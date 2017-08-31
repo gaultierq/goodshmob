@@ -3,27 +3,14 @@
 import React, {Component} from 'react';
 
 import {ActivityIndicatorIOS, StyleSheet, View} from 'react-native';
-import Persist from "../utils/Persist";
+import {  store3 } from "../utils/Persist";
+import {  prepareCall } from "../utils/Api";
 
 const FBSDK = require('react-native-fbsdk');
 const {
     LoginButton, AccessToken
 } = FBSDK;
 
-function prepareCall(verb, token) {
-    verb = verb || "auth/facebook/generate_token";
-    let apiEndpoint = "https://goodshitapp-staging.herokuapp.com/";
-    return fetch(
-        apiEndpoint + verb,
-        {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({auth: {access_token: token}})
-        });
-}
 
 export default class Login extends Component {
 
@@ -36,7 +23,7 @@ export default class Login extends Component {
             <View>
                 <LoginButton
                     onLoginFinished={this.onLoginFinished}
-                    onLogoutFinished={() => alert("logout.")}/>
+                />
             </View>
         );
     }
@@ -53,7 +40,7 @@ export default class Login extends Component {
                 (data) => {
                     let token = data.accessToken.toString();
 
-                    console.log("facebook token:" + token)
+                    console.log("facebook token:" + token);
                     prepareCall("auth/facebook/generate_token", token)
                         .then((response) => {
                             let client = response.headers.get('Client');
@@ -62,7 +49,7 @@ export default class Login extends Component {
 
                             console.log(`headers: client=${client}, uid=${uid}, access-token=${accessToken} `);
 
-                            Persist.store("client", client, "uid", uid, "access-token", accessToken);
+                            store3("client", client, "uid", uid, "access-token", accessToken);
 
                             return response
                         })
