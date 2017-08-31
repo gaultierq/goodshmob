@@ -3240,6 +3240,14 @@ react-devtools-core@2.3.1:
     shell-quote "^1.6.1"
     ws "^2.0.3"
 
+react-native-fbsdk@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/react-native-fbsdk/-/react-native-fbsdk-0.6.1.tgz#268bdbda5a16f5341ca43e3fa1beb88801e35a92"
+
+"react-native-fbsdk@git://github.com/facebook/react-native-fbsdk#065507aa1d2b8b0b6cb50d13117694123f8303fa":
+  version "0.6.1"
+  resolved "git://github.com/facebook/react-native-fbsdk#065507aa1d2b8b0b6cb50d13117694123f8303fa"
+
 react-native@0.47.2:
   version "0.47.2"
   resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.47.2.tgz#5e55cd84e4947123c86d36ea6f95ab9ed2d0cb19"

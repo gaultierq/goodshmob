@@ -12,6 +12,8 @@ import {
   View
 } from 'react-native';
 
+import Login from './app/components/Login';
+
 export default class goodshmob extends Component {
   render() {
     return (
@@ -26,6 +28,7 @@ export default class goodshmob extends Component {
           Double tap R on your keyboard to reload,{'\n'}
           Shake or press menu button for dev menu
         </Text>
+        <Login/>
       </View>
     );
   }
