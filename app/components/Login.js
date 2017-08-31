@@ -1,101 +1,86 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
-import { 
-  StyleSheet,
-  TextInput,
-  TouchableHighlight,
-  ActivityIndicatorIOS,
-  AsyncStorage,
-  Text,
-  View
-} from 'react-native';
+import {ActivityIndicatorIOS, StyleSheet, View} from 'react-native';
+import Persist from "../utils/Persist";
 
 const FBSDK = require('react-native-fbsdk');
 const {
-  LoginButton, AccessToken
+    LoginButton, AccessToken
 } = FBSDK;
 
+function prepareCall(verb, token) {
+    verb = verb || "auth/facebook/generate_token";
+    let apiEndpoint = "https://goodshitapp-staging.herokuapp.com/";
+    return fetch(
+        apiEndpoint + verb,
+        {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({auth: {access_token: token}})
+        });
+}
 
 export default class Login extends Component {
-  
-  constructor(){
-    super();
-  }
- 
-  render() {
-    return (
-      <View>
-        <LoginButton
-          onLoginFinished={
-            (error, result) => {
-              if (error) {
-                alert("login has error: " + result.error);
-              } 
-              else if (result.isCancelled) {
-                alert("login is cancelled.");
-              } 
-              else {
-                AccessToken.getCurrentAccessToken().then(
-                  (data) => {
-                    alert(data.accessToken.toString())
-                  }
-                )
-              }
-            }
-          }
-          onLogoutFinished={() => alert("logout.")}/>
-      </View>
-    );
-  }
 
-  login() {
-    
-  }
+    constructor(){
+        super();
+    }
+
+    render() {
+        return (
+            <View>
+                <LoginButton
+                    onLoginFinished={this.onLoginFinished}
+                    onLogoutFinished={() => alert("logout.")}/>
+            </View>
+        );
+    }
+
+    onLoginFinished(error, result) {
+        if (error) {
+            alert("login has error: " + result.error);
+        }
+        else if (result.isCancelled) {
+            alert("login is cancelled.");
+        }
+        else {
+            AccessToken.getCurrentAccessToken().then(
+                (data) => {
+                    let token = data.accessToken.toString();
+
+                    console.log("facebook token:" + token)
+                    prepareCall("auth/facebook/generate_token", token)
+                        .then((response) => {
+                            let client = response.headers.get('Client');
+                            let uid = response.headers.get('Uid');
+                            let accessToken = response.headers.get('Access-Token');
+
+                            console.log(`headers: client=${client}, uid=${uid}, access-token=${accessToken} `);
+
+                            Persist.store("client", client, "uid", uid, "access-token", accessToken);
+
+                            return response
+                        })
+                        .then((response) => response.json())
+                        .then((json) => {
+
+                                let user = JSON.stringify(json.data);
+                                alert("json="+ user)
+                                //AsyncStorage.set({"goodsh_store:current_user": user})
+                            }
+                        )
+                        .done();
+                }
+            )
+        }
+    }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-    padding: 10,
-    paddingTop: 80
-  },
-  input: {
-    height: 50,
-    marginTop: 10,
-    padding: 4,
-    fontSize: 18,
-    borderWidth: 1,
-    borderColor: '#48bbec'
-  },
-  button: {
-    height: 50,
-    backgroundColor: '#48BBEC',
-    alignSelf: 'stretch',
-    marginTop: 10,
-    justifyContent: 'center'
-  },
-  buttonText: {
-    fontSize: 22,
-    color: '#FFF',
-    alignSelf: 'center'
-  },
-  heading: {
-    fontSize: 30,
-  },
-  error: {
-    color: 'red',
-    paddingTop: 10
-  },
-  success: {
-    color: 'green',
-    paddingTop: 10
-  },
-  loader: {
-    marginTop: 20
-  }
+
 });
