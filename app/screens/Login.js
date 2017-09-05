@@ -22,7 +22,7 @@ export default class Login extends Component {
         return (
             <View>
                 <LoginButton
-                    onLoginFinished={this.onLoginFinished}
+                    onLoginFinished={this.onLoginFinished.bind(this)}
                 />
             </View>
         );
@@ -57,8 +57,14 @@ export default class Login extends Component {
                         .then((json) => {
 
                                 let user = JSON.stringify(json.data);
-                                alert("json="+ user)
+                                //alert("json="+ user)
                                 //AsyncStorage.set({"goodsh_store:current_user": user})
+
+                                this.props.navigator.push({
+                                    screen: 'example.MainScreen',
+                                    title: 'Pushed Main Screen'
+                                });
+
                             }
                         )
                         .done();
