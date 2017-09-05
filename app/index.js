@@ -17,7 +17,7 @@ Navigation.startTabBasedApp({
             screen: 'example.Login',
             icon: require('./img/profil.png'),
             //selectedIcon: require('../img/two_selected.png'), // iOS only
-            title: 'Login screen'
+            title: 'Login screen1'
         }
     ]
 });
