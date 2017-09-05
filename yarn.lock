@@ -1065,8 +1065,8 @@ chalk@^2.0.0:
     supports-color "^4.0.0"
 
 ci-info@^1.0.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/ci-info/-/ci-info-1.1.0.tgz#37f6e917002864c263af2579cedcb4abb24fa467"
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/ci-info/-/ci-info-1.1.1.tgz#47b44df118c48d2597b56d342e7e25791060171a"
 
 cli-cursor@^2.1.0:
   version "2.1.0"
