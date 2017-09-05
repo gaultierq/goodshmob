@@ -17,7 +17,9 @@ import com.facebook.soloader.SoLoader;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainApplication extends Application implements ReactApplication {
+import com.reactnativenavigation.NavigationApplication;
+
+public class MainApplication extends NavigationApplication implements ReactApplication {
 
   private static CallbackManager mCallbackManager = CallbackManager.Factory.create();
 
@@ -51,4 +53,9 @@ public class MainApplication extends Application implements ReactApplication {
     FacebookSdk.sdkInitialize(this);
     SoLoader.init(this, /* native exopackage */ false);
   }
+
+       @Override
+       public List<ReactPackage> createAdditionalReactPackages() {
+           return getPackages();
+       }
 }
