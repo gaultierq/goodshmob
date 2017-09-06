@@ -1,23 +1,36 @@
 
 import { Navigation } from 'react-native-navigation';
 
-import { registerScreens } from './screens';
+import { registerScreens, LoginScreenConfig } from './screens';
+
+import LoginManager from './managers/LoginManager'
 
 registerScreens(); // this is where you register all of your app's screens
 
 
-import Login from './screens/Login';
-
+import Login from './screens/LoginScreen';
 
 // start the app
-Navigation.startTabBasedApp({
-    tabs: [
-        {
-            label: 'Login',
-            screen: 'example.Login',
-            icon: require('./img/profil.png'),
-            //selectedIcon: require('../img/two_selected.png'), // iOS only
-            title: 'Login screen!'
-        }
-    ]
+LoginManager.readUser().then((user) => {
+    if (user) {
+        console.warn("looool2: " + LoginScreenConfig);
+        Navigation.startSingleScreenApp({
+            screen:
+                {
+                    label: 'Main',
+                    title: 'Goodsh',
+                    screen: 'goodsh.MainScreen',
+                    icon: require('./img/goodsh.png'),
+                }
+        });
+    }
+    else {
+        console.warn("looool: " + LoginScreenConfig);
+        Navigation.startSingleScreenApp({
+            screen: LoginScreenConfig
+        });
+
+    }
 });
+
+

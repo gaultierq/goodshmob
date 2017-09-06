@@ -1,6 +1,9 @@
 
 import React, {Component} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, Button} from 'react-native';
+import LoginManager from '../managers/LoginManager'
+
+//throw new Error();
 
 export default class MainScreen extends Component {
 
@@ -11,8 +14,21 @@ export default class MainScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
+                <Button
+                    title="logout"
+                    onPress={this.logout.bind(this)}
+                />
             </View>
         );
+    }
+
+    logout() {
+        LoginManager.logout(() => {
+            this.props.navigator.push({
+                screen: 'goodsh.LoginScreen',
+                title: 'Goodsh'
+            });
+        });
     }
 }
 
