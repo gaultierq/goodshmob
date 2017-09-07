@@ -4,9 +4,9 @@ import LoginScreen from './LoginScreen';
 import MainScreen from './MainScreen';
 
 // register all screens of the app (including internal ones)
-export function registerScreens() {
-    Navigation.registerComponent('goodsh.LoginScreen', () => LoginScreen);
-    Navigation.registerComponent('goodsh.MainScreen', () => MainScreen);
+export function registerScreens(store, Provider) {
+    Navigation.registerComponent('goodsh.LoginScreen', () => LoginScreen, store, Provider);
+    Navigation.registerComponent('goodsh.MainScreen', () => MainScreen, store, Provider);
 }
 
 

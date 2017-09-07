@@ -4,6 +4,8 @@ import React, {Component} from 'react';
 
 import {ActivityIndicatorIOS, StyleSheet, View} from 'react-native';
 import LoginManager from "../managers/LoginManager"
+import * as appActions from "../actions/app"
+import {connect} from 'react-redux';
 
 const FBSDK = require('react-native-fbsdk');
 const {
@@ -11,7 +13,7 @@ const {
 } = FBSDK;
 
 
-export default class Login extends Component {
+class Login extends Component {
 
     constructor(){
         super();
@@ -35,17 +37,9 @@ export default class Login extends Component {
             alert("login is cancelled.");
         }
         else {
-            this.performLogin();
+            //this.performLogin();
+            this.props.dispatch(appActions.login());
         }
-    }
-
-    performLogin() {
-        LoginManager.login(() => {
-            this.props.navigator.push({
-                screen: 'goodsh.MainScreen',
-                title: 'Goodsh'
-            });
-        });
     }
 }
 
@@ -62,3 +56,6 @@ export const Config = {
         navBarHidden: true,
     }
 };
+
+
+export default connect()(Login);

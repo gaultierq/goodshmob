@@ -1,11 +1,9 @@
-
 import React, {Component} from 'react';
 import {StyleSheet, View, Button} from 'react-native';
-import LoginManager from '../managers/LoginManager'
+import  * as appActions from '../actions/app'
+import {connect} from "react-redux";
 
-//throw new Error();
-
-export default class MainScreen extends Component {
+class MainScreen extends Component {
 
     constructor(){
         super();
@@ -23,12 +21,7 @@ export default class MainScreen extends Component {
     }
 
     logout() {
-        LoginManager.logout(() => {
-            this.props.navigator.push({
-                screen: 'goodsh.LoginScreen',
-                title: 'Goodsh'
-            });
-        });
+        this.props.dispatch(appActions.logout());
     }
 }
 
@@ -38,3 +31,5 @@ const styles = StyleSheet.create({
         backgroundColor: '#F5FCFF',
     }
 });
+
+export default connect()(MainScreen);
