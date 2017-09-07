@@ -8,6 +8,10 @@ import  * as appActions from './actions/app'
 import thunk from "redux-thunk";
 import logger from 'redux-logger'
 
+//see the network requests in the debugger
+//TODO: doesnt work yet
+//GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
+
 // redux related book keeping
 const createStoreWithMiddleware = applyMiddleware(thunk, logger)(createStore);
 const reducer = combineReducers(reducers);

@@ -1,5 +1,5 @@
 import {buildPersistentKey, store, store3} from "../utils/Persist";
-import { prepareCall } from "../utils/Api";
+import * as Api from "../utils/Api";
 
 import {  LoginManager as FacebookLoginManager, AccessToken } from "react-native-fbsdk";
 import {AsyncStorage} from "react-native";
@@ -17,7 +17,7 @@ class LoginManager {
 
                     console.log("facebook token:" + token);
 
-                    prepareCall("auth/facebook/generate_token", token)
+                    Api.post("auth/facebook/generate_token", {auth: {access_token: token}})
                         .then((response) => {
                             let client = response.headers.get('Client');
                             let uid = response.headers.get('Uid');
@@ -43,6 +43,7 @@ class LoginManager {
                                 resolve();
                             }
                         )
+                        .catch(() => this.logout())
                         .done();
                 }
             )
