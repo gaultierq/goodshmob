@@ -2,11 +2,13 @@ import { Navigation } from 'react-native-navigation';
 
 import LoginScreen from './LoginScreen';
 import MainScreen from './MainScreen';
+import DebugScreen from './DebugScreen';
 
 // register all screens of the app (including internal ones)
 export function registerScreens(store, Provider) {
     Navigation.registerComponent('goodsh.LoginScreen', () => LoginScreen, store, Provider);
     Navigation.registerComponent('goodsh.MainScreen', () => MainScreen, store, Provider);
+    Navigation.registerComponent('goodsh.DebugScreen', () => DebugScreen, store, Provider);
 }
 
 
