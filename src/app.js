@@ -18,11 +18,13 @@ const store = createStoreWithMiddleware(reducer);
 registerScreens(store, Provider);
 
 
+
 export default class App {
     constructor() {
         // since react-redux only works on components, we need to subscribe this class manually
         store.subscribe(this.onStoreUpdate.bind(this));
         store.dispatch(appActions.appInitialized());
+
     }
 
     onStoreUpdate() {
