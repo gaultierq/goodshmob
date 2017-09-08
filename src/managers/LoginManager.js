@@ -1,8 +1,12 @@
-import {buildPersistentKey, store, store3} from "../utils/Persist";
+// @flow
+
+import {buildPersistentKey} from "../utils/Persist";
 import * as Api from "../utils/Api";
 
 import {  LoginManager as FacebookLoginManager, AccessToken } from "react-native-fbsdk";
 import {AsyncStorage} from "react-native";
+import * as Persist from "../utils/Persist";
+
 
 
 class LoginManager {
@@ -13,19 +17,27 @@ class LoginManager {
         return new Promise(resolve => {
             AccessToken.getCurrentAccessToken().then(
                 (data) => {
-                    let token = data.accessToken.toString();
+                    let token = data ? data.accessToken.toString() : '';
 
-                    console.log("facebook token:" + token);
+                    console.info("facebook token:" + token);
 
-                    Api.post("auth/facebook/generate_token", {auth: {access_token: token}})
+                    Api.submit("auth/facebook/generate_token", 'POST', {auth: {access_token: token}})
                         .then((response) => {
                             let client = response.headers.get('Client');
                             let uid = response.headers.get('Uid');
                             let accessToken = response.headers.get('Access-Token');
 
-                            console.log(`headers: client=${client}, uid=${uid}, access-token=${accessToken} `);
+                            console.log(`auth headers found: client=${client}, uid=${uid}, access-token=${accessToken} `);
 
-                            store3("client", client, "uid", uid, "access-token", accessToken);
+                            Api.credentials(client, uid, accessToken);
+
+                            AsyncStorage.multiSet([
+                                [buildPersistentKey(Persist.CLIENT_KEY), client],
+                                [buildPersistentKey(Persist.UID_KEY), uid],
+                                [buildPersistentKey(Persist.ACCESS_TOKEN_KEY), accessToken],
+                            ], () => {
+
+                            });
 
                             return response
                         })
@@ -34,9 +46,9 @@ class LoginManager {
 
                                 let u = json.data;
                                 let user = JSON.stringify(u);
-                                console.log(`storing user: user=${user}`);
+                                console.info(`storing user: user=${user}`);
 
-                                AsyncStorage.setItem(buildPersistentKey("user"), user, () => this.readUser());
+                                AsyncStorage.setItem(buildPersistentKey(Persist.USER_KEY), user);
 
                                 this.user = u;
 
@@ -60,17 +72,6 @@ class LoginManager {
     static currentUser() {
         console.log("current user = " + JSON.stringify(this.user))
         return this.user;
-    }
-
-    static readUser() {
-        return new Promise((resolve, reject) => {
-            AsyncStorage.getItem(buildPersistentKey("user")).then((u) => {
-                console.log("user stored: " + u);
-                LoginManager.user = JSON.parse(u);
-                resolve(u);
-            });
-        });
-
     }
 
 

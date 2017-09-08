@@ -1,23 +1,36 @@
-import * as types from './types';
-import LoginManager from "../../managers/LoginManager";
+// @flow
+
+import * as types from './appTypes';
+import LoginManager from "../managers/LoginManager";
+import * as Persist from "../utils/Persist";
+import * as Api from "../utils/Api";
 
 export function appInitialized() {
 
-    return async function(dispatch, getState) {
+    return async (dispatch: any, getState: any) => {
         // since all business logic should be inside redux actions
         // this is a good place to put your app initialization code
 
-        let user = await LoginManager.readUser();
+        let { user, access_token, client, uid} = (await Persist.readMany([
+            "user",
+            "access_token",
+            "client",
+            "uid",
+        ]));
+
+        Api.credentials(access_token, client, uid);
+
         dispatch(changeAppRoot(user ? 'after-login' : 'login'));
+
     };
 }
 
-export function changeAppRoot(root) {
+export function changeAppRoot(root: string) {
     return {type: types.ROOT_CHANGED, root: root};
 }
 
 export function login() {
-    return async function(dispatch, getState) {
+    return async (dispatch: any, getState: any) => {
         // login logic would go here, and when it's done, we switch app roots
 
         //TODO: handle errors
@@ -30,7 +43,7 @@ export function login() {
 
 export function logout() {
 
-    return function(dispatch, getState) {
+    return (dispatch: any, getState: any) => {
 
         LoginManager.logout();
 

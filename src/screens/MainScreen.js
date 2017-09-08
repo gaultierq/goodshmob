@@ -1,31 +1,23 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Button, Text} from 'react-native';
-import  * as appActions from '../actions/app'
+import  * as activitesActions from '../actions/activitiesActions'
 import {connect} from "react-redux";
 
 class MainScreen extends Component {
 
     constructor(){
         super();
-        this.state = { searching: false }
     }
 
-    /*
-    //TODO: you are here
     componentDidMount() {
-        this.props
-            .fetchActivities()
-            .then((res) => {
-            this.setState({searching: false })
-        });
+        this.props.dispatch(activitesActions.fetchActivities());
     }
-    */
 
     render() {
         return (
             <View style={styles.container}>
                 <Text>
-                    test
+                    { `activities: ${JSON.stringify(this.props.activities)}`}
                 </Text>
             </View>
         );
@@ -39,5 +31,9 @@ const styles = StyleSheet.create({
     }
 });
 
+const mapStateToProps = (state, ownProps) => ({
+    activities: state.activities,
+});
 
-export default connect()(MainScreen);
+
+export default connect(mapStateToProps)(MainScreen);

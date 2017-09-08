@@ -4,7 +4,7 @@ import {Provider} from "react-redux";
 import { Navigation } from 'react-native-navigation';
 import { registerScreens, LoginScreenConfig } from './screens';
 import * as reducers from "./reducers";
-import  * as appActions from './actions/app'
+import  * as appActions from './actions/appActions'
 import thunk from "redux-thunk";
 import logger from 'redux-logger'
 

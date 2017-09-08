@@ -4,7 +4,7 @@ import React, {Component} from 'react';
 
 import {ActivityIndicatorIOS, StyleSheet, View} from 'react-native';
 import LoginManager from "../managers/LoginManager"
-import * as appActions from "../actions/app"
+import * as appActions from "../actions/appActions"
 import {connect} from 'react-redux';
 
 const FBSDK = require('react-native-fbsdk');

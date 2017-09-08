@@ -5,9 +5,8 @@ export function fetchActivities() {
     return async (dispatch, getState) => {
 
         Api.get("activities")
-            .then((response) => {
-                    let json = response.json();
-                    dispatch(setFetchedActivities({activities: json}));
+            .then((activities) => {
+                    dispatch(setFetchedActivities({activities}));
                 }
             )
             .done();
@@ -16,7 +15,7 @@ export function fetchActivities() {
 
 export function setFetchedActivities({ activities }) {
     return {
-        type: types.FETCH_ACTIVITIES,
+        type: types.SET_FETCHED_ACTIVITIES,
         activities,
     }
 }

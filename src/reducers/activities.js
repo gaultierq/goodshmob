@@ -6,7 +6,7 @@ const initialState = Immutable({
 
 export default function fetchActivities(state = initialState, action = {}) {
     switch (action.type) {
-        case types.FETCH_ACTIVITIES:
+        case types.SET_FETCHED_ACTIVITIES:
             return state.merge({
                 activities: action.activities
             });
