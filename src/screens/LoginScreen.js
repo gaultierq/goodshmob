@@ -6,6 +6,7 @@ import {ActivityIndicatorIOS, Button, Image, StyleSheet, Text, View} from 'react
 import * as appActions from "../actions/appActions"
 import {connect} from 'react-redux';
 import {LoginManager} from 'react-native-fbsdk';
+import i18n from '../i18n/i18n'
 
 
 // class UIColor
@@ -44,21 +45,23 @@ class Login extends Component {
                     justifyContent: 'center',
                 }}
             >
-                <View
-                    style={{
-                        alignItems: 'center'
-                    }}
+                <View style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    margin: '10%'
+                }}
                 >
-                    <Text>forget bla bla</Text>
-                    <Text>Restaurant bla bla</Text>
+                    <Text>{i18n.t('login_screen.value_proposal')}</Text>
+                    <Text>{i18n.t('login_screen.definition.example')}</Text>
                     <Image source={require('../img/goodshit_beta.png')}/>
                     <Button
                         onPress={this.handleFacebookLogin.bind(this)}
-                        title="Sign in with Facebook"
+                        title={i18n.t('login_screen.facebook_signin')}
                         color="#40e7bb"
-                        accessibilityLabel="Sign in with Facebook"
+                        accessibilityLabel={i18n.t('login_screen.facebook_signin')}
                     />
-                    <Text>Don't publish blah blah</Text>
+                    <Text>{i18n.t('login_screen.no_publication')}</Text>
                 </View>
             </Image>
         );

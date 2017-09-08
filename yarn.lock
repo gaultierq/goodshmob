@@ -2,6 +2,10 @@
 # yarn lockfile v1
 
 
+"@types/react@^16.0.5":
+  version "16.0.5"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.0.5.tgz#d713cf67cc211dea20463d2a0b66005c22070c4b"
+
 abab@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/abab/-/abab-1.0.3.tgz#b81de5f7274ec4e756d797cd834f303642724e5d"
@@ -1911,6 +1915,10 @@ http-signature@~1.1.0:
     jsprim "^1.2.2"
     sshpk "^1.7.0"
 
+"i18n-js@github:fnando/i18n-js#v3.0.1":
+  version "3.0.1"
+  resolved "https://codeload.github.com/fnando/i18n-js/tar.gz/a4f947fd65d80bd3e09971f21ab02e967e676742"
+
 iconv-lite@0.4.11:
   version "0.4.11"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.11.tgz#2ecb42fd294744922209a2e7c404dac8793d8ade"
@@ -3271,6 +3279,12 @@ react-devtools-core@2.3.1:
 "react-native-fbsdk@git://github.com/facebook/react-native-fbsdk#065507aa1d2b8b0b6cb50d13117694123f8303fa":
   version "0.6.1"
   resolved "git://github.com/facebook/react-native-fbsdk#065507aa1d2b8b0b6cb50d13117694123f8303fa"
+
+react-native-i18n@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/react-native-i18n/-/react-native-i18n-2.0.5.tgz#9bd9b37130df803718ffdc7be6a46ec2b0ef95df"
+  dependencies:
+    i18n-js "github:fnando/i18n-js#v3.0.1"
 
 react-native-navigation@^1.1.212:
   version "1.1.213"

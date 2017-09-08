@@ -15,6 +15,7 @@
 		"react": "16.0.0-alpha.12",
 		"react-native": "0.47.2",
 		"react-native-fbsdk": "git://github.com/facebook/react-native-fbsdk#065507aa1d2b8b0b6cb50d13117694123f8303fa",
+		"react-native-i18n": "^2.0.5",
 		"react-native-navigation": "^1.1.212",
 		"react-redux": "^5.0.6",
 		"redux": "^3.7.2",

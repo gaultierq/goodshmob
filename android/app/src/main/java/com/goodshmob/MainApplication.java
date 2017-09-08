@@ -9,6 +9,7 @@ import android.app.Application;
 import android.content.Intent;
 
 import com.facebook.react.ReactApplication;
+import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -29,21 +30,6 @@ public class MainApplication extends NavigationApplication implements ReactAppli
     return mCallbackManager;
   }
 
-//  private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
-//    @Override
-//    public boolean getUseDeveloperSupport() {
-//      return BuildConfig.DEBUG;
-//    }
-//
-//    @Override
-//    protected List<ReactPackage> getPackages() {
-//      return Arrays.<ReactPackage>asList(
-//          new MainReactPackage(),
-//              new FBSDKPackage(mCallbackManager)
-//      );
-//    }
-//  };
-
   @Override
   public boolean isDebug() {
     // Make sure you are using BuildConfig from your own application
@@ -53,6 +39,7 @@ public class MainApplication extends NavigationApplication implements ReactAppli
   protected List<ReactPackage> getPackages() {
     return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new RNI18nPackage(),
             new FBSDKPackage(mCallbackManager)
     );
   }
