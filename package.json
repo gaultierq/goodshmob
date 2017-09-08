@@ -9,6 +9,7 @@
 		"flow-stop": "flow stop"
 	},
 	"dependencies": {
+		"@types/react": "^16.0.5",
 		"adm-zip": "^0.4.7",
 		"plist": "^2.1.0",
 		"react": "16.0.0-alpha.12",
