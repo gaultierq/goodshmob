@@ -1,3 +1,5 @@
 //@flow
 
-import './src/app.js'
+import App from './src/app'
+
+new App();
