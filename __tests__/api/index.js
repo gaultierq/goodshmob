@@ -10,5 +10,6 @@ test('testing parse method', () => {
     expect(sending).toBeInstanceOf(Models.Sending);
     expect(sending.user).toBeDefined();
     expect(sending.user).toBeInstanceOf(Models.User);
+    expect(sending.user.email).toBe("foobar_80@example.com");
 
 });

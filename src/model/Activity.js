@@ -1,4 +1,5 @@
 import Base from "./Base";
+import User from "./User";
 
 export default class Activity extends Base {
     created_at;
@@ -6,7 +7,7 @@ export default class Activity extends Base {
     type;
     privacy;
     description;
-    user;
+    user: User;
     target;
     resource;
     related_activities;
