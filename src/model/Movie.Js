@@ -1,6 +1,6 @@
 import Item from "./Item";
 
-class MovieResource extends Item {
+export default class Movie extends Item {
     overview;
 
 

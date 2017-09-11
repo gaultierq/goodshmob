@@ -1,5 +1,5 @@
 import Item from "./Item";
 
-class CreativeWork extends Item {
+export default class CreativeWork extends Item {
 
 }

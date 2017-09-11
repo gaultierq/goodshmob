@@ -1,6 +1,6 @@
 import Base from "./Base";
 
-class CommentResource extends Base {
+export default class Comment extends Base {
 
     created_at;
     content_;

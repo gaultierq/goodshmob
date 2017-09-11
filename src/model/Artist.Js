@@ -1,6 +1,6 @@
 import Item from "./Item";
 
-class ArtistResource extends Item {
+export default class Artist extends Item {
 
     provider
 }

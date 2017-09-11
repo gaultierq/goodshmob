@@ -1,6 +1,6 @@
 import Item from "./Item";
 
-class PlaceResource extends Item {
+export default class Place extends Item {
 
   location;
 }

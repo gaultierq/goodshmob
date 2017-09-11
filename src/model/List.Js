@@ -1,6 +1,6 @@
 import Base from "./Base";
 
-class ListResource extends Base {
+export default class List extends Base {
 
     created_at;
     name;

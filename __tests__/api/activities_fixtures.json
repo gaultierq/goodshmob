@@ -1,0 +1,177 @@
+{
+    "data": [
+    {
+        "id": "bdae7a3d-d788-48b9-8ef1-587cda1af74c",
+        "type": "sendings",
+        "attributes": {
+            "privacy": "custom",
+            "type": "Sending",
+            "created-at": "2017-08-08T16:07:05.734Z",
+            "updated-at": "2017-08-08T16:07:05.734Z",
+            "description": "a description\nabout the item."
+        },
+        "relationships": {
+            "user": {
+                "data": {
+                    "id": "36c31049-9fab-41df-8ee8-9e9f3228d151",
+                    "type": "users"
+                }
+            },
+            "resource": {
+                "data": {
+                    "id": "296df7d9-27cf-4586-91df-b24374bd1a34",
+                    "type": "posts"
+                }
+            },
+            "target": {
+                "data": {
+                    "id": "ea65222b-6849-4fec-9a95-1a56fb471760",
+                    "type": "users"
+                }
+            },
+            "commentators": {
+                "data": [
+
+                ]
+            },
+            "comments": {
+                "data": [
+
+                ]
+            }
+        },
+        "links": {
+            "self": "http://test.host/sendings/bdae7a3d-d788-48b9-8ef1-587cda1af74c"
+        },
+        "meta": {
+            "comments-count": 0,
+            "liked": false,
+            "likes-count": 0
+        }
+    },
+    {
+        "id": "296df7d9-27cf-4586-91df-b24374bd1a34",
+        "type": "posts",
+        "attributes": {
+            "privacy": "everyone",
+            "type": "Post",
+            "created-at": "2017-08-08T16:07:05.722Z",
+            "updated-at": "2017-08-08T16:07:05.722Z",
+            "description": "a description\nabout the item."
+        },
+        "relationships": {
+            "user": {
+                "data": {
+                    "id": "36c31049-9fab-41df-8ee8-9e9f3228d151",
+                    "type": "users"
+                }
+            },
+            "resource": {
+                "data": {
+                    "id": "f3aeca0f-e9e6-4a23-8978-1aa52e65842f",
+                    "type": "places"
+                }
+            },
+            "commentators": {
+                "data": [
+
+                ]
+            },
+            "comments": {
+                "data": [
+
+                ]
+            },
+            "related-activities": {
+                "data": [
+                    {
+                        "id": "bdae7a3d-d788-48b9-8ef1-587cda1af74c",
+                        "type": "sendings"
+                    }
+                ]
+            }
+        },
+        "links": {
+            "self": "http://test.host/posts/296df7d9-27cf-4586-91df-b24374bd1a34"
+        },
+        "meta": {
+            "comments-count": 0,
+            "liked": false,
+            "likes-count": 0
+        }
+    }
+],
+    "included": [
+    {
+        "id": "36c31049-9fab-41df-8ee8-9e9f3228d151",
+        "type": "users",
+        "attributes": {
+            "email": "foobar_80@example.com",
+            "first-name": "Foo_75",
+            "image": "http://www.example.com/foobar_80.png",
+            "last-name": "Bar_75"
+        },
+        "relationships": {
+            "goodshbox": {
+                "data": null
+            },
+            "lists": {
+                "data": [
+
+                ]
+            }
+        },
+        "links": {
+            "self": "http://test.host/users/36c31049-9fab-41df-8ee8-9e9f3228d151"
+        }
+    },
+    {
+        "id": "ea65222b-6849-4fec-9a95-1a56fb471760",
+        "type": "users",
+        "attributes": {
+            "email": "foobar_78@example.com",
+            "first-name": "Foo_73",
+            "image": "http://www.example.com/foobar_78.png",
+            "last-name": "Bar_73"
+        },
+        "relationships": {
+            "goodshbox": {
+                "data": null
+            },
+            "lists": {
+                "data": [
+
+                ]
+            }
+        },
+        "links": {
+            "self": "http://test.host/users/ea65222b-6849-4fec-9a95-1a56fb471760"
+        }
+    },
+    {
+        "id": "f3aeca0f-e9e6-4a23-8978-1aa52e65842f",
+        "type": "places",
+        "attributes": {
+            "image": "http://www.example.com/item.png",
+            "provider": "Google Places",
+            "subtitle": "an address",
+            "title": "a title",
+            "type": "Place",
+            "uid": "c104cb3e-86bf-4c0f-8ba0-dde454bd6ad5",
+            "url": "http://www.example.com/item.html",
+            "location": null
+        },
+        "links": {
+            "self": "http://test.host/items/f3aeca0f-e9e6-4a23-8978-1aa52e65842f"
+        },
+        "meta": {
+            "activities-count": 1
+        }
+    }
+],
+    "links": {
+    "self": "http://example.org/activities?page%5Bnumber%5D=0",
+        "first": "http://example.org/activities?page%5Bnumber%5D=0",
+        "next": "http://example.org/activities?page%5Bnumber%5D=1"
+}
+}

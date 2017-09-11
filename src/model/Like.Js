@@ -1,6 +1,6 @@
 import Base from "./Base";
 
-class LikeResource extends Base {
+export default class Like extends Base {
 
     created_at;
     updated_at;

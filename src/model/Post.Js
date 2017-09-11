@@ -1,4 +1,4 @@
 import Activity from "./Activity";
 
-class PostResource extends Activity {
+export default class Post extends Activity {
 }

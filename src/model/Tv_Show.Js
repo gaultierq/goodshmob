@@ -1,6 +1,6 @@
 import Item from "./Item";
 
-class TvShowResource extends Item {
+export default class TvShow extends Item {
 
     overview;
 

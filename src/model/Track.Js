@@ -1,6 +1,6 @@
 import Item from "./Item";
 
-class TrackResource extends Item {
+export default class Track extends Item {
 
     artist_names;
     album_type;

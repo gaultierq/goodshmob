@@ -1,4 +1,4 @@
 import Activity from "./Activity";
 
-class SavingResource extends Activity {
+export default class Saving extends Activity {
 }

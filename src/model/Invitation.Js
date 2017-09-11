@@ -1,4 +1,6 @@
-export class InvitationResource extends Base {
+import Base from "./Base";
+
+export class Invitation extends Base {
     invitations;
     first_name;
     last_name;
@@ -11,6 +13,4 @@ export class InvitationResource extends Base {
     full_name() {
         return `${this.first_name} ${this.last_name}`;
     }
-
-    end
 }
