@@ -3,22 +3,24 @@ import * as Models from "./"
 
 export function parse(data) {
 
+    let store = {};
+
     if (data.included) {
-        let byId = {};
 
         data.included.map((source) => {
 
             let obj: Base = this.createObject(source);
             if (obj) {
-                byId[obj.type] = byId[obj.type] || {};
-                byId[obj.type][obj.id] = obj;
+                store[obj.type] = store[obj.type] || {};
+                store[obj.type][obj.id] = obj;
             }
         });
     }
 
+    console.debug(`store=${JSON.stringify(store)}`);
 
     let result = [];
-    data.data.map((o) => result.push(createObject(o)));
+    data.data.map((o) => result.push(createObject(o, store)));
 
 
     return result;
@@ -59,14 +61,16 @@ function createFlatObject(source) {
     let clazz = Models[moduleId];
     if (!clazz) thrown(`model not found`, type, source);
 
-    let obj = new clazz;
+    let obj: Base = new clazz;
+
+    obj.id = source.id;
+    obj.type = type;
 
     //let obj: Base = new Base();
     if (source.attributes) {
         Object.assign(obj, source.attributes);
     }
     return obj;
-
 }
 
 /*
@@ -83,14 +87,18 @@ export function createObject(source: Source, store: any): Base {
 
     if (source.relationships) {
         let relResult = {};
-        Object.getOwnPropertyNames(source.relationships).map((relVal)=>{
-            let relObj: Base = createFlatObject(relVal);
+        Object.getOwnPropertyNames(source.relationships).map((relKey)=>{
+            let srcObj = source.relationships[relKey];
+            if (!srcObj || !srcObj.data) return;
+
+            let relObj: Base = createFlatObject(srcObj.data);
 
             if (relObj) {
 
                 if (store && store[relObj.type]) {
                     let stored = store[relObj.type][relObj.id];
                     if (stored) {
+                        console.debug("stored object found:" + JSON.stringify(stored));
                         Object.assign(relObj, stored);
                     }
                 }
