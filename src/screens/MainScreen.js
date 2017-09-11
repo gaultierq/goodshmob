@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Button, Text, FlatList} from 'react-native';
+import {StyleSheet, View, Text, FlatList, Button, Image} from 'react-native';
 import  * as activitesActions from '../actions/activitiesActions'
 import {connect} from "react-redux";
+import { Card } from 'react-native-elements'
+
 
 class MainScreen extends Component {
 
 
-    _keyExtractor = (item, index) => item.id;
+    keyExtractor = (item, index) => item.id;
 
 
     constructor(){
@@ -21,15 +23,6 @@ class MainScreen extends Component {
         this.props.dispatch(activitesActions.fetchActivities());
     }
 
-    renderItem(item) {
-        let activity = item.item;
-        return <ActivityItem
-            id={activity.id}
-            onPressItem={this.onPressItem}
-            title={`bing ${activity.id}`}
-        />
-    }
-
     onPressItem(id) {
         alert(`coucou ${id}`);
     }
@@ -42,17 +35,23 @@ class MainScreen extends Component {
                     title="fetch"
                     onPress={this.fetch.bind(this)}
                 />
-
                 <FlatList style={styles.list}
-                    data={activities}
-                    renderItem={this.renderItem}
-                    keyExtractor={this._keyExtractor}
+                          data={activities}
+                          renderItem={this.renderItem}
+                          keyExtractor={this.keyExtractor}
                 />
-                {/*<Text>*/}
-                    {/*{ `activities ${activities.length}: ${JSON.stringify(activities)}`}*/}
-                {/*</Text>*/}
             </View>
         );
+    }
+
+    renderItem(item) {
+        let activity = item.item;
+        return <ActivityItem
+            id={activity.id}
+            onPressItem={this.onPressItem}
+            title={`bing `}
+            image={activity.image}
+        />
     }
 }
 
@@ -63,11 +62,16 @@ class ActivityItem extends React.Component {
 
     render() {
         return (
-            <Text
-                onPress={this._onPress}
-            >
-                {`heeeey: ${this.props.title}`}
-            </Text>
+            <Card title={`title= ${this.props.id}`}>
+                <View key={this.props} style={styles.user}>
+                    <Image
+                        style={styles.image}
+                        resizeMode="cover"
+                        source={{ uri: this.props.image }}
+                    />
+                    <Text style={styles.name}>{"asjdkjasd: "+this.props.id}</Text>
+                </View>
+            </Card>
         )
     }
 }

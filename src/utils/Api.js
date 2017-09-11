@@ -30,13 +30,16 @@ let xhr = function (route, verb, body) {
 
     return submit(route, verb, body)
         .then( resp => {
-            console.debug(`receiving response: ${JSON.stringify(resp)}`);
+
             let json = resp.json();
             if (resp.ok) return json;
             return json.then(err => {throw err});
         })
         .then(json => {
-            return json.data;
+            let data = json.data;
+            let included = json.included;
+            console.debug(`receiving response:\n \data:\n${JSON.stringify(data, null, '\t')} \nincluded:\n${JSON.stringify(included, null, '\t')}`);
+            return json;
         });
 };
 
