@@ -1,6 +1,6 @@
 import * as Api from "../utils/Api"
 import * as types from './activitiesTypes';
-import * as Util from "../model/Util"
+import * as Util from "../utils/ModelUtils"
 
 export function fetchActivities() {
     return async (dispatch, getState) => {

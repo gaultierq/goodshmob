@@ -2,7 +2,7 @@ import Base from "./Base";
 
 export default class List extends Base {
 
-    created_at;
+    createdAt;
     name;
     primary;
     privacy;

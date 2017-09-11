@@ -2,8 +2,8 @@ import Base from "./Base";
 
 export default class Comment extends Base {
 
-    created_at;
-    content_;
+    createdAt;
+    content;
     user;
     resource;
 }

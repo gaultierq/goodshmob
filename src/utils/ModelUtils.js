@@ -1,5 +1,8 @@
-import Base from "./Base";
-import * as Models from "./"
+// @flow
+
+import Base from "../model/Base";
+import * as Models from "../model/index"
+import * as StringUtils from "./StringUtils"
 
 export function parse(data) {
 
@@ -33,18 +36,30 @@ class ParseError extends Error {
 let formatMsg = function (msg, type, source) {
     return `${msg} for type=${type}, and source=${source}`;
 };
+
 let thrown = function (msg, type, source) {
     throw new ParseError(formatMsg(msg, type, source));
 };
 
 
-//1. create object instance (from type)
-let toUppercase = function (type) {
-    return type.substr(0, 1).toUpperCase() + type.substr(1, type.length - 1);
+let assignSafe = function (target, src) {
+    for (let p in src) {
+        if (src.hasOwnProperty(p)) {
+            let pp = StringUtils.toLowercase(dashToCamel(p));
+            target[pp] = src[p];
+        }
+    }
+};
+
+let dashToCamel = function (type) {
+    let uppercased = type.split('-').map((part) => {
+        return StringUtils.toUppercase(part);
+    });
+    return uppercased.join('');
 };
 
 //2. flatten attributes
-function createFlatObject(source) {
+function createFlatObject(source): Base {
 
     let type: string;
     //if (!source.id) throw new ParseError("expecting id");
@@ -61,10 +76,7 @@ function createFlatObject(source) {
 
     type = type.substr(0, type.length - 1);
 
-    let uppercased = type.split('-').map((part) => {
-        return toUppercase(part);
-    });
-    let moduleId = uppercased.join('');
+    let moduleId = dashToCamel(type);
 
     //let moduleId = toUppercase(type);
 
@@ -78,7 +90,7 @@ function createFlatObject(source) {
 
     //let obj: Base = new Base();
     if (source.attributes) {
-        Object.assign(obj, source.attributes);
+        assignSafe(obj, source.attributes);
     }
     return obj;
 }

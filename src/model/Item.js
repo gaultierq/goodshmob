@@ -7,7 +7,7 @@ export default class Item {
     image: String;
     provider;
     type;
-    activities_count: int;
+    activitiesCount: int;
     description;
 }
 
