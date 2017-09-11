@@ -21,4 +21,11 @@ test('testing activities_fixtures2', () => {
     let result = Util.parse(require("./activities_fixtures2.json"));
 
     expect(result).toBeDefined();
+
+    let savings: Models.Saving = result[0];
+    expect(savings).toBeInstanceOf(Models.Saving);
+    let resource: Models.Place = savings.resource;
+    expect(resource).toBeInstanceOf(Models.Place);
+    expect(resource.image).toBe("https://lh3.googleusercontent.com/p/AF1QipM_mxiOMo3vYOLIsvfKqcvjdWvYN_skmCAirsR9=s1600-w600");
+
 });

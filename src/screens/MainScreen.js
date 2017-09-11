@@ -24,7 +24,6 @@ class MainScreen extends Component {
     }
 
     onPressItem(id) {
-        alert(`coucou ${id}`);
     }
 
     render() {
