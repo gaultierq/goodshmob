@@ -45,11 +45,14 @@ class MainScreen extends Component {
 
     renderItem(item) {
         let activity = item.item;
+        console.debug("rendering:"+JSON.stringify(activity));
+        let image = activity.resource ? activity.resource.image : undefined;
+        console.debug("rendering (image):"+image);
         return <ActivityItem
             id={activity.id}
             onPressItem={this.onPressItem}
-            title={`bing `}
-            image={activity.image}
+            title={activity.description}
+            image={image}
         />
     }
 }
@@ -61,15 +64,9 @@ class ActivityItem extends React.Component {
 
     render() {
         return (
-            <Card title={`title= ${this.props.id}`}>
-                <View key={this.props} style={styles.user}>
-                    <Image
-                        style={styles.image}
-                        resizeMode="cover"
-                        source={{ uri: this.props.image }}
-                    />
-                    <Text style={styles.name}>{"asjdkjasd: "+this.props.id}</Text>
-                </View>
+            <Card image={{uri: this.props.image}}
+                  imageStyle={styles.image}>
+                <Text style={styles.name}>{this.props.title}</Text>
             </Card>
         )
     }
@@ -79,6 +76,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#F5FCFF',
+    },
+    image: {
+        width: "100%",
+        height: 250
     }
 });
 
