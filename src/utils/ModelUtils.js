@@ -59,6 +59,7 @@ let dashToCamel = function (type) {
 };
 
 //2. flatten attributes
+//type will be singular, CamelCased
 function createFlatObject(source): Base {
 
     let type: string;
@@ -70,13 +71,14 @@ function createFlatObject(source): Base {
         return null;
     }
 
-    console.debug(`creating object for type=${type}`);
+    //console.debug(`creating object for type=${type}`);
 
     if (!type.endsWith("s")) thrown(`expecting plural`, type, source);
 
+    //remove the plurals
     type = type.substr(0, type.length - 1);
 
-    let moduleId = dashToCamel(type);
+    let moduleId: string = dashToCamel(type);
 
     //let moduleId = toUppercase(type);
 
@@ -86,7 +88,7 @@ function createFlatObject(source): Base {
     let obj: Base = new clazz;
 
     obj.id = source.id;
-    obj.type = type;
+    obj.type = moduleId;
 
     //let obj: Base = new Base();
     if (source.attributes) {
@@ -115,8 +117,12 @@ export function createObject(source: Source, store: any): Base {
 
             let relObj: Base = createFlatObject(srcObj.data);
 
+
             if (relObj) {
 
+                if (relObj.id === "5c981d29-ec75-4f16-b326-4c52b54a456e") {
+                    console.log("TEST: " + JSON.stringify(relObj));
+                }
                 if (store && store[relObj.type]) {
                     let stored = store[relObj.type][relObj.id];
                     if (stored) {
