@@ -2,6 +2,7 @@ import Activity from './Activity';
 import Album from './Album';
 import Artist from './Artist';
 import Comment from './Comment';
+import CreativeWork from './CreativeWork';
 import Invitation from './Invitation';
 import Item from './Item';
 import Like from './Like';
@@ -19,6 +20,7 @@ export {
      Album,
      Artist,
      Comment,
+     CreativeWork,
      Invitation,
      Item,
      Like,

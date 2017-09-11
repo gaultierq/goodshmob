@@ -6,13 +6,10 @@ export function fetchActivities() {
     return async (dispatch, getState) => {
 
         Api.get("activities?include=user,resource,target")
-            .then((activities) => {
+            .then((response) => {
+                    let activities3 = Util.parse(response);
 
-                //list of activities
-                //let activities2 = activities.data;
-                let activities3 = Util.parse(activities);
-
-                dispatch(setFetchedActivities({activities: activities3}));
+                    dispatch(setFetchedActivities({activities: activities3}));
                 }
             )
             .done();

@@ -39,6 +39,10 @@ let thrown = function (msg, type, source) {
 
 
 //1. create object instance (from type)
+let toUppercase = function (type) {
+    return type.substr(0, 1).toUpperCase() + type.substr(1, type.length - 1);
+};
+
 //2. flatten attributes
 function createFlatObject(source) {
 
@@ -47,7 +51,7 @@ function createFlatObject(source) {
     type = source.type;
 
     if (!type) {
-        console.error(formatMsg("expecting type", type, source));
+        //console.error(formatMsg("expecting type", type, source));
         return null;
     }
 
@@ -57,9 +61,15 @@ function createFlatObject(source) {
 
     type = type.substr(0, type.length - 1);
 
-    let moduleId = type.substr(0, 1).toUpperCase() + type.substr(1, type.length - 1);
+    let uppercased = type.split('-').map((part) => {
+        return toUppercase(part);
+    });
+    let moduleId = uppercased.join('');
+
+    //let moduleId = toUppercase(type);
+
     let clazz = Models[moduleId];
-    if (!clazz) thrown(`model not found`, type, source);
+    if (!clazz) thrown(`model not found:${moduleId}`, type, source);
 
     let obj: Base = new clazz;
 

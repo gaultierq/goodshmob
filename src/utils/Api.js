@@ -38,7 +38,7 @@ let xhr = function (route, verb, body) {
         .then(json => {
             let data = json.data;
             let included = json.included;
-            console.debug(`receiving response:\n \data:\n${JSON.stringify(data, null, '\t')} \nincluded:\n${JSON.stringify(included, null, '\t')}`);
+            console.debug(`receiving response:\n ${JSON.stringify(json, null, '\t')}`);
             return json;
         });
 };
