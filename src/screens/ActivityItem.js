@@ -23,7 +23,7 @@ export default class ActivityItem extends React.Component {
             }}>
                 <View style={{marginLeft: cardMargin, marginRight: cardMargin}}>
 
-                    <View style={{flex: 1, flexDirection: 'row'}}>
+                    <View style={{flex: 1, flexDirection: 'row', }}>
                         <Image
                             source={{uri: user.image}}
                             style={{
@@ -32,7 +32,7 @@ export default class ActivityItem extends React.Component {
                                 borderRadius: 15
                             }}
                         />
-                        <View style={{  }}>
+                        <View style={{ flex: 1, }}>
                             <Text>{Model.User.fullname(user)}</Text>
                             <Text>{`${target ? "in " + target.name : ''}`}</Text>
                         </View>
