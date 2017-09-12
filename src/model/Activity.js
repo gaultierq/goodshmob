@@ -1,5 +1,5 @@
 import Base from "./Base";
-import User from "./User";
+import * as Models from "."
 
 export default class Activity extends Base {
     createdAt;
@@ -7,11 +7,12 @@ export default class Activity extends Base {
     type;
     privacy;
     description;
-    user: User;
+    user: Models.User;
     target;
-    resource;
+    resource: Models.Item;
     relatedActivities;
     comments;
     commentators;
+
 }
 

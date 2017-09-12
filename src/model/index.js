@@ -15,21 +15,24 @@ import Sending from './Sending';
 import Track from './Track';
 import User from './User';
 
+import Base from './Base';
+
 export {
-     Activity,
-     Album,
-     Artist,
-     Comment,
-     CreativeWork,
-     Invitation,
-     Item,
-     Like,
-     List,
-     Movie,
-     Place,
-     Post,
-     Saving,
-     Sending,
-     Track,
-     User,
+    Activity,
+    Album,
+    Artist,
+    Comment,
+    CreativeWork,
+    Invitation,
+    Item,
+    Like,
+    List,
+    Movie,
+    Place,
+    Post,
+    Saving,
+    Sending,
+    Track,
+    User,
+    Base
 };

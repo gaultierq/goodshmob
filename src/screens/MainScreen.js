@@ -1,9 +1,11 @@
+// @flow
+
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, FlatList, Button, Image} from 'react-native';
+import {StyleSheet, View, Text, FlatList, Button, Image, ImageBackground} from 'react-native';
 import  * as activitesActions from '../actions/activitiesActions'
 import {connect} from "react-redux";
-import { Card } from 'react-native-elements'
-
+import * as Model from "../model"
+import ActivityItem from "./ActivityItem";
 
 class MainScreen extends Component {
 
@@ -27,61 +29,44 @@ class MainScreen extends Component {
     }
 
     render() {
-        let activities = this.props.activities.activities || [{id: 35}];
+        let activities = this.props.activities.activities || [];
         return (
-            <View style={styles.container}>
-                <Button
-                    title="fetch"
-                    onPress={this.fetch.bind(this)}
-                />
-                <FlatList style={styles.list}
-                          data={activities}
-                          renderItem={this.renderItem}
-                          keyExtractor={this.keyExtractor}
-                />
-            </View>
+            <ImageBackground
+                source={require('../img/home_background.png')}
+                style={{
+                    flex: 1,
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    justifyContent: 'center',
+                }}
+            >
+                <View style={{
+                    flex: 1,
+                    padding: 10
+                }}>
+                    <Button
+                        title="fetch"
+                        onPress={this.fetch.bind(this)}
+                    />
+                    <FlatList
+                        data={activities}
+                        renderItem={this.renderItem}
+                        keyExtractor={this.keyExtractor}
+                    />
+                </View>
+            </ImageBackground>
         );
     }
 
     renderItem(item) {
-        let activity = item.item;
-        console.debug("rendering:"+JSON.stringify(activity));
-        let image = activity.resource ? activity.resource.image : undefined;
-        console.debug("rendering (image):"+image);
         return <ActivityItem
-            id={activity.id}
             onPressItem={this.onPressItem}
-            title={activity.description}
-            image={image}
+            activity={item.item}
         />
     }
 }
 
-class ActivityItem extends React.Component {
-    _onPress = () => {
-        this.props.onPressItem(this.props.id);
-    };
-
-    render() {
-        return (
-            <Card image={{uri: this.props.image}}
-                  imageStyle={styles.image}>
-                <Text style={styles.name}>{this.props.title}</Text>
-            </Card>
-        )
-    }
-}
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#F5FCFF',
-    },
-    image: {
-        width: "100%",
-        height: 250
-    }
-});
 
 const mapStateToProps = (state, ownProps) => ({
     activities: state.activities,
