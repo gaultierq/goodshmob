@@ -98,7 +98,7 @@ export default class App {
                         tabBarButtonColor: '#ffff00', // optional, change the color of the tab icons and text (also unselected)
                         tabBarSelectedButtonColor: '#ff9900', // optional, change the color of the selected tab icon and text (only selected)
                         tabBarBackgroundColor: '#551A8B', // optional, change the background color of the tab bar
-                        initialTabIndex: 1, // optional, the default selected bottom tab. Default: 0
+                        //initialTabIndex: 1, // optional, the default selected bottom tab. Default: 0
                     },
                     appStyle: {
                         orientation: 'portrait', // Sets a specific orientation to the entire app. Default: 'auto'. Supported values: 'auto', 'landscape', 'portrait'
@@ -126,7 +126,7 @@ export default class App {
                     //     disableOpenGesture: false // optional, can the drawer be opened with a swipe instead of button
                     // },
                     passProps: {}, // simple serializable object that will pass as props to all top screens (optional)
-                    animationType: 'slide-down' // optional, add transition animation to root change: 'none', 'slide-down', 'fade'
+                    //animationType: 'slide-down' // optional, add transition animation to root change: 'none', 'slide-down', 'fade'
                 });
 
 

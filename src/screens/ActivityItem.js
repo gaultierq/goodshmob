@@ -14,32 +14,42 @@ export default class ActivityItem extends React.Component {
         let target: Model.List = activity.target;
         let image = resource ? resource.image : undefined;
 
-
+        let cardMargin = 15;
         return (
             <View style={{
-                marginBottom: 15,
-                backgroundColor: "transparent"
+                backgroundColor: "transparent",
+                marginTop: 20,
+                marginBottom: 20
             }}>
-                <View style={{flex: 1, flexDirection: 'row'}}>
-                    <Image
-                        source={{uri: user.image}}
-                        style={{
-                            height: 30,
-                            width: 30,
-                            borderRadius: 15
-                        }}
-                    />
-                    <View style={{  }}>
-                        <Text>{Model.User.fullname(user)}</Text>
-                        <Text>{`${target ? "in " + target.name : ''}`}</Text>
+                <View style={{marginLeft: cardMargin, marginRight: cardMargin}}>
+
+                    <View style={{flex: 1, flexDirection: 'row'}}>
+                        <Image
+                            source={{uri: user.image}}
+                            style={{
+                                height: 30,
+                                width: 30,
+                                borderRadius: 15
+                            }}
+                        />
+                        <View style={{  }}>
+                            <Text>{Model.User.fullname(user)}</Text>
+                            <Text>{`${target ? "in " + target.name : ''}`}</Text>
+                        </View>
+
                     </View>
 
+                    <Text>{activity.description}</Text>
                 </View>
-
-                <Text>{activity.description}</Text>
-
+                {/*card*/}
                 <View style={{
-                    backgroundColor: "white"
+                    backgroundColor: "white",
+                    marginLeft: cardMargin,
+                    marginRight: cardMargin,
+                    shadowColor: "#000",
+                    shadowOpacity: 0.3,
+                    shadowOffset: {width: 2, height: 2},
+                    shadowRadius: 2,
                 }}>
 
                     <Image
@@ -52,6 +62,30 @@ export default class ActivityItem extends React.Component {
                     />
                     <Text>{resource.title}</Text>
                     <Text>{resource.subtitle}</Text>
+                    <View style={{width: "100%", height: 1, backgroundColor: "#000"}}/>
+
+
+                    <View style={{flex: 1, flexDirection: 'row'}}>
+
+                        {/*comment button*/}
+                        <View style={{flex: 1}}>
+                            <Image source={require('../img/close_circle.png')}/>
+                            <Text>{"Donner son avis"}</Text>
+                        </View>
+                        <View style={{flex: 1}}>
+                            <Image source={require('../img/close_circle.png')}/>
+                            <Text>{"Copier le lien"}</Text>
+                        </View>
+                        <View style={{flex: 1}}>
+                            <Image source={require('../img/close_circle.png')}/>
+                            <Text>{"Enregistrer"}</Text>
+                        </View>
+                        <View style={{flex: 1}}>
+                            <Image source={require('../img/close_circle.png')}/>
+                            <Text>{"Acheter"}</Text>
+                        </View>
+
+                    </View>
 
                 </View>
 

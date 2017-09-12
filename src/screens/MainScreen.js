@@ -42,13 +42,8 @@ class MainScreen extends Component {
                 }}
             >
                 <View style={{
-                    flex: 1,
-                    padding: 10
+                    flex: 1
                 }}>
-                    <Button
-                        title="fetch"
-                        onPress={this.fetch.bind(this)}
-                    />
                     <FlatList
                         data={activities}
                         renderItem={this.renderItem}
