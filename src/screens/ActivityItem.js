@@ -15,16 +15,16 @@ export default class ActivityItem extends React.Component {
         let target: Model.List = activity.target;
         let image = resource ? resource.image : undefined;
 
-        let cardMargin = 15;
+        let cardMargin = 12;
         return (
             <View style={{
                 backgroundColor: "transparent",
                 marginTop: 20,
                 marginBottom: 20
             }}>
-                <View style={{marginLeft: cardMargin, marginRight: cardMargin}}>
+                <View style={{margin: cardMargin, marginBottom: 8}}>
 
-                    <View style={{flex: 1, flexDirection: 'row',}}>
+                    <View style={{flex: 1, flexDirection: 'row', marginBottom: 8}}>
                         <Image
                             source={{uri: user.image}}
                             style={{
@@ -33,14 +33,14 @@ export default class ActivityItem extends React.Component {
                                 borderRadius: 15
                             }}
                         />
-                        <View style={{flex: 1,}}>
-                            <Text>{Model.User.fullname(user)}</Text>
-                            <Text>{`${target ? "in " + target.name : ''}`}</Text>
+                        <View style={{flex: 1, marginLeft: 8}}>
+                            <Text style={{fontSize: 11}}>{Model.User.fullname(user)}</Text>
+                            <Text style={{fontSize: 14}}>{`${target ? "in " + target.name : ''}`}</Text>
                         </View>
 
                     </View>
 
-                    <Text>{activity.description}</Text>
+                    <Text style={{fontSize: 14}}>{activity.description}</Text>
                 </View>
                 {/*card*/}
                 <View style={{
@@ -61,12 +61,15 @@ export default class ActivityItem extends React.Component {
                             width: "100%",
                         }}
                     />
-                    <Text>{resource.title}</Text>
-                    <Text>{resource.subtitle}</Text>
-                    <View style={{width: "100%", height: 1, backgroundColor: "#000"}}/>
+                    <View style={{padding: 15}}>
+                        <Text style={{fontSize: 20}}>{resource.title}</Text>
+                        <Text style={{fontSize: 12, color: '#505050'}}>{resource.subtitle}</Text>
+                    </View>
+
+                    <View style={{width: "100%", height: StyleSheet.hairlineWidth, backgroundColor: "#505050"}}/>
 
 
-                    <View style={this.styles.buttonContainer}>
+                    <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
 
                         {this.renderButton(require('../img/comment.png'), i18n.t("activity_item_buttons.comment"))}
                         {this.renderButton(require('../img/send.png'), i18n.t("activity_item_buttons.share"))}
@@ -83,15 +86,10 @@ export default class ActivityItem extends React.Component {
 
 
     renderButton(img, text) {
-        return <View style={this.styles.button}>
+        return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', padding: 6}}>
             <Image source={img} style={{margin: 8}}/>
-            <Text style={this.styles.buttonText}>{text}</Text>
+            <Text style={{textAlign: 'center', fontSize: 10}}>{text}</Text>
         </View>;
     }
 
-    styles = {
-        button: {flex: 1, justifyContent: 'center', alignItems: 'center', padding: 6},
-        buttonText: {textAlign: 'center', fontSize: 8},
-        buttonContainer: {flex: 1, flexDirection: 'row', justifyContent: 'space-between'}
-    };
 }
