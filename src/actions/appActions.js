@@ -5,11 +5,24 @@ import LoginManager from "../managers/LoginManager";
 import * as Persist from "../utils/Persist";
 import * as Api from "../utils/Api";
 
+import {
+    setCustomText,
+} from 'react-native-global-props';
+
 export function appInitialized() {
 
     return async (dispatch: any, getState: any) => {
         // since all business logic should be inside redux actions
         // this is a good place to put your app initialization code
+
+
+        //defining default font
+        setCustomText({
+            style: {
+                fontFamily: 'Thonburi',
+                color: 'black'
+            }
+        });
 
         let { user, access_token, client, uid} = (await Persist.readMany([
             "user",
