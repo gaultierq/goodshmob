@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react';
-import {View, FlatList, ImageBackground, RefreshControl} from 'react-native';
+import {StyleSheet, View, FlatList, ImageBackground, RefreshControl, ActivityIndicator} from 'react-native';
 import  * as activitesActions from '../actions/activitiesActions'
 import {connect} from "react-redux";
 import * as Model from "../model"
@@ -11,9 +11,14 @@ class MainScreen extends Component {
 
     keyExtractor = (item, index) => item.id;
 
+    state: {
+        loadingFirst: boolean;
+        loadingMore: boolean;
+    };
+
     constructor(){
         super();
-        this.state = {refreshing: false};
+        this.state = {loadingFirst: false, loadingMore: false};
     }
 
     componentDidMount() {
@@ -21,10 +26,15 @@ class MainScreen extends Component {
     }
 
     loadMore() {
+        if (this.state.loadingMore) return;
+        this.setState({loadingMore: true});
+
         if (!this.props.activities.links) return;
         let nextUrl = this.props.activities.links.next;
         console.log("Next url:" + nextUrl);
-        this.props.dispatch(activitesActions.fetchMoreActivities(nextUrl));
+        this.props.dispatch(activitesActions.fetchMoreActivities(nextUrl, () => {
+            this.setState({loadingMore: false});
+        }));
     }
 
     loadFirst(callback?) {
@@ -36,6 +46,7 @@ class MainScreen extends Component {
 
     render() {
         let activities = this.props.activities.activities || [];
+
         return (
             <ImageBackground
                 source={require('../img/home_background.png')}
@@ -48,22 +59,26 @@ class MainScreen extends Component {
                 }}
             >
                 <View style={{
-                    flex: 1
+
                 }}>
+
                     <FlatList
                         data={activities}
                         renderItem={this.renderItem}
                         keyExtractor={this.keyExtractor}
                         refreshControl={
                             <RefreshControl
-                                refreshing={this.state.refreshing}
+                                refreshing={this.state.loadingFirst}
                                 onRefresh={this.onRefresh.bind(this)}
                             />
                         }
                         onEndReached={ this.onEndReached.bind(this) }
                         onEndReachedThreshold={0}
                     />
+
+
                 </View>
+
             </ImageBackground>
         );
     }
@@ -86,13 +101,22 @@ class MainScreen extends Component {
     }
 
     onRefresh() {
-        this.setState({refreshing: true});
+        this.setState({loadingFirst: true});
         this.loadFirst(()=> {
-            this.setState({refreshing: false});
+            this.setState({loadingFirst: false});
         });
     }
 }
 
+
+const styles = StyleSheet.create ({
+    activityIndicator: {
+        // flex: 1,
+        // justifyContent: 'center',
+        // alignItems: 'center',
+        height: 80
+    }
+})
 
 const mapStateToProps = (state, ownProps) => ({
     activities: state.activities,
