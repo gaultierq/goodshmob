@@ -17,7 +17,13 @@ export default class ActivityItem extends React.Component {
         let image = resource ? resource.image : undefined;
 
         let cardMargin = 12;
-        let targetName = target ? target.name : '';
+        let targetName;
+        if (target) {
+            let count = target.meta ? target.meta["savings-count"] : 0;
+            targetName = target.name;
+            if (count) targetName += targetName + " (" + count + ")"
+        }
+
 
         let likesCount = activity.meta ? activity.meta["likes-count"] : 0;
         return (
