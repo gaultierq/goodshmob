@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {StyleSheet, View, Text, Image} from 'react-native';
 import * as Model from "../model"
 import i18n from '../i18n/i18n'
+import * as TimeUtils from '../utils/TimeUtils'
 
 export default class ActivityItem extends React.Component {
     _onPress = () => {
@@ -34,8 +35,15 @@ export default class ActivityItem extends React.Component {
                             }}
                         />
                         <View style={{flex: 1, marginLeft: 8}}>
-                            <Text style={{fontSize: 11}}>{Model.User.fullname(user)}</Text>
-                            <Text style={{fontSize: 14}}>{`${target ? "in " + target.name : ''}`}</Text>
+                            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+                                <Text style={{fontSize: 12, color:'blue'}}>{Model.User.fullname(user)}</Text>
+                                <Text style={{fontSize: 10, color:'#505050', marginLeft: 4}}>{TimeUtils.timeSince(Date.parse(activity.createdAt))}</Text>
+                            </View>
+
+                            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+                                <Text style={{fontSize: 9, color:'#505050', marginRight: 4}}>{i18n.t("activity_item.header.in")}</Text>
+                                <Text style={{fontSize: 14, color: 'blue'}}>{target ? target.name: ''}</Text>
+                            </View>
                         </View>
 
                     </View>
@@ -71,10 +79,10 @@ export default class ActivityItem extends React.Component {
 
                     <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
 
-                        {this.renderButton(require('../img/comment.png'), i18n.t("activity_item_buttons.comment"))}
-                        {this.renderButton(require('../img/send.png'), i18n.t("activity_item_buttons.share"))}
-                        {this.renderButton(require('../img/save-icon.png'), i18n.t("activity_item_buttons.save"))}
-                        {this.renderButton(require('../img/buy-icon.png'), i18n.t("activity_item_buttons.buy"))}
+                        {this.renderButton(require('../img/comment.png'), i18n.t("activity_item.buttons.comment"))}
+                        {this.renderButton(require('../img/send.png'), i18n.t("activity_item.buttons.share"))}
+                        {this.renderButton(require('../img/save-icon.png'), i18n.t("activity_item.buttons.save"))}
+                        {this.renderButton(require('../img/buy-icon.png'), i18n.t("activity_item.buttons.buy"))}
 
                     </View>
 
@@ -82,6 +90,10 @@ export default class ActivityItem extends React.Component {
 
             </View>
         )
+    }
+
+    timeSince() {
+        
     }
 
 

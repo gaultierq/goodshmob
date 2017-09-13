@@ -22,11 +22,16 @@ export default {
         "send":"ENVOYER A UN AUTRE GOODSHER",
         "share":"ENVOYER SUR"
     },
-    "activity_item_buttons":{
-        "comment":"DONNER SON AVIS",
-        "share":"PARTAGER",
-        "save":"ENREGISTRER",
-        "buy":"ACHETER",
+    "activity_item": {
+        header: {
+            in: "in"
+        },
+        buttons:{
+            "comment":"DONNER SON AVIS",
+            "share":"PARTAGER",
+            "save":"ENREGISTRER",
+            "buy":"ACHETER",
+        }
     },
     "activity":{
         "in_list":"%{activity}\ndans %{list}",
@@ -174,5 +179,39 @@ export default {
         "sending":"%{username} t’a envoyé %{item_title} to you",
         "invitation":"%{username} et %{you} êtes désormais connectés",
         "you":"toi"
+    },
+    util: {
+        time: {
+            since_seconds: {
+                zero: "",
+                one: "Il y a 1 seconde",
+                other: "Il y a %{count} secondes"
+            },
+            since_minutes: {
+                zero: "",
+                one: "Il y a 1 minute",
+                other: "Il y a %{count} minutes"
+            },
+            since_hours: {
+                zero: "",
+                one: "Il y a 1 heure",
+                other: "Il y a %{count} heures"
+            },
+            since_days: {
+                zero: "",
+                one: "Il y a 1 jour",
+                other: "Il y a %{count} jours"
+            },
+            since_months: {
+                zero: "",
+                one: "Il y a 1 mois",
+                other: "Il y a %{count} mois"
+            },
+            since_years: {
+                zero: "",
+                one: "Il y a 1 an",
+                other: "Il y a %{count} ans"
+            },
+        }
     }
 };

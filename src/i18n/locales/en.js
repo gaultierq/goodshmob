@@ -22,11 +22,16 @@ export default {
         "send":"Send to another goodsher",
         "share":"Share elsewhere"
     },
-    "activity_item_buttons":{
-        "comment":"COMMENT",
-        "share":"SHARE",
-        "save":"SAVE",
-        "buy":"BUY",
+    "activity_item":{
+        header: {
+            in: "in"
+        },
+        buttons:{
+            "comment":"COMMENT",
+            "share":"SHARE",
+            "save":"SAVE",
+            "buy":"BUY",
+        }
     },
     "activity":{
         "in_list":"%{activity}\nin %{list}",
@@ -174,5 +179,40 @@ export default {
         "sending":"%{username} sended %{item_title} to you",
         "invitation":"%{username} and %{you} are now connected",
         "you":"you"
+    },
+
+    util: {
+        time: {
+            since_seconds: {
+                zero: "",
+                one: "1 second ago",
+                other: "%{count} seconds ago"
+            },
+            since_minutes: {
+                zero: "",
+                one: "1 minute ago",
+                other: "%{count} minutes ago"
+            },
+            since_hours: {
+                zero: "",
+                one: "1 hour ago",
+                other: "%{count} hours ago"
+            },
+            since_days: {
+                zero: "",
+                one: "1 jour ago",
+                other: "%{count} days ago"
+            },
+            since_months: {
+                zero: "",
+                one: "1 month ago",
+                other: "%{count} months ago"
+            },
+            since_years: {
+                zero: "",
+                one: "1 year ago",
+                other: "%{count} years ago"
+            },
+        }
     }
 };
