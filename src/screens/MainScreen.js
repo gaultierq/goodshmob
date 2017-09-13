@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, FlatList, Button, Image, ImageBackground} from 'react-native';
+import {View, FlatList, ImageBackground, RefreshControl} from 'react-native';
 import  * as activitesActions from '../actions/activitiesActions'
 import {connect} from "react-redux";
 import * as Model from "../model"
@@ -9,20 +9,26 @@ import ActivityItem from "./ActivityItem";
 
 class MainScreen extends Component {
 
-
     keyExtractor = (item, index) => item.id;
-
 
     constructor(){
         super();
+        this.state = {refreshing: false};
     }
 
     componentDidMount() {
-        this.fetch();
+        this.loadFirst();
     }
 
-    fetch() {
-        this.props.dispatch(activitesActions.fetchActivities());
+    loadMore() {
+        if (!this.props.activities.links) return;
+        let nextUrl = this.props.activities.links.next;
+        console.log("Next url:" + nextUrl);
+        this.props.dispatch(activitesActions.fetchMoreActivities(nextUrl));
+    }
+
+    loadFirst(callback?) {
+        this.props.dispatch(activitesActions.fetchActivities(callback));
     }
 
     onPressItem(id) {
@@ -48,10 +54,28 @@ class MainScreen extends Component {
                         data={activities}
                         renderItem={this.renderItem}
                         keyExtractor={this.keyExtractor}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={this.state.refreshing}
+                                onRefresh={this.onRefresh.bind(this)}
+                            />
+                        }
+                        onEndReached={ this.onEndReached.bind(this) }
+                        onEndReachedThreshold={0}
                     />
                 </View>
             </ImageBackground>
         );
+    }
+
+    onEndReached() {
+        if (this.props.activities.hasMore) {
+            this.loadMore();
+        }
+        else {
+            console.info("end of feed")
+        }
+
     }
 
     renderItem(item) {
@@ -59,6 +83,13 @@ class MainScreen extends Component {
             onPressItem={this.onPressItem}
             activity={item.item}
         />
+    }
+
+    onRefresh() {
+        this.setState({refreshing: true});
+        this.loadFirst(()=> {
+            this.setState({refreshing: false});
+        });
     }
 }
 

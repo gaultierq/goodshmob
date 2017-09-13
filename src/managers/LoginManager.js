@@ -21,7 +21,7 @@ class LoginManager {
 
                     console.info("facebook token:" + token);
 
-                    Api.submit("auth/facebook/generate_token", 'POST', {auth: {access_token: token}})
+                    Api.submit("https://goodshitapp-staging.herokuapp.com/auth/facebook/generate_token", 'POST', {auth: {access_token: token}})
                         .then((response) => {
                             let client = response.headers.get('Client');
                             let uid = response.headers.get('Uid');

@@ -20,13 +20,7 @@ export function parse(data) {
         });
     }
 
-    // console.debug(`store=${JSON.stringify(store)}`);
-
-    let result = [];
-    data.data.map((o) => result.push(createObject(o, store)));
-
-
-    return result;
+    return data.data.map((o) => createObject(o, store));
 }
 
 class ParseError extends Error {

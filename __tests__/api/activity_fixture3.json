@@ -1,0 +1,471 @@
+{
+  "data": [
+    {
+      "id": "5a61cbd9-aca2-4d6e-8084-997e57eef2a7",
+      "type": "savings",
+      "attributes": {
+        "privacy": "everyone",
+        "type": "Saving",
+        "created-at": "2017-08-31T03:54:22.112Z",
+        "updated-at": "2017-08-31T03:54:22.112Z",
+        "description": "J'adore ce resto "
+      },
+      "relationships": {
+        "user": {
+          "data": {
+            "id": "b871ecdf-f15c-43bf-b94f-abcbaab637ba",
+            "type": "users"
+          }
+        },
+        "resource": {
+          "data": {
+            "id": "5c981d29-ec75-4f16-b326-4c52b54a456e",
+            "type": "places"
+          }
+        },
+        "target": {
+          "data": {
+            "id": "4ce6d964-71e1-4938-aa41-55c23a57a311",
+            "type": "lists"
+          }
+        },
+        "commentators": {
+          "data": []
+        },
+        "comments": {
+          "data": []
+        },
+        "related-activities": {
+          "data": []
+        }
+      },
+      "links": {
+        "self": "https://goodshitapp-staging.herokuapp.com/savings/5a61cbd9-aca2-4d6e-8084-997e57eef2a7"
+      },
+      "meta": {
+        "comments-count": 0,
+        "liked": false,
+        "likes-count": 0
+      }
+    },
+    {
+      "id": "ea7f410c-e86e-4928-b63e-42b9f805d729",
+      "type": "posts",
+      "attributes": {
+        "privacy": "everyone",
+        "type": "Post",
+        "created-at": "2017-07-10T11:52:18.263Z",
+        "updated-at": "2017-07-10T11:52:18.263Z",
+        "description": "via Benoit Taconet - Super petite resto thaïlandais familial"
+      },
+      "relationships": {
+        "user": {
+          "data": {
+            "id": "b871ecdf-f15c-43bf-b94f-abcbaab637ba",
+            "type": "users"
+          }
+        },
+        "resource": {
+          "data": {
+            "id": "845eaa5b-43f9-487b-b6d7-b402b13354d8",
+            "type": "places"
+          }
+        },
+        "commentators": {
+          "data": [
+            {
+              "id": "530f5721-cd02-4f7c-991c-fde5790df1ea",
+              "type": "users"
+            },
+            {
+              "id": "fcd8a28e-864b-4d5d-b7b5-f18a0e0bc4a0",
+              "type": "users"
+            }
+          ]
+        },
+        "comments": {
+          "data": [
+            {
+              "id": "c1a2abaa-f21c-46c9-9026-da8d3a4e230b",
+              "type": "comments"
+            },
+            {
+              "id": "776e9ae1-6d40-407e-8cb6-a49304933f3f",
+              "type": "comments"
+            },
+            {
+              "id": "1000ee19-eefa-4314-8764-850ae1e1dec8",
+              "type": "comments"
+            },
+            {
+              "id": "2d4fb477-af9e-49e8-8a6d-4011c187c867",
+              "type": "comments"
+            },
+            {
+              "id": "23e8bcc1-305f-41de-9d4b-419d1dfe5656",
+              "type": "comments"
+            },
+            {
+              "id": "bcd90659-6d42-4ddc-ba93-70eba23c82e5",
+              "type": "comments"
+            }
+          ]
+        },
+        "related-activities": {
+          "data": [
+            {
+              "id": "6910cefe-174d-4f28-a4c8-f9ec6d884cf9",
+              "type": "savings"
+            },
+            {
+              "id": "85167bb2-cecc-480f-a251-e18d6f96f69f",
+              "type": "savings"
+            }
+          ]
+        }
+      },
+      "links": {
+        "self": "https://goodshitapp-staging.herokuapp.com/posts/ea7f410c-e86e-4928-b63e-42b9f805d729"
+      },
+      "meta": {
+        "comments-count": 6,
+        "liked": false,
+        "likes-count": 1
+      }
+    },
+    {
+      "id": "aca4a144-8fbb-454e-8471-d1a2c3ded70d",
+      "type": "posts",
+      "attributes": {
+        "privacy": "everyone",
+        "type": "Post",
+        "created-at": "2017-06-21T18:18:35.419Z",
+        "updated-at": "2017-06-21T18:18:35.419Z",
+        "description": "via Benoit Taconet - Pratique pour travailler le matin"
+      },
+      "relationships": {
+        "user": {
+          "data": {
+            "id": "b871ecdf-f15c-43bf-b94f-abcbaab637ba",
+            "type": "users"
+          }
+        },
+        "resource": {
+          "data": {
+            "id": "dc303a09-040e-4932-9784-be51e7035585",
+            "type": "places"
+          }
+        },
+        "commentators": {
+          "data": [
+            {
+              "id": "530f5721-cd02-4f7c-991c-fde5790df1ea",
+              "type": "users"
+            }
+          ]
+        },
+        "comments": {
+          "data": [
+            {
+              "id": "c2217a43-0152-4e90-9caa-387dcb561ab3",
+              "type": "comments"
+            }
+          ]
+        },
+        "related-activities": {
+          "data": [
+            {
+              "id": "db9b31c9-7ec0-4e16-8f1d-33be7c92dca9",
+              "type": "posts"
+            }
+          ]
+        }
+      },
+      "links": {
+        "self": "https://goodshitapp-staging.herokuapp.com/posts/aca4a144-8fbb-454e-8471-d1a2c3ded70d"
+      },
+      "meta": {
+        "comments-count": 1,
+        "liked": false,
+        "likes-count": 2
+      }
+    },
+    {
+      "id": "5bfb0ced-3d4b-4433-bef9-28560ef63186",
+      "type": "savings",
+      "attributes": {
+        "privacy": "everyone",
+        "type": "Saving",
+        "created-at": "2017-06-21T18:07:25.552Z",
+        "updated-at": "2017-06-21T18:07:25.552Z",
+        "description": "via Joffrey Jaffeux - via Joffrey Jaffeux - Test date dead ad ad a"
+      },
+      "relationships": {
+        "user": {
+          "data": {
+            "id": "b871ecdf-f15c-43bf-b94f-abcbaab637ba",
+            "type": "users"
+          }
+        },
+        "resource": {
+          "data": {
+            "id": "6e9127f5-cfe1-4825-86d6-725d50e834c8",
+            "type": "creative-works"
+          }
+        },
+        "target": {
+          "data": {
+            "id": "9eccd24a-5756-4df6-9eb5-dde38c80a5b5",
+            "type": "lists"
+          }
+        },
+        "commentators": {
+          "data": [
+            {
+              "id": "530f5721-cd02-4f7c-991c-fde5790df1ea",
+              "type": "users"
+            },
+            {
+              "id": "b871ecdf-f15c-43bf-b94f-abcbaab637ba",
+              "type": "users"
+            },
+            {
+              "id": "fcd8a28e-864b-4d5d-b7b5-f18a0e0bc4a0",
+              "type": "users"
+            }
+          ]
+        },
+        "comments": {
+          "data": [
+            {
+              "id": "5a475a01-fc28-4591-87ff-80f2929320c5",
+              "type": "comments"
+            },
+            {
+              "id": "4685c4a5-c265-449c-87ca-2239e5eb408e",
+              "type": "comments"
+            },
+            {
+              "id": "e9049afc-a4d1-484e-9766-b0103c809416",
+              "type": "comments"
+            }
+          ]
+        },
+        "related-activities": {
+          "data": []
+        }
+      },
+      "links": {
+        "self": "https://goodshitapp-staging.herokuapp.com/savings/5bfb0ced-3d4b-4433-bef9-28560ef63186"
+      },
+      "meta": {
+        "comments-count": 3,
+        "liked": false,
+        "likes-count": 1
+      }
+    }
+  ],
+  "included": [
+    {
+      "id": "b871ecdf-f15c-43bf-b94f-abcbaab637ba",
+      "type": "users",
+      "attributes": {
+        "email": "benoit.taconet@gmail.com",
+        "first-name": "Benoit",
+        "image": "https://scontent.xx.fbcdn.net/v/t1.0-1/c0.0.50.50/p50x50/10374463_10152525601222989_976270942230073424_n.jpg?oh=f658b7c659304aaac9b7dd03f9534ab2&oe=5A54B03F",
+        "last-name": "Taconet"
+      },
+      "relationships": {
+        "goodshbox": {
+          "data": {
+            "id": "635b08f2-be98-441b-adb3-44bd393165cf",
+            "type": "lists"
+          }
+        },
+        "lists": {
+          "data": [
+            {
+              "id": "62dc6f65-bf50-41a1-ae05-0fe8b82b0afe",
+              "type": "lists"
+            },
+            {
+              "id": "88867b25-cc4c-45ec-9d49-a544e63b3103",
+              "type": "lists"
+            },
+            {
+              "id": "18b6d865-1eb6-4b7c-ae00-72043ec40edb",
+              "type": "lists"
+            },
+            {
+              "id": "85c0eb3d-9b57-45c1-929c-93484631874a",
+              "type": "lists"
+            },
+            {
+              "id": "9eccd24a-5756-4df6-9eb5-dde38c80a5b5",
+              "type": "lists"
+            },
+            {
+              "id": "4ce6d964-71e1-4938-aa41-55c23a57a311",
+              "type": "lists"
+            }
+          ]
+        }
+      },
+      "links": {
+        "self": "https://goodshitapp-staging.herokuapp.com/users/b871ecdf-f15c-43bf-b94f-abcbaab637ba"
+      }
+    },
+    {
+      "id": "5c981d29-ec75-4f16-b326-4c52b54a456e",
+      "type": "places",
+      "attributes": {
+        "image": "https://lh3.googleusercontent.com/p/AF1QipM_mxiOMo3vYOLIsvfKqcvjdWvYN_skmCAirsR9=s1600-w600",
+        "provider": "Google Places",
+        "subtitle": "3 Rue Victor Massé, 75009 Paris, France",
+        "title": "Le Pantruche",
+        "type": "Place",
+        "uid": "ChIJNQoJuUZu5kcRFmtyuQGSgi8",
+        "url": "https://www.facebook.com/LePantruche/",
+        "location": "https://maps.google.com/?cid=3423459202858904342"
+      },
+      "links": {
+        "self": "https://goodshitapp-staging.herokuapp.com/items/5c981d29-ec75-4f16-b326-4c52b54a456e"
+      },
+      "meta": {
+        "activities-count": 1
+      }
+    },
+    {
+      "id": "4ce6d964-71e1-4938-aa41-55c23a57a311",
+      "type": "lists",
+      "attributes": {
+        "created-at": "2017-07-10T11:43:08.621Z",
+        "name": "Restos Paris",
+        "primary": false,
+        "privacy": "everyone"
+      },
+      "relationships": {
+        "user": {
+          "data": {
+            "id": "b871ecdf-f15c-43bf-b94f-abcbaab637ba",
+            "type": "users"
+          }
+        },
+        "savings": {
+          "data": [
+            {
+              "id": "5a61cbd9-aca2-4d6e-8084-997e57eef2a7",
+              "type": "savings"
+            },
+            {
+              "id": "85167bb2-cecc-480f-a251-e18d6f96f69f",
+              "type": "savings"
+            }
+          ]
+        }
+      },
+      "links": {
+        "self": "https://goodshitapp-staging.herokuapp.com/lists/4ce6d964-71e1-4938-aa41-55c23a57a311"
+      },
+      "meta": {
+        "savings-count": 2
+      }
+    },
+    {
+      "id": "845eaa5b-43f9-487b-b6d7-b402b13354d8",
+      "type": "places",
+      "attributes": {
+        "image": "https://lh3.googleusercontent.com/p/AF1QipMneUOPbTlaHU9_2disfFTc9Hl8a5EEoJmW-23c=s1600-w600",
+        "provider": "Google Places",
+        "subtitle": "15 Rue Beaugrenelle, 75015 Paris, France",
+        "title": "Chanthaboury",
+        "type": "Place",
+        "uid": "ChIJb1d1YAVw5kcRR2FJJPSb_Ck",
+        "url": null,
+        "location": "https://maps.google.com/?cid=3025464522569244999"
+      },
+      "links": {
+        "self": "https://goodshitapp-staging.herokuapp.com/items/845eaa5b-43f9-487b-b6d7-b402b13354d8"
+      },
+      "meta": {
+        "activities-count": 4
+      }
+    },
+    {
+      "id": "dc303a09-040e-4932-9784-be51e7035585",
+      "type": "places",
+      "attributes": {
+        "image": "https://lh3.googleusercontent.com/p/AF1QipPiuA92ivwuTiuCAjgCmfuvCdKpbXql_sTd5fXn=s1600-w600",
+        "provider": "Google Places",
+        "subtitle": "43 Rue Saint-Merri, 75004 Paris, France",
+        "title": "Café Beaubourg",
+        "type": "Place",
+        "uid": "ChIJJeb6GBxu5kcRk0LhccqQWaE",
+        "url": "http://cafebeaubourg.com/fr/",
+        "location": "https://maps.google.com/?cid=11626483112202027667"
+      },
+      "links": {
+        "self": "https://goodshitapp-staging.herokuapp.com/items/dc303a09-040e-4932-9784-be51e7035585"
+      },
+      "meta": {
+        "activities-count": 6
+      }
+    },
+    {
+      "id": "6e9127f5-cfe1-4825-86d6-725d50e834c8",
+      "type": "creative-works",
+      "attributes": {
+        "image": "https://images-eu.ssl-images-amazon.com/images/I/51MyPoth5XL._SL160_.jpg",
+        "provider": "Amazon",
+        "subtitle": "Stéphane Allix",
+        "title": "Le test : Une expérience inouïe, la preuve de l'après-vie ?",
+        "type": "CreativeWork",
+        "uid": "2226319085",
+        "url": "https://www.amazon.fr/test-exp%C3%A9rience-inou%C3%AFe-preuve-lapr%C3%A8s-vie/dp/2226319085?SubscriptionId=AKIAINT3BBO7BDHGXXGA&amp;tag=www1001stylos-21&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=2226319085"
+      },
+      "links": {
+        "self": "https://goodshitapp-staging.herokuapp.com/items/6e9127f5-cfe1-4825-86d6-725d50e834c8"
+      },
+      "meta": {
+        "activities-count": 6
+      }
+    },
+    {
+      "id": "9eccd24a-5756-4df6-9eb5-dde38c80a5b5",
+      "type": "lists",
+      "attributes": {
+        "created-at": "2017-06-07T12:33:10.748Z",
+        "name": "À lire absolument",
+        "primary": false,
+        "privacy": "everyone"
+      },
+      "relationships": {
+        "user": {
+          "data": {
+            "id": "b871ecdf-f15c-43bf-b94f-abcbaab637ba",
+            "type": "users"
+          }
+        },
+        "savings": {
+          "data": [
+            {
+              "id": "5bfb0ced-3d4b-4433-bef9-28560ef63186",
+              "type": "savings"
+            }
+          ]
+        }
+      },
+      "links": {
+        "self": "https://goodshitapp-staging.herokuapp.com/lists/9eccd24a-5756-4df6-9eb5-dde38c80a5b5"
+      },
+      "meta": {
+        "savings-count": 1
+      }
+    }
+  ],
+  "links": {
+    "self": "https://goodshitapp-staging.herokuapp.com/activities?page%5Bnumber%5D=0",
+    "first": "https://goodshitapp-staging.herokuapp.com/activities?page%5Bnumber%5D=0",
+    "next": "https://goodshitapp-staging.herokuapp.com/activities?page%5Bnumber%5D=1"
+  }
+}

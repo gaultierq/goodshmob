@@ -1,7 +1,11 @@
+// @flow
+
+import URL from "url-parse"
+import qs from "querystringify"
 
 let client, uid, accessToken;
 
-let apiEndpoint = "https://goodshitapp-staging.herokuapp.com/";
+const apiEndpoint = "https://goodshitapp-staging.herokuapp.com/";
 
 let headers = function () {
     let headers = {
@@ -15,8 +19,8 @@ let headers = function () {
     if (accessToken) headers['Access-Token'] = accessToken;
     return headers;
 };
-export function submit(route, method, body) {
-    let url = apiEndpoint + route;
+
+export function submit(url, method, body) {
     let options = Object.assign({
         method: method,
         headers: headers()
@@ -24,6 +28,38 @@ export function submit(route, method, body) {
 
     console.debug(`sending request url=${url}, options: ${JSON.stringify(options)}`);
     return fetch(url, options);
+}
+
+export class Call {
+
+    url: URL = new URL(apiEndpoint);
+    body: any;
+
+    withRoute(pathname:string) {
+        this.url = this.url.set('pathname', pathname);
+        return this;
+    }
+
+    withQuery(query) {
+
+        let q = qs.parse(this.url.query);
+
+
+        let newVar = Object.assign({}, q || {}, query);
+        this.url.set('query', newVar);
+        return this;
+    }
+
+    static parse(url) {
+        let result = new Call();
+        result.url = new URL(url);
+        return result;
+    }
+
+    get() {
+        let urlString = this.url.toString();
+        return xhr(urlString, 'GET', this.body);
+    }
 }
 
 let xhr = function (route, verb, body) {
@@ -43,13 +79,16 @@ let xhr = function (route, verb, body) {
         });
 };
 
+
+
+
 export function post(target, body) {
     return xhr(target, 'POST', body);
 }
 
-export function get(target, body) {
-    return xhr(target, 'GET', body);
-}
+// export function get(target, body) {
+//     return xhr(target, 'GET', body);
+// }
 
 //TODO: this is shit
 export function credentials(a, c, u) {

@@ -467,5 +467,8 @@
         "self": "https://goodshitapp-staging.herokuapp.com/activities?page%5Bnumber%5D=0",
         "first": "https://goodshitapp-staging.herokuapp.com/activities?page%5Bnumber%5D=0",
         "next": "https://goodshitapp-staging.herokuapp.com/activities?page%5Bnumber%5D=1"
+
+
+
     }
 }

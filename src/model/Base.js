@@ -4,7 +4,7 @@ export default class Base {
 
     id: String;
     type: String; //doesnt make sense though
-    links: string;
+    links: any;
 }
 
 class Source {
