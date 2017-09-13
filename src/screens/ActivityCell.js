@@ -45,23 +45,45 @@ export default class ActivityItem extends React.Component {
                         />
                         <View style={{flex: 1, marginLeft: 8}}>
                             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                                <Text style={{fontSize: 12, color:'blue'}}>{Model.User.fullname(user)}</Text>
-                                <Text style={{fontSize: 10, color:'#505050', marginLeft: 4}}>{TimeUtils.timeSince(Date.parse(activity.createdAt))}</Text>
+                                <TouchableOpacity><Text style={{
+                                    fontSize: 12,
+                                    color: 'blue'
+                                }}>{Model.User.fullname(user)}</Text></TouchableOpacity>
+                                <TouchableOpacity><Text style={{
+                                    fontSize: 10,
+                                    color: '#505050',
+                                    marginLeft: 4
+                                }}>{TimeUtils.timeSince(Date.parse(activity.createdAt))}</Text></TouchableOpacity>
                             </View>
-                            { !!target &&
+                            {!!target &&
                             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                                    <Text style={{fontSize: 11, color:'#505050', marginRight: 4}}>{i18n.t("activity_item.header.in")}</Text>
-                                    <Text style={{fontSize: 14, color: 'blue'}}>{targetName}</Text>
+                                <Text style={{
+                                    fontSize: 11,
+                                    color: '#505050',
+                                    marginRight: 4
+                                }}>{i18n.t("activity_item.header.in")}</Text>
+                                <TouchableOpacity><Text
+                                    style={{fontSize: 14, color: 'blue'}}>{targetName}</Text></TouchableOpacity>
 
                                 {
                                     target.primary ?
                                         <TouchableOpacity>
-                                            <Text style={{fontSize: 9, color: '#505050', padding: 5, borderRadius: 5,                                     borderWidth: 0.5,
-                                                borderColor: '#505050'}}>{i18n.t("activity_item.buttons.unfollow_list")}</Text>
+                                            <Text style={{
+                                                fontSize: 9,
+                                                color: '#505050',
+                                                padding: 5,
+                                                borderRadius: 5,
+                                                borderWidth: 0.5,
+                                                borderColor: '#505050'
+                                            }}>{i18n.t("activity_item.buttons.unfollow_list")}</Text>
                                         </TouchableOpacity>
                                         :
-                                        <TouchableOpacity style={{backgroundColor: "white", padding: 5, borderRadius: 5}}>
-                                            <Text style={{fontSize: 9, color: 'blue'}}>{i18n.t("activity_item.buttons.follow_list")}</Text>
+                                        <TouchableOpacity
+                                            style={{backgroundColor: "white", padding: 5, borderRadius: 5}}>
+                                            <Text style={{
+                                                fontSize: 9,
+                                                color: 'blue'
+                                            }}>{i18n.t("activity_item.buttons.follow_list")}</Text>
                                         </TouchableOpacity>
                                 }
 
@@ -86,53 +108,9 @@ export default class ActivityItem extends React.Component {
                 }}>
 
 
-                    <View style={{alignItems: 'center',}}>
-                        <Image
-                            source={{uri: image}}
-                            style={{
-                                alignSelf: 'center',
-                                height: 150,
-                                width: "100%",
-                            }}
-                        />
+                    {this.renderGoodshButton(image, likesCount)}
 
-                        <View style={
-                            {
-                                backgroundColor: "white",
-                                width: 60,
-                                height: 30,
-                                position: 'absolute',
-                                bottom: -15,
-                                borderRadius: 5,
-                                padding: 2.5,
 
-                            }
-                        }>
-                            <View style={
-                                {
-                                    width: "100%",
-                                    height: "100%",
-                                    borderRadius: 5,
-                                    flex: 1, flexDirection: 'row', justifyContent: 'center',
-                                    borderWidth: 0.5,
-                                    borderColor: '#d6d7da',
-                                    alignItems: 'center',
-                                    padding: 2.5,
-                                }
-                            }>
-                                <Image source={require('../img/mini-g-number.png')} resizeMode="contain"
-                                       style={{
-                                           width: 20,
-                                           height: 20,
-                                       }}
-                                />
-                                {!!likesCount && <Text style={{fontSize: 12, marginLeft: 3}}>{likesCount}</Text>}
-
-                            </View>
-
-                        </View>
-
-                    </View>
                     <View style={{padding: 15}}>
                         <Text style={{fontSize: 20, fontFamily: 'Chivo',}}>{resource.title}</Text>
                         <Text style={{fontSize: 12, color: '#505050'}}>{resource.subtitle}</Text>
@@ -156,6 +134,58 @@ export default class ActivityItem extends React.Component {
         )
     }
 
+    renderGoodshButton(image, likesCount) {
+        return <TouchableOpacity>
+            <View style={{alignItems: 'center',}}>
+                <Image
+                    source={{uri: image}}
+                    style={{
+                        alignSelf: 'center',
+                        height: 150,
+                        width: "100%",
+                    }}
+                />
+
+                <View style={
+                    {
+                        backgroundColor: "white",
+                        width: 60,
+                        height: 30,
+                        position: 'absolute',
+                        bottom: -15,
+                        borderRadius: 5,
+                        padding: 2.5,
+
+                    }
+                }>
+                    <View style={
+                        {
+                            width: "100%",
+                            height: "100%",
+                            borderRadius: 5,
+                            flex: 1, flexDirection: 'row', justifyContent: 'center',
+                            borderWidth: 0.5,
+                            borderColor: '#d6d7da',
+                            alignItems: 'center',
+                            padding: 2.5,
+                        }
+                    }>
+                        <Image source={require('../img/mini-g-number.png')} resizeMode="contain"
+                               style={{
+                                   width: 20,
+                                   height: 20,
+                               }}
+                        />
+                        {!!likesCount && <Text style={{fontSize: 12, marginLeft: 3}}>{likesCount}</Text>}
+
+                    </View>
+
+                </View>
+
+            </View>
+        </TouchableOpacity>;
+    }
+
     timeSince() {
 
     }
@@ -163,8 +193,10 @@ export default class ActivityItem extends React.Component {
 
     renderButton(img, text) {
         return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', padding: 6}}>
-            <Image source={img} style={{margin: 8}}/>
-            <Text style={{textAlign: 'center', fontSize: 10}}>{text}</Text>
+            <TouchableOpacity>
+                <Image source={img} style={{margin: 8}}/>
+                <Text style={{textAlign: 'center', fontSize: 10}}>{text}</Text>
+            </TouchableOpacity>
         </View>;
     }
 
