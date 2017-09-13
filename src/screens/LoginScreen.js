@@ -1,8 +1,8 @@
 'use strict';
-
+// @flow
 import React, {Component} from 'react';
 
-import {ActivityIndicatorIOS, Button, Image, StyleSheet, Text, View} from 'react-native';
+import {Button, Image, StyleSheet, Text, View, ActivityIndicator} from 'react-native';
 import * as appActions from "../actions/appActions"
 import {connect} from 'react-redux';
 import {LoginManager} from 'react-native-fbsdk';
@@ -29,8 +29,14 @@ import i18n from '../i18n/i18n'
 
 class Login extends Component {
 
+
+    state: {
+        loginInProgress: boolean;
+    };
+
     constructor(){
         super();
+        this.state = {loginInProgress: false};
     }
 
     render() {
@@ -60,6 +66,11 @@ class Login extends Component {
                         title={i18n.t('login_screen.facebook_signin')}
                         color="#40e7bb"
                         accessibilityLabel={i18n.t('login_screen.facebook_signin')}
+                        disabled={this.state.loginInProgress}
+                    />
+                    <ActivityIndicator
+                        animating = {this.state.loginInProgress}
+                        size = "small"
                     />
                     <Text>{i18n.t('login_screen.no_publication')}</Text>
                 </View>
@@ -67,32 +78,23 @@ class Login extends Component {
         );
     }
 
-    onLoginFinished(error, result) {
-        if (error) {
-            alert("login has error: " + result.error);
-        }
-        else if (result.isCancelled) {
-            alert("login is cancelled.");
-        }
-        else {
-            //this.performLogin();
-            this.props.dispatch(appActions.login());
-        }
-    }
-
     handleFacebookLogin () {
+        this.setState({loginInProgress: true});
+
         LoginManager.logInWithReadPermissions(['public_profile', 'email', 'user_friends'])
             .then(
                 result => {
                     if (result.isCancelled) {
                         console.log('Login cancelled')
                     } else {
-                        console.log('Login success with permissions: ' + result.grantedPermissions.toString());
-                        this.props.dispatch(appActions.login());
+                        console.log(`Login success with permissions: ${result.grantedPermissions ? result.grantedPermissions.toString() : 'null'}`);
+                        this.props.dispatch(appActions.login(() => this.setState({loginInProgress: false})));
                     }
+
                 },
                 error => {
                     console.log('Login fail with error: ' + error)
+                    this.setState({loginInProgress: false})
                 }
             )
     }

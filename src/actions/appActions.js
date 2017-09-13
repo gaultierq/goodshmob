@@ -42,12 +42,14 @@ export function changeAppRoot(root: string) {
     return {type: types.ROOT_CHANGED, root: root};
 }
 
-export function login() {
+export function login(callback?:Function) {
     return async (dispatch: any, getState: any) => {
         // login logic would go here, and when it's done, we switch app roots
 
         //TODO: handle errors
         await LoginManager.login();
+
+        callback && callback();
 
         dispatch(changeAppRoot('after-login'));
     };

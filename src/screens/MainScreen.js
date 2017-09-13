@@ -4,7 +4,6 @@ import React, {Component} from 'react';
 import {StyleSheet, View, FlatList, ImageBackground, RefreshControl, ActivityIndicator} from 'react-native';
 import  * as activitesActions from '../actions/activitiesActions'
 import {connect} from "react-redux";
-import * as Model from "../model"
 import ActivityItem from "./ActivityCell";
 
 class MainScreen extends Component {
@@ -14,11 +13,12 @@ class MainScreen extends Component {
     state: {
         loadingFirst: boolean;
         loadingMore: boolean;
+        loadedOnce: boolean;
     };
 
     constructor(){
         super();
-        this.state = {loadingFirst: false, loadingMore: false};
+        this.state = {loadingFirst: false, loadingMore: false, loadedOnce: false};
     }
 
     componentDidMount() {
@@ -37,8 +37,14 @@ class MainScreen extends Component {
         }));
     }
 
-    loadFirst(callback?) {
-        this.props.dispatch(activitesActions.fetchActivities(callback));
+    loadFirst() {
+        if (this.state.loadingFirst) return;
+        this.setState({loadingFirst: true});
+
+        this.props.dispatch(activitesActions.fetchActivities(
+            ()=> {
+                this.setState({loadingFirst: false, loadedOnce: true});
+            }));
     }
 
     onPressItem(id) {
@@ -61,6 +67,10 @@ class MainScreen extends Component {
                 <View style={{
 
                 }}>
+                    <ActivityIndicator
+                        animating = {!this.state.loadedOnce && this.state.loadingFirst}
+                        size = "large"
+                    />
 
                     <FlatList
                         data={activities}
@@ -76,6 +86,10 @@ class MainScreen extends Component {
                         onEndReachedThreshold={0}
                     />
 
+                    <ActivityIndicator
+                        animating = {this.state.loadingMore}
+                        size = "small"
+                    />
 
                 </View>
 
@@ -102,21 +116,10 @@ class MainScreen extends Component {
 
     onRefresh() {
         this.setState({loadingFirst: true});
-        this.loadFirst(()=> {
-            this.setState({loadingFirst: false});
-        });
+        this.loadFirst();
     }
 }
 
-
-const styles = StyleSheet.create ({
-    activityIndicator: {
-        // flex: 1,
-        // justifyContent: 'center',
-        // alignItems: 'center',
-        height: 80
-    }
-})
 
 const mapStateToProps = (state, ownProps) => ({
     activities: state.activities,
