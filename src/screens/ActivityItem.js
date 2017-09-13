@@ -110,7 +110,7 @@ export default class ActivityItem extends React.Component {
 
                     </View>
                     <View style={{padding: 15}}>
-                        <Text style={{fontSize: 20}}>{resource.title}</Text>
+                        <Text style={{fontSize: 20, fontFamily: 'Chivo',}}>{resource.title}</Text>
                         <Text style={{fontSize: 12, color: '#505050'}}>{resource.subtitle}</Text>
                     </View>
 

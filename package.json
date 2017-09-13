@@ -39,5 +39,8 @@
 		"setupFiles": [
 			"./config/testEnv.js"
 		]
+	},
+	"rnpm": {
+		"assets": ["src/assets/fonts"]
 	}
 }

@@ -52,6 +52,10 @@
 		D261BB129BE145FBBE97F010 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 61E1F585D8914B64BA2ED4CE /* Octicons.ttf */; };
 		E562BCD35F904331841C43E0 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7D9112FBAA7A42859CAEC569 /* SimpleLineIcons.ttf */; };
 		2CDEC027B0B94D4B8BC2F0EF /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AEA210FB7F134502882C575D /* Zocial.ttf */; };
+		119C101348C240859579E2D9 /* Chivo-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 535177D01D674E02A0CCBA0F /* Chivo-Bold.otf */; };
+		7D697178B03C425D8A5846F3 /* Chivo-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = AFFDDE367F6F409396393412 /* Chivo-Light.otf */; };
+		90C407EB6BAC424492F7C571 /* Chivo-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 224F1BE54A5D4D8AAC1B5B12 /* Chivo-Regular.ttf */; };
+		D7516C65F12E4CBA8A19DFB2 /* Edo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8BB56482BD4A4BA5A06EEF8F /* Edo.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -347,6 +351,10 @@
 		61E1F585D8914B64BA2ED4CE /* Octicons.ttf */ = {isa = PBXFileReference; name = "Octicons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		7D9112FBAA7A42859CAEC569 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; name = "SimpleLineIcons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		AEA210FB7F134502882C575D /* Zocial.ttf */ = {isa = PBXFileReference; name = "Zocial.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		535177D01D674E02A0CCBA0F /* Chivo-Bold.otf */ = {isa = PBXFileReference; name = "Chivo-Bold.otf"; path = "../src/assets/fonts/Chivo-Bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		AFFDDE367F6F409396393412 /* Chivo-Light.otf */ = {isa = PBXFileReference; name = "Chivo-Light.otf"; path = "../src/assets/fonts/Chivo-Light.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		224F1BE54A5D4D8AAC1B5B12 /* Chivo-Regular.ttf */ = {isa = PBXFileReference; name = "Chivo-Regular.ttf"; path = "../src/assets/fonts/Chivo-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		8BB56482BD4A4BA5A06EEF8F /* Edo.ttf */ = {isa = PBXFileReference; name = "Edo.ttf"; path = "../src/assets/fonts/Edo.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -629,6 +637,10 @@
 				61E1F585D8914B64BA2ED4CE /* Octicons.ttf */,
 				7D9112FBAA7A42859CAEC569 /* SimpleLineIcons.ttf */,
 				AEA210FB7F134502882C575D /* Zocial.ttf */,
+				535177D01D674E02A0CCBA0F /* Chivo-Bold.otf */,
+				AFFDDE367F6F409396393412 /* Chivo-Light.otf */,
+				224F1BE54A5D4D8AAC1B5B12 /* Chivo-Regular.ttf */,
+				8BB56482BD4A4BA5A06EEF8F /* Edo.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1070,6 +1082,10 @@
 				D261BB129BE145FBBE97F010 /* Octicons.ttf in Resources */,
 				E562BCD35F904331841C43E0 /* SimpleLineIcons.ttf in Resources */,
 				2CDEC027B0B94D4B8BC2F0EF /* Zocial.ttf in Resources */,
+				119C101348C240859579E2D9 /* Chivo-Bold.otf in Resources */,
+				7D697178B03C425D8A5846F3 /* Chivo-Light.otf in Resources */,
+				90C407EB6BAC424492F7C571 /* Chivo-Regular.ttf in Resources */,
+				D7516C65F12E4CBA8A19DFB2 /* Edo.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
