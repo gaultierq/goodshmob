@@ -22,6 +22,12 @@ export default {
         "send":"Send to another goodsher",
         "share":"Share elsewhere"
     },
+    "activity_item_buttons":{
+        "comment":"COMMENT",
+        "share":"SHARE",
+        "save":"SAVE",
+        "buy":"BUY",
+    },
     "activity":{
         "in_list":"%{activity}\nin %{list}",
         "to_user":"%{activity}\nto %{user}"

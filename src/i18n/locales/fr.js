@@ -22,6 +22,12 @@ export default {
         "send":"ENVOYER A UN AUTRE GOODSHER",
         "share":"ENVOYER SUR"
     },
+    "activity_item_buttons":{
+        "comment":"DONNER SON AVIS",
+        "share":"PARTAGER",
+        "save":"ENREGISTRER",
+        "buy":"ACHETER",
+    },
     "activity":{
         "in_list":"%{activity}\ndans %{list}",
         "to_user":"%{activity}\npour %{user}"

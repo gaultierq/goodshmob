@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Text, Image} from 'react-native';
 import * as Model from "../model"
+import i18n from '../i18n/i18n'
 
 export default class ActivityItem extends React.Component {
     _onPress = () => {
@@ -23,7 +24,7 @@ export default class ActivityItem extends React.Component {
             }}>
                 <View style={{marginLeft: cardMargin, marginRight: cardMargin}}>
 
-                    <View style={{flex: 1, flexDirection: 'row', }}>
+                    <View style={{flex: 1, flexDirection: 'row',}}>
                         <Image
                             source={{uri: user.image}}
                             style={{
@@ -32,7 +33,7 @@ export default class ActivityItem extends React.Component {
                                 borderRadius: 15
                             }}
                         />
-                        <View style={{ flex: 1, }}>
+                        <View style={{flex: 1,}}>
                             <Text>{Model.User.fullname(user)}</Text>
                             <Text>{`${target ? "in " + target.name : ''}`}</Text>
                         </View>
@@ -65,25 +66,12 @@ export default class ActivityItem extends React.Component {
                     <View style={{width: "100%", height: 1, backgroundColor: "#000"}}/>
 
 
-                    <View style={{flex: 1, flexDirection: 'row'}}>
+                    <View style={this.styles.buttonContainer}>
 
-                        {/*comment button*/}
-                        <View style={{flex: 1}}>
-                            <Image source={require('../img/close_circle.png')}/>
-                            <Text>{"Donner son avis"}</Text>
-                        </View>
-                        <View style={{flex: 1}}>
-                            <Image source={require('../img/close_circle.png')}/>
-                            <Text>{"Copier le lien"}</Text>
-                        </View>
-                        <View style={{flex: 1}}>
-                            <Image source={require('../img/close_circle.png')}/>
-                            <Text>{"Enregistrer"}</Text>
-                        </View>
-                        <View style={{flex: 1}}>
-                            <Image source={require('../img/close_circle.png')}/>
-                            <Text>{"Acheter"}</Text>
-                        </View>
+                        {this.renderButton(require('../img/comment.png'), i18n.t("activity_item_buttons.comment"))}
+                        {this.renderButton(require('../img/send.png'), i18n.t("activity_item_buttons.share"))}
+                        {this.renderButton(require('../img/save-icon.png'), i18n.t("activity_item_buttons.save"))}
+                        {this.renderButton(require('../img/buy-icon.png'), i18n.t("activity_item_buttons.buy"))}
 
                     </View>
 
@@ -92,4 +80,18 @@ export default class ActivityItem extends React.Component {
             </View>
         )
     }
+
+
+    renderButton(img, text) {
+        return <View style={this.styles.button}>
+            <Image source={img} style={{margin: 8}}/>
+            <Text style={this.styles.buttonText}>{text}</Text>
+        </View>;
+    }
+
+    styles = {
+        button: {flex: 1, justifyContent: 'center', alignItems: 'center', padding: 6},
+        buttonText: {textAlign: 'center', fontSize: 8},
+        buttonContainer: {flex: 1, flexDirection: 'row', justifyContent: 'space-between'}
+    };
 }
