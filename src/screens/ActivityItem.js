@@ -20,8 +20,8 @@ export default class ActivityItem extends React.Component {
         return (
             <View style={{
                 backgroundColor: "transparent",
-                marginTop: 20,
-                marginBottom: 20
+                marginTop: 10,
+                marginBottom: 10
             }}>
                 <View style={{margin: cardMargin, marginBottom: 8}}>
 
@@ -61,14 +61,54 @@ export default class ActivityItem extends React.Component {
                     shadowRadius: 2,
                 }}>
 
-                    <Image
-                        source={{uri: image}}
-                        style={{
-                            alignSelf: 'center',
-                            height: 150,
-                            width: "100%",
-                        }}
-                    />
+
+                    <View style={{alignItems: 'center',}}>
+                        <Image
+                            source={{uri: image}}
+                            style={{
+                                alignSelf: 'center',
+                                height: 150,
+                                width: "100%",
+                            }}
+                        />
+
+                        <View style={
+                            {
+                                backgroundColor: "white",
+                                width: 60,
+                                height: 30,
+                                position: 'absolute',
+                                bottom: -15,
+                                borderRadius: 5,
+                                padding: 2.5,
+
+                            }
+                        }>
+                            <View style={
+                                {
+                                    width: "100%",
+                                    height: "100%",
+                                    borderRadius: 5,
+                                    flex: 1, flexDirection: 'row', justifyContent: 'center',
+                                    borderWidth: 0.5,
+                                    borderColor: '#d6d7da',
+                                    alignItems: 'center',
+                                    padding: 2.5,
+                                }
+                            }>
+                                <Image source={require('../img/mini-g-number.png')} resizeMode="contain"
+                                       style={{
+                                               width: 20,
+                                               height: 20,
+                                           }}
+                                />
+
+                                <Text style={{fontSize: 10, }}>{"999"}</Text>
+                            </View>
+
+                        </View>
+
+                    </View>
                     <View style={{padding: 15}}>
                         <Text style={{fontSize: 20}}>{resource.title}</Text>
                         <Text style={{fontSize: 12, color: '#505050'}}>{resource.subtitle}</Text>
@@ -93,7 +133,7 @@ export default class ActivityItem extends React.Component {
     }
 
     timeSince() {
-        
+
     }
 
 
