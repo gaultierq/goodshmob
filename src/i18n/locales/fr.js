@@ -31,6 +31,8 @@ export default {
             "share":"PARTAGER",
             "save":"ENREGISTRER",
             "buy":"ACHETER",
+            "follow_list": "SUIVRE LA LISTE",
+            "unfollow_list": "NE PLUS SUIVRE",
         }
     },
     "activity":{

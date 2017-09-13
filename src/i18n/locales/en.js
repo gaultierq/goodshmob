@@ -31,6 +31,8 @@ export default {
             "share":"SHARE",
             "save":"SAVE",
             "buy":"BUY",
+            "follow_list": "FOLLOW LIST",
+            "unfollow_list": "UNFOLLOW LIST",
         }
     },
     "activity":{

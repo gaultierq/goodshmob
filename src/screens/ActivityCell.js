@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, Image} from 'react-native';
+import {StyleSheet, View, Text, Image, Button, TouchableOpacity} from 'react-native';
 import * as Model from "../model"
 import i18n from '../i18n/i18n'
 import * as TimeUtils from '../utils/TimeUtils'
@@ -21,7 +21,7 @@ export default class ActivityItem extends React.Component {
         if (target) {
             let count = target.meta ? target.meta["savings-count"] : 0;
             targetName = target.name;
-            if (count) targetName += targetName + " (" + count + ")"
+            if (count) targetName += " (" + count + ")"
         }
 
 
@@ -48,10 +48,24 @@ export default class ActivityItem extends React.Component {
                                 <Text style={{fontSize: 12, color:'blue'}}>{Model.User.fullname(user)}</Text>
                                 <Text style={{fontSize: 10, color:'#505050', marginLeft: 4}}>{TimeUtils.timeSince(Date.parse(activity.createdAt))}</Text>
                             </View>
-                            { !!targetName &&
+                            { !!target &&
                             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                                <Text style={{fontSize: 9, color:'#505050', marginRight: 4}}>{i18n.t("activity_item.header.in")}</Text>
-                                <Text style={{fontSize: 14, color: 'blue'}}>{targetName}</Text>
+                                    <Text style={{fontSize: 11, color:'#505050', marginRight: 4}}>{i18n.t("activity_item.header.in")}</Text>
+                                    <Text style={{fontSize: 14, color: 'blue'}}>{targetName}</Text>
+
+                                {
+                                    target.primary ?
+                                        <TouchableOpacity>
+                                            <Text style={{fontSize: 9, color: '#505050', padding: 5, borderRadius: 5,                                     borderWidth: 0.5,
+                                                borderColor: '#505050'}}>{i18n.t("activity_item.buttons.unfollow_list")}</Text>
+                                        </TouchableOpacity>
+                                        :
+                                        <TouchableOpacity style={{backgroundColor: "white", padding: 5, borderRadius: 5}}>
+                                            <Text style={{fontSize: 9, color: 'blue'}}>{i18n.t("activity_item.buttons.follow_list")}</Text>
+                                        </TouchableOpacity>
+                                }
+
+
                             </View>
                             }
                         </View>
