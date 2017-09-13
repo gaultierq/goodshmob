@@ -72,3 +72,12 @@ test('testing pagination', () => {
     console.log("next State: " + JSON.stringify(nextState));
 });
 
+
+test('testing meta', () => {
+    let result = Util.parse(require("./activities_fixtures2.json"));
+
+    let post: Models.Post = result[1];
+    expect(post).toBeInstanceOf(Models.Post);
+    expect(post.meta).toBeDefined();
+    expect(post.meta["comments-count"]).toBe(6);
+});

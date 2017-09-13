@@ -88,6 +88,11 @@ function createFlatObject(source): Base {
     if (source.attributes) {
         assignSafe(obj, source.attributes);
     }
+    if (source.meta) {
+        obj.meta = source.meta;
+    }
+
+
     return obj;
 }
 

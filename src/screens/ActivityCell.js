@@ -17,6 +17,9 @@ export default class ActivityItem extends React.Component {
         let image = resource ? resource.image : undefined;
 
         let cardMargin = 12;
+        let targetName = target ? target.name : '';
+
+        let likesCount = activity.meta ? activity.meta["likes-count"] : 0;
         return (
             <View style={{
                 backgroundColor: "transparent",
@@ -39,11 +42,12 @@ export default class ActivityItem extends React.Component {
                                 <Text style={{fontSize: 12, color:'blue'}}>{Model.User.fullname(user)}</Text>
                                 <Text style={{fontSize: 10, color:'#505050', marginLeft: 4}}>{TimeUtils.timeSince(Date.parse(activity.createdAt))}</Text>
                             </View>
-
+                            { !!targetName &&
                             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                                 <Text style={{fontSize: 9, color:'#505050', marginRight: 4}}>{i18n.t("activity_item.header.in")}</Text>
-                                <Text style={{fontSize: 14, color: 'blue'}}>{target ? target.name: ''}</Text>
+                                <Text style={{fontSize: 14, color: 'blue'}}>{targetName}</Text>
                             </View>
+                            }
                         </View>
 
                     </View>
@@ -98,12 +102,12 @@ export default class ActivityItem extends React.Component {
                             }>
                                 <Image source={require('../img/mini-g-number.png')} resizeMode="contain"
                                        style={{
-                                               width: 20,
-                                               height: 20,
-                                           }}
+                                           width: 20,
+                                           height: 20,
+                                       }}
                                 />
+                                {!!likesCount && <Text style={{fontSize: 12, marginLeft: 3}}>{likesCount}</Text>}
 
-                                <Text style={{fontSize: 10, }}>{"999"}</Text>
                             </View>
 
                         </View>

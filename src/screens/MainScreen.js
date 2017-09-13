@@ -5,7 +5,7 @@ import {View, FlatList, ImageBackground, RefreshControl} from 'react-native';
 import  * as activitesActions from '../actions/activitiesActions'
 import {connect} from "react-redux";
 import * as Model from "../model"
-import ActivityItem from "./ActivityItem";
+import ActivityItem from "./ActivityCell";
 
 class MainScreen extends Component {
 
