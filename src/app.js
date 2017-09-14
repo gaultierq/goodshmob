@@ -2,7 +2,7 @@
 import {createStore, applyMiddleware, combineReducers} from "redux";
 import {Provider} from "react-redux";
 import { Navigation } from 'react-native-navigation';
-import { registerScreens, LoginScreenConfig } from './screens';
+import { registerScreens} from './screens';
 import * as reducers from "./reducers";
 import  * as appActions from './actions/appActions'
 import thunk from "redux-thunk";
@@ -73,58 +73,85 @@ export default class App {
                         {
                             label: 'Home', // tab label as appears under the icon in iOS (optional)
                             screen: 'goodsh.MainScreen', // unique ID registered with Navigation.registerScreen
-                            icon: require('./img/goodsh.png'), // local image asset for the tab icon unselected state (optional on iOS)
+                            icon: require('./img/bottom_bar_home.png'), // local image asset for the tab icon unselected state (optional on iOS)
                             //selectedIcon: require('../img/one_selected.png'), // local image asset for the tab icon selected state (optional, iOS only. On Android, Use `tabBarSelectedButtonColor` instead)
-                            iconInsets: { // add this to change icon position (optional, iOS only).
-                                top: 6, // optional, default is 0.
-                                left: 0, // optional, default is 0.
-                                bottom: -6, // optional, default is 0.
-                                right: 0 // optional, default is 0.
-                            },
+                            // iconInsets: { // add this to change icon position (optional, iOS only).
+                            //     top: 6, // optional, default is 0.
+                            //     left: 0, // optional, default is 0.
+                            //     bottom: -6, // optional, default is 0.
+                            //     right: 0 // optional, default is 0.
+                            // },
                             title: 'Home', // title of the screen as appears in the nav bar (optional)
                             //titleImage: require('../img/titleImage.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
                             navigatorStyle: {}, // override the navigator style for the tab screen, see "Styling the navigator" below (optional),
-                            navigatorButtons: {} // override the nav buttons for the tab screen, see "Adding buttons to the navigator" below (optional)
+                            navigatorButtons: {}, // override the nav buttons for the tab screen, see "Adding buttons to the navigator" below (optional)
+                            titleImage: require('./img/screen_title_home.png'),
                         },
                         {
-                            label: 'Debug',
-                            screen: 'goodsh.DebugScreen',
-                            icon: require('./img/goodsh.png'),
+                            label: 'Search',
+                            screen: 'goodsh.SearchScreen',
+                            icon: require('./img/bottom_bar_search.png'),
+                            // selectedIcon: require('../img/two_selected.png'),
+                            title: 'Search'
+                        },
+                        {
+                            label: 'Add',
+                            screen: 'goodsh.AddScreen',
+                            icon: require('./img/bottom_bar_add.png'),
+                            // selectedIcon: require('../img/two_selected.png'),
+                            title: 'Add'
+                        },
+                        {
+                            label: 'Notif',
+                            screen: 'goodsh.NotifScreen',
+                            icon: require('./img/bottom_bar_notif.png'),
+                            // selectedIcon: require('../img/two_selected.png'),
+                            title: 'Notif'
+                        },
+                        {
+                            label: 'Ask',
+                            screen: 'goodsh.AskScreen',
+                            icon: require('./img/bottom_bar_ask.png'),
                             // selectedIcon: require('../img/two_selected.png'),
                             title: 'Debug'
-                        }
+                        },
+                        // {
+                        //     label: 'Debug',
+                        //     screen: 'goodsh.DebugScreen',
+                        //     icon: require('./img/goodsh.png'),
+                        //     // selectedIcon: require('../img/two_selected.png'),
+                        //     title: 'Debug'
+                        // }
                     ],
                     tabsStyle: { // optional, add this if you want to style the tab bar beyond the defaults
-                        tabBarButtonColor: '#ffff00', // optional, change the color of the tab icons and text (also unselected)
-                        tabBarSelectedButtonColor: '#ff9900', // optional, change the color of the selected tab icon and text (only selected)
-                        tabBarBackgroundColor: '#551A8B', // optional, change the background color of the tab bar
-                        //initialTabIndex: 1, // optional, the default selected bottom tab. Default: 0
+                        tabBarButtonColor: '#000', // optional, change the color of the tab icons and text (also unselected)
+                        tabBarSelectedButtonColor: '#40E7BB', // optional, change the color of the selected tab icon and text (only selected)
                     },
                     appStyle: {
                         orientation: 'portrait', // Sets a specific orientation to the entire app. Default: 'auto'. Supported values: 'auto', 'landscape', 'portrait'
                         bottomTabBadgeTextColor: 'red', // Optional, change badge text color. Android only
                         bottomTabBadgeBackgroundColor: 'green' // Optional, change badge background color. Android only
                     },
-                    // drawer: { // optional, add this if you want a side menu drawer in your app
-                    //     left: { // optional, define if you want a drawer from the left
-                    //         screen: 'example.FirstSideMenu', // unique ID registered with Navigation.registerScreen
-                    //         passProps: {} // simple serializable object that will pass as props to all top screens (optional)
-                    //     },
-                    //     right: { // optional, define if you want a drawer from the right
-                    //         screen: 'example.SecondSideMenu', // unique ID registered with Navigation.registerScreen
-                    //         passProps: {} // simple serializable object that will pass as props to all top screens (optional)
-                    //     },
-                    //     style: { // ( iOS only )
-                    //         drawerShadow: true, // optional, add this if you want a side menu drawer shadow
-                    //         contentOverlayColor: 'rgba(0,0,0,0.25)', // optional, add this if you want a overlay color when drawer is open
-                    //         leftDrawerWidth: 50, // optional, add this if you want a define left drawer width (50=percent)
-                    //         rightDrawerWidth: 50 // optional, add this if you want a define right drawer width (50=percent)
-                    //     },
-                    //     type: 'MMDrawer', // optional, iOS only, types: 'TheSideBar', 'MMDrawer' default: 'MMDrawer'
-                    //     animationType: 'door', //optional, iOS only, for MMDrawer: 'door', 'parallax', 'slide', 'slide-and-scale'
-                    //     // for TheSideBar: 'airbnb', 'facebook', 'luvocracy','wunder-list'
-                    //     disableOpenGesture: false // optional, can the drawer be opened with a swipe instead of button
-                    // },
+                    drawer: { // optional, add this if you want a side menu drawer in your app
+                        left: { // optional, define if you want a drawer from the left
+                            screen: 'goodsh.CommunityScreen', // unique ID registered with Navigation.registerScreen
+                            passProps: {} // simple serializable object that will pass as props to all top screens (optional)
+                        },
+                        right: { // optional, define if you want a drawer from the right
+                            screen: 'goodsh.LineUpScreen', // unique ID registered with Navigation.registerScreen
+                            passProps: {} // simple serializable object that will pass as props to all top screens (optional)
+                        },
+                        style: { // ( iOS only )
+                            drawerShadow: true, // optional, add this if you want a side menu drawer shadow
+                            contentOverlayColor: 'rgba(0,0,0,0.25)', // optional, add this if you want a overlay color when drawer is open
+                            leftDrawerWidth: 100, // optional, add this if you want a define left drawer width (50=percent)
+                            rightDrawerWidth: 100 // optional, add this if you want a define right drawer width (50=percent)
+                        },
+                        type: 'MMDrawer', // optional, iOS only, types: 'TheSideBar', 'MMDrawer' default: 'MMDrawer'
+                        animationType: 'door', //optional, iOS only, for MMDrawer: 'door', 'parallax', 'slide', 'slide-and-scale'
+                        // for TheSideBar: 'airbnb', 'facebook', 'luvocracy','wunder-list'
+                        disableOpenGesture: false // optional, can the drawer be opened with a swipe instead of button
+                    },
                     passProps: {}, // simple serializable object that will pass as props to all top screens (optional)
                     //animationType: 'slide-down' // optional, add transition animation to root change: 'none', 'slide-down', 'fade'
                 });

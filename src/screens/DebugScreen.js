@@ -8,7 +8,7 @@ class DebugScreen extends Component {
 
     constructor(){
         super();
-        this.state = {text: ":)"};
+        this.state = {text: ""};
     }
 
     render() {

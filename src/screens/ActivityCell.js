@@ -148,7 +148,7 @@ export default class ActivityItem extends React.Component {
 
                 <View style={
                     {
-                        backgroundColor: "white",
+                        backgroundColor : "white",
                         width: 60,
                         height: 30,
                         position: 'absolute',
