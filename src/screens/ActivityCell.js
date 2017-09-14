@@ -26,6 +26,9 @@ export default class ActivityItem extends React.Component {
 
 
         let likesCount = activity.meta ? activity.meta["likes-count"] : 0;
+        let blue = '#408be7';
+        let grey1 = '#767676';
+        let grey2 = '#AAAAAA';
         return (
             <View style={{
                 backgroundColor: "transparent",
@@ -45,36 +48,43 @@ export default class ActivityItem extends React.Component {
                         />
                         <View style={{flex: 1, marginLeft: 8}}>
                             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+                                <TouchableOpacity>
+                                    <Text style={{
+                                        fontSize: 11,
+                                        color: blue
+                                    }}>{Model.User.fullname(user)}</Text>
+                                </TouchableOpacity>
                                 <TouchableOpacity><Text style={{
-                                    fontSize: 12,
-                                    color: 'blue'
-                                }}>{Model.User.fullname(user)}</Text></TouchableOpacity>
-                                <TouchableOpacity><Text style={{
-                                    fontSize: 10,
-                                    color: '#505050',
+                                    fontSize: 9,
+                                    color: grey1,
                                     marginLeft: 4
                                 }}>{TimeUtils.timeSince(Date.parse(activity.createdAt))}</Text></TouchableOpacity>
                             </View>
                             {!!target &&
                             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                                 <Text style={{
-                                    fontSize: 11,
-                                    color: '#505050',
+                                    fontSize: 9,
+                                    color: grey1,
                                     marginRight: 4
                                 }}>{i18n.t("activity_item.header.in")}</Text>
-                                <TouchableOpacity><Text
-                                    style={{fontSize: 14, color: 'blue'}}>{targetName}</Text></TouchableOpacity>
+                                <TouchableOpacity>
+                                    <Text
+                                        style={{fontSize: 14, color: blue}}>
+                                        {targetName}
+                                    </Text>
+                                </TouchableOpacity>
 
                                 {
                                     target.primary ?
                                         <TouchableOpacity>
                                             <Text style={{
                                                 fontSize: 9,
-                                                color: '#505050',
+                                                fontFamily: 'Chivo',
+                                                color: grey1,
                                                 padding: 5,
                                                 borderRadius: 5,
                                                 borderWidth: 0.5,
-                                                borderColor: '#505050'
+                                                borderColor: grey1
                                             }}>{i18n.t("activity_item.buttons.unfollow_list")}</Text>
                                         </TouchableOpacity>
                                         :
@@ -82,7 +92,8 @@ export default class ActivityItem extends React.Component {
                                             style={{backgroundColor: "white", padding: 5, borderRadius: 5}}>
                                             <Text style={{
                                                 fontSize: 9,
-                                                color: 'blue'
+                                                fontFamily: 'Chivo',
+                                                color: blue
                                             }}>{i18n.t("activity_item.buttons.follow_list")}</Text>
                                         </TouchableOpacity>
                                 }
@@ -112,8 +123,8 @@ export default class ActivityItem extends React.Component {
 
 
                     <View style={{padding: 15}}>
-                        <Text style={{fontSize: 20, fontFamily: 'Chivo',}}>{resource.title}</Text>
-                        <Text style={{fontSize: 12, color: '#505050'}}>{resource.subtitle}</Text>
+                        <Text style={{fontSize: 18, fontFamily: 'Chivo-Light', }}>{resource.title}</Text>
+                        <Text style={{fontSize: 12, color: grey2}}>{resource.subtitle}</Text>
                     </View>
 
                     <View style={{width: "100%", height: StyleSheet.hairlineWidth, backgroundColor: "#505050"}}/>
@@ -194,8 +205,8 @@ export default class ActivityItem extends React.Component {
     renderButton(img, text) {
         return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', padding: 6}}>
             <TouchableOpacity>
-                <Image source={img} style={{margin: 8}}/>
-                <Text style={{textAlign: 'center', fontSize: 10}}>{text}</Text>
+                <Image source={img} style={{width: 16, height: 16, margin: 8}}/>
+                <Text style={{fontFamily: 'Chivo', textAlign: 'center', fontSize: 10}}>{text}</Text>
             </TouchableOpacity>
         </View>;
     }

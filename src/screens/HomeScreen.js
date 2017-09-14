@@ -23,7 +23,6 @@ class HomeScreen extends Component {
         ],
     };
 
-
     keyExtractor = (item, index) => item.id;
 
 
@@ -107,7 +106,7 @@ class HomeScreen extends Component {
                 }}
             >
                 <View style={{
-
+                    marginTop: 50
                 }}>
                     <ActivityIndicator
                         animating = {!this.state.loadedOnce && this.state.loadingFirst}
