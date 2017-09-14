@@ -107,7 +107,8 @@ export default class App {
                     },
                     drawer: { // optional, add this if you want a side menu drawer in your app
                         left: { // optional, define if you want a drawer from the left
-                            screen: 'goodsh.CommunityScreen', // unique ID registered with Navigation.registerScreen
+                            // screen: 'goodsh.CommunityScreen',
+                            screen: 'goodsh.DebugScreen', // unique ID registered with Navigation.registerScreen
                             passProps: {} // simple serializable object that will pass as props to all top screens (optional)
                         },
                         right: { // optional, define if you want a drawer from the right
@@ -121,7 +122,7 @@ export default class App {
                             rightDrawerWidth: 100 // optional, add this if you want a define right drawer width (50=percent)
                         },
                         type: 'MMDrawer', // optional, iOS only, types: 'TheSideBar', 'MMDrawer' default: 'MMDrawer'
-                        animationType: 'door', //optional, iOS only, for MMDrawer: 'door', 'parallax', 'slide', 'slide-and-scale'
+                        animationType: 'slide-and-scale', //optional, iOS only, for MMDrawer: 'door', 'parallax', 'slide', 'slide-and-scale'
                         // for TheSideBar: 'airbnb', 'facebook', 'luvocracy','wunder-list'
                         disableOpenGesture: false // optional, can the drawer be opened with a swipe instead of button
                     },

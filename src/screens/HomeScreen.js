@@ -5,6 +5,7 @@ import {StyleSheet, View, FlatList, ImageBackground, RefreshControl, ActivityInd
 import  * as activitesActions from '../actions/activitiesActions'
 import {connect} from "react-redux";
 import ActivityItem from "./ActivityCell";
+import * as UI from "./UIStyles"
 
 class HomeScreen extends Component {
 
@@ -23,6 +24,8 @@ class HomeScreen extends Component {
         ],
     };
 
+    static navigatorStyle = UI.NavStyles;
+
     keyExtractor = (item, index) => item.id;
 
 
@@ -32,11 +35,6 @@ class HomeScreen extends Component {
         loadedOnce: boolean;
     };
 
-    static navigatorStyle = {
-        drawUnderNavBar: true,
-        navBarTranslucent: true,
-        navBarButtonColor: 'black',
-    };
 
     constructor(props){
         super();
@@ -107,7 +105,6 @@ class HomeScreen extends Component {
             >
 
                 <View style={{
-                    marginTop: 50
                 }}>
                     <ActivityIndicator
                         animating = {!this.state.loadedOnce && this.state.loadingFirst}
