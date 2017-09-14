@@ -105,6 +105,7 @@ class HomeScreen extends Component {
                     justifyContent: 'center',
                 }}
             >
+
                 <View style={{
                     marginTop: 50
                 }}>

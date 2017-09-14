@@ -205,7 +205,7 @@ export default class ActivityItem extends React.Component {
     renderButton(img, text) {
         return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', padding: 6}}>
             <TouchableOpacity>
-                <Image source={img} style={{width: 16, height: 16, margin: 8}}/>
+                <Image source={img} style={{width: 16, height: 16, margin: 8, resizeMode: 'contain'}}/>
                 <Text style={{fontFamily: 'Chivo', textAlign: 'center', fontSize: 10}}>{text}</Text>
             </TouchableOpacity>
         </View>;
