@@ -72,6 +72,77 @@ import com.android.build.OutputFile
  * ]
  */
 
+
+project.ext.react = [
+        // the name of the generated asset file containing your JS bundle
+        bundleAssetName: "index.android.bundle",
+
+        // the entry file for bundle generation
+        entryFile: "index.android.js",
+
+        // whether to bundle JS and assets in debug mode
+        bundleInDebug: false,
+
+        // whether to bundle JS and assets in debug mode
+        bundleInDev: true,
+
+        // whether to bundle JS and assets in release mode
+        bundleInRelease: true,
+
+        // whether to bundle JS and assets in another build variant (if configured).
+        // See http://tools.android.com/tech-docs/new-build-system/user-guide#TOC-Build-Variants
+        // The configuration property can be in the following formats
+        //         'bundleIn${productFlavor}${buildType}'
+        //         'bundleIn${buildType}'
+        // bundleInFreeDebug: true,
+        // bundleInPaidRelease: true,
+        // bundleInBeta: true,
+
+        // whether to disable dev mode in custom build variants (by default only disabled in release)
+        // for example: to disable dev mode in the staging build type (if configured)
+        devDisabledInStaging: true,
+        // The configuration property can be in the following formats
+        //         'devDisabledIn${productFlavor}${buildType}'
+        //         'devDisabledIn${buildType}'
+
+        // the root of your project, i.e. where "package.json" lives
+        root: "../../",
+
+        // where to put the JS bundle asset in debug mode
+        jsBundleDirDebug: "$buildDir/intermediates/assets/debug",
+
+        // where to put the JS bundle asset in debug mode
+        jsBundleDirDev: "$buildDir/intermediates/assets/dev",
+
+        // where to put the JS bundle asset in release mode
+        jsBundleDirRelease: "$buildDir/intermediates/assets/release",
+
+        // where to put drawable resources / React Native assets, e.g. the ones you use via
+        // require('./image.png')), in debug mode
+        resourcesDirDebug: "$buildDir/intermediates/res/merged/debug",
+
+        resourcesDirDev: "$buildDir/intermediates/res/merged/dev",
+
+        // where to put drawable resources / React Native assets, e.g. the ones you use via
+        // require('./image.png')), in release mode
+        resourcesDirRelease: "$buildDir/intermediates/res/merged/release",
+
+        // by default the gradle tasks are skipped if none of the JS files or assets change; this means
+        // that we don't look at files in android/ or ios/ to determine whether the tasks are up to
+        // date; if you have any other folders that you want to ignore for performance reasons (gradle
+        // indexes the entire tree), add them here. Alternatively, if you have JS files in android/
+        // for example, you might want to remove it from here.
+        inputExcludes: ["android/**", "ios/**"],
+
+        // override which node gets called and with what additional arguments
+        nodeExecutableAndArgs: ["node"],
+
+        // supply additional arguments to the packager
+        extraPackagerArgs: []
+]
+
+
+
 apply from: "../../node_modules/react-native/react.gradle"
 
 /**
@@ -111,12 +182,54 @@ android {
             include "armeabi-v7a", "x86"
         }
     }
+
+
+    signingConfigs {
+        release {
+            File propFile = rootProject.file("release.properties")
+            if (propFile.exists()) {
+                Properties releaseProps = new Properties()
+                releaseProps.load(new FileInputStream(propFile))
+                if (releaseProps.getProperty("keyStore", "") != "") {
+                    storeFile rootProject.file(releaseProps.getProperty("keyStore"))
+                    storePassword releaseProps.getProperty("keyStorePassword")
+                    keyAlias releaseProps.getProperty("keyAlias")
+                    keyPassword releaseProps.getProperty("keyAliasPassword")
+                }
+            }
+        }
+
+        dev {
+            keyAlias 'goodsh-dev'
+            keyPassword 'goodsh-dev'
+            storeFile rootProject.file("keystores/goodsh-dev.keystore")
+            storePassword 'goodsh-dev'
+        }
+    }
+
     buildTypes {
+
+        dev {
+            minifyEnabled false
+            useProguard false
+            signingConfig signingConfigs.dev
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            applicationIdSuffix ".dev"
+//            debuggable true
+//            buildConfigField "boolean", "DISPLAY_DEBUG_BUTTON", "true"
+//            buildConfigField "boolean", "DISABLE_HOCKEYAPP_UPDATE", "false"
+//            buildConfigField "boolean", "DISABLE_HOCKEYAPP_TRACKING", "false"
+//            manifestPlaceholders = [HOCKEYAPP_APP_ID: ""]
+            //config api client
+
+
+        }
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->
         variant.outputs.each { output ->

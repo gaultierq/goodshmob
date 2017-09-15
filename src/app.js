@@ -49,8 +49,6 @@ export default class App {
                     screen: {
                         label: 'Login',
                         screen: 'goodsh.LoginScreen',
-                        icon: require('./img/profil.png'),
-                        //selectedIcon: require('../img/two_selected.png'), // iOS only
                         navigatorStyle: {
                             navBarHidden: true,
                         }
