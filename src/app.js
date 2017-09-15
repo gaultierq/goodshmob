@@ -7,6 +7,8 @@ import * as reducers from "./reducers";
 import  * as appActions from './actions/appActions'
 import thunk from "redux-thunk";
 import logger from 'redux-logger'
+import codePush from "react-native-code-push";
+
 
 //see the network requests in the debugger
 //TODO: doesnt work yet
@@ -22,12 +24,16 @@ const store = createStoreWithMiddleware(reducer);
 registerScreens(store, Provider);
 
 
-
 export default class App {
     constructor() {
         // since react-redux only works on components, we need to subscribe this class manually
         store.subscribe(this.onStoreUpdate.bind(this));
         store.dispatch(appActions.appInitialized());
+
+        codePush.sync({
+            updateDialog: true,
+            installMode: codePush.InstallMode.IMMEDIATE
+        });
 
     }
 
