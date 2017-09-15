@@ -3720,8 +3720,8 @@ react-native-i18n@^2.0.5:
     i18n-js "github:fnando/i18n-js#v3.0.1"
 
 react-native-navigation@^1.1.212:
-  version "1.1.219"
-  resolved "https://registry.yarnpkg.com/react-native-navigation/-/react-native-navigation-1.1.219.tgz#3d25dc0a6973d5e4d1c808a12c550c53a89d0e7d"
+  version "1.1.226"
+  resolved "https://registry.yarnpkg.com/react-native-navigation/-/react-native-navigation-1.1.226.tgz#a5ee6b3ea9ede70c67f5632f2d2b0851fdc3ee30"
   dependencies:
     lodash "4.x.x"
 

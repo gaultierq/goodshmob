@@ -1,4 +1,4 @@
-package com.goodshmob;
+package it.goodsh.mob;
 
 import com.facebook.FacebookSdk;
 import com.facebook.CallbackManager;
