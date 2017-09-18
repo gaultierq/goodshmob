@@ -59,40 +59,22 @@ export default class ActivityItem extends React.Component {
                             </View>
                             {!!target &&
                             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                                <Text style={{
-                                    fontSize: 9,
-                                    color: UI.Colors.grey1,
-                                    marginRight: 4
-                                }}>{i18n.t("activity_item.header.in")}</Text>
-                                <TouchableOpacity>
-                                    <Text
-                                        style={{fontSize: 14, color: UI.Colors.blue}}>
-                                        {targetName}
-                                    </Text>
-                                </TouchableOpacity>
+                                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+                                    <Text style={{
+                                        fontSize: 9,
+                                        color: UI.Colors.grey1,
+                                        marginRight: 4
+                                    }}>{i18n.t("activity_item.header.in")}</Text>
+                                    <TouchableOpacity>
+                                        <Text
+                                            style={{fontSize: 14, color: UI.Colors.blue}}>
+                                            {targetName}
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
 
                                 {
-                                    target.primary ?
-                                        <TouchableOpacity>
-                                            <Text style={{
-                                                fontSize: 9,
-                                                fontFamily: 'Chivo',
-                                                color: UI.Colors.grey1,
-                                                padding: 5,
-                                                borderRadius: 5,
-                                                borderWidth: 0.5,
-                                                borderColor: UI.Colors.grey1
-                                            }}>{i18n.t("activity_item.buttons.unfollow_list")}</Text>
-                                        </TouchableOpacity>
-                                        :
-                                        <TouchableOpacity
-                                            style={{backgroundColor: "white", padding: 5, borderRadius: 5}}>
-                                            <Text style={{
-                                                fontSize: 9,
-                                                fontFamily: 'Chivo',
-                                                color: UI.Colors.blue
-                                            }}>{i18n.t("activity_item.buttons.follow_list")}</Text>
-                                        </TouchableOpacity>
+                                    this.renderFollowButton(target)
                                 }
 
 
@@ -142,6 +124,30 @@ export default class ActivityItem extends React.Component {
         )
     }
 
+    renderFollowButton(target) {
+        return target.primary ?
+            <TouchableOpacity>
+                <Text style={{
+                    fontSize: 9,
+                    fontFamily: 'Chivo',
+                    color: UI.Colors.grey1,
+                    padding: 5,
+                    borderRadius: 5,
+                    borderWidth: 0.5,
+                    borderColor: UI.Colors.grey1
+                }}>{i18n.t("activity_item.buttons.unfollow_list")}</Text>
+            </TouchableOpacity>
+            :
+            <TouchableOpacity
+                style={{backgroundColor: "white", padding: 5, borderRadius: 5}}>
+                <Text style={{
+                    fontSize: 9,
+                    fontFamily: 'Chivo',
+                    color: UI.Colors.blue
+                }}>{i18n.t("activity_item.buttons.follow_list")}</Text>
+            </TouchableOpacity>;
+    }
+
     renderGoodshButton(image, likesCount) {
         return <View style={{alignItems: 'center',}}>
             <Image
@@ -152,8 +158,7 @@ export default class ActivityItem extends React.Component {
                     width: "100%",
                 }}
             />
-
-            <View style={
+            <TouchableOpacity style={
                 {
                     backgroundColor : "white",
                     width: 60,
@@ -186,8 +191,7 @@ export default class ActivityItem extends React.Component {
                     {!!likesCount && <Text style={{fontSize: 12, marginLeft: 3}}>{likesCount}</Text>}
 
                 </View>
-
-            </View>
+            </TouchableOpacity>
 
         </View>
     }
