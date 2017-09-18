@@ -29,7 +29,7 @@ class LoginManager {
 
                             console.log(`auth headers found: client=${client}, uid=${uid}, access-token=${accessToken} `);
 
-                            Api.credentials(client, uid, accessToken);
+                            Api.credentials(accessToken, client, uid);
 
                             AsyncStorage.multiSet([
                                 [buildPersistentKey(Persist.CLIENT_KEY), client],
@@ -52,7 +52,7 @@ class LoginManager {
 
                                 this.user = u;
 
-                                resolve();
+                                resolve(u);
                             }
                         )
                         .catch(() => this.logout())
@@ -65,7 +65,7 @@ class LoginManager {
     static logout() {
         FacebookLoginManager.logOut();
         //store("user", null);
-        AsyncStorage.removeItem(buildPersistentKey("user"));
+        AsyncStorage.clear();
         this.user = null;
     }
 

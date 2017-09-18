@@ -20,17 +20,17 @@ export function fetchActivities(callback?) {
     };
 }
 
-export function fetchMoreActivities(nextUrl:string, callback?) {
+export function fetchMoreActivities(nextUrl:string, onFinished?) {
     return async (dispatch, getState) => {
 
         let call = new Api.Call.parse(nextUrl)
             .withQuery({include: "user,resource,target"});
 
-        submit(call, dispatch, callback);
+        submit(call, dispatch, onFinished);
     };
 }
 
-let submit = function (call, dispatch, callback) {
+let submit = function (call, dispatch, onFinished) {
     call.get()
         .then((response) => {
 
@@ -41,8 +41,14 @@ let submit = function (call, dispatch, callback) {
 
 
 
-            callback && callback();
-        });
+
+        })
+        .catch((err) => {
+            console.warn(`error while fetching activities: ${JSON.stringify(err)}`)
+        })
+        .then(() => {
+            onFinished && onFinished();
+    });
 };
 
 

@@ -2,7 +2,7 @@
 // @flow
 import React, {Component} from 'react';
 
-import {Button, Image, StyleSheet, Text, View, ActivityIndicator} from 'react-native';
+import {Button, ImageBackground, Image, StyleSheet, Text, View, ActivityIndicator} from 'react-native';
 import * as appActions from "../actions/appActions"
 import {connect} from 'react-redux';
 import {LoginManager} from 'react-native-fbsdk';
@@ -41,7 +41,7 @@ class Login extends Component {
 
     render() {
         return (
-            <Image
+            <ImageBackground
                 source={require('../img/welcome_screen.jpg')}
                 style={{
                     flex: 1,
@@ -74,7 +74,7 @@ class Login extends Component {
                     />
                     <Text>{i18n.t('login_screen.no_publication')}</Text>
                 </View>
-            </Image>
+            </ImageBackground>
         );
     }
 

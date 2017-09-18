@@ -4,6 +4,7 @@ import {Provider} from "react-redux";
 import { Navigation } from 'react-native-navigation';
 import { registerScreens} from './screens';
 import * as reducers from "./reducers";
+import {createWithReducers} from "./reducers/app";
 import  * as appActions from './actions/appActions'
 import thunk from "redux-thunk";
 import logger from 'redux-logger'
@@ -16,7 +17,10 @@ import codePush from "react-native-code-push";
 
 // redux related book keeping
 const createStoreWithMiddleware = applyMiddleware(thunk, logger)(createStore);
-const reducer = combineReducers(reducers);
+let appReducers = combineReducers(reducers);
+
+const reducer = createWithReducers(appReducers);
+
 const store = createStoreWithMiddleware(reducer);
 
 
@@ -38,105 +42,101 @@ export default class App {
     }
 
     onStoreUpdate() {
-        const {root} = store.getState().app;
-        // handle a root change
-        // if your app doesn't change roots in runtime, you can remove onStoreUpdate() altogether
-        if (this.currentRoot != root) {
-            this.currentRoot = root;
-            this.startApp(root);
+        const {currentUser} = store.getState().app;
+
+        let logged = !!currentUser;
+
+        if (this.logged !== logged) {
+            this.logged = logged;
+            this.startApp(logged);
         }
     }
 
-    startApp(root) {
+    startApp(logged) {
 
-        switch (root) {
-            case 'login':
-                Navigation.startSingleScreenApp({
-                    screen: {
-                        label: 'Login',
-                        screen: 'goodsh.LoginScreen',
-                        navigatorStyle: {
-                            navBarHidden: true,
-                        }
+        if (!logged) {
+            Navigation.startSingleScreenApp({
+                screen: {
+                    label: 'Login',
+                    screen: 'goodsh.LoginScreen',
+                    navigatorStyle: {
+                        navBarHidden: true,
                     }
-                });
-                return;
-            case 'after-login':
+                }
+            });
+        } else {
 
-                Navigation.startTabBasedApp({
-                    tabs: [
-                        {
-                            label: 'Home', // tab label as appears under the icon in iOS (optional)
-                            screen: 'goodsh.HomeScreen', // unique ID registered with Navigation.registerScreen
-                            icon: require('./img/bottom_bar_home.png'), // local image asset for the tab icon unselected state (optional on iOS)
-                            title: 'Home', // title of the screen as appears in the nav bar (optional)
-                            titleImage: require('./img/screen_title_home.png'),
-                        },
-                        {
-                            label: 'Search',
-                            screen: 'goodsh.SearchScreen',
-                            icon: require('./img/bottom_bar_search.png'),
-                            title: 'Search'
-                        },
-                        {
-                            label: 'Add',
-                            screen: 'goodsh.AddScreen',
-                            icon: require('./img/bottom_bar_add.png'),
-                            title: 'Add'
-                        },
-                        {
-                            label: 'Notif',
-                            screen: 'goodsh.NotifScreen',
-                            icon: require('./img/bottom_bar_notif.png'),
-                            title: 'Notif'
-                        },
-                        {
-                            label: 'Ask',
-                            screen: 'goodsh.AskScreen',
-                            icon: require('./img/bottom_bar_ask.png'),
-                            title: 'Debug'
-                        },
-                    ],
-                    tabsStyle: { // optional, add this if you want to style the tab bar beyond the defaults
-                        tabBarButtonColor: '#000', // optional, change the color of the tab icons and text (also unselected)
-                        tabBarSelectedButtonColor: '#40E7BB', // optional, change the color of the selected tab icon and text (only selected)
-                        tabBarBackgroundColor: 'white',
-                        forceTitlesDisplay: false,
-                        tabBarShowLabels: 'hidden',
+            Navigation.startTabBasedApp({
+                tabs: [
+                    {
+                        label: 'Home', // tab label as appears under the icon in iOS (optional)
+                        screen: 'goodsh.HomeScreen', // unique ID registered with Navigation.registerScreen
+                        icon: require('./img/bottom_bar_home.png'), // local image asset for the tab icon unselected state (optional on iOS)
+                        title: 'Home', // title of the screen as appears in the nav bar (optional)
+                        titleImage: require('./img/screen_title_home.png'),
                     },
-                    appStyle: {
-                        orientation: 'portrait', // Sets a specific orientation to the entire app. Default: 'auto'. Supported values: 'auto', 'landscape', 'portrait'
-                        bottomTabBadgeTextColor: 'red', // Optional, change badge text color. Android only
-                        bottomTabBadgeBackgroundColor: 'green' // Optional, change badge background color. Android only
+                    {
+                        label: 'Search',
+                        screen: 'goodsh.SearchScreen',
+                        icon: require('./img/bottom_bar_search.png'),
+                        title: 'Search'
                     },
-                    drawer: { // optional, add this if you want a side menu drawer in your app
-                        left: { // optional, define if you want a drawer from the left
-                            // screen: 'goodsh.CommunityScreen',
-                            screen: 'goodsh.DebugScreen', // unique ID registered with Navigation.registerScreen
-                            passProps: {} // simple serializable object that will pass as props to all top screens (optional)
-                        },
-                        right: { // optional, define if you want a drawer from the right
-                            screen: 'goodsh.LineUpScreen', // unique ID registered with Navigation.registerScreen
-                            passProps: {} // simple serializable object that will pass as props to all top screens (optional)
-                        },
-                        style: { // ( iOS only )
-                            drawerShadow: true, // optional, add this if you want a side menu drawer shadow
-                            contentOverlayColor: 'rgba(0,0,0,0.25)', // optional, add this if you want a overlay color when drawer is open
-                            leftDrawerWidth: 100, // optional, add this if you want a define left drawer width (50=percent)
-                            rightDrawerWidth: 100 // optional, add this if you want a define right drawer width (50=percent)
-                        },
-                        type: 'MMDrawer', // optional, iOS only, types: 'TheSideBar', 'MMDrawer' default: 'MMDrawer'
-                        animationType: 'slide-and-scale', //optional, iOS only, for MMDrawer: 'door', 'parallax', 'slide', 'slide-and-scale'
-                        // for TheSideBar: 'airbnb', 'facebook', 'luvocracy','wunder-list'
-                        disableOpenGesture: false // optional, can the drawer be opened with a swipe instead of button
+                    {
+                        label: 'Add',
+                        screen: 'goodsh.AddScreen',
+                        icon: require('./img/bottom_bar_add.png'),
+                        title: 'Add'
                     },
-                    passProps: {}, // simple serializable object that will pass as props to all top screens (optional)
-                    //animationType: 'slide-down' // optional, add transition animation to root change: 'none', 'slide-down', 'fade'
-                });
+                    {
+                        label: 'Notif',
+                        screen: 'goodsh.NotifScreen',
+                        icon: require('./img/bottom_bar_notif.png'),
+                        title: 'Notif'
+                    },
+                    {
+                        label: 'Ask',
+                        screen: 'goodsh.AskScreen',
+                        icon: require('./img/bottom_bar_ask.png'),
+                        title: 'Debug'
+                    },
+                ],
+                tabsStyle: { // optional, add this if you want to style the tab bar beyond the defaults
+                    tabBarButtonColor: '#000', // optional, change the color of the tab icons and text (also unselected)
+                    tabBarSelectedButtonColor: '#40E7BB', // optional, change the color of the selected tab icon and text (only selected)
+                    tabBarBackgroundColor: 'white',
+                    forceTitlesDisplay: false,
+                    tabBarShowLabels: 'hidden',
+                },
+                appStyle: {
+                    orientation: 'portrait', // Sets a specific orientation to the entire app. Default: 'auto'. Supported values: 'auto', 'landscape', 'portrait'
+                    bottomTabBadgeTextColor: 'red', // Optional, change badge text color. Android only
+                    bottomTabBadgeBackgroundColor: 'green' // Optional, change badge background color. Android only
+                },
+                drawer: { // optional, add this if you want a side menu drawer in your app
+                    left: { // optional, define if you want a drawer from the left
+                        // screen: 'goodsh.CommunityScreen',
+                        screen: 'goodsh.DebugScreen', // unique ID registered with Navigation.registerScreen
+                        passProps: {} // simple serializable object that will pass as props to all top screens (optional)
+                    },
+                    right: { // optional, define if you want a drawer from the right
+                        screen: 'goodsh.LineUpScreen', // unique ID registered with Navigation.registerScreen
+                        passProps: {} // simple serializable object that will pass as props to all top screens (optional)
+                    },
+                    style: { // ( iOS only )
+                        drawerShadow: true, // optional, add this if you want a side menu drawer shadow
+                        contentOverlayColor: 'rgba(0,0,0,0.25)', // optional, add this if you want a overlay color when drawer is open
+                        leftDrawerWidth: 100, // optional, add this if you want a define left drawer width (50=percent)
+                        rightDrawerWidth: 100 // optional, add this if you want a define right drawer width (50=percent)
+                    },
+                    type: 'MMDrawer', // optional, iOS only, types: 'TheSideBar', 'MMDrawer' default: 'MMDrawer'
+                    animationType: 'slide-and-scale', //optional, iOS only, for MMDrawer: 'door', 'parallax', 'slide', 'slide-and-scale'
+                    // for TheSideBar: 'airbnb', 'facebook', 'luvocracy','wunder-list'
+                    disableOpenGesture: false // optional, can the drawer be opened with a swipe instead of button
+                },
+                passProps: {}, // simple serializable object that will pass as props to all top screens (optional)
+                //animationType: 'slide-down' // optional, add transition animation to root change: 'none', 'slide-down', 'fade'
+            });
 
-                return;
-            default:
-                console.error('Unknown app root');
         }
     }
 }

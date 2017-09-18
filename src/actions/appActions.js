@@ -33,13 +33,13 @@ export function appInitialized() {
 
         Api.credentials(access_token, client, uid);
 
-        dispatch(changeAppRoot(user ? 'after-login' : 'login'));
+        dispatch(changeAppRoot(user));
 
     };
 }
 
-export function changeAppRoot(root: string) {
-    return {type: types.ROOT_CHANGED, root: root};
+export function changeAppRoot(user) {
+    return {type: user ? types.USER_LOGIN : types.USER_LOGOUT, user: user};
 }
 
 export function login(callback?:Function) {
@@ -47,11 +47,11 @@ export function login(callback?:Function) {
         // login logic would go here, and when it's done, we switch app roots
 
         //TODO: handle errors
-        await LoginManager.login();
+        let user = await LoginManager.login();
 
         callback && callback();
 
-        dispatch(changeAppRoot('after-login'));
+        dispatch(changeAppRoot(user));
     };
 }
 
@@ -62,6 +62,6 @@ export function logout() {
 
         LoginManager.logout();
 
-        dispatch(changeAppRoot('login'));
+        dispatch(changeAppRoot(null));
     };
 }
