@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -54,14 +53,14 @@
 		B6B6A8ECFF5A458789ADDE6C /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3713A1A16A3B474CBF4B2E0E /* Foundation.ttf */; };
 		B9BA7B592F814FD9B3B48B80 /* Thonburi-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C07AEF4AB2404ECD99E4CD2B /* Thonburi-Light.ttf */; };
 		BFA47067D8864920BA2BF128 /* Thonburi-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 83211284DF4F4A8897E908DC /* Thonburi-Bold.ttf */; };
-		C070146D2D6944479CCBF5C9 /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A3E8F52F2E4442B41FDBC8 /* libCodePush.a */; };
 		D08F4DF21F5E900C0018E2DD /* libReactNativeNavigation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D9D9891F5E8FAF003772C8 /* libReactNativeNavigation.a */; };
-		D1BE7EF9F8114598A05F36B9 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = DB78BAD0732B4A5C85B5F8B7 /* libz.tbd */; };
 		D261BB129BE145FBBE97F010 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 61E1F585D8914B64BA2ED4CE /* Octicons.ttf */; };
 		D7516C65F12E4CBA8A19DFB2 /* Edo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8BB56482BD4A4BA5A06EEF8F /* Edo.ttf */; };
 		DC1535E141CA49ADBAA5C3B8 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B90F481194EA4DD7BAA6DFA3 /* MaterialIcons.ttf */; };
 		E3378056004E45EDAE2E6BB8 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6237B7E7B6B436CBF8A63DB /* FBSDKLoginKit.framework */; };
 		E562BCD35F904331841C43E0 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7D9112FBAA7A42859CAEC569 /* SimpleLineIcons.ttf */; };
+		6FF146881FB94C1F86D374AE /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C6CC50C5AB94623BCD20FC3 /* libCodePush.a */; };
+		31EA5D451C2A4277A2EB86C6 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 47158AD1F83943FD82888F9E /* libz.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -261,20 +260,6 @@
 			remoteGlobalIDString = 5DBEB1501B18CEA900B34395;
 			remoteInfo = RNVectorIcons;
 		};
-		D074BB721F6BB6DA005FC4E5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = E7CA21C022C9496AA664B5C7 /* CodePush.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 134814201AA4EA6300B7C361;
-			remoteInfo = CodePush;
-		};
-		D074BB741F6BB6DA005FC4E5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = E7CA21C022C9496AA664B5C7 /* CodePush.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F886647B1F4ADB500036D01B;
-			remoteInfo = "CodePush-tvOS";
-		};
 		D0C8F9CB1F64027400E264D4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 533444B06DC74E6F8D46DC36 /* RNI18n.xcodeproj */;
@@ -384,10 +369,10 @@
 		C9005B048F024717B4913BB2 /* RCTFBSDK.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTFBSDK.xcodeproj; path = "../node_modules/react-native-fbsdk/ios/RCTFBSDK.xcodeproj"; sourceTree = "<group>"; };
 		CB77874F92F7495C904FBF9C /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
 		D0D9D95F1F5E8FAF003772C8 /* ReactNativeNavigation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeNavigation.xcodeproj; path = "../node_modules/react-native-navigation/ios/ReactNativeNavigation.xcodeproj"; sourceTree = "<group>"; };
-		DB78BAD0732B4A5C85B5F8B7 /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		E175974E856F403FB8526D08 /* libRCTFBSDK.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTFBSDK.a; sourceTree = "<group>"; };
-		E7CA21C022C9496AA664B5C7 /* CodePush.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = CodePush.xcodeproj; path = "../node_modules/react-native-code-push/ios/CodePush.xcodeproj"; sourceTree = "<group>"; };
-		F3A3E8F52F2E4442B41FDBC8 /* libCodePush.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libCodePush.a; sourceTree = "<group>"; };
+		C86A610E451340DDB95B0EDF /* CodePush.xcodeproj */ = {isa = PBXFileReference; name = "CodePush.xcodeproj"; path = "../node_modules/react-native-code-push/ios/CodePush.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		5C6CC50C5AB94623BCD20FC3 /* libCodePush.a */ = {isa = PBXFileReference; name = "libCodePush.a"; path = "libCodePush.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		47158AD1F83943FD82888F9E /* libz.tbd */ = {isa = PBXFileReference; name = "libz.tbd"; path = "usr/lib/libz.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -421,8 +406,8 @@
 				2054F13072464CE0B7BFC292 /* libRNI18n.a in Frameworks */,
 				0B84AF2526274756A819CC20 /* libRCTFBSDK.a in Frameworks */,
 				1D3F9667D1C64B33906D46B8 /* libRNVectorIcons.a in Frameworks */,
-				C070146D2D6944479CCBF5C9 /* libCodePush.a in Frameworks */,
-				D1BE7EF9F8114598A05F36B9 /* libz.tbd in Frameworks */,
+				6FF146881FB94C1F86D374AE /* libCodePush.a in Frameworks */,
+				31EA5D451C2A4277A2EB86C6 /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -597,7 +582,7 @@
 				533444B06DC74E6F8D46DC36 /* RNI18n.xcodeproj */,
 				C9005B048F024717B4913BB2 /* RCTFBSDK.xcodeproj */,
 				CB77874F92F7495C904FBF9C /* RNVectorIcons.xcodeproj */,
-				E7CA21C022C9496AA664B5C7 /* CodePush.xcodeproj */,
+				C86A610E451340DDB95B0EDF /* CodePush.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -668,15 +653,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		D074BB6E1F6BB6DA005FC4E5 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				D074BB731F6BB6DA005FC4E5 /* libCodePush.a */,
-				D074BB751F6BB6DA005FC4E5 /* libCodePush.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		D0C8F9A91F64027400E264D4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -705,7 +681,7 @@
 		F193B04D1EF44D979793D005 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				DB78BAD0732B4A5C85B5F8B7 /* libz.tbd */,
+				47158AD1F83943FD82888F9E /* libz.tbd */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -824,10 +800,6 @@
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
-				{
-					ProductGroup = D074BB6E1F6BB6DA005FC4E5 /* Products */;
-					ProjectRef = E7CA21C022C9496AA664B5C7 /* CodePush.xcodeproj */;
-				},
 				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
 					ProjectRef = 00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */;
@@ -1082,20 +1054,6 @@
 			remoteRef = D069B2731F693FB800F152ED /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		D074BB731F6BB6DA005FC4E5 /* libCodePush.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libCodePush.a;
-			remoteRef = D074BB721F6BB6DA005FC4E5 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D074BB751F6BB6DA005FC4E5 /* libCodePush.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libCodePush.a;
-			remoteRef = D074BB741F6BB6DA005FC4E5 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		D0C8F9CC1F64027400E264D4 /* libRNI18n.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1321,9 +1279,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1352,9 +1307,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1446,9 +1398,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1487,9 +1436,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1520,9 +1466,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.goodshmob-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1548,9 +1491,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.goodshmob-tvOSTests";

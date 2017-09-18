@@ -54,6 +54,11 @@ public class MainApplication extends NavigationApplication implements ReactAppli
 //  }
 
   @Override
+  public String getJSBundleFile() {
+    return CodePush.getJSBundleFile();
+  }
+
+  @Override
   public void onCreate() {
     super.onCreate();
 
