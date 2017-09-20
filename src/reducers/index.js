@@ -1,5 +1,5 @@
-import app from './app';
-import activities from './activities';
+import app from '../app/reducer';
+import activities from '../activities/reducer';
 
 export {
     app,

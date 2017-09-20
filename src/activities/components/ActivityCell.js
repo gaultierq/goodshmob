@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Text, Image, Button, TouchableOpacity, TouchableHighlight} from 'react-native';
-import * as Model from "../model"
-import i18n from '../i18n/i18n'
-import * as TimeUtils from '../utils/TimeUtils'
-import * as UI from "./UIStyles";
+import * as Model from "../../models/index"
+import i18n from '../../i18n/i18n'
+import * as TimeUtils from '../../utils/TimeUtils'
+import * as UI from "../../screens/UIStyles";
 
 export default class ActivityItem extends React.Component {
 
@@ -108,10 +108,10 @@ export default class ActivityItem extends React.Component {
 
                     <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
 
-                        {this.renderButton(require('../img/comment.png'), i18n.t("activity_item.buttons.comment"))}
-                        {this.renderButton(require('../img/send.png'), i18n.t("activity_item.buttons.share"))}
-                        {this.renderButton(require('../img/save-icon.png'), i18n.t("activity_item.buttons.save"))}
-                        {this.renderButton(require('../img/buy-icon.png'), i18n.t("activity_item.buttons.buy"))}
+                        {this.renderButton(require('../../img/comment.png'), i18n.t("activity_item.buttons.comment"))}
+                        {this.renderButton(require('../../img/send.png'), i18n.t("activity_item.buttons.share"))}
+                        {this.renderButton(require('../../img/save-icon.png'), i18n.t("activity_item.buttons.save"))}
+                        {this.renderButton(require('../../img/buy-icon.png'), i18n.t("activity_item.buttons.buy"))}
 
                     </View>
 
@@ -187,7 +187,7 @@ export default class ActivityItem extends React.Component {
                         padding: 2.5,
                     }
                 }>
-                    <Image source={require('../img/mini-g-number.png')} resizeMode="contain"
+                    <Image source={require('../../img/mini-g-number.png')} resizeMode="contain"
                            style={{
                                width: 20,
                                height: 20,

@@ -3,7 +3,7 @@
 import React, {Component} from 'react';
 
 import {Button, ImageBackground, Image, StyleSheet, Text, View, ActivityIndicator} from 'react-native';
-import * as appActions from "../actions/appActions"
+import * as appActions from "../app/actions"
 import {connect} from 'react-redux';
 import {LoginManager} from 'react-native-fbsdk';
 import i18n from '../i18n/i18n'

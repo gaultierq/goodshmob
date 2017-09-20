@@ -2,11 +2,10 @@
 
 import React, {Component} from 'react';
 import {StyleSheet, View, FlatList, ImageBackground, RefreshControl, ActivityIndicator} from 'react-native';
-import  * as activitesActions from '../actions/activitiesActions'
 import {connect} from "react-redux";
-import ActivityCell from "./ActivityCell";
+import ActivityCell from "../activities/components/ActivityCell";
 import * as UI from "./UIStyles"
-import  * as activitesActions from '../actions/activitiesActions'
+import  * as activitesActions from '../activities/actions'
 
 class HomeScreen extends Component {
 

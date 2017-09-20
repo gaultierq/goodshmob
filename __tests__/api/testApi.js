@@ -1,5 +1,5 @@
 import * as Util from "../../src/utils/ModelUtils"
-import * as Models from "../../src/model"
+import * as Models from "../../src/models"
 import Immutable from 'seamless-immutable';
 
 test('testing activities_fixtures', () => {

@@ -1,5 +1,5 @@
-import app from './appActions'
-import activities from './activitiesActions'
+import app from '../app/actions'
+import activities from '../activities/actions'
 
 export {
     app, activities

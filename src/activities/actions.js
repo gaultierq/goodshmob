@@ -1,7 +1,7 @@
 // @flow
 
 import * as Api from "../utils/Api"
-import * as types from './activitiesTypes';
+import * as types from './actionTypes';
 import * as Util from "../utils/ModelUtils"
 let fixtures = require("../fixtures/activities_fixtures2.json");
 

@@ -1,6 +1,6 @@
 // @flow
 
-import * as types from './appTypes';
+import * as types from './actionTypes';
 import LoginManager from "../managers/LoginManager";
 import * as Persist from "../utils/Persist";
 import * as Api from "../utils/Api";

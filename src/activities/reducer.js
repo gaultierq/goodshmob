@@ -1,7 +1,7 @@
 // @flow
 
 import Immutable from 'seamless-immutable';
-import * as types from '../actions/activitiesTypes';
+import * as types from './actionTypes';
 
 const initialState = Immutable({
     activities: []

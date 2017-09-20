@@ -1,7 +1,7 @@
 // @flow
 
-import Base from "../model/Base";
-import * as Models from "../model/index"
+import Base from "../models/Base";
+import * as Models from "../models/index"
 import * as StringUtils from "./StringUtils"
 
 export function parse(data) {
