@@ -29,11 +29,13 @@ class ActivityScreen extends Component {
             data = this.props.activities.activities.find((a) => a.id === this.props.activityId);
         }
 
+        let showLoader = !data && this.props.activity.fetching;
+        
         return (
             <ScrollView>
                 <View style={styles.container}>
                     <ActivityIndicator
-                        animating = {this.props.activity.fetching}
+                        animating = {showLoader}
                         size = "small"
                     />
                     { data && <ActivityCell activity={data}/>}
