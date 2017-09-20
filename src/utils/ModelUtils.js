@@ -4,7 +4,7 @@ import Base from "../models/Base";
 import * as Models from "../models/index"
 import * as StringUtils from "./StringUtils"
 
-export function parse(data) {
+export function parse(data: any) {
 
     let store = {};
 
@@ -14,7 +14,9 @@ export function parse(data) {
 
             let obj: Base = this.createObject(source);
             if (obj) {
+                // $FlowFixMe
                 store[obj.type] = store[obj.type] || {};
+                // $FlowFixMe
                 store[obj.type][obj.id] = obj;
             }
         });
@@ -45,6 +47,7 @@ let assignSafe = function (target, src) {
     for (let p in src) {
         if (src.hasOwnProperty(p)) {
             let pp = StringUtils.toLowercase(dashToCamel(p));
+            // $FlowFixMe
             target[pp] = src[p];
         }
     }
@@ -145,3 +148,131 @@ export function createObject(source: Source, store: any): Base {
 
     return result;
 }
+
+
+export class Merge<T> {
+    mergeInto: Array<T>;
+
+    mergeMe: Array<T>;
+
+    afterId: string;
+
+    hasMore: boolean;
+
+    hasLess: boolean;
+
+
+
+    constructor(mergeInto: Array<T>, mergeMe: Array<T>) {
+        this.mergeInto = mergeInto;
+        this.mergeMe = mergeMe.slice();
+    }
+
+    setAfterKey(afterId: string) {
+        this.afterId = afterId;
+        return this;
+    }
+
+    //!\\ do *not* rely on DataList#hasMore
+    hasMore(hasMore: boolean) {
+        this.hasMore = hasMore;
+        return this;
+    }
+
+    //!\\ do *not* rely on DataList#hasLess
+    hasLess(hasLess: boolean) {
+        this.hasLess = hasLess;
+        return this;
+    }
+
+    getSegment() {
+        let mergeIds: Array<string> = this.getIds(this.mergeInto);
+        let addIds: Array<string> = this.getIds(this.mergeMe);
+
+        let from = null, to = null;
+        addIds.forEach((id) => {
+            let index = mergeIds.indexOf(id);
+            let lastindex = mergeIds.lastIndexOf(id);
+
+            if (index >= 0) {
+                if (from === null) from = index;
+                if (to === null) to = lastindex;
+
+                if (index < from) from = index;
+                if (lastindex > to) to = lastindex;
+            }
+        });
+
+        if (this.hasLess === false) from = 0;
+        if (this.hasMore === false) to = this.mergeInto.length - 1;
+
+        if (from !== null && to !== null) return {from, to};
+        return null;
+    }
+
+
+    getIds(arr: Array<T>): Array<string> {
+        return arr.map(e => this.getKey(e));
+    }
+
+    merge() {
+        console.log(`merging ${JSON.stringify(this.mergeMe)} into ${JSON.stringify(this.mergeInto)}`);
+        let result = [];
+
+        //(start, end)
+        let segment = this.getSegment();
+        console.log(`segment= ${JSON.stringify(segment)}`);
+
+        let mergeIds = this.getIds(this.mergeInto);
+
+        let resRemoved: { [string]: T } = null;
+        //merge=removing long segment, and adding the new items right after
+        if (segment !== null) {
+            resRemoved = {};
+            //removing the segment
+            for (let i = segment.to; i >= segment.from; i--) {
+                let removed : T = this.mergeInto.splice(i, 1)[0];
+                let key: string = this.getKey(removed);
+                resRemoved[key] = removed;
+                mergeIds.splice(mergeIds.indexOf(key), 1);
+            }
+        }
+        //inserting:
+        //a. right after afterId, if set
+        //b. after the resRemoved segment
+        //c. at the end of the list
+        let insertAt = null;
+
+        if (this.afterId !== null) {
+            let ix = mergeIds.indexOf(this.afterId);
+            if (ix >= 0) insertAt = ix + 1;
+        }
+        if (insertAt === null && segment !== null) insertAt = segment.from;
+        if (insertAt === null) insertAt = mergeIds.length;
+
+        let i = insertAt;
+        this.mergeMe.forEach((d: T) => {
+            if (resRemoved !== null) {
+                let old = resRemoved[this.getKey(d)];
+                if (old !== null) {
+                    d = this.mergeItem(old, d);
+                }
+            }
+            this.mergeInto.splice(i++, 0, d);
+        });
+
+        //onMerged();
+        return result;
+    }
+
+    getKey(d: T): string {
+        // $FlowFixMe
+        return d['id'];
+    }
+
+
+    mergeItem(old: T, newItem: T): T {
+        return newItem;
+    }
+}
+
