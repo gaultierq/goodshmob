@@ -5,24 +5,23 @@ import * as types from './actionTypes';
 import * as Util from "../utils/ModelUtils"
 
 const initialState = Immutable({
-    activity: {}
+    fetching: false,
+    error: null
 });
 
 export default function reduce(state:any = initialState, action: any) {
     switch (action.type) {
         case types.FETCH_REQUEST:
             return state.merge({
-                loading: true
+                fetching: true
             });
         case types.FETCH_SUCCESS:
             let payload = action.payload;
-            console.log("!!!!!!!!!!action="+action);
-
             let data = Util.parse(payload);
 
             return state.merge({
                 data: data,
-                loading: false,
+                fetching: false,
                 error: null
             });
         case types.FETCH_FAILURE:
@@ -31,7 +30,7 @@ export default function reduce(state:any = initialState, action: any) {
             console.error(error);
 
             return state.merge({
-                loading: false,
+                fetching: false,
                 error: error
             });
         default:
