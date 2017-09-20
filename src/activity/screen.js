@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Button, Text, ScrollView} from 'react-native';
-import  * as appActions from '../activities/actions'
+import  * as actions from './actions'
 import {connect} from "react-redux";
 import {AsyncStorage} from "react-native";
 
@@ -21,10 +21,10 @@ class ActivityScreen extends Component {
         if (this.state.isRequesting) return;
         this.setState({isRequesting: true});
 
-        // this.props.dispatch(activitesActions.fetchActivities(
-        //     ()=> {
-        //         this.setState({loadingFirst: false, loadedOnce: true});
-        //     }));
+        this.props.dispatch(actions.fetchActivity(
+            ()=> {
+                this.setState({loadingFirst: false, loadedOnce: true});
+            }));
     }
 
 

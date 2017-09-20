@@ -1,0 +1,1 @@
+export const APPEND_FETCHED_ACTIVITIES = 'goodsh.activities.APPEND_FETCHED_ACTIVITIES';

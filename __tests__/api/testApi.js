@@ -1,6 +1,7 @@
 import * as Util from "../../src/utils/ModelUtils"
 import * as Models from "../../src/models"
 import Immutable from 'seamless-immutable';
+import * as Api from "../../src/utils/Api";
 
 test('testing activities_fixtures', () => {
     let result = Util.parse(require("./activities_fixtures.json"));
@@ -81,3 +82,4 @@ test('testing meta', () => {
     expect(post.meta).toBeDefined();
     expect(post.meta["comments-count"]).toBe(6);
 });
+

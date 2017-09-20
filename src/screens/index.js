@@ -9,7 +9,7 @@ import AskScreen from './AskScreen';
 import LineUpScreen from './LineUpScreen';
 import CommunityScreen from './CommunityScreen';
 import DebugScreen from './DebugScreen';
-import ActivityScreen from './ActivityScreen';
+import ActivityScreen from '../activity/screen';
 
 // register all screens of the app (including internal ones)
 export function registerScreens(store, Provider) {
