@@ -1,3 +1,5 @@
+// @flow
+
 import * as Api from "../utils/Api"
 import * as types from './activitiesTypes';
 import * as Util from "../utils/ModelUtils"
@@ -38,13 +40,9 @@ let submit = function (call, dispatch, onFinished) {
                 type: types.APPEND_FETCHED_ACTIVITIES,
                 activities: Util.parse(response),
                 links: response.links});
-
-
-
-
         })
         .catch((err) => {
-            console.warn(`error while fetching activities: ${JSON.stringify(err)}`)
+            console.error(err);
         })
         .then(() => {
             onFinished && onFinished();

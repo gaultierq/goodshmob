@@ -1,14 +1,11 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, Image, Button, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, Text, Image, Button, TouchableOpacity, TouchableHighlight} from 'react-native';
 import * as Model from "../model"
 import i18n from '../i18n/i18n'
 import * as TimeUtils from '../utils/TimeUtils'
 import * as UI from "./UIStyles";
 
 export default class ActivityItem extends React.Component {
-    _onPress = () => {
-        this.props.onPressItem(this.props.activity.id);
-    };
 
     render() {
         let activity: Model.Activity = this.props.activity;
@@ -98,7 +95,7 @@ export default class ActivityItem extends React.Component {
                 }}>
 
 
-                    {this.renderGoodshButton(image, likesCount)}
+                    {this.renderGoodshButton(image, likesCount, this.props.onPressItem)}
 
 
                     <View style={{padding: 15}}>
@@ -148,17 +145,25 @@ export default class ActivityItem extends React.Component {
             </TouchableOpacity>;
     }
 
-    renderGoodshButton(image, likesCount) {
+    renderGoodshButton(image, likesCount, onActivityPressed) {
         return <View style={{alignItems: 'center',}}>
-            <Image
-                source={{uri: image}}
+            <TouchableHighlight
+                onPress={onActivityPressed}
                 style={{
-                    alignSelf: 'center',
-                    height: 150,
-                    width: "100%",
-                }}
-            />
-            <TouchableOpacity style={
+                alignSelf: 'center',
+                height: 150,
+                width: "100%",
+            }}>
+                <Image
+                    source={{uri: image}}
+                    style={{
+                        alignSelf: 'center',
+                        height: 150,
+                        width: "100%",
+                    }}
+                />
+            </TouchableHighlight>
+            <TouchableHighlight style={
                 {
                     backgroundColor : "white",
                     width: 60,
@@ -191,13 +196,9 @@ export default class ActivityItem extends React.Component {
                     {!!likesCount && <Text style={{fontSize: 12, marginLeft: 3}}>{likesCount}</Text>}
 
                 </View>
-            </TouchableOpacity>
+            </TouchableHighlight>
 
         </View>
-    }
-
-    timeSince() {
-
     }
 
 

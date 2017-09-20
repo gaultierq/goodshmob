@@ -4,8 +4,9 @@ import React, {Component} from 'react';
 import {StyleSheet, View, FlatList, ImageBackground, RefreshControl, ActivityIndicator} from 'react-native';
 import  * as activitesActions from '../actions/activitiesActions'
 import {connect} from "react-redux";
-import ActivityItem from "./ActivityCell";
+import ActivityCell from "./ActivityCell";
 import * as UI from "./UIStyles"
+import  * as activitesActions from '../actions/activitiesActions'
 
 class HomeScreen extends Component {
 
@@ -86,7 +87,21 @@ class HomeScreen extends Component {
             }));
     }
 
-    onPressItem(id) {
+    navToActivity(item) {
+        console.info("onPressItem: " + JSON.stringify(item));
+        this.props.navigator.push({
+            screen: 'goodsh.ActivityScreen', // unique ID registered with Navigation.registerScreen
+            title: "Details", // navigation bar title of the pushed screen (optional)
+            titleImage: require('../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
+            passProps: {}, // Object that will be passed as props to the pushed screen (optional)
+            animated: true, // does the push have transition animation or does it happen immediately (optional)
+            animationType: 'slide-up', // 'fade' (for both) / 'slide-horizontal' (for android) does the push have different transition animation (optional)
+            backButtonTitle: undefined, // override the back button title (optional)
+            backButtonHidden: false, // hide the back button altogether (optional)
+            navigatorStyle: {}, // override the navigator style for the pushed screen (optional)
+            navigatorButtons: {} // override the nav buttons for the pushed screen (optional)
+        });
+
     }
 
     render() {
@@ -113,7 +128,7 @@ class HomeScreen extends Component {
 
                     <FlatList
                         data={activities}
-                        renderItem={this.renderItem}
+                        renderItem={this.renderItem.bind(this)}
                         keyExtractor={this.keyExtractor}
                         refreshControl={
                             <RefreshControl
@@ -147,8 +162,8 @@ class HomeScreen extends Component {
     }
 
     renderItem(item) {
-        return <ActivityItem
-            onPressItem={this.onPressItem}
+        return <ActivityCell
+            onPressItem={this.navToActivity.bind(this, item)}
             activity={item.item}
         />
     }
