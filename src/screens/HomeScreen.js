@@ -28,7 +28,7 @@ class HomeScreen extends Component {
 
     keyExtractor = (item, index) => item.id;
 
-
+    //todo: in redux
     state: {
         loadingFirst: boolean;
         loadingMore: boolean;

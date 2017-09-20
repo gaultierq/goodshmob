@@ -168,19 +168,19 @@ export class Merge<T> {
         this.mergeMe = mergeMe.slice();
     }
 
-    setAfterKey(afterId: string) {
+    setAfterKey(afterId: string): Merge<T> {
         this.afterId = afterId;
         return this;
     }
 
     //!\\ do *not* rely on DataList#hasMore
-    hasMore(hasMore: boolean) {
+    hasMore(hasMore: boolean): Merge<T> {
         this.hasMore = hasMore;
         return this;
     }
 
     //!\\ do *not* rely on DataList#hasLess
-    hasLess(hasLess: boolean) {
+    withHasLess(hasLess: boolean): Merge<T> {
         this.hasLess = hasLess;
         return this;
     }
