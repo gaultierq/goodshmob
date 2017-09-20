@@ -19,8 +19,13 @@ export function parse(data) {
             }
         });
     }
-
-    return data.data.map((o) => createObject(o, store));
+    let data2 = data.data;
+    if (data2 instanceof Array) {
+        return data2.map((o) => createObject(o, store));
+    }
+    else {
+        return createObject(data2, store)
+    }
 }
 
 class ParseError extends Error {

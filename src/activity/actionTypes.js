@@ -1,1 +1,3 @@
-export const APPEND_FETCHED_ACTIVITIES = 'goodsh.activities.APPEND_FETCHED_ACTIVITIES';
+export const FETCH_REQUEST = 'FETCH_REQUEST';
+export const FETCH_SUCCESS = 'FETCH_SUCCESS';
+export const FETCH_FAILURE = 'FETCH_FAILURE';

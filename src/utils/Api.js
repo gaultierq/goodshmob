@@ -5,9 +5,9 @@ import qs from "querystringify"
 
 let client, uid, accessToken;
 
-const apiEndpoint = "https://goodshitapp-staging.herokuapp.com/";
+export const API_END_POINT = "https://goodshitapp-staging.herokuapp.com/";
 
-let headers = function () {
+export function headers() {
     let headers = {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ export function submit(url, method, body) {
 
 export class Call {
 
-    url: URL = new URL(apiEndpoint);
+    url: URL = new URL(API_END_POINT);
     body: any;
 
     withRoute(pathname:string) {

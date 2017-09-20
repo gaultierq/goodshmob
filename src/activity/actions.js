@@ -1,8 +1,11 @@
 // @flow
 
-import * as Api from "../utils/Api"
-import * as types from './actionTypes';
-import * as Util from "../utils/ModelUtils"
+import { CALL_API } from 'redux-api-middleware'
+import {API_END_POINT} from "../utils/Api";
+import * as types from "./actionTypes"
+import * as Api from "../utils/Api";
+
+
 
 let fixtures = require("../fixtures/activities_fixtures2.json");
 
@@ -26,32 +29,30 @@ let getType = function (activityType) {
     return type;
 };
 
+
+
 export function fetchActivity(activityId, activityType, callback?) {
-    return async (dispatch, getState) => {
+    let type = getType(activityType);
 
-        let type = getType(activityType);
-
-        let call = new Api.Call().withRoute(`${type}/${activityId}`);
-
-        call.get()
-            .then((response) => {
-
-                dispatch({
-                    type: types.APPEND_FETCHED_ACTIVITIES,
-                    activities: Util.parse(response),
-                    links: response.links});
-            })
-            .catch((err) => {
-                console.error(err);
-            })
-            .then(callback);
-
-
-        // dispatch({
-        //     type: types.APPEND_FETCHED_ACTIVITIES,
-        //     activities: Util.parse(fixtures)
-        //     });
-    };
+    return {
+        [CALL_API]: {
+            endpoint:  `${API_END_POINT}/${type}/${activityId}`,
+            method: 'GET',
+            headers: Api.headers(),
+            types: [types.FETCH_REQUEST,
+                types.FETCH_SUCCESS,
+                // {
+                //     type: types.FETCH_SUCCESS,
+                //     payload: (action, state, res) => {
+                //         const contentType = res.headers.get('Content-Type');
+                //         if (contentType && ~contentType.indexOf('json')) {
+                //             return res.json();
+                //         }
+                //     }
+                // },
+                types.FETCH_FAILURE]
+        }
+    }
 }
 
 

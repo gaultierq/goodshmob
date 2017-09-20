@@ -9,6 +9,7 @@ import  * as appActions from './app/actions'
 import thunk from "redux-thunk";
 import logger from 'redux-logger'
 import codePush from "react-native-code-push";
+import { apiMiddleware } from 'redux-api-middleware';
 
 
 //see the network requests in the debugger
@@ -16,7 +17,7 @@ import codePush from "react-native-code-push";
 //GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
 
 // redux related book keeping
-const createStoreWithMiddleware = applyMiddleware(thunk, logger)(createStore);
+const createStoreWithMiddleware = applyMiddleware(apiMiddleware, thunk, logger)(createStore);
 let appReducers = combineReducers(reducers);
 
 const reducer = createWithReducers(appReducers);

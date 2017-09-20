@@ -18,13 +18,7 @@ class ActivityScreen extends Component {
 
 
     load() {
-        if (this.state.isRequesting) return;
-        this.setState({isRequesting: true});
-
-        this.props.dispatch(actions.fetchActivity(
-            ()=> {
-                this.setState({loadingFirst: false, loadedOnce: true});
-            }));
+        this.props.dispatch(actions.fetchActivity(this.props.activity.id, this.props.activity.type));
     }
 
 

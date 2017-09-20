@@ -86,13 +86,13 @@ class HomeScreen extends Component {
             }));
     }
 
-    navToActivity(item) {
-        console.info("onPressItem: " + JSON.stringify(item));
+    navToActivity(activity) {
+        console.info("onPressItem: " + JSON.stringify(activity));
         this.props.navigator.push({
             screen: 'goodsh.ActivityScreen', // unique ID registered with Navigation.registerScreen
             title: "Details", // navigation bar title of the pushed screen (optional)
             titleImage: require('../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
-            passProps: {}, // Object that will be passed as props to the pushed screen (optional)
+            passProps: {activity}, // Object that will be passed as props to the pushed screen (optional)
             animated: true, // does the push have transition animation or does it happen immediately (optional)
             animationType: 'slide-up', // 'fade' (for both) / 'slide-horizontal' (for android) does the push have different transition animation (optional)
             backButtonTitle: undefined, // override the back button title (optional)
@@ -161,9 +161,10 @@ class HomeScreen extends Component {
     }
 
     renderItem(item) {
+        let it = item.item;
         return <ActivityCell
-            onPressItem={this.navToActivity.bind(this, item)}
-            activity={item.item}
+            onPressItem={() => this.navToActivity(it)}
+            activity={it}
         />
     }
 
