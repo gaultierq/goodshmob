@@ -27,7 +27,7 @@ let getType = function (activityType) {
 
 export function fetchActivity(activityId, activityType) {
     let type = getType(activityType);
-    return Api.createSimpleApiCall(`${type}/${activityId}`, 'GET', types.FETCH);
+    return Api.createSimpleApiCall(`${type}/${activityId}`, 'GET', types.FETCH, {id: activityId});
 }
 
 

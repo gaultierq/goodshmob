@@ -7,7 +7,7 @@ import * as Util from "../utils/ModelUtils";
 
 const initialState = Immutable(Object.assign(
     {all: {}, like: {}, unlike: {}},
-    createDefault(types.FETCH, types.LIKE)));
+    createDefault(types.FETCH, types.LIKE, types.UNLIKE)));
 
 let updateActivitiesStore = function (activity, state) {
     let id: string = activity.id;

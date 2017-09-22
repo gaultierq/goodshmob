@@ -35,7 +35,7 @@ class ActivityScreen extends Component {
                         animating = {showLoader}
                         size = "small"
                     />
-                    { data && <ActivityCell activity={data}/>}
+                    { data && <ActivityCell activityId={data.id}/>}
 
                 </View>
             </ScrollView>
