@@ -24,12 +24,12 @@ class ActivityScreen extends Component {
 
 
     render() {
-        let data = this.props.activity.data;
+        let data = this.props.activity.fetch.data;
         if (!data && this.props.activities.activities) {
             data = this.props.activities.activities.find((a) => a.id === this.props.activityId);
         }
 
-        let showLoader = !data && this.props.activity.fetching;
+        let showLoader = !data && this.props.activity.fetch.requesting;
         
         return (
             <ScrollView>

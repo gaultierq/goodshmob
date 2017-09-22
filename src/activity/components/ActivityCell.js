@@ -1,11 +1,15 @@
+// @flow
+
 import React, {Component} from 'react';
 import {StyleSheet, View, Text, Image, Button, TouchableOpacity, TouchableHighlight} from 'react-native';
 import * as Model from "../../models/index"
 import i18n from '../../i18n/i18n'
 import * as TimeUtils from '../../utils/TimeUtils'
 import * as UI from "../../screens/UIStyles";
+import * as activityAction from "../actions"
+import {connect} from "react-redux";
 
-export default class ActivityItem extends React.Component {
+class ActivityCell extends React.Component {
 
     render() {
         let activity: Model.Activity = this.props.activity;
@@ -146,6 +150,10 @@ export default class ActivityItem extends React.Component {
     }
 
     renderGoodshButton(image, likesCount, onActivityPressed) {
+        let activity = this.props.activity;
+        let liked = activity.meta && activity.meta["liked"];
+
+        let goodshButtonColor = liked ? UI.Colors.green : UI.Colors.white;
         return <View style={{alignItems: 'center',}}>
             <TouchableHighlight
                 onPress={onActivityPressed}
@@ -163,7 +171,7 @@ export default class ActivityItem extends React.Component {
                     }}
                 />
             </TouchableHighlight>
-            <TouchableHighlight style={
+            <View style={
                 {
                     backgroundColor : "white",
                     width: 60,
@@ -175,12 +183,18 @@ export default class ActivityItem extends React.Component {
 
                 }
             }>
-                <View style={
+
+                <TouchableOpacity
+                    onPress={this.onGoodshPressed.bind(this)}
+                    style={
                     {
                         width: "100%",
                         height: "100%",
                         borderRadius: 5,
-                        flex: 1, flexDirection: 'row', justifyContent: 'center',
+                        backgroundColor : goodshButtonColor,
+                        flex: 1,
+                        flexDirection: 'row',
+                        justifyContent: 'center',
                         borderWidth: 0.5,
                         borderColor: '#d6d7da',
                         alignItems: 'center',
@@ -195,8 +209,8 @@ export default class ActivityItem extends React.Component {
                     />
                     {!!likesCount && <Text style={{fontSize: 12, marginLeft: 3}}>{likesCount}</Text>}
 
-                </View>
-            </TouchableHighlight>
+                </TouchableOpacity>
+            </View>
 
         </View>
     }
@@ -211,4 +225,10 @@ export default class ActivityItem extends React.Component {
         </View>;
     }
 
+
+    onGoodshPressed() {
+        let {id, type} = this.props.activity;
+        this.props.dispatch(activityAction.like(id, type));
+    }
 }
+export default connect()(ActivityCell);

@@ -7,5 +7,7 @@ export const NavStyles = Object.freeze({
 export const Colors = Object.freeze({
     blue: '#408be7',
     grey1: '#767676',
-    grey2: '#AAAAAA'
+    grey2: '#AAAAAA',
+    green: '#1ec',
+    white: '#fff'
 });

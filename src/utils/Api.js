@@ -2,6 +2,17 @@
 
 import URL from "url-parse"
 import qs from "querystringify"
+import * as Util from "./ModelUtils";
+import { CALL_API } from 'redux-api-middleware'
+
+
+export const ALL_API_TYPE = [];
+
+export const REQUEST = add("request");
+export const SUCCESS = add("success");
+export const FAILURE = add("failure");
+
+
 
 let client, uid, accessToken;
 
@@ -99,3 +110,64 @@ export function credentials(a, c, u) {
 
 }
 
+export function handleAction(action, state, ...actionNames: string[]) {
+
+
+    for (let actionName of actionNames) {
+
+        let createMerge = (newVar) => {
+            let toMerge = {};
+            toMerge[actionName] = newVar;
+            return toMerge;
+        };
+
+        let type: string = action.type;
+        switch (type) {
+            case composeName(actionName, REQUEST):
+                let toMerge = createMerge({ requesting: true });
+                return state.merge(toMerge);
+            case composeName(actionName, SUCCESS):
+                let payload = action.payload;
+                let data = Util.parse(payload);
+                return state.merge(createMerge({
+                    data: data,
+                    fetching: false,
+                    error: null
+                }));
+            case composeName(actionName, FAILURE):
+                let error = action.payload;
+                console.error(error);
+                return state.merge(
+                    createMerge({
+                        fetching: false,
+                        error: error
+                    }));
+        }
+    }
+
+
+
+    return null;
+}
+
+
+export function composeName(actionName, apiType: string): string {
+    return `${actionName}_${apiType}`;
+}
+
+
+function add(item: string): string {
+    ALL_API_TYPE.push(item);
+    return item;
+}
+
+export function createSimpleApiCall(route: string, method: string, actionName: string) {
+    return {
+        [CALL_API]: {
+            endpoint: `${API_END_POINT}/` + route,
+            method: method,
+            headers: headers(),
+            types: ALL_API_TYPE.map((type) => composeName(actionName, type))
+        }
+    }
+};
