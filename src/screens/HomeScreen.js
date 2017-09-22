@@ -5,7 +5,7 @@ import {StyleSheet, View, FlatList, ImageBackground, RefreshControl, ActivityInd
 import {connect} from "react-redux";
 import ActivityCell from "../activity/components/ActivityCell";
 import * as UI from "./UIStyles"
-import  * as activitesActions from '../activities/actions'
+import  * as activitesActions from '../home/actions'
 
 class HomeScreen extends Component {
 
@@ -68,8 +68,8 @@ class HomeScreen extends Component {
         if (this.state.loadingMore) return;
         this.setState({loadingMore: true});
 
-        if (!this.props.activities.links) return;
-        let nextUrl = this.props.activities.links.next;
+        if (!this.props.home.links) return;
+        let nextUrl = this.props.home.links.next;
         console.log("Next url:" + nextUrl);
         this.props.dispatch(activitesActions.fetchMoreActivities(nextUrl, () => {
             this.setState({loadingMore: false});
@@ -106,7 +106,7 @@ class HomeScreen extends Component {
     }
 
     render() {
-        let activities = this.props.activities.activities || [];
+        let activities = this.props.home.feedIds.map((id) => this.props.activity.all[id]);
 
         return (
             <ImageBackground
@@ -153,7 +153,7 @@ class HomeScreen extends Component {
     }
 
     onEndReached() {
-        if (this.props.activities.hasMore) {
+        if (this.props.home.hasMore) {
             this.loadMore();
         }
         else {
@@ -176,9 +176,9 @@ class HomeScreen extends Component {
     }
 }
 
-
 const mapStateToProps = (state, ownProps) => ({
-    activities: state.activities,
+    home: state.home,
+    activity: state.activity
 });
 
 

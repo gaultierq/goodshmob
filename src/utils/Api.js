@@ -112,7 +112,6 @@ export function credentials(a, c, u) {
 
 export function handleAction(action, state, ...actionNames: string[]) {
 
-
     for (let actionName of actionNames) {
 
         let createMerge = (newVar) => {
@@ -147,7 +146,7 @@ export function handleAction(action, state, ...actionNames: string[]) {
 
 
 
-    return null;
+    return state;
 }
 
 

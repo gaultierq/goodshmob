@@ -5,7 +5,7 @@ import * as types from './actionTypes';
 import * as DataUtils from '../utils/ModelUtils'
 
 const initialState = Immutable({
-    activities: []
+    feedIds: []
 });
 
 export default function fetchActivities(state = initialState, action = {}) {
@@ -13,15 +13,17 @@ export default function fetchActivities(state = initialState, action = {}) {
         case types.APPEND_FETCHED_ACTIVITIES:
 
             //perfs ?
-            let activities = state.activities.asMutable();
-            activities = activities.concat(action.activities);
+            let currentFeedIds = state.feedIds.asMutable().map((id) => {id});
 
-            new DataUtils.Merge(activities, action.activities)
+
+            new DataUtils.Merge(currentFeedIds, action.activities)
                 .withHasLess(true)
                 .merge();
 
+            let feedIds = currentFeedIds.map((a) => a.id);
+
             return state.merge({
-                activities,
+                feedIds,
                 links: action.links,
                 hasMore: action.activities.length > 0 && action.links && action.links.next
             });
