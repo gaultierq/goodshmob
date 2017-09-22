@@ -110,43 +110,41 @@ export function credentials(a, c, u) {
 
 }
 
-export function handleAction(action, state, ...actionNames: string[]) {
+
+
+
+export function handleAction(action, state, idPromise, ...actionNames: string[]) {
+
 
     for (let actionName of actionNames) {
-
-        let createMerge = (newVar) => {
-            let toMerge = {};
-            toMerge[actionName] = newVar;
-            return toMerge;
+        let formatResult =  (toMerge) => {
+            return idPromise ? {[actionName]: {[idPromise()]: toMerge}} : {[actionName]: toMerge};
         };
 
         let type: string = action.type;
         switch (type) {
             case composeName(actionName, REQUEST):
-                let toMerge = createMerge({ requesting: true });
-                return state.merge(toMerge);
+                return formatResult({ requesting: true });
             case composeName(actionName, SUCCESS):
                 let payload = action.payload;
-                let data = Util.parse(payload);
-                return state.merge(createMerge({
+                let data = payload ? Util.parse(payload) : null;
+                return formatResult({
                     data: data,
                     requesting: false,
                     error: null
-                }));
+                });
             case composeName(actionName, FAILURE):
                 let error = action.payload;
                 console.error(error);
-                return state.merge(
-                    createMerge({
-                        requesting: false,
-                        error: error
-                    }));
+                return formatResult({
+                    requesting: false,
+                    error: error
+                });
         }
     }
 
 
-
-    return state;
+    return null;
 }
 
 

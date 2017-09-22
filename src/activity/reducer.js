@@ -5,7 +5,9 @@ import * as types from './actionTypes';
 import * as Api from "../utils/Api";
 import * as Util from "../utils/ModelUtils";
 
-const initialState = Immutable(Object.assign({all: {}, like: {}}, createDefault(types.FETCH, types.LIKE)));
+const initialState = Immutable(Object.assign(
+    {all: {}, like: {}, unlike: {}},
+    createDefault(types.FETCH, types.LIKE)));
 
 let updateActivitiesStore = function (activity, state) {
     let id: string = activity.id;
@@ -15,8 +17,10 @@ let updateActivitiesStore = function (activity, state) {
     return state;
 };
 export default function reduce(state:any = initialState, action: any) {
-
-    state = Api.handleAction(action, state, types.FETCH, types.LIKE);
+    let toMerge = Api.handleAction(action, state, () => action.meta.id, types.FETCH, types.LIKE, types.UNLIKE);
+    if (toMerge) {
+        state = state.merge(toMerge, {deep: true})
+    }
 
     switch (action.type) {
         case types.APPEND_FETCHED_ACTIVITIES:
@@ -35,14 +39,14 @@ export default function reduce(state:any = initialState, action: any) {
             let like = Util.parse(action.payload);
             let activity = like.resource;
             state = updateActivitiesStore(activity, state);
-            //state = Immutable.setIn(state, ["all", action.meta.id, "meta", "liked"], true);
+            //state = Immutable.setIn(state, ["all", action.meta.activityId, "meta", "liked"], true);
             break;
         }
         case Api.composeName(types.UNLIKE, Api.SUCCESS):{
-            let id = action.meta.id;
-            state = Immutable.setIn(state, ["all", id, "meta", "liked"], false);
-            let count = state.all[id].meta["likes-count"];
-            state = Immutable.setIn(state, ["all", id, "meta", "likes-count"], --count);
+
+            state = Immutable.setIn(state, ["all", action.meta.id, "meta", "liked"], false);
+            let count = state.all[action.meta.id].meta["likes-count"];
+            state = Immutable.setIn(state, ["all", action.meta.id, "meta", "likes-count"], --count);
             break;
         }
     }

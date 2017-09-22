@@ -166,7 +166,7 @@ class HomeScreen extends Component {
         let it = item.item;
         return <ActivityCell
             onPressItem={() => this.navToActivity(it)}
-            activity={it}
+            activityId={it.id}
         />
     }
 

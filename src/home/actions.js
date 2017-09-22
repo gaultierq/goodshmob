@@ -18,7 +18,7 @@ export function fetchActivities(callback?) {
         // dispatch({
         //     type: types.APPEND_FETCHED_ACTIVITIES,
         //     activities: Util.parse(fixtures)
-        //     });
+        // });
     };
 }
 
@@ -46,7 +46,7 @@ let submit = function (call, dispatch, onFinished) {
         })
         .then(() => {
             onFinished && onFinished();
-    });
+        });
 };
 
 

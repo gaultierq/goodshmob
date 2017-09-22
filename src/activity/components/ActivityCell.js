@@ -12,7 +12,9 @@ import {connect} from "react-redux";
 class ActivityCell extends React.Component {
 
     render() {
-        let activity: Model.Activity = this.props.activity;
+        let activity = this.getActivity();
+
+        //let activity: Model.Activity = this.props.activity;
         let user: Model.User = activity.user;
         let resource = activity.resource;
         let target: Model.List = activity.target;
@@ -125,6 +127,10 @@ class ActivityCell extends React.Component {
         )
     }
 
+    getActivity() {
+        return this.props.activity.all[this.props.activityId];
+    }
+
     renderFollowButton(target) {
         return target.primary ?
             <TouchableOpacity>
@@ -150,16 +156,16 @@ class ActivityCell extends React.Component {
     }
 
     renderGoodshButton(image, likesCount, onActivityPressed) {
-        let activity = this.props.activity;
+        let activity = this.getActivity();
         let liked = activity.meta && activity.meta["liked"];
 
-        let goodshButtonColor = liked ? UI.Colors.green : UI.Colors.white;
+        let goodshButtonColor = (this.isLiking() || this.isUnliking()) ? UI.Colors.grey1 : liked ? UI.Colors.green : UI.Colors.white;
         return <View style={{alignItems: 'center',}}>
             <TouchableHighlight
                 onPress={onActivityPressed}
                 style={{
                 alignSelf: 'center',
-                height: 150,
+                height: 165,
                 width: "100%",
             }}>
                 <Image
@@ -171,21 +177,22 @@ class ActivityCell extends React.Component {
                     }}
                 />
             </TouchableHighlight>
-            <View style={
+            <TouchableHighlight
+                onPress={this.onGoodshPressed.bind(this)}
+                style={
                 {
                     backgroundColor : "white",
                     width: 60,
                     height: 30,
                     position: 'absolute',
-                    bottom: -15,
+                    bottom: 0,
                     borderRadius: 5,
                     padding: 2.5,
 
                 }
             }>
 
-                <TouchableOpacity
-                    onPress={this.onGoodshPressed.bind(this)}
+                <View
                     style={
                     {
                         width: "100%",
@@ -209,8 +216,8 @@ class ActivityCell extends React.Component {
                     />
                     {!!likesCount && <Text style={{fontSize: 12, marginLeft: 3}}>{likesCount}</Text>}
 
-                </TouchableOpacity>
-            </View>
+                </View>
+            </TouchableHighlight>
 
         </View>
     }
@@ -227,10 +234,29 @@ class ActivityCell extends React.Component {
 
 
     onGoodshPressed() {
-        let {id, type} = this.props.activity;
-        let alreadyLiked = this.props.activity.meta["liked"];
+        if (this.isLiking() || this.isUnliking()) return;
+
+        let activity = this.getActivity();
+        let {id, type} = activity;
+        let alreadyLiked = activity.meta["liked"];
         let action = alreadyLiked ? activityAction.unlike : activityAction.like;
         this.props.dispatch(action(id, type));
     }
+
+    isLiking() {
+        return this.isRequesting(this.props.activity.like);
+    }
+
+    isUnliking() {
+        return this.isRequesting(this.props.activity.unlike);
+    }
+
+    isRequesting(method) {
+        let lastLikeRequest = method && method[this.props.activityId];
+        return lastLikeRequest && lastLikeRequest.requesting;
+    }
 }
-export default connect()(ActivityCell);
+const mapStateToProps = (state, ownProps) => ({
+    activity: state.activity
+});
+export default connect(mapStateToProps)(ActivityCell);
