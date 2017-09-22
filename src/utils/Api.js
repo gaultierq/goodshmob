@@ -130,7 +130,7 @@ export function handleAction(action, state, ...actionNames: string[]) {
                 let data = Util.parse(payload);
                 return state.merge(createMerge({
                     data: data,
-                    fetching: false,
+                    requesting: false,
                     error: null
                 }));
             case composeName(actionName, FAILURE):
@@ -138,7 +138,7 @@ export function handleAction(action, state, ...actionNames: string[]) {
                 console.error(error);
                 return state.merge(
                     createMerge({
-                        fetching: false,
+                        requesting: false,
                         error: error
                     }));
         }
@@ -160,13 +160,15 @@ function add(item: string): string {
     return item;
 }
 
-export function createSimpleApiCall(route: string, method: string, actionName: string) {
+export function createSimpleApiCall(route: string, method: string, actionName: string, meta?: any) {
     return {
         [CALL_API]: {
             endpoint: `${API_END_POINT}/` + route,
             method: method,
             headers: headers(),
-            types: ALL_API_TYPE.map((type) => composeName(actionName, type))
+            types: ALL_API_TYPE.map((type) => {
+                return {type: composeName(actionName, type), meta};
+            })
         }
     }
 };

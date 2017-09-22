@@ -27,14 +27,18 @@ let getType = function (activityType) {
 
 export function fetchActivity(activityId, activityType) {
     let type = getType(activityType);
-
     return Api.createSimpleApiCall(`${type}/${activityId}`, 'GET', types.FETCH);
 }
 
 
 export function like(activityId: string, activityType: string) {
     let type = getType(activityType);
-    return Api.createSimpleApiCall(`${type}/${activityId}/likes`, 'POST', types.LIKE);
+    return Api.createSimpleApiCall(`${type}/${activityId}/likes`, 'POST', types.LIKE, {id: activityId});
+}
+
+export function unlike(activityId: string, activityType: string) {
+    let type = getType(activityType);
+    return Api.createSimpleApiCall(`${type}/${activityId}/likes`, 'DELETE', types.UNLIKE, {id: activityId});
 }
 
 

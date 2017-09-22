@@ -228,7 +228,9 @@ class ActivityCell extends React.Component {
 
     onGoodshPressed() {
         let {id, type} = this.props.activity;
-        this.props.dispatch(activityAction.like(id, type));
+        let alreadyLiked = this.props.activity.meta["liked"];
+        let action = alreadyLiked ? activityAction.unlike : activityAction.like;
+        this.props.dispatch(action(id, type));
     }
 }
 export default connect()(ActivityCell);
