@@ -122,15 +122,25 @@ export function createObject(source: Source, store: any): Base {
             let srcObj = source.relationships[relKey];
             if (!srcObj || !srcObj.data) return;
 
-            let relObj: Base = createFlatObject(srcObj.data);
+            //object vs array
 
-            if (relObj) {
-                if (store && store[relObj.type]) {
-                    let stored = store[relObj.type][relObj.id];
-                    if (stored) {
-                        Object.assign(relObj, stored);
+            let objectFromStore = (src) => {
+                let relObj: Base = createFlatObject(src);
+
+                //populate from store
+                if (relObj) {
+                    if (store && store[relObj.type]) {
+                        let stored = store[relObj.type][relObj.id];
+                        if (stored) {
+                            Object.assign(relObj, stored);
+                        }
                     }
                 }
+                return relObj;
+            };
+
+            let relObj = Array.isArray(srcObj.data) ?srcObj.data.map((a) => objectFromStore(a)) :  objectFromStore(srcObj.data);
+            if (relObj) {
                 relResult[relKey] = relObj;
             }
         });
