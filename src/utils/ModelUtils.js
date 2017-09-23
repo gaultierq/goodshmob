@@ -6,21 +6,28 @@ import * as StringUtils from "./StringUtils"
 
 export function parse(data: any) {
 
-    let store = {};
+    let createStore =  (store) => {
 
-    if (data.included) {
+        if (data.included) {
+            data.included.map((source) => {
+                let obj: Base = createObject(source, store);
+                if (obj) {
+                    // $FlowFixMe
+                    store[obj.type] = store[obj.type] || {};
+                    // $FlowFixMe
+                    store[obj.type][obj.id] = obj;
+                }
+            });
+        }
+        return store;
+    };
 
-        data.included.map((source) => {
+    let store = createStore({});
 
-            let obj: Base = this.createObject(source);
-            if (obj) {
-                // $FlowFixMe
-                store[obj.type] = store[obj.type] || {};
-                // $FlowFixMe
-                store[obj.type][obj.id] = obj;
-            }
-        });
-    }
+    //this is a hack to avoid too much thinking
+    //TODO: do the thinking
+    store = createStore(store);
+
     let data2 = data.data;
     if (data2 instanceof Array) {
         return data2.map((o) => createObject(o, store));
@@ -125,7 +132,7 @@ export function createObject(source: Source, store: any): Base {
             //object vs array
 
             let objectFromStore = (src) => {
-                let relObj: Base = createFlatObject(src);
+                let relObj: Base = createObject(src, store);
 
                 //populate from store
                 if (relObj) {
