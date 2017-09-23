@@ -170,6 +170,7 @@ class ActivityCell extends React.Component {
             }}>
                 <Image
                     source={{uri: image}}
+                    resizeMode='contain'
                     style={{
                         alignSelf: 'center',
                         height: 150,

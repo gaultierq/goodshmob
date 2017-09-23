@@ -118,10 +118,10 @@ class HomeScreen extends Component {
                 <View style={{
                 }}>
                     {/* empty */}
-                    <ActivityIndicator
+                    {!home.feed.loaded && <ActivityIndicator
                         animating = {!home.feed.loaded}
                         size = "large"
-                    />
+                    />}
 
                     <FlatList
                         data={activities}
@@ -129,7 +129,7 @@ class HomeScreen extends Component {
                         keyExtractor={this.keyExtractor}
                         refreshControl={
                             <RefreshControl
-                                refreshing={home.load_feed.requesting}
+                                refreshing={!!home.load_feed.loaded && home.load_feed.requesting}
                                 onRefresh={this.onRefresh.bind(this)}
                             />
                         }
