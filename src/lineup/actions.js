@@ -17,6 +17,8 @@ let execLoad = function (url, type) {
                 payload: (action, state, res) => {
 
                     return res.json().then((payload) => {
+                        console.log("TEMP PAYLOAD START=======");
+                        console.log(JSON.stringify(payload));
                         return {
                             data: Util.parse(payload),
                             links: payload.links

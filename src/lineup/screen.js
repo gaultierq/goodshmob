@@ -3,8 +3,11 @@ import {StyleSheet, View, Button, Text, ScrollView, ActivityIndicator, FlatList,
 import  * as actions from './actions'
 import {connect} from "react-redux";
 import {AsyncStorage} from "react-native";
+import LineupCell from "./components/LineupCell";
 
 class LineupScreen extends Component {
+
+    keyExtractor = (item, index) => item.id;
 
     constructor(){
         super();
@@ -60,6 +63,19 @@ class LineupScreen extends Component {
         let it = item.item;
         return <Text>{JSON.stringify(it)}</Text>
     }
+
+
+    renderItem(item) {
+        let it = item.item;
+        return <LineupCell
+            onPressItem={() => this.navToLineupDetail(it)}
+            lineupId={it.id}
+        />
+    }
+
+    navToLineupDetail(it) {
+    }
+
 
     onRefresh() {
         this.loadFirst();

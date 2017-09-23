@@ -1,0 +1,360 @@
+{
+  "data": [
+    {
+      "id": "c340b3cd-328e-41ac-b598-a70322ad3d58",
+      "type": "lists",
+      "attributes": {
+        "created-at": "2017-08-08T16:07:01.346Z",
+        "name": "GoodshBox",
+        "primary": true,
+        "privacy": "everyone"
+      },
+      "relationships": {
+        "user": {
+          "data": {
+            "id": "1f73db2e-d236-4e64-b5ba-2f1d3c2aa28e",
+            "type": "users"
+          }
+        },
+        "savings": {
+          "data": [
+
+          ]
+        }
+      },
+      "links": {
+        "self": "http://test.host/lists/c340b3cd-328e-41ac-b598-a70322ad3d58"
+      },
+      "meta": {
+        "savings-count": 0
+      }
+    },
+    {
+      "id": "67e5d4dd-cd17-4822-b831-14591bdf8d19",
+      "type": "lists",
+      "attributes": {
+        "created-at": "2017-08-08T16:07:01.350Z",
+        "name": "ananas 14",
+        "primary": false,
+        "privacy": "everyone"
+      },
+      "relationships": {
+        "user": {
+          "data": {
+            "id": "1f73db2e-d236-4e64-b5ba-2f1d3c2aa28e",
+            "type": "users"
+          }
+        },
+        "savings": {
+          "data": [
+            {
+              "id": "1c4416da-f9fe-478c-8e43-3daa663a000f",
+              "type": "savings"
+            },
+            {
+              "id": "f2f43cd7-21f2-44ba-9697-3ed0e3799c41",
+              "type": "savings"
+            }
+          ]
+        }
+      },
+      "links": {
+        "self": "http://test.host/lists/67e5d4dd-cd17-4822-b831-14591bdf8d19"
+      },
+      "meta": {
+        "savings-count": 2
+      }
+    },
+    {
+      "id": "f32b6f62-a8ad-484e-8ee5-144e2cb8cb80",
+      "type": "lists",
+      "attributes": {
+        "created-at": "2017-08-08T16:07:01.367Z",
+        "name": "ananas 15",
+        "primary": false,
+        "privacy": "me"
+      },
+      "relationships": {
+        "user": {
+          "data": {
+            "id": "1f73db2e-d236-4e64-b5ba-2f1d3c2aa28e",
+            "type": "users"
+          }
+        },
+        "savings": {
+          "data": [
+            {
+              "id": "280ba2fe-9992-427b-95b5-ea93738c9517",
+              "type": "savings"
+            }
+          ]
+        }
+      },
+      "links": {
+        "self": "http://test.host/lists/f32b6f62-a8ad-484e-8ee5-144e2cb8cb80"
+      },
+      "meta": {
+        "savings-count": 1
+      }
+    }
+  ],
+  "included": [
+    {
+      "id": "1f73db2e-d236-4e64-b5ba-2f1d3c2aa28e",
+      "type": "users",
+      "attributes": {
+        "email": "foobar_41@example.com",
+        "first-name": "Foo_41",
+        "image": "http://www.example.com/foobar_41.png",
+        "last-name": "Bar_41"
+      },
+      "relationships": {
+        "goodshbox": {
+          "data": {
+            "id": "c340b3cd-328e-41ac-b598-a70322ad3d58",
+            "type": "lists"
+          }
+        },
+        "lists": {
+          "data": [
+            {
+              "id": "67e5d4dd-cd17-4822-b831-14591bdf8d19",
+              "type": "lists"
+            },
+            {
+              "id": "f32b6f62-a8ad-484e-8ee5-144e2cb8cb80",
+              "type": "lists"
+            }
+          ]
+        }
+      },
+      "links": {
+        "self": "http://test.host/users/1f73db2e-d236-4e64-b5ba-2f1d3c2aa28e"
+      }
+    },
+    {
+      "id": "1c4416da-f9fe-478c-8e43-3daa663a000f",
+      "type": "savings",
+      "attributes": {
+        "privacy": "me",
+        "type": "Saving",
+        "created-at": "2017-08-08T16:07:01.415Z",
+        "updated-at": "2017-08-08T16:07:01.415Z",
+        "description": "a description\nabout the item."
+      },
+      "relationships": {
+        "user": {
+          "data": {
+            "id": "1f73db2e-d236-4e64-b5ba-2f1d3c2aa28e",
+            "type": "users"
+          }
+        },
+        "resource": {
+          "data": {
+            "id": "79d30041-5baa-48be-9117-3f8931b9ff9b",
+            "type": "places"
+          }
+        },
+        "target": {
+          "data": {
+            "id": "67e5d4dd-cd17-4822-b831-14591bdf8d19",
+            "type": "lists"
+          }
+        },
+        "commentators": {
+          "data": [
+
+          ]
+        },
+        "comments": {
+          "data": [
+
+          ]
+        },
+        "related-activities": {
+          "data": [
+
+          ]
+        }
+      },
+      "links": {
+        "self": "http://test.host/savings/1c4416da-f9fe-478c-8e43-3daa663a000f"
+      },
+      "meta": {
+        "comments-count": 0,
+        "liked": false,
+        "likes-count": 0
+      }
+    },
+    {
+      "id": "79d30041-5baa-48be-9117-3f8931b9ff9b",
+      "type": "places",
+      "attributes": {
+        "image": "http://www.example.com/item.png",
+        "provider": "Google Places",
+        "subtitle": "an address",
+        "title": "a title",
+        "type": "Place",
+        "uid": "beee4867-d6d5-452d-8966-783416b9cafb",
+        "url": "http://www.example.com/item.html",
+        "location": null
+      },
+      "links": {
+        "self": "http://test.host/items/79d30041-5baa-48be-9117-3f8931b9ff9b"
+      },
+      "meta": {
+        "activities-count": 1
+      }
+    },
+    {
+      "id": "f2f43cd7-21f2-44ba-9697-3ed0e3799c41",
+      "type": "savings",
+      "attributes": {
+        "privacy": "everyone",
+        "type": "Saving",
+        "created-at": "2017-08-08T16:07:01.360Z",
+        "updated-at": "2017-08-08T16:07:01.360Z",
+        "description": "a description\nabout the item."
+      },
+      "relationships": {
+        "user": {
+          "data": {
+            "id": "1f73db2e-d236-4e64-b5ba-2f1d3c2aa28e",
+            "type": "users"
+          }
+        },
+        "resource": {
+          "data": {
+            "id": "07522aaa-d49d-4265-a12b-c5805ed82fa6",
+            "type": "places"
+          }
+        },
+        "target": {
+          "data": {
+            "id": "67e5d4dd-cd17-4822-b831-14591bdf8d19",
+            "type": "lists"
+          }
+        },
+        "commentators": {
+          "data": [
+
+          ]
+        },
+        "comments": {
+          "data": [
+
+          ]
+        },
+        "related-activities": {
+          "data": [
+
+          ]
+        }
+      },
+      "links": {
+        "self": "http://test.host/savings/f2f43cd7-21f2-44ba-9697-3ed0e3799c41"
+      },
+      "meta": {
+        "comments-count": 0,
+        "liked": false,
+        "likes-count": 0
+      }
+    },
+    {
+      "id": "07522aaa-d49d-4265-a12b-c5805ed82fa6",
+      "type": "places",
+      "attributes": {
+        "image": "http://www.example.com/item.png",
+        "provider": "Google Places",
+        "subtitle": "an address",
+        "title": "a title",
+        "type": "Place",
+        "uid": "29761c02-ad64-43f4-bc68-a3fa15f31420",
+        "url": "http://www.example.com/item.html",
+        "location": null
+      },
+      "links": {
+        "self": "http://test.host/items/07522aaa-d49d-4265-a12b-c5805ed82fa6"
+      },
+      "meta": {
+        "activities-count": 1
+      }
+    },
+    {
+      "id": "280ba2fe-9992-427b-95b5-ea93738c9517",
+      "type": "savings",
+      "attributes": {
+        "privacy": "everyone",
+        "type": "Saving",
+        "created-at": "2017-08-08T16:07:01.377Z",
+        "updated-at": "2017-08-08T16:07:01.377Z",
+        "description": "a description\nabout the item."
+      },
+      "relationships": {
+        "user": {
+          "data": {
+            "id": "1f73db2e-d236-4e64-b5ba-2f1d3c2aa28e",
+            "type": "users"
+          }
+        },
+        "resource": {
+          "data": {
+            "id": "e2b66153-d034-4038-a9f5-06e5f956f344",
+            "type": "places"
+          }
+        },
+        "target": {
+          "data": {
+            "id": "f32b6f62-a8ad-484e-8ee5-144e2cb8cb80",
+            "type": "lists"
+          }
+        },
+        "commentators": {
+          "data": [
+
+          ]
+        },
+        "comments": {
+          "data": [
+
+          ]
+        },
+        "related-activities": {
+          "data": [
+
+          ]
+        }
+      },
+      "links": {
+        "self": "http://test.host/savings/280ba2fe-9992-427b-95b5-ea93738c9517"
+      },
+      "meta": {
+        "comments-count": 0,
+        "liked": false,
+        "likes-count": 0
+      }
+    },
+    {
+      "id": "e2b66153-d034-4038-a9f5-06e5f956f344",
+      "type": "places",
+      "attributes": {
+        "image": "http://www.example.com/item.png",
+        "provider": "Google Places",
+        "subtitle": "an address",
+        "title": "a title",
+        "type": "Place",
+        "uid": "d54282f0-5c57-4e5f-b16c-dc0cf5905152",
+        "url": "http://www.example.com/item.html",
+        "location": null
+      },
+      "links": {
+        "self": "http://test.host/items/e2b66153-d034-4038-a9f5-06e5f956f344"
+      },
+      "meta": {
+        "activities-count": 1
+      }
+    }
+  ],
+  "links": {
+  }
+}

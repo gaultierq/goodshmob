@@ -8,8 +8,4 @@ export default class List extends Base {
     privacy;
     savings;
     user;
-
-    savings_count() {
-        //self.meta.fetch("savings-count", 0).to_i
-    }
 }

@@ -124,16 +124,10 @@ export function createObject(source: Source, store: any): Base {
 
             let relObj: Base = createFlatObject(srcObj.data);
 
-
             if (relObj) {
-
-                // if (relObj.id === "5c981d29-ec75-4f16-b326-4c52b54a456e") {
-                //     console.log("TEST: " + JSON.stringify(relObj));
-                // }
                 if (store && store[relObj.type]) {
                     let stored = store[relObj.type][relObj.id];
                     if (stored) {
-                        // console.debug("stored object found:" + JSON.stringify(stored));
                         Object.assign(relObj, stored);
                     }
                 }
