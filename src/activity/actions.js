@@ -40,17 +40,3 @@ export function unlike(activityId: string, activityType: string) {
     let type = getType(activityType);
     return Api.createSimpleApiCall(`${type}/${activityId}/likes`, 'DELETE', types.UNLIKE, {id: activityId});
 }
-
-
-// [types.FETCH_REQUEST,
-//     types.FETCH_SUCCESS,
-//     // {
-//     //     type: types.FETCH_SUCCESS,
-//     //     payload: (action, state, res) => {
-//     //         const contentType = res.headers.get('Content-Type');
-//     //         if (contentType && ~contentType.indexOf('json')) {
-//     //             return res.json();
-//     //         }
-//     //     }
-//     // },
-//     types.FETCH_FAILURE]

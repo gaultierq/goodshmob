@@ -139,47 +139,6 @@ export class Handler {
 }
 
 
-export function handleAction1(action, state, idPromise, ...actionNames: string[]) {
-
-    let actionTypes = [REQUEST, SUCCESS, FAILURE];
-
-    for (let actionName of actionNames) {
-        let formatResult =  (toMerge) => {
-            return idPromise ? {[actionName]: {[idPromise()]: toMerge}} : {[actionName]: toMerge};
-        };
-
-
-        let type: string = action.type;
-
-        for (let typ of actionTypes) {
-            if (composeName(actionName, typ) !== type) continue;
-
-            switch (typ) {
-                case REQUEST:
-                    return formatResult({ requesting: true });
-                case SUCCESS:
-                    let payload = action.payload;
-                    let data = payload ? Util.parse(payload) : null;
-                    return formatResult({
-                        data: data,
-                        requesting: false,
-                        error: null
-                    });
-                case FAILURE:
-                    let error = action.payload;
-                    console.error(error);
-                    return formatResult({
-                        requesting: false,
-                        error: error
-                    });
-            }
-        }
-    }
-
-    return null;
-}
-
-
 export function handleAction(action: any, idPromise: () => string, actionObject: ApiAction, ...actionTypes: string[]) {
     let actionName = actionObject.name();
 
@@ -228,14 +187,14 @@ function add(item: string): string {
     return item;
 }
 
-export function createSimpleApiCall(route: string, method: string, actionName: string, meta?: any) {
+export function createSimpleApiCall(route: string, method: string, apiAction: ApiAction, meta?: any) {
     return {
         [CALL_API]: {
             endpoint: `${API_END_POINT}/` + route,
             method: method,
             headers: headers(),
             types: ALL_API_TYPE.map((type) => {
-                return {type: composeName(actionName, type), meta};
+                return {type: apiAction.forType(type), meta};
             })
         }
     }

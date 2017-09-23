@@ -20,8 +20,7 @@ export default function reduce(state = initialState, action = {}) {
         new Api.Handler(action)
             .handle(types.LOAD_MORE_FEED, Api.REQUEST, Api.FAILURE)
             .handle(types.LOAD_FEED, Api.REQUEST, Api.FAILURE)
-            .obtain()
-    ;
+            .obtain();
 
     if (toMerge) {
         state = state.merge(toMerge, {deep: true})

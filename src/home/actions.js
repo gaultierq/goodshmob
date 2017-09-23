@@ -6,20 +6,16 @@ import * as Util from "../utils/ModelUtils"
 let fixtures = require("../fixtures/activities_fixtures2.json");
 import { CALL_API } from 'redux-api-middleware'
 
-export function loadFeed() {
-    let call = new Api.Call()
-        .withRoute("activities")
-        .withQuery({include: "user,resource,target"});
-
+let execLoad = function (url, type) {
     return {
         [CALL_API]: {
-            endpoint: call.getUrl(),
+            endpoint: url,
             method: "GET",
             headers: Api.headers(),
             types: [
-                types.LOAD_FEED.request(),
+                type.request(),
                 {
-                    type: types.LOAD_FEED.success(),
+                    type: type.success(),
                     payload: (action, state, res) => {
 
                         return res.json().then((payload) => {
@@ -31,40 +27,25 @@ export function loadFeed() {
 
                     },
                 },
-                types.LOAD_FEED.failure()
+                type.failure()
             ],
         }
     };
+};
+
+export function loadFeed() {
+    let call = new Api.Call()
+        .withRoute("activities")
+        .withQuery({include: "user,resource,target"});
+
+    return execLoad(call.getUrl(), types.LOAD_FEED);
 }
 
 export function loadMoreFeed(nextUrl:string) {
     let call = new Api.Call.parse(nextUrl)
         .withQuery({include: "user,resource,target"});
 
-    return {
-        [CALL_API]: {
-            endpoint: call.getUrl(),
-            method: "GET",
-            headers: Api.headers(),
-            types: [
-                types.LOAD_MORE_FEED.request(),
-                {
-                    type: types.LOAD_MORE_FEED.success(),
-                    payload: (action, state, res) => {
-
-                        return res.json().then((payload) => {
-                            return {
-                                activities: Util.parse(payload),
-                                links: payload.links
-                            };
-                        });
-
-                    },
-                },
-                types.LOAD_MORE_FEED.failure()
-            ],
-        }
-    };
+    return execLoad(call.getUrl(), types.LOAD_MORE_FEED);
 }
 
 

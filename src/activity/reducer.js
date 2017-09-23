@@ -17,11 +17,15 @@ let updateActivitiesStore = function (activity, state) {
     return state;
 };
 export default function reduce(state:any = initialState, action: any) {
-    let toMerge = Api.handleAction1(action, state, () => action.meta.id, types.FETCH, types.LIKE, types.UNLIKE);
 
-    if (toMerge) {
-        state = state.merge(toMerge, {deep: true})
-    }
+    let toMerge =
+        new Api.Handler(action, () => action.meta.id)
+            .handle(types.FETCH, Api.REQUEST, Api.SUCCESS, Api.FAILURE)
+            .handle(types.LIKE, Api.REQUEST, Api.SUCCESS, Api.FAILURE)
+            .handle(types.UNLIKE, Api.REQUEST, Api.SUCCESS, Api.FAILURE)
+            .obtain();
+
+    if (toMerge) state = state.merge(toMerge, {deep: true})
 
     switch (action.type) {
         case types.LOAD_FEED.success():
