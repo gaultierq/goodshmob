@@ -6,10 +6,10 @@ import SearchScreen from './SearchScreen';
 import AddScreen from './AddScreen';
 import NotifScreen from './NotifScreen';
 import AskScreen from './AskScreen';
-import LineUpScreen from './LineUpScreen';
 import CommunityScreen from './CommunityScreen';
 import DebugScreen from './DebugScreen';
 import ActivityScreen from '../activity/screen';
+import LineupScreen from '../lineup/screen';
 
 // register all screens of the app (including internal ones)
 export function registerScreens(store, Provider) {
@@ -20,7 +20,7 @@ export function registerScreens(store, Provider) {
     Navigation.registerComponent('goodsh.NotifScreen', () => NotifScreen, store, Provider);
     Navigation.registerComponent('goodsh.AskScreen', () => AskScreen, store, Provider);
     Navigation.registerComponent('goodsh.DebugScreen', () => DebugScreen, store, Provider);
-    Navigation.registerComponent('goodsh.LineUpScreen', () => LineUpScreen, store, Provider);
     Navigation.registerComponent('goodsh.CommunityScreen', () => CommunityScreen, store, Provider);
     Navigation.registerComponent('goodsh.ActivityScreen', () => ActivityScreen, store, Provider);
+    Navigation.registerComponent('goodsh.LineupScreen', () => LineupScreen, store, Provider);
 }
