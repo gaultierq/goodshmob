@@ -216,7 +216,7 @@ export class Merge<T> {
     }
 
     merge() {
-        console.log(`merging ${JSON.stringify(this.mergeMe)} into ${JSON.stringify(this.mergeInto)}`);
+        //console.log(`merging ${JSON.stringify(this.mergeMe)} into ${JSON.stringify(this.mergeInto)}`);
         let result = [];
 
         //(start, end)

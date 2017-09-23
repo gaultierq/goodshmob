@@ -57,10 +57,12 @@ class HomeScreen extends Component {
     }
 
     loadFirst() {
+        if (this.props.home.load_feed.requesting) return;
         this.props.dispatch(activitesActions.loadFeed());
     }
 
     loadMore() {
+        if (this.props.home.load_more_feed.requesting) return;
         if (!this.props.home.links) return;
         let nextUrl = this.props.home.links.next;
         console.log("Next url:" + nextUrl);
@@ -101,9 +103,6 @@ class HomeScreen extends Component {
         if (!isUnique(activities.map((a)=>a.id))) throw new Error(`activities ids not unique 2`);
         if (!isUnique(activities)) throw new Error(`activities not unique`);
 
-
-
-
         return (
             <ImageBackground
                 source={require('../img/home_background.png')}
@@ -136,13 +135,13 @@ class HomeScreen extends Component {
                         }
                         onEndReached={ this.onEndReached.bind(this) }
                         onEndReachedThreshold={0}
-                    />
+                        ListFooterComponent={(home.load_more_feed.requesting) &&
 
-                    <ActivityIndicator
-                        animating = {home.load_more_feed.requesting}
-                        size = "small"
+                        <ActivityIndicator
+                            animating = {home.load_more_feed.requesting}
+                            size = "small"
+                        />}
                     />
-
                 </View>
 
             </ImageBackground>
