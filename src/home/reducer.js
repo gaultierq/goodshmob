@@ -13,7 +13,7 @@ export default function fetchActivities(state = initialState, action = {}) {
         case types.APPEND_FETCHED_ACTIVITIES:
 
             //perfs ?
-            let currentFeedIds = state.feedIds.asMutable().map((id) => {id});
+            let currentFeedIds = state.feedIds.asMutable().map((id) => {return {id}});
 
 
             new DataUtils.Merge(currentFeedIds, action.activities)

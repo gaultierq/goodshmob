@@ -28,7 +28,7 @@ export default function reduce(state:any = initialState, action: any) {
                 map[obj.id] = obj;
                 return map;
             }, {});
-            state = state.merge({all: res});
+            state = state.merge({all: res}, {deep: true});
             break;
         case Api.composeName(types.FETCH, Api.SUCCESS):
             let activity = Util.parse(action.payload);
