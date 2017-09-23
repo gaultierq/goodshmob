@@ -6,6 +6,7 @@ import {connect} from "react-redux";
 import ActivityCell from "../activity/components/ActivityCell";
 import * as UI from "./UIStyles"
 import  * as activitesActions from '../home/actions'
+import {isUnique} from "../utils/ArrayUtil";
 
 class HomeScreen extends Component {
 
@@ -28,17 +29,8 @@ class HomeScreen extends Component {
 
     keyExtractor = (item, index) => item.id;
 
-    //todo: in redux
-    state: {
-        loadingFirst: boolean;
-        loadingMore: boolean;
-        loadedOnce: boolean;
-    };
-
-
     constructor(props){
         super();
-        this.state = {loadingFirst: false, loadingMore: false, loadedOnce: false};
         props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
@@ -64,27 +56,18 @@ class HomeScreen extends Component {
         this.loadFirst();
     }
 
-    loadMore() {
-        if (this.state.loadingMore) return;
-        this.setState({loadingMore: true});
+    loadFirst() {
+        this.props.dispatch(activitesActions.loadFeed());
+    }
 
+    loadMore() {
         if (!this.props.home.links) return;
         let nextUrl = this.props.home.links.next;
         console.log("Next url:" + nextUrl);
-        this.props.dispatch(activitesActions.fetchMoreActivities(nextUrl, () => {
-            this.setState({loadingMore: false});
-        }));
+        this.props.dispatch(activitesActions.loadMoreFeed(nextUrl));
     }
 
-    loadFirst() {
-        if (this.state.loadingFirst) return;
-        this.setState({loadingFirst: true});
 
-        this.props.dispatch(activitesActions.fetchActivities(
-            ()=> {
-                this.setState({loadingFirst: false, loadedOnce: true});
-            }));
-    }
 
     navToActivity(activity) {
         console.info("onPressItem: " + JSON.stringify(activity));
@@ -106,7 +89,20 @@ class HomeScreen extends Component {
     }
 
     render() {
-        let activities = this.props.home.feedIds.map((id) => this.props.activity.all[id]);
+        let home = this.props.home;
+        let activities = home.feed.ids.map((id) => {
+            let activity = this.props.activity.all[id];
+            if (!activity) throw new Error("no activity found for id="+id);
+            return activity;
+        });
+
+        this.checkEmpty(activities);
+        if (!isUnique(home.feed.ids)) throw new Error(`activities ids not unique`);
+        if (!isUnique(activities.map((a)=>a.id))) throw new Error(`activities ids not unique 2`);
+        if (!isUnique(activities)) throw new Error(`activities not unique`);
+
+
+
 
         return (
             <ImageBackground
@@ -122,8 +118,9 @@ class HomeScreen extends Component {
 
                 <View style={{
                 }}>
+                    {/* empty */}
                     <ActivityIndicator
-                        animating = {!this.state.loadedOnce && this.state.loadingFirst}
+                        animating = {!home.feed.loaded}
                         size = "large"
                     />
 
@@ -133,7 +130,7 @@ class HomeScreen extends Component {
                         keyExtractor={this.keyExtractor}
                         refreshControl={
                             <RefreshControl
-                                refreshing={this.state.loadingFirst}
+                                refreshing={home.load_feed.requesting}
                                 onRefresh={this.onRefresh.bind(this)}
                             />
                         }
@@ -142,7 +139,7 @@ class HomeScreen extends Component {
                     />
 
                     <ActivityIndicator
-                        animating = {this.state.loadingMore}
+                        animating = {home.load_more_feed.requesting}
                         size = "small"
                     />
 
@@ -151,6 +148,14 @@ class HomeScreen extends Component {
             </ImageBackground>
         );
     }
+
+    checkEmpty(activities) {
+        let empty = activities.filter((elem, index, self) => {
+            return typeof elem === 'undefined';
+        });
+        if (empty.length > 0) throw new Error(`empty activities found`);
+    }
+
 
     onEndReached() {
         if (this.props.home.hasMore) {
@@ -163,6 +168,7 @@ class HomeScreen extends Component {
     }
 
     renderItem(item) {
+
         let it = item.item;
         return <ActivityCell
             onPressItem={() => this.navToActivity(it)}
@@ -171,7 +177,6 @@ class HomeScreen extends Component {
     }
 
     onRefresh() {
-        this.setState({loadingFirst: true});
         this.loadFirst();
     }
 }

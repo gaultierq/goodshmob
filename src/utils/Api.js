@@ -71,6 +71,10 @@ export class Call {
         let urlString = this.url.toString();
         return xhr(urlString, 'GET', this.body);
     }
+
+    getUrl() {
+        return this.url.toString();
+    }
 }
 
 let xhr = function (route, verb, body) {
@@ -110,22 +114,89 @@ export function credentials(a, c, u) {
 
 }
 
+export class Handler {
+    action: any;
+    idPromise: () => string;
+    result: any;
+
+    constructor(action, idPromise) {
+        this.action = action;
+        this.idPromise = idPromise;
+    }
+
+    handle(apiAction: ApiAction, ...actionTypes: string[]) {
+        if (!this.result) this.result = handleAction(this.action, this.idPromise, apiAction, ...actionTypes);
+        return this;
+    }
+
+    and(actionName, ...actionTypes) {
+        return this.handle(actionName, actionTypes);
+    }
+
+    obtain() {
+        return this.result;
+    }
+}
 
 
+export function handleAction1(action, state, idPromise, ...actionNames: string[]) {
 
-export function handleAction(action, state, idPromise, ...actionNames: string[]) {
-
+    let actionTypes = [REQUEST, SUCCESS, FAILURE];
 
     for (let actionName of actionNames) {
         let formatResult =  (toMerge) => {
             return idPromise ? {[actionName]: {[idPromise()]: toMerge}} : {[actionName]: toMerge};
         };
 
+
         let type: string = action.type;
-        switch (type) {
-            case composeName(actionName, REQUEST):
+
+        for (let typ of actionTypes) {
+            if (composeName(actionName, typ) !== type) continue;
+
+            switch (typ) {
+                case REQUEST:
+                    return formatResult({ requesting: true });
+                case SUCCESS:
+                    let payload = action.payload;
+                    let data = payload ? Util.parse(payload) : null;
+                    return formatResult({
+                        data: data,
+                        requesting: false,
+                        error: null
+                    });
+                case FAILURE:
+                    let error = action.payload;
+                    console.error(error);
+                    return formatResult({
+                        requesting: false,
+                        error: error
+                    });
+            }
+        }
+    }
+
+    return null;
+}
+
+
+export function handleAction(action: any, idPromise: () => string, actionObject: ApiAction, ...actionTypes: string[]) {
+    let actionName = actionObject.name();
+
+    let formatResult =  (toMerge) => {
+        return idPromise ? {[actionName]: {[idPromise()]: toMerge}} : {[actionName]: toMerge};
+    };
+
+    let type: string = action.type;
+
+    for (let typ of actionTypes) {
+
+        if (actionObject.forType(typ) !== type) continue;
+
+        switch (typ) {
+            case REQUEST:
                 return formatResult({ requesting: true });
-            case composeName(actionName, SUCCESS):
+            case SUCCESS:
                 let payload = action.payload;
                 let data = payload ? Util.parse(payload) : null;
                 return formatResult({
@@ -133,7 +204,7 @@ export function handleAction(action, state, idPromise, ...actionNames: string[])
                     requesting: false,
                     error: null
                 });
-            case composeName(actionName, FAILURE):
+            case FAILURE:
                 let error = action.payload;
                 console.error(error);
                 return formatResult({
@@ -142,7 +213,6 @@ export function handleAction(action, state, idPromise, ...actionNames: string[])
                 });
         }
     }
-
 
     return null;
 }
@@ -170,3 +240,34 @@ export function createSimpleApiCall(route: string, method: string, actionName: s
         }
     }
 };
+
+
+export class ApiAction {
+
+    actionName: string;
+
+    constructor(actionName: string) {
+        this.actionName = actionName;
+
+    }
+
+    success() {
+        return composeName(this.actionName, SUCCESS);
+    }
+
+    request() {
+        return composeName(this.actionName, REQUEST);
+    }
+
+    failure() {
+        return this.forType(FAILURE);
+    }
+
+    forType(apiType: string) {
+        return composeName(this.actionName, apiType);
+    }
+
+    name() {
+        return this.actionName;
+    }
+}

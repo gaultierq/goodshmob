@@ -1,1 +1,4 @@
-export const APPEND_FETCHED_ACTIVITIES = 'goodsh.activities.APPEND_FETCHED_ACTIVITIES';
+import * as Api from "../utils/Api";
+
+export const LOAD_FEED = new Api.ApiAction("load_feed");
+export const LOAD_MORE_FEED = new Api.ApiAction("load_more_feed");

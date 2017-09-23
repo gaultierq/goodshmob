@@ -17,24 +17,26 @@ let updateActivitiesStore = function (activity, state) {
     return state;
 };
 export default function reduce(state:any = initialState, action: any) {
-    let toMerge = Api.handleAction(action, state, () => action.meta.id, types.FETCH, types.LIKE, types.UNLIKE);
+    let toMerge = Api.handleAction1(action, state, () => action.meta.id, types.FETCH, types.LIKE, types.UNLIKE);
+
     if (toMerge) {
         state = state.merge(toMerge, {deep: true})
     }
 
     switch (action.type) {
-        case types.APPEND_FETCHED_ACTIVITIES:
-            let res = action.activities.reduce((map, obj) => {
+        case types.LOAD_FEED.success():
+        case types.LOAD_MORE_FEED.success():
+            let res = action.payload.activities.reduce((map, obj) => {
                 map[obj.id] = obj;
                 return map;
             }, {});
             state = state.merge({all: res}, {deep: true});
             break;
-        case Api.composeName(types.FETCH, Api.SUCCESS):
+        case types.FETCH.success():
             let activity = Util.parse(action.payload);
             state = updateActivitiesStore(activity, state);
             break;
-        case Api.composeName(types.LIKE, Api.SUCCESS):
+        case types.LIKE.success():
         {
             let like = Util.parse(action.payload);
             let activity = like.resource;
@@ -42,7 +44,7 @@ export default function reduce(state:any = initialState, action: any) {
             //state = Immutable.setIn(state, ["all", action.meta.activityId, "meta", "liked"], true);
             break;
         }
-        case Api.composeName(types.UNLIKE, Api.SUCCESS):{
+        case types.UNLIKE.success():{
 
             state = Immutable.setIn(state, ["all", action.meta.id, "meta", "liked"], false);
             let count = state.all[action.meta.id].meta["likes-count"];
