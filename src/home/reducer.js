@@ -28,7 +28,7 @@ export default function reduce(state = initialState, action = {}) {
 
     let handle = function (apiAction) {
         let payload = action.payload;
-        let activities = payload.activities;
+        let activities = payload.data;
         let currentFeedIds = state.feed.ids.asMutable()
             .map((id) => {
                 return {id}

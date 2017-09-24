@@ -20,17 +20,17 @@ export default function reduce(state:any = initialState, action: any) {
 
     let toMerge =
         new Api.Handler(action, () => action.meta.id)
-            .handle(types.FETCH, Api.REQUEST, Api.SUCCESS, Api.FAILURE)
-            .handle(types.LIKE, Api.REQUEST, Api.SUCCESS, Api.FAILURE)
-            .handle(types.UNLIKE, Api.REQUEST, Api.SUCCESS, Api.FAILURE)
+            .handleAll(types.FETCH)
+            .handleAll(types.LIKE)
+            .handleAll(types.UNLIKE)
             .obtain();
 
-    if (toMerge) state = state.merge(toMerge, {deep: true})
+    if (toMerge) state = state.merge(toMerge, {deep: true});
 
     switch (action.type) {
         case types.LOAD_FEED.success():
         case types.LOAD_MORE_FEED.success():
-            let res = action.payload.activities.reduce((map, obj) => {
+            let res = action.payload.data.reduce((map, obj) => {
                 map[obj.id] = obj;
                 return map;
             }, {});

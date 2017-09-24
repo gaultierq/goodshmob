@@ -129,8 +129,12 @@ export class Handler {
         return this;
     }
 
-    and(actionName, ...actionTypes) {
-        return this.handle(actionName, actionTypes);
+    handleAll(apiAction: ApiAction) {
+        return this.handle(apiAction, REQUEST, SUCCESS, FAILURE);
+    }
+
+    and(apiAction: ApiAction, ...actionTypes: string[]) {
+        return this.handle(apiAction, actionTypes);
     }
 
     obtain() {
@@ -198,8 +202,35 @@ export function createSimpleApiCall(route: string, method: string, apiAction: Ap
             })
         }
     }
-};
+}
 
+//TODO: merge me with my sis
+export function createSimpleApiCall2(url, type) {
+    return {
+        [CALL_API]: {
+            endpoint: url,
+            method: "GET",
+            headers: headers(),
+            types: [
+                type.request(),
+                {
+                    type: type.success(),
+                    payload: (action, state, res) => {
+
+                        return res.json().then((payload) => {
+                            return {
+                                data: Util.parse(payload),
+                                links: payload.links
+                            };
+                        });
+
+                    },
+                },
+                type.failure()
+            ],
+        }
+    };
+}
 
 export class ApiAction {
 
