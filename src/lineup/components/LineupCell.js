@@ -23,27 +23,20 @@ class LineupCell extends React.Component {
 
         let target: Model.List = lineup.target;
         let cardMargin = 12;
-        let targetName;
-        if (target) {
-            let count = target.meta ? target.meta["savings-count"] : 0;
-            targetName = target.name;
-            if (count) targetName += " (" + count + ")"
-        }
-        let likesCount = lineup.meta ? lineup.meta["likes-count"] : 0;
 
         return (
-            <View style={{
-                backgroundColor: "transparent",
-                marginTop: 10,
-                marginBottom: 10
-            }}>
-                <Text>{lineup.name}</Text>
-                <FlatList
-                    data={savings}
-                    renderItem={this.renderItem.bind(this)}
-                    keyExtractor={(item, index) => item.id}
-                    horizontal={true}
-                />
+            <View style={{}}>
+                <Text style={Object.assign({backgroundColor: 'transparent'}, UI.SIDE_MARGINS(cardMargin))}>{lineup.name}</Text>
+
+                <View style={Object.assign({marginTop: cardMargin, marginBottom: cardMargin}, UI.CARD(cardMargin))}>
+                    <FlatList
+                        data={savings}
+                        renderItem={this.renderItem.bind(this)}
+                        keyExtractor={(item, index) => item.id}
+                        horizontal={true}
+                    />
+                </View>
+
 
 
             </View>

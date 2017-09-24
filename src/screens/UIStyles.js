@@ -11,3 +11,21 @@ export const Colors = Object.freeze({
     green: '#1ec',
     white: '#fff'
 });
+export const CARD = (cardMargin) => {
+    return {
+        backgroundColor: "white",
+        marginLeft: cardMargin,
+        marginRight: cardMargin,
+        shadowColor: "#000",
+        shadowOpacity: 0.3,
+        shadowOffset: {width: 2, height: 2},
+        borderRadius: 4,
+        shadowRadius: 2
+    }
+};
+export const SIDE_MARGINS = (margin) => {
+    return {
+        marginLeft: margin,
+        marginRight: margin,
+    }
+};

@@ -4,6 +4,7 @@ import  * as actions from './actions'
 import {connect} from "react-redux";
 import {AsyncStorage} from "react-native";
 import LineupCell from "./components/LineupCell";
+import {MainBackground} from "../screens/UIComponents";
 
 class LineupScreen extends Component {
 
@@ -33,6 +34,7 @@ class LineupScreen extends Component {
             return lin;
         });
         return (
+            <MainBackground>
             <ScrollView>
                 <View style={styles.container}>
                     <FlatList
@@ -56,6 +58,7 @@ class LineupScreen extends Component {
                     />
                 </View>
             </ScrollView>
+            </MainBackground>
         );
     }
 

@@ -4,6 +4,7 @@ import  * as actions from './actions'
 import {connect} from "react-redux";
 import {AsyncStorage} from "react-native";
 import FriendCell from "./components/FriendCell";
+import {MainBackground} from "../screens/UIComponents";
 
 class CommunityScreen extends Component {
 
@@ -34,6 +35,7 @@ class CommunityScreen extends Component {
             return lin;
         });
         return (
+            <MainBackground>
             <ScrollView>
                 <View style={styles.container}>
                     <FlatList
@@ -57,6 +59,7 @@ class CommunityScreen extends Component {
                     />
                 </View>
             </ScrollView>
+            </MainBackground>
         );
     }
 

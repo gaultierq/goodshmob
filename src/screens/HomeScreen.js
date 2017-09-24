@@ -4,7 +4,8 @@ import React, {Component} from 'react';
 import {StyleSheet, View, FlatList, ImageBackground, RefreshControl, ActivityIndicator} from 'react-native';
 import {connect} from "react-redux";
 import ActivityCell from "../activity/components/ActivityCell";
-import * as UI from "./UIStyles"
+import * as UIStyles from "./UIStyles"
+import {MainBackground} from "./UIComponents"
 import  * as activitesActions from '../home/actions'
 import {isUnique} from "../utils/ArrayUtil";
 
@@ -25,7 +26,7 @@ class HomeScreen extends Component {
         ],
     };
 
-    static navigatorStyle = UI.NavStyles;
+    static navigatorStyle = UIStyles.NavStyles;
 
     keyExtractor = (item, index) => item.id;
 
@@ -69,8 +70,6 @@ class HomeScreen extends Component {
         this.props.dispatch(activitesActions.loadMoreFeed(nextUrl));
     }
 
-
-
     navToActivity(activity) {
         console.info("onPressItem: " + JSON.stringify(activity));
         let passProps = {activityId: activity.id, activityType: activity.type};
@@ -104,19 +103,8 @@ class HomeScreen extends Component {
         if (!isUnique(activities)) throw new Error(`activities not unique`);
 
         return (
-            <ImageBackground
-                source={require('../img/home_background.png')}
-                style={{
-                    flex: 1,
-                    position: 'absolute',
-                    width: '100%',
-                    height: '100%',
-                    justifyContent: 'center',
-                }}
-            >
-
-                <View style={{
-                }}>
+            <MainBackground>
+                <View>
                     {/* empty */}
                     {!home.feed.loaded && <ActivityIndicator
                         animating = {!home.feed.loaded}
@@ -144,7 +132,7 @@ class HomeScreen extends Component {
                     />
                 </View>
 
-            </ImageBackground>
+            </MainBackground>
         );
     }
 

@@ -90,15 +90,7 @@ class ActivityCell extends React.Component {
                     <Text style={{fontSize: 14}}>{activity.description}</Text>
                 </View>
                 {/*card*/}
-                <View style={{
-                    backgroundColor: "white",
-                    marginLeft: cardMargin,
-                    marginRight: cardMargin,
-                    shadowColor: "#000",
-                    shadowOpacity: 0.3,
-                    shadowOffset: {width: 2, height: 2},
-                    shadowRadius: 2,
-                }}>
+                <View style={Object.assign({}, UI.CARD(cardMargin))}>
 
 
                     {this.renderGoodshButton(image, likesCount, this.props.onPressItem)}
