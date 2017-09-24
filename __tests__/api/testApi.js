@@ -67,7 +67,7 @@ test('testing pagination', () => {
     let result2 = [{id: 100}, {id: 120}];
 
 
-    let currentState = Immutable.create(result1);
+    let currentState = Immutable(result1);
     let nextState = Immutable.merge(currentState, result2);
 
     console.log("next State: " + JSON.stringify(nextState));
