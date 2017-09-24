@@ -6,8 +6,8 @@ import SearchScreen from './SearchScreen';
 import AddScreen from './AddScreen';
 import NotifScreen from './NotifScreen';
 import AskScreen from './AskScreen';
-import CommunityScreen from './CommunityScreen';
 import DebugScreen from './DebugScreen';
+import FriendScreen from '../friend/screen';
 import ActivityScreen from '../activity/screen';
 import LineupScreen from '../lineup/screen';
 
@@ -20,7 +20,7 @@ export function registerScreens(store, Provider) {
     Navigation.registerComponent('goodsh.NotifScreen', () => NotifScreen, store, Provider);
     Navigation.registerComponent('goodsh.AskScreen', () => AskScreen, store, Provider);
     Navigation.registerComponent('goodsh.DebugScreen', () => DebugScreen, store, Provider);
-    Navigation.registerComponent('goodsh.CommunityScreen', () => CommunityScreen, store, Provider);
+    Navigation.registerComponent('goodsh.CommunityScreen', () => FriendScreen, store, Provider);
     Navigation.registerComponent('goodsh.ActivityScreen', () => ActivityScreen, store, Provider);
     Navigation.registerComponent('goodsh.LineupScreen', () => LineupScreen, store, Provider);
 }

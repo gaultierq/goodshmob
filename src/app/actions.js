@@ -8,6 +8,7 @@ import * as Api from "../utils/Api";
 import {
     setCustomText,
 } from 'react-native-global-props';
+import * as ModelUtils from "../utils/ModelUtils";
 
 export function appInitialized() {
 
@@ -33,13 +34,14 @@ export function appInitialized() {
 
         Api.credentials(access_token, client, uid);
 
-        dispatch(changeAppRoot(user));
+        dispatch(dispatchLogin(user));
 
     };
 }
 
-export function changeAppRoot(user) {
-    return {type: user ? types.USER_LOGIN : types.USER_LOGOUT, user: user};
+export function dispatchLogin(user) {
+    user = JSON.parse(user);
+    return {type: user ? types.USER_LOGIN : types.USER_LOGOUT, user};
 }
 
 export function login(callback?:Function) {
@@ -51,7 +53,7 @@ export function login(callback?:Function) {
 
         callback && callback();
 
-        dispatch(changeAppRoot(user));
+        dispatch(dispatchLogin(user));
     };
 }
 
@@ -62,6 +64,6 @@ export function logout() {
 
         LoginManager.logout();
 
-        dispatch(changeAppRoot(null));
+        dispatch(dispatchLogin(null));
     };
 }

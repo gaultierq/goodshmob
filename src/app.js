@@ -86,9 +86,11 @@ export default class App {
                     },
                     {
                         label: 'Add',
-                        screen: 'goodsh.AddScreen',
+                        //screen: 'goodsh.AddScreen',
+                        screen: 'goodsh.CommunityScreen',
                         icon: require('./img/bottom_bar_add.png'),
-                        title: 'Add'
+                        //title: 'Add',
+                        title: 'Community',
                     },
                     {
                         label: 'Notif',
