@@ -4,8 +4,8 @@ import Base from "../models/Base";
 import * as Models from "../models/index"
 import * as StringUtils from "./StringUtils"
 
-export function parse(data: any) {
 
+export function parse(data: any) {
     let createStore =  (store) => {
 
         if (data.included) {
