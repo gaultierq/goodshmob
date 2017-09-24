@@ -36,9 +36,6 @@ class LineupCell extends React.Component {
                         horizontal={true}
                     />
                 </View>
-
-
-
             </View>
         )
     }
@@ -53,16 +50,14 @@ class LineupCell extends React.Component {
 
 
         return <Image
-            source={{uri: image}}
-            style={{
-                height: 40,
-                width: 40,
-                margin: 5
-            }}
-        />;
+                source={{uri: image}}
+                style={{
+                    height: 50,
+                    width: 50,
+                    margin: 10
+                }}
+            />
     }
-
-
 }
 const mapStateToProps = (state, ownProps) => ({
     lineup: state.lineup

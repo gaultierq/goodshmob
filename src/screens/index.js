@@ -9,7 +9,8 @@ import AskScreen from './AskScreen';
 import DebugScreen from './DebugScreen';
 import FriendScreen from '../friend/screen';
 import ActivityScreen from '../activity/screen';
-import LineupScreen from '../lineup/screen';
+import LineupListScreen from '../lineup/listScreen';
+import LineupDetailScreen from '../lineup/detailScreen';
 
 // register all screens of the app (including internal ones)
 export function registerScreens(store, Provider) {
@@ -22,5 +23,6 @@ export function registerScreens(store, Provider) {
     Navigation.registerComponent('goodsh.DebugScreen', () => DebugScreen, store, Provider);
     Navigation.registerComponent('goodsh.CommunityScreen', () => FriendScreen, store, Provider);
     Navigation.registerComponent('goodsh.ActivityScreen', () => ActivityScreen, store, Provider);
-    Navigation.registerComponent('goodsh.LineupScreen', () => LineupScreen, store, Provider);
+    Navigation.registerComponent('goodsh.LineupListScreen', () => LineupListScreen, store, Provider);
+    Navigation.registerComponent('goodsh.LineupDetailScreen', () => LineupDetailScreen, store, Provider);
 }

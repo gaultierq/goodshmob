@@ -79,7 +79,7 @@ export default class App {
                     {
                         label: 'Search',
                         // screen: 'goodsh.SearchScreen',
-                        screen: 'goodsh.LineupScreen',
+                        screen: 'goodsh.LineupListScreen',
                         icon: require('./img/bottom_bar_search.png'),
                         // title: 'Search'
                         title: 'Lineup'
@@ -124,7 +124,7 @@ export default class App {
                         passProps: {} // simple serializable object that will pass as props to all top screens (optional)
                     },
                     right: { // optional, define if you want a drawer from the right
-                        screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
+                        screen: 'goodsh.LineupListScreen', // unique ID registered with Navigation.registerScreen
                         passProps: {} // simple serializable object that will pass as props to all top screens (optional)
                     },
                     style: { // ( iOS only )

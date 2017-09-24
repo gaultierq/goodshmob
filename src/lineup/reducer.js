@@ -17,8 +17,8 @@ export default function reduce(state = initialState, action = {}) {
 
     let toMerge =
         new Api.Handler(action)
-            .handle(types.LOAD_LINEUPS, Api.REQUEST, Api.FAILURE)
-            .handle(types.LOAD_MORE_LINEUPS, Api.REQUEST, Api.FAILURE)
+            .handle(types.FETCH_LINEUPS, Api.REQUEST, Api.FAILURE)
+            .handle(types.FETCH_MORE_LINEUPS, Api.REQUEST, Api.FAILURE)
             .obtain();
 
     if (toMerge) {
@@ -61,10 +61,10 @@ export default function reduce(state = initialState, action = {}) {
     };
 
     switch (action.type) {
-        case types.LOAD_LINEUPS.success():
-            return handle(types.LOAD_LINEUPS);
-        case types.LOAD_MORE_LINEUPS.success():
-            return handle(types.LOAD_MORE_LINEUPS);
+        case types.FETCH_LINEUPS.success():
+            return handle(types.FETCH_LINEUPS);
+        case types.FETCH_MORE_LINEUPS.success():
+            return handle(types.FETCH_MORE_LINEUPS);
         default:
             return state;
     }

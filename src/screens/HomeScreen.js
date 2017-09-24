@@ -86,7 +86,6 @@ class HomeScreen extends Component {
             navigatorStyle: {}, // override the navigator style for the pushed screen (optional)
             navigatorButtons: {} // override the nav buttons for the pushed screen (optional)
         });
-
     }
 
     render() {
