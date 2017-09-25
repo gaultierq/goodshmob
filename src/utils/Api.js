@@ -4,7 +4,7 @@ import URL from "url-parse"
 import qs from "querystringify"
 import * as Util from "./ModelUtils";
 import { CALL_API } from 'redux-api-middleware'
-
+import { API_SYMBOL } from '../middleware/apiMiddleware'
 
 export const ALL_API_TYPE = [];
 
@@ -261,3 +261,20 @@ export class ApiAction {
         return this.actionName;
     }
 }
+
+export function sendAction(apiAction, call) {
+    let types = ALL_API_TYPE.map((apiActionType) => {
+        return {
+            type: apiAction.forType(apiActionType),
+            [API_SYMBOL]: {isRequest: apiActionType === REQUEST, endpoint: call.getUrl(), baseType: apiAction}
+        }
+    });
+    return {
+        [CALL_API]: {
+            endpoint: call.getUrl(),
+            method: "GET",
+            headers: headers(),
+            types: types,
+        }
+    };
+};

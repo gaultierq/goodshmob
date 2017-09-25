@@ -18,7 +18,7 @@ let handleRequest = function (callAPI, store, action, next) {
 
     next(actionWith({
             type: API_DATA_REQUEST,
-            baseType: action.type
+            baseType: callAPI.baseType
         }
     ));
 
@@ -46,7 +46,7 @@ let handleNotRequest = function (callAPI, store, action, next) {
     next(actionWith({
             response,
             type: API_DATA_SUCCESS,
-            baseType: action.type,
+            baseType: callAPI.baseType,
             endpoint
         })
     );

@@ -6,12 +6,14 @@ const initialState = Immutable({
 });
 
 export default function (state = initialState, action) {
+    if (!action.baseType) return state;
+
     switch (action.type) {
         case API_DATA_SUCCESS:
         case API_DATA_FAILURE:
+            state = state.merge({isLastSuccess: {[action.baseType.name()]: action.type === API_DATA_SUCCESS}});
         case API_DATA_REQUEST:
-            return state.merge({isLoading: {[action.baseType]: action.type === API_DATA_REQUEST}});
-        default:
-            return state;
+            state = state.merge({isLoading: {[action.baseType.name()]: action.type === API_DATA_REQUEST}});
     }
+    return state;
 }

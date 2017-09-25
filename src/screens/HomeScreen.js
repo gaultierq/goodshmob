@@ -52,7 +52,6 @@ class HomeScreen extends Component {
         }
     }
 
-
     componentDidMount() {
         this.loadFirst();
     }
