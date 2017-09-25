@@ -3,7 +3,6 @@ import * as Models from "../../src/models"
 import Immutable from 'seamless-immutable';
 import * as Api from "../../src/utils/Api";
 import util from 'util'
-
 import normalize from 'json-api-normalizer';
 import build from 'redux-object';
 
@@ -106,7 +105,7 @@ test('testing meta', () => {
 
 function parse(response, fixtureFile) {
     let normalized = normalize(response,{ endpoint: fixtureFile });
-    console.log("=====normalized")
+    console.log("=====normalized");
     logObject(normalized);
 
     let meta = normalized.meta[fixtureFile].data;
@@ -117,7 +116,7 @@ function parse(response, fixtureFile) {
     else {
         result = build(normalized, meta.type, meta.id)
     }
-    console.log("=====result")
+    console.log("=====result");
     logObject(result);
     return result;
 

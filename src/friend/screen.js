@@ -21,19 +21,22 @@ class CommunityScreen extends Component {
     load() {
         let cui = this.props.app.currentUser.id;
         this.props.dispatch(actions.loadFriend(cui));
+
     }
 
     loadMore() {
-        this.props.dispatch(actions.loadMoreFriend());
+        //this.props.dispatch(actions.loadMoreFriend());
     }
 
     render() {
         let friend = this.props.friend;
-        let friends = friend.ids.map((id) => {
+
+
+        let friends = friend && friend.ids? friend.ids.map((id) => {
             let lin = friend.all[id];
             if (!lin) throw new Error("no friend found for id="+id);
             return lin;
-        });
+        }):[];
         return (
             <MainBackground>
             <ScrollView>
@@ -42,20 +45,14 @@ class CommunityScreen extends Component {
                         data={friends}
                         renderItem={this.renderItem.bind(this)}
                         keyExtractor={this.keyExtractor}
-                        refreshControl={
-                            <RefreshControl
-                                refreshing={!!friend.load_friend.loaded && friend.load_friend.requesting}
-                                onRefresh={this.onRefresh.bind(this)}
-                            />
-                        }
+
                         onEndReached={ this.onEndReached.bind(this) }
                         onEndReachedThreshold={0}
-                        ListFooterComponent={(friend.load_more_friend.requesting) &&
-
-                        <ActivityIndicator
-                            animating = {friend.load_more_friend.requesting}
-                            size = "small"
-                        />}
+                        // ListFooterComponent={(friend.load_more_friend.requesting) &&
+                        // <ActivityIndicator
+                        //     animating = {friend.load_more_friend.requesting}
+                        //     size = "small"
+                        // />}
                     />
                 </View>
             </ScrollView>

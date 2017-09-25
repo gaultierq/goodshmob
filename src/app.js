@@ -10,6 +10,7 @@ import thunk from "redux-thunk";
 import logger from 'redux-logger'
 import codePush from "react-native-code-push";
 import { apiMiddleware } from 'redux-api-middleware';
+import apiPost from './middleware/apiMiddleware';
 
 
 //see the network requests in the debugger
@@ -17,7 +18,7 @@ import { apiMiddleware } from 'redux-api-middleware';
 //GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
 
 // redux related book keeping
-const createStoreWithMiddleware = applyMiddleware(apiMiddleware, thunk, logger)(createStore);
+const createStoreWithMiddleware = applyMiddleware(apiMiddleware, apiPost, thunk, logger)(createStore);
 let appReducers = combineReducers(reducers);
 
 const reducer = createWithReducers(appReducers);
@@ -30,6 +31,9 @@ registerScreens(store, Provider);
 
 
 export default class App {
+
+    testScreen = 'goodsh.CommunityScreen';
+
     constructor() {
         // since react-redux only works on components, we need to subscribe this class manually
         store.subscribe(this.onStoreUpdate.bind(this));
@@ -55,7 +59,15 @@ export default class App {
 
     startApp(logged) {
 
-        if (!logged) {
+        if (this.testScreen) {
+            Navigation.startSingleScreenApp({
+                screen: {
+                    label: 'test',
+                    screen: this.testScreen
+                }
+            });
+        }
+        else if (!logged) {
             Navigation.startSingleScreenApp({
                 screen: {
                     label: 'Login',
@@ -65,8 +77,8 @@ export default class App {
                     }
                 }
             });
-        } else {
-
+        }
+        else {
             Navigation.startTabBasedApp({
                 tabs: [
                     {
