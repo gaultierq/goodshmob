@@ -13,7 +13,7 @@ class FriendCell extends React.Component {
 
 
     render() {
-        let friend : Model.User = this.getFriend();
+        let friend : Model.User = this.props.friend;
 
         return (
             <View style={{
@@ -56,7 +56,4 @@ class FriendCell extends React.Component {
 
 
 }
-const mapStateToProps = (state, ownProps) => ({
-    friend: state.friend
-});
-export default connect(mapStateToProps)(FriendCell);
+export default FriendCell;

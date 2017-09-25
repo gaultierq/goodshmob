@@ -12,6 +12,6 @@ export {
     app,
     home,
     activity,
-    lineup
-    // friend
+    lineup,
+    friend
 };

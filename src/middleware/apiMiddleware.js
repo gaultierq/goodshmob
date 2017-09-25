@@ -48,8 +48,8 @@ let handleNotRequest = function (callAPI, store, action, next) {
             type: API_DATA_SUCCESS,
             baseType: action.type,
             endpoint
-        }
-    ));
+        })
+    );
 
     return next(action);
 };

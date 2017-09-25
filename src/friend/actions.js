@@ -24,9 +24,7 @@ export function loadFriend(userId: string) {
             types: [
                 {
                     type: types.LOAD_FRIENDS.request(),
-                    [API_SYMBOL]: {
-                        isRequest: true,
-                        endpoint: call.getUrl()
+                    [API_SYMBOL]: {isRequest: true, endpoint: call.getUrl()
                     }
                 },
                 {

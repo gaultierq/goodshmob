@@ -5,6 +5,7 @@ import {connect} from "react-redux";
 import {AsyncStorage} from "react-native";
 import FriendCell from "./components/FriendCell";
 import {MainBackground} from "../screens/UIComponents";
+import build from 'redux-object'
 
 class CommunityScreen extends Component {
 
@@ -21,7 +22,6 @@ class CommunityScreen extends Component {
     load() {
         let cui = this.props.app.currentUser.id;
         this.props.dispatch(actions.loadFriend(cui));
-
     }
 
     loadMore() {
@@ -31,12 +31,12 @@ class CommunityScreen extends Component {
     render() {
         let friend = this.props.friend;
 
-
-        let friends = friend && friend.ids? friend.ids.map((id) => {
-            let lin = friend.all[id];
-            if (!lin) throw new Error("no friend found for id="+id);
-            return lin;
-        }):[];
+        let friends = (friend.list || []).map(object => build(this.props.data, object.type, object.id));
+        // let friends = friend && friend.list_ids? friend.list_ids.map((id) => {
+        //     let lin = friend.all[id];
+        //     if (!lin) throw new Error("no friend found for id="+id);
+        //     return lin;
+        // }):[];
         return (
             <MainBackground>
             <ScrollView>
@@ -60,17 +60,12 @@ class CommunityScreen extends Component {
         );
     }
 
-    renderItem(item) {
-        let it = item.item;
-        return <Text>{JSON.stringify(it)}</Text>
-    }
-
 
     renderItem(item) {
         let it = item.item;
         return <FriendCell
             onPressItem={() => this.navToFriendDetail(it)}
-            friendId={it.id}
+            friend={it}
         />
     }
 
@@ -101,6 +96,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state, ownProps) => ({
     friend: state.friend,
+    data: state.data,
     app: state.app,
 });
 

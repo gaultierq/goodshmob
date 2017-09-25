@@ -7,10 +7,7 @@ import * as Api from "../utils/Api";
 import {isUnique} from "../utils/ArrayUtil";
 
 const initialState = Immutable({
-    //all: {},
-    //ids: [],
-    //load_friend: {requesting: false},
-    //load_more_friend: {requesting: false},
+    list: [],
 });
 
 export default function reduce(state = initialState, action = {}) {
@@ -27,19 +24,19 @@ export default function reduce(state = initialState, action = {}) {
 
     // let handle = function (apiAction) {
     //     let payload = action.payload;
-    //     let friends = payload.data;
-    //     let currentFriendIds = state.ids.asMutable()
+    //     let newFriends = payload.data;
+    //     let currentFriends = state.ids.asMutable()
     //         .map((id) => {
     //             return {id}
     //         });
     //
-    //     new DataUtils.Merge(currentFriendIds, friends)
+    //     new DataUtils.Merge(currentFriends, newFriends)
     //         .withHasLess(true)
     //         .merge();
     //
-    //     let friendIds = currentFriendIds.map((a) => a.id);
+    //     let friendIds = currentFriends.map((a) => a.id);
     //
-    //     let friendsById = friends.reduce((map, obj) => {
+    //     let friendsById = newFriends.reduce((map, obj) => {
     //         map[obj.id] = obj;
     //         return map;
     //     }, {});
@@ -51,7 +48,7 @@ export default function reduce(state = initialState, action = {}) {
     //         feed: {loaded: true},
     //         [apiAction.name()]: {requesting: false, error: null},
     //         links: links,
-    //         hasMore: friends.length > 0 && links && links.next,
+    //         hasMore: newFriends.length > 0 && links && links.next,
     //         ids: friendIds,
     //         all: friendsById
     //     }, {deep: true});
@@ -60,13 +57,30 @@ export default function reduce(state = initialState, action = {}) {
     //     return state;
     // };
 
-    // switch (action.type) {
-    //     case types.LOAD_FRIENDS.success():
-    //         return  state.merge(action.payload);
-    //         //return handle(types.LOAD_FRIENDS);
-    //     // case types.LOAD_MORE_FRIENDS.success():
-    //     //     return handle(types.LOAD_MORE_FRIENDS);
-    //     default:
-    //         return state;
-    // }
+
+
+    switch (action.type) {
+        case types.LOAD_FRIENDS.success():
+
+            let currentFriends = state.list.asMutable();
+
+            let payload = action.payload;
+            let newFriends = payload.data.map((f)=> {
+                let {id, type} = f;
+                return {id, type};
+            });
+
+
+            new DataUtils.Merge(currentFriends, newFriends)
+                .withHasLess(true)
+                .merge();
+
+
+            return state.merge({
+                list: currentFriends,
+            }, {deep: true});
+
+        default:
+            return state;
+    }
 }
