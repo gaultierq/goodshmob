@@ -5,7 +5,7 @@ import * as types from './actionTypes';
 import * as Util from "../utils/ModelUtils"
 import { CALL_API } from 'redux-api-middleware'
 import normalize from 'json-api-normalizer';
-import { API_REQUEST_SYMBOL, API_SYMBOL } from '../middleware/apiMiddleware'
+import { API_SYMBOL } from '../middleware/apiMiddleware'
 
 export function loadFriend(userId: string) {
     let call = new Api.Call()

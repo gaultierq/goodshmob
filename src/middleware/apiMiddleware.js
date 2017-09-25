@@ -8,7 +8,6 @@ export const API_DATA_SUCCESS = 'API_DATA_SUCCESS';
 export const API_DATA_FAILURE = 'API_DATA_FAILURE';
 
 export const API_SYMBOL = Symbol("api");
-export const API_REQUEST_SYMBOL = Symbol("api pre");
 
 
 let handleRequest = function (callAPI, store, action, next) {
@@ -38,7 +37,7 @@ let handleNotRequest = function (callAPI, store, action, next) {
 
     const actionWith = (data) => {
         const finalAction = Object.assign({}, action, data);
-        delete finalAction[CALL_API];
+        delete finalAction[API_SYMBOL];
         return finalAction;
     };
 
@@ -60,15 +59,7 @@ export default store => next => action => {
     if (typeof callAPI === 'undefined') {
         return next(action);
     }
-    let isRequest = callAPI.isRequest;
-    let isCallApiUndefined = (typeof action[CALL_API] === 'undefined');
-    if (!isRequest && !isCallApiUndefined) {
-        throw new Error("this action has not been consumed by redux-api-middleware yet");
-    }
-    else if (isRequest && isCallApiUndefined) {
-        throw new Error("this action is expeceted to be consumed by redux-api-middleware");
-    }
-    if (isRequest) {
+    if (callAPI.isRequest) {
         return handleRequest(callAPI, store, action, next);
     }
     else {
