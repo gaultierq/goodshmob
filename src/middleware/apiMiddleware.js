@@ -1,7 +1,6 @@
 // @flow
 import { CALL_API } from 'redux-api-middleware'
 import normalize from 'json-api-normalizer';
-import en from "../i18n/locales/en";
 
 export const API_DATA_REQUEST = 'API_DATA_REQUEST';
 export const API_DATA_SUCCESS = 'API_DATA_SUCCESS';

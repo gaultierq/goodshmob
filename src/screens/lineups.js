@@ -1,10 +1,16 @@
+// @flow
+
 import React, {Component} from 'react';
 import {StyleSheet, View, Text, ScrollView, ActivityIndicator, FlatList, RefreshControl, TouchableHighlight} from 'react-native';
-import  * as actions from './actions'
 import {connect} from "react-redux";
 import {AsyncStorage} from "react-native";
 import LineupCell from "./components/LineupCell";
-import {MainBackground} from "../screens/UIComponents";
+import {MainBackground} from "./UIComponents";
+import Immutable from 'seamless-immutable';
+import * as Api from "../utils/Api";
+import {isUnique} from "../utils/ArrayUtil";
+import { CALL_API } from 'redux-api-middleware'
+
 
 class LineupListScreen extends Component {
 
@@ -23,16 +29,20 @@ class LineupListScreen extends Component {
     }
 
     loadMore() {
-        this.props.dispatch(actions.loadMoreLineups());
+        if (this.isLoadingMore()) return;
+        if (!this.props.lineupList.links) return;
+        let nextUrl = this.props.lineupList.links.next;
+        console.log("Next url:" + nextUrl);
+
+        //data.meta;
+        this.props.dispatch(actions.loadMoreLineups(nextUrl));
     }
 
     render() {
-        let lineup = this.props.lineup;
-        let lineups = lineup.ids.map((id) => {
-            let lin = lineup.all[id];
-            if (!lin) throw new Error("no lineup found for id="+id);
-            return lin;
-        });
+        let lineupList = this.props.lineupList;
+
+        let lineups = lineupList.list;
+
         return (
             <MainBackground>
                 <ScrollView>
@@ -43,16 +53,16 @@ class LineupListScreen extends Component {
                             keyExtractor={this.keyExtractor}
                             refreshControl={
                                 <RefreshControl
-                                    refreshing={!!lineup.load_lineup.loaded && lineup.load_lineup.requesting}
+                                    refreshing={this.isLoading()}
                                     onRefresh={this.onRefresh.bind(this)}
                                 />
                             }
                             onEndReached={ this.onEndReached.bind(this) }
                             onEndReachedThreshold={0}
-                            ListFooterComponent={(lineup.load_more_lineup.requesting) &&
+                            ListFooterComponent={this.isLoadingMore() &&
 
                             <ActivityIndicator
-                                animating = {lineup.load_more_lineup.requesting}
+                                animating = {this.isLoadingMore()}
                                 size = "small"
                             />}
                         />
@@ -60,6 +70,15 @@ class LineupListScreen extends Component {
                 </ScrollView>
             </MainBackground>
         );
+    }
+
+
+    isLoadingMore() {
+        return !!this.props.request.isLoading[actiontypes.FETCH_MORE_LINEUPS.name()];
+    }
+
+    isLoading() {
+        return !!this.props.request.isLoading[actiontypes.FETCH_LINEUPS.name()];
     }
 
 
@@ -97,7 +116,7 @@ class LineupListScreen extends Component {
     }
 
     onEndReached() {
-        if (this.props.lineup.hasMore) {
+        if (this.props.lineupList.hasMore) {
             this.loadMore();
         }
         else {
@@ -114,7 +133,54 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state, ownProps) => ({
-    lineup: state.lineup
+    lineupList: state.lineupList,
+    request: state.request
 });
 
-export default connect(mapStateToProps)(LineupListScreen);
+const actiontypes = (() => {
+    const FETCH_LINEUPS = new Api.ApiAction("fetch_lineups");
+    const FETCH_MORE_LINEUPS = new Api.ApiAction("fetch_more_lineups");
+
+    return {FETCH_LINEUPS, FETCH_MORE_LINEUPS};
+})();
+
+
+const actions = (() => {
+    return {
+        loadLineups: () => {
+            let call = new Api.Call()
+                .withRoute("lists")
+                .withQuery({
+                    page: 1,
+                    per_page: 10,
+                    include: "creator"
+                });
+
+            return Api.sendAction(actiontypes.FETCH_LINEUPS, call);
+        },
+
+        loadMoreLineups:(nextUrl:string) => {
+            let call = new Api.Call.parse(nextUrl)
+                .withQuery({
+                    page: 1,
+                    per_page: 10,
+                    include: "creator"
+                });
+
+            return Api.sendAction(actiontypes.FETCH_MORE_LINEUPS, call);
+        }
+    };
+})();
+
+const reducer = (() => {
+    const initialState = Immutable(Api.initialListState());
+
+    return (state = initialState, action = {}) => {
+        let desc = {fetchFirst: actiontypes.FETCH_LINEUPS, fetchMore: actiontypes.FETCH_MORE_LINEUPS};
+        return Api.reduceList(state, action, desc);
+    }
+})();
+
+let screen = connect(mapStateToProps)(LineupListScreen);
+
+export {reducer, screen};

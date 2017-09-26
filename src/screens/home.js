@@ -62,7 +62,7 @@ class HomeScreen extends Component {
 
     loadFirst() {
         if (this.isLoading()) return;
-        this.props.dispatch(actions.loadFeed());
+        this.props.dispatch(actions.loadLineups());
     }
 
     loadMore() {
@@ -72,7 +72,7 @@ class HomeScreen extends Component {
         console.log("Next url:" + nextUrl);
 
         //data.meta;
-        this.props.dispatch(actions.loadMoreFeed(nextUrl));
+        this.props.dispatch(actions.loadMoreLineups(nextUrl));
     }
 
     navToActivity(activity) {
@@ -194,7 +194,7 @@ const actiontypes = (() => {
 
 const actions = (() => {
     return {
-        loadFeed: () => {
+        loadLineups: () => {
             let call = new Api.Call()
                 .withRoute("activities")
                 .withQuery({include: "user,resource,target"});
@@ -202,7 +202,7 @@ const actions = (() => {
             return Api.sendAction(actiontypes.LOAD_FEED, call);
         },
 
-        loadMoreFeed:(nextUrl:string) => {
+        loadMoreLineups:(nextUrl:string) => {
             let call = new Api.Call.parse(nextUrl)
                 .withQuery({include: "user,resource,target"});
 

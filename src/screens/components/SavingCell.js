@@ -5,7 +5,7 @@ import {StyleSheet, View, Text, Image, Button, TouchableOpacity, TouchableHighli
 import * as Model from "../../models/index"
 import i18n from '../../i18n/i18n'
 import * as TimeUtils from '../../utils/TimeUtils'
-import * as UI from "../../screens/UIStyles";
+import * as UI from "../UIStyles";
 import * as activityAction from "../actions"
 import {connect} from "react-redux";
 
@@ -30,7 +30,7 @@ class SavingCell extends React.Component {
     }
 
     getSaving() {
-        return this.props.lineup.all[this.props.lineupId];
+        return this.props.data.all[this.props.lineupId];
     }
 
     renderItem(item) {
@@ -49,6 +49,6 @@ class SavingCell extends React.Component {
     }
 }
 const mapStateToProps = (state, ownProps) => ({
-    lineup: state.lineup
+    data: state.data
 });
 export default connect(mapStateToProps)(SavingCell);

@@ -3,7 +3,7 @@ import request from './requestReducer'
 import app from '../app/reducer';
 import {reducer as home} from '../screens/home';
 import activity from '../activity/reducer';
-import lineup from '../lineup/reducer';
+import {reducer as lineupList} from '../screens/lineups';
 import {reducer as friend} from '../screens/community';
 
 export {
@@ -12,6 +12,6 @@ export {
     app,
     home,
     activity,
-    lineup,
+    lineupList,
     friend
 };

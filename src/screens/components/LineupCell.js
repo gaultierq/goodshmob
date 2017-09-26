@@ -3,11 +3,9 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Text, Image, Button, TouchableOpacity, TouchableHighlight, FlatList} from 'react-native';
 import * as Model from "../../models/index"
-import i18n from '../../i18n/i18n'
-import * as TimeUtils from '../../utils/TimeUtils'
-import * as UI from "../../screens/UIStyles";
-import * as activityAction from "../actions"
+import * as UI from "../UIStyles";
 import {connect} from "react-redux";
+import build from 'redux-object'
 
 class LineupCell extends React.Component {
 
@@ -34,6 +32,15 @@ class LineupCell extends React.Component {
                         renderItem={this.renderItem.bind(this)}
                         keyExtractor={(item, index) => item.id}
                         horizontal={true}
+                        ListFooterComponent={
+                            <Image
+                                source={require('../../img/plus.png')} resizeMode="contain"
+                                style={{
+                                    height: 30,
+                                    width: 30,
+                                    margin: 20
+                                }}
+                            />}
                     />
                 </View>
             </View>
@@ -41,25 +48,34 @@ class LineupCell extends React.Component {
     }
 
     getLineup() {
-        return this.props.lineup.all[this.props.lineupId];
+        return build(this.props.data, "lists", this.props.lineupId);
+    }
+
+    getSaving(savingId) {
+        return build(this.props.data, "savings", savingId);
     }
 
     renderItem(item) {
         let it: Model.Saving = item.item;
+
+        //eager: true doesnt work
+        it = this.getSaving(it.id);
+
         let image = it.resource ? it.resource.image : undefined;
 
-
         return <Image
-                source={{uri: image}}
-                style={{
-                    height: 50,
-                    width: 50,
-                    margin: 10
-                }}
-            />
+            source={{uri: image}}
+            style={{
+                height: 50,
+                width: 50,
+                margin: 10
+            }}
+        />
     }
 }
 const mapStateToProps = (state, ownProps) => ({
-    lineup: state.lineup
+    lineup: state.lineup,
+    data: state.data,
+    request: state.request,
 });
 export default connect(mapStateToProps)(LineupCell);

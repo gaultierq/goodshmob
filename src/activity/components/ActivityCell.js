@@ -121,10 +121,7 @@ class ActivityCell extends React.Component {
     }
 
     getActivity() {
-        //(home.list || []).map(object => build(this.props.data, object.type, object.id));
-        let result = build(this.props.data, this.props.activityType, this.props.activityId);
-        if (!result) throw new Error(`no activity found at: type=${this.props.activityType} &id=${this.props.activityId}`);
-        return result;
+        return build(this.props.data, this.props.activityType, this.props.activityId);
     }
 
     renderFollowButton(target) {
