@@ -266,7 +266,11 @@ export function sendAction(apiAction, call) {
     let types = ALL_API_TYPE.map((apiActionType) => {
         return {
             type: apiAction.forType(apiActionType),
-            [API_SYMBOL]: {isRequest: apiActionType === REQUEST, endpoint: call.getUrl(), baseType: apiAction}
+            [API_SYMBOL]: {
+                isRequest: apiActionType === REQUEST,
+                endpoint: call.getUrl(),
+                baseType: apiAction
+            }
         }
     });
     return {
@@ -277,4 +281,4 @@ export function sendAction(apiAction, call) {
             types: types,
         }
     };
-};
+}

@@ -10,14 +10,14 @@ export function loadFeed() {
         .withRoute("activities")
         .withQuery({include: "user,resource,target"});
 
-    return Api.createSimpleApiCall2(call.getUrl(), types.LOAD_FEED);
+    return Api.sendAction(types.LOAD_FEED, call);
 }
 
 export function loadMoreFeed(nextUrl:string) {
     let call = new Api.Call.parse(nextUrl)
         .withQuery({include: "user,resource,target"});
 
-    return Api.createSimpleApiCall2(call.getUrl(), types.LOAD_MORE_FEED);
+    return Api.sendAction(types.LOAD_MORE_FEED, call);
 }
 
 

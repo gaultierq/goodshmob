@@ -10,6 +10,7 @@ export default function (state = initialState, action) {
 
     switch (action.type) {
         case API_DATA_SUCCESS:
+            state = state.merge({links: {[action.baseType.name()]: action.type === API_DATA_SUCCESS}});
         case API_DATA_FAILURE:
             state = state.merge({isLastSuccess: {[action.baseType.name()]: action.type === API_DATA_SUCCESS}});
         case API_DATA_REQUEST:

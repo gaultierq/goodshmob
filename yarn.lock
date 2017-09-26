@@ -3009,9 +3009,9 @@ jsesc@~0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-0.5.0.tgz#e7dee66e35d6fc16f710fe91d5cf69f70f08911d"
 
-json-api-normalizer@^0.4.1:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/json-api-normalizer/-/json-api-normalizer-0.4.1.tgz#07f79f25de1e5badf61b00504ae99ab81bbc05e1"
+json-api-normalizer@^0.4.2:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/json-api-normalizer/-/json-api-normalizer-0.4.2.tgz#6ddd59488cf03fac688156adf552fc042faaed45"
   dependencies:
     lodash "^4.17.2"
 
@@ -4252,9 +4252,9 @@ redux-logger@^3.0.6:
   dependencies:
     deep-diff "^0.3.5"
 
-redux-object@^0.5.1:
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/redux-object/-/redux-object-0.5.1.tgz#f8f6045f6864581dddc34d09183ba87cf4d130cf"
+redux-object@^0.5.2:
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/redux-object/-/redux-object-0.5.2.tgz#28707bc8d7c382018936a9b3eb715bd69661e867"
 
 redux-thunk@^2.2.0:
   version "2.2.0"

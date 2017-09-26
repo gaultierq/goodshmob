@@ -8,7 +8,7 @@ const initialState = Immutable({
 export default function (state = initialState, action) {
     switch (action.type) {
         case API_DATA_SUCCESS:
-            return state.merge(action.response, { meta: { [action.endpoint]: { loading: false } } });
+            return state.merge(action.response, {deep: true});
         default:
             return state;
     }

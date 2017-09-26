@@ -8,6 +8,7 @@ import * as TimeUtils from '../../utils/TimeUtils'
 import * as UI from "../../screens/UIStyles";
 import * as activityAction from "../actions"
 import {connect} from "react-redux";
+import build from 'redux-object'
 
 class ActivityCell extends React.Component {
 
@@ -120,7 +121,10 @@ class ActivityCell extends React.Component {
     }
 
     getActivity() {
-        return this.props.activity.all[this.props.activityId];
+        //(home.list || []).map(object => build(this.props.data, object.type, object.id));
+        let result = build(this.props.data, this.props.activityType, this.props.activityId);
+        if (!result) throw new Error(`no activity found at: type=${this.props.activityType} &id=${this.props.activityId}`);
+        return result;
     }
 
     renderFollowButton(target) {
@@ -250,6 +254,7 @@ class ActivityCell extends React.Component {
     }
 }
 const mapStateToProps = (state, ownProps) => ({
-    activity: state.activity
+    activity: state.activity,
+    data: state.data,
 });
 export default connect(mapStateToProps)(ActivityCell);

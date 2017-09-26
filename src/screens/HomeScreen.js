@@ -7,7 +7,10 @@ import ActivityCell from "../activity/components/ActivityCell";
 import * as UIStyles from "./UIStyles"
 import {MainBackground} from "./UIComponents"
 import  * as activitesActions from '../home/actions'
+import  * as activitesActionsTypes from '../home/actionTypes'
+
 import {isUnique} from "../utils/ArrayUtil";
+
 
 class HomeScreen extends Component {
 
@@ -57,15 +60,17 @@ class HomeScreen extends Component {
     }
 
     loadFirst() {
-        if (this.props.home.load_feed.requesting) return;
+        if (this.isLoading()) return;
         this.props.dispatch(activitesActions.loadFeed());
     }
 
     loadMore() {
-        if (this.props.home.load_more_feed.requesting) return;
+        if (this.isLoadingMore()) return;
         if (!this.props.home.links) return;
         let nextUrl = this.props.home.links.next;
         console.log("Next url:" + nextUrl);
+
+        //data.meta;
         this.props.dispatch(activitesActions.loadMoreFeed(nextUrl));
     }
 
@@ -89,14 +94,17 @@ class HomeScreen extends Component {
 
     render() {
         let home = this.props.home;
-        let activities = home.feed.ids.map((id) => {
-            let activity = this.props.activity.all[id];
-            if (!activity) throw new Error("no activity found for id="+id);
-            return activity;
-        });
+
+        let activities = home.list ;//(home.list || []).map(object => build(this.props.data, object.type, object.id));
+
+        // let activities = home.feed.ids.map((id) => {
+        //     let activity = this.props.activity.all[id];
+        //     if (!activity) throw new Error("no activity found for id="+id);
+        //     return activity;
+        // });
 
         this.checkEmpty(activities);
-        if (!isUnique(home.feed.ids)) throw new Error(`activities ids not unique`);
+        //if (!isUnique(home.feed.ids)) throw new Error(`activities ids not unique`);
         if (!isUnique(activities.map((a)=>a.id))) throw new Error(`activities ids not unique 2`);
         if (!isUnique(activities)) throw new Error(`activities not unique`);
 
@@ -104,8 +112,8 @@ class HomeScreen extends Component {
             <MainBackground>
                 <View>
                     {/* empty */}
-                    {!home.feed.loaded && <ActivityIndicator
-                        animating = {!home.feed.loaded}
+                    {this.isLoading() && <ActivityIndicator
+                        animating = {this.isLoading()}
                         size = "large"
                     />}
 
@@ -115,23 +123,30 @@ class HomeScreen extends Component {
                         keyExtractor={this.keyExtractor}
                         refreshControl={
                             <RefreshControl
-                                refreshing={!!home.load_feed.loaded && home.load_feed.requesting}
+                                refreshing={this.isLoading()}
                                 onRefresh={this.onRefresh.bind(this)}
                             />
                         }
                         onEndReached={ this.onEndReached.bind(this) }
                         onEndReachedThreshold={0}
-                        ListFooterComponent={(home.load_more_feed.requesting) &&
-
-                        <ActivityIndicator
-                            animating = {home.load_more_feed.requesting}
-                            size = "small"
-                        />}
+                        ListFooterComponent={
+                            this.isLoadingMore() && <ActivityIndicator
+                                animating = {this.isLoadingMore()}
+                                size = "small"
+                            />}
                     />
                 </View>
 
             </MainBackground>
         );
+    }
+
+    isLoadingMore() {
+        return this.props.request.isLoading[activitesActionsTypes.LOAD_MORE_FEED.name()];
+    }
+
+    isLoading() {
+        return this.props.request.isLoading[activitesActionsTypes.LOAD_FEED.name()];
     }
 
     checkEmpty(activities) {
@@ -158,6 +173,7 @@ class HomeScreen extends Component {
         return <ActivityCell
             onPressItem={() => this.navToActivity(it)}
             activityId={it.id}
+            activityType={it.type}
         />
     }
 
@@ -168,6 +184,8 @@ class HomeScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => ({
     home: state.home,
+    request: state.request,
+    data: state.data,
     activity: state.activity
 });
 
