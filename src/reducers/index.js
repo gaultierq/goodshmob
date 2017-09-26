@@ -1,7 +1,7 @@
 import data from './dataReducer'
 import request from './requestReducer'
 import app from '../app/reducer';
-import home from '../home/reducer';
+import {reducer as home} from '../screens/home';
 import activity from '../activity/reducer';
 import lineup from '../lineup/reducer';
 import friend from '../friend/reducer';

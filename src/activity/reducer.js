@@ -28,14 +28,14 @@ export default function reduce(state:any = initialState, action: any) {
     if (toMerge) state = state.merge(toMerge, {deep: true});
 
     switch (action.type) {
-        case types.LOAD_FEED.success():
-        case types.LOAD_MORE_FEED.success():
-            let res = action.payload.data.reduce((map, obj) => {
-                map[obj.id] = obj;
-                return map;
-            }, {});
-            state = state.merge({all: res}, {deep: true});
-            break;
+        // case types.LOAD_FEED.success():
+        // case types.LOAD_MORE_FEED.success():
+        //     let res = action.payload.data.reduce((map, obj) => {
+        //         map[obj.id] = obj;
+        //         return map;
+        //     }, {});
+        //     state = state.merge({all: res}, {deep: true});
+        //     break;
         case types.FETCH.success():
             let activity = Util.parse(action.payload);
             state = updateActivitiesStore(activity, state);

@@ -6,10 +6,10 @@ import {connect} from "react-redux";
 import ActivityCell from "../activity/components/ActivityCell";
 import * as UIStyles from "./UIStyles"
 import {MainBackground} from "./UIComponents"
-import  * as activitesActions from '../home/actions'
-import  * as activitesActionsTypes from '../home/actionTypes'
-
+import Immutable from 'seamless-immutable';
+import * as Api from "../utils/Api";
 import {isUnique} from "../utils/ArrayUtil";
+import { CALL_API } from 'redux-api-middleware'
 
 
 class HomeScreen extends Component {
@@ -95,16 +95,9 @@ class HomeScreen extends Component {
     render() {
         let home = this.props.home;
 
-        let activities = home.list ;//(home.list || []).map(object => build(this.props.data, object.type, object.id));
-
-        // let activities = home.feed.ids.map((id) => {
-        //     let activity = this.props.activity.all[id];
-        //     if (!activity) throw new Error("no activity found for id="+id);
-        //     return activity;
-        // });
+        let activities = home.list ;
 
         this.checkEmpty(activities);
-        //if (!isUnique(home.feed.ids)) throw new Error(`activities ids not unique`);
         if (!isUnique(activities.map((a)=>a.id))) throw new Error(`activities ids not unique 2`);
         if (!isUnique(activities)) throw new Error(`activities not unique`);
 
@@ -142,11 +135,11 @@ class HomeScreen extends Component {
     }
 
     isLoadingMore() {
-        return this.props.request.isLoading[activitesActionsTypes.LOAD_MORE_FEED.name()];
+        return !!this.props.request.isLoading[activitesActionsTypes.LOAD_MORE_FEED.name()];
     }
 
     isLoading() {
-        return this.props.request.isLoading[activitesActionsTypes.LOAD_FEED.name()];
+        return !!this.props.request.isLoading[activitesActionsTypes.LOAD_FEED.name()];
     }
 
     checkEmpty(activities) {
@@ -190,4 +183,41 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 
-export default connect(mapStateToProps)(HomeScreen);
+let activitesActionsTypes = (() => {
+    const LOAD_FEED = new Api.ApiAction("load_feed");
+    const LOAD_MORE_FEED = new Api.ApiAction("load_more_feed");
+
+    return {LOAD_FEED, LOAD_MORE_FEED};
+})();
+
+let activitesActions = (() => {
+    return {
+        loadFeed: () => {
+            let call = new Api.Call()
+                .withRoute("activities")
+                .withQuery({include: "user,resource,target"});
+
+            return Api.sendAction(activitesActionsTypes.LOAD_FEED, call);
+        },
+
+        loadMoreFeed:(nextUrl:string) => {
+            let call = new Api.Call.parse(nextUrl)
+                .withQuery({include: "user,resource,target"});
+
+            return Api.sendAction(activitesActionsTypes.LOAD_MORE_FEED, call);
+        }
+    };
+})();
+
+let reducer = (() => {
+    const initialState = Immutable(Api.initialListState());
+
+    return (state = initialState, action = {}) => {
+        let desc = {fetchFirst: activitesActionsTypes.LOAD_FEED, fetchMore: activitesActionsTypes.LOAD_MORE_FEED};
+        return Api.reduceList(state, action, desc);
+    }
+})();
+
+let screen = connect(mapStateToProps)(HomeScreen);
+
+export {reducer, screen};

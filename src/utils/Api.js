@@ -282,3 +282,45 @@ export function sendAction(apiAction, call) {
         }
     };
 }
+
+export function initialListState() {
+    return {
+        list: [],
+        links: {},
+        hasMore: false
+    };
+}
+
+export const reduceList = function (state, action, desc) {
+    switch (action.type) {
+        case desc.fetchFirst.success():
+        case desc.fetchMore.success():
+
+            let currentList = state.list.asMutable();
+            let links = {};
+
+            let payload = action.payload;
+
+            if (currentList.length === 0 || action.type === desc.fetchMore.success()) {
+                links.next = payload.links.next;
+            }
+
+            let newList = payload.data.map((f) => {
+                let {id, type} = f;
+                return {id, type};
+            });
+
+            new Util.Merge(currentList, newList)
+                .withHasLess(true)
+                .merge();
+
+
+            state = state.merge({
+                list: currentList,
+                links,
+                hasMore: newList.length > 0 && links && links.next
+            }, {deep: true});
+
+    }
+    return state;
+};
