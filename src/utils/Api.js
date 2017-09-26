@@ -302,7 +302,7 @@ export const reduceList = function (state, action, desc) {
             let payload = action.payload;
 
             if (currentList.length === 0 || action.type === desc.fetchMore.success()) {
-                links.next = payload.links.next;
+                links.next = payload.links ? payload.links.next : null;
             }
 
             let newList = payload.data.map((f) => {

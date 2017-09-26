@@ -3,10 +3,6 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Text, Image, Button, TouchableOpacity, TouchableHighlight, FlatList} from 'react-native';
 import * as Model from "../../models/index"
-import i18n from '../../i18n/i18n'
-import * as TimeUtils from '../../utils/TimeUtils'
-import * as UI from "../../screens/UIStyles";
-import * as activityAction from "../actions"
 import {connect} from "react-redux";
 
 class FriendCell extends React.Component {

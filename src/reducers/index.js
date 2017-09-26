@@ -4,7 +4,7 @@ import app from '../app/reducer';
 import {reducer as home} from '../screens/home';
 import activity from '../activity/reducer';
 import lineup from '../lineup/reducer';
-import friend from '../friend/reducer';
+import {reducer as friend} from '../screens/community';
 
 export {
     data,

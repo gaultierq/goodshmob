@@ -6,6 +6,7 @@ import {connect} from "react-redux";
 import ActivityCell from "../activity/components/ActivityCell";
 import * as UIStyles from "./UIStyles"
 import {MainBackground} from "./UIComponents"
+
 import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
 import {isUnique} from "../utils/ArrayUtil";
@@ -61,7 +62,7 @@ class HomeScreen extends Component {
 
     loadFirst() {
         if (this.isLoading()) return;
-        this.props.dispatch(activitesActions.loadFeed());
+        this.props.dispatch(actions.loadFeed());
     }
 
     loadMore() {
@@ -71,7 +72,7 @@ class HomeScreen extends Component {
         console.log("Next url:" + nextUrl);
 
         //data.meta;
-        this.props.dispatch(activitesActions.loadMoreFeed(nextUrl));
+        this.props.dispatch(actions.loadMoreFeed(nextUrl));
     }
 
     navToActivity(activity) {
@@ -135,11 +136,11 @@ class HomeScreen extends Component {
     }
 
     isLoadingMore() {
-        return !!this.props.request.isLoading[activitesActionsTypes.LOAD_MORE_FEED.name()];
+        return !!this.props.request.isLoading[actiontypes.LOAD_MORE_FEED.name()];
     }
 
     isLoading() {
-        return !!this.props.request.isLoading[activitesActionsTypes.LOAD_FEED.name()];
+        return !!this.props.request.isLoading[actiontypes.LOAD_FEED.name()];
     }
 
     checkEmpty(activities) {
@@ -183,37 +184,38 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 
-let activitesActionsTypes = (() => {
+const actiontypes = (() => {
     const LOAD_FEED = new Api.ApiAction("load_feed");
     const LOAD_MORE_FEED = new Api.ApiAction("load_more_feed");
 
     return {LOAD_FEED, LOAD_MORE_FEED};
 })();
 
-let activitesActions = (() => {
+
+const actions = (() => {
     return {
         loadFeed: () => {
             let call = new Api.Call()
                 .withRoute("activities")
                 .withQuery({include: "user,resource,target"});
 
-            return Api.sendAction(activitesActionsTypes.LOAD_FEED, call);
+            return Api.sendAction(actiontypes.LOAD_FEED, call);
         },
 
         loadMoreFeed:(nextUrl:string) => {
             let call = new Api.Call.parse(nextUrl)
                 .withQuery({include: "user,resource,target"});
 
-            return Api.sendAction(activitesActionsTypes.LOAD_MORE_FEED, call);
+            return Api.sendAction(actiontypes.LOAD_MORE_FEED, call);
         }
     };
 })();
 
-let reducer = (() => {
+const reducer = (() => {
     const initialState = Immutable(Api.initialListState());
 
     return (state = initialState, action = {}) => {
-        let desc = {fetchFirst: activitesActionsTypes.LOAD_FEED, fetchMore: activitesActionsTypes.LOAD_MORE_FEED};
+        let desc = {fetchFirst: actiontypes.LOAD_FEED, fetchMore: actiontypes.LOAD_MORE_FEED};
         return Api.reduceList(state, action, desc);
     }
 })();

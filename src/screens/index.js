@@ -7,7 +7,7 @@ import AddScreen from './AddScreen';
 import NotifScreen from './NotifScreen';
 import AskScreen from './AskScreen';
 import DebugScreen from './DebugScreen';
-import FriendScreen from '../friend/screen';
+import {screen as FriendScreen} from './community';
 import ActivityScreen from '../activity/screen';
 import LineupListScreen from '../lineup/listScreen';
 import LineupDetailScreen from '../lineup/detailScreen';

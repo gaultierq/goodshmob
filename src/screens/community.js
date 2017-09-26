@@ -2,13 +2,14 @@
 
 import React, {Component} from 'react';
 import {StyleSheet, View, Button, Text, ScrollView, ActivityIndicator, FlatList, RefreshControl} from 'react-native';
-import  * as actions from './actions'
 import {connect} from "react-redux";
 import {AsyncStorage} from "react-native";
 import FriendCell from "./components/FriendCell";
-import {MainBackground} from "../screens/UIComponents";
+import {MainBackground} from "./UIComponents";
 import build from 'redux-object'
-import * as types from './actionTypes';
+import Immutable from 'seamless-immutable';
+import * as Api from "../utils/Api";
+import { CALL_API } from 'redux-api-middleware'
 
 class CommunityScreen extends Component {
 
@@ -35,7 +36,7 @@ class CommunityScreen extends Component {
         let friend = this.props.friend;
 
         let friends = (friend.list || []).map(object => build(this.props.data, object.type, object.id));
-        let isLoading = this.props.request.isLoading[types.LOAD_FRIENDS.name()];
+        let isLoading = this.props.request.isLoading[actionTypes.LOAD_FRIENDS.name()];
 
         return (
             <MainBackground>
@@ -105,4 +106,48 @@ const mapStateToProps = (state, ownProps) => ({
     request: state.request
 });
 
-export default connect(mapStateToProps)(CommunityScreen);
+
+const actionTypes = (() => {
+
+    const LOAD_FRIENDS = new Api.ApiAction("load_friends");
+    const LOAD_MORE_FRIENDS = new Api.ApiAction("load_more_friends");
+
+    return {LOAD_FRIENDS, LOAD_MORE_FRIENDS};
+})();
+
+
+const actions = (() => {
+    return {
+
+        loadFriend: (userId: string) => {
+            let call = new Api.Call()
+                .withRoute(`users/${userId}/friends`)
+                .withQuery({
+                    page: 1,
+                    per_page: 10,
+                    include: "creator"
+                });
+
+            return Api.sendAction(actionTypes.LOAD_FRIENDS, call);
+        },
+        loadMoreFriend: (nextUrl:string) => {
+            let call = new Api.Call.parse(nextUrl)
+                .withQuery({include: "user,resource,target"});
+
+            return Api.createSimpleApiCall2(call.getUrl(), actionTypes.LOAD_MORE_FRIENDS);
+        }
+    };
+})();
+
+const reducer = (() => {
+    const initialState = Immutable(Api.initialListState());
+
+    return (state = initialState, action = {}) => {
+        let desc = {fetchFirst: actionTypes.LOAD_FRIENDS, fetchMore: actionTypes.LOAD_MORE_FRIENDS};
+        return Api.reduceList(state, action, desc);
+    }
+})();
+
+let screen = connect(mapStateToProps)(CommunityScreen);
+
+export {reducer, screen};

@@ -32,7 +32,8 @@ registerScreens(store, Provider);
 
 export default class App {
 
-    testScreen = 'goodsh.HomeScreen';
+    //testScreen = 'goodsh.HomeScreen';
+    testScreen = 'goodsh.CommunityScreen';
 
     constructor() {
         // since react-redux only works on components, we need to subscribe this class manually
