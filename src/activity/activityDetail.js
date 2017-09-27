@@ -1,11 +1,15 @@
+// @flow
+
 import React, {Component} from 'react';
 import {StyleSheet, View, Button, Text, ScrollView, ActivityIndicator} from 'react-native';
 import  * as actions from './actions'
+import  * as actionTypes from './actionTypes'
 import {connect} from "react-redux";
 import {AsyncStorage} from "react-native";
 import ActivityCell from "./components/ActivityCell";
+import build from 'redux-object'
 
-class ActivityScreen extends Component {
+class ActivityDetailScreen extends Component {
 
     constructor(){
         super();
@@ -24,9 +28,9 @@ class ActivityScreen extends Component {
 
 
     render() {
-        let data = this.props.activity.all[this.props.activityId];
+        let activity = this.getActivity();
 
-        let showLoader = !data && this.props.activity.fetch.requesting;
+        let showLoader = !activity && this.isLoading();
         
         return (
             <ScrollView>
@@ -35,11 +39,23 @@ class ActivityScreen extends Component {
                         animating = {showLoader}
                         size = "small"
                     />
-                    { data && <ActivityCell activityId={data.id}/>}
+                    { activity &&
+                    <ActivityCell
+                        activityId={activity.id}
+                        activityType={activity.type}
+                    />}
 
                 </View>
             </ScrollView>
         );
+    }
+
+    isLoading() {
+        return !!this.props.request.isLoading[actionTypes.FETCH_ACTIVITY.name()];
+    }
+
+    getActivity() {
+        return build(this.props.data, this.props.activityType, this.props.activityId);
     }
 }
 
@@ -50,8 +66,11 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state, ownProps) => ({
-    activity: state.activity,
-    activities: state.activities,
+    data: state.data,
+    request: state.request,
 });
 
-export default connect(mapStateToProps)(ActivityScreen);
+
+let screen = connect(mapStateToProps)(ActivityDetailScreen);
+
+export {screen};

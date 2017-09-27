@@ -2,7 +2,7 @@
 import {createStore, applyMiddleware, combineReducers} from "redux";
 import {Provider} from "react-redux";
 import { Navigation } from 'react-native-navigation';
-import { registerScreens} from './screens';
+import { registerScreens} from './screens/allScreens';
 import * as reducers from "./reducers";
 import {createWithReducers} from "./app/reducer";
 import  * as appActions from './app/actions'
@@ -32,9 +32,18 @@ registerScreens(store, Provider);
 
 export default class App {
 
-    //testScreen = 'goodsh.HomeScreen';
-    //testScreen = 'goodsh.CommunityScreen';
-    testScreen = 'goodsh.LineupListScreen';
+
+    testScreen = {
+        screen: {
+            label: 'test',
+            screen: 'goodsh.ActivityDetailScreen',
+        },
+        passProps: {
+            activityId: "0ea0fae6-4b40-4de5-a8b4-28b74fe68f9a",
+            activityType:"savings"
+        }
+
+    };
 
     constructor() {
         // since react-redux only works on components, we need to subscribe this class manually
@@ -59,15 +68,11 @@ export default class App {
         }
     }
 
+
     startApp(logged) {
 
         if (this.testScreen) {
-            Navigation.startSingleScreenApp({
-                screen: {
-                    label: 'test',
-                    screen: this.testScreen
-                }
-            });
+            Navigation.startSingleScreenApp(this.testScreen);
         }
         else if (!logged) {
             Navigation.startSingleScreenApp({

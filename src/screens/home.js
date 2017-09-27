@@ -80,7 +80,7 @@ class HomeScreen extends Component {
         let passProps = {activityId: activity.id, activityType: activity.type};
 
         this.props.navigator.push({
-            screen: 'goodsh.ActivityScreen', // unique ID registered with Navigation.registerScreen
+            screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
             title: "Details", // navigation bar title of the pushed screen (optional)
             titleImage: require('../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
             passProps: passProps, // Object that will be passed as props to the pushed screen (optional)
@@ -199,14 +199,14 @@ const actions = (() => {
                 .withRoute("activities")
                 .withQuery({include: "user,resource,target"});
 
-            return Api.sendAction(actiontypes.LOAD_FEED, call);
+            return Api.fetchData(actiontypes.LOAD_FEED, call);
         },
 
         loadMoreLineups:(nextUrl:string) => {
             let call = new Api.Call.parse(nextUrl)
                 .withQuery({include: "user,resource,target"});
 
-            return Api.sendAction(actiontypes.LOAD_MORE_FEED, call);
+            return Api.fetchData(actiontypes.LOAD_MORE_FEED, call);
         }
     };
 })();

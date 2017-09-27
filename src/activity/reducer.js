@@ -7,7 +7,7 @@ import * as Util from "../utils/ModelUtils";
 
 const initialState = Immutable(Object.assign(
     {all: {}, like: {}, unlike: {}},
-    createDefault(types.FETCH, types.LIKE, types.UNLIKE)));
+    createDefault(types.FETCH_ACTIVITY, types.LIKE, types.UNLIKE)));
 
 let updateActivitiesStore = function (activity, state) {
     let id: string = activity.id;
@@ -20,7 +20,6 @@ export default function reduce(state:any = initialState, action: any) {
 
     let toMerge =
         new Api.Handler(action, () => action.meta.id)
-            .handleAll(types.FETCH)
             .handleAll(types.LIKE)
             .handleAll(types.UNLIKE)
             .obtain();
@@ -28,24 +27,15 @@ export default function reduce(state:any = initialState, action: any) {
     if (toMerge) state = state.merge(toMerge, {deep: true});
 
     switch (action.type) {
-        // case types.LOAD_FEED.success():
-        // case types.LOAD_MORE_FEED.success():
-        //     let res = action.payload.data.reduce((map, obj) => {
-        //         map[obj.id] = obj;
-        //         return map;
-        //     }, {});
-        //     state = state.merge({all: res}, {deep: true});
-        //     break;
-        case types.FETCH.success():
-            let activity = Util.parse(action.payload);
-            state = updateActivitiesStore(activity, state);
+        case types.FETCH_ACTIVITY.success():
+            // let activity = Util.parse(action.payload);
+            // state = updateActivitiesStore(activity, state);
             break;
         case types.LIKE.success():
         {
             let like = Util.parse(action.payload);
             let activity = like.resource;
             state = updateActivitiesStore(activity, state);
-            //state = Immutable.setIn(state, ["all", action.meta.activityId, "meta", "liked"], true);
             break;
         }
         case types.UNLIKE.success():{

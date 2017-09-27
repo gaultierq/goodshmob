@@ -262,7 +262,7 @@ export class ApiAction {
     }
 }
 
-export function sendAction(apiAction, call) {
+export function fetchData(apiAction, call) {
     let types = ALL_API_TYPE.map((apiActionType) => {
         return {
             type: apiAction.forType(apiActionType),

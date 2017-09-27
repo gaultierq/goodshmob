@@ -128,7 +128,7 @@ const actions = (() => {
                     include: "creator"
                 });
 
-            return Api.sendAction(actionTypes.LOAD_FRIENDS, call);
+            return Api.fetchData(actionTypes.LOAD_FRIENDS, call);
         },
         loadMoreFriend: (nextUrl:string) => {
             let call = new Api.Call.parse(nextUrl)

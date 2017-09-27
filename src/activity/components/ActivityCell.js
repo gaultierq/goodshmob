@@ -8,7 +8,7 @@ import * as TimeUtils from '../../utils/TimeUtils'
 import * as UI from "../../screens/UIStyles";
 import * as activityAction from "../actions"
 import {connect} from "react-redux";
-import build from 'redux-object'
+import {buildNonNullData} from "../../utils/DataUtils";
 
 class ActivityCell extends React.Component {
 
@@ -121,7 +121,7 @@ class ActivityCell extends React.Component {
     }
 
     getActivity() {
-        return build(this.props.data, this.props.activityType, this.props.activityId);
+        return buildNonNullData(this.props.data, this.props.activityType, this.props.activityId);
     }
 
     renderFollowButton(target) {
