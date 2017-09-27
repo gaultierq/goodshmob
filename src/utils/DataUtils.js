@@ -1,17 +1,33 @@
 import build from 'redux-object'
 
+
+//ask backend to sanitize types
+export let getType = function (activityType) {
+    let type;
+    switch (activityType.toLowerCase()) {
+        case "post":
+        case "posts":
+            type = "posts";
+            break;
+        case "sending":
+        case "sendings":
+            type = "sendings";
+            break;
+        case "saving":
+        case "savings":
+            type = "savings";
+            break;
+    }
+    if (!type) throw new Error(`type not found for ${activityType}`);
+    return type;
+};
+
 export function buildNonNullData(store, type, id) {
     let result = build(store, type, id);
 
-    function sanitize(type) {
-        switch (type) {
-            case "Saving":
-                return "savings";
-        }
-    }
 
     if (!result) {
-        let sanitized = sanitize(type);
+        let sanitized = getType(type);
         result = build(store, sanitized, id);
         if (result) {
             console.warn(`data sanitize success:${type} -> ${sanitized}`)

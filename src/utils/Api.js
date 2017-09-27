@@ -51,7 +51,7 @@ export class Call {
         return this;
     }
 
-    withQuery(query) {
+    withQuery(query: any) {
 
         let q = qs.parse(this.url.query);
 
@@ -114,74 +114,74 @@ export function credentials(a, c, u) {
 
 }
 
-export class Handler {
-    action: any;
-    idPromise: () => string;
-    result: any;
-
-    constructor(action, idPromise) {
-        this.action = action;
-        this.idPromise = idPromise;
-    }
-
-    handle(apiAction: ApiAction, ...actionTypes: string[]) {
-        if (!this.result) this.result = handleAction(this.action, this.idPromise, apiAction, ...actionTypes);
-        return this;
-    }
-
-    handleAll(apiAction: ApiAction) {
-        return this.handle(apiAction, REQUEST, SUCCESS, FAILURE);
-    }
-
-    and(apiAction: ApiAction, ...actionTypes: string[]) {
-        return this.handle(apiAction, actionTypes);
-    }
-
-    obtain() {
-        return this.result;
-    }
-}
-
-
-export function handleAction(action: any, idPromise: () => string, actionObject: ApiAction, ...actionTypes: string[]) {
-    let actionName = actionObject.name();
-
-    let formatResult =  (toMerge) => {
-        return idPromise ? {[actionName]: {[idPromise()]: toMerge}} : {[actionName]: toMerge};
-    };
-
-    let type: string = action.type;
-
-    for (let typ of actionTypes) {
-
-        if (actionObject.forType(typ) !== type) continue;
-
-        switch (typ) {
-            case REQUEST:
-                return formatResult({ requesting: true });
-            case SUCCESS:
-                let payload = action.payload;
-                let data = payload ? Util.parse(payload) : null;
-                return formatResult({
-                    data: data,
-                    requesting: false,
-                    error: null
-                });
-            case FAILURE:
-                let error = action.payload;
-                console.error(error);
-                return formatResult({
-                    requesting: false,
-                    error: error
-                });
-        }
-    }
-
-    return null;
-}
+// export class Handler {
+//     action: any;
+//     idPromise: () => string;
+//     result: any;
+//
+//     constructor(action, idPromise) {
+//         this.action = action;
+//         this.idPromise = idPromise;
+//     }
+//
+//     handle(apiAction: ApiAction, ...actionTypes: string[]) {
+//         if (!this.result) this.result = handleAction(this.action, this.idPromise, apiAction, ...actionTypes);
+//         return this;
+//     }
+//
+//     handleAll(apiAction: ApiAction) {
+//         return this.handle(apiAction, REQUEST, SUCCESS, FAILURE);
+//     }
+//
+//     and(apiAction: ApiAction, ...actionTypes: string[]) {
+//         return this.handle(apiAction, actionTypes);
+//     }
+//
+//     obtain() {
+//         return this.result;
+//     }
+// }
 
 
-export function composeName(actionName, apiType: string): string {
+// export function handleAction(action: any, idPromise: () => string, actionObject: ApiAction, ...actionTypes: string[]) {
+//     let actionName = actionObject.name();
+//
+//     let formatResult =  (toMerge) => {
+//         return idPromise ? {[actionName]: {[idPromise()]: toMerge}} : {[actionName]: toMerge};
+//     };
+//
+//     let type: string = action.type;
+//
+//     for (let typ of actionTypes) {
+//
+//         if (actionObject.forType(typ) !== type) continue;
+//
+//         switch (typ) {
+//             case REQUEST:
+//                 return formatResult({ requesting: true });
+//             case SUCCESS:
+//                 let payload = action.payload;
+//                 let data = payload ? Util.parse(payload) : null;
+//                 return formatResult({
+//                     data: data,
+//                     requesting: false,
+//                     error: null
+//                 });
+//             case FAILURE:
+//                 let error = action.payload;
+//                 console.error(error);
+//                 return formatResult({
+//                     requesting: false,
+//                     error: error
+//                 });
+//         }
+//     }
+//
+//     return null;
+// }
+
+
+export function composeName(actionName: string, apiType: string): string {
     return `${actionName}_${apiType}`;
 }
 
@@ -205,32 +205,32 @@ export function createSimpleApiCall(route: string, method: string, apiAction: Ap
 }
 
 //TODO: merge me with my sis
-export function createSimpleApiCall2(url, type) {
-    return {
-        [CALL_API]: {
-            endpoint: url,
-            method: "GET",
-            headers: headers(),
-            types: [
-                type.request(),
-                {
-                    type: type.success(),
-                    payload: (action, state, res) => {
-
-                        return res.json().then((payload) => {
-                            return {
-                                data: Util.parse(payload),
-                                links: payload.links
-                            };
-                        });
-
-                    },
-                },
-                type.failure()
-            ],
-        }
-    };
-}
+// export function createSimpleApiCall2(url, type) {
+//     return {
+//         [CALL_API]: {
+//             endpoint: url,
+//             method: "GET",
+//             headers: headers(),
+//             types: [
+//                 type.request(),
+//                 {
+//                     type: type.success(),
+//                     payload: (action, state, res) => {
+//
+//                         return res.json().then((payload) => {
+//                             return {
+//                                 data: Util.parse(payload),
+//                                 links: payload.links
+//                             };
+//                         });
+//
+//                     },
+//                 },
+//                 type.failure()
+//             ],
+//         }
+//     };
+// }
 
 export class ApiAction {
 
@@ -262,7 +262,7 @@ export class ApiAction {
     }
 }
 
-export function fetchData(apiAction, call) {
+export function fetchData(apiAction: ApiAction, call: Call) {
     let types = ALL_API_TYPE.map((apiActionType) => {
         return {
             type: apiAction.forType(apiActionType),

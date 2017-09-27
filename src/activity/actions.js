@@ -1,28 +1,9 @@
 // @flow
 import * as types from "./actionTypes"
 import * as Api from "../utils/Api";
+import {getType} from "../utils/DataUtils";
 
 let fixtures = require("../fixtures/activities_fixtures2.json");
-
-let getType = function (activityType) {
-    let type;
-    switch (activityType.toLowerCase()) {
-        case "post":
-        case "posts":
-            type = "posts";
-            break;
-        case "sending":
-        case "sendings":
-            type = "sendings";
-            break;
-        case "saving":
-        case "savings":
-            type = "savings";
-            break;
-    }
-    if (!type) throw new Error(`type not found for ${activityType}`);
-    return type;
-};
 
 
 export function fetchActivity(activityId, activityType) {

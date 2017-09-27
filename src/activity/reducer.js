@@ -18,13 +18,13 @@ let updateActivitiesStore = function (activity, state) {
 };
 export default function reduce(state:any = initialState, action: any) {
 
-    let toMerge =
-        new Api.Handler(action, () => action.meta.id)
-            .handleAll(types.LIKE)
-            .handleAll(types.UNLIKE)
-            .obtain();
-
-    if (toMerge) state = state.merge(toMerge, {deep: true});
+    // let toMerge =
+    //     new Api.Handler(action, () => action.meta.id)
+    //         .handleAll(types.LIKE)
+    //         .handleAll(types.UNLIKE)
+    //         .obtain();
+    //
+    // if (toMerge) state = state.merge(toMerge, {deep: true});
 
     switch (action.type) {
         case types.FETCH_ACTIVITY.success():

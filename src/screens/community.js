@@ -134,7 +134,7 @@ const actions = (() => {
             let call = new Api.Call.parse(nextUrl)
                 .withQuery({include: "user,resource,target"});
 
-            return Api.createSimpleApiCall2(call.getUrl(), actionTypes.LOAD_MORE_FRIENDS);
+            return Api.fetchData(actionTypes.LOAD_MORE_FRIENDS, call);
         }
     };
 })();
