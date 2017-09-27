@@ -6,8 +6,8 @@ import * as Api from "../utils/Api";
 import * as Util from "../utils/ModelUtils";
 
 const initialState = Immutable(Object.assign(
-    {all: {}, like: {}, unlike: {}},
-    createDefault(types.FETCH_ACTIVITY, types.LIKE, types.UNLIKE)));
+    {like: {}, unlike: {}},
+    createDefault(types.LIKE, types.UNLIKE)));
 
 let updateActivitiesStore = function (activity, state) {
     let id: string = activity.id;

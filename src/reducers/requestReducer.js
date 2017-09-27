@@ -3,6 +3,8 @@ import Immutable from 'seamless-immutable';
 
 const initialState = Immutable({
     isLoading: {},
+    isLastSuccess: {},
+    links: {}
 });
 
 export default function (state = initialState, action) {

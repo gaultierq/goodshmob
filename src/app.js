@@ -33,17 +33,17 @@ registerScreens(store, Provider);
 export default class App {
 
 
-    testScreen = {
-        screen: {
-            label: 'test',
-            screen: 'goodsh.ActivityDetailScreen',
-        },
-        passProps: {
-            activityId: "0ea0fae6-4b40-4de5-a8b4-28b74fe68f9a",
-            activityType:"savings"
-        }
-
-    };
+    // testScreen = {
+    //     screen: {
+    //         label: 'test',
+    //         screen: 'goodsh.ActivityDetailScreen',
+    //     },
+    //     passProps: {
+    //         activityId: "0ea0fae6-4b40-4de5-a8b4-28b74fe68f9a",
+    //         activityType:"savings"
+    //     }
+    //
+    // };
 
     constructor() {
         // since react-redux only works on components, we need to subscribe this class manually

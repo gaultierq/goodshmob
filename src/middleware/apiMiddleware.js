@@ -15,6 +15,7 @@ let handleRequest = function (callAPI, store, action, next) {
         return Object.assign({}, action, data);
     };
 
+    //for: request.isLoading = true
     next(actionWith({
             type: API_DATA_REQUEST,
             baseType: callAPI.baseType
@@ -40,7 +41,11 @@ let handleNotRequest = function (callAPI, store, action, next) {
         return finalAction;
     };
 
-    let response = normalize(action.payload, {endpoint: endpoint});
+    //TODO: handle failure
+
+    //TODO: handle request with no data returned (ex: DELETE)
+
+    let response = normalize(action.payload/*, {endpoint: endpoint}*/);
 
     next(actionWith({
             response,
