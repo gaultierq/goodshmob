@@ -12,11 +12,11 @@ export default function (state = initialState, action) {
 
     switch (action.type) {
         case API_DATA_SUCCESS:
-            state = state.merge({links: {[action.baseType.name()]: action.type === API_DATA_SUCCESS}});
+            state = state.merge({links: {[action.baseType.name()]: action.type === API_DATA_SUCCESS}}, {deep: true});
         case API_DATA_FAILURE:
-            state = state.merge({isLastSuccess: {[action.baseType.name()]: action.type === API_DATA_SUCCESS}});
+            state = state.merge({isLastSuccess: {[action.baseType.name()]: action.type === API_DATA_SUCCESS}}, {deep: true});
         case API_DATA_REQUEST:
-            state = state.merge({isLoading: {[action.baseType.name()]: action.type === API_DATA_REQUEST}});
+            state = state.merge({isLoading: {[action.baseType.name()]: action.type === API_DATA_REQUEST}}, {deep: true});
     }
     return state;
 }

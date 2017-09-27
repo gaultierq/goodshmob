@@ -135,12 +135,12 @@ class HomeScreen extends Component {
         );
     }
 
-    isLoadingMore() {
-        return !!this.props.request.isLoading[actiontypes.LOAD_MORE_FEED.name()];
+    isLoading() {
+        return !!this.props.request.isLoading[actiontypes.FETCH_ACTIVITIES.name()];
     }
 
-    isLoading() {
-        return !!this.props.request.isLoading[actiontypes.LOAD_FEED.name()];
+    isLoadingMore() {
+        return !!this.props.request.isLoading[actiontypes.FETCH_MORE_ACTIVITIES.name()];
     }
 
     checkEmpty(activities) {
@@ -185,10 +185,10 @@ const mapStateToProps = (state, ownProps) => ({
 
 
 const actiontypes = (() => {
-    const LOAD_FEED = new Api.ApiAction("load_feed");
-    const LOAD_MORE_FEED = new Api.ApiAction("load_more_feed");
+    const FETCH_ACTIVITIES = new Api.ApiAction("home/fetch_activities");
+    const FETCH_MORE_ACTIVITIES = new Api.ApiAction("home/fetch_more_activities");
 
-    return {LOAD_FEED, LOAD_MORE_FEED};
+    return {FETCH_ACTIVITIES, FETCH_MORE_ACTIVITIES};
 })();
 
 
@@ -199,14 +199,14 @@ const actions = (() => {
                 .withRoute("activities")
                 .withQuery({include: "user,resource,target"});
 
-            return Api.fetchData(actiontypes.LOAD_FEED, call);
+            return Api.fetchData(actiontypes.FETCH_ACTIVITIES, call);
         },
 
         loadMoreLineups:(nextUrl:string) => {
             let call = new Api.Call.parse(nextUrl)
                 .withQuery({include: "user,resource,target"});
 
-            return Api.fetchData(actiontypes.LOAD_MORE_FEED, call);
+            return Api.fetchData(actiontypes.FETCH_MORE_ACTIVITIES, call);
         }
     };
 })();
@@ -215,7 +215,7 @@ const reducer = (() => {
     const initialState = Immutable(Api.initialListState());
 
     return (state = initialState, action = {}) => {
-        let desc = {fetchFirst: actiontypes.LOAD_FEED, fetchMore: actiontypes.LOAD_MORE_FEED};
+        let desc = {fetchFirst: actiontypes.FETCH_ACTIVITIES, fetchMore: actiontypes.FETCH_MORE_ACTIVITIES};
         return Api.reduceList(state, action, desc);
     }
 })();
