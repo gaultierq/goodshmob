@@ -12,7 +12,10 @@ export function fetchActivity(activityId, activityType) {
     return new Api.Call()
         .withMethod('GET')
         .withRoute(`${type}/${activityId}`)
-        .disptachForAction(types.FETCH_ACTIVITY);
+        .disptachForAction(types.FETCH_ACTIVITY, {
+            actionName: types.FETCH_ACTIVITY.forId(activityId),
+            meta: {id: activityId, type: activityType}
+        });
 }
 
 
