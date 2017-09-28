@@ -67,12 +67,12 @@ export class Call {
         return this.xhr(this.url.toString(), this.method, this.body);
     }
 
-    disptachForAction(apiAction: ApiAction) {
+    disptachForAction(apiAction: ApiAction, meta?: any) {
         return {
-            [API_SYMBOL]: {
+            [API_SYMBOL]: Object.assign({}, {
                 call: this,
                 apiAction
-            }
+            }, {meta: meta})
         };
     }
 
@@ -81,9 +81,14 @@ export class Call {
         return submit(route, verb, body)
             .then( resp => {
 
-                let json = resp.json();
-                if (resp.ok) return json;
-                return json.then(err => {throw err});
+                if (resp.ok) {
+                    let contentType = resp.headers.get("content-type");
+                    if(contentType && contentType.indexOf("application/json") !== -1) {
+                        return resp.json();
+                    }
+                    return "ok";
+                }
+                return resp.json().then(err => {throw err});
             });
     };
 }
@@ -192,7 +197,7 @@ let middleware = store => next => action => {
         return next(action);
     }
 
-    const { call, apiAction} = callAPI;
+    const { call, apiAction, meta} = callAPI;
 
     const actionWith = (data) => {
         const finalAction = Object.assign({}, action, data, {apiAction});
@@ -212,7 +217,7 @@ let middleware = store => next => action => {
                 //2.
                 next(actionWith({ data, type: API_DATA_SUCCESS }));
 
-                return next({type: apiAction.success(), payload: response});
+                return next(Object.assign({}, {type: apiAction.success(), payload: response}, {meta}));
             },
             error => next(actionWith({ type: API_DATA_FAILURE, error: error.message || 'Something bad happened' })),
         );

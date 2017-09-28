@@ -238,11 +238,11 @@ class ActivityCell extends React.Component {
     }
 
     isLiking() {
-        return this.isRequesting(this.props.activity.like);
+        return false;//this.isRequesting(this.props.activity.like);
     }
 
     isUnliking() {
-        return this.isRequesting(this.props.activity.unlike);
+        return false;//this.isRequesting(this.props.activity.unlike);
     }
 
     isRequesting(method) {

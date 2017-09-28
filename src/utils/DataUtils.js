@@ -2,7 +2,7 @@ import build from 'redux-object'
 
 
 //ask backend to sanitize types
-export let getType = function (activityType) {
+export let sanitizeActivityType = function (activityType) {
     let type;
     switch (activityType.toLowerCase()) {
         case "post":
@@ -27,7 +27,7 @@ export function buildNonNullData(store, type, id) {
 
 
     if (!result) {
-        let sanitized = getType(type);
+        let sanitized = sanitizeActivityType(type);
         result = build(store, sanitized, id);
         if (result) {
             console.warn(`data sanitize success:${type} -> ${sanitized}`)

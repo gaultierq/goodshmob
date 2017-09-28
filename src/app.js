@@ -3,7 +3,7 @@ import {createStore, applyMiddleware, combineReducers} from "redux";
 import {Provider} from "react-redux";
 import { Navigation } from 'react-native-navigation';
 import { registerScreens} from './screens/allScreens';
-import * as reducers from "./reducers";
+import * as reducers from "./reducers/allReducers";
 import {createWithReducers} from "./app/reducer";
 import  * as appActions from './app/actions'
 import thunk from "redux-thunk";
