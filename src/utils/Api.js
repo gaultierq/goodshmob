@@ -67,12 +67,12 @@ export class Call {
         return this.xhr(this.url.toString(), this.method, this.body);
     }
 
-    disptachForAction(apiAction: ApiAction, meta?: any) {
+    disptachForAction(apiAction: ApiAction, options?: any) {
         return {
             [API_SYMBOL]: Object.assign({}, {
                 call: this,
                 apiAction
-            }, {meta: meta})
+            }, options)
         };
     }
 
@@ -130,6 +130,10 @@ export class ApiAction {
 
     forType(apiType: string) {
         return composeName(this.actionName, apiType);
+    }
+
+    forId(id: string) {
+        return `${this.name()}[${id}]`;
     }
 
     name() {
@@ -200,7 +204,7 @@ let middleware = store => next => action => {
     const { call, apiAction, meta} = callAPI;
 
     const actionWith = (data) => {
-        const finalAction = Object.assign({}, action, data, {apiAction});
+        const finalAction = Object.assign({}, callAPI, data, {apiAction});
         delete finalAction[API_SYMBOL];
         return finalAction;
     };
@@ -214,11 +218,12 @@ let middleware = store => next => action => {
             response => {
                 let data = normalize(response);
 
-                //2.
+                //1., 2.
                 next(actionWith({ data, type: API_DATA_SUCCESS }));
 
                 return next(Object.assign({}, {type: apiAction.success(), payload: response}, {meta}));
             },
+            //1., 2.
             error => next(actionWith({ type: API_DATA_FAILURE, error: error.message || 'Something bad happened' })),
         );
 };

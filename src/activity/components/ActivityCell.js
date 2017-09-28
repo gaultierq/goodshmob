@@ -9,6 +9,7 @@ import * as UI from "../../screens/UIStyles";
 import * as activityAction from "../actions"
 import {connect} from "react-redux";
 import {buildNonNullData} from "../../utils/DataUtils";
+import * as types from "../actionTypes";
 
 class ActivityCell extends React.Component {
 
@@ -238,20 +239,17 @@ class ActivityCell extends React.Component {
     }
 
     isLiking() {
-        return false;//this.isRequesting(this.props.activity.like);
+        return !!this.props.request.isLoading[types.LIKE.forId(this.props.activityId)];
     }
 
     isUnliking() {
-        return false;//this.isRequesting(this.props.activity.unlike);
+        return !!this.props.request.isLoading[types.UNLIKE.forId(this.props.activityId)];
     }
 
-    isRequesting(method) {
-        let lastLikeRequest = method && method[this.props.activityId];
-        return lastLikeRequest && lastLikeRequest.requesting;
-    }
 }
 const mapStateToProps = (state, ownProps) => ({
     activity: state.activity,
     data: state.data,
+    request: state.request,
 });
 export default connect(mapStateToProps)(ActivityCell);

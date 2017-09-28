@@ -22,7 +22,10 @@ export function like(activityId: string, activityType: string) {
     return new Api.Call()
         .withMethod('POST')
         .withRoute(`${type}/${activityId}/likes`)
-        .disptachForAction(types.LIKE);
+        .disptachForAction(types.LIKE, {
+            actionName: types.LIKE.forId(activityId),
+            meta: {id: activityId, type: activityType}
+        });
 }
 
 export function unlike(activityId: string, activityType: string) {
@@ -31,5 +34,8 @@ export function unlike(activityId: string, activityType: string) {
     return new Api.Call()
         .withMethod('DELETE')
         .withRoute(`${type}/${activityId}/likes`)
-        .disptachForAction(types.UNLIKE, {id: activityId, type: activityType});
+        .disptachForAction(types.UNLIKE, {
+            actionName: types.UNLIKE.forId(activityId),
+            meta: {id: activityId, type: activityType}
+        });
 }
