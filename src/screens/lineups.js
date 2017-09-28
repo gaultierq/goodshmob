@@ -1,15 +1,15 @@
 // @flow
 
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, ScrollView, ActivityIndicator, FlatList, RefreshControl, TouchableHighlight} from 'react-native';
+import {StyleSheet, Image, View, Text, ScrollView, ActivityIndicator, FlatList, RefreshControl, TouchableHighlight} from 'react-native';
 import {connect} from "react-redux";
 import {AsyncStorage} from "react-native";
 import LineupCell from "./components/LineupCell";
 import {MainBackground} from "./UIComponents";
 import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
-
-
+import i18n from '../i18n/i18n'
+import * as UI from "../screens/UIStyles";
 
 class LineupListScreen extends Component {
 
@@ -45,7 +45,7 @@ class LineupListScreen extends Component {
         return (
             <MainBackground>
                 <ScrollView>
-                    <View style={styles.container}>
+                    <View style={{}}>
                         <FlatList
                             data={lineups}
                             renderItem={this.renderItem.bind(this)}
@@ -58,6 +58,7 @@ class LineupListScreen extends Component {
                             }
                             onEndReached={ this.onEndReached.bind(this) }
                             onEndReachedThreshold={0}
+                            ListHeaderComponent={this.renderHeader()}
                             ListFooterComponent={this.isLoadingMore() &&
 
                             <ActivityIndicator
@@ -71,6 +72,32 @@ class LineupListScreen extends Component {
         );
     }
 
+
+    //TODO: card style
+    renderHeader() {
+        return <TouchableHighlight onPress={() => {}}>
+        <View style={
+            Object.assign({}, UI.CARD(12),{
+                flex: 1,
+                flexDirection: 'row',
+                alignItems: 'center',
+                padding: 10,
+                marginTop: 10,
+                marginBottom: 10,
+
+            })}>
+            <Image source={require('../img/plus.png')}
+                   resizeMode="contain"
+                   style={{
+                       width: 20,
+                       height: 20,
+                   }}
+            />
+            <Text>{i18n.t('create_list_controller.title')}</Text>
+        </View>
+        </TouchableHighlight>
+            ;
+    }
 
     isLoadingMore() {
         return !!this.props.request.isLoading[actiontypes.FETCH_MORE_LINEUPS.name()];
