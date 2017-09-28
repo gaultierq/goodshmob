@@ -32,7 +32,8 @@ registerScreens(store, Provider);
 
 export default class App {
 
-
+    //screen: 'goodsh.ActivityDetailScreen',
+    //screen: 'goodsh.LineupListScreen',
     // testScreen = {
     //     screen: {
     //         label: 'test',
@@ -42,7 +43,6 @@ export default class App {
     //         activityId: "0ea0fae6-4b40-4de5-a8b4-28b74fe68f9a",
     //         activityType:"savings"
     //     }
-    //
     // };
 
     constructor() {

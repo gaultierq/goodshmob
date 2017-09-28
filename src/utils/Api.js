@@ -61,7 +61,7 @@ export class Call {
         return this;
     }
 
-    static parse(url) {
+    static parse(url): Call {
         let result = new Call();
         result.url = new URL(url);
         return result;
@@ -70,6 +70,16 @@ export class Call {
     get() {
         let urlString = this.url.toString();
         return xhr(urlString, 'GET', this.body);
+    }
+
+    forGet(): Call {
+        this.method = 'GET';
+        return this;
+    }
+
+    exec() {
+        if (!this.method) throw new Error("call need a method");
+        return xhr(this.url.toString(), this.method, this.body);
     }
 
     getUrl() {
@@ -85,12 +95,6 @@ let xhr = function (route, verb, body) {
             let json = resp.json();
             if (resp.ok) return json;
             return json.then(err => {throw err});
-        })
-        .then(json => {
-            let data = json.data;
-            let included = json.included;
-            console.debug(`receiving response:\n ${JSON.stringify(json, null, '\t')}`);
-            return json;
         });
 };
 
@@ -242,11 +246,11 @@ export class ApiAction {
     }
 
     success() {
-        return composeName(this.actionName, SUCCESS);
+        return this.forType(SUCCESS);
     }
 
     request() {
-        return composeName(this.actionName, REQUEST);
+        return this.forType(REQUEST);
     }
 
     failure() {
@@ -263,24 +267,13 @@ export class ApiAction {
 }
 
 export function fetchData(apiAction: ApiAction, call: Call) {
-    let types = ALL_API_TYPE.map((apiActionType) => {
-        return {
-            type: apiAction.forType(apiActionType),
-            [API_SYMBOL]: {
-                isRequest: apiActionType === REQUEST,
-                endpoint: call.getUrl(),
-                baseType: apiAction
-            }
-        }
-    });
+    call.forGet();
     return {
-        [CALL_API]: {
-            endpoint: call.getUrl(),
-            method: "GET",
-            headers: headers(),
-            types: types,
+        [API_SYMBOL]: {
+            call,
+            apiAction
         }
-    };
+    }
 }
 
 export function initialListState() {

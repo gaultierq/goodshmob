@@ -10,6 +10,7 @@ export function fetchActivity(activityId, activityType) {
     let type = getType(activityType);
     let call = new Api.Call()
         .withRoute(`${type}/${activityId}`);
+
     return Api.fetchData(types.FETCH_ACTIVITY, call);
 }
 

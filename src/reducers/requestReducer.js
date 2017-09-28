@@ -8,15 +8,16 @@ const initialState = Immutable({
 });
 
 export default function (state = initialState, action) {
-    if (!action.baseType) return state;
+    if (!action.apiAction) return state;
 
+    let actionName = action.apiAction.name();
     switch (action.type) {
         case API_DATA_SUCCESS:
-            state = state.merge({links: {[action.baseType.name()]: action.type === API_DATA_SUCCESS}}, {deep: true});
+            //state = state.merge({links: {[action.baseType.name()]: action.type === API_DATA_SUCCESS}}, {deep: true});
         case API_DATA_FAILURE:
-            state = state.merge({isLastSuccess: {[action.baseType.name()]: action.type === API_DATA_SUCCESS}}, {deep: true});
+            state = state.merge({isLastSuccess: {[actionName]: action.type === API_DATA_SUCCESS}}, {deep: true});
         case API_DATA_REQUEST:
-            state = state.merge({isLoading: {[action.baseType.name()]: action.type === API_DATA_REQUEST}}, {deep: true});
+            state = state.merge({isLoading: {[actionName]: action.type === API_DATA_REQUEST}}, {deep: true});
     }
     return state;
 }
