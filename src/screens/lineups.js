@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react';
-import {StyleSheet, Image, View, Text, ScrollView, ActivityIndicator, FlatList, RefreshControl, TouchableHighlight} from 'react-native';
+import {StyleSheet, Modal, Image, View, Text, ScrollView, ActivityIndicator, FlatList, RefreshControl, TouchableHighlight} from 'react-native';
 import {connect} from "react-redux";
 import {AsyncStorage} from "react-native";
 import LineupCell from "./components/LineupCell";
@@ -17,6 +17,7 @@ class LineupListScreen extends Component {
 
     constructor(){
         super();
+        this.state= {modalVisible: false}
     }
 
     componentDidMount() {
@@ -66,35 +67,34 @@ class LineupListScreen extends Component {
                                 size = "small"
                             />}
                         />
+                        {this.renderModal()}
                     </View>
                 </ScrollView>
             </MainBackground>
         );
     }
 
-
-    //TODO: card style
+    //TODO: extract lineup card style
     renderHeader() {
-        return <TouchableHighlight onPress={() => {}}>
-        <View style={
-            Object.assign({}, UI.CARD(12),{
-                flex: 1,
-                flexDirection: 'row',
-                alignItems: 'center',
-                padding: 10,
-                marginTop: 10,
-                marginBottom: 10,
-
-            })}>
-            <Image source={require('../img/plus.png')}
-                   resizeMode="contain"
-                   style={{
-                       width: 20,
-                       height: 20,
-                   }}
-            />
-            <Text>{i18n.t('create_list_controller.title')}</Text>
-        </View>
+        return <TouchableHighlight onPress={() => {this.setModalVisible(true)}}>
+            <View style={
+                Object.assign({}, UI.CARD(12),{
+                    flex: 1,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    padding: 10,
+                    marginTop: 10,
+                    marginBottom: 10,
+                })}>
+                <Image source={require('../img/plus.png')}
+                       resizeMode="contain"
+                       style={{
+                           width: 20,
+                           height: 20,
+                       }}
+                />
+                <Text>{i18n.t('create_list_controller.title')}</Text>
+            </View>
         </TouchableHighlight>
             ;
     }
@@ -136,9 +136,36 @@ class LineupListScreen extends Component {
         });
     }
 
+    renderModal() {
+        return (
+            <Modal
+                animationType="slide"
+                presentationStyle='pageSheet'
+                visible={this.state.modalVisible}
+                onRequestClose={() => {alert("Modal has been closed.")}}
+            >
+                <View style={{marginTop: 22}}>
+                    <View>
+                        <Text>Hello World!</Text>
+
+                        <TouchableHighlight onPress={() => {
+                            this.setModalVisible(!this.state.modalVisible)
+                        }}>
+                            <Text>Hide Modal</Text>
+                        </TouchableHighlight>
+
+                    </View>
+                </View>
+            </Modal>
+        );
+    }
+
+    setModalVisible(visible) {
+        this.setState({modalVisible: visible});
+    }
 
     onRefresh() {
-        this.loadFirst();
+        this.load();
     }
 
     onEndReached() {
