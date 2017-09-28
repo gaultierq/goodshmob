@@ -13,10 +13,6 @@ export default class User extends Base {
     goodshbox;
     lists;
 
-    static current() {
-        return LoginManager.currentUser();
-    }
-
     static fullname(u: User) {
         return `${u.firstName} ${u.lastName}`;
     }
