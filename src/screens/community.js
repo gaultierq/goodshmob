@@ -120,7 +120,7 @@ const actions = (() => {
     return {
 
         loadFriend: (userId: string) => {
-            let call = new Api.Call()
+            let call = new Api.Call().withMethod('GET')
                 .withRoute(`users/${userId}/friends`)
                 .withQuery({
                     page: 1,
@@ -131,8 +131,12 @@ const actions = (() => {
             return Api.fetchData(actionTypes.LOAD_FRIENDS, call);
         },
         loadMoreFriend: (nextUrl:string) => {
-            let call = new Api.Call.parse(nextUrl)
-                .withQuery({include: "user,resource,target"});
+            let call = new Api.Call.parse(nextUrl).withMethod('GET')
+                .withQuery({
+                    page: 1,
+                    per_page: 10,
+                    include: "creator"
+                });
 
             return Api.fetchData(actionTypes.LOAD_MORE_FRIENDS, call);
         }

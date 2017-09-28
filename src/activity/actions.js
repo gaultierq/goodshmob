@@ -8,7 +8,7 @@ let fixtures = require("../fixtures/activities_fixtures2.json");
 
 export function fetchActivity(activityId, activityType) {
     let type = getType(activityType);
-    let call = new Api.Call()
+    let call = new Api.Call().withMethod('GET')
         .withRoute(`${type}/${activityId}`);
 
     return Api.fetchData(types.FETCH_ACTIVITY, call);

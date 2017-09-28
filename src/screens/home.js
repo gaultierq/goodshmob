@@ -195,7 +195,7 @@ const actiontypes = (() => {
 const actions = (() => {
     return {
         loadLineups: () => {
-            let call = new Api.Call()
+            let call = new Api.Call().withMethod('GET')
                 .withRoute("activities")
                 .withQuery({include: "user,resource,target"});
 
@@ -203,7 +203,7 @@ const actions = (() => {
         },
 
         loadMoreLineups:(nextUrl:string) => {
-            let call = new Api.Call.parse(nextUrl)
+            let call = new Api.Call.parse(nextUrl).withMethod('GET')
                 .withQuery({include: "user,resource,target"});
 
             return Api.fetchData(actiontypes.FETCH_MORE_ACTIVITIES, call);

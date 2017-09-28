@@ -45,6 +45,7 @@ export class Call {
 
     url: URL = new URL(API_END_POINT);
     body: any;
+    method: string;
 
     withRoute(pathname:string) {
         this.url = this.url.set('pathname', pathname);
@@ -52,12 +53,14 @@ export class Call {
     }
 
     withQuery(query: any) {
-
         let q = qs.parse(this.url.query);
-
-
         let newVar = Object.assign({}, q || {}, query);
         this.url.set('query', newVar);
+        return this;
+    }
+
+    withMethod(method:string): Call {
+        this.method = method;
         return this;
     }
 
@@ -73,8 +76,7 @@ export class Call {
     }
 
     forGet(): Call {
-        this.method = 'GET';
-        return this;
+        return this.withMethod('GET');
     }
 
     exec() {
@@ -85,6 +87,18 @@ export class Call {
     getUrl() {
         return this.url.toString();
     }
+
+
+
+    disptachForAction(apiAction) {
+        return {
+            [API_SYMBOL]: {
+                call: this,
+                apiAction
+            }
+        };
+    }
+
 }
 
 let xhr = function (route, verb, body) {
@@ -267,13 +281,13 @@ export class ApiAction {
 }
 
 export function fetchData(apiAction: ApiAction, call: Call) {
-    call.forGet();
-    return {
-        [API_SYMBOL]: {
-            call,
-            apiAction
-        }
-    }
+    return call.disptachForAction(apiAction);
+    // return {
+    //     [API_SYMBOL]: {
+    //         call,
+    //         apiAction
+    //     }
+    // }
 }
 
 export function initialListState() {

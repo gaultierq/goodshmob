@@ -148,7 +148,7 @@ const actiontypes = (() => {
 const actions = (() => {
     return {
         loadLineups: () => {
-            let call = new Api.Call()
+            let call = new Api.Call().withMethod('GET')
                 .withRoute("lists")
                 .withQuery({
                     page: 1,
@@ -160,7 +160,7 @@ const actions = (() => {
         },
 
         loadMoreLineups:(nextUrl:string) => {
-            let call = new Api.Call.parse(nextUrl)
+            let call = new Api.Call.parse(nextUrl).withMethod('GET')
                 .withQuery({
                     page: 1,
                     per_page: 10,
