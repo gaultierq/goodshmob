@@ -128,7 +128,7 @@ const actions = (() => {
                     include: "creator"
                 });
 
-            return Api.fetchData(actionTypes.LOAD_FRIENDS, call);
+            return call.disptachForAction(actionTypes.LOAD_FRIENDS);
         },
         loadMoreFriend: (nextUrl:string) => {
             let call = new Api.Call.parse(nextUrl).withMethod('GET')
@@ -138,7 +138,7 @@ const actions = (() => {
                     include: "creator"
                 });
 
-            return Api.fetchData(actionTypes.LOAD_MORE_FRIENDS, call);
+            return call.disptachForAction(actionTypes.LOAD_MORE_FRIENDS);
         }
     };
 })();

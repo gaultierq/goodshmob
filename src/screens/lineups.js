@@ -156,7 +156,7 @@ const actions = (() => {
                     include: "creator"
                 });
 
-            return Api.fetchData(actiontypes.FETCH_LINEUPS, call);
+            return call.disptachForAction(actiontypes.FETCH_LINEUPS);
         },
 
         loadMoreLineups:(nextUrl:string) => {
@@ -167,7 +167,7 @@ const actions = (() => {
                     include: "creator"
                 });
 
-            return Api.fetchData(actiontypes.FETCH_MORE_LINEUPS, call);
+            return call.disptachForAction(actiontypes.FETCH_MORE_LINEUPS);
         }
     };
 })();

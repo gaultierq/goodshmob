@@ -199,14 +199,14 @@ const actions = (() => {
                 .withRoute("activities")
                 .withQuery({include: "user,resource,target"});
 
-            return Api.fetchData(actiontypes.FETCH_ACTIVITIES, call);
+            return call.disptachForAction(actiontypes.FETCH_ACTIVITIES);
         },
 
         loadMoreLineups:(nextUrl:string) => {
             let call = new Api.Call.parse(nextUrl).withMethod('GET')
                 .withQuery({include: "user,resource,target"});
 
-            return Api.fetchData(actiontypes.FETCH_MORE_ACTIVITIES, call);
+            return call.disptachForAction(actiontypes.FETCH_MORE_ACTIVITIES);
         }
     };
 })();
