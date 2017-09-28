@@ -24,7 +24,6 @@
 		"react-native-vector-icons": "^4.3.0",
 		"react-redux": "^5.0.6",
 		"redux": "^3.7.2",
-		"redux-api-middleware": "^2.0.0-beta.3",
 		"redux-logger": "^3.0.6",
 		"redux-object": "^0.5.2",
 		"redux-thunk": "^2.2.0",

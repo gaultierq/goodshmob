@@ -9,7 +9,7 @@ import {MainBackground} from "./UIComponents";
 import build from 'redux-object'
 import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
-import { CALL_API } from 'redux-api-middleware'
+
 
 class CommunityScreen extends Component {
 

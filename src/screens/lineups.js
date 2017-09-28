@@ -8,8 +8,7 @@ import LineupCell from "./components/LineupCell";
 import {MainBackground} from "./UIComponents";
 import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
-import {isUnique} from "../utils/ArrayUtil";
-import { CALL_API } from 'redux-api-middleware'
+
 
 
 class LineupListScreen extends Component {
