@@ -3,8 +3,8 @@
 import URL from "url-parse"
 import qs from "querystringify"
 import * as Util from "./ModelUtils";
-import { CALL_API } from 'redux-api-middleware'
-import { API_SYMBOL } from '../middleware/apiMiddleware'
+import normalize from 'json-api-normalizer';
+
 
 let client, uid, accessToken;
 
@@ -64,7 +64,7 @@ export class Call {
 
     exec() {
         if (!this.method) throw new Error("call need a method");
-        return xhr(this.url.toString(), this.method, this.body);
+        return this.xhr(this.url.toString(), this.method, this.body);
     }
 
     disptachForAction(apiAction: ApiAction) {
@@ -87,8 +87,6 @@ export class Call {
             });
     };
 }
-
-
 
 //TODO: this is shit
 export function credentials(a, c, u) {
@@ -175,3 +173,49 @@ export const reduceList = function (state, action, desc) {
     }
     return state;
 };
+
+
+
+export const API_DATA_REQUEST = 'API_DATA_REQUEST';
+export const API_DATA_SUCCESS = 'API_DATA_SUCCESS';
+export const API_DATA_FAILURE = 'API_DATA_FAILURE';
+
+export const API_SYMBOL = Symbol("api");
+
+
+//1. edit store.request : .isLoading, .isLastSuccess, .isLastFailure, .isLastFinished
+//2. edit store.data : request has flag -> dataReducer; or other actions
+let middleware = store => next => action => {
+    const callAPI = action[API_SYMBOL];
+
+    if (typeof callAPI === 'undefined') {
+        return next(action);
+    }
+
+    const { call, apiAction} = callAPI;
+
+    const actionWith = (data) => {
+        const finalAction = Object.assign({}, action, data, {apiAction});
+        delete finalAction[API_SYMBOL];
+        return finalAction;
+    };
+
+    //1.
+    next(actionWith({ type: API_DATA_REQUEST}));
+
+
+    return call.exec()
+        .then(
+            response => {
+                let data = normalize(response);
+
+                //2.
+                next(actionWith({ data, type: API_DATA_SUCCESS }));
+
+                return next({type: apiAction.success(), payload: response});
+            },
+            error => next(actionWith({ type: API_DATA_FAILURE, error: error.message || 'Something bad happened' })),
+        );
+};
+
+export {middleware}

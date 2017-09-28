@@ -9,8 +9,7 @@ import  * as appActions from './app/actions'
 import thunk from "redux-thunk";
 import logger from 'redux-logger'
 import codePush from "react-native-code-push";
-import { apiMiddleware } from 'redux-api-middleware';
-import apiPost from './middleware/apiMiddleware';
+import {middleware as apiMiddleware} from './utils/Api';
 
 
 //see the network requests in the debugger
@@ -18,7 +17,7 @@ import apiPost from './middleware/apiMiddleware';
 //GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
 
 // redux related book keeping
-const createStoreWithMiddleware = applyMiddleware(apiMiddleware, apiPost, thunk, logger)(createStore);
+const createStoreWithMiddleware = applyMiddleware(apiMiddleware, thunk, logger)(createStore);
 let appReducers = combineReducers(reducers);
 
 const reducer = createWithReducers(appReducers);
@@ -33,7 +32,7 @@ registerScreens(store, Provider);
 export default class App {
 
     //screen: 'goodsh.ActivityDetailScreen',
-    //screen: 'goodsh.LineupListScreen',
+    // screen: 'goodsh.LineupListScreen',
     // testScreen = {
     //     screen: {
     //         label: 'test',

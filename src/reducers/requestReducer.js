@@ -1,4 +1,4 @@
-import {API_DATA_FAILURE, API_DATA_REQUEST, API_DATA_SUCCESS} from '../middleware/apiMiddleware';
+import {API_DATA_FAILURE, API_DATA_REQUEST, API_DATA_SUCCESS} from '../utils/Api';
 import Immutable from 'seamless-immutable';
 
 const initialState = Immutable({
