@@ -91,6 +91,7 @@ class SavingsScreen extends Component {
         return <SavingCell
             onPressItem={() => this.navToSavingDetail(it)}
             savingId={it.id}
+            navigator={this.props.navigator}
         />
     }
 
@@ -102,7 +103,7 @@ class SavingsScreen extends Component {
     }
 
     onEndReached() {
-        if (this.props.friend.hasMore) {
+        if (this.props.savings.hasMore) {
             this.loadMore();
         }
         else {
