@@ -6,31 +6,53 @@ import * as Model from "../../models/index"
 import i18n from '../../i18n/i18n'
 import * as TimeUtils from '../../utils/TimeUtils'
 import * as UI from "../UIStyles";
-import * as activityAction from "../actions"
 import {connect} from "react-redux";
+import {buildNonNullData} from "../../utils/DataUtils";
 
 class SavingCell extends React.Component {
 
 
     render() {
-        let saving : Model.List = this.getSaving();
+        let saving : Model.Saving = this.getSaving();
+        let resource = saving.resource;
+        let image = resource ? resource.image : undefined;
+
         let cardMargin = 12;
 
         return (
-            <View style={Object.assign(
-                {
+            <View style={
+                { ...UI.CARD(cardMargin), ...UI.TP_MARGINS(cardMargin), padding: cardMargin,
                     flex: 1,
                     flexDirection: 'row',
-                    marginTop: cardMargin, marginBottom: cardMargin,
+                    justifyContent: "flex-start"
+                }}>
 
-                }, UI.CARD(cardMargin))}>
-
+                <Image
+                    source={{uri: image}}
+                    resizeMode='contain'
+                    style={{
+                        alignSelf: 'center',
+                        height: 100,
+                        width: 100,
+                    }}
+                />
+                <View style={{flex:1, padding: 15}}>
+                    <Text style={{fontSize: 18, fontFamily: 'Chivo-Light', }}>{resource.title}</Text>
+                    <Text style={{fontSize: 12, color: UI.Colors.grey2}}>{resource.subtitle}</Text>
+                </View>
+                <Image source={require('../../img/mini-g-number.png')} resizeMode="contain"
+                       style={{
+                           alignSelf: 'center',
+                           width: 20,
+                           height: 20,
+                       }}
+                />
             </View>
         )
     }
 
     getSaving() {
-        return this.props.data.all[this.props.lineupId];
+        return buildNonNullData(this.props.data, "savings", this.props.savingId);
     }
 
     renderItem(item) {

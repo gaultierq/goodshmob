@@ -27,7 +27,7 @@ class LineupListScreen extends Component {
         super();
         this.state= {
             isCreatingLineup: false,
-            modalVisible: true
+            modalVisible: false
         }
     }
 

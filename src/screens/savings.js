@@ -9,11 +9,10 @@ import {MainBackground} from "./UIComponents";
 import build from 'redux-object'
 import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
+import SavingCell from "./components/SavingCell";
 
 
-class CommunityScreen extends Component {
-
-    keyExtractor = (item, index) => item.id;
+class SavingsScreen extends Component {
 
     constructor(){
         super();
@@ -24,7 +23,7 @@ class CommunityScreen extends Component {
     }
 
     load() {
-        let cui = this.props.app.currentUser.id;
+        let cui = this.props.lineupId;
         this.props.dispatch(actions.fetchSavings(cui));
     }
 
@@ -33,53 +32,52 @@ class CommunityScreen extends Component {
     }
 
     render() {
-        let friend = this.props.friend;
+        let savings = this.props.savings;
 
-        let friends = (friend.list || []).map(object => build(this.props.data, object.type, object.id));
+        let savingList = (savings.list || []).map(object => build(this.props.data, object.type, object.id));
+
         let isLoading = this.props.request.isLoading[actionTypes.LOAD_SAVINGS.name()];
 
         return (
             <MainBackground>
-            <ScrollView>
-                <View style={styles.container}>
-                    {isLoading && <ActivityIndicator
-                        animating = {isLoading}
-                        size = "large"
-                    />}
+                <ScrollView>
+                    <View style={styles.container}>
+                        {isLoading && <ActivityIndicator
+                            animating = {isLoading}
+                            size = "large"
+                        />}
 
-                    <FlatList
-                        data={friends}
-                        renderItem={this.renderItem.bind(this)}
-                        keyExtractor={this.keyExtractor}
-                        onEndReached={ this.onEndReached.bind(this) }
-                        onEndReachedThreshold={0}
-                        // ListFooterComponent={(friend.load_more_friend.requesting) &&
-                        // <ActivityIndicator
-                        //     animating = {friend.load_more_friend.requesting}
-                        //     size = "small"
-                        // />}
-                    />
-                </View>
-            </ScrollView>
+                        <FlatList
+                            data={savingList}
+                            renderItem={this.renderItem.bind(this)}
+                            keyExtractor={(item, index) => item.id}
+                            onEndReached={ this.onEndReached.bind(this) }
+                            onEndReachedThreshold={0}
+                            // ListFooterComponent={(savings.load_more_friend.requesting) &&
+                            // <ActivityIndicator
+                            //     animating = {savings.load_more_friend.requesting}
+                            //     size = "small"
+                            // />}
+                        />
+                    </View>
+                </ScrollView>
             </MainBackground>
         );
     }
 
-
     renderItem(item) {
         let it = item.item;
-        return <FriendCell
-            onPressItem={() => this.navToFriendDetail(it)}
-            friend={it}
+        return <SavingCell
+            onPressItem={() => this.navToSavingDetail(it)}
+            savingId={it.id}
         />
     }
 
-    navToFriendDetail(it) {
+    navToSavingDetail(it) {
     }
 
-
     onRefresh() {
-        this.loadFirst();
+        this.load();
     }
 
     onEndReached() {
@@ -100,7 +98,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state, ownProps) => ({
-    friend: state.friend,
+    savings: state.savings,
     data: state.data,
     app: state.app,
     request: state.request
@@ -109,23 +107,23 @@ const mapStateToProps = (state, ownProps) => ({
 
 const actionTypes = (() => {
 
-    const LOAD_FRIENDS = new Api.ApiAction("load_friends");
-    const LOAD_MORE_FRIENDS = new Api.ApiAction("load_more_friends");
+    const LOAD_SAVINGS = new Api.ApiAction("load_savings");
+    const LOAD_MORE_SAVINGS = new Api.ApiAction("load_more_savings");
 
-    return {LOAD_SAVINGS: LOAD_FRIENDS, LOAD_MORE_FRIENDS};
+    return {LOAD_SAVINGS, LOAD_MORE_SAVINGS};
 })();
 
 
 const actions = (() => {
     return {
 
-        fetchSavings: (userId: string) => {
+        fetchSavings: (lineupId: string) => {
             let call = new Api.Call().withMethod('GET')
-                .withRoute(`users/${userId}/friends`)
+                .withRoute(`lists/${lineupId}/savings`)
                 .withQuery({
                     page: 1,
                     per_page: 10,
-                    include: "creator"
+                    include: "*.*"
                 });
 
             return call.disptachForAction(actionTypes.LOAD_SAVINGS);
@@ -138,7 +136,7 @@ const actions = (() => {
                     include: "creator"
                 });
 
-            return call.disptachForAction(actionTypes.LOAD_MORE_FRIENDS);
+            return call.disptachForAction(actionTypes.LOAD_MORE_SAVINGS);
         }
     };
 })();
@@ -147,11 +145,11 @@ const reducer = (() => {
     const initialState = Immutable(Api.initialListState());
 
     return (state = initialState, action = {}) => {
-        let desc = {fetchFirst: actionTypes.LOAD_SAVINGS, fetchMore: actionTypes.LOAD_MORE_FRIENDS};
+        let desc = {fetchFirst: actionTypes.LOAD_SAVINGS, fetchMore: actionTypes.LOAD_MORE_SAVINGS};
         return Api.reduceList(state, action, desc);
     }
 })();
 
-let screen = connect(mapStateToProps)(CommunityScreen);
+let screen = connect(mapStateToProps)(SavingsScreen);
 
 export {reducer, screen};

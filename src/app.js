@@ -36,11 +36,10 @@ export default class App {
     testScreen = {
         screen: {
             label: 'test',
-            screen: 'goodsh.LineupListScreen',
+            screen: 'goodsh.SavingsScreen',
         },
         passProps: {
-            activityId: "0ea0fae6-4b40-4de5-a8b4-28b74fe68f9a",
-            activityType:"savings"
+            lineupId: "37e67b05-c86c-4aeb-b3af-bf1c34862cd0",
         }
     };
 

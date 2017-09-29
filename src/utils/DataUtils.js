@@ -18,7 +18,7 @@ export let sanitizeActivityType = function (activityType) {
             type = "savings";
             break;
     }
-    if (!type) throw new Error(`type not found for ${activityType}`);
+    //if (!type) throw new Error(`type not found for ${activityType}`);
     return type;
 };
 
