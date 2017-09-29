@@ -29,3 +29,9 @@ export const SIDE_MARGINS = (margin) => {
         marginRight: margin,
     }
 };
+export const TP_MARGINS = (margin) => {
+    return {
+        marginTop: margin,
+        marginBottom: margin,
+    }
+};

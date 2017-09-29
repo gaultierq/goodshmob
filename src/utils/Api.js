@@ -44,6 +44,11 @@ export class Call {
         return this;
     }
 
+    withBody(body:any) {
+        this.body = body;
+        return this;
+    }
+
     withQuery(query: any) {
         let q = qs.parse(this.url.query);
         let newVar = Object.assign({}, q || {}, query);

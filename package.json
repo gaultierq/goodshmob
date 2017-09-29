@@ -11,6 +11,7 @@
 	"dependencies": {
 		"@types/react": "^16.0.5",
 		"adm-zip": "^0.4.7",
+		"apsl-react-native-button": "^3.1.0",
 		"es6-symbol": "^3.1.1",
 		"json-api-normalizer": "^0.4.2",
 		"plist": "^2.1.0",
@@ -20,6 +21,7 @@
 		"react-native-fbsdk": "facebook/react-native-fbsdk#065507a",
 		"react-native-global-props": "^1.1.1",
 		"react-native-i18n": "^2.0.5",
+		"react-native-modal": "^4.0.0",
 		"react-native-navigation": "^1.1.212",
 		"react-native-vector-icons": "^4.3.0",
 		"react-redux": "^5.0.6",

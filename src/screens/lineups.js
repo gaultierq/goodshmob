@@ -1,7 +1,12 @@
 // @flow
 
 import React, {Component} from 'react';
-import {StyleSheet, Modal, Image, View, Text, ScrollView, ActivityIndicator, FlatList, RefreshControl, TouchableHighlight} from 'react-native';
+import {
+    StyleSheet, TextInput, Image,
+    View, Text, ScrollView, ActivityIndicator,
+    FlatList, RefreshControl, TouchableHighlight} from 'react-native';
+import Modal from 'react-native-modal'
+
 import {connect} from "react-redux";
 import {AsyncStorage} from "react-native";
 import LineupCell from "./components/LineupCell";
@@ -10,6 +15,9 @@ import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
 import i18n from '../i18n/i18n'
 import * as UI from "../screens/UIStyles";
+import Button from 'apsl-react-native-button'
+import {TP_MARGINS} from "./UIStyles";
+
 
 class LineupListScreen extends Component {
 
@@ -17,7 +25,10 @@ class LineupListScreen extends Component {
 
     constructor(){
         super();
-        this.state= {modalVisible: false}
+        this.state= {
+            isCreatingLineup: false,
+            modalVisible: true
+        }
     }
 
     componentDidMount() {
@@ -139,20 +150,39 @@ class LineupListScreen extends Component {
     renderModal() {
         return (
             <Modal
-                animationType="slide"
-                presentationStyle='pageSheet'
-                visible={this.state.modalVisible}
-                onRequestClose={() => {alert("Modal has been closed.")}}
+                isVisible={this.state.modalVisible}
             >
-                <View style={{marginTop: 22}}>
+                <View style={{
+                    backgroundColor: 'white',
+                    padding: 10,
+                    borderRadius: 4,
+                    borderColor: 'rgba(0, 0, 0, 0.1)',
+                }}>
                     <View>
-                        <Text>Hello World!</Text>
+                        <Text>Add a new lineup</Text>
+                        <Text>Be creative ;)</Text>
 
-                        <TouchableHighlight onPress={() => {
-                            this.setModalVisible(!this.state.modalVisible)
-                        }}>
-                            <Text>Hide Modal</Text>
-                        </TouchableHighlight>
+                        <TextInput
+                            style={{...TP_MARGINS(20), height: 40, borderColor: 'gray', borderWidth: 1}}
+                            onChangeText={(text) => this.setState({newLineupName: text})}
+                            value={this.state.text}
+                        />
+
+                        <Button
+                                isLoading={this.state.isCreatingLineup}
+                                isDisabled={!this.state.newLineupName}
+                                onPress={this.createLineup.bind(this)}>
+                            <Text>Add</Text>
+                        </Button>
+
+                        <Button
+                                onPress={() => {
+                                    this.setModalVisible(!this.state.modalVisible)
+                                }}>
+                            <Text>Cancel</Text>
+                        </Button>
+
+
 
                     </View>
                 </View>
@@ -166,6 +196,13 @@ class LineupListScreen extends Component {
 
     onRefresh() {
         this.load();
+    }
+    createLineup() {
+        if (!this.state.newLineupName) return;
+        if (this.state.isCreatingLineup) return;
+        this.setState({isCreatingLineup: true});
+        this.props.dispatch(actions.createLineup(this.state.newLineupName))
+            .then(()=> this.setModalVisible(false)).then(()=> this.setState({isCreatingLineup: false}));
     }
 
     onEndReached() {
@@ -193,8 +230,9 @@ const mapStateToProps = (state, ownProps) => ({
 const actiontypes = (() => {
     const FETCH_LINEUPS = new Api.ApiAction("fetch_lineups");
     const FETCH_MORE_LINEUPS = new Api.ApiAction("fetch_more_lineups");
+    const CREATE_LINEUP = new Api.ApiAction("create_lineup");
 
-    return {FETCH_LINEUPS, FETCH_MORE_LINEUPS};
+    return {FETCH_LINEUPS, FETCH_MORE_LINEUPS, CREATE_LINEUP};
 })();
 
 
@@ -221,7 +259,19 @@ const actions = (() => {
                 });
 
             return call.disptachForAction(actiontypes.FETCH_MORE_LINEUPS);
-        }
+        },
+        createLineup: (listName) => {
+            let call = new Api.Call()
+                .withMethod('POST')
+                .withRoute("lists")
+                .withBody({
+                    "list": {
+                        "name": listName
+                    }
+                });
+
+            return call.disptachForAction(actiontypes.CREATE_LINEUP);
+        },
     };
 })();
 
@@ -230,7 +280,21 @@ const reducer = (() => {
 
     return (state = initialState, action = {}) => {
         let desc = {fetchFirst: actiontypes.FETCH_LINEUPS, fetchMore: actiontypes.FETCH_MORE_LINEUPS};
-        return Api.reduceList(state, action, desc);
+        state = Api.reduceList(state, action, desc);
+        switch (action.type) {
+            case actiontypes.CREATE_LINEUP.success():
+                let payload = action.payload;
+                let {id, type} = payload.data;
+                let newItem = {id, type};
+
+                let list = state.list.map((val, index) => {
+                    return (index === 1) ? newItem : val;
+                });
+                state = state.merge({list});
+                break;
+        }
+
+        return state;
     }
 })();
 
