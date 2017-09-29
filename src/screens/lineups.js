@@ -134,7 +134,7 @@ class LineupListScreen extends Component {
     seeLineupDetails(lineup) {
         console.info("onPressItem: " + JSON.stringify(lineup));
         this.props.navigator.push({
-            screen: 'goodsh.LineupDetailScreen', // unique ID registered with Navigation.registerScreen
+            screen: 'goodsh.SavingsScreen', // unique ID registered with Navigation.registerScreen
             title: "Lineup Details", // navigation bar title of the pushed screen (optional)
             titleImage: require('../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
             passProps: {lineupId: lineup.id}, // Object that will be passed as props to the pushed screen (optional)

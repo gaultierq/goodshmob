@@ -32,11 +32,10 @@ class SavingsScreen extends Component {
     }
 
     render() {
-        let savings = this.props.savings;
+        let savingList = this.getSavings();
 
-        let savingList = (savings.list || []).map(object => build(this.props.data, object.type, object.id));
+        let isLoading = !savingList && this.props.request.isLoading[actionTypes.LOAD_SAVINGS.name()];
 
-        let isLoading = this.props.request.isLoading[actionTypes.LOAD_SAVINGS.name()];
 
         return (
             <MainBackground>
@@ -63,6 +62,28 @@ class SavingsScreen extends Component {
                 </ScrollView>
             </MainBackground>
         );
+    }
+
+    getSavings() {
+        let isLastSuccess = this.props.request.isLastSuccess[actionTypes.LOAD_SAVINGS.name()];
+
+        let lineup = this.getLineup();
+        let savingList;
+
+        if (isLastSuccess) {
+            savingList = this.props.savings.list;
+        }
+        else if (lineup) {
+            savingList = lineup.savings
+        }
+        else {
+            savingList = [];
+        }
+        return savingList;
+    }
+
+    getLineup() {
+        return build(this.props.data, "lists", this.props.lineupId);
     }
 
     renderItem(item) {
