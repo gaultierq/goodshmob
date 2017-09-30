@@ -24,7 +24,7 @@ class CommunityScreen extends Component {
     }
 
     load() {
-        let cui = this.props.app.currentUser.id;
+        let cui = this.props.auth.currentUserId;
         this.props.dispatch(actions.fetchSavings(cui));
     }
 
@@ -79,7 +79,7 @@ class CommunityScreen extends Component {
 
 
     onRefresh() {
-        this.loadFirst();
+        this.load();
     }
 
     onEndReached() {
@@ -103,6 +103,7 @@ const mapStateToProps = (state, ownProps) => ({
     friend: state.friend,
     data: state.data,
     app: state.app,
+    auth: state.auth,
     request: state.request
 });
 

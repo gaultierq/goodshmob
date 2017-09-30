@@ -3,6 +3,7 @@ import * as types from "./actionTypes"
 import * as Api from "../utils/Api";
 import {sanitizeActivityType} from "../utils/DataUtils";
 
+
 let fixtures = require("../fixtures/activities_fixtures2.json");
 
 

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Button, Text, ScrollView} from 'react-native';
-import  * as appActions from '../app/actions'
+import  * as appActions from '../auth/actions'
 import {connect} from "react-redux";
 import {AsyncStorage} from "react-native";
 

@@ -3,7 +3,7 @@
 import React, {Component} from 'react';
 
 import {Button, ImageBackground, Image, StyleSheet, Text, View, ActivityIndicator} from 'react-native';
-import * as appActions from "../app/actions"
+import * as appActions from "../auth/actions"
 import {connect} from 'react-redux';
 import {LoginManager} from 'react-native-fbsdk';
 import i18n from '../i18n/i18n'
@@ -86,17 +86,19 @@ class Login extends Component {
                 result => {
                     if (result.isCancelled) {
                         console.log('Login cancelled')
-                    } else {
+                    }
+                    else {
                         console.log(`Login success with permissions: ${result.grantedPermissions ? result.grantedPermissions.toString() : 'null'}`);
-                        this.props.dispatch(appActions.login(() => this.setState({loginInProgress: false})));
+                        appActions.login(this.props.dispatch);
                     }
 
                 },
                 error => {
-                    console.log('Login fail with error: ' + error)
-                    this.setState({loginInProgress: false})
+                    console.log('Login fail with error: ' + error);
+
                 }
             )
+            .then(() => this.setState({loginInProgress: false}));
     }
 }
 

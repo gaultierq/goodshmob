@@ -1,11 +1,12 @@
+// @flow
 
 import {createStore, applyMiddleware, combineReducers} from "redux";
 import {Provider} from "react-redux";
 import { Navigation } from 'react-native-navigation';
 import { registerScreens} from './screens/allScreens';
 import * as reducers from "./reducers/allReducers";
-import {createWithReducers} from "./app/reducer";
-import  * as appActions from './app/actions'
+import {createWithReducers} from "./auth/reducer";
+import  * as appActions from './auth/actions'
 import thunk from "redux-thunk";
 import logger from 'redux-logger'
 import codePush from "react-native-code-push";
@@ -52,20 +53,24 @@ export default class App {
             updateDialog: true,
             installMode: codePush.InstallMode.IMMEDIATE
         });
-
+        this.resolveLogged();
     }
 
     onStoreUpdate() {
-        const {currentUser} = store.getState().app;
+        this.resolveLogged();
+    }
 
-        let logged = !!currentUser;
+
+    resolveLogged() {
+        const {currentUserId} = store.getState().auth;
+
+        let logged = !!currentUserId;
 
         if (this.logged !== logged) {
             this.logged = logged;
             this.startApp(logged);
         }
     }
-
 
     startApp(logged) {
 

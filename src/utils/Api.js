@@ -6,6 +6,14 @@ import * as Util from "./ModelUtils";
 import normalize from 'json-api-normalizer';
 
 
+export const API_DATA_REQUEST = 'API_DATA_REQUEST';
+export const API_DATA_SUCCESS = 'API_DATA_SUCCESS';
+export const API_DATA_FAILURE = 'API_DATA_FAILURE';
+export const API_AUTH = 'API_AUTH';
+
+export const API_SYMBOL = Symbol("api");
+
+
 let client, uid, accessToken;
 
 export const API_END_POINT = "https://goodshitapp-staging.herokuapp.com/";
@@ -67,11 +75,6 @@ export class Call {
         return result;
     }
 
-    exec() {
-        if (!this.method) throw new Error("call need a method");
-        return this.xhr(this.url.toString(), this.method, this.body);
-    }
-
     disptachForAction(apiAction: ApiAction, options?: any) {
         return {
             [API_SYMBOL]: Object.assign({}, {
@@ -81,21 +84,11 @@ export class Call {
         };
     }
 
-    xhr(route, verb, body) {
 
-        return submit(route, verb, body)
-            .then( resp => {
-
-                if (resp.ok) {
-                    let contentType = resp.headers.get("content-type");
-                    if(contentType && contentType.indexOf("application/json") !== -1) {
-                        return resp.json();
-                    }
-                    return "ok";
-                }
-                return resp.json().then(err => {throw err});
-            });
-    };
+    exec() {
+        //if (!this.method) throw new Error("call need a method");
+        return submit(this.url.toString(), this.method, this.body);
+    }
 }
 
 //TODO: this is shit
@@ -104,7 +97,6 @@ export function credentials(a, c, u) {
     accessToken = a;
     client = c;
     uid = u;
-
 }
 
 
@@ -190,13 +182,6 @@ export const reduceList = function (state, action, desc) {
 
 
 
-export const API_DATA_REQUEST = 'API_DATA_REQUEST';
-export const API_DATA_SUCCESS = 'API_DATA_SUCCESS';
-export const API_DATA_FAILURE = 'API_DATA_FAILURE';
-
-export const API_SYMBOL = Symbol("api");
-
-
 //1. edit store.request : .isLoading, .isLastSuccess, .isLastFailure, .isLastFinished
 //2. edit store.data : request has flag -> dataReducer; or other actions
 let middleware = store => next => action => {
@@ -218,9 +203,54 @@ let middleware = store => next => action => {
     next(actionWith({ type: API_DATA_REQUEST}));
 
 
+    let handleAuth = (response, next) => {
+        let client1 = response.headers.get('Client');
+        let uid1 = response.headers.get('Uid');
+        let accessToken1 = response.headers.get('Access-Token');
+
+        let save = false;
+        if (client !== client1) {
+            client = client1;
+            save = true;
+        }
+        if (uid !== uid1) {
+            uid = uid1;
+            save = true;
+        }
+        if (accessToken !== accessToken1) {
+            accessToken = accessToken1;
+            save = true;
+        }
+        if (save) {
+            next({
+                type: API_AUTH,
+                client, uid, accessToken
+            })
+        }
+    };
+
     return call.exec()
+        .then(resp => {
+            handleAuth(resp, next);
+            return resp;
+        })
+        .then(resp => {
+            if (resp.ok) {
+                let contentType = resp.headers.get("content-type");
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    return resp.json();
+                }
+                return "ok";
+            }
+            return resp.json().then(err => {
+                throw err
+            });
+        })
         .then(
             response => {
+
+                //handleAuth(response, next);
+
                 let data = normalize(response);
 
                 //1., 2.
@@ -229,7 +259,11 @@ let middleware = store => next => action => {
                 return next(Object.assign({}, {type: apiAction.success(), payload: response}, {meta}));
             },
             //1., 2.
-            error => next(actionWith({ type: API_DATA_FAILURE, error: error.message || 'Something bad happened' })),
+            error => {
+                //handleAuth(response, next);
+
+                return next(actionWith({ type: API_DATA_FAILURE, error: error.message || 'Something bad happened' }))
+            },
         );
 };
 
