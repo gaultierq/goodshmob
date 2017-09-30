@@ -1,6 +1,6 @@
 // @flow
 
-import {createStore, applyMiddleware, combineReducers} from "redux";
+import {compose, createStore, applyMiddleware, combineReducers} from "redux";
 import {Provider} from "react-redux";
 import { Navigation } from 'react-native-navigation';
 import { registerScreens} from './screens/allScreens';
@@ -11,20 +11,27 @@ import thunk from "redux-thunk";
 import logger from 'redux-logger'
 import codePush from "react-native-code-push";
 import {middleware as apiMiddleware} from './utils/Api';
-
+import {persistStore, autoRehydrate} from 'redux-persist'
+import {AsyncStorage} from 'react-native'
+import immutableTransform from './immutableTransform'
 
 //see the network requests in the debugger
 //TODO: doesnt work yet
 //GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
 
-// redux related book keeping
-const createStoreWithMiddleware = applyMiddleware(apiMiddleware, thunk, logger)(createStore);
 let appReducers = combineReducers(reducers);
-
 const reducer = createWithReducers(appReducers);
+const store = createStore(
+    reducer,
+    undefined,
+    compose(
+        applyMiddleware(apiMiddleware, thunk, logger),
+        autoRehydrate()
+    )
+);
 
-const store = createStoreWithMiddleware(reducer);
-
+// begin periodically persisting the store
+persistStore(store, {storage: AsyncStorage,  transforms: [immutableTransform]});
 
 // screen related book keeping
 registerScreens(store, Provider);
@@ -66,6 +73,7 @@ export default class App {
 
         let logged = !!currentUserId;
 
+        //TODO: use navigation to resolve the current screen
         if (this.logged !== logged) {
             this.logged = logged;
             this.startApp(logged);

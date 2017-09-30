@@ -1,14 +1,10 @@
 // @flow
 
-import * as types from './actionTypes';
 import * as Api from "../utils/Api";
-import * as authTypes from "../auth/authActionTypes"
+import * as authTypes from "./actionTypes"
 import {  LoginManager as FacebookLoginManager, AccessToken } from "react-native-fbsdk";
 
-import {
-    setCustomText,
-} from 'react-native-global-props';
-import * as ModelUtils from "../utils/ModelUtils";
+import {setCustomText} from 'react-native-global-props';
 
 export function appInitialized() {
 
@@ -24,40 +20,10 @@ export function appInitialized() {
                 color: 'black'
             }
         });
-
-        // let { user, access_token, client, uid} = (await Persist.readMany([
-        //     "user",
-        //     "access_token",
-        //     "client",
-        //     "uid",
-        // ]));
-
-        //Api.credentials(access_token, client, uid);
-
-        //dispatch(dispatchLogin(user));
-
     };
 }
 
-export function dispatchLogin(user) {
-    user = JSON.parse(user);
-    return {type: user ? types.USER_LOGIN : types.USER_LOGOUT, user};
-}
-
-// export function login(callback?:Function) {
-//     return async (dispatch: any, getState: any) => {
-//         // login logic would go here, and when it's done, we switch app roots
-//
-//         //TODO: handle errors
-//         let user = await LoginManager.login();
-//
-//         callback && callback();
-//
-//         dispatch(dispatchLogin(user));
-//     };
-// }
-
-export function login(dispatch, callback?:Function) {
+export function login(dispatch: any, callback?:Function) {
     AccessToken.getCurrentAccessToken().then(
         (data) => {
             let token = data ? data.accessToken.toString() : '';
@@ -71,7 +37,6 @@ export function login(dispatch, callback?:Function) {
                 .disptachForAction(authTypes.USER_LOGIN));
         }
     )
-
 }
 
 export function logout() {

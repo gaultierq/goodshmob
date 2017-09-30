@@ -6,7 +6,7 @@ import * as Api from "../utils/Api";
 import {  LoginManager as FacebookLoginManager, AccessToken } from "react-native-fbsdk";
 import {AsyncStorage} from "react-native";
 import * as Persist from "../utils/Persist";
-import * as authTypes from "../auth/authActionTypes"
+import * as authTypes from "../auth/actionTypes"
 
 
 class LoginManager {
