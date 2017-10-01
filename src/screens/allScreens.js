@@ -2,7 +2,7 @@ import { Navigation } from 'react-native-navigation';
 
 import LoginScreen from './LoginScreen';
 import {screen as HomeScreen} from './home';
-import SearchScreen from './SearchScreen';
+import {screen as SearchScreen} from './search';
 import AddScreen from './AddScreen';
 import NotifScreen from './NotifScreen';
 import AskScreen from './AskScreen';
