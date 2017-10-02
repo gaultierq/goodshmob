@@ -8,12 +8,14 @@ import * as UI from "../UIStyles";
 import {connect} from "react-redux";
 import {buildNonNullData} from "../../utils/DataUtils";
 
-class SavingCell extends React.Component {
+export default class ItemCell extends React.Component {
 
 
     render() {
-        let saving : Model.Saving = this.getSaving();
-        let resource = saving.resource;
+        let item = this.props.item;
+        if (!item) throw new Error("expecting item");
+
+        let resource = item;
         let image = resource ? resource.image : undefined;
 
         let cardMargin = 12;
@@ -54,41 +56,26 @@ class SavingCell extends React.Component {
     }
 
     onSavingPressed() {
-        let saving = this.getSaving();
-        this.props.navigator.push({
-            screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
-            title: "Activity Details", // navigation bar title of the pushed screen (optional)
-            titleImage: require('../../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
-            passProps: {activityId: saving.id, activityType: saving.type}, // Object that will be passed as props to the pushed screen (optional)
-            animated: true, // does the push have transition animation or does it happen immediately (optional)
-            animationType: 'slide-up', // 'fade' (for both) / 'slide-horizontal' (for android) does the push have different transition animation (optional)
-            backButtonTitle: undefined, // override the back button title (optional)
-            backButtonHidden: false, // hide the back button altogether (optional)
-            navigatorStyle: {}, // override the navigator style for the pushed screen (optional)
-            navigatorButtons: {} // override the nav buttons for the pushed screen (optional)
-        });
+        // let saving = this.getSaving();
+        // this.props.navigator.push({
+        //     screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
+        //     title: "Activity Details", // navigation bar title of the pushed screen (optional)
+        //     titleImage: require('../../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
+        //     passProps: {activityId: saving.id, activityType: saving.type}, // Object that will be passed as props to the pushed screen (optional)
+        //     animated: true, // does the push have transition animation or does it happen immediately (optional)
+        //     animationType: 'slide-up', // 'fade' (for both) / 'slide-horizontal' (for android) does the push have different transition animation (optional)
+        //     backButtonTitle: undefined, // override the back button title (optional)
+        //     backButtonHidden: false, // hide the back button altogether (optional)
+        //     navigatorStyle: {}, // override the navigator style for the pushed screen (optional)
+        //     navigatorButtons: {} // override the nav buttons for the pushed screen (optional)
+        // });
     }
 
-    getSaving() {
-        return buildNonNullData(this.props.data, "savings", this.props.savingId);
-    }
+    // getSaving() {
+    //     return buildNonNullData(this.props.data, "savings", this.props.savingId);
+    // }
 
-    renderItem(item) {
-        let it: Model.Saving = item.item;
-        let image = it.resource ? it.resource.image : undefined;
-
-
-        return <Image
-            source={{uri: image}}
-            style={{
-                height: 50,
-                width: 50,
-                margin: 10
-            }}
-        />
-    }
 }
-const mapStateToProps = (state, ownProps) => ({
-    data: state.data
-});
-export default connect(mapStateToProps)(SavingCell);
+// const mapStateToProps = (state, ownProps) => ({
+//     data: state.data
+// });

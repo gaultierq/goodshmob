@@ -17,6 +17,14 @@ export let sanitizeActivityType = function (activityType) {
         case "savings":
             type = "savings";
             break;
+        case "creative-works":
+        case "creative-work":
+            type = "creativeWorks";
+            break;
+        case "tv-shows":
+        case "tv-show":
+            type = "tvShows";
+            break;
     }
     //if (!type) throw new Error(`type not found for ${activityType}`);
     return type;

@@ -9,7 +9,8 @@ import {MainBackground} from "./UIComponents";
 import build from 'redux-object'
 import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
-import SavingCell from "./components/SavingCell";
+import ItemCell from "./components/ItemCell";
+import {buildNonNullData} from "../utils/DataUtils";
 
 
 class SavingsScreen extends Component {
@@ -88,9 +89,9 @@ class SavingsScreen extends Component {
 
     renderItem(item) {
         let it = item.item;
-        return <SavingCell
+        return <ItemCell
             onPressItem={() => this.navToSavingDetail(it)}
-            savingId={it.id}
+            item={it.resource}
             navigator={this.props.navigator}
         />
     }

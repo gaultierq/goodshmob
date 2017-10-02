@@ -10,7 +10,8 @@ import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
 import {combineReducers} from "redux";
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
-
+import ItemCell from "./components/ItemCell";
+import {buildNonNullData} from "../utils/DataUtils";
 
 const SEARCH_CATEGORIES = [ "consumer_goods", "places_and_people", "musics", "movies"]
 
@@ -104,7 +105,6 @@ class SearchCategory extends Component {
 
         return (
             <View>
-                <Text>Ceci est un header</Text>
                 <FlatList
                     data={results}
                     renderItem={this.renderItem.bind(this)}
@@ -114,8 +114,19 @@ class SearchCategory extends Component {
         );
     }
 
-    renderItem(it) {
-        return (<Text>{JSON.stringify(it)}</Text>);
+    renderItem(item) {
+        let it = this.getItem(item.item);
+        if (!it) throw new Error(`no item${JSON.stringify(item.item)}`);
+
+        return <ItemCell
+            onPressItem={() => this.navToSavingDetail(it)}
+            item={it}
+            navigator={this.props.navigator}
+        />
+    }
+
+    getItem(item) {
+        return buildNonNullData(this.props.data, item.type, item.id);
     }
 }
 
