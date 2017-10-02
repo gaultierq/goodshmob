@@ -3,16 +3,12 @@
 import * as Api from "../utils/Api";
 import * as authTypes from "./actionTypes"
 import {  LoginManager as FacebookLoginManager, AccessToken } from "react-native-fbsdk";
-
+import codePush from "react-native-code-push";
 import {setCustomText} from 'react-native-global-props';
 
-export function appInitialized() {
+export function initApp() {
 
     return async (dispatch: any, getState: any) => {
-        // since all business logic should be inside redux actions
-        // this is a good place to put your app initialization code
-
-
         //defining default font
         setCustomText({
             style: {
@@ -20,6 +16,14 @@ export function appInitialized() {
                 color: 'black'
             }
         });
+
+        codePush.sync({
+            updateDialog: true,
+            installMode: codePush.InstallMode.IMMEDIATE
+        });
+
+        let auth = getState().auth;
+        Api.credentials(auth.accessToken, auth.client, auth.uid);
     };
 }
 

@@ -1,8 +1,9 @@
 // @flow
 
 import React, {Component} from 'react';
-import {Text, TouchableOpacity,
-    StyleSheet, View, FlatList, ImageBackground, RefreshControl, ActivityIndicator} from 'react-native';
+import {
+    Text, StyleSheet, View, FlatList, RefreshControl, ActivityIndicator, TextInput
+} from 'react-native';
 import {connect} from "react-redux";
 import {MainBackground} from "./UIComponents"
 import Immutable from 'seamless-immutable';
@@ -15,9 +16,13 @@ class SearchScreen extends Component {
 
     categ = ["stuff", "place", "movie", "music"];
 
+    SEARCH_CATEGORIES = [ ":consumer_goods", ":places_and_people", ":musics", ":movies"]
+
+    IDENTIFIERS = [ ":things", ":places", ":movies", ":musics"]
+
     state = {
         index: 0,
-        routes: this.categ.map((c, i) => ({key: `${i}`, title: c}))
+        routes: this.categ.map((c, i) => ({key: `${i}`, title: c})),
     };
 
     _handleIndexChange = index => this.setState({ index });
@@ -36,14 +41,26 @@ class SearchScreen extends Component {
         let search = this.props.search;
 
         return (
-            <TabViewAnimated
-                style={styles.container}
-                navigationState={this.state}
-                renderScene={this._renderScene}
-                renderHeader={this._renderHeader}
-                onIndexChange={this._handleIndexChange}
-            />
+            <View style={{width:"100%", height: "100%"}}>
+                <TextInput
+                    editable = {true}
+                    maxLength = {40}
+                    onChangeText={this.onSearchInputChange.bind(this)}
+                />
+                <TabViewAnimated
+                    style={styles.container}
+                    navigationState={this.state}
+                    renderScene={this._renderScene}
+                    renderHeader={this._renderHeader}
+                    onIndexChange={this._handleIndexChange}
+                />
+            </View>
+
         );
+    }
+
+    onSearchInputChange(input) {
+        this.props.dispatch(actions.searchFor(input, "consumer_goods"));
     }
 
     renderCategory(c) {
@@ -97,29 +114,23 @@ class SearchCategory extends Component {
 
 
 const actiontypes = (() => {
-    const FETCH_ACTIVITIES = new Api.ApiAction("search/fetch_activities");
-    const FETCH_MORE_ACTIVITIES = new Api.ApiAction("search/fetch_more_activities");
+    const SEARCH_TERM = new Api.ApiAction("search/term");
 
-    return {FETCH_ACTIVITIES, FETCH_MORE_ACTIVITIES};
+    return {SEARCH_TERM};
 })();
 
 
 const actions = (() => {
     return {
-        loadLineups: () => {
-            let call = new Api.Call().withMethod('GET')
-                .withRoute("activities")
-                .withQuery({include: "user,resource,target"});
+        searchFor: (term, category) => {
 
-            return call.disptachForAction(actiontypes.FETCH_ACTIVITIES);
+            let call = new Api.Call()
+                .withMethod('GET')
+                .withRoute(`search/${category}`)
+                .withQuery({'search[term]': term});
+
+            return call.disptachForAction(actiontypes.SEARCH_TERM);
         },
-
-        loadMoreLineups:(nextUrl:string) => {
-            let call = new Api.Call.parse(nextUrl).withMethod('GET')
-                .withQuery({include: "user,resource,target"});
-
-            return call.disptachForAction(actiontypes.FETCH_MORE_ACTIVITIES);
-        }
     };
 })();
 

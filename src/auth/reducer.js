@@ -1,5 +1,6 @@
 import Immutable from 'seamless-immutable';
 import * as types from "./actionTypes";
+import {API_AUTH} from "../utils/Api";
 
 const initialState = Immutable({
     currentUserId: '',
@@ -24,7 +25,7 @@ export function createWithReducers(appReducers) {
 export default function (state = initialState, action) {
 
     switch (action.type) {
-        case types.API_AUTH:
+        case API_AUTH:
             let {client, uid, accessToken} = action;
             state = state.merge({client, uid, accessToken});
             break;

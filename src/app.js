@@ -9,7 +9,7 @@ import {createWithReducers} from "./auth/reducer";
 import  * as appActions from './auth/actions'
 import thunk from "redux-thunk";
 import logger from 'redux-logger'
-import codePush from "react-native-code-push";
+
 import {middleware as apiMiddleware} from './utils/Api';
 import {persistStore, autoRehydrate} from 'redux-persist'
 import {AsyncStorage} from 'react-native'
@@ -18,7 +18,7 @@ import immutableTransform from './immutableTransform'
 //see the network requests in the debugger
 //TODO: doesnt work yet
 //GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
-
+console.info("LOOOOL1");
 let appReducers = combineReducers(reducers);
 const reducer = createWithReducers(appReducers);
 const store = createStore(
@@ -26,12 +26,20 @@ const store = createStore(
     undefined,
     compose(
         applyMiddleware(apiMiddleware, thunk, logger),
-        autoRehydrate()
+        autoRehydrate({log:true})
     )
 );
 
 // begin periodically persisting the store
-persistStore(store, {storage: AsyncStorage,  transforms: [immutableTransform]});
+persistStore(store,
+    {storage: AsyncStorage,  transforms: [immutableTransform]},
+    () => {
+        console.log("persist store complete");
+        store.dispatch(appActions.initApp());
+    }
+);
+
+
 
 // screen related book keeping
 registerScreens(store, Provider);
@@ -41,25 +49,20 @@ export default class App {
 
     //screen: 'goodsh.ActivityDetailScreen',
     // screen: 'goodsh.LineupListScreen',
-    testScreen = {
-        screen: {
-            label: 'test',
-            screen: 'goodsh.SearchScreen',
-        },
-        passProps: {
-            lineupId: "37e67b05-c86c-4aeb-b3af-bf1c34862cd0",
-        }
-    };
+
+    // testScreen = {
+    //     screen: {
+    //         label: 'test',
+    //         screen: 'goodsh.SearchScreen',
+    //     },
+    //     passProps: {
+    //         lineupId: "37e67b05-c86c-4aeb-b3af-bf1c34862cd0",
+    //     }
+    // };
 
     constructor() {
         // since react-redux only works on components, we need to subscribe this class manually
         store.subscribe(this.onStoreUpdate.bind(this));
-        store.dispatch(appActions.appInitialized());
-
-        codePush.sync({
-            updateDialog: true,
-            installMode: codePush.InstallMode.IMMEDIATE
-        });
         this.resolveLogged();
     }
 

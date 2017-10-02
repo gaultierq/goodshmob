@@ -4,6 +4,7 @@ import URL from "url-parse"
 import qs from "querystringify"
 import * as Util from "./ModelUtils";
 import normalize from 'json-api-normalizer';
+import {logout} from "../auth/actions";
 
 
 export const API_DATA_REQUEST = 'API_DATA_REQUEST';
@@ -225,7 +226,7 @@ let middleware = store => next => action => {
             next({
                 type: API_AUTH,
                 client, uid, accessToken
-            })
+            });
         }
     };
 
@@ -242,14 +243,14 @@ let middleware = store => next => action => {
                 }
                 return "ok";
             }
+            let status = resp.status;
+
             return resp.json().then(err => {
-                throw err
+                throw {...err, status: status}
             });
         })
         .then(
             response => {
-
-                //handleAuth(response, next);
 
                 let data = normalize(response);
 
@@ -260,9 +261,11 @@ let middleware = store => next => action => {
             },
             //1., 2.
             error => {
-                //handleAuth(response, next);
+                let errMsg = error.message || `Something bad happened (${error.status}): ${JSON.stringify(error)}`;
 
-                return next(actionWith({ type: API_DATA_FAILURE, error: error.message || 'Something bad happened' }))
+
+                next(actionWith({ type: API_DATA_FAILURE, error: errMsg }));
+                return next(logout())
             },
         );
 };
