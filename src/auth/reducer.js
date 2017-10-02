@@ -25,14 +25,16 @@ export function createWithReducers(appReducers) {
 export default function (state = initialState, action) {
 
     switch (action.type) {
-        case API_AUTH:
-            let {client, uid, accessToken} = action;
-            state = state.merge({client, uid, accessToken});
-            break;
         case types.USER_LOGIN.success():
             //TODO: api return built object
             let currentUserId = action.payload.data.id;
-            state = state.merge({currentUserId});
+            let resp = action.original;
+
+            let client = resp.headers.get('Client');
+            let uid = resp.headers.get('Uid');
+            let accessToken = resp.headers.get('Access-Token');
+
+            state = state.merge({client, uid, accessToken, currentUserId});
             break;
         case types.USER_LOGOUT:
             state = initialState;

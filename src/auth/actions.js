@@ -6,25 +6,21 @@ import {  LoginManager as FacebookLoginManager, AccessToken } from "react-native
 import codePush from "react-native-code-push";
 import {setCustomText} from 'react-native-global-props';
 
-export function initApp() {
+export function onAppReady() {
+    //defining default font
+    setCustomText({
+        style: {
+            fontFamily: 'Thonburi',
+            color: 'black'
+        }
+    });
 
-    return async (dispatch: any, getState: any) => {
-        //defining default font
-        setCustomText({
-            style: {
-                fontFamily: 'Thonburi',
-                color: 'black'
-            }
-        });
+    codePush.sync({
+        updateDialog: true,
+        installMode: codePush.InstallMode.IMMEDIATE
+    });
 
-        codePush.sync({
-            updateDialog: true,
-            installMode: codePush.InstallMode.IMMEDIATE
-        });
-
-        let auth = getState().auth;
-        Api.credentials(auth.accessToken, auth.client, auth.uid);
-    };
+    return {type: "APP_INITIALIZED"}
 }
 
 export function login(dispatch: any, callback?:Function) {

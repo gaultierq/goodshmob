@@ -10,12 +10,11 @@ import {logout} from "../auth/actions";
 export const API_DATA_REQUEST = 'API_DATA_REQUEST';
 export const API_DATA_SUCCESS = 'API_DATA_SUCCESS';
 export const API_DATA_FAILURE = 'API_DATA_FAILURE';
-export const API_AUTH = 'API_AUTH';
 
 export const API_SYMBOL = Symbol("api");
 
 
-let client, uid, accessToken;
+let currentUserId, client, uid, accessToken;
 
 export const API_END_POINT = "https://goodshitapp-staging.herokuapp.com/";
 
@@ -91,6 +90,19 @@ export class Call {
         return submit(this.url.toString(), this.method, this.body);
     }
 }
+
+export function init(store) {
+    store.subscribe(() => {
+        console.info(`api initialized with: access-token=${accessToken}, client=${client}, uid=${uid}`);
+        let state = store.getState();
+        let auth = state.auth;
+        accessToken = auth.accessToken;
+        client = auth.client;
+        uid = auth.uid;
+        currentUserId = auth.currentUserId;
+    });
+}
+
 
 //TODO: this is shit
 export function credentials(a, c, u) {
@@ -204,44 +216,16 @@ let middleware = store => next => action => {
     next(actionWith({ type: API_DATA_REQUEST}));
 
 
-    let handleAuth = (response, next) => {
-        let client1 = response.headers.get('Client');
-        let uid1 = response.headers.get('Uid');
-        let accessToken1 = response.headers.get('Access-Token');
-
-        let save = false;
-        if (client !== client1) {
-            client = client1;
-            save = true;
-        }
-        if (uid !== uid1) {
-            uid = uid1;
-            save = true;
-        }
-        if (accessToken !== accessToken1) {
-            accessToken = accessToken1;
-            save = true;
-        }
-        if (save) {
-            next({
-                type: API_AUTH,
-                client, uid, accessToken
-            });
-        }
-    };
-
-    return call.exec()
+    return call
+        .exec()
         .then(resp => {
-            handleAuth(resp, next);
-            return resp;
-        })
-        .then(resp => {
+            console.debug("api: response")
             if (resp.ok) {
                 let contentType = resp.headers.get("content-type");
                 if (contentType && contentType.indexOf("application/json") !== -1) {
-                    return resp.json();
+                    return resp.json().then((json)=> ({json, original: resp}));
                 }
-                return "ok";
+                return {json: "ok", original: resp};
             }
             let status = resp.status;
 
@@ -249,23 +233,26 @@ let middleware = store => next => action => {
                 throw {...err, status: status}
             });
         })
-        .then(
-            response => {
-
+        .then(resp => {
+                let response = resp.json;
                 let data = normalize(response);
 
                 //1., 2.
                 next(actionWith({ data, type: API_DATA_SUCCESS }));
 
-                return next(Object.assign({}, {type: apiAction.success(), payload: response}, {meta}));
+                return next(Object.assign({}, {type: apiAction.success(), payload: response, original: resp.original}, {meta}));
             },
             //1., 2.
             error => {
                 let errMsg = error.message || `Something bad happened (${error.status}): ${JSON.stringify(error)}`;
 
+                let errorAction = actionWith({ type: API_DATA_FAILURE, error: errMsg });
+                if (error.status === 401) {
+                    next(errorAction);
+                    return next(logout())
+                }
+                return next(errorAction);
 
-                next(actionWith({ type: API_DATA_FAILURE, error: errMsg }));
-                return next(logout())
             },
         );
 };

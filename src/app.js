@@ -16,6 +16,7 @@ import {AsyncStorage} from 'react-native'
 import immutableTransform from './immutableTransform'
 import {REHYDRATE} from 'redux-persist/constants'
 import Immutable from 'seamless-immutable';
+import * as Api from "./utils/Api";
 
 const initialState = Immutable({
     rehydrated: false,
@@ -39,20 +40,27 @@ const store = createStore(
     undefined,
     compose(
         applyMiddleware(apiMiddleware, thunk, logger),
-        autoRehydrate({log:true})
+        autoRehydrate()
     )
 );
 
+let hydrated = false
+
 // begin periodically persisting the store
 persistStore(store,
-    {storage: AsyncStorage,  transforms: [immutableTransform]},
+    {
+        storage: AsyncStorage,
+        transforms: [immutableTransform],
+        blacklist: ['search']
+    },
     () => {
         console.log("persist store complete");
-        store.dispatch(appActions.initApp());
+        hydrated = true;
+        store.dispatch(appActions.onAppReady());
     }
 );
 
-
+Api.init(store);
 
 
 // screen related book keeping
@@ -64,21 +72,23 @@ export default class App {
     //screen: 'goodsh.ActivityDetailScreen',
     // screen: 'goodsh.LineupListScreen',
 
-    logged = false;
+    logged = null;
 
-    testScreen = {
-        screen: {
-            label: 'test',
-            screen: 'goodsh.SearchScreen',
-        },
-        passProps: {
-            lineupId: "37e67b05-c86c-4aeb-b3af-bf1c34862cd0",
-        }
-    };
+    // testScreen = null;
+    // testScreen = {
+    //     screen: {
+    //         label: 'test',
+    //         screen: 'goodsh.SearchScreen',
+    //     },
+    //     passProps: {
+    //         lineupId: "37e67b05-c86c-4aeb-b3af-bf1c34862cd0",
+    //     }
+    // };
 
     constructor() {
         // since react-redux only works on components, we need to subscribe this class manually
         store.subscribe(this.onStoreUpdate.bind(this));
+
         this.resolveLogged();
     }
 
@@ -89,10 +99,11 @@ export default class App {
     resolveLogged() {
         //waiting rehydration before starting app
         let rehydrated = store.getState().app.rehydrated;
-        if (!rehydrated) {
+        if (!hydrated) {
             console.debug("waiting for rehydration");
             return;
         }
+        console.debug("resolving logged");
 
         const {currentUserId} = store.getState().auth;
 
@@ -106,11 +117,9 @@ export default class App {
     }
 
     startApp(logged: boolean) {
+        console.debug(`starting app logged=${logged}, test=${(!!this.testScreen)}`);
 
-        if (this.testScreen) {
-            Navigation.startSingleScreenApp(this.testScreen);
-        }
-        else if (!logged) {
+        if (!logged) {
             Navigation.startSingleScreenApp({
                 screen: {
                     label: 'Login',
@@ -120,6 +129,9 @@ export default class App {
                     }
                 }
             });
+        }
+        else if (this.testScreen) {
+            Navigation.startSingleScreenApp(this.testScreen);
         }
         else {
             Navigation.startTabBasedApp({

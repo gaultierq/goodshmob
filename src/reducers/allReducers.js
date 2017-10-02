@@ -7,6 +7,7 @@ import {reducer as home} from '../screens/home';
 import {reducer as lineupList} from '../screens/lineups';
 import {reducer as friend} from '../screens/community';
 import {reducer as savings} from '../screens/savings';
+import {reducer as search} from '../screens/search';
 import auth from '../auth/reducer';
 
 let data = reduceReducers(data1, activity);
@@ -29,5 +30,6 @@ export {
     lineupList,
     friend,
     savings,
-    auth
+    auth,
+    search
 };
