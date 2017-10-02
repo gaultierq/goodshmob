@@ -12,6 +12,7 @@ import {combineReducers} from "redux";
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 import ItemCell from "./components/ItemCell";
 import {buildNonNullData} from "../utils/DataUtils";
+import i18n from '../i18n/i18n'
 
 const SEARCH_CATEGORIES = [ "consumer_goods", "places_and_people", "musics", "movies"]
 
@@ -20,7 +21,7 @@ class SearchScreen extends Component {
     state = {
         index: 0,
         input: '',
-        routes: SEARCH_CATEGORIES.map((c, i) => ({key: `${i}`, title: c})),
+        routes: SEARCH_CATEGORIES.map((c, i) => ({key: `${i}`, title: this.getTitle(c)})),
     };
 
     _handleIndexChange = index => {
@@ -32,6 +33,11 @@ class SearchScreen extends Component {
     _renderScene = SceneMap(
         SEARCH_CATEGORIES.reduce((result, c, i) => Object.assign(result, this.renderCategory(i, c)), {}));
 
+
+
+    getTitle(cat: string) {
+        return i18n.t('search_item_screen.tabs.' + cat);
+    }
 
     renderCategory(i, c) {
         return {[i]: () => (

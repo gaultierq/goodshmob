@@ -127,6 +127,12 @@ export default {
         }
     },
     "search_item_screen":{
+        "tabs": {
+            "consumer_goods":"TRUC",
+            "places_and_people":"LIEU",
+            "movies":"FILM",
+            "musics":"SON"
+        },
         "filter":{
             "things":"TRUC",
             "places":"LIEU",

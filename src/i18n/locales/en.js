@@ -127,6 +127,12 @@ export default {
         }
     },
     "search_item_screen":{
+        "tabs": {
+            "consumer_goods":"STUFF",
+            "places_and_people":"PLACES",
+            "movies":"MOVIES",
+            "musics":"MUSIC"
+        },
         "filter":{
             "things":"STUFF",
             "places":"PLACES",
