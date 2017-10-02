@@ -14,13 +14,26 @@ import {middleware as apiMiddleware} from './utils/Api';
 import {persistStore, autoRehydrate} from 'redux-persist'
 import {AsyncStorage} from 'react-native'
 import immutableTransform from './immutableTransform'
+import {REHYDRATE} from 'redux-persist/constants'
+import Immutable from 'seamless-immutable';
+
+const initialState = Immutable({
+    rehydrated: false,
+});
+
+const appReducer = (state = initialState, action) => {
+    switch (action.type) {
+        case REHYDRATE:
+            return state.merge({rehydrated: true})
+    }
+    return state;
+};
 
 //see the network requests in the debugger
 //TODO: doesnt work yet
 //GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
-console.info("LOOOOL1");
-let appReducers = combineReducers(reducers);
-const reducer = createWithReducers(appReducers);
+let allReducers = combineReducers({...reducers, app: appReducer});
+const reducer = createWithReducers(allReducers);
 const store = createStore(
     reducer,
     undefined,
@@ -41,6 +54,7 @@ persistStore(store,
 
 
 
+
 // screen related book keeping
 registerScreens(store, Provider);
 
@@ -50,15 +64,17 @@ export default class App {
     //screen: 'goodsh.ActivityDetailScreen',
     // screen: 'goodsh.LineupListScreen',
 
-    // testScreen = {
-    //     screen: {
-    //         label: 'test',
-    //         screen: 'goodsh.SearchScreen',
-    //     },
-    //     passProps: {
-    //         lineupId: "37e67b05-c86c-4aeb-b3af-bf1c34862cd0",
-    //     }
-    // };
+    logged = false;
+
+    testScreen = {
+        screen: {
+            label: 'test',
+            screen: 'goodsh.SearchScreen',
+        },
+        passProps: {
+            lineupId: "37e67b05-c86c-4aeb-b3af-bf1c34862cd0",
+        }
+    };
 
     constructor() {
         // since react-redux only works on components, we need to subscribe this class manually
@@ -70,8 +86,14 @@ export default class App {
         this.resolveLogged();
     }
 
-
     resolveLogged() {
+        //waiting rehydration before starting app
+        let rehydrated = store.getState().app.rehydrated;
+        if (!rehydrated) {
+            console.debug("waiting for rehydration");
+            return;
+        }
+
         const {currentUserId} = store.getState().auth;
 
         let logged = !!currentUserId;
@@ -83,7 +105,7 @@ export default class App {
         }
     }
 
-    startApp(logged) {
+    startApp(logged: boolean) {
 
         if (this.testScreen) {
             Navigation.startSingleScreenApp(this.testScreen);
