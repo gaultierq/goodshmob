@@ -16,15 +16,15 @@ const SEARCH_CATEGORIES = [ "consumer_goods", "places_and_people", "musics", "mo
 
 class SearchScreen extends Component {
 
-
-    IDENTIFIERS = [ ":things", ":places", ":movies", ":musics"]
-
     state = {
         index: 0,
+        input: '',
         routes: SEARCH_CATEGORIES.map((c, i) => ({key: `${i}`, title: c})),
     };
 
-    _handleIndexChange = index => this.setState({ index });
+    _handleIndexChange = index => {
+        this.setState({ index }, () => this.performSearch());
+    };
 
     _renderHeader = props => <TabBar {...props} />;
 
@@ -38,8 +38,6 @@ class SearchScreen extends Component {
     }
 
     render() {
-        let search = this.props.search;
-
         return (
             <View style={{width:"100%", height: "100%"}}>
                 <TextInput
@@ -60,11 +58,18 @@ class SearchScreen extends Component {
     }
 
     onSearchInputChange(input) {
-        this.props.dispatch(actions.searchFor(input, SEARCH_CATEGORIES[this.state.index]));
+        this.setState({input: input}, () => this.performSearch());
     }
 
-    goToPage(tabNumber: number) {
-
+    performSearch() {
+        let cat = SEARCH_CATEGORIES[this.state.index];
+        let data = this.props.search[cat];
+        if (data && data.token === this.state.input) {
+            console.log("skipping request");
+        }
+        else {
+            this.props.dispatch(actions.searchFor(this.state.input, cat));
+        }
     }
 }
 
