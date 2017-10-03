@@ -133,6 +133,12 @@ export default {
             "movies":"FILM",
             "musics":"SON"
         },
+        "placeholder": {
+            "consumer_goods":"Plein de trucs",
+            "places_and_people":"Plein d'endroits",
+            "movies":"Plein de films",
+            "musics":"Plein de sons"
+        },
         "filter":{
             "things":"TRUC",
             "places":"LIEU",

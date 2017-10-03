@@ -76,6 +76,7 @@
 		<string>Thonburi-Bold.ttf</string>
 		<string>Thonburi-Light.ttf</string>
 		<string>Thonburi.ttf</string>
+		<string>Feather.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

@@ -18,7 +18,7 @@ export default class ItemCell extends React.Component {
         let resource = item;
         let image = resource ? resource.image : undefined;
 
-        let cardMargin = 12;
+        let cardMargin = 8;
 
         return (
             <TouchableHighlight
@@ -30,15 +30,16 @@ export default class ItemCell extends React.Component {
                         justifyContent: "flex-start"
                     }}>
 
-                    <Image
+                    { image && <Image
                         source={{uri: image}}
                         resizeMode='contain'
                         style={{
                             alignSelf: 'center',
-                            height: 100,
-                            width: 100,
+                            height: 80,
+                            width: 80,
                         }}
                     />
+                    }
                     <View style={{flex:1, padding: 15}}>
                         <Text style={{fontSize: 18, fontFamily: 'Chivo-Light', }}>{resource.title}</Text>
                         <Text style={{fontSize: 12, color: UI.Colors.grey2}}>{resource.subtitle}</Text>

@@ -13,6 +13,8 @@ import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 import ItemCell from "./components/ItemCell";
 import {buildNonNullData} from "../utils/DataUtils";
 import i18n from '../i18n/i18n'
+import { SearchBar } from 'react-native-elements'
+import * as UIStyles from "../screens/UIStyles"
 
 const SEARCH_CATEGORIES = [ "consumer_goods", "places_and_people", "musics", "movies"]
 
@@ -28,7 +30,13 @@ class SearchScreen extends Component {
         this.setState({ index }, () => this.performSearch());
     };
 
-    _renderHeader = props => <TabBar {...props} />;
+    _renderHeader = props => <TabBar {...props}
+                                     indicatorStyle={styles.indicator}
+                                     style={styles.tabbar}
+                                     tabStyle={styles.tab}
+                                     labelStyle={styles.label}
+
+    />;
 
     _renderScene = SceneMap(
         SEARCH_CATEGORIES.reduce((result, c, i) => Object.assign(result, this.renderCategory(i, c)), {}));
@@ -39,6 +47,11 @@ class SearchScreen extends Component {
         return i18n.t('search_item_screen.tabs.' + cat);
     }
 
+    getPlaceholder() {
+        let cat = this.getCategory();
+        return i18n.t('search_item_screen.placeholder.' + cat);
+    }
+
     renderCategory(i, c) {
         return {[i]: () => (
             <SearchCategory category={c}/>)};
@@ -47,10 +60,13 @@ class SearchScreen extends Component {
     render() {
         return (
             <View style={{width:"100%", height: "100%"}}>
-                <TextInput
-                    editable = {true}
-                    maxLength = {40}
+                <SearchBar
+                    lightTheme
                     onChangeText={this.onSearchInputChange.bind(this)}
+                    placeholder={this.getPlaceholder()}
+                    clearIcon={{color: '#86939e'}}
+                    containerStyle={styles.searchContainer}
+                    inputStyle={styles.searchInput}
                 />
                 <TabViewAnimated
                     style={styles.container}
@@ -69,7 +85,7 @@ class SearchScreen extends Component {
     }
 
     performSearch() {
-        let cat = SEARCH_CATEGORIES[this.state.index];
+        let cat = this.getCategory();
         let data = this.props.search[cat];
         if (data && data.token === this.state.input) {
             console.log("skipping request");
@@ -77,6 +93,10 @@ class SearchScreen extends Component {
         else {
             this.props.dispatch(actions.searchFor(this.state.input, cat));
         }
+    }
+
+    getCategory() {
+        return SEARCH_CATEGORIES[this.state.index];
     }
 }
 
@@ -90,6 +110,26 @@ const mapStateToProps = (state, ownProps) => ({
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    searchContainer: {
+        backgroundColor: 'white',
+    },
+    searchInput: {
+        backgroundColor: 'white',
+    },
+    tabbar: {
+        backgroundColor: 'white',
+        color: "black"
+    },
+    indicator: {
+        backgroundColor: UIStyles.Colors.green,
+    },
+    tab: {
+        opacity: 1,
+        width: 90,
+    },
+    label: {
+        color: '#000',
     },
 });
 
@@ -129,6 +169,7 @@ class SearchCategory extends Component {
             item={it}
             navigator={this.props.navigator}
         />
+        //return <Text>{"image="+it.image + '\n\n\n'}</Text>
     }
 
     getItem(item) {

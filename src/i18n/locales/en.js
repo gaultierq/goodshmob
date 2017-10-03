@@ -133,6 +133,12 @@ export default {
             "movies":"MOVIES",
             "musics":"MUSIC"
         },
+        "placeholder": {
+            "consumer_goods":"Stuff",
+            "places_and_people":"City, Address...",
+            "movies":"Movies",
+            "musics":"Musics"
+        },
         "filter":{
             "things":"STUFF",
             "places":"PLACES",
