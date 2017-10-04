@@ -13,7 +13,7 @@ import {isUnique} from "../utils/ArrayUtil";
 
 
 
-class HomeScreen extends Component {
+class NetworkScreen extends Component {
 
     static navigatorButtons = {
         leftButtons: [
@@ -67,8 +67,8 @@ class HomeScreen extends Component {
 
     loadMore() {
         if (this.isLoadingMore()) return;
-        if (!this.props.home.links) return;
-        let nextUrl = this.props.home.links.next;
+        if (!this.props.network.links) return;
+        let nextUrl = this.props.network.links.next;
         console.log("Next url:" + nextUrl);
 
         //data.meta;
@@ -94,9 +94,9 @@ class HomeScreen extends Component {
     }
 
     render() {
-        let home = this.props.home;
+        let network = this.props.network;
 
-        let activities = home.list ;
+        let activities = network.list ;
 
         this.checkEmpty(activities);
         if (!isUnique(activities.map((a)=>a.id))) throw new Error(`activities ids not unique 2`);
@@ -152,7 +152,7 @@ class HomeScreen extends Component {
 
 
     onEndReached() {
-        if (this.props.home.hasMore) {
+        if (this.props.network.hasMore) {
             this.loadMore();
         }
         else {
@@ -177,7 +177,7 @@ class HomeScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    home: state.home,
+    network: state.network,
     request: state.request,
     data: state.data,
     activity: state.activity
@@ -220,6 +220,6 @@ const reducer = (() => {
     }
 })();
 
-let screen = connect(mapStateToProps)(HomeScreen);
+let screen = connect(mapStateToProps)(NetworkScreen);
 
 export {reducer, screen};

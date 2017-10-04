@@ -3,7 +3,7 @@ import activity from '../activity/reducer';
 
 import request from './requestReducer'
 //import app from '../auth/reducer';
-import {reducer as home} from '../screens/home';
+import {reducer as network} from '../screens/network';
 import {reducer as lineupList} from '../screens/lineups';
 import {reducer as friend} from '../screens/community';
 import {reducer as savings} from '../screens/savings';
@@ -24,9 +24,7 @@ function reduceReducers(...reducers) {
 export {
     data,
     request,
-    // app,
-    home,
-    //activity,
+    network,
     lineupList,
     friend,
     savings,

@@ -1,7 +1,7 @@
 import { Navigation } from 'react-native-navigation';
 
 import LoginScreen from './LoginScreen';
-import {screen as HomeScreen} from './home';
+import {screen as NetworkScreen} from './network';
 import {screen as SearchScreen} from './search';
 import AddScreen from './AddScreen';
 import NotifScreen from './NotifScreen';
@@ -15,7 +15,7 @@ import {screen as SavingsScreen} from './savings';
 // register all screens of the app (including internal ones)
 export function registerScreens(store, Provider) {
     Navigation.registerComponent('goodsh.LoginScreen', () => LoginScreen, store, Provider);
-    Navigation.registerComponent('goodsh.HomeScreen', () => HomeScreen, store, Provider);
+    Navigation.registerComponent('goodsh.NetworkScreen', () => NetworkScreen, store, Provider);
     Navigation.registerComponent('goodsh.SearchScreen', () => SearchScreen, store, Provider);
     Navigation.registerComponent('goodsh.AddScreen', () => AddScreen, store, Provider);
     Navigation.registerComponent('goodsh.NotifScreen', () => NotifScreen, store, Provider);
