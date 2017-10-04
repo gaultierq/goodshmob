@@ -154,15 +154,6 @@ class LineupListScreen extends Component {
         });
     }
 
-
-    navToSearch() {
-        this.props.navigator.showModal({
-            screen: 'goodsh.SearchScreen', // unique ID registered with Navigation.registerScreen
-            title: "Ajouter un goodsh", // navigation bar title of the pushed screen (optional)
-            passProps: {}, // Object that will be passed as props to the pushed screen (optional)
-        });
-    }
-
     renderModal() {
         return (
             <Modal
