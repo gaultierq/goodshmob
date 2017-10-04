@@ -17,7 +17,8 @@ import i18n from '../i18n/i18n'
 import * as UI from "../screens/UIStyles";
 import Button from 'apsl-react-native-button'
 import {TP_MARGINS} from "./UIStyles";
-
+import ActionButton from 'react-native-action-button';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 class LineupListScreen extends Component {
 
@@ -81,9 +82,14 @@ class LineupListScreen extends Component {
                         {this.renderModal()}
                     </View>
                 </ScrollView>
+                <ActionButton
+                    buttonColor="rgba(231,76,60,1)"
+                    onPress={() => { this.navToSearch() }}
+                />
             </MainBackground>
         );
     }
+
 
     //TODO: extract lineup card style
     renderHeader() {
@@ -109,6 +115,7 @@ class LineupListScreen extends Component {
         </TouchableHighlight>
             ;
     }
+
 
     isLoadingMore() {
         return !!this.props.request.isLoading[actiontypes.FETCH_MORE_LINEUPS.name()];
@@ -139,11 +146,20 @@ class LineupListScreen extends Component {
             titleImage: require('../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
             passProps: {lineupId: lineup.id}, // Object that will be passed as props to the pushed screen (optional)
             animated: true, // does the push have transition animation or does it happen immediately (optional)
-            animationType: 'slide-up', // 'fade' (for both) / 'slide-horizontal' (for android) does the push have different transition animation (optional)
+            animationType: 'slide-down', // 'fade' (for both) / 'slide-horizontal' (for android) does the push have different transition animation (optional)
             backButtonTitle: undefined, // override the back button title (optional)
             backButtonHidden: false, // hide the back button altogether (optional)
             navigatorStyle: {}, // override the navigator style for the pushed screen (optional)
             navigatorButtons: {} // override the nav buttons for the pushed screen (optional)
+        });
+    }
+
+
+    navToSearch() {
+        this.props.navigator.showModal({
+            screen: 'goodsh.SearchScreen', // unique ID registered with Navigation.registerScreen
+            title: "Ajouter un goodsh", // navigation bar title of the pushed screen (optional)
+            passProps: {}, // Object that will be passed as props to the pushed screen (optional)
         });
     }
 
@@ -181,9 +197,6 @@ class LineupListScreen extends Component {
                                 }}>
                             <Text>Cancel</Text>
                         </Button>
-
-
-
                     </View>
                 </View>
             </Modal>
