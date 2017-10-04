@@ -5,7 +5,6 @@ import {
     Text, StyleSheet, View, FlatList, RefreshControl, ActivityIndicator, TextInput
 } from 'react-native';
 import {connect} from "react-redux";
-import {MainBackground} from "./UIComponents"
 import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
 import {combineReducers} from "redux";
@@ -22,8 +21,9 @@ class SearchScreen extends Component {
 
     state = {
         index: 0,
-        input: '',
+        input: '', //TODO : rename it to token
         routes: SEARCH_CATEGORIES.map((c, i) => ({key: `${i}`, title: this.getTitle(c)})),
+        loaded: false,
     };
 
     _handleIndexChange = index => {
@@ -56,12 +56,12 @@ class SearchScreen extends Component {
         return {[i]: () => (
             <SearchPage
                 category={c}
-                isLoading={()=> isLoading(c)}
+                isLoading={()=> this.isLoading(c)}
             />)};
     }
 
     isLoading(category: string) {
-        return this.props.request.isLoading[composeSearchActionName(c)];
+        return !!this.props.request.isLoading[composeSearchActionName(category, this.state.input)];
     }
 
     render() {
@@ -126,10 +126,14 @@ const styles = StyleSheet.create({
     },
     tabbar: {
         backgroundColor: 'white',
-        color: "black"
     },
     indicator: {
         backgroundColor: UIStyles.Colors.green,
+    },
+    activityIndicator: {
+        position: "absolute",
+        top: 30, left: 0, right: 0, justifyContent: 'center',
+        zIndex: 3000
     },
     tab: {
         opacity: 1,
@@ -157,18 +161,19 @@ class SearchPage extends Component {
         let search = this.props.search[this.props.category];
         let results = search.list ;
 
+        let isLoading = !!this.props.isLoading();
+
         return (
             <View>
+                {isLoading && <ActivityIndicator
+                    animating = {isLoading}
+                    size = "large"
+                    style={styles.activityIndicator}
+                />}
                 <FlatList
                     data={results}
                     renderItem={this.renderItem.bind(this)}
                     keyExtractor={(item, index) => item.id}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={this.props.isLoading()}
-                        />
-                    }
-                    ListFooterComponent={<View style={{height: 50}}/>}
                 />
             </View>
         );
@@ -200,9 +205,8 @@ const actiontypes = (() => {
 })();
 
 
-let composeSearchActionName = function (category) {
-    return "search/" + category;
-};
+let composeSearchActionName = (category, token) => `search/${category}?${token}`;
+
 const actions = (() => {
     return {
         searchFor: (token, category) => {
@@ -213,7 +217,7 @@ const actions = (() => {
                 .withQuery({'search[term]': token});
 
             return call.disptachForAction(actiontypes.SEARCH, {
-                actionName: composeSearchActionName(category),
+                actionName: composeSearchActionName(category, token),
                 meta: {category, token}});
         },
     };

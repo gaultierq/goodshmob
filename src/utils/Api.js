@@ -93,24 +93,19 @@ export class Call {
 }
 
 export function init(store) {
-    store.subscribe(() => {
-        console.info(`api initialized with: access-token=${accessToken}, client=${client}, uid=${uid}`);
+    let unsubscribe = store.subscribe(() => {
         let state = store.getState();
+        if (!state.app.rehydrated) return;
+
+        unsubscribe();
+
         let auth = state.auth;
         accessToken = auth.accessToken;
         client = auth.client;
         uid = auth.uid;
         currentUserId = auth.currentUserId;
+        console.info(`api initialized with: access-token=${accessToken}, client=${client}, uid=${uid}`);
     });
-}
-
-
-//TODO: this is shit
-export function credentials(a, c, u) {
-    console.info(`credentials found: access-token=${a}, client=${c}, uid=${u}`);
-    accessToken = a;
-    client = c;
-    uid = u;
 }
 
 
