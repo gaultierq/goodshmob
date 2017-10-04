@@ -33,7 +33,19 @@ class HomeScreen extends Component {
         this.props.navigator.showModal({
             screen: 'goodsh.SearchScreen', // unique ID registered with Navigation.registerScreen
             title: "Ajouter un goodsh", // navigation bar title of the pushed screen (optional)
-            passProps: {}, // Object that will be passed as props to the pushed screen (optional)
+            passProps: {
+                onItemSelected: (item) => this.onItemSelected(item)
+            }, // Object that will be passed as props to the pushed screen (optional)
+        });
+    }
+
+    onItemSelected(item) {
+        this.props.navigator.showModal({
+            screen: 'goodsh.LineupListScreen', // unique ID registered with Navigation.registerScreen
+            title: "Ranger ce goodsh", // navigation bar title of the pushed screen (optional)
+            passProps: {
+                onItemSelected: (item) => this.onItemSelected(item)
+            }, // Object that will be passed as props to the pushed screen (optional)
         });
     }
 }

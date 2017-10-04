@@ -11,6 +11,10 @@ import {buildNonNullData} from "../../utils/DataUtils";
 export default class ItemCell extends React.Component {
 
 
+    propTypes: {
+        onPressItem: React.PropTypes.func;
+    };
+
     render() {
         let item = this.props.item;
         if (!item) throw new Error("expecting item");
@@ -22,7 +26,7 @@ export default class ItemCell extends React.Component {
 
         return (
             <TouchableHighlight
-                onPress={this.onSavingPressed.bind(this)}>
+                onPress={this.props.onPressItem}>
                 <View style={
                     { ...UI.CARD(cardMargin), ...UI.TP_MARGINS(cardMargin), padding: cardMargin,
                         flex: 1,
@@ -56,27 +60,5 @@ export default class ItemCell extends React.Component {
         )
     }
 
-    onSavingPressed() {
-        // let saving = this.getSaving();
-        // this.props.navigator.push({
-        //     screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
-        //     title: "Activity Details", // navigation bar title of the pushed screen (optional)
-        //     titleImage: require('../../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
-        //     passProps: {activityId: saving.id, activityType: saving.type}, // Object that will be passed as props to the pushed screen (optional)
-        //     animated: true, // does the push have transition animation or does it happen immediately (optional)
-        //     animationType: 'slide-up', // 'fade' (for both) / 'slide-horizontal' (for android) does the push have different transition animation (optional)
-        //     backButtonTitle: undefined, // override the back button title (optional)
-        //     backButtonHidden: false, // hide the back button altogether (optional)
-        //     navigatorStyle: {}, // override the navigator style for the pushed screen (optional)
-        //     navigatorButtons: {} // override the nav buttons for the pushed screen (optional)
-        // });
-    }
-
-    // getSaving() {
-    //     return buildNonNullData(this.props.data, "savings", this.props.savingId);
-    // }
 
 }
-// const mapStateToProps = (state, ownProps) => ({
-//     data: state.data
-// });

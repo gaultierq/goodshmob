@@ -19,6 +19,10 @@ const SEARCH_CATEGORIES = [ "consumer_goods", "places_and_people", "musics", "mo
 
 class SearchScreen extends Component {
 
+    propTypes: {
+        onItemSelected: React.PropTypes.func;
+    };
+
     state = {
         index: 0,
         input: '', //TODO : rename it to token
@@ -57,6 +61,7 @@ class SearchScreen extends Component {
             <SearchPage
                 category={c}
                 isLoading={()=> this.isLoading(c)}
+                onItemSelected={this.props.onItemSelected}
             />)};
     }
 
@@ -155,6 +160,7 @@ class SearchPage extends Component {
     propTypes: {
         category: React.PropTypes.string,
         isLoading: React.PropTypes.func;
+        onItemSelected: React.PropTypes.func;
     };
 
     render() {
@@ -184,11 +190,10 @@ class SearchPage extends Component {
         if (!it) throw new Error(`no item${JSON.stringify(item.item)}`);
 
         return <ItemCell
-            onPressItem={() => this.navToSavingDetail(it)}
+            onPressItem={() => this.props.onItemSelected(it)}
             item={it}
             navigator={this.props.navigator}
         />
-        //return <Text>{"image="+it.image + '\n\n\n'}</Text>
     }
 
     getItem(item) {
