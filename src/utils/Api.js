@@ -77,10 +77,11 @@ export class Call {
 
     disptachForAction(apiAction: ApiAction, options?: any) {
         return {
-            [API_SYMBOL]: Object.assign({}, {
-                call: this,
-                apiAction
-            }, options)
+            [API_SYMBOL]: Object.assign({},
+                {
+                    call: this,
+                    apiAction
+                }, options)
         };
     }
 

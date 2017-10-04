@@ -54,7 +54,14 @@ class SearchScreen extends Component {
 
     renderCategory(i, c) {
         return {[i]: () => (
-            <SearchCategory category={c}/>)};
+            <SearchPage
+                category={c}
+                isLoading={()=> isLoading(c)}
+            />)};
+    }
+
+    isLoading(category: string) {
+        return this.props.request.isLoading[composeSearchActionName(c)];
     }
 
     render() {
@@ -129,7 +136,7 @@ const styles = StyleSheet.create({
         width: 90,
     },
     label: {
-        color: '#000',
+        color: '#000000',
     },
 });
 
@@ -139,10 +146,11 @@ const styles = StyleSheet.create({
         data: state.data,
     })
 )
-class SearchCategory extends Component {
+class SearchPage extends Component {
 
     propTypes: {
         category: React.PropTypes.string,
+        isLoading: React.PropTypes.func;
     };
 
     render() {
@@ -155,6 +163,12 @@ class SearchCategory extends Component {
                     data={results}
                     renderItem={this.renderItem.bind(this)}
                     keyExtractor={(item, index) => item.id}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={this.props.isLoading()}
+                        />
+                    }
+                    ListFooterComponent={<View style={{height: 50}}/>}
                 />
             </View>
         );
@@ -186,6 +200,9 @@ const actiontypes = (() => {
 })();
 
 
+let composeSearchActionName = function (category) {
+    return "search/" + category;
+};
 const actions = (() => {
     return {
         searchFor: (token, category) => {
@@ -195,7 +212,9 @@ const actions = (() => {
                 .withRoute(`search/${category}`)
                 .withQuery({'search[term]': token});
 
-            return call.disptachForAction(actiontypes.SEARCH, {meta: {category, token}});
+            return call.disptachForAction(actiontypes.SEARCH, {
+                actionName: composeSearchActionName(category),
+                meta: {category, token}});
         },
     };
 })();
