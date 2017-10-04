@@ -9,6 +9,9 @@ import build from 'redux-object'
 
 class LineupCell extends React.Component {
 
+    props: {
+        onAddInLineupPressed: Function
+    };
 
     render() {
         let lineup : Model.List = this.getLineup();
@@ -33,14 +36,18 @@ class LineupCell extends React.Component {
                         keyExtractor={(item, index) => item.id}
                         horizontal={true}
                         ListFooterComponent={
-                            <Image
-                                source={require('../../img/plus.png')} resizeMode="contain"
-                                style={{
-                                    height: 30,
-                                    width: 30,
-                                    margin: 20
-                                }}
-                            />}
+                            <TouchableHighlight onPress={this.props.onAddInLineupPressed}>
+                                <Image
+                                    source={require('../../img/plus.png')} resizeMode="contain"
+                                    style={{
+                                        height: 30,
+                                        width: 30,
+                                        margin: 20
+                                    }}
+                                />
+                            </TouchableHighlight>
+                        }
+
                     />
                 </View>
             </View>
@@ -78,4 +85,6 @@ const mapStateToProps = (state, ownProps) => ({
     data: state.data,
     request: state.request,
 });
+
+//TODO: disconnect
 export default connect(mapStateToProps)(LineupCell);

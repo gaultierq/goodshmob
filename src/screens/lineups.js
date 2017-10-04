@@ -8,7 +8,6 @@ import {
 import Modal from 'react-native-modal'
 
 import {connect} from "react-redux";
-import {AsyncStorage} from "react-native";
 import LineupCell from "./components/LineupCell";
 import {MainBackground} from "./UIComponents";
 import Immutable from 'seamless-immutable';
@@ -18,11 +17,13 @@ import * as UI from "../screens/UIStyles";
 import Button from 'apsl-react-native-button'
 import {TP_MARGINS} from "./UIStyles";
 import ActionButton from 'react-native-action-button';
-import Icon from 'react-native-vector-icons/Ionicons';
 
 class LineupListScreen extends Component {
 
-    keyExtractor = (item, index) => item.id;
+    props: {
+        onLineupPressed: Function,
+        onAddInLineupPressed: Function
+    };
 
     constructor(){
         super();
@@ -62,7 +63,7 @@ class LineupListScreen extends Component {
                         <FlatList
                             data={lineups}
                             renderItem={this.renderItem.bind(this)}
-                            keyExtractor={this.keyExtractor}
+                            keyExtractor={(item, index) => item.id}
                             refreshControl={
                                 <RefreshControl
                                     refreshing={this.isLoading()}
@@ -84,7 +85,7 @@ class LineupListScreen extends Component {
                 </ScrollView>
                 <ActionButton
                     buttonColor="rgba(231,76,60,1)"
-                    onPress={() => { this.navToSearch() }}
+                    onPress={() => { this.startSearchItem() }}
                 />
             </MainBackground>
         );
@@ -127,32 +128,19 @@ class LineupListScreen extends Component {
 
 
     renderItem(item) {
-        let it = item.item;
-        return <TouchableHighlight onPress={() => this.seeLineupDetails(it)}>
-            <View>
-                <LineupCell
-                    onPressItem={() => this.navToLineupDetail(it)}
-                    lineupId={it.id}
-                />
-            </View>
-        </TouchableHighlight>
+        let lineup = item.item;
+        return (
+            <TouchableHighlight onPress={() => this.props.onLineupPressed(lineup)}>
+                <View>
+                    <LineupCell
+                        lineupId={lineup.id}
+                        onAddInLineupPressed={this.props.onAddInLineupPressed}
+                    />
+                </View>
+            </TouchableHighlight>
+        )
     }
 
-    seeLineupDetails(lineup) {
-        console.info("onPressItem: " + JSON.stringify(lineup));
-        this.props.navigator.push({
-            screen: 'goodsh.SavingsScreen', // unique ID registered with Navigation.registerScreen
-            title: "Lineup Details", // navigation bar title of the pushed screen (optional)
-            titleImage: require('../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
-            passProps: {lineupId: lineup.id}, // Object that will be passed as props to the pushed screen (optional)
-            animated: true, // does the push have transition animation or does it happen immediately (optional)
-            animationType: 'slide-down', // 'fade' (for both) / 'slide-horizontal' (for android) does the push have different transition animation (optional)
-            backButtonTitle: undefined, // override the back button title (optional)
-            backButtonHidden: false, // hide the back button altogether (optional)
-            navigatorStyle: {}, // override the navigator style for the pushed screen (optional)
-            navigatorButtons: {} // override the nav buttons for the pushed screen (optional)
-        });
-    }
 
     renderModal() {
         return (
@@ -176,16 +164,16 @@ class LineupListScreen extends Component {
                         />
 
                         <Button
-                                isLoading={this.state.isCreatingLineup}
-                                isDisabled={!this.state.newLineupName}
-                                onPress={this.createLineup.bind(this)}>
+                            isLoading={this.state.isCreatingLineup}
+                            isDisabled={!this.state.newLineupName}
+                            onPress={this.createLineup.bind(this)}>
                             <Text>Add</Text>
                         </Button>
 
                         <Button
-                                onPress={() => {
-                                    this.setModalVisible(!this.state.modalVisible)
-                                }}>
+                            onPress={() => {
+                                this.setModalVisible(!this.state.modalVisible)
+                            }}>
                             <Text>Cancel</Text>
                         </Button>
                     </View>

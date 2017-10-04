@@ -1,19 +1,26 @@
 // @flow
 
 import React, {Component} from 'react';
-import {StyleSheet, View, Button, Text, ScrollView, ActivityIndicator, FlatList, RefreshControl} from 'react-native';
+import {StyleSheet, View, ScrollView, ActivityIndicator, FlatList} from 'react-native';
 import {connect} from "react-redux";
-import {AsyncStorage} from "react-native";
-import FriendCell from "./components/FriendCell";
 import {MainBackground} from "./UIComponents";
 import build from 'redux-object'
 import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
 import ItemCell from "./components/ItemCell";
-import {buildNonNullData} from "../utils/DataUtils";
+import PropTypes from 'prop-types';
 
+
+
+// SavingsScreen.propTypes = {
+//     lineupId: PropTypes.string.required
+// };
 
 class SavingsScreen extends Component {
+
+    propTypes = {
+        lineupId: PropTypes.string.required
+    };
 
     constructor(){
         super();
@@ -110,7 +117,6 @@ class SavingsScreen extends Component {
         else {
             console.info("end of feed")
         }
-
     }
 }
 

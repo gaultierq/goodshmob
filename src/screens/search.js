@@ -19,8 +19,8 @@ const SEARCH_CATEGORIES = [ "consumer_goods", "places_and_people", "musics", "mo
 
 class SearchScreen extends Component {
 
-    propTypes: {
-        onItemSelected: React.PropTypes.func;
+    props: {
+        onItemSelected: Function;
     };
 
     state = {
