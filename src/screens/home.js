@@ -14,6 +14,7 @@ import List from "../models/List";
 
 class HomeScreen extends Component {
 
+    static navigationOptions = { title: 'Welcome', header: null };
 
     constructor(props){
         super(props);
@@ -34,7 +35,6 @@ class HomeScreen extends Component {
     }
 
     render() {
-
         let rightButtons = (this.state.pendingItem || this.state.pendingList) ? [{
             title: 'Cancel',
             id: 'cancel_add' // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
@@ -55,7 +55,7 @@ class HomeScreen extends Component {
                 />
                 {this.displayFloatingButton() && <ActionButton
                     buttonColor="rgba(231,76,60,1)"
-                    onPress={() => { this.startSearchItem() }}
+                    onPress={() => { this.onFloatingButtonPressed() }}
                 />}
 
             </MainBackground>
@@ -68,7 +68,7 @@ class HomeScreen extends Component {
 
     addInLineup(lineup: List) {
         this.setState({pendingList: lineup});
-        this.startSearchItem();
+        this.onFloatingButtonPressed();
     }
 
     seeLineupDetails(lineup) {
@@ -87,7 +87,7 @@ class HomeScreen extends Component {
         });
     }
 
-    startSearchItem() {
+    onFloatingButtonPressed() {
         this.props.navigator.showModal({
             screen: 'goodsh.SearchScreen', // unique ID registered with Navigation.registerScreen
             title: "Ajouter un goodsh", // navigation bar title of the pushed screen (optional)

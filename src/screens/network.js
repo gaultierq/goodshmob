@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react';
-import {StyleSheet, View, FlatList, ImageBackground, RefreshControl, ActivityIndicator} from 'react-native';
+import {View, FlatList, RefreshControl, ActivityIndicator} from 'react-native';
 import {connect} from "react-redux";
 import ActivityCell from "../activity/components/ActivityCell";
 import * as UIStyles from "./UIStyles"
@@ -14,6 +14,7 @@ import {isUnique} from "../utils/ArrayUtil";
 
 
 class NetworkScreen extends Component {
+
 
     static navigatorButtons = {
         leftButtons: [

@@ -1,28 +1,22 @@
 // @flow
 
-import React, {Component} from 'react';
-import {StyleSheet, View, Text, Image, Button, TouchableOpacity, TouchableHighlight, FlatList} from 'react-native';
+import React from 'react';
+import {View, Text, Image, TouchableHighlight, FlatList} from 'react-native';
 import * as Model from "../../models/index"
 import * as UI from "../UIStyles";
-import {connect} from "react-redux";
 import build from 'redux-object'
 
-class LineupCell extends React.Component {
+export default class LineupCell extends React.Component {
 
     props: {
-        onAddInLineupPressed: Function
+        onAddInLineupPressed: Function,
+        lineup: Object
     };
 
     render() {
-        let lineup : Model.List = this.getLineup();
+        let lineup : Model.List = this.props.lineup;
         let savings: Model.Saving[] = lineup.savings;
 
-        //let activity: Model.Activity = this.props.activity;
-        let user: Model.User = lineup.user;
-        let resource = lineup.resource;
-        let image = resource ? resource.image : undefined;
-
-        let target: Model.List = lineup.target;
         let cardMargin = 12;
 
         return (
@@ -80,11 +74,3 @@ class LineupCell extends React.Component {
         />
     }
 }
-const mapStateToProps = (state, ownProps) => ({
-    lineup: state.lineup,
-    data: state.data,
-    request: state.request,
-});
-
-//TODO: disconnect
-export default connect(mapStateToProps)(LineupCell);

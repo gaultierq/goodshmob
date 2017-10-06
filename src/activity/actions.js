@@ -1,14 +1,14 @@
 // @flow
 import * as types from "./actionTypes"
 import * as Api from "../utils/Api";
-import {sanitizeActivityType} from "../utils/DataUtils";
+import {sanitizeItemType} from "../utils/DataUtils";
 
 
 let fixtures = require("../fixtures/activities_fixtures2.json");
 
 
 export function fetchActivity(activityId, activityType) {
-    let type = sanitizeActivityType(activityType);
+    let type = sanitizeItemType(activityType);
 
     return new Api.Call()
         .withMethod('GET')
@@ -21,7 +21,7 @@ export function fetchActivity(activityId, activityType) {
 
 
 export function like(activityId: string, activityType: string) {
-    let type = sanitizeActivityType(activityType);
+    let type = sanitizeItemType(activityType);
 
     return new Api.Call()
         .withMethod('POST')
@@ -33,7 +33,7 @@ export function like(activityId: string, activityType: string) {
 }
 
 export function unlike(activityId: string, activityType: string) {
-    let type = sanitizeActivityType(activityType);
+    let type = sanitizeItemType(activityType);
 
     return new Api.Call()
         .withMethod('DELETE')

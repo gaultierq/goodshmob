@@ -2,8 +2,7 @@
 
 import React, {Component} from 'react';
 import {
-    Text, StyleSheet, View, FlatList, RefreshControl, ActivityIndicator, TextInput
-} from 'react-native';
+    StyleSheet, View, FlatList, ActivityIndicator} from 'react-native';
 import {connect} from "react-redux";
 import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";

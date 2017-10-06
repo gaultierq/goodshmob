@@ -3,33 +3,35 @@
 import React, {Component} from 'react';
 import {
     StyleSheet, TextInput, Image,
-    View, Text, ScrollView, ActivityIndicator,
+    View, Text, ActivityIndicator,
     FlatList, RefreshControl, TouchableHighlight} from 'react-native';
 import Modal from 'react-native-modal'
 
 import {connect} from "react-redux";
 import LineupCell from "./components/LineupCell";
-import {MainBackground} from "./UIComponents";
 import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
 import i18n from '../i18n/i18n'
 import * as UI from "../screens/UIStyles";
 import Button from 'apsl-react-native-button'
 import {TP_MARGINS} from "./UIStyles";
-import ActionButton from 'react-native-action-button';
+import { SearchBar } from 'react-native-elements'
+import build from 'redux-object'
 
 class LineupListScreen extends Component {
 
     props: {
         onLineupPressed: Function,
-        onAddInLineupPressed: Function
+        onAddInLineupPressed: Function,
+        data: Object
     };
 
     constructor(){
         super();
         this.state= {
             isCreatingLineup: false,
-            modalVisible: false
+            modalVisible: false,
+            filter: null
         }
     }
 
@@ -53,47 +55,70 @@ class LineupListScreen extends Component {
 
     render() {
         let lineupList = this.props.lineupList;
+        //let lineups = lineupList.list.map((l) => buildNonNullData(this.props.data, "lists", l.id));
+        let lineups = build(this.props.data, "lists", lineupList.list.map(o=>o.id));
+        lineups.forEach((l)=>{
+            //btw: this array is not immutable
+            //wip
+            //l.savings = l.relationships.savings.data.map(s=>build(this.props.data, "savings", s.id));
+        });
 
-        let lineups = lineupList.list;
+        if (this.state.filter) {
+            lineups = lineups.filter((l) => l.name.indexOf(this.state.filter) >= 0);
+        }
 
         return (
-            <MainBackground>
-                <ScrollView>
-                    <View style={{}}>
-                        <FlatList
-                            data={lineups}
-                            renderItem={this.renderItem.bind(this)}
-                            keyExtractor={(item, index) => item.id}
-                            refreshControl={
-                                <RefreshControl
-                                    refreshing={this.isLoading()}
-                                    onRefresh={this.onRefresh.bind(this)}
-                                />
-                            }
-                            onEndReached={ this.onEndReached.bind(this) }
-                            onEndReachedThreshold={0}
-                            ListHeaderComponent={this.renderHeader()}
-                            ListFooterComponent={this.isLoadingMore() &&
-
-                            <ActivityIndicator
-                                animating = {this.isLoadingMore()}
-                                size = "small"
-                            />}
-                        />
-                        {this.renderModal()}
-                    </View>
-                </ScrollView>
-                <ActionButton
-                    buttonColor="rgba(231,76,60,1)"
-                    onPress={() => { this.startSearchItem() }}
+            <View style={{}}>
+                <SearchBar
+                    lightTheme
+                    onChangeText={this.onSearchInputChange.bind(this)}
+                    placeholder={"rechercher dans mes listes"}
+                    clearIcon={{color: '#86939e'}}
+                    containerStyle={styles.searchContainer}
+                    inputStyle={styles.searchInput}
                 />
-            </MainBackground>
+                <FlatList
+                    data={lineups}
+                    renderItem={this.renderItem.bind(this)}
+                    keyExtractor={(item, index) => item.id}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={this.isLoading()}
+                            onRefresh={this.onRefresh.bind(this)}
+                        />
+                    }
+                    onEndReached={ this.onEndReached.bind(this) }
+                    onEndReachedThreshold={0}
+                    ListHeaderComponent={this.renderHeader()}
+                    ListFooterComponent={this.isLoadingMore() &&
+
+                    <ActivityIndicator
+                        animating = {this.isLoadingMore()}
+                        size = "small"
+                    />}
+                />
+                {this.renderModal()}
+            </View>
         );
     }
 
+    onSearchInputChange(input) {
+        this.setState({filter: input}, () => this.performSearch());
+    }
+
+
+    performSearch() {
+        // execute the local search here !
+
+    }
+
+    isSearching() {
+        return !!this.state.filter;
+    }
 
     //TODO: extract lineup card style
     renderHeader() {
+        if (this.isSearching()) return null;
         return <TouchableHighlight onPress={() => {this.setModalVisible(true)}}>
             <View style={
                 Object.assign({}, UI.CARD(12),{
@@ -129,11 +154,13 @@ class LineupListScreen extends Component {
 
     renderItem(item) {
         let lineup = item.item;
+
+
         return (
             <TouchableHighlight onPress={() => this.props.onLineupPressed(lineup)}>
                 <View>
                     <LineupCell
-                        lineupId={lineup.id}
+                        lineup={lineup}
                         onAddInLineupPressed={this.props.onAddInLineupPressed}
                     />
                 </View>
@@ -211,12 +238,20 @@ class LineupListScreen extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-    }
+    },
+    searchContainer: {
+        backgroundColor: 'white',
+        marginTop: 40
+    },
+    searchInput: {
+        backgroundColor: 'white',
+    },
 });
 
 const mapStateToProps = (state, ownProps) => ({
     lineupList: state.lineupList,
-    request: state.request
+    request: state.request,
+    data: state.data,
 });
 
 const actiontypes = (() => {

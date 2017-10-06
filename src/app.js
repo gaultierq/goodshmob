@@ -75,15 +75,15 @@ export default class App {
     logged = null;
 
     testScreen = null;
-    testScreen = {
-        screen: {
-            label: 'test',
-            screen: 'goodsh.SearchScreen',
-        },
-        passProps: {
-            lineupId: "37e67b05-c86c-4aeb-b3af-bf1c34862cd0",
-        }
-    };
+    // testScreen = {
+    //     screen: {
+    //         label: 'test',
+    //         screen: 'goodsh.SearchScreen',
+    //     },
+    //     passProps: {
+    //         lineupId: "37e67b05-c86c-4aeb-b3af-bf1c34862cd0",
+    //     }
+    // };
 
     constructor() {
         // since react-redux only works on components, we need to subscribe this class manually
@@ -137,39 +137,20 @@ export default class App {
             Navigation.startTabBasedApp({
                 tabs: [
                     {
-                        label: 'Network', // tab label as appears under the icon in iOS (optional)
-                        screen: 'goodsh.NetworkScreen', // unique ID registered with Navigation.registerScreen
-                        icon: require('./img/bottom_bar_search.png'), // local image asset for the tab icon unselected state (optional on iOS)
-                        title: 'Mon réseau', // title of the screen as appears in the nav bar (optional)
-                        titleImage: require('./img/screen_title_home.png'),
-                    },
-                    {
                         label: 'Mon compte',
                         screen: 'goodsh.HomeScreen',
                         icon: require('./img/bottom_bar_home.png'),
                         // title: 'Search'
                         title: 'Mon compte'
                     },
-                    // {
-                    //     label: 'Add',
-                    //     //screen: 'goodsh.AddScreen',
-                    //     screen: 'goodsh.CommunityScreen',
-                    //     icon: require('./img/bottom_bar_add.png'),
-                    //     //title: 'Add',
-                    //     title: 'Community',
-                    // },
-                    // {
-                    //     label: 'Notif',
-                    //     screen: 'goodsh.NotifScreen',
-                    //     icon: require('./img/bottom_bar_notif.png'),
-                    //     title: 'Notif'
-                    // },
-                    // {
-                    //     label: 'Ask',
-                    //     screen: 'goodsh.AskScreen',
-                    //     icon: require('./img/bottom_bar_ask.png'),
-                    //     title: 'Debug'
-                    // },
+                    {
+                        label: 'Network', // tab label as appears under the icon in iOS (optional)
+                        screen: 'goodsh.NetworkScreen', // unique ID registered with Navigation.registerScreen
+                        icon: require('./img/bottom_bar_search.png'), // local image asset for the tab icon unselected state (optional on iOS)
+                        title: 'Mon réseau', // title of the screen as appears in the nav bar (optional)
+                        titleImage: require('./img/screen_title_home.png'),
+                    },
+
                 ],
                 tabsStyle: { // optional, add this if you want to style the tab bar beyond the defaults
                     tabBarButtonColor: '#000', // optional, change the color of the tab icons and text (also unselected)
@@ -177,6 +158,7 @@ export default class App {
                     tabBarBackgroundColor: 'white',
                     forceTitlesDisplay: false,
                     tabBarShowLabels: 'hidden',
+                    initialTabIndex: 1,
                 },
                 appStyle: {
                     orientation: 'portrait', // Sets a specific orientation to the entire app. Default: 'auto'. Supported values: 'auto', 'landscape', 'portrait'

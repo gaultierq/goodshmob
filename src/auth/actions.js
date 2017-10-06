@@ -15,10 +15,10 @@ export function onAppReady() {
         }
     });
 
-    codePush.sync({
-        updateDialog: true,
-        installMode: codePush.InstallMode.IMMEDIATE
-    });
+    // codePush.sync({
+    //     updateDialog: true,
+    //     installMode: codePush.InstallMode.IMMEDIATE
+    // });
 
     return {type: "APP_INITIALIZED"}
 }
