@@ -14,38 +14,55 @@ export const API_DATA_FAILURE = 'API_DATA_FAILURE';
 export const API_SYMBOL = Symbol("api");
 
 
-let currentUserId, client, uid, accessToken;
-
 export const API_END_POINT = "https://goodshitapp-staging.herokuapp.com/";
 
-export function headers() {
-    let headers = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-    };
 
-    //TODO: find nicer syntax
-    if (client) headers['Client'] = client;
-    if (uid) headers['Uid'] = uid;
-    if (accessToken) headers['Access-Token'] = accessToken;
-    return headers;
+let instance : Api = null;
+
+class Api {
+
+    constructor(store) {
+        this.store = store;
+    }
+
+    headers() {
+        let state = this.store.getState();
+        let auth = state.auth;
+
+        let {accessToken, client, uid} = auth;
+
+        let headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        };
+
+        //TODO: find nicer syntax
+        if (client) headers['Client'] = client;
+        if (uid) headers['Uid'] = uid;
+        if (accessToken) headers['Access-Token'] = accessToken;
+        return headers;
+    }
+
+
+    submit(url, method, body) {
+        let options = Object.assign({
+            method: method,
+            headers: this.headers()
+        }, body ? {body: JSON.stringify(body)} : null);
+
+        console.debug(`sending request url=${url}, options: ${JSON.stringify(options)}`);
+        return fetch(url, options);
+    }
+
 }
 
-export function submit(url, method, body) {
-    let options = Object.assign({
-        method: method,
-        headers: headers()
-    }, body ? {body: JSON.stringify(body)} : null);
-
-    console.debug(`sending request url=${url}, options: ${JSON.stringify(options)}`);
-    return fetch(url, options);
-}
 
 export class Call {
 
     url: URL = new URL(API_END_POINT);
     body: any;
     method: string;
+    headers = instance.headers();
 
     withRoute(pathname:string) {
         this.url = this.url.set('pathname', pathname);
@@ -88,24 +105,27 @@ export class Call {
 
     exec() {
         //if (!this.method) throw new Error("call need a method");
-        return submit(this.url.toString(), this.method, this.body);
+        return instance.submit(this.url.toString(), this.method, this.body);
     }
 }
 
 export function init(store) {
-    let unsubscribe = store.subscribe(() => {
-        let state = store.getState();
-        if (!state.app.rehydrated) return;
+    instance = new Api(store);
 
-        unsubscribe();
-
-        let auth = state.auth;
-        accessToken = auth.accessToken;
-        client = auth.client;
-        uid = auth.uid;
-        currentUserId = auth.currentUserId;
-        console.info(`api initialized with: access-token=${accessToken}, client=${client}, uid=${uid}`);
-    });
+    // let unsubscribe = store.subscribe(() => {
+    //     let state = store.getState();
+    //     if (!state.app.rehydrated) return;
+    //
+    //     unsubscribe();
+    //
+    //     let auth = state.auth;
+    //
+    //     accessToken = auth.accessToken;
+    //     client = auth.client;
+    //     uid = auth.uid;
+    //     currentUserId = auth.currentUserId;
+    //     console.info(`api initialized with: access-token=${accessToken}, client=${client}, uid=${uid}`);
+    // });
 }
 
 

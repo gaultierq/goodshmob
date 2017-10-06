@@ -3,8 +3,8 @@
 
 
 "@types/react@^16.0.5":
-  version "16.0.7"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.0.7.tgz#f85b6c33c988a1631e2f32fedae71ec6d9718a0d"
+  version "16.0.9"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.0.9.tgz#2ad952abbb22617620927694f9a4bce292d7fb2b"
 
 abab@^1.0.3:
   version "1.0.4"
@@ -2590,8 +2590,8 @@ image-size@^0.3.5:
   resolved "https://registry.yarnpkg.com/image-size/-/image-size-0.3.5.tgz#83240eab2fb5b00b04aab8c74b0471e9cba7ad8c"
 
 immutable@^3.8.1:
-  version "3.8.1"
-  resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.1.tgz#200807f11ab0f72710ea485542de088075f68cd2"
+  version "3.8.2"
+  resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.2.tgz#c2439951455bb39913daf281376f1530e104adf3"
 
 imurmurhash@^0.1.4:
   version "0.1.4"
@@ -4498,7 +4498,7 @@ react-native-elements@^0.17.0:
 
 react-native-fbsdk@facebook/react-native-fbsdk#065507a:
   version "0.6.1"
-  resolved "https://codeload.github.com/facebook/react-native-fbsdk/tar.gz/065507aa1d2b8b0b6cb50d13117694123f8303fa"
+  resolved "https://codeload.github.com/facebook/react-native-fbsdk/tar.gz/065507a"
 
 react-native-global-props@^1.1.1:
   version "1.1.1"
@@ -4518,8 +4518,8 @@ react-native-modal@^4.0.0:
     react-native-animatable "^1.2.3"
 
 react-native-navigation@^1.1.212:
-  version "1.1.231"
-  resolved "https://registry.yarnpkg.com/react-native-navigation/-/react-native-navigation-1.1.231.tgz#2a8b269444a3ccde6280eb59d49ed680a8b070d4"
+  version "1.1.235"
+  resolved "https://registry.yarnpkg.com/react-native-navigation/-/react-native-navigation-1.1.235.tgz#53e3dc0eeb2b41b3f8890329550b15d1d5de9ac5"
   dependencies:
     lodash "4.x.x"
 
@@ -5827,7 +5827,7 @@ ws@^2.0.3:
     safe-buffer "~5.0.1"
     ultron "~1.1.0"
 
-xcode@0.9.2, xcode@^0.9.1:
+xcode@0.9.2:
   version "0.9.2"
   resolved "https://registry.yarnpkg.com/xcode/-/xcode-0.9.2.tgz#b8969a2d7bf8b5feafbad162bd97de39f16e2907"
   dependencies:
@@ -5835,7 +5835,7 @@ xcode@0.9.2, xcode@^0.9.1:
     simple-plist "0.1.4"
     uuid "3.0.1"
 
-xcode@^0.9.3:
+xcode@^0.9.1, xcode@^0.9.3:
   version "0.9.3"
   resolved "https://registry.yarnpkg.com/xcode/-/xcode-0.9.3.tgz#910a89c16aee6cc0b42ca805a6d0b4cf87211cf3"
   dependencies:
