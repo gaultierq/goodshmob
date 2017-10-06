@@ -4,7 +4,6 @@ import React from 'react';
 import {View, Text, Image, TouchableHighlight, FlatList} from 'react-native';
 import * as Model from "../../models/index"
 import * as UI from "../UIStyles";
-import build from 'redux-object'
 
 export default class LineupCell extends React.Component {
 
@@ -48,19 +47,8 @@ export default class LineupCell extends React.Component {
         )
     }
 
-    getLineup() {
-        return build(this.props.data, "lists", this.props.lineupId);
-    }
-
-    getSaving(savingId) {
-        return build(this.props.data, "savings", savingId);
-    }
-
     renderItem(item) {
         let it: Model.Saving = item.item;
-
-        //eager: true doesnt work
-        it = this.getSaving(it.id);
 
         let image = it.resource ? it.resource.image : undefined;
 

@@ -16,7 +16,7 @@ import * as UI from "../screens/UIStyles";
 import Button from 'apsl-react-native-button'
 import {TP_MARGINS} from "./UIStyles";
 import { SearchBar } from 'react-native-elements'
-import build from 'redux-object'
+import build from './redux-object'
 
 class LineupListScreen extends Component {
 
@@ -56,12 +56,13 @@ class LineupListScreen extends Component {
     render() {
         let lineupList = this.props.lineupList;
         //let lineups = lineupList.list.map((l) => buildNonNullData(this.props.data, "lists", l.id));
-        let lineups = build(this.props.data, "lists", lineupList.list.map(o=>o.id));
-        lineups.forEach((l)=>{
-            //btw: this array is not immutable
-            //wip
-            //l.savings = l.relationships.savings.data.map(s=>build(this.props.data, "savings", s.id));
-        });
+        let ids = lineupList.list.asMutable().map(o=>o.id);
+        let lineups = build(this.props.data, "lists", ids);
+        // lineups.forEach((l)=>{
+        //     //btw: this array is not immutable
+        //     //wip
+        //     //l.savings = l.relationships.savings.data.map(s=>build(this.props.data, "savings", s.id));
+        // });
 
         if (this.state.filter) {
             lineups = lineups.filter((l) => l.name.indexOf(this.state.filter) >= 0);
