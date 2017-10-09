@@ -12,5 +12,8 @@
   ],
   "rules": {
     // overrides
+    "no-console": 0,
+    "no-unused-vars": 1
+
   }
 }

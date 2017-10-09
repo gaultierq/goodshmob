@@ -93,6 +93,10 @@ export class Call {
     }
 
     disptachForAction(apiAction: ApiAction, options?: any) {
+
+        //fetch
+        // on result -> dispatch other action
+
         return {
             [API_SYMBOL]: Object.assign({},
                 {
@@ -100,6 +104,56 @@ export class Call {
                     apiAction
                 }, options)
         };
+    }
+
+    disptachForAction2(apiAction: ApiAction, options?: any) {
+        const call = this;
+        return (dispatch) => {
+            let meta = null;
+
+            return call
+                .exec()
+                .then(resp => {
+                    console.debug("api: response");
+                    if (resp.ok) {
+                        let contentType = resp.headers.get("content-type");
+                        if (contentType && contentType.indexOf("application/json") !== -1) {
+                            return resp.json().then((json)=> ({json, original: resp}));
+                        }
+                        return {json: "ok", original: resp};
+                    }
+                    let status = resp.status;
+
+                    return resp.json().then(err => {
+                        throw {...err, status: status}
+                    });
+                })
+                .then(resp => {
+                        let response = resp.json;
+                        let data = normalize(response);
+
+                        //1., 2.
+                        dispatch({ data, type: API_DATA_SUCCESS });
+
+                        return dispatch(Object.assign({}, {type: apiAction.success(), payload: response, original: resp.original}, {meta}));
+                    },
+                    //1., 2.
+                    error => {
+                        let errMsg = error.message || `Something bad happened (${error.status}): ${JSON.stringify(error)}`;
+
+                        let errorAction = dispatch({ type: API_DATA_FAILURE, error: errMsg });
+                        if (error.status === 401) {
+                            dispatch(errorAction);
+                            return dispatch(logout())
+                        }
+                        return dispatch(errorAction);
+
+                    },
+                );
+        };
+
+
+
     }
 
 
@@ -111,21 +165,6 @@ export class Call {
 
 export function init(store) {
     instance = new Api(store);
-
-    // let unsubscribe = store.subscribe(() => {
-    //     let state = store.getState();
-    //     if (!state.app.rehydrated) return;
-    //
-    //     unsubscribe();
-    //
-    //     let auth = state.auth;
-    //
-    //     accessToken = auth.accessToken;
-    //     client = auth.client;
-    //     uid = auth.uid;
-    //     currentUserId = auth.currentUserId;
-    //     console.info(`api initialized with: access-token=${accessToken}, client=${client}, uid=${uid}`);
-    // });
 }
 
 

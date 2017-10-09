@@ -166,10 +166,9 @@ class LineupListScreen extends Component {
     }
 
 
+    //render a lineup row
     renderItem(item) {
         let lineup = item.item;
-
-
         return (
             <TouchableHighlight onPress={() => this.props.onLineupPressed(lineup)}>
                 <View>

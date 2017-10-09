@@ -11,6 +11,7 @@ import ActionButton from 'react-native-action-button';
 import { screen as LineupList } from './lineups'
 import Item from "../models/Item";
 import List from "../models/List";
+import * as types from "../types"
 
 class HomeScreen extends Component {
 
@@ -50,8 +51,8 @@ class HomeScreen extends Component {
         return (
             <MainBackground>
                 <LineupList
-                    onLineupPressed={(lineup) => this.seeLineupDetails(lineup)}
-                    onAddInLineupPressed={(lineup) => this.addInLineup(lineup)}
+                    onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
+                    onAddInLineupPressed={this.state.pendingItem ? null : (lineup) => this.addInLineup(lineup)}
                 />
                 {this.displayFloatingButton() && <ActionButton
                     buttonColor="rgba(231,76,60,1)"
@@ -71,7 +72,16 @@ class HomeScreen extends Component {
         this.onFloatingButtonPressed();
     }
 
-    seeLineupDetails(lineup) {
+    onLineupPressed(lineup:types.List) {
+        if (this.state.pendingItem) {
+            this.setState({pendingList: lineup}, () => this.resolveAdd());
+        }
+        else {
+            this.seeLineupDetails(lineup);
+        }
+    }
+
+    seeLineupDetails(lineup: types.List) {
         console.info("on linup pressed: " + JSON.stringify(lineup));
         this.props.navigator.push({
             screen: 'goodsh.SavingsScreen', // unique ID registered with Navigation.registerScreen
@@ -92,9 +102,9 @@ class HomeScreen extends Component {
             screen: 'goodsh.SearchScreen', // unique ID registered with Navigation.registerScreen
             title: "Ajouter un goodsh", // navigation bar title of the pushed screen (optional)
             passProps: {
-                onItemSelected: (item: Item) => {
+                onItemSelected: (item: types.Item) => {
                     this.props.navigator.dismissAllModals();
-                    console.info("item selected: "+ JSON.stringify(item.name));
+                    console.info("item selected: "+ JSON.stringify(item.title));
 
                     //here we have a pending item to add.
                     //TODO: add it to redux
@@ -108,7 +118,10 @@ class HomeScreen extends Component {
     resolveAdd() {
         //action blabla
         if (this.state.pendingItem && this.state.pendingList) {
-            console.log(this.state.pendingItem.title + "waiting to be added:" + this.state.pendingList.name)
+            console.info(`${this.state.pendingItem.title} waiting to be added in ${this.state.pendingList.name}`);
+            this.props
+                .dispatch(actions.saveItem(this.state.pendingItem.id, this.state.pendingList.id, ))
+                .then(() => this.setState({pendingItem: null, pendingList: null}));
         }
     }
 
@@ -125,12 +138,32 @@ const mapStateToProps = (state, ownProps) => ({
 
 const actiontypes = (() => {
 
-    return {};
+    const SAVE_ITEM = new Api.ApiAction("save_item");
+    return {SAVE_ITEM};
 })();
 
 
 const actions = (() => {
     return {
+        saveItem: (itemId, lineupId, privacy = 0, description = '') => {
+
+            let body = {
+                saving: { list_id: lineupId, privacy}
+            };
+            if (description) {
+                Object.assign(body, description)
+            }
+            console.log("saving item, with body:");
+            console.log(body);
+
+            let call = new Api.Call()
+                .withMethod('POST')
+                .withRoute(`items/${itemId}/savings`)
+                .withBody(body)
+                .withQuery({'include': '*.*'});
+
+            return call.disptachForAction2(actiontypes.SAVE_ITEM);
+        },
     };
 })();
 
