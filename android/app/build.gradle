@@ -251,6 +251,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-snackbar')
     compile project(':react-native-code-push')
     compile project(':react-native-vector-icons')
     compile project(':react-native-i18n')

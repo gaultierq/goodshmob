@@ -4537,6 +4537,10 @@ react-native-side-menu@^1.0.2:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-snackbar@^0.4.2:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/react-native-snackbar/-/react-native-snackbar-0.4.2.tgz#03979ff445be16115a385d80dc08dd1c77563219"
+
 react-native-tab-navigator@^0.3.4:
   version "0.3.4"
   resolved "https://registry.yarnpkg.com/react-native-tab-navigator/-/react-native-tab-navigator-0.3.4.tgz#54a18f1ad06a09d4a0de81ff00416bc1b760c960"

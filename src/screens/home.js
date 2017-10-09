@@ -12,6 +12,7 @@ import { screen as LineupList } from './lineups'
 import Item from "../models/Item";
 import List from "../models/List";
 import * as types from "../types"
+import Snackbar from "react-native-snackbar"
 
 class HomeScreen extends Component {
 
@@ -52,7 +53,7 @@ class HomeScreen extends Component {
             <MainBackground>
                 <LineupList
                     onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
-                    onAddInLineupPressed={this.state.pendingItem ? null : (lineup) => this.addInLineup(lineup)}
+                    onAddInLineupPressed={(this.state.pendingItem) ? null : (lineup) => this.addInLineup(lineup)}
                 />
                 {this.displayFloatingButton() && <ActionButton
                     buttonColor="rgba(231,76,60,1)"
@@ -69,6 +70,7 @@ class HomeScreen extends Component {
 
     addInLineup(lineup: List) {
         this.setState({pendingList: lineup});
+        console.log(`add in lineup: ${lineup.id}`);
         this.onFloatingButtonPressed();
     }
 
@@ -106,10 +108,8 @@ class HomeScreen extends Component {
                     this.props.navigator.dismissAllModals();
                     console.info("item selected: "+ JSON.stringify(item.title));
 
-                    //here we have a pending item to add.
                     //TODO: add it to redux
-                    this.setState({pendingItem: item});
-                    this.resolveAdd();
+                    this.setState({pendingItem: item}, () => this.resolveAdd());
                 }
             }, // Object that will be passed as props to the pushed screen (optional)
         });
@@ -121,7 +121,13 @@ class HomeScreen extends Component {
             console.info(`${this.state.pendingItem.title} waiting to be added in ${this.state.pendingList.name}`);
             this.props
                 .dispatch(actions.saveItem(this.state.pendingItem.id, this.state.pendingList.id, ))
-                .then(() => this.setState({pendingItem: null, pendingList: null}));
+                .then(() => {
+                    Snackbar.show({
+                        title: 'Item ajouté',
+                        //duration: Snackbar.LENGTH_INDEFINITE,
+                    });
+                    return this.setState({pendingItem: null, pendingList: null});
+                });
         }
     }
 

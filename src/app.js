@@ -33,6 +33,9 @@ const appReducer = (state = initialState, action) => {
 //see the network requests in the debugger
 //TODO: doesnt work yet
 //GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
+
+console.disableYellowBox = true;
+
 let allReducers = combineReducers({...reducers, app: appReducer});
 const reducer = createWithReducers(allReducers);
 const store = createStore(
