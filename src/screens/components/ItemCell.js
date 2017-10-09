@@ -8,6 +8,7 @@ import * as UI from "../UIStyles";
 import {connect} from "react-redux";
 import {buildNonNullData} from "../../utils/DataUtils";
 
+
 export default class ItemCell extends React.Component {
 
 

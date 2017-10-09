@@ -16,5 +16,6 @@ export default {
     },
     in: (raw) => {
         return fromImmutable(raw)
-    }
+    },
+    config: {blacklist: ["data"]}
 }

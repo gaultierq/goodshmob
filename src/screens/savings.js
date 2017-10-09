@@ -4,7 +4,7 @@ import React, {Component} from 'react';
 import {StyleSheet, View, ScrollView, ActivityIndicator, FlatList} from 'react-native';
 import {connect} from "react-redux";
 import {MainBackground} from "./UIComponents";
-import build from 'redux-object'
+import build from './redux-object'
 import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
 import ItemCell from "./components/ItemCell";
@@ -40,7 +40,10 @@ class SavingsScreen extends Component {
     }
 
     render() {
-        let savingList = this.getSavings();
+        //let savingList = this.getSavings();
+        let lineup = this.getLineup();
+        let savingList = lineup.savings.map((s)=>s.resource);
+
 
         let isLoading = !savingList && this.props.request.isLoading[actionTypes.LOAD_SAVINGS.name()];
 
@@ -73,6 +76,7 @@ class SavingsScreen extends Component {
     }
 
     getSavings() {
+        //shit
         let isLastSuccess = this.props.request.isLastSuccess[actionTypes.LOAD_SAVINGS.name()];
 
         let lineup = this.getLineup();
@@ -98,7 +102,7 @@ class SavingsScreen extends Component {
         let it = item.item;
         return <ItemCell
             onPressItem={() => this.navToSavingDetail(it)}
-            item={it.resource}
+            item={it}
             navigator={this.props.navigator}
         />
     }

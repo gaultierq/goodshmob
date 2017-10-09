@@ -11,9 +11,9 @@ import thunk from "redux-thunk";
 import logger from 'redux-logger'
 
 import {middleware as apiMiddleware} from './utils/Api';
-import {persistStore, autoRehydrate} from 'redux-persist'
+import {persistStore, autoRehydrate, createTransform} from 'redux-persist'
 import {AsyncStorage} from 'react-native'
-import immutableTransform from './immutableTransform'
+import  immutableTransform from './immutableTransform'
 import {REHYDRATE} from 'redux-persist/constants'
 import Immutable from 'seamless-immutable';
 import * as Api from "./utils/Api";
@@ -50,7 +50,7 @@ let hydrated = false
 persistStore(store,
     {
         storage: AsyncStorage,
-        transforms: [immutableTransform],
+        transforms: [createTransform(immutableTransform.in, immutableTransform.out, immutableTransform.config)],
         blacklist: ['search']
     },
     () => {
@@ -158,7 +158,7 @@ export default class App {
                     tabBarBackgroundColor: 'white',
                     forceTitlesDisplay: false,
                     tabBarShowLabels: 'hidden',
-                    initialTabIndex: 1,
+                    initialTabIndex: 0,
                 },
                 appStyle: {
                     orientation: 'portrait', // Sets a specific orientation to the entire app. Default: 'auto'. Supported values: 'auto', 'landscape', 'portrait'
