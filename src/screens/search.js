@@ -16,21 +16,32 @@ import * as UIStyles from "../screens/UIStyles"
 
 const SEARCH_CATEGORIES = [ "consumer_goods", "places_and_people", "musics", "movies"]
 
+type SearchState = {
+    index: number,
+    input: string,
+    routes: Array<string>,
+    loaded: boolean,
+    pendingSearch: number,
+    isSearching: { [key: string]: Array<string> }
+}
+
 class SearchScreen extends Component {
 
     props: {
         onItemSelected: Function;
     };
 
-    state = {
+    state : SearchState = {
         index: 0,
         input: '', //TODO : rename it to token
         routes: SEARCH_CATEGORIES.map((c, i) => ({key: `${i}`, title: this.getTitle(c)})),
         loaded: false,
+        isSearching: {},
+        test: ''
     };
 
     _handleIndexChange = index => {
-        this.setState({ index }, () => this.performSearch());
+        this.setState({ index }, () => this.performSearch(true));
     };
 
     _renderHeader = props => <TabBar {...props}
@@ -41,9 +52,10 @@ class SearchScreen extends Component {
 
     />;
 
-    _renderScene = SceneMap(
+    renderScene = SceneMap(
         SEARCH_CATEGORIES.reduce((result, c, i) => Object.assign(result, this.renderCategory(i, c)), {}));
 
+    _renderScene = ({ route }) => { return this.renderSearchPage(SEARCH_CATEGORIES[route.key])}
 
 
     getTitle(cat: string) {
@@ -56,16 +68,21 @@ class SearchScreen extends Component {
     }
 
     renderCategory(i, c) {
-        return {[i]: () => (
-            <SearchPage
-                category={c}
-                isLoading={()=> this.isLoading(c)}
-                onItemSelected={this.props.onItemSelected}
-            />)};
+        let xml = this.renderSearchPage(c);
+        return {[i]: () => (xml)};
     }
 
-    isLoading(category: string) {
-        return !!this.props.request.isLoading[composeSearchActionName(category, this.state.input)];
+    renderSearchPage(c) {
+        let xml = <SearchPage
+            category={c}
+            isLoading={() => this.isSearching(c)}
+            onItemSelected={this.props.onItemSelected}
+        />;
+        return xml;
+    }
+
+    isSearching(category: string) {
+        return !!this.state.isSearching[category];
     }
 
     render() {
@@ -95,14 +112,43 @@ class SearchScreen extends Component {
         this.setState({input: input}, () => this.performSearch());
     }
 
-    performSearch() {
+    performSearch(hard: false) {
+        let when = -1;
         let cat = this.getCategory();
         let data = this.props.search[cat];
-        if (data && data.token === this.state.input) {
+        let input = this.state.input;
+        if (data && data.token === input) {
             console.log("skipping request");
         }
         else {
-            this.props.dispatch(actions.searchFor(this.state.input, cat));
+            when = hard ? 0 : 300;
+        }
+
+        if (when >= 0) {
+            let timeoutId = setTimeout(() => {
+
+                let tokenBeingSearched = this.state.isSearching[cat] || [];
+                tokenBeingSearched = tokenBeingSearched.slice();
+
+                if (tokenBeingSearched.indexOf(input) > -1) throw new Error(`"${input}" is already being searched for`);
+                tokenBeingSearched.push(input);
+
+                this.setState({isSearching: {[cat]: tokenBeingSearched}});
+
+                this.props.dispatch(actions.searchFor(this.state.input, cat))
+                    .then(()=> {
+                        let tokenBeingSearched = this.state.isSearching[cat];
+                        tokenBeingSearched = tokenBeingSearched.slice();
+                        let indexOf = tokenBeingSearched.indexOf(input);
+                        if (indexOf === -1) throw new Error(`"${input}" should be being searched for`);
+
+                        tokenBeingSearched.splice(indexOf, 1);
+                        this.setState({isSearching: {[cat]: tokenBeingSearched}});
+                        this.setState({test: new Date() + ''});
+                    });
+            }, when);
+            clearTimeout(this.state.pendingSearch);
+            this.setState({pendingSearch: timeoutId});
         }
     }
 
@@ -220,7 +266,7 @@ const actions = (() => {
                 .withRoute(`search/${category}`)
                 .withQuery({'search[term]': token});
 
-            return call.disptachForAction(actiontypes.SEARCH, {
+            return call.disptachForAction2(actiontypes.SEARCH, {
                 actionName: composeSearchActionName(category, token),
                 meta: {category, token}});
         },

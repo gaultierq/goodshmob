@@ -109,7 +109,7 @@ export class Call {
     disptachForAction2(apiAction: ApiAction, options?: any) {
         const call = this;
         return (dispatch) => {
-            let meta = null;
+            let meta = options ? options.meta : null;
 
             return call
                 .exec()
