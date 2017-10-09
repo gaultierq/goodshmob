@@ -17,6 +17,7 @@ import Button from 'apsl-react-native-button'
 import {TP_MARGINS} from "./UIStyles";
 import { SearchBar } from 'react-native-elements'
 import build from './redux-object'
+import Fuse from 'fuse.js'
 
 class LineupListScreen extends Component {
 
@@ -65,8 +66,19 @@ class LineupListScreen extends Component {
         // });
 
         if (this.state.filter) {
+
+            let options = {
+                keys: ['name'],
+                sort: true,
+                threshold: 0.6
+            };
+
+            let fuse = new Fuse(lineups, options);
+
+            lineups = fuse.search(this.state.filter);
+
             //TODO : use another lib here
-            lineups = lineups.filter((l) => l.name.indexOf(this.state.filter) >= 0);
+            //lineups = lineups.filter((l) => l.name.indexOf(this.state.filter) >= 0);
         }
 
         return (
