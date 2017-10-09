@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
     },
     searchContainer: {
         backgroundColor: 'white',
-        marginTop: 40
+        //marginTop: 40
     },
     searchInput: {
         backgroundColor: 'white',

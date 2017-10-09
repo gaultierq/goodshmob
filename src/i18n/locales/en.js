@@ -1,4 +1,10 @@
 export default {
+    "tabs": {
+        home: {
+            title: "My lists",
+            label: "My lists"
+        }
+    },
     "shared":{
         "ok":"OK",
         "goodsh_sent":"GOODSH' sent",

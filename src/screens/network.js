@@ -12,6 +12,17 @@ import * as Api from "../utils/Api";
 import {isUnique} from "../utils/ArrayUtil";
 
 
+type NetworkState = {
+    isFetchingFirst: boolean,
+    isFetchingMore: boolean,
+};
+
+
+//TODO: extract
+type NavigableProps = {
+    navigagor: any
+};
+
 
 class NetworkScreen extends Component {
 
@@ -33,10 +44,17 @@ class NetworkScreen extends Component {
 
     static navigatorStyle = UIStyles.NavStyles;
 
+    props: NavigableProps;
+
+
+
+    state: NetworkState;
+
     keyExtractor = (item, index) => item.id;
 
     constructor(props){
         super();
+        this.state = {isFetchingFirst: false, isFetchingMore: false};
         props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
@@ -62,18 +80,20 @@ class NetworkScreen extends Component {
     }
 
     loadFirst() {
-        if (this.isLoading()) return;
-        this.props.dispatch(actions.loadLineups());
+        if (this.state.isFetchingFirst) return;
+        this.setState({isFetchingFirst: true});
+        this.props.dispatch(actions.loadLineups()).then(()=>this.setState({isFetchingFirst: false}));
     }
 
     loadMore() {
-        if (this.isLoadingMore()) return;
+        if (this.state.isFetchingMore) return;
         if (!this.props.network.links) return;
+        this.setState({isFetchingMore: true});
         let nextUrl = this.props.network.links.next;
         console.log("Next url:" + nextUrl);
 
         //data.meta;
-        this.props.dispatch(actions.loadMoreLineups(nextUrl));
+        this.props.dispatch(actions.loadMoreLineups(nextUrl)).then(()=>this.setState({isFetchingMore: false}));
     }
 
     navToActivity(activity) {
@@ -106,11 +126,6 @@ class NetworkScreen extends Component {
         return (
             <MainBackground>
                 <View>
-                    {/* empty */}
-                    {this.isLoading() && <ActivityIndicator
-                        animating = {this.isLoading()}
-                        size = "large"
-                    />}
 
                     <FlatList
                         data={activities}
@@ -118,15 +133,15 @@ class NetworkScreen extends Component {
                         keyExtractor={this.keyExtractor}
                         refreshControl={
                             <RefreshControl
-                                refreshing={this.isLoading()}
+                                refreshing={this.state.isFetchingFirst}
                                 onRefresh={this.onRefresh.bind(this)}
                             />
                         }
                         onEndReached={ this.onEndReached.bind(this) }
                         onEndReachedThreshold={0}
                         ListFooterComponent={
-                            this.isLoadingMore() && <ActivityIndicator
-                                animating = {this.isLoadingMore()}
+                            this.state.isFetchingMore && <ActivityIndicator
+                                animating={this.state.isFetchingMore}
                                 size = "small"
                             />}
                     />
@@ -134,14 +149,6 @@ class NetworkScreen extends Component {
 
             </MainBackground>
         );
-    }
-
-    isLoading() {
-        return !!this.props.request.isLoading[actiontypes.FETCH_ACTIVITIES.name()];
-    }
-
-    isLoadingMore() {
-        return !!this.props.request.isLoading[actiontypes.FETCH_MORE_ACTIVITIES.name()];
     }
 
     checkEmpty(activities) {
@@ -200,14 +207,14 @@ const actions = (() => {
                 .withRoute("activities")
                 .withQuery({include: "user,resource,target"});
 
-            return call.disptachForAction(actiontypes.FETCH_ACTIVITIES);
+            return call.disptachForAction2(actiontypes.FETCH_ACTIVITIES);
         },
 
         loadMoreLineups:(nextUrl:string) => {
             let call = new Api.Call.parse(nextUrl).withMethod('GET')
                 .withQuery({include: "user,resource,target"});
 
-            return call.disptachForAction(actiontypes.FETCH_MORE_ACTIVITIES);
+            return call.disptachForAction2(actiontypes.FETCH_MORE_ACTIVITIES);
         }
     };
 })();

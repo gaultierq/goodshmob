@@ -13,6 +13,7 @@ import Item from "../models/Item";
 import List from "../models/List";
 import * as types from "../types"
 import Snackbar from "react-native-snackbar"
+import i18n from '../i18n/i18n'
 
 class HomeScreen extends Component {
 
@@ -123,8 +124,7 @@ class HomeScreen extends Component {
                 .dispatch(actions.saveItem(this.state.pendingItem.id, this.state.pendingList.id, ))
                 .then(() => {
                     Snackbar.show({
-                        title: 'Item ajouté',
-                        //duration: Snackbar.LENGTH_INDEFINITE,
+                        title: i18n.t('shared.goodsh_saved'),
                     });
                     return this.setState({pendingItem: null, pendingList: null});
                 });

@@ -17,6 +17,7 @@ import  immutableTransform from './immutableTransform'
 import {REHYDRATE} from 'redux-persist/constants'
 import Immutable from 'seamless-immutable';
 import * as Api from "./utils/Api";
+import i18n from './i18n/i18n'
 
 const initialState = Immutable({
     rehydrated: false,
@@ -140,11 +141,11 @@ export default class App {
             Navigation.startTabBasedApp({
                 tabs: [
                     {
-                        label: 'Mon compte',
+                        label: i18n.t('tabs.home.label'),
                         screen: 'goodsh.HomeScreen',
                         icon: require('./img/bottom_bar_home.png'),
                         // title: 'Search'
-                        title: 'Mon compte'
+                        title: i18n.t('tabs.home.title')
                     },
                     {
                         label: 'Network', // tab label as appears under the icon in iOS (optional)
@@ -161,7 +162,7 @@ export default class App {
                     tabBarBackgroundColor: 'white',
                     forceTitlesDisplay: false,
                     tabBarShowLabels: 'hidden',
-                    initialTabIndex: 0,
+                    initialTabIndex: 1,
                 },
                 appStyle: {
                     orientation: 'portrait', // Sets a specific orientation to the entire app. Default: 'auto'. Supported values: 'auto', 'landscape', 'portrait'
