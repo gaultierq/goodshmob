@@ -65,6 +65,7 @@ class LineupListScreen extends Component {
         // });
 
         if (this.state.filter) {
+            //TODO : use another lib here
             lineups = lineups.filter((l) => l.name.indexOf(this.state.filter) >= 0);
         }
 
