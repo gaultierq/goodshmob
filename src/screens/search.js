@@ -14,30 +14,34 @@ import i18n from '../i18n/i18n'
 import { SearchBar } from 'react-native-elements'
 import * as UIStyles from "../screens/UIStyles"
 
-const SEARCH_CATEGORIES = [ "consumer_goods", "places_and_people", "musics", "movies"]
+
+type SearchCategory = "consumer_goods" | "places_and_people" | "musics" | "movies";
+type SearchToken = string;
+
+const SEARCH_CATEGORIES : SearchCategory = [ "consumer_goods", "places_and_people", "musics", "movies"]
 
 type SearchState = {
     index: number,
-    input: string,
+    input: SearchToken,
     routes: Array<string>,
     loaded: boolean,
     pendingSearch: number,
-    isSearching: { [key: string]: Array<string> }
+    isSearching: { [key: SearchCategory]: Array<SearchToken> }
 }
 
 class SearchScreen extends Component {
 
     props: {
         onItemSelected: Function;
+        search: Function
     };
 
     state : SearchState = {
         index: 0,
         input: '', //TODO : rename it to token
-        routes: SEARCH_CATEGORIES.map((c, i) => ({key: `${i}`, title: this.getTitle(c)})),
+        routes: SEARCH_CATEGORIES.map((c, i) => ({key: `${i}`, title: SearchScreen.getTitle(c)})),
         loaded: false,
         isSearching: {},
-        test: ''
     };
 
     _handleIndexChange = index => {
@@ -58,7 +62,7 @@ class SearchScreen extends Component {
     _renderScene = ({ route }) => { return this.renderSearchPage(SEARCH_CATEGORIES[route.key])}
 
 
-    getTitle(cat: string) {
+    static getTitle(cat: SearchCategory) {
         return i18n.t('search_item_screen.tabs.' + cat);
     }
 
@@ -72,7 +76,7 @@ class SearchScreen extends Component {
         return {[i]: () => (xml)};
     }
 
-    renderSearchPage(c) {
+    renderSearchPage(c: SearchCategory) {
         let xml = <SearchPage
             category={c}
             isLoading={() => this.isSearching(c)}
@@ -81,7 +85,7 @@ class SearchScreen extends Component {
         return xml;
     }
 
-    isSearching(category: string) {
+    isSearching(category: SearchCategory) {
         return !!this.state.isSearching[category];
     }
 
@@ -114,14 +118,14 @@ class SearchScreen extends Component {
 
     performSearch(hard: false) {
         let when = -1;
-        let cat = this.getCategory();
+        let cat : SearchCategory = this.getCategory();
         let data = this.props.search[cat];
         let input = this.state.input;
         if (data && data.token === input) {
             console.log("skipping request");
         }
         else {
-            when = hard ? 0 : 300;
+            when = hard ? 0 : 400;
         }
 
         if (when >= 0) {
@@ -144,7 +148,6 @@ class SearchScreen extends Component {
 
                         tokenBeingSearched.splice(indexOf, 1);
                         this.setState({isSearching: {[cat]: tokenBeingSearched}});
-                        this.setState({test: new Date() + ''});
                     });
             }, when);
             clearTimeout(this.state.pendingSearch);
@@ -152,7 +155,7 @@ class SearchScreen extends Component {
         }
     }
 
-    getCategory() {
+    getCategory() : SearchCategory {
         return SEARCH_CATEGORIES[this.state.index];
     }
 }
