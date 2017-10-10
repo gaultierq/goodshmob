@@ -30,12 +30,19 @@ class LineupListScreen extends Component {
         data: Object
     };
 
+    state: {
+        isLoading: boolean,
+        isLoadingMore: boolean,
+    };
+
     constructor(){
         super();
         this.state= {
             isCreatingLineup: false,
             modalVisible: false,
-            filter: null
+            filter: null,
+            isLoading: false,
+            isLoadingMore: false,
         }
     }
 
@@ -44,17 +51,28 @@ class LineupListScreen extends Component {
     }
 
     load() {
-        this.props.dispatch(actions.loadLineups());
+        if (this.state.isLoading) return;
+        this.setState({isLoading: true});
+        this.props
+            .dispatch(actions.loadLineups())
+            .then(() => {
+                this.setState({isLoading: false});
+        });
     }
 
     loadMore() {
-        if (this.isLoadingMore()) return;
+        if (this.state.isLoadingMore) return;
         if (!this.props.lineupList.links) return;
+
         let nextUrl = this.props.lineupList.links.next;
         console.log("Next url:" + nextUrl);
 
+        this.setState({isLoadingMore: true});
         //data.meta;
-        this.props.dispatch(actions.loadMoreLineups(nextUrl));
+        this.props.dispatch(actions.loadMoreLineups(nextUrl))
+            .then(() => {
+                this.setState({isLoadingMore: false});
+            });
     }
 
     render() {
@@ -174,11 +192,11 @@ class LineupListScreen extends Component {
 
 
     isLoadingMore() {
-        return !!this.props.request.isLoading[actiontypes.FETCH_MORE_LINEUPS.name()];
+        return this.state.isLoadingMore;
     }
 
     isLoading() {
-        return !!this.props.request.isLoading[actiontypes.FETCH_LINEUPS.name()];
+        return this.state.isLoading;
     }
 
     //render a lineup row
@@ -312,7 +330,7 @@ const actions = (() => {
                     include: "creator"
                 });
 
-            return call.disptachForAction(actiontypes.FETCH_LINEUPS);
+            return call.disptachForAction2(actiontypes.FETCH_LINEUPS);
         },
 
         loadMoreLineups:(nextUrl:string) => {
@@ -323,7 +341,7 @@ const actions = (() => {
                     include: "creator"
                 });
 
-            return call.disptachForAction(actiontypes.FETCH_MORE_LINEUPS);
+            return call.disptachForAction2(actiontypes.FETCH_MORE_LINEUPS);
         },
         createLineup: (listName) => {
             let call = new Api.Call()
