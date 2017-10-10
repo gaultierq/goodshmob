@@ -12,8 +12,8 @@ import {buildNonNullData} from "../../utils/DataUtils";
 export default class ItemCell extends React.Component {
 
 
-    propTypes: {
-        onPressItem: React.PropTypes.func;
+    props: {
+        onPressItem: Function;
     };
 
     render() {

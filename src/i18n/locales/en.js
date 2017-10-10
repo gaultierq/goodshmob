@@ -5,6 +5,11 @@ export default {
             label: "My lists"
         }
     },
+    lineups: {
+        search: {
+            placeholder: "Search into my lists"
+        }
+    },
     "shared":{
         "ok":"OK",
         "goodsh_sent":"GOODSH' sent",

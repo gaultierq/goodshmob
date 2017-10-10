@@ -60,7 +60,7 @@ export type User = Base & {
 }
 
 
-export type Saving = Base & {
+export type Saving = Activity & {
 }
 
 

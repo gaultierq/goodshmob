@@ -55,6 +55,7 @@ class HomeScreen extends Component {
                 <LineupList
                     onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
                     onAddInLineupPressed={(this.state.pendingItem) ? null : (lineup) => this.addInLineup(lineup)}
+                    canFilterOverItems={() => !this.state.pendingItem}
                 />
                 {this.displayFloatingButton() && <ActionButton
                     buttonColor="rgba(231,76,60,1)"

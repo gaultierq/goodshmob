@@ -16,14 +16,17 @@ import * as UI from "../screens/UIStyles";
 import Button from 'apsl-react-native-button'
 import {TP_MARGINS} from "./UIStyles";
 import { SearchBar } from 'react-native-elements'
-import build from './redux-object'
+import build from 'redux-object'
 import Fuse from 'fuse.js'
+import type * as types from "../types";
+import ItemCell from "./components/ItemCell";
 
 class LineupListScreen extends Component {
 
     props: {
         onLineupPressed: Function,
         onAddInLineupPressed: Function,
+        canFilterOverItems: Function,
         data: Object
     };
 
@@ -58,27 +61,40 @@ class LineupListScreen extends Component {
         let lineupList = this.props.lineupList;
         //let lineups = lineupList.list.map((l) => buildNonNullData(this.props.data, "lists", l.id));
         let ids = lineupList.list.asMutable().map(o=>o.id);
-        let lineups = build(this.props.data, "lists", ids);
-        // lineups.forEach((l)=>{
-        //     //btw: this array is not immutable
-        //     //wip
-        //     //l.savings = l.relationships.savings.data.map(s=>build(this.props.data, "savings", s.id));
-        // });
+        let lineups : Array<types.List> = build(this.props.data, "lists", ids, {includeType: true});
+
+        let data: Array<types.List|types.Item>;
 
         if (this.state.filter) {
 
-            let options = {
-                keys: ['name'],
+            let searchIn = [];
+
+            lineups.forEach((lu: types.List) => {
+                searchIn.push(lu);
+
+                if (this.props.canFilterOverItems()) {
+                    searchIn = searchIn.concat(lu.savings.map((sa: types.Saving)=>sa.resource))
+                }
+            });
+
+            let fuse = new Fuse(searchIn, {
+                keys: [{
+                    name: 'name',
+                    weight: 0.6
+                }, {
+                    name: 'title',
+                    weight: 0.4
+                }],
+                // keys: ['name', 'title'],
                 sort: true,
                 threshold: 0.6
-            };
+            });
 
-            let fuse = new Fuse(lineups, options);
+            data = fuse.search(this.state.filter);
 
-            lineups = fuse.search(this.state.filter);
-
-            //TODO : use another lib here
-            //lineups = lineups.filter((l) => l.name.indexOf(this.state.filter) >= 0);
+        }
+        else {
+            data = lineups;
         }
 
         return (
@@ -86,13 +102,13 @@ class LineupListScreen extends Component {
                 <SearchBar
                     lightTheme
                     onChangeText={this.onSearchInputChange.bind(this)}
-                    placeholder={"rechercher dans mes listes"}
+                    placeholder={i18n.t('lineups.search.placeholder')}
                     clearIcon={{color: '#86939e'}}
                     containerStyle={styles.searchContainer}
                     inputStyle={styles.searchInput}
                 />
                 <FlatList
-                    data={lineups}
+                    data={data}
                     renderItem={this.renderItem.bind(this)}
                     keyExtractor={(item, index) => item.id}
                     refreshControl={
@@ -165,20 +181,29 @@ class LineupListScreen extends Component {
         return !!this.props.request.isLoading[actiontypes.FETCH_LINEUPS.name()];
     }
 
-
     //render a lineup row
     renderItem(item) {
-        let lineup = item.item;
-        return (
-            <TouchableHighlight onPress={() => this.props.onLineupPressed(lineup)}>
-                <View>
-                    <LineupCell
-                        lineup={lineup}
-                        onAddInLineupPressed={this.props.onAddInLineupPressed}
-                    />
-                </View>
-            </TouchableHighlight>
-        )
+        let it = item.item;
+        if (it.type === 'lists') {
+            return (
+                <TouchableHighlight onPress={() => this.props.onLineupPressed(it)}>
+                    <View>
+                        <LineupCell
+                            lineup={it}
+                            onAddInLineupPressed={this.props.onAddInLineupPressed}
+                        />
+                    </View>
+                </TouchableHighlight>
+            )
+        }
+        else {
+            return (
+                <ItemCell
+                    item={it}
+                    onPressItem={() => {}}
+                />
+            )
+        }
     }
 
 
