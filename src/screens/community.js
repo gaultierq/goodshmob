@@ -3,7 +3,6 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Button, Text, ScrollView, ActivityIndicator, FlatList, RefreshControl} from 'react-native';
 import {connect} from "react-redux";
-import {AsyncStorage} from "react-native";
 import FriendCell from "./components/FriendCell";
 import {MainBackground} from "./UIComponents";
 import build from 'redux-object'
@@ -15,15 +14,18 @@ class CommunityScreen extends Component {
 
     keyExtractor = (item, index) => item.id;
 
+
+    state: NetworkState;
+
     constructor(){
         super();
     }
 
     componentDidMount() {
-        this.load();
+        this.fetchFirst();
     }
 
-    load() {
+    fetchFirst() {
         let cui = this.props.auth.currentUserId;
         this.props.dispatch(actions.fetchSavings(cui));
     }
@@ -79,7 +81,7 @@ class CommunityScreen extends Component {
 
 
     onRefresh() {
-        this.load();
+        this.fetchFirst();
     }
 
     onEndReached() {

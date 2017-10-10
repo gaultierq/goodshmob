@@ -12,10 +12,15 @@ import * as Api from "../utils/Api";
 import {isUnique} from "../utils/ArrayUtil";
 
 
-type NetworkState = {
+type FeedState = {
     isFetchingFirst: boolean,
     isFetchingMore: boolean,
+    isPulling: boolean
 };
+
+
+type NetworkState = {
+} & FeedState;
 
 
 //TODO: extract
@@ -23,6 +28,96 @@ type NavigableProps = {
     navigagor: any
 };
 
+//TODO: extract
+type SmartListProps = {
+    navigagor: any,
+    fetchAction: any,
+    fetchMoreAction: any
+};
+
+type SmartListState = {
+    isFetchingFirst: boolean,
+    isFetchingMore: boolean,
+    isPulling: boolean
+};
+
+@connect()
+class Feed<T> extends Component  {
+
+    props: {
+        data: Array<T>,
+        renderItem: Function,
+        fetchAction: Function,
+        fetchMoreAction: Function
+    };
+
+    keyExtractor = (item, index) => item.id;
+    state: SmartListState;
+
+    constructor(){
+        super();
+        this.state =  {isFetchingFirst: false, isFetchingMore: false, isPulling: false};
+    }
+
+    componentDidMount() {
+        this.fetchFirst();
+    }
+
+    fetchFirst(dispatch) {
+        if (this.state.isFetchingFirst) return;
+        this.setState({isFetchingFirst: true});
+        this.props.dispatch(this.props.fetchAction()).then(()=>this.setState({isFetchingFirst: false}));
+    }
+
+    fetchMore() {
+        //TODO
+    }
+
+    onRefresh() {
+        this.loadFirst();
+    }
+
+    render() {
+        return (
+            <FlatList
+                data={this.props.data}
+                renderItem={this.props.renderItem}
+                keyExtractor={this.keyExtractor}
+                refreshControl={this.renderRefreshControl()}
+                onEndReached={ this.onEndReached.bind(this) }
+                onEndReachedThreshold={0}
+                ListFooterComponent={this.renderFetchMoreLoader()}
+            />
+        );
+    }
+
+    renderRefreshControl() {
+        return (<RefreshControl
+            refreshing={this.state.isFetchingFirst}
+            onRefresh={this.onRefresh.bind(this)}
+        />);
+    }
+
+    renderFetchMoreLoader() {
+        return (this.state.isFetchingMore &&
+            <ActivityIndicator
+                animating={this.state.isFetchingMore}
+                size = "small"
+            />)
+    }
+
+
+
+    onEndReached() {
+        // if (this.props.network.hasMore) {
+        //     this.loadMore();
+        // }
+        // else {
+        console.info("end of feed")
+        // }
+    }
+
+}
 
 class NetworkScreen extends Component {
 
@@ -45,8 +140,6 @@ class NetworkScreen extends Component {
     static navigatorStyle = UIStyles.NavStyles;
 
     props: NavigableProps;
-
-
 
     state: NetworkState;
 
@@ -73,27 +166,6 @@ class NetworkScreen extends Component {
                 })
             }
         }
-    }
-
-    componentDidMount() {
-        this.loadFirst();
-    }
-
-    loadFirst() {
-        if (this.state.isFetchingFirst) return;
-        this.setState({isFetchingFirst: true});
-        this.props.dispatch(actions.loadLineups()).then(()=>this.setState({isFetchingFirst: false}));
-    }
-
-    loadMore() {
-        if (this.state.isFetchingMore) return;
-        if (!this.props.network.links) return;
-        this.setState({isFetchingMore: true});
-        let nextUrl = this.props.network.links.next;
-        console.log("Next url:" + nextUrl);
-
-        //data.meta;
-        this.props.dispatch(actions.loadMoreLineups(nextUrl)).then(()=>this.setState({isFetchingMore: false}));
     }
 
     navToActivity(activity) {
@@ -126,24 +198,11 @@ class NetworkScreen extends Component {
         return (
             <MainBackground>
                 <View>
-
-                    <FlatList
+                    <Feed
                         data={activities}
                         renderItem={this.renderItem.bind(this)}
-                        keyExtractor={this.keyExtractor}
-                        refreshControl={
-                            <RefreshControl
-                                refreshing={this.state.isFetchingFirst}
-                                onRefresh={this.onRefresh.bind(this)}
-                            />
-                        }
-                        onEndReached={ this.onEndReached.bind(this) }
-                        onEndReachedThreshold={0}
-                        ListFooterComponent={
-                            this.state.isFetchingMore && <ActivityIndicator
-                                animating={this.state.isFetchingMore}
-                                size = "small"
-                            />}
+                        fetchAction={actions.loadLineups}
+                        fetchMoreAction={actions.loadMoreLineups}
                     />
                 </View>
 
@@ -159,16 +218,6 @@ class NetworkScreen extends Component {
     }
 
 
-    onEndReached() {
-        if (this.props.network.hasMore) {
-            this.loadMore();
-        }
-        else {
-            console.info("end of feed")
-        }
-
-    }
-
     renderItem(item) {
 
         let it = item.item;
@@ -179,9 +228,6 @@ class NetworkScreen extends Component {
         />
     }
 
-    onRefresh() {
-        this.loadFirst();
-    }
 }
 
 const mapStateToProps = (state, ownProps) => ({

@@ -84,7 +84,7 @@ export default class App {
     // testScreen = {
     //     screen: {
     //         label: 'test',
-    //         screen: 'goodsh.SearchScreen',
+    //         screen: 'goodsh.CommunityScreen',
     //     },
     //     passProps: {
     //         lineupId: "37e67b05-c86c-4aeb-b3af-bf1c34862cd0",
