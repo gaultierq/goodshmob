@@ -9,7 +9,6 @@ import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
 import ActionButton from 'react-native-action-button';
 import { screen as LineupList } from './lineups'
-import Item from "../models/Item";
 import List from "../models/List";
 import * as types from "../types"
 import Snackbar from "react-native-snackbar"
@@ -104,7 +103,7 @@ class HomeScreen extends Component {
     onFloatingButtonPressed() {
         this.props.navigator.showModal({
             screen: 'goodsh.SearchScreen', // unique ID registered with Navigation.registerScreen
-            title: "Ajouter un goodsh", // navigation bar title of the pushed screen (optional)
+            title: i18n.t("tabs.search.title"), // navigation bar title of the pushed screen (optional)
             passProps: {
                 onItemSelected: (item: types.Item) => {
                     this.props.navigator.dismissAllModals();

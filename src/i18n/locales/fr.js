@@ -3,7 +3,10 @@ export default {
         home: {
             title: "Mes listes",
             label: "Mes listes"
-        }
+        },
+        search: {
+            title: "Ajouter quelquechose",
+        },
     },
     lineups: {
         search: {

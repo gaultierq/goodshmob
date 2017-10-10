@@ -31,6 +31,38 @@ type SearchState = {
 
 class SearchScreen extends Component {
 
+
+
+    static navigatorButtons = {
+        // leftButtons: [
+        //     {
+        //         icon: require('../img/drawer_community.png'), // for icon button, provide the local image asset name
+        //         id: 'community' // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
+        //     }
+        // ],
+        rightButtons: [
+            {
+                //icon: require('../img/drawer_line_up.png'), // for icon button, provide the local image asset name
+                id: 'cancel_search', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
+                title: "Cancel"
+            }
+        ],
+    };
+
+
+    constructor(props) {
+        super(props);
+        props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+    }
+
+    onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
+        if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
+            if (event.id === 'cancel_search') { // this is the same id field from the static navigatorButtons definition
+                this.props.navigator.dismissAllModals();
+            }
+        }
+    }
+
     props: {
         onItemSelected: Function;
         search: Function
@@ -52,9 +84,7 @@ class SearchScreen extends Component {
                                      indicatorStyle={styles.indicator}
                                      style={styles.tabbar}
                                      tabStyle={styles.tab}
-                                     labelStyle={styles.label}
-
-    />;
+                                     labelStyle={styles.label}/>;
 
     renderScene = SceneMap(
         SEARCH_CATEGORIES.reduce((result, c, i) => Object.assign(result, this.renderCategory(i, c)), {}));

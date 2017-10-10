@@ -79,6 +79,8 @@ export default class App {
     logged = null;
 
     testScreen = null;
+
+    
     // testScreen = {
     //     screen: {
     //         label: 'test',
