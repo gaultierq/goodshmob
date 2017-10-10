@@ -31,7 +31,10 @@ class HomeScreen extends Component {
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
         if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
             if (event.id === 'cancel_add') { // this is the same id field from the static navigatorButtons definition
-                this.setState({pendingItem: null, pendingList: null});
+                this.setState({
+                    pendingItem: null,
+                    pendingList: null
+                });
             }
         }
     }
@@ -70,9 +73,13 @@ class HomeScreen extends Component {
     }
 
     addInLineup(lineup: List) {
-        this.setState({pendingList: lineup});
-        console.log(`add in lineup: ${lineup.id}`);
-        this.onFloatingButtonPressed();
+        this.setState({pendingList: lineup}, () => {
+            console.log(`add in lineup: ${lineup.id}`);
+            this.displaySearchScreen(()=> {
+                this.setState({pendingList: null});
+            });
+        });
+
     }
 
     onLineupPressed(lineup:types.List) {
@@ -90,7 +97,9 @@ class HomeScreen extends Component {
             screen: 'goodsh.SavingsScreen', // unique ID registered with Navigation.registerScreen
             title: "Lineup Details", // navigation bar title of the pushed screen (optional)
             titleImage: require('../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
-            passProps: {lineupId: lineup.id}, // Object that will be passed as props to the pushed screen (optional)
+            passProps: {
+                lineupId: lineup.id
+            }, // Object that will be passed as props to the pushed screen (optional)
             animated: true, // does the push have transition animation or does it happen immediately (optional)
             animationType: 'slide-down', // 'fade' (for both) / 'slide-horizontal' (for android) does the push have different transition animation (optional)
             backButtonTitle: undefined, // override the back button title (optional)
@@ -101,17 +110,29 @@ class HomeScreen extends Component {
     }
 
     onFloatingButtonPressed() {
+        this.displaySearchScreen();
+    }
+
+    displaySearchScreen(onCancel?) {
         this.props.navigator.showModal({
             screen: 'goodsh.SearchScreen', // unique ID registered with Navigation.registerScreen
-            title: i18n.t("tabs.search.title"), // navigation bar title of the pushed screen (optional)
+            title: // navigation bar title of the pushed screen (optional)
+                this.state.pendingList ?
+                    i18n.t("tabs.search.title_in", {list_name: this.state.pendingList.name}) :
+                    i18n.t("tabs.search.title"),
             passProps: {
                 onItemSelected: (item: types.Item) => {
                     this.props.navigator.dismissAllModals();
-                    console.info("item selected: "+ JSON.stringify(item.title));
+                    console.info("item selected: " + JSON.stringify(item.title));
 
                     //TODO: add it to redux
                     this.setState({pendingItem: item}, () => this.resolveAdd());
+                },
+                onCancel: () => {
+                    this.props.navigator.dismissAllModals();
+                    onCancel && onCancel();
                 }
+
             }, // Object that will be passed as props to the pushed screen (optional)
         });
     }

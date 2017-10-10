@@ -6,6 +6,7 @@ export default {
         },
         search: {
             title: "Ajouter quelquechose",
+            title_in: "Ajouter quelquechose à %{list_name}",
         },
     },
     lineups: {

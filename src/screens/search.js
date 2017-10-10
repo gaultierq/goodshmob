@@ -58,14 +58,15 @@ class SearchScreen extends Component {
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
         if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
             if (event.id === 'cancel_search') { // this is the same id field from the static navigatorButtons definition
-                this.props.navigator.dismissAllModals();
+                this.props.onCancel();
             }
         }
     }
 
     props: {
         onItemSelected: Function;
-        search: Function
+        search: Function,
+        onCancel: Function
     };
 
     state : SearchState = {

@@ -28,7 +28,7 @@ export default class LineupCell extends React.Component {
                         renderItem={this.renderItem.bind(this)}
                         keyExtractor={(item, index) => item.id}
                         horizontal={true}
-                        ListFooterComponent={
+                        ListHeaderComponent={
                             this.props.onAddInLineupPressed && <TouchableHighlight onPress={() => this.props.onAddInLineupPressed(lineup)}>
                                 <Image
                                     source={require('../../img/plus.png')} resizeMode="contain"
@@ -40,7 +40,6 @@ export default class LineupCell extends React.Component {
                                 />
                             </TouchableHighlight>
                         }
-
                     />
                 </View>
             </View>

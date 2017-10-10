@@ -80,7 +80,7 @@ export default class App {
 
     testScreen = null;
 
-    
+
     // testScreen = {
     //     screen: {
     //         label: 'test',
