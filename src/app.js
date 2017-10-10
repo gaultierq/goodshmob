@@ -169,27 +169,27 @@ export default class App {
                     bottomTabBadgeTextColor: 'red', // Optional, change badge text color. Android only
                     bottomTabBadgeBackgroundColor: 'green' // Optional, change badge background color. Android only
                 },
-                // drawer: { // optional, add this if you want a side menu drawer in your app
-                //     left: { // optional, define if you want a drawer from the left
-                //         // screen: 'goodsh.CommunityScreen',
-                //         screen: 'goodsh.DebugScreen', // unique ID registered with Navigation.registerScreen
-                //         passProps: {} // simple serializable object that will pass as props to all top screens (optional)
-                //     },
-                //     right: { // optional, define if you want a drawer from the right
-                //         screen: 'goodsh.LineupListScreen', // unique ID registered with Navigation.registerScreen
-                //         passProps: {} // simple serializable object that will pass as props to all top screens (optional)
-                //     },
-                //     style: { // ( iOS only )
-                //         drawerShadow: true, // optional, add this if you want a side menu drawer shadow
-                //         contentOverlayColor: 'rgba(0,0,0,0.25)', // optional, add this if you want a overlay color when drawer is open
-                //         leftDrawerWidth: 100, // optional, add this if you want a define left drawer width (50=percent)
-                //         rightDrawerWidth: 100 // optional, add this if you want a define right drawer width (50=percent)
-                //     },
-                //     type: 'MMDrawer', // optional, iOS only, types: 'TheSideBar', 'MMDrawer' default: 'MMDrawer'
-                //     animationType: 'slide-and-scale', //optional, iOS only, for MMDrawer: 'door', 'parallax', 'slide', 'slide-and-scale'
-                //     // for TheSideBar: 'airbnb', 'facebook', 'luvocracy','wunder-list'
-                //     disableOpenGesture: false // optional, can the drawer be opened with a swipe instead of button
-                // },
+                drawer: { // optional, add this if you want a side menu drawer in your app
+                    left: { // optional, define if you want a drawer from the left
+                        // screen: 'goodsh.CommunityScreen',
+                        screen: 'goodsh.DebugScreen', // unique ID registered with Navigation.registerScreen
+                        passProps: {} // simple serializable object that will pass as props to all top screens (optional)
+                    },
+                    right: { // optional, define if you want a drawer from the right
+                        screen: 'goodsh.LineupListScreen', // unique ID registered with Navigation.registerScreen
+                        passProps: {} // simple serializable object that will pass as props to all top screens (optional)
+                    },
+                    style: { // ( iOS only )
+                        drawerShadow: true, // optional, add this if you want a side menu drawer shadow
+                        contentOverlayColor: 'rgba(0,0,0,0.25)', // optional, add this if you want a overlay color when drawer is open
+                        leftDrawerWidth: 100, // optional, add this if you want a define left drawer width (50=percent)
+                        rightDrawerWidth: 100 // optional, add this if you want a define right drawer width (50=percent)
+                    },
+                    type: 'MMDrawer', // optional, iOS only, types: 'TheSideBar', 'MMDrawer' default: 'MMDrawer'
+                    animationType: 'slide-and-scale', //optional, iOS only, for MMDrawer: 'door', 'parallax', 'slide', 'slide-and-scale'
+                    // for TheSideBar: 'airbnb', 'facebook', 'luvocracy','wunder-list'
+                    disableOpenGesture: false // optional, can the drawer be opened with a swipe instead of button
+                },
                 passProps: {}, // simple serializable object that will pass as props to all top screens (optional)
                 //animationType: 'slide-down' // optional, add transition animation to root change: 'none', 'slide-down', 'fade'
             });

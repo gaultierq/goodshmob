@@ -7,6 +7,7 @@ import * as appActions from "../auth/actions"
 import {connect} from 'react-redux';
 import {LoginManager} from 'react-native-fbsdk';
 import i18n from '../i18n/i18n'
+import { AccessToken } from "react-native-fbsdk";
 
 class Login extends Component {
 
@@ -69,7 +70,19 @@ class Login extends Component {
                     }
                     else {
                         console.log(`Login success with permissions: ${result.grantedPermissions ? result.grantedPermissions.toString() : 'null'}`);
-                        appActions.login(this.props.dispatch);
+
+                        AccessToken.getCurrentAccessToken().then(
+                            (data) => {
+                                let token = data ? data.accessToken.toString() : '';
+
+                                console.info("facebook token:" + token);
+                                this.props
+                                    .dispatch(appActions.login(token))
+                                    .then(() => this.setState({loginInProgress: false}))
+
+                            }
+                        )
+
                     }
 
                 },
@@ -78,7 +91,10 @@ class Login extends Component {
 
                 }
             )
-            .then(() => this.setState({loginInProgress: false}));
+            ;
     }
 }
-export default connect()(Login);
+
+let screen = connect()(Login);
+
+export {screen};

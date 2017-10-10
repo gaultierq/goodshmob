@@ -25,7 +25,7 @@ class LoginManager {
     //                     .withMethod('POST')
     //                     .withRoute(`auth/facebook/generate_token`)
     //                     .withBody({auth: {access_token: token}})
-    //                     .disptachForAction(authTypes.USER_LOGIN);
+    //                     .disptachForAction(actionTypes.USER_LOGIN);
     //             }
     //         )
     //     })
