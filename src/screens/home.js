@@ -13,6 +13,7 @@ import List from "../models/List";
 import * as types from "../types"
 import Snackbar from "react-native-snackbar"
 import i18n from '../i18n/i18n'
+import * as UIStyles from "./UIStyles";
 
 class HomeScreen extends Component {
 
@@ -28,26 +29,41 @@ class HomeScreen extends Component {
         props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
+    static navigatorStyle = UIStyles.NavStyles;
+
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
         if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
-            if (event.id === 'cancel_add') { // this is the same id field from the static navigatorButtons definition
-                this.setState({
-                    pendingItem: null,
-                    pendingList: null
-                });
+            // if (event.id === 'cancel_add') { // this is the same id field from the static navigatorButtons definition
+            //     this.setState({
+            //         pendingItem: null,
+            //         pendingList: null
+            //     });
+            // }
+            switch (event.id) {
+                case 'cancel_add':
+                    this.setState({
+                        pendingItem: null,
+                        pendingList: null
+                    });
+                    break;
+                case 'profile':
+                    this.props.navigator.push({
+                        screen: 'goodsh.CommunityScreen', // unique ID registered with Navigation.registerScreen
+                        title: "Mes amis", // navigation bar title of the pushed screen (optional)
+                        passProps: {
+                        },
+                    });
+                    break;
             }
         }
     }
 
     render() {
-        let rightButtons = (this.state.pendingItem || this.state.pendingList) ? [{
-            title: 'Cancel',
-            id: 'cancel_add' // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
-        }] : [];
+        let rightButtons = this.getRightButtonDefinition();
 
         this.props.navigator.setButtons({
             leftButtons: [], // see "Adding buttons to the navigator" below for format (optional)
-            rightButtons: rightButtons,
+            rightButtons,
             animated: false// does the change have transition animation or does it happen immediately (optional)
         });
 
@@ -66,6 +82,19 @@ class HomeScreen extends Component {
 
             </MainBackground>
         );
+    }
+
+    getRightButtonDefinition() {
+        return (this.state.pendingItem || this.state.pendingList) ? [
+            {
+                title: 'Cancel',
+                id: 'cancel_add' // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
+            }] : [
+            {
+                icon: require('../img/drawer_community.png'),
+                id: 'profile'
+            }
+        ];
     }
 
     displayFloatingButton() {
