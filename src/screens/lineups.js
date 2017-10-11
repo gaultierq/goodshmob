@@ -21,6 +21,9 @@ import Fuse from 'fuse.js'
 import type * as types from "../types";
 import ItemCell from "./components/ItemCell";
 import Feed from "./components/feed";
+import Swipeout from "react-native-swipeout";
+import CurrentUser from  "../CurrentUser"
+import {actions as savingsActions} from "./savings"
 
 class LineupListScreen extends Component {
 
@@ -58,7 +61,7 @@ class LineupListScreen extends Component {
             .dispatch(actions.loadLineups())
             .then(() => {
                 this.setState({isLoading: false});
-        });
+            });
     }
 
     loadMore() {
@@ -92,7 +95,8 @@ class LineupListScreen extends Component {
                 searchIn.push(lu);
 
                 if (this.props.canFilterOverItems()) {
-                    searchIn = searchIn.concat(lu.savings.map((sa: types.Saving)=>sa.resource))
+                    // searchIn = searchIn.concat(lu.savings.map((sa: types.Saving)=>sa.resource))
+                    searchIn = searchIn.concat(lu.savings)
                 }
             });
 
@@ -101,7 +105,7 @@ class LineupListScreen extends Component {
                     name: 'name',
                     weight: 0.6
                 }, {
-                    name: 'title',
+                    name: 'resource.title',
                     weight: 0.4
                 }],
                 // keys: ['name', 'title'],
@@ -132,8 +136,6 @@ class LineupListScreen extends Component {
                     fetchAction={actions.loadLineups}
                     fetchMoreAction={actions.loadMoreLineups}
                     ListHeaderComponent={this.renderHeader()}
-
-
                 />
                 {this.renderModal()}
             </View>
@@ -192,8 +194,12 @@ class LineupListScreen extends Component {
     //render a lineup row
     renderItem(item) {
         let it = item.item;
-        if (it.type === 'lists') {
-            return (
+
+        let result;
+        let isLineup = it.type === 'lists';
+
+        if (isLineup) {
+            result = (
                 <TouchableHighlight onPress={() => this.props.onLineupPressed(it)}>
                     <View>
                         <LineupCell
@@ -205,13 +211,34 @@ class LineupListScreen extends Component {
             )
         }
         else {
-            return (
+            let saving = it;
+            result = (
                 <ItemCell
-                    item={it}
+                    item={saving.resource}
                     onPressItem={() => {}}
                 />
             )
         }
+
+        let disabled = it.user.id !== CurrentUser.id;
+
+        let swipeBtns = [{
+            text: 'Delete',
+            backgroundColor: 'red',
+            underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+            onPress: () => this.props.dispatch((isLineup? actions.deleteLineup : savingsActions.deleteSaving)(it))
+        }];
+
+        // return result;
+        return (
+            <Swipeout right={swipeBtns}
+                      autoClose='true'
+                      backgroundColor= 'transparent'
+                      disabled={disabled}>
+                {result}
+            </Swipeout>
+        )
+
     }
 
 
@@ -304,8 +331,9 @@ const actiontypes = (() => {
     const FETCH_LINEUPS = new Api.ApiAction("fetch_lineups");
     const FETCH_MORE_LINEUPS = new Api.ApiAction("fetch_more_lineups");
     const CREATE_LINEUP = new Api.ApiAction("create_lineup");
+    const DELETE_LINEUP = new Api.ApiAction("delete_lineup");
 
-    return {FETCH_LINEUPS, FETCH_MORE_LINEUPS, CREATE_LINEUP};
+    return {FETCH_LINEUPS, FETCH_MORE_LINEUPS, CREATE_LINEUP, DELETE_LINEUP};
 })();
 
 
@@ -344,6 +372,13 @@ const actions = (() => {
                 });
 
             return call.disptachForAction(actiontypes.CREATE_LINEUP);
+        },
+        deleteLineup : (lineup) => {
+            let call = new Api.Call()
+                .withMethod('DELETE')
+                .withRoute(`lists/${lineup.id}`);
+
+            return call.disptachForAction(actiontypes.DELETE_LINEUP);
         },
     };
 })();

@@ -66,7 +66,6 @@ class SavingsScreen extends Component {
                       backgroundColor= 'transparent'
                       disabled={disabled}
             >
-
                 <ItemCell
                     onPressItem={() => this.navToSavingDetail(saving)}
                     item={it}
@@ -167,4 +166,4 @@ const reducer = (() => {
 
 let screen = connect(mapStateToProps)(SavingsScreen);
 
-export {reducer, screen};
+export {reducer, screen, actions};
