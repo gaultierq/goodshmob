@@ -35,9 +35,17 @@ export default class Feed<T> extends Component  {
     }
 
     fetchFirst() {
-        if (this.state.isFetchingFirst) return;
-        this.setState({isFetchingFirst: true});
-        this.props.dispatch(this.props.fetchAction()).then(()=>this.setState({isFetchingFirst: false}));
+        return new Promise((resolve) => {
+            if (this.state.isFetchingFirst) {
+                resolve();
+            }
+            else {
+                this.setState({isFetchingFirst: true});
+                this.props.dispatch(this.props.fetchAction()).then(()=>this.setState({isFetchingFirst: false})).then(()=>resolve());
+            }
+        });
+
+
     }
 
     fetchMore() {
@@ -45,7 +53,9 @@ export default class Feed<T> extends Component  {
     }
 
     onRefresh() {
-        this.loadFirst();
+        if (this.state.isPulling) return;
+        this.setState({isPulling: true});
+        this.fetchFirst().then(()=>this.setState({isPulling: false}));
     }
 
     render() {
@@ -64,8 +74,9 @@ export default class Feed<T> extends Component  {
     }
 
     renderRefreshControl() {
+        let displayLoader = (this.state.isFetchingFirst && !this.props.data) || this.state.isPulling;
         return (<RefreshControl
-            refreshing={this.state.isFetchingFirst}
+            refreshing={displayLoader}
             onRefresh={this.onRefresh.bind(this)}
         />);
     }
