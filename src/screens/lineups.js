@@ -20,6 +20,7 @@ import build from 'redux-object'
 import Fuse from 'fuse.js'
 import type * as types from "../types";
 import ItemCell from "./components/ItemCell";
+import Feed from "./components/feed";
 
 class LineupListScreen extends Component {
 
@@ -125,25 +126,14 @@ class LineupListScreen extends Component {
                     containerStyle={styles.searchContainer}
                     inputStyle={styles.searchInput}
                 />
-                <FlatList
+                <Feed
                     data={data}
                     renderItem={this.renderItem.bind(this)}
-                    keyExtractor={(item, index) => item.id}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={this.isLoading()}
-                            onRefresh={this.onRefresh.bind(this)}
-                        />
-                    }
-                    onEndReached={ this.onEndReached.bind(this) }
-                    onEndReachedThreshold={0}
+                    fetchAction={actions.loadLineups}
+                    fetchMoreAction={actions.loadMoreLineups}
                     ListHeaderComponent={this.renderHeader()}
-                    ListFooterComponent={this.isLoadingMore() &&
 
-                    <ActivityIndicator
-                        animating = {this.isLoadingMore()}
-                        size = "small"
-                    />}
+
                 />
                 {this.renderModal()}
             </View>

@@ -1,18 +1,18 @@
 // @flow
 
 import React, {Component} from 'react';
-import {
-    StyleSheet, View, FlatList, ActivityIndicator} from 'react-native';
+import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native';
 import {connect} from "react-redux";
 import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
 import {combineReducers} from "redux";
-import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
+import {SceneMap, TabBar, TabViewAnimated} from 'react-native-tab-view';
 import ItemCell from "./components/ItemCell";
 import {buildNonNullData} from "../utils/DataUtils";
 import i18n from '../i18n/i18n'
-import { SearchBar } from 'react-native-elements'
+import {SearchBar} from 'react-native-elements'
 import * as UIStyles from "../screens/UIStyles"
+import Feed from "./components/feed";
 
 
 type SearchCategory = "consumer_goods" | "places_and_people" | "musics" | "movies";
@@ -255,6 +255,7 @@ class SearchPage extends Component {
                     size = "large"
                     style={styles.activityIndicator}
                 />}
+
                 <FlatList
                     data={results}
                     renderItem={this.renderItem.bind(this)}

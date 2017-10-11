@@ -1,68 +1,38 @@
 // @flow
 
 import React, {Component} from 'react';
-import {StyleSheet, View, Button, Text, ScrollView, ActivityIndicator, FlatList, RefreshControl} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {connect} from "react-redux";
 import FriendCell from "./components/FriendCell";
 import {MainBackground} from "./UIComponents";
 import build from 'redux-object'
 import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
+import Feed from "./components/feed"
 
 
 class CommunityScreen extends Component {
-
-    keyExtractor = (item, index) => item.id;
-
-
-    state: NetworkState;
 
     constructor(){
         super();
     }
 
-    componentDidMount() {
-        this.fetchFirst();
-    }
-
-    fetchFirst() {
-        let cui = this.props.auth.currentUserId;
-        this.props.dispatch(actions.fetchSavings(cui));
-    }
-
-    loadMore() {
-        //this.props.dispatch(actions.loadMoreFriend());
-    }
 
     render() {
         let friend = this.props.friend;
 
         let friends = (friend.list || []).map(object => build(this.props.data, object.type, object.id));
-        let isLoading = this.props.request.isLoading[actionTypes.LOAD_SAVINGS.name()];
 
         return (
             <MainBackground>
-            <ScrollView>
                 <View style={styles.container}>
-                    {isLoading && <ActivityIndicator
-                        animating = {isLoading}
-                        size = "large"
-                    />}
-
-                    <FlatList
+                    <Feed
                         data={friends}
                         renderItem={this.renderItem.bind(this)}
-                        keyExtractor={this.keyExtractor}
-                        onEndReached={ this.onEndReached.bind(this) }
-                        onEndReachedThreshold={0}
-                        // ListFooterComponent={(friend.load_more_friend.requesting) &&
-                        // <ActivityIndicator
-                        //     animating = {friend.load_more_friend.requesting}
-                        //     size = "small"
-                        // />}
+                        fetchAction={() => actions.loadSavings(this.props.auth.currentUserId)}
+                        fetchMoreAction={actions.loadMoreSavings}
                     />
                 </View>
-            </ScrollView>
             </MainBackground>
         );
     }
@@ -77,21 +47,6 @@ class CommunityScreen extends Component {
     }
 
     navToFriendDetail(it) {
-    }
-
-
-    onRefresh() {
-        this.fetchFirst();
-    }
-
-    onEndReached() {
-        if (this.props.friend.hasMore) {
-            this.loadMore();
-        }
-        else {
-            console.info("end of feed")
-        }
-
     }
 }
 
@@ -122,7 +77,8 @@ const actionTypes = (() => {
 const actions = (() => {
     return {
 
-        fetchSavings: (userId: string) => {
+        loadSavings: (userId: string) => {
+
             let call = new Api.Call().withMethod('GET')
                 .withRoute(`users/${userId}/friends`)
                 .withQuery({
@@ -133,7 +89,7 @@ const actions = (() => {
 
             return call.disptachForAction(actionTypes.LOAD_SAVINGS);
         },
-        loadMoreFriend: (nextUrl:string) => {
+        loadMoreSavings: (nextUrl:string) => {
             let call = new Api.Call.parse(nextUrl).withMethod('GET')
                 .withQuery({
                     page: 1,

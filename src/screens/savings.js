@@ -8,7 +8,7 @@ import build from './redux-object'
 import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
 import ItemCell from "./components/ItemCell";
-import PropTypes from 'prop-types';
+import Feed from "./components/feed";
 
 
 
@@ -18,80 +18,30 @@ import PropTypes from 'prop-types';
 
 class SavingsScreen extends Component {
 
-    propTypes = {
-        lineupId: PropTypes.string.required
+    props : {
+        lineupId: string
     };
 
-    constructor(){
-        super();
-    }
-
-    componentDidMount() {
-        this.load();
-    }
-
-    load() {
-        let cui = this.props.lineupId;
-        this.props.dispatch(actions.fetchSavings(cui));
-    }
-
-    loadMore() {
-        //this.props.dispatch(actions.loadMoreFriend());
-    }
-
     render() {
-        //let savingList = this.getSavings();
         let lineup = this.getLineup();
         let savingList = lineup.savings.map((s)=>s.resource);
-
-
-        let isLoading = !savingList && this.props.request.isLoading[actionTypes.LOAD_SAVINGS.name()];
-
 
         return (
             <MainBackground>
                 <ScrollView>
                     <View style={styles.container}>
-                        {isLoading && <ActivityIndicator
-                            animating = {isLoading}
-                            size = "large"
-                        />}
 
-                        <FlatList
+                        <Feed
                             data={savingList}
                             renderItem={this.renderItem.bind(this)}
-                            keyExtractor={(item, index) => item.id}
-                            onEndReached={ this.onEndReached.bind(this) }
-                            onEndReachedThreshold={0}
-                            // ListFooterComponent={(savings.load_more_friend.requesting) &&
-                            // <ActivityIndicator
-                            //     animating = {savings.load_more_friend.requesting}
-                            //     size = "small"
-                            // />}
+                            fetchAction={()=>actions.loadSavings(this.props.lineupId)}
+                            fetchMoreAction={actions.loadMoreSavings}
                         />
+
                     </View>
                 </ScrollView>
             </MainBackground>
         );
-    }
-
-    getSavings() {
-        //shit
-        let isLastSuccess = this.props.request.isLastSuccess[actionTypes.LOAD_SAVINGS.name()];
-
-        let lineup = this.getLineup();
-        let savingList;
-
-        if (isLastSuccess) {
-            savingList = this.props.savings.list;
-        }
-        else if (lineup) {
-            savingList = lineup.savings
-        }
-        else {
-            savingList = [];
-        }
-        return savingList;
     }
 
     getLineup() {
@@ -108,19 +58,6 @@ class SavingsScreen extends Component {
     }
 
     navToSavingDetail(it) {
-    }
-
-    onRefresh() {
-        this.load();
-    }
-
-    onEndReached() {
-        if (this.props.savings.hasMore) {
-            this.loadMore();
-        }
-        else {
-            console.info("end of feed")
-        }
     }
 }
 
@@ -150,7 +87,7 @@ const actionTypes = (() => {
 const actions = (() => {
     return {
 
-        fetchSavings: (lineupId: string) => {
+        loadSavings: (lineupId: string) => {
             let call = new Api.Call().withMethod('GET')
                 .withRoute(`lists/${lineupId}/savings`)
                 .withQuery({
@@ -161,7 +98,7 @@ const actions = (() => {
 
             return call.disptachForAction(actionTypes.LOAD_SAVINGS);
         },
-        loadMoreFriend: (nextUrl:string) => {
+        loadMoreSavings: (nextUrl:string) => {
             let call = new Api.Call.parse(nextUrl).withMethod('GET')
                 .withQuery({
                     page: 1,
