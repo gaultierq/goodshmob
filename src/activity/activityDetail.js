@@ -1,13 +1,13 @@
 // @flow
 
 import React, {Component} from 'react';
-import {StyleSheet, View, Button, Text, ScrollView, ActivityIndicator} from 'react-native';
-import  * as actions from './actions'
-import  * as actionTypes from './actionTypes'
+import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native';
+import * as actions from './actions'
+import * as actionTypes from './actionTypes'
 import {connect} from "react-redux";
-import {AsyncStorage} from "react-native";
 import ActivityCell from "./components/ActivityCell";
 import build from 'redux-object'
+import {buildNonNullData} from "../utils/DataUtils";
 
 class ActivityDetailScreen extends Component {
 
@@ -15,7 +15,6 @@ class ActivityDetailScreen extends Component {
         super();
         this.state = {};
     }
-
 
     componentDidMount() {
         this.load();
@@ -55,7 +54,7 @@ class ActivityDetailScreen extends Component {
     }
 
     getActivity() {
-        return build(this.props.data, this.props.activityType, this.props.activityId);
+        return buildNonNullData(this.props.data, this.props.activityType, this.props.activityId);
     }
 }
 

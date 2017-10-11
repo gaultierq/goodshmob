@@ -74,14 +74,11 @@ class NetworkScreen extends Component {
     }
 
     navToActivity(activity) {
-        console.info("onPressItem: " + JSON.stringify(activity));
-        let passProps = {activityId: activity.id, activityType: activity.type};
-
         this.props.navigator.push({
             screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
             title: "Details", // navigation bar title of the pushed screen (optional)
             titleImage: require('../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
-            passProps: passProps, // Object that will be passed as props to the pushed screen (optional)
+            passProps: {activityId: activity.id, activityType: activity.type}, // Object that will be passed as props to the pushed screen (optional)
             animated: true, // does the push have transition animation or does it happen immediately (optional)
             animationType: 'slide-up', // 'fade' (for both) / 'slide-horizontal' (for android) does the push have different transition animation (optional)
             backButtonTitle: undefined, // override the back button title (optional)
@@ -96,7 +93,7 @@ class NetworkScreen extends Component {
 
         let activities = network.list ;
 
-        this.checkEmpty(activities);
+        NetworkScreen.checkEmpty(activities);
         if (!isUnique(activities.map((a)=>a.id))) throw new Error(`activities ids not unique 2`);
         if (!isUnique(activities)) throw new Error(`activities not unique`);
 
@@ -115,7 +112,7 @@ class NetworkScreen extends Component {
         );
     }
 
-    checkEmpty(activities) {
+    static checkEmpty(activities) {
         let empty = activities.filter((elem, index, self) => {
             return typeof elem === 'undefined';
         });

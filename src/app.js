@@ -18,6 +18,7 @@ import {REHYDRATE} from 'redux-persist/constants'
 import Immutable from 'seamless-immutable';
 import * as Api from "./utils/Api";
 import i18n from './i18n/i18n'
+import * as CurrentUser from './CurrentUser'
 
 const initialState = Immutable({
     rehydrated: false,
@@ -65,6 +66,7 @@ persistStore(store,
 );
 
 Api.init(store);
+CurrentUser.init(store);
 
 
 // screen related book keeping
@@ -190,7 +192,7 @@ export default class App {
                     type: 'MMDrawer', // optional, iOS only, types: 'TheSideBar', 'MMDrawer' default: 'MMDrawer'
                     animationType: 'slide-and-scale', //optional, iOS only, for MMDrawer: 'door', 'parallax', 'slide', 'slide-and-scale'
                     // for TheSideBar: 'airbnb', 'facebook', 'luvocracy','wunder-list'
-                    disableOpenGesture: false // optional, can the drawer be opened with a swipe instead of button
+                    disableOpenGesture: true// optional, can the drawer be opened with a swipe instead of button
                 },
                 passProps: {}, // simple serializable object that will pass as props to all top screens (optional)
                 //animationType: 'slide-down' // optional, add transition animation to root change: 'none', 'slide-down', 'fade'
