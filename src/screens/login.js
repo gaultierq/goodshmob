@@ -82,13 +82,12 @@ class Login extends Component {
 
                             }
                         )
-
                     }
 
                 },
                 error => {
                     console.log('Login fail with error: ' + error);
-
+                    this.setState({loginInProgress: false});
                 }
             )
             ;

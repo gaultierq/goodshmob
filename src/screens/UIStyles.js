@@ -20,7 +20,10 @@ export const CARD = (cardMargin) => {
         shadowOpacity: 0.3,
         shadowOffset: {width: 2, height: 2},
         borderRadius: 4,
-        shadowRadius: 2
+        shadowRadius: 2,
+        elevation: 2,
+        marginTop: 5,
+        marginBottom: 5
     }
 };
 export const SIDE_MARGINS = (margin) => {
