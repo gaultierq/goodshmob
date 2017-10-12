@@ -13,6 +13,7 @@ import i18n from '../i18n/i18n'
 import {SearchBar} from 'react-native-elements'
 import * as UIStyles from "../screens/UIStyles"
 import Feed from "./components/feed";
+import {MainBackground} from "./UIComponents";
 
 
 type SearchCategory = "consumer_goods" | "places_and_people" | "musics" | "movies";
@@ -249,7 +250,7 @@ class SearchPage extends Component {
         let isLoading = !!this.props.isLoading();
 
         return (
-            <View>
+            <MainBackground>
                 {isLoading && <ActivityIndicator
                     animating = {isLoading}
                     size = "large"
@@ -261,7 +262,7 @@ class SearchPage extends Component {
                     renderItem={this.renderItem.bind(this)}
                     keyExtractor={(item, index) => item.id}
                 />
-            </View>
+            </MainBackground>
         );
     }
 
