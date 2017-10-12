@@ -6,8 +6,8 @@ import * as actions from './actions'
 import * as actionTypes from './actionTypes'
 import {connect} from "react-redux";
 import ActivityCell from "./components/ActivityCell";
-import build from 'redux-object'
 import {buildNonNullData} from "../utils/DataUtils";
+import {MainBackground} from "../screens/UIComponents";
 
 class ActivityDetailScreen extends Component {
 
@@ -30,22 +30,24 @@ class ActivityDetailScreen extends Component {
         let activity = this.getActivity();
 
         let showLoader = !activity && this.isLoading();
-        
-        return (
-            <ScrollView>
-                <View style={styles.container}>
-                    <ActivityIndicator
-                        animating = {showLoader}
-                        size = "small"
-                    />
-                    { activity &&
-                    <ActivityCell
-                        activityId={activity.id}
-                        activityType={activity.type}
-                    />}
 
-                </View>
-            </ScrollView>
+        return (
+            <MainBackground>
+                <ScrollView>
+                    <View style={styles.container}>
+                        <ActivityIndicator
+                            animating = {showLoader}
+                            size = "small"
+                        />
+                        { activity &&
+                        <ActivityCell
+                            activityId={activity.id}
+                            activityType={activity.type}
+                        />}
+
+                    </View>
+                </ScrollView>
+            </MainBackground>
         );
     }
 
