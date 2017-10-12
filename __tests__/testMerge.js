@@ -23,7 +23,7 @@ function testMerge(into: number[], add: number[], after:number, hasMore: boolean
     let result = new ModelUtils.Merge(mergeInto, mergeMe)
         .setAfterKey(lastId)
         .hasMore(hasMore)
-        .hasLess(hasLess)
+        .withHasLess(hasLess)
         .merge();
 
     let newIds = mergeInto.map((e) => e.id);
