@@ -72,6 +72,7 @@ class HomeScreen extends Component {
             <MainBackground>
                 <LineupList
                     onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
+                    onSavingPressed={(saving) => this.onSavingPressed(saving)}
                     onAddInLineupPressed={(this.state.pendingItem) ? null : (lineup) => this.addInLineup(lineup)}
                     canFilterOverItems={() => !this.state.pendingItem}
                 />
@@ -116,26 +117,42 @@ class HomeScreen extends Component {
             this.setState({pendingList: lineup}, () => this.resolveAdd());
         }
         else {
-            this.seeLineupDetails(lineup);
+            console.info("on linup pressed: " + JSON.stringify(lineup));
+            this.props.navigator.push({
+                screen: 'goodsh.SavingsScreen', // unique ID registered with Navigation.registerScreen
+                title: "Lineup Details", // navigation bar title of the pushed screen (optional)
+                titleImage: require('../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
+                passProps: {
+                    lineupId: lineup.id
+                }, // Object that will be passed as props to the pushed screen (optional)
+                animated: true, // does the push have transition animation or does it happen immediately (optional)
+                animationType: 'slide-down', // 'fade' (for both) / 'slide-horizontal' (for android) does the push have different transition animation (optional)
+                backButtonTitle: undefined, // override the back button title (optional)
+                backButtonHidden: false, // hide the back button altogether (optional)
+                navigatorStyle: {}, // override the navigator style for the pushed screen (optional)
+                navigatorButtons: {} // override the nav buttons for the pushed screen (optional)
+            });
         }
     }
 
-    seeLineupDetails(lineup: types.List) {
-        console.info("on linup pressed: " + JSON.stringify(lineup));
-        this.props.navigator.push({
-            screen: 'goodsh.SavingsScreen', // unique ID registered with Navigation.registerScreen
-            title: "Lineup Details", // navigation bar title of the pushed screen (optional)
-            titleImage: require('../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
-            passProps: {
-                lineupId: lineup.id
-            }, // Object that will be passed as props to the pushed screen (optional)
-            animated: true, // does the push have transition animation or does it happen immediately (optional)
-            animationType: 'slide-down', // 'fade' (for both) / 'slide-horizontal' (for android) does the push have different transition animation (optional)
-            backButtonTitle: undefined, // override the back button title (optional)
-            backButtonHidden: false, // hide the back button altogether (optional)
-            navigatorStyle: {}, // override the navigator style for the pushed screen (optional)
-            navigatorButtons: {} // override the nav buttons for the pushed screen (optional)
-        });
+    onSavingPressed(saving:types.Saving) {
+        if (this.state.pendingItem) {
+            throw new Error("This should not happen");
+        }
+        else {
+            this.props.navigator.push({
+                screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
+                title: "Details", // navigation bar title of the pushed screen (optional)
+                titleImage: require('../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
+                passProps: {activityId: saving.id, activityType: saving.type}, // Object that will be passed as props to the pushed screen (optional)
+                animated: true, // does the push have transition animation or does it happen immediately (optional)
+                animationType: 'slide-up', // 'fade' (for both) / 'slide-horizontal' (for android) does the push have different transition animation (optional)
+                backButtonTitle: undefined, // override the back button title (optional)
+                backButtonHidden: false, // hide the back button altogether (optional)
+                navigatorStyle: {}, // override the navigator style for the pushed screen (optional)
+                navigatorButtons: {} // override the nav buttons for the pushed screen (optional)
+            });
+        }
     }
 
     onFloatingButtonPressed() {

@@ -29,6 +29,7 @@ class LineupListScreen extends Component {
 
     props: {
         onLineupPressed: Function,
+        onSavingPressed: Function,
         onAddInLineupPressed: Function,
         canFilterOverItems: Function,
         data: Object
@@ -212,10 +213,12 @@ class LineupListScreen extends Component {
         }
         else {
             let saving = it;
+
+            let resource = saving.resource;
             result = (
                 <ItemCell
-                    item={saving.resource}
-                    onPressItem={() => {}}
+                    item={resource}
+                    onPressItem={()=>this.props.onSavingPressed(saving)}
                 />
             )
         }
