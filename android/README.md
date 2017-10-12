@@ -1,0 +1,1 @@
+keytool -genkeypair -alias goodsh-dev -keypass goodsh-dev -keystore goodsh-dev.keystore -storepass goodsh-dev -dname "CN=Goodshit Dev,O=Goodshit,C=FR” -validity 9999
