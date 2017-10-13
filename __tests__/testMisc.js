@@ -1,4 +1,5 @@
 import * as Time from "../src/utils/TimeUtils"
+import * as Api from "../src/utils/Api";
 
 test('testing times', () => {
 
@@ -15,5 +16,25 @@ test('testing times', () => {
     ).toBe("4 minutes ago");
 
 });
+
+
+test('testing api query', () => {
+
+    let call = new Api.Call()
+        .withRoute("lists")
+        .withMethod('GET')
+    call.addQuery({fun: "fact"});
+
+    let checkQuery = (expected) => {
+        let url: String = call.buildUrl();
+        let query = url.substr(url.indexOf("?") + 1);
+        expect(query).toBe(expected);
+    };
+
+    checkQuery("fun=fact");
+    call.addQuery({john: "doe"});
+    checkQuery("fun=fact&john=doe");
+});
+
 
 

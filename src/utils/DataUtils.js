@@ -1,4 +1,5 @@
 import build from 'redux-object'
+import type * as types from "../types";
 
 
 //ask backend to sanitize types
@@ -45,3 +46,12 @@ export function buildNonNullData(store, type, id: string) {
     if (!result) throw new Error(`resource not found for type=${type} id=${id}`);
     return result;
 }
+
+export function assertUnique(data: Array) {
+    let ids = [];
+    data && data.forEach((d) => {
+        if (ids.indexOf(d.id)>=0) throw new Error(`id already in this array: ${d.id}`);
+        ids.push(d.id);
+    });
+}
+

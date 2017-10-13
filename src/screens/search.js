@@ -14,6 +14,7 @@ import {SearchBar} from 'react-native-elements'
 import * as UIStyles from "../screens/UIStyles"
 import Feed from "./components/feed";
 import {MainBackground} from "./UIComponents";
+import ApiAction from "../utils/ApiAction";
 
 
 type SearchCategory = "consumer_goods" | "places_and_people" | "musics" | "movies";
@@ -284,8 +285,8 @@ class SearchPage extends Component {
 
 
 const actiontypes = (() => {
-    const SEARCH = new Api.ApiAction("search");
-    const SEARCH_MORE = new Api.ApiAction("search_more");
+    const SEARCH = new ApiAction("search");
+    const SEARCH_MORE = new ApiAction("search_more");
 
     return {SEARCH, SEARCH_MORE};
 })();
@@ -300,7 +301,7 @@ const actions = (() => {
             let call = new Api.Call()
                 .withMethod('GET')
                 .withRoute(`search/${category}`)
-                .withQuery({'search[term]': token});
+                .addQuery({'search[term]': token});
 
             return call.disptachForAction2(actiontypes.SEARCH, {
                 actionName: composeSearchActionName(category, token),

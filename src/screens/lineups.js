@@ -2,9 +2,16 @@
 
 import React, {Component} from 'react';
 import {
-    StyleSheet, TextInput, Image,
-    View, Text, ActivityIndicator,
-    FlatList, RefreshControl, TouchableHighlight} from 'react-native';
+    ActivityIndicator,
+    FlatList,
+    Image,
+    RefreshControl,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableHighlight,
+    View
+} from 'react-native';
 import Modal from 'react-native-modal'
 
 import {connect} from "react-redux";
@@ -15,15 +22,16 @@ import i18n from '../i18n/i18n'
 import * as UI from "../screens/UIStyles";
 import Button from 'apsl-react-native-button'
 import {TP_MARGINS} from "./UIStyles";
-import { SearchBar } from 'react-native-elements'
+import {SearchBar} from 'react-native-elements'
 import build from 'redux-object'
 import Fuse from 'fuse.js'
 import type * as types from "../types";
 import ItemCell from "./components/ItemCell";
 import Feed from "./components/feed";
 import Swipeout from "react-native-swipeout";
-import CurrentUser from  "../CurrentUser"
+import CurrentUser from "../CurrentUser"
 import {actions as savingsActions} from "./savings"
+import ApiAction from "../utils/ApiAction";
 
 class LineupListScreen extends Component {
 
@@ -49,35 +57,6 @@ class LineupListScreen extends Component {
             isLoading: false,
             isLoadingMore: false,
         }
-    }
-
-    componentDidMount() {
-        this.load();
-    }
-
-    load() {
-        if (this.state.isLoading) return;
-        this.setState({isLoading: true});
-        this.props
-            .dispatch(actions.loadLineups())
-            .then(() => {
-                this.setState({isLoading: false});
-            });
-    }
-
-    loadMore() {
-        if (this.state.isLoadingMore) return;
-        if (!this.props.lineupList.links) return;
-
-        let nextUrl = this.props.lineupList.links.next;
-        console.log("Next url:" + nextUrl);
-
-        this.setState({isLoadingMore: true});
-        //data.meta;
-        this.props.dispatch(actions.loadMoreLineups(nextUrl))
-            .then(() => {
-                this.setState({isLoadingMore: false});
-            });
     }
 
     render() {
@@ -235,7 +214,7 @@ class LineupListScreen extends Component {
         // return result;
         return (
             <Swipeout right={swipeBtns}
-                      autoClose='true'
+                      autoClose={true}
                       backgroundColor= 'transparent'
                       disabled={disabled}>
                 {result}
@@ -300,15 +279,6 @@ class LineupListScreen extends Component {
             .then(()=> this.setModalVisible(false)).then(()=> this.setState({isCreatingLineup: false}));
     }
 
-    onEndReached() {
-        if (this.props.lineupList.hasMore) {
-            this.loadMore();
-        }
-        else {
-            console.info("end of feed")
-        }
-
-    }
 }
 
 const styles = StyleSheet.create({
@@ -331,10 +301,10 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const actiontypes = (() => {
-    const FETCH_LINEUPS = new Api.ApiAction("fetch_lineups");
-    const FETCH_MORE_LINEUPS = new Api.ApiAction("fetch_more_lineups");
-    const CREATE_LINEUP = new Api.ApiAction("create_lineup");
-    const DELETE_LINEUP = new Api.ApiAction("delete_lineup");
+    const FETCH_LINEUPS = new ApiAction("fetch_lineups");
+    const FETCH_MORE_LINEUPS = new ApiAction("fetch_more_lineups");
+    const CREATE_LINEUP = new ApiAction("create_lineup");
+    const DELETE_LINEUP = new ApiAction("delete_lineup");
 
     return {FETCH_LINEUPS, FETCH_MORE_LINEUPS, CREATE_LINEUP, DELETE_LINEUP};
 })();
@@ -342,21 +312,24 @@ const actiontypes = (() => {
 
 const actions = (() => {
     return {
-        loadLineups: () => {
+        loadLineups: ({afterId} ?) => {
             let call = new Api.Call().withMethod('GET')
                 .withRoute("lists")
-                .withQuery({
+                .addQuery({
                     page: 1,
                     per_page: 10,
                     include: "creator"
                 });
 
+            if (afterId) call.addQuery({id_gt: afterId});
+
+
             return call.disptachForAction2(actiontypes.FETCH_LINEUPS);
         },
 
-        loadMoreLineups:(nextUrl:string) => {
+        loadMoreLineups:(aferId:string) => {
             let call = new Api.Call.parse(nextUrl).withMethod('GET')
-                .withQuery({
+                .addQuery({
                     page: 1,
                     per_page: 10,
                     include: "creator"

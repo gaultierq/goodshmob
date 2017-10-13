@@ -11,6 +11,7 @@ import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
 import {isUnique} from "../utils/ArrayUtil";
 import Feed from "./components/feed"
+import ApiAction from "../utils/ApiAction";
 
 type FeedState = {
     isFetchingFirst: boolean,
@@ -103,8 +104,8 @@ class NetworkScreen extends Component {
                     <Feed
                         data={activities}
                         renderItem={this.renderItem.bind(this)}
-                        fetchAction={actions.loadLineups}
-                        fetchMoreAction={actions.loadMoreLineups}
+                        fetchAction={actions.fetchActivities}
+                        fetchMoreAction={actions.fetchMoreActivities}
                     />
                 </View>
 
@@ -141,8 +142,8 @@ const mapStateToProps = (state, ownProps) => ({
 
 
 const actiontypes = (() => {
-    const FETCH_ACTIVITIES = new Api.ApiAction("home/fetch_activities");
-    const FETCH_MORE_ACTIVITIES = new Api.ApiAction("home/fetch_more_activities");
+    const FETCH_ACTIVITIES = new ApiAction("home/fetch_activities");
+    const FETCH_MORE_ACTIVITIES = new ApiAction("home/fetch_more_activities");
 
     return {FETCH_ACTIVITIES, FETCH_MORE_ACTIVITIES};
 })();
@@ -150,17 +151,17 @@ const actiontypes = (() => {
 
 const actions = (() => {
     return {
-        loadLineups: () => {
+        fetchActivities: () => {
             let call = new Api.Call().withMethod('GET')
                 .withRoute("activities")
-                .withQuery({include: "user,resource,target"});
+                .addQuery({include: "user,resource,target"});
 
             return call.disptachForAction2(actiontypes.FETCH_ACTIVITIES);
         },
 
-        loadMoreLineups:(nextUrl:string) => {
+        fetchMoreActivities:(nextUrl:string) => {
             let call = new Api.Call.parse(nextUrl).withMethod('GET')
-                .withQuery({include: "user,resource,target"});
+                .addQuery({include: "user,resource,target"});
 
             return call.disptachForAction2(actiontypes.FETCH_MORE_ACTIVITIES);
         }

@@ -14,6 +14,7 @@ import * as types from "../types"
 import Snackbar from "react-native-snackbar"
 import i18n from '../i18n/i18n'
 import * as UIStyles from "./UIStyles";
+import ApiAction from "../utils/ApiAction";
 
 class HomeScreen extends Component {
 
@@ -211,7 +212,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const actiontypes = (() => {
 
-    const SAVE_ITEM = new Api.ApiAction("save_item");
+    const SAVE_ITEM = new ApiAction("save_item");
     return {SAVE_ITEM};
 })();
 
@@ -233,7 +234,7 @@ const actions = (() => {
                 .withMethod('POST')
                 .withRoute(`items/${itemId}/savings`)
                 .withBody(body)
-                .withQuery({'include': '*.*'});
+                .addQuery({'include': '*.*'});
 
             return call.disptachForAction2(actiontypes.SAVE_ITEM);
         },

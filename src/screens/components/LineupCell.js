@@ -4,6 +4,7 @@ import React from 'react';
 import {View, Text, Image, TouchableHighlight, FlatList} from 'react-native';
 import * as Model from "../../models/index"
 import * as UI from "../UIStyles";
+import {assertUnique} from "../../utils/DataUtils";
 
 export default class LineupCell extends React.Component {
 
@@ -17,6 +18,9 @@ export default class LineupCell extends React.Component {
         let savings: Model.Saving[] = lineup.savings;
 
         let cardMargin = 12;
+
+
+        assertUnique(savings);
 
         return (
             <View style={{}}>

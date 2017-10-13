@@ -4,7 +4,9 @@ import URL from "url-parse"
 import qs from "querystringify"
 import * as Util from "./ModelUtils";
 import normalize from 'json-api-normalizer';
+//hack for tests. FIXME: remove circular dep
 import {logout} from "../auth/actions";
+import ApiAction from "./ApiAction";
 
 
 export const API_DATA_REQUEST = 'API_DATA_REQUEST';
@@ -26,6 +28,7 @@ class Api {
     }
 
     headers() {
+        if (!this.store) return null; //tests
         let state = this.store.getState();
         let auth = state.auth;
 
@@ -74,10 +77,11 @@ export class Call {
         return this;
     }
 
-    withQuery(query: any) {
-        let q = qs.parse(this.url.query);
-        let newVar = Object.assign({}, q || {}, query);
-        this.url.set('query', newVar);
+    addQuery(query: any) {
+        let currentQuery = this.url.query;
+        let q = currentQuery;//qs.parse(currentQuery);
+        let newQuery = Object.assign({}, q || {}, query);
+        this.url.set('query', newQuery);
         return this;
     }
 
@@ -90,6 +94,14 @@ export class Call {
         let result = new Call();
         result.url = new URL(url);
         return result;
+    }
+
+    toString() {
+        return "call:" + url.toString();
+    }
+
+    buildUrl() {
+        return this.url.toString();
     }
 
     disptachForAction(apiAction: ApiAction, options?: any) {
@@ -167,45 +179,6 @@ export function init(store) {
     instance = new Api(store);
 }
 
-
-export function composeName(actionName: string, apiType: string): string {
-    return `${actionName}_${apiType}`;
-}
-
-export class ApiAction {
-
-    actionName: string;
-
-    constructor(actionName: string) {
-        this.actionName = actionName;
-
-    }
-
-    success() {
-        return this.forType("success");
-    }
-
-    request() {
-        return this.forType("request");
-    }
-
-    failure() {
-        return this.forType("failure");
-    }
-
-    forType(apiType: string) {
-        return composeName(this.actionName, apiType);
-    }
-
-    forId(id: string) {
-        return `${this.name()}[${id}]`;
-    }
-
-    name() {
-        return this.actionName;
-    }
-}
-
 export function initialListState() {
     return {
         list: [],
@@ -247,7 +220,6 @@ export const reduceList = function (state, action, desc) {
     }
     return state;
 };
-
 
 
 //1. edit store.request : .isLoading, .isLastSuccess, .isLastFailure, .isLastFinished

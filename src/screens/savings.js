@@ -13,6 +13,7 @@ import Swipeout from 'react-native-swipeout';
 import type * as types from "../types";
 import {buildNonNullData} from "../utils/DataUtils";
 import CurrentUser from  "../CurrentUser"
+import ApiAction from "../utils/ApiAction";
 
 class SavingsScreen extends Component {
 
@@ -62,7 +63,7 @@ class SavingsScreen extends Component {
 
         return (
             <Swipeout right={swipeBtns}
-                      autoClose='true'
+                      autoClose={true}
                       backgroundColor= 'transparent'
                       disabled={disabled}
             >
@@ -113,9 +114,9 @@ const mapStateToProps = (state, ownProps) => ({
 
 const actionTypes = (() => {
 
-    const LOAD_SAVINGS = new Api.ApiAction("load_savings");
-    const LOAD_MORE_SAVINGS = new Api.ApiAction("load_more_savings");
-    const DELETE_SAVING = new Api.ApiAction("delete_saving");
+    const LOAD_SAVINGS = new ApiAction("load_savings");
+    const LOAD_MORE_SAVINGS = new ApiAction("load_more_savings");
+    const DELETE_SAVING = new ApiAction("delete_saving");
 
     return {LOAD_SAVINGS, LOAD_MORE_SAVINGS, DELETE_SAVING};
 })();
@@ -127,7 +128,7 @@ const actions = (() => {
         loadSavings: (lineupId: string) => {
             let call = new Api.Call().withMethod('GET')
                 .withRoute(`lists/${lineupId}/savings`)
-                .withQuery({
+                .addQuery({
                     page: 1,
                     per_page: 10,
                     include: "*.*"
@@ -137,7 +138,7 @@ const actions = (() => {
         },
         loadMoreSavings: (nextUrl:string) => {
             let call = new Api.Call.parse(nextUrl).withMethod('GET')
-                .withQuery({
+                .addQuery({
                     page: 1,
                     per_page: 10,
                     include: "creator"

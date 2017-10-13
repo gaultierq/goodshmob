@@ -9,6 +9,7 @@ import build from 'redux-object'
 import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
 import Feed from "./components/feed"
+import ApiAction from "../utils/ApiAction";
 
 
 class CommunityScreen extends Component {
@@ -67,8 +68,8 @@ const mapStateToProps = (state, ownProps) => ({
 
 const actionTypes = (() => {
 
-    const LOAD_FRIENDS = new Api.ApiAction("load_friends");
-    const LOAD_MORE_FRIENDS = new Api.ApiAction("load_more_friends");
+    const LOAD_FRIENDS = new ApiAction("load_friends");
+    const LOAD_MORE_FRIENDS = new ApiAction("load_more_friends");
 
     return {LOAD_SAVINGS: LOAD_FRIENDS, LOAD_MORE_FRIENDS};
 })();
@@ -81,7 +82,7 @@ const actions = (() => {
 
             let call = new Api.Call().withMethod('GET')
                 .withRoute(`users/${userId}/friends`)
-                .withQuery({
+                .addQuery({
                     page: 1,
                     per_page: 10,
                     include: "creator"
@@ -91,7 +92,7 @@ const actions = (() => {
         },
         loadMoreSavings: (nextUrl:string) => {
             let call = new Api.Call.parse(nextUrl).withMethod('GET')
-                .withQuery({
+                .addQuery({
                     page: 1,
                     per_page: 10,
                     include: "creator"

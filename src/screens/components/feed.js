@@ -3,6 +3,7 @@
 import React, {Component} from 'react';
 import {FlatList, RefreshControl, ActivityIndicator, ReactElement} from 'react-native';
 import {connect} from "react-redux";
+import {assertUnique} from "../../utils/DataUtils";
 
 
 @connect()
@@ -31,34 +32,37 @@ export default class Feed<T> extends Component  {
     }
 
     componentDidMount() {
-        this.fetchFirst();
+        this.fetchIt();
     }
 
-    fetchFirst() {
+    fetchIt(afterId?) {
         return new Promise((resolve) => {
             if (this.state.isFetchingFirst) {
                 resolve();
             }
             else {
                 this.setState({isFetchingFirst: true});
-                this.props.dispatch(this.props.fetchAction()).then(()=>this.setState({isFetchingFirst: false})).then(()=>resolve());
+                this.props
+                    .dispatch(this.props.fetchAction({afterId}))
+                    .then(()=>this.setState({isFetchingFirst: false}))
+                    .then(()=>resolve());
             }
         });
-
-
     }
 
     fetchMore() {
-        //TODO
+        let c = this.props.data;
+        c && this.fetchIt(c[c.length-1].id);
     }
 
     onRefresh() {
         if (this.state.isPulling) return;
         this.setState({isPulling: true});
-        this.fetchFirst().then(()=>this.setState({isPulling: false}));
+        this.fetchIt().then(()=>this.setState({isPulling: false}));
     }
 
     render() {
+        assertUnique(this.props.data);
         return (
             <FlatList
                 data={this.props.data}
@@ -89,15 +93,17 @@ export default class Feed<T> extends Component  {
             />)
     }
 
-
+    hasMore() {
+        return true;
+    }
 
     onEndReached() {
-        // if (this.props.network.hasMore) {
-        //     this.loadMore();
-        // }
-        // else {
-        console.info("end of feed")
-        // }
+        if (this.hasMore()) {
+            this.fetchMore();
+        }
+        else {
+            console.info("end of feed")
+        }
     }
 
 }
