@@ -106,7 +106,7 @@ class ActivityCell extends React.Component {
                     <View style={{width: "100%", height: StyleSheet.hairlineWidth, backgroundColor: UI.Colors.grey1}}/>
 
 
-                    <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
+                    <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 10, paddingRight: 10}}>
 
                         {this.renderButton(require('../../img/comment.png'), i18n.t("activity_item.buttons.comment"))}
                         {this.renderButton(require('../../img/send.png'), i18n.t("activity_item.buttons.share"))}
@@ -158,10 +158,10 @@ class ActivityCell extends React.Component {
             <TouchableHighlight
                 onPress={onActivityPressed}
                 style={{
-                alignSelf: 'center',
-                height: 165,
-                width: "100%",
-            }}>
+                    alignSelf: 'center',
+                    height: 165,
+                    width: "100%",
+                }}>
                 <Image
                     source={{uri: image}}
                     resizeMode='contain'
@@ -175,34 +175,34 @@ class ActivityCell extends React.Component {
             <TouchableHighlight
                 onPress={this.onGoodshPressed.bind(this)}
                 style={
-                {
-                    backgroundColor : "white",
-                    width: 60,
-                    height: 30,
-                    position: 'absolute',
-                    bottom: 0,
-                    borderRadius: 5,
-                    padding: 2.5,
+                    {
+                        backgroundColor : "white",
+                        width: 60,
+                        height: 30,
+                        position: 'absolute',
+                        bottom: 0,
+                        borderRadius: 5,
+                        padding: 2.5,
 
-                }
-            }>
+                    }
+                }>
 
                 <View
                     style={
-                    {
-                        width: "100%",
-                        height: "100%",
-                        borderRadius: 5,
-                        backgroundColor : goodshButtonColor,
-                        flex: 1,
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        borderWidth: 0.5,
-                        borderColor: '#d6d7da',
-                        alignItems: 'center',
-                        padding: 2.5,
-                    }
-                }>
+                        {
+                            width: "100%",
+                            height: "100%",
+                            borderRadius: 5,
+                            backgroundColor : goodshButtonColor,
+                            flex: 1,
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            borderWidth: 0.5,
+                            borderColor: '#d6d7da',
+                            alignItems: 'center',
+                            padding: 2.5,
+                        }
+                    }>
                     <Image source={require('../../img/mini-g-number.png')} resizeMode="contain"
                            style={{
                                width: 20,
@@ -219,12 +219,15 @@ class ActivityCell extends React.Component {
 
 
     renderButton(img, text) {
-        return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', padding: 6}}>
-            <TouchableOpacity>
-                <Image source={img} style={{width: 16, height: 16, margin: 8, resizeMode: 'contain'}}/>
-                <Text style={{fontFamily: 'Chivo', textAlign: 'center', fontSize: 10}}>{text}</Text>
+        return (<TouchableOpacity>
+                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', padding: 6}}>
+
+                    <Image source={img} style={{width: 16, height: 16, margin: 8, resizeMode: 'contain'}}/>
+                    <Text style={{fontFamily: 'Chivo', textAlign: 'center', fontSize: 10}}>{text}</Text>
+
+                </View>
             </TouchableOpacity>
-        </View>;
+        );
     }
 
 

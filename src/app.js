@@ -56,7 +56,7 @@ persistStore(store,
     {
         storage: AsyncStorage,
         transforms: [createTransform(immutableTransform.in, immutableTransform.out, immutableTransform.config)],
-        blacklist: ['search']
+        whitelist: ['auth']
     },
     () => {
         console.log("persist store complete");

@@ -4,6 +4,13 @@ import React, {Component} from 'react';
 import {FlatList, RefreshControl, ActivityIndicator, ReactElement} from 'react-native';
 import {connect} from "react-redux";
 import {assertUnique} from "../../utils/DataUtils";
+import ApiAction from "../../utils/ApiAction";
+import * as Api from "../../utils/Api";
+
+export type FeedSource = {
+    callFactory: ()=>Api.Call,
+    action: ApiAction
+}
 
 
 @connect()
@@ -12,8 +19,8 @@ export default class Feed<T> extends Component  {
     props: {
         data: Array<T>,
         renderItem: Function,
-        fetchAction: Function,
-        fetchMoreAction: Function,
+        fetchSrc: FeedSource,
+        hasMore: boolean,
         ListHeaderComponent?: ReactElement
     };
 
@@ -42,8 +49,12 @@ export default class Feed<T> extends Component  {
             }
             else {
                 this.setState({isFetchingFirst: true});
+
+                let call = this.props.fetchSrc.callFactory();
+                if (afterId) call.addQuery({id_gt: afterId});
+
                 this.props
-                    .dispatch(this.props.fetchAction({afterId}))
+                    .dispatch(call.disptachForAction2(this.props.fetchSrc.action))
                     .then(()=>this.setState({isFetchingFirst: false}))
                     .then(()=>resolve());
             }
@@ -94,7 +105,7 @@ export default class Feed<T> extends Component  {
     }
 
     hasMore() {
-        return true;
+        return !!this.props.hasMore;
     }
 
     onEndReached() {
@@ -102,8 +113,9 @@ export default class Feed<T> extends Component  {
             this.fetchMore();
         }
         else {
-            console.info("end of feed")
+            console.info("== end of feed ==")
         }
     }
-
 }
+
+

@@ -36,7 +36,11 @@ class SavingsScreen extends Component {
                         data={savingList}
                         renderItem={this.renderItem.bind(this)}
                         fetchAction={()=>actions.loadSavings(this.props.lineupId)}
-                        fetchMoreAction={actions.loadMoreSavings}
+                        fetchSrc={{
+                            callFactory:()=>actions.loadSavings(this.props.lineupId),
+                            action:actiontypes.LOAD_SAVINGS
+                        }}
+                        hasMore={!this.props.lineupList.hasNoMore}
                     />
 
                 </View>
@@ -115,10 +119,9 @@ const mapStateToProps = (state, ownProps) => ({
 const actionTypes = (() => {
 
     const LOAD_SAVINGS = new ApiAction("load_savings");
-    const LOAD_MORE_SAVINGS = new ApiAction("load_more_savings");
     const DELETE_SAVING = new ApiAction("delete_saving");
 
-    return {LOAD_SAVINGS, LOAD_MORE_SAVINGS, DELETE_SAVING};
+    return {LOAD_SAVINGS, DELETE_SAVING};
 })();
 
 
@@ -126,7 +129,7 @@ const actions = (() => {
     return {
 
         loadSavings: (lineupId: string) => {
-            let call = new Api.Call().withMethod('GET')
+            return new Api.Call().withMethod('GET')
                 .withRoute(`lists/${lineupId}/savings`)
                 .addQuery({
                     page: 1,
@@ -134,17 +137,6 @@ const actions = (() => {
                     include: "*.*"
                 });
 
-            return call.disptachForAction(actionTypes.LOAD_SAVINGS);
-        },
-        loadMoreSavings: (nextUrl:string) => {
-            let call = new Api.Call.parse(nextUrl).withMethod('GET')
-                .addQuery({
-                    page: 1,
-                    per_page: 10,
-                    include: "creator"
-                });
-
-            return call.disptachForAction(actionTypes.LOAD_MORE_SAVINGS);
         },
         deleteSaving: (saving:types.Saving) => {
             let call = new Api.Call()

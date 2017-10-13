@@ -30,8 +30,11 @@ class CommunityScreen extends Component {
                     <Feed
                         data={friends}
                         renderItem={this.renderItem.bind(this)}
-                        fetchAction={() => actions.loadSavings(this.props.auth.currentUserId)}
-                        fetchMoreAction={actions.loadMoreSavings}
+                        fetchSrc={{
+                            callFactory: () => actions.fetchFriendsCall(this.props.auth.currentUserId),
+                            action: actionTypes.LOAD_FRIENDS
+                        }}
+                        hasMore={!this.props.friend.hasNoMore}
                     />
                 </View>
             </MainBackground>
@@ -69,37 +72,23 @@ const mapStateToProps = (state, ownProps) => ({
 const actionTypes = (() => {
 
     const LOAD_FRIENDS = new ApiAction("load_friends");
-    const LOAD_MORE_FRIENDS = new ApiAction("load_more_friends");
 
-    return {LOAD_SAVINGS: LOAD_FRIENDS, LOAD_MORE_FRIENDS};
+    return {LOAD_FRIENDS};
 })();
 
 
 const actions = (() => {
     return {
+        fetchFriendsCall: (userId: string) => {
 
-        loadSavings: (userId: string) => {
-
-            let call = new Api.Call().withMethod('GET')
+            return new Api.Call().withMethod('GET')
                 .withRoute(`users/${userId}/friends`)
                 .addQuery({
                     page: 1,
                     per_page: 10,
                     include: "creator"
                 });
-
-            return call.disptachForAction(actionTypes.LOAD_SAVINGS);
         },
-        loadMoreSavings: (nextUrl:string) => {
-            let call = new Api.Call.parse(nextUrl).withMethod('GET')
-                .addQuery({
-                    page: 1,
-                    per_page: 10,
-                    include: "creator"
-                });
-
-            return call.disptachForAction(actionTypes.LOAD_MORE_FRIENDS);
-        }
     };
 })();
 
@@ -107,8 +96,7 @@ const reducer = (() => {
     const initialState = Immutable(Api.initialListState());
 
     return (state = initialState, action = {}) => {
-        let desc = {fetchFirst: actionTypes.LOAD_SAVINGS, fetchMore: actionTypes.LOAD_MORE_FRIENDS};
-        return Api.reduceList(state, action, desc);
+        return Api.reduceList(state, action, {fetchFirst: actionTypes.LOAD_FRIENDS});
     }
 })();
 

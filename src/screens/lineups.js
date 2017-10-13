@@ -32,6 +32,7 @@ import Swipeout from "react-native-swipeout";
 import CurrentUser from "../CurrentUser"
 import {actions as savingsActions} from "./savings"
 import ApiAction from "../utils/ApiAction";
+import type {FeedSource} from "./components/feed";
 
 class LineupListScreen extends Component {
 
@@ -113,8 +114,11 @@ class LineupListScreen extends Component {
                 <Feed
                     data={data}
                     renderItem={this.renderItem.bind(this)}
-                    fetchAction={actions.loadLineups}
-                    fetchMoreAction={actions.loadMoreLineups}
+                    fetchSrc={{
+                        callFactory: actions.fetchCall,
+                        action: actiontypes.FETCH_LINEUPS
+                    }}
+                    hasMore={!this.props.lineupList.hasNoMore}
                     ListHeaderComponent={this.renderHeader()}
                 />
                 {this.renderModal()}
@@ -162,15 +166,6 @@ class LineupListScreen extends Component {
             ;
     }
 
-
-    isLoadingMore() {
-        return this.state.isLoadingMore;
-    }
-
-    isLoading() {
-        return this.state.isLoading;
-    }
-
     //render a lineup row
     renderItem(item) {
         let it = item.item;
@@ -179,8 +174,9 @@ class LineupListScreen extends Component {
         let isLineup = it.type === 'lists';
 
         if (isLineup) {
+            let handler = this.props.onLineupPressed ? () => this.props.onLineupPressed(it) : null;
             result = (
-                <TouchableHighlight onPress={() => this.props.onLineupPressed(it)}>
+                <TouchableHighlight onPress={handler}>
                     <View>
                         <LineupCell
                             lineup={it}
@@ -311,15 +307,20 @@ const actiontypes = (() => {
 
 
 const actions = (() => {
+
+
+
     return {
+        fetchCall: () => new Api.Call()
+            .withMethod('GET')
+            .withRoute("lists")
+            .addQuery({
+                page: 1,
+                per_page: 10,
+                include: "creator"
+            }),
         loadLineups: ({afterId} ?) => {
-            let call = new Api.Call().withMethod('GET')
-                .withRoute("lists")
-                .addQuery({
-                    page: 1,
-                    per_page: 10,
-                    include: "creator"
-                });
+            let call = fetchCall();
 
             if (afterId) call.addQuery({id_gt: afterId});
 

@@ -187,19 +187,16 @@ export function initialListState() {
     };
 }
 
-export const reduceList = function (state, action, desc) {
+export const reduceList = (state, action, desc) => {
     switch (action.type) {
         case desc.fetchFirst.success():
-        case desc.fetchMore.success():
 
             let currentList = state.list.asMutable();
             let links = {};
 
             let payload = action.payload;
 
-            if (currentList.length === 0 || action.type === desc.fetchMore.success()) {
-                links.next = payload.links ? payload.links.next : null;
-            }
+            let hasNoMore = payload.data.length === 0;
 
             let newList = payload.data.map((f) => {
                 let {id, type} = f;
@@ -213,8 +210,9 @@ export const reduceList = function (state, action, desc) {
 
             state = state.merge({
                 list: currentList,
-                links,
-                hasMore: newList.length > 0 && links && links.next
+                //links,
+                hasMore: newList.length > 0 && links && !!links.next,
+                hasNoMore
             }, {deep: true});
 
     }
