@@ -32,7 +32,6 @@ import Swipeout from "react-native-swipeout";
 import CurrentUser from "../CurrentUser"
 import {actions as savingsActions} from "./savings"
 import ApiAction from "../utils/ApiAction";
-import type {FeedSource} from "./components/feed";
 
 class LineupListScreen extends Component {
 
@@ -84,6 +83,8 @@ class LineupListScreen extends Component {
                     clearIcon={{color: '#86939e'}}
                     containerStyle={styles.searchContainer}
                     inputStyle={styles.searchInput}
+                    autoCapitalize='none'
+                    autoCorrect='false'
                 />
                 <Feed
                     data={data}
@@ -102,6 +103,7 @@ class LineupListScreen extends Component {
     }
 
     applyFilter(lineups) {
+        if (!lineups) return lineups;
         let searchIn = [];
 
         lineups.forEach((lu: types.List) => {
@@ -288,7 +290,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     searchInput: {
-        backgroundColor: 'white',
+        backgroundColor: 'white'
+
     },
 });
 
