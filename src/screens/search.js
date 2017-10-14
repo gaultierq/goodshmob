@@ -6,13 +6,12 @@ import {connect} from "react-redux";
 import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
 import {combineReducers} from "redux";
-import {SceneMap, TabBar, TabViewAnimated} from 'react-native-tab-view';
+import {TabBar, TabViewAnimated} from 'react-native-tab-view';
 import ItemCell from "./components/ItemCell";
 import {buildNonNullData} from "../utils/DataUtils";
 import i18n from '../i18n/i18n'
 import {SearchBar} from 'react-native-elements'
 import * as UIStyles from "../screens/UIStyles"
-import Feed from "./components/feed";
 import {MainBackground} from "./UIComponents";
 import ApiAction from "../utils/ApiAction";
 
@@ -20,13 +19,12 @@ import ApiAction from "../utils/ApiAction";
 type SearchCategory = "consumer_goods" | "places_and_people" | "musics" | "movies";
 type SearchToken = string;
 
-const SEARCH_CATEGORIES : SearchCategory = [ "consumer_goods", "places_and_people", "musics", "movies"]
+const SEARCH_CATEGORIES : SearchCategory = [ "consumer_goods", "places_and_people", "musics", "movies"];
 
 type SearchState = {
     index: number,
     input: SearchToken,
     routes: Array<string>,
-    loaded: boolean,
     pendingSearch: number,
     isSearching: { [key: SearchCategory]: Array<SearchToken> }
 }
@@ -36,12 +34,6 @@ class SearchScreen extends Component {
 
 
     static navigatorButtons = {
-        // leftButtons: [
-        //     {
-        //         icon: require('../img/drawer_community.png'), // for icon button, provide the local image asset name
-        //         id: 'community' // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
-        //     }
-        // ],
         rightButtons: [
             {
                 //icon: require('../img/drawer_line_up.png'), // for icon button, provide the local image asset name
@@ -51,6 +43,18 @@ class SearchScreen extends Component {
         ],
     };
 
+    props: {
+        onItemSelected: Function;
+        search: Function,
+        onCancel: Function
+    };
+
+    state : SearchState = {
+        index: 0,
+        input: '', //TODO : rename it to token
+        routes: SEARCH_CATEGORIES.map((c, i) => ({key: `${i}`, title: SearchScreen.getTitle(c)})),
+        isSearching: {},
+    };
 
     constructor(props) {
         super(props);
@@ -65,20 +69,6 @@ class SearchScreen extends Component {
         }
     }
 
-    props: {
-        onItemSelected: Function;
-        search: Function,
-        onCancel: Function
-    };
-
-    state : SearchState = {
-        index: 0,
-        input: '', //TODO : rename it to token
-        routes: SEARCH_CATEGORIES.map((c, i) => ({key: `${i}`, title: SearchScreen.getTitle(c)})),
-        loaded: false,
-        isSearching: {},
-    };
-
     _handleIndexChange = index => {
         this.setState({ index }, () => this.performSearch(true));
     };
@@ -89,10 +79,7 @@ class SearchScreen extends Component {
                                      tabStyle={styles.tab}
                                      labelStyle={styles.label}/>;
 
-    renderScene = SceneMap(
-        SEARCH_CATEGORIES.reduce((result, c, i) => Object.assign(result, this.renderCategory(i, c)), {}));
-
-    _renderScene = ({ route }) => { return this.renderSearchPage(SEARCH_CATEGORIES[route.key])}
+    _renderScene = ({ route }) => { return this.renderSearchPage(SEARCH_CATEGORIES[route.key])};
 
 
     static getTitle(cat: SearchCategory) {
@@ -104,22 +91,18 @@ class SearchScreen extends Component {
         return i18n.t('search_item_screen.placeholder.' + cat);
     }
 
-    renderCategory(i, c) {
-        let xml = this.renderSearchPage(c);
-        return {[i]: () => (xml)};
-    }
-
-    renderSearchPage(c: SearchCategory) {
-        let xml = <SearchPage
-            category={c}
-            isLoading={() => this.isSearching(c)}
-            onItemSelected={this.props.onItemSelected}
-        />;
-        return xml;
+    renderSearchPage(category: SearchCategory) {
+        return (
+            <SearchPage
+                category={category}
+                isLoading={() => this.isSearching(category)}
+                onItemSelected={this.props.onItemSelected}
+            />
+        );
     }
 
     isSearching(category: SearchCategory) {
-        return !!this.state.isSearching[category];
+        return (this.state.isSearching[category] || []).length > 0;
     }
 
     render() {
@@ -132,6 +115,8 @@ class SearchScreen extends Component {
                     clearIcon={{color: '#86939e'}}
                     containerStyle={styles.searchContainer}
                     inputStyle={styles.searchInput}
+                    autoCapitalize='none'
+                    autoCorrect='false'
                 />
                 <TabViewAnimated
                     style={styles.container}
@@ -238,22 +223,20 @@ const styles = StyleSheet.create({
 )
 class SearchPage extends Component {
 
-    propTypes: {
-        category: React.PropTypes.string,
-        isLoading: React.PropTypes.func;
-        onItemSelected: React.PropTypes.func;
+    props: {
+        category: string,
+        isLoading: () => boolean;
+        onItemSelected: Function;
     };
 
     render() {
         let search = this.props.search[this.props.category];
         let results = search.list ;
 
-        let isLoading = !!this.props.isLoading();
-
         return (
             <MainBackground>
-                {isLoading && <ActivityIndicator
-                    animating = {isLoading}
+                {this.props.isLoading() && <ActivityIndicator
+                    animating = {this.props.isLoading()}
                     size = "large"
                     style={styles.activityIndicator}
                 />}
@@ -265,6 +248,7 @@ class SearchPage extends Component {
                 />
             </MainBackground>
         );
+
     }
 
     renderItem(item) {
