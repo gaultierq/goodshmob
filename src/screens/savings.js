@@ -14,11 +14,13 @@ import type * as types from "../types";
 import {buildNonNullData} from "../utils/DataUtils";
 import CurrentUser from  "../CurrentUser"
 import ApiAction from "../utils/ApiAction";
+import type {Saving} from "../types";
 
 class SavingsScreen extends Component {
 
     props : {
-        lineupId: string
+        lineupId: string,
+        lineup:? types.List
     };
 
     componentWillMount() {
@@ -27,20 +29,18 @@ class SavingsScreen extends Component {
 
     render() {
 
-        let savingList = this.lineup.savings.map((s)=>s.resource);
-
         return (
             <MainBackground>
                 <View style={styles.container}>
                     <Feed
-                        data={savingList}
+                        data={this.lineup.savings}
                         renderItem={this.renderItem.bind(this)}
                         fetchAction={()=>actions.loadSavings(this.props.lineupId)}
                         fetchSrc={{
                             callFactory:()=>actions.loadSavings(this.props.lineupId),
-                            action:actiontypes.LOAD_SAVINGS
+                            action:actionTypes.LOAD_SAVINGS
                         }}
-                        hasMore={!this.props.lineupList.hasNoMore}
+                        hasMore={!this.props.savings.hasNoMore}
                     />
 
                 </View>
@@ -49,12 +49,12 @@ class SavingsScreen extends Component {
     }
 
     getLineup() {
-        return buildNonNullData(this.props.data, "lists", this.props.lineupId);
+        return this.props.lineup || buildNonNullData(this.props.data, "lists", this.props.lineupId);
     }
 
     renderItem(item) {
-        let it = item.item;
-        let saving = this.lineup.savings.filter((sav)=>sav.resource.id === it.id)[0];
+        let saving: Saving = item.item;
+        //let saving = this.lineup.savings.filter((sav)=>sav.resource.id === it.id)[0];
 
         let disabled = this.lineup.user.id !== CurrentUser.id;
 
@@ -73,7 +73,7 @@ class SavingsScreen extends Component {
             >
                 <ItemCell
                     onPressItem={() => this.navToSavingDetail(saving)}
-                    item={it}
+                    item={saving.resource}
                     navigator={this.props.navigator}
                 />
             </Swipeout>)

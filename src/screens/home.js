@@ -128,7 +128,8 @@ class HomeScreen extends Component {
                 title: "Lineup Details", // navigation bar title of the pushed screen (optional)
                 titleImage: require('../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
                 passProps: {
-                    lineupId: lineup.id
+                    lineupId: lineup.id,
+                    lineup
                 }, // Object that will be passed as props to the pushed screen (optional)
                 animated: true, // does the push have transition animation or does it happen immediately (optional)
                 animationType: 'slide-down', // 'fade' (for both) / 'slide-horizontal' (for android) does the push have different transition animation (optional)

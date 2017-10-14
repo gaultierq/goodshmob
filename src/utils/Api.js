@@ -273,6 +273,7 @@ let middleware = store => next => action => {
 
                 let errorAction = actionWith({ type: API_DATA_FAILURE, error: errMsg });
                 if (error.status === 401) {
+                    console.log("unauthorized user. loging out")
                     next(errorAction);
                     return next(logout())
                 }
