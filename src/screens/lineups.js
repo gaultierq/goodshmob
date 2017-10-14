@@ -69,40 +69,14 @@ class LineupListScreen extends Component {
         let data: Array<types.List|types.Item>;
 
         if (this.state.filter) {
-
-            let searchIn = [];
-
-            lineups.forEach((lu: types.List) => {
-                searchIn.push(lu);
-
-                if (this.props.canFilterOverItems()) {
-                    // searchIn = searchIn.concat(lu.savings.map((sa: types.Saving)=>sa.resource))
-                    searchIn = searchIn.concat(lu.savings)
-                }
-            });
-
-            let fuse = new Fuse(searchIn, {
-                keys: [{
-                    name: 'name',
-                    weight: 0.6
-                }, {
-                    name: 'resource.title',
-                    weight: 0.4
-                }],
-                // keys: ['name', 'title'],
-                sort: true,
-                threshold: 0.6
-            });
-
-            data = fuse.search(this.state.filter);
-
+            data = this.applyFilter(lineups);
         }
         else {
             data = lineups;
         }
 
         return (
-            <View style={{}}>
+            <View>
                 <SearchBar
                     lightTheme
                     onChangeText={this.onSearchInputChange.bind(this)}
@@ -120,10 +94,39 @@ class LineupListScreen extends Component {
                     }}
                     hasMore={!this.props.lineupList.hasNoMore}
                     ListHeaderComponent={this.renderHeader()}
+                    style={{marginBottom: 120}} //FIXME: this is a hack.
                 />
                 {this.renderModal()}
             </View>
         );
+    }
+
+    applyFilter(lineups) {
+        let searchIn = [];
+
+        lineups.forEach((lu: types.List) => {
+            searchIn.push(lu);
+
+            if (this.props.canFilterOverItems()) {
+                // searchIn = searchIn.concat(lu.savings.map((sa: types.Saving)=>sa.resource))
+                searchIn = searchIn.concat(lu.savings)
+            }
+        });
+
+        let fuse = new Fuse(searchIn, {
+            keys: [{
+                name: 'name',
+                weight: 0.6
+            }, {
+                name: 'resource.title',
+                weight: 0.4
+            }],
+            // keys: ['name', 'title'],
+            sort: true,
+            threshold: 0.6
+        });
+
+        return fuse.search(this.state.filter);
     }
 
     onSearchInputChange(input) {
@@ -283,7 +286,6 @@ const styles = StyleSheet.create({
     },
     searchContainer: {
         backgroundColor: 'white',
-        //marginTop: 40
     },
     searchInput: {
         backgroundColor: 'white',

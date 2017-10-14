@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {connect} from "react-redux";
 import {MainBackground} from "./UIComponents";
@@ -71,12 +71,16 @@ class HomeScreen extends Component {
 
         return (
             <MainBackground>
-                <LineupList
-                    onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
-                    onSavingPressed={(saving) => this.onSavingPressed(saving)}
-                    onAddInLineupPressed={(this.state.pendingItem) ? null : (lineup) => this.addInLineup(lineup)}
-                    canFilterOverItems={() => !this.state.pendingItem}
-                />
+                <View>
+                    <LineupList
+                        onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
+                        onSavingPressed={(saving) => this.onSavingPressed(saving)}
+                        onAddInLineupPressed={(this.state.pendingItem) ? null : (lineup) => this.addInLineup(lineup)}
+                        canFilterOverItems={() => !this.state.pendingItem}
+                    />
+
+                </View>
+
                 {this.displayFloatingButton() && <ActionButton
                     buttonColor="rgba(231,76,60,1)"
                     onPress={() => { this.onFloatingButtonPressed() }}

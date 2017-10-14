@@ -21,7 +21,8 @@ export default class Feed<T> extends Component  {
         renderItem: Function,
         fetchSrc: FeedSource,
         hasMore: boolean,
-        ListHeaderComponent?: ReactElement
+        ListHeaderComponent?: ReactElement,
+        style: any
     };
 
 
@@ -44,18 +45,22 @@ export default class Feed<T> extends Component  {
 
     fetchIt(afterId?) {
         return new Promise((resolve) => {
-            if (this.state.isFetchingFirst) {
+
+            let t = afterId ? 'isFetchingMore' : 'isFetchingFirst';
+
+            if (this.state[t]) {
                 resolve();
             }
             else {
-                this.setState({isFetchingFirst: true});
+                this.setState({[t]: true});
 
                 let call = this.props.fetchSrc.callFactory();
+
                 if (afterId) call.addQuery({id_after: afterId});
 
                 this.props
                     .dispatch(call.disptachForAction2(this.props.fetchSrc.action))
-                    .then(()=>this.setState({isFetchingFirst: false}))
+                    .then(()=>this.setState({[t]: false}))
                     .then(()=>resolve());
             }
         });
@@ -84,6 +89,7 @@ export default class Feed<T> extends Component  {
                 onEndReachedThreshold={0}
                 ListFooterComponent={this.renderFetchMoreLoader()}
                 ListHeaderComponent={this.props.ListHeaderComponent}
+                style={this.props.style}
             />
         );
     }
