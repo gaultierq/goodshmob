@@ -51,7 +51,7 @@ export default class Feed<T> extends Component  {
                 this.setState({isFetchingFirst: true});
 
                 let call = this.props.fetchSrc.callFactory();
-                if (afterId) call.addQuery({id_gt: afterId});
+                if (afterId) call.addQuery({id_after: afterId});
 
                 this.props
                     .dispatch(call.disptachForAction2(this.props.fetchSrc.action))
