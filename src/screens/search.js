@@ -116,7 +116,7 @@ class SearchScreen extends Component {
                     containerStyle={styles.searchContainer}
                     inputStyle={styles.searchInput}
                     autoCapitalize='none'
-                    autoCorrect='false'
+                    autoCorrect={false}
                 />
                 <TabViewAnimated
                     style={styles.container}
