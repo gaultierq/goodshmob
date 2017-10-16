@@ -3,7 +3,7 @@ import type * as types from "../types";
 
 
 //ask backend to sanitize types
-export let sanitizeItemType = function (activityType) {
+export let sanitizeActivityType = function (activityType) {
     let type;
     switch (activityType.toLowerCase()) {
         case "post":
@@ -36,8 +36,8 @@ export function buildNonNullData(store, type, id: string) {
 
 
     if (!result) {
-        let sanitized = sanitizeItemType(type);
-        result = build(store, sanitized, id);
+        let sanitized = sanitizeActivityType(type);
+        result = build(store, sanitized, id, {includeType: true});
         if (result) {
             console.warn(`data sanitize success:${type} -> ${sanitized}`)
         }

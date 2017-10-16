@@ -35,7 +35,6 @@ class SavingsScreen extends Component {
                     <Feed
                         data={this.lineup.savings}
                         renderItem={this.renderItem.bind(this)}
-                        fetchAction={()=>actions.loadSavings(this.props.lineupId)}
                         fetchSrc={{
                             callFactory:()=>actions.loadSavings(this.props.lineupId),
                             action:actionTypes.LOAD_SAVINGS

@@ -42,7 +42,10 @@ export default {
             in: "in"
         },
         buttons:{
-            "comment":"DONNER SON AVIS",
+            "comment": {
+                zero: "DONNER SON AVIS",
+                other: "DONNER SON AVIS (%{count})"
+            },
             "share":"PARTAGER",
             "save":"ENREGISTRER",
             "buy":"ACHETER",

@@ -1,19 +1,20 @@
 // @flow
 import * as types from "./actionTypes"
 import * as Api from "../utils/Api";
-import {sanitizeItemType} from "../utils/DataUtils";
+import {sanitizeActivityType} from "../utils/DataUtils";
 
 
 let fixtures = require("../fixtures/activities_fixtures2.json");
 
 
-export function fetchActivity(activityId, activityType) {
-    let type = sanitizeItemType(activityType);
+export function fetchActivityAndRelated(activityId, activityType) {
+    let type = sanitizeActivityType(activityType);
 
     return new Api.Call()
         .withMethod('GET')
         .withRoute(`${type}/${activityId}`)
-        .disptachForAction(types.FETCH_ACTIVITY, {
+        //.addQuery({include: "related-activities.*"})
+        .disptachForAction2(types.FETCH_ACTIVITY, {
             actionName: types.FETCH_ACTIVITY.forId(activityId),
             meta: {id: activityId, type: activityType}
         });
@@ -21,7 +22,7 @@ export function fetchActivity(activityId, activityType) {
 
 
 export function like(activityId: string, activityType: string) {
-    let type = sanitizeItemType(activityType);
+    let type = sanitizeActivityType(activityType);
 
     return new Api.Call()
         .withMethod('POST')
@@ -33,7 +34,7 @@ export function like(activityId: string, activityType: string) {
 }
 
 export function unlike(activityId: string, activityType: string) {
-    let type = sanitizeItemType(activityType);
+    let type = sanitizeActivityType(activityType);
 
     return new Api.Call()
         .withMethod('DELETE')

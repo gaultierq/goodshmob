@@ -166,7 +166,7 @@ export default class App {
                     tabBarBackgroundColor: 'white',
                     forceTitlesDisplay: false,
                     tabBarShowLabels: 'hidden',
-                    initialTabIndex: 0,
+                    initialTabIndex: 1,
                 },
                 appStyle: {
                     orientation: 'portrait', // Sets a specific orientation to the entire app. Default: 'auto'. Supported values: 'auto', 'landscape', 'portrait'

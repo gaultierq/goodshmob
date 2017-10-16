@@ -42,7 +42,11 @@ export default {
             in: "in"
         },
         buttons:{
-            "comment":"COMMENT",
+            "comment": {
+                zero: "COMMENT",
+                other: "COMMENT (%{count})"
+            },
+
             "share":"SHARE",
             "save":"SAVE",
             "buy":"BUY",

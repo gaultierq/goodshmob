@@ -2,7 +2,7 @@
 
 import Immutable from 'seamless-immutable';
 import * as types from './actionTypes';
-import {sanitizeItemType} from "../utils/DataUtils";
+import {sanitizeActivityType} from "../utils/DataUtils";
 
 const initialState = Immutable();
 
@@ -12,7 +12,7 @@ export default function reduce(state:any = initialState, action: any) {
             break;
         case types.UNLIKE.success():{
             let {type, id} = action.meta;
-            type = sanitizeItemType(type);
+            type = sanitizeActivityType(type);
 
             state = Immutable.setIn(state, [type, id, "meta", "liked"], false);
             let newVar = [type, id, "meta", "likes-count"];

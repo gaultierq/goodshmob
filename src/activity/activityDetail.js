@@ -1,13 +1,15 @@
 // @flow
 
 import React, {Component} from 'react';
-import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native';
+import {ActivityIndicator, FlatList, ScrollView, StyleSheet, TouchableHighlight, View} from 'react-native';
 import * as actions from './actions'
 import * as actionTypes from './actionTypes'
 import {connect} from "react-redux";
 import ActivityCell from "./components/ActivityCell";
 import {buildNonNullData} from "../utils/DataUtils";
 import {MainBackground} from "../screens/UIComponents";
+import ActivityDescription from "./components/ActivityDescription";
+import type {Activity} from "../types";
 
 class ActivityDetailScreen extends Component {
 
@@ -17,19 +19,21 @@ class ActivityDetailScreen extends Component {
     }
 
     componentDidMount() {
+        //this.activity = this.makeActivity();
         this.load();
     }
 
 
     load() {
-        this.props.dispatch(actions.fetchActivity(this.props.activityId, this.props.activityType));
+        this.props.dispatch(actions.fetchActivityAndRelated(this.props.activityId, this.props.activityType));
     }
 
 
     render() {
-        let activity = this.getActivity();
+        let activity = this.makeActivity();
 
         let showLoader = !activity && this.isLoading();
+        let relatedActivities = activity.relatedActivities;
 
         return (
             <MainBackground>
@@ -44,6 +48,14 @@ class ActivityDetailScreen extends Component {
                             activityId={activity.id}
                             activityType={activity.type}
                         />}
+                        {activity &&
+                        <FlatList
+                            data={relatedActivities}
+                            renderItem={this.renderRelatedActivities.bind(this)}
+                            keyExtractor={(item, index) => item.id}
+                        />
+                        }
+
 
                     </View>
                 </ScrollView>
@@ -51,12 +63,38 @@ class ActivityDetailScreen extends Component {
         );
     }
 
+    renderRelatedActivities(it) {
+        let rel = it.item;
+        return (
+            <TouchableHighlight
+                onPress={()=> this.displayActivityComments(rel)}
+            >
+                <View>
+                    <ActivityDescription activity={rel}/>
+                </View>
+
+            </TouchableHighlight>
+        );
+    }
+
+    displayActivityComments(activity: Activity) {
+        this.props.navigator.push({
+            screen: 'goodsh.CommentsScreen', // unique ID registered with Navigation.registerScreen
+            title: "Commentaires", // navigation bar title of the pushed screen (optional)
+            passProps: {
+                activity
+            },
+        });
+    }
+
+
+
     isLoading() {
         return !!this.props.request.isLoading[actionTypes.FETCH_ACTIVITY.name()];
     }
 
-    getActivity() {
-        return buildNonNullData(this.props.data, this.props.activityType, this.props.activityId);
+    makeActivity() {
+        return this.props.activity || buildNonNullData(this.props.data, this.props.activityType, this.props.activityId);
     }
 }
 

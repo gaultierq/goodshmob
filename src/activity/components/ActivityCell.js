@@ -10,6 +10,7 @@ import * as activityAction from "../actions"
 import {connect} from "react-redux";
 import {buildNonNullData} from "../../utils/DataUtils";
 import * as types from "../actionTypes";
+import ActivityDescription from "./ActivityDescription";
 
 class ActivityCell extends React.Component {
 
@@ -17,7 +18,6 @@ class ActivityCell extends React.Component {
         let activity = this.getActivity();
 
         //let activity: Model.Activity = this.props.activity;
-        let user: Model.User = activity.user;
         let resource = activity.resource;
         let target: Model.List = activity.target;
         let image = resource ? resource.image : undefined;
@@ -30,6 +30,7 @@ class ActivityCell extends React.Component {
             if (count) targetName += " (" + count + ")"
         }
         let likesCount = activity.meta ? activity.meta["likes-count"] : 0;
+        let commentsCount = activity.meta ? activity.meta["comments-count"] : 0;
 
         return (
             <View style={{
@@ -37,60 +38,7 @@ class ActivityCell extends React.Component {
                 marginTop: 10,
                 marginBottom: 10
             }}>
-                <View style={{margin: cardMargin, marginBottom: 8}}>
-
-                    <View style={{flex: 1, flexDirection: 'row', marginBottom: 8}}>
-                        <Image
-                            source={{uri: user.image}}
-                            style={{
-                                height: 30,
-                                width: 30,
-                                borderRadius: 15
-                            }}
-                        />
-                        <View style={{flex: 1, marginLeft: 8}}>
-                            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                                <TouchableOpacity>
-                                    <Text style={{
-                                        fontSize: 11,
-                                        color: UI.Colors.blue
-                                    }}>{Model.User.fullname(user)}</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity><Text style={{
-                                    fontSize: 9,
-                                    color: UI.Colors.grey1,
-                                    marginLeft: 4
-                                }}>{TimeUtils.timeSince(Date.parse(activity.createdAt))}</Text></TouchableOpacity>
-                            </View>
-                            {!!target &&
-                            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                                    <Text style={{
-                                        fontSize: 9,
-                                        color: UI.Colors.grey1,
-                                        marginRight: 4
-                                    }}>{i18n.t("activity_item.header.in")}</Text>
-                                    <TouchableOpacity>
-                                        <Text
-                                            style={{fontSize: 14, color: UI.Colors.blue}}>
-                                            {targetName}
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
-
-                                {
-                                    this.renderFollowButton(target)
-                                }
-
-
-                            </View>
-                            }
-                        </View>
-
-                    </View>
-
-                    <Text style={{fontSize: 14}}>{activity.description}</Text>
-                </View>
+                {this.renderHeader(activity)}
                 {/*card*/}
                 <View style={Object.assign({}, UI.CARD(cardMargin))}>
 
@@ -99,16 +47,22 @@ class ActivityCell extends React.Component {
 
 
                     <View style={{padding: 15}}>
-                        <Text style={{fontSize: 18, fontFamily: 'Chivo-Light', }}>{resource.title}</Text>
+                        <Text style={{fontSize: 18, fontFamily: 'Chivo-Light',}}>{resource.title}</Text>
                         <Text style={{fontSize: 12, color: UI.Colors.grey2}}>{resource.subtitle}</Text>
                     </View>
 
                     <View style={{width: "100%", height: StyleSheet.hairlineWidth, backgroundColor: UI.Colors.grey1}}/>
 
 
-                    <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 10, paddingRight: 10}}>
+                    <View style={{
+                        flex: 1,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        paddingLeft: 10,
+                        paddingRight: 10
+                    }}>
 
-                        {this.renderButton(require('../../img/comment.png'), i18n.t("activity_item.buttons.comment"))}
+                        {this.renderButton(require('../../img/comment.png'), i18n.t("activity_item.buttons.comment", {count: commentsCount}))}
                         {this.renderButton(require('../../img/send.png'), i18n.t("activity_item.buttons.share"))}
                         {this.renderButton(require('../../img/save-icon.png'), i18n.t("activity_item.buttons.save"))}
                         {this.renderButton(require('../../img/buy-icon.png'), i18n.t("activity_item.buttons.buy"))}
@@ -121,33 +75,14 @@ class ActivityCell extends React.Component {
         )
     }
 
+    renderHeader(activity) {
+        return <ActivityDescription activity={activity} />;
+    }
+
     getActivity() {
         return buildNonNullData(this.props.data, this.props.activityType, this.props.activityId);
     }
 
-    renderFollowButton(target) {
-        return target.primary ?
-            <TouchableOpacity>
-                <Text style={{
-                    fontSize: 9,
-                    fontFamily: 'Chivo',
-                    color: UI.Colors.grey1,
-                    padding: 5,
-                    borderRadius: 5,
-                    borderWidth: 0.5,
-                    borderColor: UI.Colors.grey1
-                }}>{i18n.t("activity_item.buttons.unfollow_list")}</Text>
-            </TouchableOpacity>
-            :
-            <TouchableOpacity
-                style={{backgroundColor: "white", padding: 5, borderRadius: 5}}>
-                <Text style={{
-                    fontSize: 9,
-                    fontFamily: 'Chivo',
-                    color: UI.Colors.blue
-                }}>{i18n.t("activity_item.buttons.follow_list")}</Text>
-            </TouchableOpacity>;
-    }
 
     renderGoodshButton(image, likesCount, onActivityPressed) {
         let activity = this.getActivity();
