@@ -44,11 +44,13 @@ export default {
         buttons:{
             "comment": {
                 zero: "COMMENT",
+                one: "COMMENT (1)",
                 other: "COMMENT (%{count})"
             },
 
             "share":"SHARE",
             "save":"SAVE",
+            "saved":"SAVED",
             "buy":"BUY",
             "follow_list": "FOLLOW LIST",
             "unfollow_list": "UNFOLLOW LIST",

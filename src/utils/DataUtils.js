@@ -1,5 +1,6 @@
 import build from 'redux-object'
 import type * as types from "../types";
+import type {Id} from "../types";
 
 
 //ask backend to sanitize types
@@ -31,7 +32,7 @@ export let sanitizeActivityType = function (activityType) {
     return type;
 };
 
-export function buildNonNullData(store, type, id: string) {
+export function buildNonNullData(store, type, id: Id) {
     let result = build(store, type, id);
 
 

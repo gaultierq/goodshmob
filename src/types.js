@@ -1,5 +1,13 @@
 
-export type url = string;
+export type Url = string;
+
+export type Id = string;
+
+export type ActivityType = 'saving' | 'post' | 'sending';
+
+export type NavigableProps = {
+    navigator: any
+};
 
 export type Item = {
     title: string,
@@ -26,7 +34,7 @@ export type List =  Base & {
 
 export type Base = {
 
-    id: String,
+    id: Id,
     type: String, //doesn't make sense though
     links: any,
     meta: any,

@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import {Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
+import {Image, Share, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
 import * as Model from "../../models/index"
 import i18n from '../../i18n/i18n'
 import * as UI from "../../screens/UIStyles";
@@ -10,9 +10,18 @@ import {connect} from "react-redux";
 import {buildNonNullData} from "../../utils/DataUtils";
 import * as types from "../actionTypes";
 import ActivityDescription from "./ActivityDescription";
-import type {url} from "../../types"
+import type {Activity, ActivityType, Id, List, Url, Item} from "../../types"
+import {saveItem} from "../../screens/actions";
 
 class ActivityCell extends React.Component {
+
+    props: {
+        data: any,
+        activity: Activity,
+        activityId: Id,
+        activityType: ActivityType,
+        navigator: any
+    };
 
     render() {
         let activity = this.getActivity();
@@ -31,6 +40,8 @@ class ActivityCell extends React.Component {
         }
         let likesCount = activity.meta ? activity.meta["likes-count"] : 0;
         let commentsCount = activity.meta ? activity.meta["comments-count"] : 0;
+
+        let goodshed = resource && resource.meta ? resource.meta["goodshed"] : false;
 
         return (
             <View style={{
@@ -62,10 +73,15 @@ class ActivityCell extends React.Component {
                         paddingRight: 10
                     }}>
 
-                        {this.renderButton(require('../../img/comment.png'), i18n.t("activity_item.buttons.comment", {count: commentsCount}))}
-                        {this.renderButton(require('../../img/send.png'), i18n.t("activity_item.buttons.share"))}
-                        {this.renderButton(require('../../img/save-icon.png'), i18n.t("activity_item.buttons.save"))}
-                        {this.renderButton(require('../../img/buy-icon.png'), i18n.t("activity_item.buttons.buy"))}
+                        {this.renderButton(require('../../img/comment.png'), i18n.t("activity_item.buttons.comment", {count: commentsCount}), () => this.comment(activity))}
+                        {this.renderButton(require('../../img/send.png'), i18n.t("activity_item.buttons.share"), () => this.shareIntent(activity))}
+                        {
+                            goodshed ?
+                                this.renderButton(require('../../img/save-icon.png'), i18n.t("activity_item.buttons.saved"), null, true)
+                                :
+                                this.renderButton(require('../../img/save-icon.png'), i18n.t("activity_item.buttons.save"), () => this.save(activity))
+                        }
+                        {this.renderButton(require('../../img/buy-icon.png'), i18n.t("activity_item.buttons.buy"), () => this.buy(activity))}
 
                     </View>
 
@@ -75,6 +91,53 @@ class ActivityCell extends React.Component {
         )
     }
 
+    buy(activity: Activity) {
+
+    }
+
+    save(activity: Activity) {
+        this.props.navigator.push({
+            screen: 'goodsh.LineupListScreen', // unique ID registered with Navigation.registerScreen
+            title: "Sauvegarder" + activity.resource.title, // navigation bar title of the pushed screen (optional)
+            passProps: {
+                activity,
+                canFilterOverItems: false,
+                onLineupPressed: (lineup: List)=> this.saveResourceInList(activity.resource, lineup)
+            },
+        });
+    }
+
+    saveResourceInList(item: Item, lineup: List) {
+        this.props.dispatch(saveItem(item.id, lineup.id)).then(()=>{
+            setTimeout(()=>this.props.navigator.pop(), 1000);
+        });
+    }
+
+    comment(activity: Activity) {
+        this.props.navigator.push({
+            screen: 'goodsh.CommentsScreen', // unique ID registered with Navigation.registerScreen
+            title: "Commentaires", // navigation bar title of the pushed screen (optional)
+            passProps: {
+                activity
+            },
+        });
+    }
+
+    shareIntent(activity: Activity) {
+        Share.share({
+            message: 'BAM: we\'re helping your business with awesome React Native apps',
+            url: 'http://bam.tech',
+            title: 'Wow, did you see that?'
+        }, {
+            // Android only:
+            dialogTitle: 'Share BAM goodness',
+            // iOS only:
+            excludedActivityTypes: [
+                'com.apple.UIKit.activity.PostToTwitter'
+            ]
+        })
+    }
+
     renderHeader(activity) {
         return <ActivityDescription activity={activity} />;
     }
@@ -82,7 +145,6 @@ class ActivityCell extends React.Component {
     getActivity() {
         return buildNonNullData(this.props.data, this.props.activityType, this.props.activityId);
     }
-
 
     renderGoodshButton(image, likesCount, onActivityPressed) {
         let activity = this.getActivity();
@@ -153,13 +215,13 @@ class ActivityCell extends React.Component {
     }
 
 
-    renderButton(img: url, text: string, handler: ()=>void) {
+    renderButton(img: Url, text: string, handler: ()=>void, active:boolean = false) {
+        let color = active ? UI.Colors.green: UI.Colors.black;
         return (<TouchableOpacity onPress={handler}>
                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', padding: 6}}>
 
-                    <Image source={img} style={{width: 16, height: 16, margin: 8, resizeMode: 'contain'}}/>
-                    <Text style={{fontFamily: 'Chivo', textAlign: 'center', fontSize: 10}}>{text}</Text>
-
+                    <Image source={img} style={{width: 16, height: 16, margin: 8, resizeMode: 'contain', tintColor: color}}/>
+                    <Text style={{fontFamily: 'Chivo', textAlign: 'center', fontSize: 10, color: color}}>{text}</Text>
                 </View>
             </TouchableOpacity>
         );
@@ -186,7 +248,7 @@ class ActivityCell extends React.Component {
 
 }
 const mapStateToProps = (state, ownProps) => ({
-    activity: state.activity,
+    // activity: state.activity,
     data: state.data,
     request: state.request,
 });

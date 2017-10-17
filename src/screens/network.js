@@ -12,6 +12,7 @@ import * as Api from "../utils/Api";
 import {isUnique} from "../utils/ArrayUtil";
 import Feed from "./components/feed"
 import ApiAction from "../utils/ApiAction";
+import type {NavigableProps} from "../types";
 
 type FeedState = {
     isFetchingFirst: boolean,
@@ -21,11 +22,6 @@ type FeedState = {
 
 type NetworkState = {
 } & FeedState;
-
-//TODO: extract
-type NavigableProps = {
-    navigagor: any
-};
 
 class NetworkScreen extends Component {
 
@@ -127,11 +123,14 @@ class NetworkScreen extends Component {
     renderItem(item) {
 
         let it = item.item;
-        return <ActivityCell
-            onPressItem={() => this.navToActivity(it)}
-            activityId={it.id}
-            activityType={it.type}
-        />
+        return (
+            <ActivityCell
+                onPressItem={() => this.navToActivity(it)}
+                activityId={it.id}
+                activityType={it.type}
+                navigator={this.props.navigator}
+            />
+        )
     }
 
 }

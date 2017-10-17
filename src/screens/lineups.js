@@ -25,7 +25,7 @@ import {TP_MARGINS} from "./UIStyles";
 import {SearchBar} from 'react-native-elements'
 import build from 'redux-object'
 import Fuse from 'fuse.js'
-import type * as types from "../types";
+import type types, {List} from "../types";
 import ItemCell from "./components/ItemCell";
 import Feed from "./components/feed";
 import Swipeout from "react-native-swipeout";
@@ -36,10 +36,10 @@ import ApiAction from "../utils/ApiAction";
 class LineupListScreen extends Component {
 
     props: {
-        onLineupPressed: Function,
+        onLineupPressed: (lineup: List) => void,
         onSavingPressed: Function,
         onAddInLineupPressed: Function,
-        canFilterOverItems: Function,
+        canFilterOverItems: boolean | ()=>boolean,
         data: Object
     };
 
@@ -102,6 +102,14 @@ class LineupListScreen extends Component {
         );
     }
 
+    canFilterOverItems() {
+        let cfoi = this.props.canFilterOverItems;
+        if (cfoi instanceof Function) return cfoi();
+        return cfoi;
+
+    }
+
+
     applyFilter(lineups) {
         if (!lineups) return lineups;
         let searchIn = [];
@@ -109,7 +117,7 @@ class LineupListScreen extends Component {
         lineups.forEach((lu: types.List) => {
             searchIn.push(lu);
 
-            if (this.props.canFilterOverItems()) {
+            if (this.canFilterOverItems()) {
                 // searchIn = searchIn.concat(lu.savings.map((sa: types.Saving)=>sa.resource))
                 searchIn = searchIn.concat(lu.savings)
             }
@@ -324,25 +332,6 @@ const actions = (() => {
                 per_page: 10,
                 include: "creator"
             }),
-        loadLineups: ({afterId} ?) => {
-            let call = fetchCall();
-
-            if (afterId) call.addQuery({id_gt: afterId});
-
-
-            return call.disptachForAction2(actiontypes.FETCH_LINEUPS);
-        },
-
-        loadMoreLineups:(aferId:string) => {
-            let call = new Api.Call.parse(nextUrl).withMethod('GET')
-                .addQuery({
-                    page: 1,
-                    per_page: 10,
-                    include: "creator"
-                });
-
-            return call.disptachForAction2(actiontypes.FETCH_MORE_LINEUPS);
-        },
         createLineup: (listName) => {
             let call = new Api.Call()
                 .withMethod('POST')

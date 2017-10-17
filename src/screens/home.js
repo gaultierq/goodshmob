@@ -8,13 +8,14 @@ import {MainBackground} from "./UIComponents";
 import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
 import ActionButton from 'react-native-action-button';
-import { screen as LineupList } from './lineups'
+import {screen as LineupList} from './lineups'
 import List from "../models/List";
 import * as types from "../types"
 import Snackbar from "react-native-snackbar"
 import i18n from '../i18n/i18n'
 import * as UIStyles from "./UIStyles";
 import ApiAction from "../utils/ApiAction";
+import {saveItem} from "./actions";
 
 class HomeScreen extends Component {
 
@@ -215,36 +216,37 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state, ownProps) => ({
 });
 
-const actiontypes = (() => {
+// const actiontypes = (() => {
+//
+//     const SAVE_ITEM = new ApiAction("save_item");
+//     return {SAVE_ITEM};
+// })();
+//
 
-    const SAVE_ITEM = new ApiAction("save_item");
-    return {SAVE_ITEM};
-})();
-
-
-const actions = (() => {
-    return {
-        saveItem: (itemId, lineupId, privacy = 0, description = '') => {
-
-            let body = {
-                saving: { list_id: lineupId, privacy}
-            };
-            if (description) {
-                Object.assign(body, description)
-            }
-            console.log("saving item, with body:");
-            console.log(body);
-
-            let call = new Api.Call()
-                .withMethod('POST')
-                .withRoute(`items/${itemId}/savings`)
-                .withBody(body)
-                .addQuery({'include': '*.*'});
-
-            return call.disptachForAction2(actiontypes.SAVE_ITEM);
-        },
-    };
-})();
+// const actions = (() => {
+//     return {
+//         saveItem: saveItem
+//         // saveItem: (itemId: Id, lineupId: Id, privacy = 0, description = '') => {
+//         //
+//         //     let body = {
+//         //         saving: { list_id: lineupId, privacy}
+//         //     };
+//         //     if (description) {
+//         //         Object.assign(body, description)
+//         //     }
+//         //     console.log("saving item, with body:");
+//         //     console.log(body);
+//         //
+//         //     let call = new Api.Call()
+//         //         .withMethod('POST')
+//         //         .withRoute(`items/${itemId}/savings`)
+//         //         .withBody(body)
+//         //         .addQuery({'include': '*.*'});
+//         //
+//         //     return call.disptachForAction2(actiontypes.SAVE_ITEM);
+//         // },
+//     };
+// })();
 
 const reducer = (() => {
     const initialState = Immutable(Api.initialListState());

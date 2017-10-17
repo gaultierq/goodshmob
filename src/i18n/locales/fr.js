@@ -44,10 +44,12 @@ export default {
         buttons:{
             "comment": {
                 zero: "DONNER SON AVIS",
+                one: "DONNER SON AVIS (1)",
                 other: "DONNER SON AVIS (%{count})"
             },
             "share":"PARTAGER",
             "save":"ENREGISTRER",
+            "saved":"ENREGISTRÉ",
             "buy":"ACHETER",
             "follow_list": "SUIVRE LA LISTE",
             "unfollow_list": "NE PLUS SUIVRE",
