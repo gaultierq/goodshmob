@@ -1,4 +1,6 @@
 
+export type url = string;
+
 export type Item = {
     title: string,
     subtitle: String,

@@ -6,6 +6,7 @@ import {connect} from "react-redux";
 import {assertUnique} from "../../utils/DataUtils";
 import ApiAction from "../../utils/ApiAction";
 import * as Api from "../../utils/Api";
+import {isEmpty} from "lodash";
 
 export type FeedSource = {
     callFactory: ()=>Api.Call,
@@ -89,13 +90,13 @@ export default class Feed<T> extends Component  {
                 onEndReachedThreshold={0}
                 ListFooterComponent={this.renderFetchMoreLoader()}
                 ListHeaderComponent={this.props.ListHeaderComponent}
-                style={this.props.style}
+                style={{...this.props.style, minHeight: 50}}
             />
         );
     }
 
     renderRefreshControl() {
-        let displayLoader = (this.state.isFetchingFirst && !this.props.data) || this.state.isPulling;
+        let displayLoader = (this.state.isFetchingFirst && isEmpty(this.props.data)) || this.state.isPulling;
         return (<RefreshControl
             refreshing={displayLoader}
             onRefresh={this.onRefresh.bind(this)}

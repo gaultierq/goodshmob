@@ -4,13 +4,13 @@ import React from 'react';
 import {Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
 import * as Model from "../../models/index"
 import i18n from '../../i18n/i18n'
-import * as TimeUtils from '../../utils/TimeUtils'
 import * as UI from "../../screens/UIStyles";
 import * as activityAction from "../actions"
 import {connect} from "react-redux";
 import {buildNonNullData} from "../../utils/DataUtils";
 import * as types from "../actionTypes";
 import ActivityDescription from "./ActivityDescription";
+import type {url} from "../../types"
 
 class ActivityCell extends React.Component {
 
@@ -153,8 +153,8 @@ class ActivityCell extends React.Component {
     }
 
 
-    renderButton(img, text) {
-        return (<TouchableOpacity>
+    renderButton(img: url, text: string, handler: ()=>void) {
+        return (<TouchableOpacity onPress={handler}>
                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', padding: 6}}>
 
                     <Image source={img} style={{width: 16, height: 16, margin: 8, resizeMode: 'contain'}}/>

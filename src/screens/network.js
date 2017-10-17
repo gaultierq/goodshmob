@@ -92,7 +92,7 @@ class NetworkScreen extends Component {
     render() {
         let network = this.props.network;
 
-        let activities = network.list ;
+        let activities = network.list;
 
         NetworkScreen.checkEmpty(activities);
         if (!isUnique(activities.map((a)=>a.id))) throw new Error(`activities ids not unique 2`);
