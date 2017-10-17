@@ -42,7 +42,7 @@ let allReducers = combineReducers({...reducers, app: appReducer});
 const reducer = createWithReducers(allReducers);
 const store = createStore(
     reducer,
-    undefined,
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
     compose(
         applyMiddleware(apiMiddleware, thunk, logger),
         autoRehydrate()
