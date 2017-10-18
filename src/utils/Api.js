@@ -67,17 +67,17 @@ export class Call {
     method: string;
     headers = instance.headers();
 
-    withRoute(pathname:string) {
+    withRoute(pathname:string): Call {
         this.url = this.url.set('pathname', pathname);
         return this;
     }
 
-    withBody(body:any) {
+    withBody(body:any): Call {
         this.body = body;
         return this;
     }
 
-    addQuery(query: any) {
+    addQuery(query: any): Call {
         let currentQuery = this.url.query;
         let q = currentQuery;//qs.parse(currentQuery);
         let newQuery = Object.assign({}, q || {}, query);
