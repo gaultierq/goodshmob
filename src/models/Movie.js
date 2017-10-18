@@ -1,10 +1,7 @@
 import Item from "./Item";
 
 export default class Movie extends Item {
-    overview;
+    overview: string;
 
 
-    location() {
-        return null;
-    }
 }

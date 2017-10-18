@@ -15,6 +15,7 @@ import {buildNonNullData} from "../utils/DataUtils";
 import CurrentUser from  "../CurrentUser"
 import ApiAction from "../utils/ApiAction";
 import type {Saving} from "../types";
+import ActivityCell from "../activity/components/ActivityCell";
 
 class SavingsScreen extends Component {
 
@@ -70,10 +71,9 @@ class SavingsScreen extends Component {
                       backgroundColor= 'transparent'
                       disabled={disabled}
             >
-                <ItemCell
-                    onPressItem={() => this.navToSavingDetail(saving)}
-                    item={saving.resource}
-                    navigator={this.props.navigator}
+                <ActivityCell
+                    activityId={saving.id}
+                    activityType={saving.type}
                 />
             </Swipeout>)
     }

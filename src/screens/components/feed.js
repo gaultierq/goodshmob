@@ -40,6 +40,32 @@ export default class Feed<T> extends Component  {
         this.state =  {isFetchingFirst: false, isFetchingMore: false, isPulling: false};
     }
 
+    render() {
+        assertUnique(this.props.data);
+
+        const {
+            data,
+            renderItem,
+            fetchSrc,
+            hasMore,
+            ...attributes
+        } = this.props;
+
+        return (
+            <FlatList
+                data={data}
+                renderItem={renderItem}
+                keyExtractor={this.keyExtractor}
+                refreshControl={this.renderRefreshControl()}
+                onEndReached={ this.onEndReached.bind(this) }
+                onEndReachedThreshold={0}
+                ListFooterComponent={this.renderFetchMoreLoader()}
+                style={{...this.props.style, minHeight: 50}}
+                {...attributes}
+            />
+        );
+    }
+
     componentDidMount() {
         this.fetchIt();
     }
@@ -78,23 +104,6 @@ export default class Feed<T> extends Component  {
         this.fetchIt().then(()=>this.setState({isPulling: false}));
     }
 
-    render() {
-        assertUnique(this.props.data);
-        return (
-            <FlatList
-                data={this.props.data}
-                renderItem={this.props.renderItem}
-                keyExtractor={this.keyExtractor}
-                refreshControl={this.renderRefreshControl()}
-                onEndReached={ this.onEndReached.bind(this) }
-                onEndReachedThreshold={0}
-                ListFooterComponent={this.renderFetchMoreLoader()}
-                ListHeaderComponent={this.props.ListHeaderComponent}
-                style={{...this.props.style, minHeight: 50}}
-            />
-        );
-    }
-
     renderRefreshControl() {
         let displayLoader = (this.state.isFetchingFirst && isEmpty(this.props.data)) || this.state.isPulling;
         return (<RefreshControl
@@ -104,11 +113,11 @@ export default class Feed<T> extends Component  {
     }
 
     renderFetchMoreLoader() {
-        return (this.state.isFetchingMore &&
+        return (this.state.isFetchingMore ?
             <ActivityIndicator
                 animating={this.state.isFetchingMore}
                 size = "small"
-            />)
+            />:null)
     }
 
     hasMore() {

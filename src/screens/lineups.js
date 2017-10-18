@@ -321,8 +321,6 @@ const actiontypes = (() => {
 
 const actions = (() => {
 
-
-
     return {
         fetchCall: () => new Api.Call()
             .withMethod('GET')

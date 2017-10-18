@@ -12,6 +12,7 @@ import * as types from "../actionTypes";
 import ActivityDescription from "./ActivityDescription";
 import type {Activity, ActivityType, Id, List, Url, Item} from "../../types"
 import {saveItem} from "../../screens/actions";
+import {Linking} from "react-native";
 
 class ActivityCell extends React.Component {
 
@@ -92,7 +93,15 @@ class ActivityCell extends React.Component {
     }
 
     buy(activity: Activity) {
-
+        let resource = activity.resource;
+        let url = resource.url;
+        Linking.canOpenURL(url).then(supported => {
+            if (supported) {
+                Linking.openURL(url);
+            } else {
+                console.log("Don't know how to open URI: " + url);
+            }
+        });
     }
 
     save(activity: Activity) {
@@ -151,12 +160,15 @@ class ActivityCell extends React.Component {
         let liked = activity.meta && activity.meta["liked"];
 
         let goodshButtonColor = (this.isLiking() || this.isUnliking()) ? UI.Colors.grey1 : liked ? UI.Colors.green : UI.Colors.white;
+
+
+        let imageHeight = 250;
         return <View style={{alignItems: 'center',}}>
             <TouchableHighlight
                 onPress={onActivityPressed}
                 style={{
                     alignSelf: 'center',
-                    height: 165,
+                    height: imageHeight+15,
                     width: "100%",
                 }}>
                 <Image
@@ -164,7 +176,7 @@ class ActivityCell extends React.Component {
                     resizeMode='contain'
                     style={{
                         alignSelf: 'center',
-                        height: 150,
+                        height: imageHeight,
                         width: "100%",
                     }}
                 />

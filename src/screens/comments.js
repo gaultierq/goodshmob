@@ -1,14 +1,15 @@
 // @flow
 import React, {Component} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {connect} from "react-redux";
 import {MainBackground} from "./UIComponents";
 import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
 import Feed from "./components/feed";
-import type {Activity} from "../types";
+import type {Activity, Comment} from "../types";
 import ApiAction from "../utils/ApiAction";
-import {sanitizeActivityType} from "../utils/DataUtils";
+import {buildNonNullData, sanitizeActivityType} from "../utils/DataUtils";
+import UserActivity from "../activity/components/UserActivity";
 
 class CommentsScreen extends Component {
 
@@ -29,6 +30,15 @@ class CommentsScreen extends Component {
                             action:actionTypes.LOAD_COMMENTS
                         }}
                         hasMore={false}
+                        ListHeaderComponent={
+                            <View style={{padding: 12, backgroundColor:"transparent"}}>
+                                <UserActivity
+                                    activityTime={this.props.activity.createdAt}
+                                    user={this.props.activity.user}/>
+
+                                <Text>{this.props.activity.description}</Text>
+                            </View>
+                        }
                     />
 
                 </View>
@@ -37,7 +47,17 @@ class CommentsScreen extends Component {
     }
 
     renderItem(item) {
-        return <Text>{item.id}</Text>;
+        let comment : Comment = item.item;
+        comment = buildNonNullData(this.props.data, "comments", comment.id);
+        return (
+            <View style={{padding: 12, backgroundColor:"white"}}>
+                <UserActivity
+                    activityTime={comment.createdAt}
+                    user={comment.user}/>
+
+                <Text>{comment.content}</Text>
+            </View>
+        );
     }
 
 
@@ -46,6 +66,7 @@ class CommentsScreen extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: 'transparent'
     }
 });
 

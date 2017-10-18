@@ -21,6 +21,10 @@ export type Item = {
     description: string,
 }
 
+export type Movie = Item & {
+    overview: string
+}
+
 
 export type List =  Base & {
 
@@ -67,6 +71,13 @@ export type User = Base & {
     goodshbox: any,
     lists: any,
 
+}
+
+export type Comment = Base & {
+    createdAt: Date;
+    content: string;
+    user: User;
+    resource: Activity;
 }
 
 

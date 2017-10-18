@@ -8,6 +8,7 @@ import * as TimeUtils from '../../utils/TimeUtils'
 import * as UI from "../../screens/UIStyles";
 import {buildNonNullData} from "../../utils/DataUtils";
 import type {Activity, List, User} from "../../types";
+import UserActivity from "./UserActivity";
 
 export default class ActivityDescription extends React.Component {
 
@@ -35,55 +36,35 @@ export default class ActivityDescription extends React.Component {
 
         return <View style={{margin: cardMargin, marginBottom: 8, backgroundColor: 'transparent'}}>
 
-            <View style={{flex: 1, flexDirection: 'row', marginBottom: 8}}>
-                <Image
-                    source={{uri: user ? user.image: ""}}
-                    style={{
-                        height: 30,
-                        width: 30,
-                        borderRadius: 15
-                    }}
-                />
-                <View style={{flex: 1, marginLeft: 8}}>
+
+            <UserActivity
+                activityTime={activity.createdAt}
+                user={user}>
+
+                {/* in Séries(1) */}
+                {!!target &&
+                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                     <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                        <TouchableOpacity>
-                            <Text style={{
-                                fontSize: 11,
-                                color: UI.Colors.blue
-                            }}>{user ? Model.User.fullname(user):""}</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity><Text style={{
+                        <Text style={{
                             fontSize: 9,
                             color: UI.Colors.grey1,
-                            marginLeft: 4
-                        }}>{activity.createdAt ? TimeUtils.timeSince(Date.parse(activity.createdAt)):''}</Text></TouchableOpacity>
+                            marginRight: 4
+                        }}>{i18n.t("activity_item.header.in")}</Text>
+                        <TouchableOpacity>
+                            <Text
+                                style={{fontSize: 14, color: UI.Colors.blue}}>
+                                {targetName}
+                            </Text>
+                        </TouchableOpacity>
                     </View>
-                    {!!target &&
-                    <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                        <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                            <Text style={{
-                                fontSize: 9,
-                                color: UI.Colors.grey1,
-                                marginRight: 4
-                            }}>{i18n.t("activity_item.header.in")}</Text>
-                            <TouchableOpacity>
-                                <Text
-                                    style={{fontSize: 14, color: UI.Colors.blue}}>
-                                    {targetName}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
 
-                        {
-                            this.props.withFollowButton && this.renderFollowButton(target)
-                        }
-
-
-                    </View>
+                    {
+                        this.props.withFollowButton && this.renderFollowButton(target)
                     }
-                </View>
 
-            </View>
+                </View>
+                }
+            </UserActivity>
 
             <Text style={{fontSize: 14}}>{activity.description}</Text>
         </View>;
