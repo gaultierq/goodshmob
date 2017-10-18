@@ -56,7 +56,6 @@ class Api {
         console.debug(`sending request url=${url}, options: ${JSON.stringify(options)}`);
         return fetch(url, options);
     }
-
 }
 
 
@@ -104,24 +103,25 @@ export class Call {
         return this.url.toString();
     }
 
-    disptachForAction(apiAction: ApiAction, options?: any) {
+    disptachForAction(apiAction: ApiAction, options?: any = {}) {
 
         //fetch
         // on result -> dispatch other action
 
         return {
-            [API_SYMBOL]: Object.assign({},
+            [API_SYMBOL]: Object.assign(
+                {},
                 {
                     call: this,
                     apiAction
-                }, options)
+                }, {options})
         };
     }
 
-    disptachForAction2(apiAction: ApiAction, options?: any) {
+    disptachForAction2(apiAction: ApiAction, options?: any = {}) {
         const call = this;
         return (dispatch) => {
-            let meta = options ? options.meta : null;
+            //let {meta} = options;
 
             return call
                 .exec()
@@ -147,7 +147,7 @@ export class Call {
                         //1., 2.
                         dispatch({ data, type: API_DATA_SUCCESS });
 
-                        return dispatch(Object.assign({}, {type: apiAction.success(), payload: response, original: resp.original}, {meta}));
+                        return dispatch(Object.assign({}, {type: apiAction.success(), payload: response, original: resp.original}, {options}));
                     },
                     //1., 2.
                     error => {
@@ -229,7 +229,7 @@ let middleware = store => next => action => {
         return next(action);
     }
 
-    const { call, apiAction, meta} = callAPI;
+    const { call, apiAction, options} = callAPI;
 
     const actionWith = (data) => {
         const finalAction = Object.assign({}, callAPI, data, {apiAction});
@@ -265,7 +265,7 @@ let middleware = store => next => action => {
                 //1., 2.
                 next(actionWith({ data, type: API_DATA_SUCCESS }));
 
-                return next(Object.assign({}, {type: apiAction.success(), payload: response, original: resp.original}, {meta}));
+                return next(Object.assign({}, {type: apiAction.success(), payload: response, original: resp.original}, {options}));
             },
             //1., 2.
             error => {

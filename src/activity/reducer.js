@@ -11,7 +11,7 @@ export default function reduce(state:any = initialState, action: any) {
         case types.LIKE.success():
             break;
         case types.UNLIKE.success():{
-            let {type, id} = action.meta;
+            let {type, id} = action.options;
             type = sanitizeActivityType(type);
 
             state = Immutable.setIn(state, [type, id, "meta", "liked"], false);

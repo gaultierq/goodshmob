@@ -6,17 +6,18 @@ import {MainBackground} from "./UIComponents";
 import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
 import Feed from "./components/feed";
-import type {Activity, Comment} from "../types";
+import type {Activity, ActivityType, Comment, Id} from "../types";
 import ApiAction from "../utils/ApiAction";
-import {buildNonNullData, sanitizeActivityType} from "../utils/DataUtils";
+import {buildData, buildNonNullData, doDataMergeInState, sanitizeActivityType} from "../utils/DataUtils";
 import UserActivity from "../activity/components/UserActivity";
-import {TP_MARGINS} from "./UIStyles";
 import i18n from '../i18n/i18n'
+import FeedSeparator from "../activity/components/FeedSeparator";
 
 class CommentsScreen extends Component {
 
     props : {
-        activity: Activity,
+        activityId: Id,
+        activityType: ActivityType,
     };
 
     state = {
@@ -25,32 +26,45 @@ class CommentsScreen extends Component {
     };
 
     render() {
+        let activity = this.getActivity();
+
+        let comments = (activity.comments || []).reduce((res, com)=> {
+            let comment = buildData(this.props.data, com.type, com.id);
+            if (comment) {
+                res.push(comment);
+            }
+            return res;
+        }, []);
+
+        //let comments = activity.comments;
 
         return (
             <MainBackground>
                 <View style={styles.container}>
                     <Feed
-                        data={this.props.comments.list}
+                        data={comments}
                         renderItem={this.renderItem.bind(this)}
                         fetchSrc={{
-                            callFactory:()=>actions.loadComments(this.props.activity),
-                            action:actionTypes.LOAD_COMMENTS
+                            callFactory:()=>actions.loadComments(activity),
+                            action:actionTypes.LOAD_COMMENTS,
+                            options: {activityId: activity.id, activityType: activity.type}
                         }}
                         hasMore={false}
+                        ItemSeparatorComponent={()=> <FeedSeparator/>}
                         ListHeaderComponent={
                             <View style={{padding: 12, backgroundColor:"transparent"}}>
                                 <UserActivity
-                                    activityTime={this.props.activity.createdAt}
-                                    user={this.props.activity.user}/>
+                                    activityTime={activity.createdAt}
+                                    user={activity.user}/>
 
-                                <Text>{this.props.activity.description}</Text>
+                                <Text>{activity.description}</Text>
                             </View>
                         }
                     />
                     <TextInput
                         editable={!this.state.isAddingComment}
                         style={styles.input}
-                        onSubmitEditing={this.addComment.bind(this)}
+                        onSubmitEditing={() => this.addComment(activity)}
                         value={this.state.newComment}
                         onChangeText={newComment => this.setState({newComment})}
                         placeholder={i18n.t("activity_comments_screen.add_comment_placeholder")}
@@ -61,10 +75,14 @@ class CommentsScreen extends Component {
         );
     }
 
-    addComment() {
+    getActivity() {
+        return buildNonNullData(this.props.data, this.props.activityType, this.props.activityId);
+    }
+
+    addComment(activity: Activity) {
         if (this.state.isAddingComment) return;
         this.setState({isAddingComment: true});
-        this.props.dispatch(actions.addComment(this.props.activity, this.state.newComment))
+        this.props.dispatch(actions.addComment(activity, this.state.newComment))
             .then(()=>{
                 this.setState({newComment: '', isAddingComment: false});
             });
@@ -84,8 +102,6 @@ class CommentsScreen extends Component {
             </View>
         );
     }
-
-
 }
 
 const styles = StyleSheet.create({
@@ -93,11 +109,10 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'transparent'
     },
-    input:{...TP_MARGINS(20), height: 40, borderColor: 'gray', borderWidth: 1, backgroundColor: 'white'}
+    input:{height: 40, borderColor: 'gray', borderWidth: 1, backgroundColor: 'white'}
 });
 
 const mapStateToProps = (state, ownProps) => ({
-    comments: state.comments,
     data: state.data,
 });
 
@@ -130,28 +145,43 @@ const actions = (() => {
                 .withRoute(`${activityType}/${activity.id}/comments`)
                 .addQuery({include: "user"})
                 .withBody({comment: {content: content}})
-                .disptachForAction2(actionTypes.ADD_COMMENT)
+                .disptachForAction2(actionTypes.ADD_COMMENT, {activityId: activity.id, activityType: activity.type})
                 ;
         }
     };
 })();
 
+
+
 const reducer = (() => {
     const initialState = Immutable(Api.initialListState());
 
     return (state = initialState, action = {}) => {
-        let desc = {fetchFirst: actionTypes.LOAD_COMMENTS};
-        switch (action.type) {
-            case actionTypes.ADD_COMMENT.success():
-                let payload = action.payload;
-                let {id, type} = payload.data;
-                let newItem = {id, type};
 
-                let list = Immutable([newItem]).concat(state.list);
-                state = state.merge({list});
+        switch (action.type) {
+            case actionTypes.LOAD_COMMENTS.success(): {
+                let {activityId, activityType} = action.options;
+                activityType = sanitizeActivityType(activityType);
+                let path = `${activityType}.${activityId}.comments.data`;
+
+                state = doDataMergeInState(state, path, action.payload.data);
                 break;
+            }
+            case actionTypes.ADD_COMMENT.success(): {
+
+                let {id, type} = action.payload.data;
+                let {activityId, activityType} = action.options;
+                activityType = sanitizeActivityType(activityType);
+
+                let path = `${activityType}.${activityId}.comments.data`;
+                state = doDataMergeInState(state, path, [{id, type}]);
+                break;
+            }
+
         }
-        return Api.reduceList(state, action, desc);
+        //let desc = {fetchFirst: actionTypes.LOAD_COMMENTS};
+        //return Api.reduceList(state, action, desc);
+        return state;
     }
 })();
 

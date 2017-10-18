@@ -14,10 +14,13 @@ export function fetchActivityAndRelated(activityId, activityType) {
         .withMethod('GET')
         .withRoute(`${type}/${activityId}`)
         //.addQuery({include: "related-activities.*"})
-        .disptachForAction2(types.FETCH_ACTIVITY, {
-            actionName: types.FETCH_ACTIVITY.forId(activityId),
-            meta: {id: activityId, type: activityType}
-        });
+        .disptachForAction2(types.FETCH_ACTIVITY,
+        //     {
+        //     actionName: types.FETCH_ACTIVITY.forId(activityId),
+        //     meta: {id: activityId, type: activityType}
+        // }
+            {id: activityId, type: activityType}
+        );
 }
 
 
@@ -27,10 +30,13 @@ export function like(activityId: string, activityType: string) {
     return new Api.Call()
         .withMethod('POST')
         .withRoute(`${type}/${activityId}/likes`)
-        .disptachForAction(types.LIKE, {
-            actionName: types.LIKE.forId(activityId),
-            meta: {id: activityId, type: activityType}
-        });
+        .disptachForAction(types.LIKE,
+        //     {
+        //     actionName: types.LIKE.forId(activityId),
+        //     meta: {id: activityId, type: activityType}
+        // }
+            {id: activityId, type: activityType}
+        );
 }
 
 export function unlike(activityId: string, activityType: string) {
@@ -39,8 +45,11 @@ export function unlike(activityId: string, activityType: string) {
     return new Api.Call()
         .withMethod('DELETE')
         .withRoute(`${type}/${activityId}/likes`)
-        .disptachForAction(types.UNLIKE, {
-            actionName: types.UNLIKE.forId(activityId),
-            meta: {id: activityId, type: activityType}
-        });
+        .disptachForAction(types.UNLIKE,
+        //     {
+        //     actionName: types.UNLIKE.forId(activityId),
+        //     meta: {id: activityId, type: activityType}
+        // }
+            {id: activityId, type: activityType}
+        );
 }

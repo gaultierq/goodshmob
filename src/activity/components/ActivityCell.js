@@ -13,6 +13,7 @@ import ActivityDescription from "./ActivityDescription";
 import type {Activity, ActivityType, Id, List, Url, Item} from "../../types"
 import {saveItem} from "../../screens/actions";
 import {Linking} from "react-native";
+import FeedSeparator from "./FeedSeparator";
 
 class ActivityCell extends React.Component {
 
@@ -63,7 +64,7 @@ class ActivityCell extends React.Component {
                         <Text style={{fontSize: 12, color: UI.Colors.grey2}}>{resource.subtitle}</Text>
                     </View>
 
-                    <View style={{width: "100%", height: StyleSheet.hairlineWidth, backgroundColor: UI.Colors.grey1}}/>
+                    <FeedSeparator/>
 
 
                     <View style={{
@@ -127,7 +128,8 @@ class ActivityCell extends React.Component {
             screen: 'goodsh.CommentsScreen', // unique ID registered with Navigation.registerScreen
             title: "Commentaires", // navigation bar title of the pushed screen (optional)
             passProps: {
-                activity
+                activityId: activity.id,
+                activityType: activity.type
             },
         });
     }
@@ -251,11 +253,13 @@ class ActivityCell extends React.Component {
     }
 
     isLiking() {
-        return !!this.props.request.isLoading[types.LIKE.forId(this.props.activityId)];
+        //FIXME: use local state
+        return false;//!!this.props.request.isLoading[types.LIKE.forId(this.props.activityId)];
     }
 
     isUnliking() {
-        return !!this.props.request.isLoading[types.UNLIKE.forId(this.props.activityId)];
+        //FIXME: use local state
+        return false;//!!this.props.request.isLoading[types.UNLIKE.forId(this.props.activityId)];
     }
 
 }

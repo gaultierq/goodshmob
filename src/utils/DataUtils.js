@@ -1,7 +1,8 @@
 import build from 'redux-object'
-import type * as types from "../types";
 import type {Id} from "../types";
-
+import * as _ from "lodash";
+import * as Util from "./ModelUtils";
+import dotprop from "dot-prop-immutable"
 
 //ask backend to sanitize types
 export let sanitizeActivityType = function (activityType) {
@@ -27,12 +28,21 @@ export let sanitizeActivityType = function (activityType) {
         case "tv-show":
             type = "tvShows";
             break;
+        case "comments":
+        case "comment":
+            type = "comments";
+            break;
     }
     //if (!type) throw new Error(`type not found for ${activityType}`);
     return type;
 };
 
-export function buildNonNullData(store, type, id: Id) {
+export function buildData(store, type, id: Id) {
+    return buildNonNullData(store, type, id, false);
+}
+
+
+export function buildNonNullData(store, type, id: Id, assertNonNull?: boolean = true) {
     let result = build(store, type, id);
 
 
@@ -44,7 +54,7 @@ export function buildNonNullData(store, type, id: Id) {
         }
     }
 
-    if (!result) throw new Error(`resource not found for type=${type} id=${id}`);
+    if (assertNonNull && !result) throw new Error(`resource not found for type=${type} id=${id}`);
     return result;
 }
 
@@ -56,3 +66,20 @@ export function assertUnique(data: Array) {
     });
 }
 
+
+export function doDataMergeInState(state, path, newList) {
+    let currentList = _.get(state, path, []).slice();
+
+    let newItems = newList.map((c) => {
+        let {id, type} = c;
+        return {id, type};
+    });
+
+    //3. merge state
+    new Util.Merge(currentList, newItems)
+        .withHasLess(true)
+        .merge();
+
+    state = dotprop.set(state, path, currentList);
+    return state;
+}

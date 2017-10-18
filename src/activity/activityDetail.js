@@ -82,7 +82,8 @@ class ActivityDetailScreen extends Component {
             screen: 'goodsh.CommentsScreen', // unique ID registered with Navigation.registerScreen
             title: "Commentaires", // navigation bar title of the pushed screen (optional)
             passProps: {
-                activity
+                activityId: activity.id,
+                activityType: activity.type
             },
         });
     }

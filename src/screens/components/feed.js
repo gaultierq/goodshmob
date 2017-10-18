@@ -10,7 +10,8 @@ import {isEmpty} from "lodash";
 
 export type FeedSource = {
     callFactory: ()=>Api.Call,
-    action: ApiAction
+    action: ApiAction,
+    options?: any
 }
 
 
@@ -81,12 +82,14 @@ export default class Feed<T> extends Component  {
             else {
                 this.setState({[t]: true});
 
-                let call = this.props.fetchSrc.callFactory();
+                let {fetchSrc}= this.props;
+
+                let call = fetchSrc.callFactory();
 
                 if (afterId) call.addQuery({id_after: afterId});
 
                 this.props
-                    .dispatch(call.disptachForAction2(this.props.fetchSrc.action))
+                    .dispatch(call.disptachForAction2(fetchSrc.action, fetchSrc.options))
                     .then(()=>this.setState({[t]: false}))
                     .then(()=>resolve());
             }

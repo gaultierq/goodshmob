@@ -287,9 +287,12 @@ const actions = (() => {
                 .withRoute(`search/${category}`)
                 .addQuery({'search[term]': token});
 
-            return call.disptachForAction2(actiontypes.SEARCH, {
-                actionName: composeSearchActionName(category, token),
-                meta: {category, token}});
+            return call.disptachForAction2(actiontypes.SEARCH,
+                //{actionName: composeSearchActionName(category, token),
+                // meta:
+                    {category, token}
+                // }
+                );
         },
     };
 })();
@@ -302,7 +305,7 @@ const reducerCreator = (reducerCategory) => (() => {
         switch (action.type) {
             case actiontypes.SEARCH.success():
             case actiontypes.SEARCH_MORE.success():
-                let {category, token} = action.meta;
+                let {category, token} = action.options;
                 if (!category || !token) throw new Error("we expect token and category");
 
                 if (category !== reducerCategory) return state;
