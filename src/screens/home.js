@@ -14,8 +14,7 @@ import * as types from "../types"
 import Snackbar from "react-native-snackbar"
 import i18n from '../i18n/i18n'
 import * as UIStyles from "./UIStyles";
-import ApiAction from "../utils/ApiAction";
-import {saveItem} from "./actions";
+import CurrentUser from "../CurrentUser"
 
 class HomeScreen extends Component {
 
@@ -70,10 +69,15 @@ class HomeScreen extends Component {
         });
 
 
+        //user_id => user_object ?
+        // yes: user.list = base feed data
+        // no: get_user{include:list}
+        // fetch more => grow user object
         return (
             <MainBackground>
                 <View>
                     <LineupList
+                        userId={CurrentUser.id}
                         onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
                         onSavingPressed={(saving) => this.onSavingPressed(saving)}
                         onAddInLineupPressed={(this.state.pendingItem) ? null : (lineup) => this.addInLineup(lineup)}

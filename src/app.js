@@ -80,16 +80,16 @@ export default class App {
 
     logged = null;
 
-    testScreen = null;
+    // testScreen = null;
 
 
     // testScreen = {
     //     screen: {
     //         label: 'test',
-    //         screen: 'goodsh.CommunityScreen',
+    //         screen: 'goodsh.LineupListScreen',
     //     },
     //     passProps: {
-    //         lineupId: "37e67b05-c86c-4aeb-b3af-bf1c34862cd0",
+    //         userId: "b871ecdf-f15c-43bf-b94f-abcbaab637ba",
     //     }
     // };
 

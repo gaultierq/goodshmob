@@ -80,9 +80,11 @@ export default class Feed<T> extends Component  {
                 resolve();
             }
             else {
-                this.setState({[t]: true});
-
                 let {fetchSrc}= this.props;
+
+                if (!fetchSrc) return;
+
+                this.setState({[t]: true});
 
                 let call = fetchSrc.callFactory();
 

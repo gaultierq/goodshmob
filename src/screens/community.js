@@ -84,8 +84,6 @@ const actions = (() => {
             return new Api.Call().withMethod('GET')
                 .withRoute(`users/${userId}/friends`)
                 .addQuery({
-                    page: 1,
-                    per_page: 10,
                     include: "creator"
                 });
         },

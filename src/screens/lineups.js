@@ -25,17 +25,19 @@ import {TP_MARGINS} from "./UIStyles";
 import {SearchBar} from 'react-native-elements'
 import build from 'redux-object'
 import Fuse from 'fuse.js'
-import type types, {List} from "../types";
+import type types, {Id, List} from "../types";
 import ItemCell from "./components/ItemCell";
 import Feed from "./components/feed";
 import Swipeout from "react-native-swipeout";
 import CurrentUser from "../CurrentUser"
 import {actions as savingsActions} from "./savings"
 import ApiAction from "../utils/ApiAction";
+import {buildData} from "../utils/DataUtils";
 
 class LineupListScreen extends Component {
 
     props: {
+        userId: Id,
         onLineupPressed: (lineup: List) => void,
         onSavingPressed: Function,
         onAddInLineupPressed: Function,
@@ -59,11 +61,27 @@ class LineupListScreen extends Component {
         }
     }
 
+    componentWillMount() {
+        if (!this.getUser()) {
+            this.props.dispatch(actions.getUser(this.props.userId).disptachForAction2(actiontypes.FETCH_USER));
+        }
+    }
+
+    getUser() {
+        return buildData(this.props.data, "users", this.props.userId);
+    }
+
     render() {
-        let lineupList = this.props.lineupList;
+        //TODO: when generalized include is working
+        // const user = this.getUser();
+        // let lineups : Array<types.List> = user ? user.lists || [] : [];
+
         //let lineups = lineupList.list.map((l) => buildNonNullData(this.props.data, "lists", l.id));
+
+        let lineupList = this.props.lineupList;
         let ids = lineupList.list.asMutable().map(o=>o.id);
         let lineups : Array<types.List> = build(this.props.data, "lists", ids, {includeType: true});
+
 
         let data: Array<types.List|types.Item>;
 
@@ -74,6 +92,13 @@ class LineupListScreen extends Component {
             data = lineups;
         }
 
+        let fetchSrc = this.props.userId === CurrentUser.id ? {
+            callFactory: actions.fetchCall,
+            action: actiontypes.FETCH_LINEUPS
+        } : null;
+
+        //let hasNoMore = !this.props.lineupList.hasNoMore;
+        let hasNoMore = true;
         return (
             <View>
                 <SearchBar
@@ -89,11 +114,8 @@ class LineupListScreen extends Component {
                 <Feed
                     data={data}
                     renderItem={this.renderItem.bind(this)}
-                    fetchSrc={{
-                        callFactory: actions.fetchCall,
-                        action: actiontypes.FETCH_LINEUPS
-                    }}
-                    hasMore={!this.props.lineupList.hasNoMore}
+                    fetchSrc={fetchSrc}
+                    hasMore={!hasNoMore}
                     ListHeaderComponent={this.renderHeader()}
                     style={{marginBottom: 120}} //FIXME: this is a hack.
                 />
@@ -310,12 +332,12 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const actiontypes = (() => {
+    const FETCH_USER = new ApiAction("fetch_user");
     const FETCH_LINEUPS = new ApiAction("fetch_lineups");
-    const FETCH_MORE_LINEUPS = new ApiAction("fetch_more_lineups");
     const CREATE_LINEUP = new ApiAction("create_lineup");
     const DELETE_LINEUP = new ApiAction("delete_lineup");
 
-    return {FETCH_LINEUPS, FETCH_MORE_LINEUPS, CREATE_LINEUP, DELETE_LINEUP};
+    return {FETCH_LINEUPS, CREATE_LINEUP, DELETE_LINEUP, FETCH_USER};
 })();
 
 
@@ -326,10 +348,16 @@ const actions = (() => {
             .withMethod('GET')
             .withRoute("lists")
             .addQuery({
-                page: 1,
-                per_page: 10,
-                include: "creator"
-            }),
+                    include: "creator"
+                }
+            ),
+        getUser: (userId): Api.Call => new Api.Call()
+            .withMethod('GET')
+            .withRoute(`users/${userId}`)
+            .addQuery({
+                    include: "lists,lists.*"
+                }
+            ),
         createLineup: (listName) => {
             let call = new Api.Call()
                 .withMethod('POST')
