@@ -68,7 +68,7 @@ export type User = Base & {
     image: any,
     email: any,
     timezone: any,
-    goodshbox: any,
+    goodshbox: List,
     lists: any,
 
 }

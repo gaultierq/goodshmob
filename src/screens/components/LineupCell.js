@@ -5,6 +5,7 @@ import {View, Text, Image, TouchableHighlight, FlatList} from 'react-native';
 import * as Model from "../../models/index"
 import * as UI from "../UIStyles";
 import {assertUnique} from "../../utils/DataUtils";
+import List from "../../models/List";
 
 export default class LineupCell extends React.Component {
 
@@ -33,21 +34,26 @@ export default class LineupCell extends React.Component {
                         keyExtractor={(item, index) => item.id}
                         horizontal={true}
                         ListHeaderComponent={
-                            this.props.onAddInLineupPressed && <TouchableHighlight onPress={() => this.props.onAddInLineupPressed(lineup)}>
-                                <Image
-                                    source={require('../../img/plus.png')} resizeMode="contain"
-                                    style={{
-                                        height: 30,
-                                        width: 30,
-                                        margin: 20
-                                    }}
-                                />
-                            </TouchableHighlight>
+                            this.renderAddInLineup(lineup)
                         }
                     />
                 </View>
             </View>
         )
+    }
+
+    renderAddInLineup(lineup:List) {
+        return this.props.onAddInLineupPressed &&
+            <TouchableHighlight onPress={() => this.props.onAddInLineupPressed(lineup)}>
+                <Image
+                    source={require('../../img/plus.png')} resizeMode="contain"
+                    style={{
+                        height: 30,
+                        width: 30,
+                        margin: 20
+                    }}
+                />
+            </TouchableHighlight>;
     }
 
     renderItem(item) {

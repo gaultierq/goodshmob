@@ -4,38 +4,50 @@ import React, {Component} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {connect} from "react-redux";
 import {MainBackground} from "./UIComponents";
-import build from 'redux-object'
 import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
-import ItemCell from "./components/ItemCell";
 import Feed from "./components/feed";
 import Swipeout from 'react-native-swipeout';
 import type * as types from "../types";
-import {buildNonNullData} from "../utils/DataUtils";
-import CurrentUser from  "../CurrentUser"
-import ApiAction from "../utils/ApiAction";
 import type {Saving} from "../types";
+import {buildNonNullData} from "../utils/DataUtils";
+import CurrentUser from "../CurrentUser"
+import ApiAction from "../utils/ApiAction";
 import ActivityCell from "../activity/components/ActivityCell";
+import type {User} from "../types";
 
 class SavingsScreen extends Component {
 
     props : {
         lineupId: string,
-        lineup:? types.List
     };
 
-    componentWillMount() {
-        this.lineup = this.getLineup();
-    }
+    state: {title: null|{title: string, titleImage: string}} = {title: null};
 
     render() {
+        const lineup = this.getLineup();
+
+
+        if (this.state.title) {
+            this.props.navigator.setTitle(this.state.title);
+        }
+        else if (lineup) {
+
+            let user:User = lineup.user;
+
+            let title = lineup.name;
+            let titleImage = user.goodshbox.id === lineup.id ? require('../img/goodshbox.png') : null;
+            this.props.navigator.setTitle({title, titleImage});
+            this.setState({title: {title, titleImage}});
+
+        }
 
         return (
             <MainBackground>
                 <View style={styles.container}>
                     <Feed
-                        data={this.lineup.savings}
-                        renderItem={this.renderItem.bind(this)}
+                        data={lineup.savings}
+                        renderItem={item => this.renderItem(item, lineup)}
                         fetchSrc={{
                             callFactory:()=>actions.loadSavings(this.props.lineupId),
                             action:actionTypes.LOAD_SAVINGS
@@ -48,15 +60,14 @@ class SavingsScreen extends Component {
         );
     }
 
-    getLineup() {
+    getLineup() : List {
         return this.props.lineup || buildNonNullData(this.props.data, "lists", this.props.lineupId);
     }
 
-    renderItem(item) {
+    renderItem(item, lineup) {
         let saving: Saving = item.item;
-        //let saving = this.lineup.savings.filter((sav)=>sav.resource.id === it.id)[0];
 
-        let disabled = this.lineup.user.id !== CurrentUser.id;
+        let disabled = lineup.user.id !== CurrentUser.id;
 
         let swipeBtns = [{
             text: 'Delete',
