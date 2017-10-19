@@ -22,25 +22,31 @@ class SavingsScreen extends Component {
         lineupId: string,
     };
 
-    state: {title: null|{title: string, titleImage: string}} = {title: null};
+    //titleSet because when navigating back, a render may change the nav bar title. this is a flaw in wix nav
+    state: {
+        title: null|{title: string, titleImage: string},
+        titleSet: boolean
+    } = {title: null, titleSet: false};
 
     render() {
         const lineup = this.getLineup();
 
+        //FIXME: this is shit
+        if (!this.state.titleSet) {
+            if (this.state.title) {
+                this.setState({titleSet: true}, () => this.props.navigator.setTitle(this.state.title));
+            }
+            else if (lineup) {
 
-        if (this.state.title) {
-            this.props.navigator.setTitle(this.state.title);
+                let user:User = lineup.user;
+
+                let title = lineup.name;
+                let titleImage = user.goodshbox.id === lineup.id ? require('../img/goodshbox.png') : null;
+                this.props.navigator.setTitle({title, titleImage});
+                this.setState({title: {title, titleImage}});
+            }
         }
-        else if (lineup) {
 
-            let user:User = lineup.user;
-
-            let title = lineup.name;
-            let titleImage = user.goodshbox.id === lineup.id ? require('../img/goodshbox.png') : null;
-            this.props.navigator.setTitle({title, titleImage});
-            this.setState({title: {title, titleImage}});
-
-        }
 
         return (
             <MainBackground>
