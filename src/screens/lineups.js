@@ -113,7 +113,7 @@ class LineupListScreen extends Component {
                     renderItem={this.renderItem.bind(this)}
                     fetchSrc={fetchSrc}
                     hasMore={!hasNoMore}
-                    ListHeaderComponent={this.renderHeader()}
+                    //ListHeaderComponent={this.renderHeader()}
                     style={{marginBottom: 120}} //FIXME: this is a hack.
                 />
 
