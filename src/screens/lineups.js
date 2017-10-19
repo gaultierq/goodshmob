@@ -12,7 +12,7 @@ import {
     TouchableHighlight,
     View
 } from 'react-native';
-import Modal from 'react-native-modal'
+
 
 import {connect} from "react-redux";
 import LineupCell from "./components/LineupCell";
@@ -20,8 +20,6 @@ import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
 import i18n from '../i18n/i18n'
 import * as UI from "../screens/UIStyles";
-import Button from 'apsl-react-native-button'
-import {TP_MARGINS} from "./UIStyles";
 import {SearchBar} from 'react-native-elements'
 import build from 'redux-object'
 import Fuse from 'fuse.js'
@@ -33,6 +31,7 @@ import CurrentUser from "../CurrentUser"
 import {actions as savingsActions} from "./savings"
 import ApiAction from "../utils/ApiAction";
 import {buildData} from "../utils/DataUtils";
+import {CREATE_LINEUP} from "./actions"
 
 class LineupListScreen extends Component {
 
@@ -53,8 +52,6 @@ class LineupListScreen extends Component {
     constructor(){
         super();
         this.state= {
-            isCreatingLineup: false,
-            modalVisible: false,
             filter: null,
             isLoading: false,
             isLoadingMore: false,
@@ -119,7 +116,7 @@ class LineupListScreen extends Component {
                     ListHeaderComponent={this.renderHeader()}
                     style={{marginBottom: 120}} //FIXME: this is a hack.
                 />
-                {this.renderModal()}
+
             </View>
         );
     }
@@ -162,13 +159,7 @@ class LineupListScreen extends Component {
     }
 
     onSearchInputChange(input) {
-        this.setState({filter: input}, () => this.performSearch());
-    }
-
-
-    performSearch() {
-        // execute the local search here !
-
+        this.setState({filter: input});
     }
 
     isSearching() {
@@ -253,63 +244,6 @@ class LineupListScreen extends Component {
         )
 
     }
-
-
-    renderModal() {
-        return (
-            <Modal
-                isVisible={this.state.modalVisible}
-            >
-                <View style={{
-                    backgroundColor: 'white',
-                    padding: 10,
-                    borderRadius: 4,
-                    borderColor: 'rgba(0, 0, 0, 0.1)',
-                }}>
-                    <View>
-                        <Text>Add a new lineup</Text>
-                        <Text>Be creative ;)</Text>
-
-                        <TextInput
-                            style={{...TP_MARGINS(20), height: 40, borderColor: 'gray', borderWidth: 1}}
-                            onChangeText={(text) => this.setState({newLineupName: text})}
-                            value={this.state.text}
-                        />
-
-                        <Button
-                            isLoading={this.state.isCreatingLineup}
-                            isDisabled={!this.state.newLineupName}
-                            onPress={this.createLineup.bind(this)}>
-                            <Text>Add</Text>
-                        </Button>
-
-                        <Button
-                            onPress={() => {
-                                this.setModalVisible(!this.state.modalVisible)
-                            }}>
-                            <Text>Cancel</Text>
-                        </Button>
-                    </View>
-                </View>
-            </Modal>
-        );
-    }
-
-    setModalVisible(visible) {
-        this.setState({modalVisible: visible});
-    }
-
-    onRefresh() {
-        this.load();
-    }
-    createLineup() {
-        if (!this.state.newLineupName) return;
-        if (this.state.isCreatingLineup) return;
-        this.setState({isCreatingLineup: true});
-        this.props.dispatch(actions.createLineup(this.state.newLineupName))
-            .then(()=> this.setModalVisible(false)).then(()=> this.setState({isCreatingLineup: false}));
-    }
-
 }
 
 const styles = StyleSheet.create({
@@ -334,10 +268,9 @@ const mapStateToProps = (state, ownProps) => ({
 const actiontypes = (() => {
     const FETCH_USER = new ApiAction("fetch_user");
     const FETCH_LINEUPS = new ApiAction("fetch_lineups");
-    const CREATE_LINEUP = new ApiAction("create_lineup");
     const DELETE_LINEUP = new ApiAction("delete_lineup");
 
-    return {FETCH_LINEUPS, CREATE_LINEUP, DELETE_LINEUP, FETCH_USER};
+    return {FETCH_LINEUPS, DELETE_LINEUP, FETCH_USER};
 })();
 
 
@@ -358,18 +291,6 @@ const actions = (() => {
                     include: "lists,lists.*"
                 }
             ),
-        createLineup: (listName) => {
-            let call = new Api.Call()
-                .withMethod('POST')
-                .withRoute("lists")
-                .withBody({
-                    "list": {
-                        "name": listName
-                    }
-                });
-
-            return call.disptachForAction(actiontypes.CREATE_LINEUP);
-        },
         deleteLineup : (lineup) => {
             let call = new Api.Call()
                 .withMethod('DELETE')
@@ -387,14 +308,15 @@ const reducer = (() => {
         let desc = {fetchFirst: actiontypes.FETCH_LINEUPS, fetchMore: actiontypes.FETCH_MORE_LINEUPS};
         state = Api.reduceList(state, action, desc);
         switch (action.type) {
-            case actiontypes.CREATE_LINEUP.success():
+            case CREATE_LINEUP.success():
                 let payload = action.payload;
                 let {id, type} = payload.data;
                 let newItem = {id, type};
 
-                let list = state.list.map((val, index) => {
-                    return (index === 1) ? newItem : val;
-                });
+                let current = state.list;
+                let list = [current[0], newItem, ...current.slice(1)];
+
+
                 state = state.merge({list});
                 break;
         }

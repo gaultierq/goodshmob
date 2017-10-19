@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, Text, TextInput, View} from 'react-native';
 
 import {connect} from "react-redux";
 import {MainBackground} from "./UIComponents";
@@ -15,16 +15,34 @@ import Snackbar from "react-native-snackbar"
 import i18n from '../i18n/i18n'
 import * as UIStyles from "./UIStyles";
 import CurrentUser from "../CurrentUser"
+import Icon from 'react-native-vector-icons/Ionicons';
+import Modal from 'react-native-modal'
+import Button from 'apsl-react-native-button'
+import {TP_MARGINS} from "./UIStyles";
+import {createLineup, saveItem} from "./actions";
+import Item from "../models/Item";
 
 class HomeScreen extends Component {
 
     static navigationOptions = { title: 'Welcome', header: null };
 
+
+    state : {
+        pendingItem: Item,
+        pendingList: List,
+        isCreatingLineup: boolean,
+        modalVisible: boolean,
+        newLineupName: null | string
+    };
+
     constructor(props){
         super(props);
         this.state = {
             pendingItem: null,
-            pendingList: null
+            pendingList: null,
+            isCreatingLineup: false,
+            modalVisible: false,
+            newLineupName: null
         };
 
         props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
@@ -86,13 +104,76 @@ class HomeScreen extends Component {
 
                 </View>
 
-                {this.displayFloatingButton() && <ActionButton
+                {this.displayFloatingButton() &&
+                <ActionButton
                     buttonColor="rgba(231,76,60,1)"
-                    onPress={() => { this.onFloatingButtonPressed() }}
-                />}
+                    // onPress={() => { this.onFloatingButtonPressed() }}
+                >
+                    <ActionButton.Item buttonColor='#3498db' title="Ajouter quelquechose" onPress={this.onFloatingButtonPressed.bind(this)}>
+                        <Icon name="md-notifications-off" style={styles.actionButtonIcon} />
+                    </ActionButton.Item>
+                    <ActionButton.Item buttonColor='#1abc9c' title="Ajouter une liste" onPress={() => this.setModalVisible(true)}>
+                        <Icon name="md-done-all" style={styles.actionButtonIcon} />
+                    </ActionButton.Item>
+                </ActionButton>
+                }
+
+                {this.renderModal()}
 
             </MainBackground>
         );
+    }
+
+    renderModal() {
+        return (
+            <Modal
+                isVisible={this.state.modalVisible}
+            >
+                <View style={{
+                    backgroundColor: 'white',
+                    padding: 10,
+                    borderRadius: 4,
+                    borderColor: 'rgba(0, 0, 0, 0.1)',
+                }}>
+                    <View>
+                        <Text>Add a new lineup</Text>
+                        <Text>Be creative ;)</Text>
+
+                        <TextInput
+                            style={{...TP_MARGINS(20), height: 40, borderColor: 'gray', borderWidth: 1}}
+                            onChangeText={(text) => this.setState({newLineupName: text})}
+                            value={this.state.text}
+                        />
+
+                        <Button
+                            isLoading={this.state.isCreatingLineup}
+                            isDisabled={!this.state.newLineupName}
+                            onPress={this.createLineup.bind(this)}>
+                            <Text>Add</Text>
+                        </Button>
+
+                        <Button
+                            onPress={() => {
+                                this.setModalVisible(!this.state.modalVisible)
+                            }}>
+                            <Text>Cancel</Text>
+                        </Button>
+                    </View>
+                </View>
+            </Modal>
+        );
+    }
+
+    setModalVisible(visible) {
+        this.setState({modalVisible: visible});
+    }
+
+    createLineup() {
+        if (!this.state.newLineupName) return;
+        if (this.state.isCreatingLineup) return;
+        this.setState({isCreatingLineup: true});
+        this.props.dispatch(createLineup(this.state.newLineupName))
+            .then(()=> this.setModalVisible(false)).then(()=> this.setState({isCreatingLineup: false}));
     }
 
     getRightButtonDefinition() {
@@ -191,7 +272,7 @@ class HomeScreen extends Component {
         if (this.state.pendingItem && this.state.pendingList) {
             console.info(`${this.state.pendingItem.title} waiting to be added in ${this.state.pendingList.name}`);
             this.props
-                .dispatch(actions.saveItem(this.state.pendingItem.id, this.state.pendingList.id, ))
+                .dispatch(saveItem(this.state.pendingItem.id, this.state.pendingList.id, ))
                 .then(() => {
                     Snackbar.show({
                         title: i18n.t('shared.goodsh_saved'),
@@ -206,7 +287,12 @@ class HomeScreen extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-    }
+    },
+    actionButtonIcon: {
+        fontSize: 20,
+        height: 22,
+        color: 'white',
+    },
 });
 
 const mapStateToProps = (state, ownProps) => ({
