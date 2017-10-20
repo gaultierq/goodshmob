@@ -32,6 +32,8 @@ import {actions as savingsActions} from "./savings"
 import ApiAction from "../utils/ApiAction";
 import {buildData} from "../utils/DataUtils";
 import {CREATE_LINEUP} from "./actions"
+import algoliasearch from 'algoliasearch/reactnative';
+
 
 class LineupListScreen extends Component {
 
@@ -47,6 +49,7 @@ class LineupListScreen extends Component {
     state: {
         isLoading: boolean,
         isLoadingMore: boolean,
+        searchResult: {lists: Array, savings: Array}
     };
 
     constructor(){
@@ -55,6 +58,7 @@ class LineupListScreen extends Component {
             filter: null,
             isLoading: false,
             isLoadingMore: false,
+            searchResult:  {lists: [], savings: []}
         }
     }
 
@@ -82,9 +86,16 @@ class LineupListScreen extends Component {
 
         let data: Array<types.List|types.Item>;
 
-        if (this.state.filter) {
-            data = this.applyFilter(lineups);
+        let searchResult = this.state.searchResult;
+        let hasSearchResult = searchResult.savings.length > 0 || searchResult.lists.length > 0;
+
+        if (this.state.filter && hasSearchResult) {
+            data = [].concat(searchResult.lists, searchResult.savings);
         }
+        //deactivate local search until further notice
+        // else if (this.state.filter) {
+        //     data = this.applyFilter(lineups);
+        // }
         else {
             data = lineups;
         }
@@ -127,8 +138,6 @@ class LineupListScreen extends Component {
         return cfoi;
 
     }
-
-
     applyFilter(lineups) {
         if (!lineups) return lineups;
         let searchIn = [];
@@ -160,6 +169,68 @@ class LineupListScreen extends Component {
 
     onSearchInputChange(input) {
         this.setState({filter: input});
+
+        if (input) {
+            this.performAlgoliaSearch(input);
+        }
+        else {
+            let lists = [], savings = [];
+            this.setState({searchResult: {lists, savings}});
+        }
+    }
+
+    performAlgoliaSearch(input) {
+        let client = algoliasearch("8UTETUZKD3", "c80385095ff870f5ddf9ba25310a9d5a");
+
+        const queries = [{
+            indexName: 'List_development',
+            query: input,
+            params: {
+                hitsPerPage: 10,
+                filters: 'user_id:' + this.props.userId
+            }
+        }, {
+            indexName: 'Saving_development',
+            query: input,
+            params: {
+                hitsPerPage: 10,
+                filters: 'user_id:' + this.props.userId
+            }
+        }
+        ];
+
+        client.search(queries, (err, content) => {
+            let i;
+            if (err) {
+                console.error(err);
+                return;
+            }
+            let lists = content.results[0].hits.map((l) => {
+                let user = Object.assign({type: "users"}, l.user, {id: l.user_id});
+                return {
+                    id: l.objectID,
+                    name: l.name,
+                    user: user,
+                    type: "lists"
+                };
+            });
+
+            let savings = content.results[1].hits.map((flat) => {
+                let user = Object.assign({type: "users"}, flat.user, {id: flat.user_id});
+
+                return {
+                    id: flat.objectID,
+                    name: flat.name,
+                    user: user,
+                    resource: {type: flat.type, image: flat.image, url: flat.url, title: flat.name},
+                    type: "savings"
+                };
+            });
+            console.log(`search result lists: ${JSON.stringify(lists)}`);
+            console.log(`search result savings: ${JSON.stringify(savings)}`);
+
+            this.setState({searchResult: {lists, savings}});
+        });
     }
 
     isSearching() {
@@ -193,19 +264,18 @@ class LineupListScreen extends Component {
     }
 
     //render a lineup row
-    renderItem(item) {
-        let it = item.item;
+    renderItem({item}) {
 
         let result;
-        let isLineup = it.type === 'lists';
+        let isLineup = item.type === 'lists';
 
         if (isLineup) {
-            let handler = this.props.onLineupPressed ? () => this.props.onLineupPressed(it) : null;
+            let handler = this.props.onLineupPressed ? () => this.props.onLineupPressed(item) : null;
             result = (
                 <TouchableHighlight onPress={handler}>
                     <View>
                         <LineupCell
-                            lineup={it}
+                            lineup={item}
                             onAddInLineupPressed={this.props.onAddInLineupPressed}
                         />
                     </View>
@@ -213,7 +283,7 @@ class LineupListScreen extends Component {
             )
         }
         else {
-            let saving = it;
+            let saving = item;
 
             let resource = saving.resource;
             result = (
@@ -224,13 +294,13 @@ class LineupListScreen extends Component {
             )
         }
 
-        let disabled = it.user.id !== CurrentUser.id;
+        let disabled = item.user.id !== CurrentUser.id;
 
         let swipeBtns = [{
             text: 'Delete',
             backgroundColor: 'red',
             underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-            onPress: () => this.props.dispatch((isLineup? actions.deleteLineup : savingsActions.deleteSaving)(it))
+            onPress: () => this.props.dispatch((isLineup? actions.deleteLineup : savingsActions.deleteSaving)(item))
         }];
 
         // return result;
@@ -280,10 +350,7 @@ const actions = (() => {
         fetchCall: () => new Api.Call()
             .withMethod('GET')
             .withRoute("lists")
-            .addQuery({
-                    include: "creator"
-                }
-            ),
+        ,
         getUser: (userId): Api.Call => new Api.Call()
             .withMethod('GET')
             .withRoute(`users/${userId}`)
