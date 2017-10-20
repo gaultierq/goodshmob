@@ -206,22 +206,21 @@ class LineupListScreen extends Component {
                 return;
             }
             let lists = content.results[0].hits.map((l) => {
-                let user = Object.assign({type: "users"}, l.user, {id: l.user_id});
-                return {
+                return buildData(this.props.data, "lists", l.objectID) ||
+                {
                     id: l.objectID,
                     name: l.name,
-                    user: user,
+                    user: Object.assign({type: "users"}, l.user, {id: l.user_id}),
                     type: "lists"
                 };
             });
 
             let savings = content.results[1].hits.map((flat) => {
-                let user = Object.assign({type: "users"}, flat.user, {id: flat.user_id});
-
-                return {
+                return buildData(this.props.data, "savings", flat.objectID) ||
+                {
                     id: flat.objectID,
                     name: flat.name,
-                    user: user,
+                    user: Object.assign({type: "users"}, flat.user, {id: flat.user_id}),
                     resource: {type: flat.type, image: flat.image, url: flat.url, title: flat.name},
                     type: "savings"
                 };
@@ -286,6 +285,9 @@ class LineupListScreen extends Component {
             let saving = item;
 
             let resource = saving.resource;
+            //TODO: this is hack
+            if (!resource) return null;
+
             result = (
                 <ItemCell
                     item={resource}

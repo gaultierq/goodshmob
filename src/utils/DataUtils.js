@@ -43,7 +43,7 @@ export function buildData(store, type, id: Id) {
 
 
 export function buildNonNullData(store, type, id: Id, assertNonNull?: boolean = true) {
-    let result = build(store, type, id);
+    let result = build(store, type, id, {includeType: true});
 
 
     if (!result) {

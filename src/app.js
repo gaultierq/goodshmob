@@ -83,15 +83,15 @@ export default class App {
     // testScreen = null;
 
 
-    testScreen = {
-        screen: {
-            label: 'test',
-            screen: 'goodsh.LineupListScreen',
-        },
-        passProps: {
-            userId: "662a61d0-5473-4d09-9410-c63aadc12e6c",
-        }
-    };
+    // testScreen = {
+    //     screen: {
+    //         label: 'test',
+    //         screen: 'goodsh.LineupListScreen',
+    //     },
+    //     passProps: {
+    //         userId: "662a61d0-5473-4d09-9410-c63aadc12e6c",
+    //     }
+    // };
 
     constructor() {
         // since react-redux only works on components, we need to subscribe this class manually

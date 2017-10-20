@@ -1,12 +1,8 @@
 // @flow
 
-import React, {Component} from 'react';
-import {StyleSheet, View, Text, Image, Button, TouchableOpacity, TouchableHighlight, FlatList} from 'react-native';
-import * as Model from "../../models/index"
-import i18n from '../../i18n/i18n'
+import React from 'react';
+import {Button, FlatList, Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
 import * as UI from "../UIStyles";
-import {connect} from "react-redux";
-import {buildNonNullData} from "../../utils/DataUtils";
 
 
 export default class ItemCell extends React.Component {
