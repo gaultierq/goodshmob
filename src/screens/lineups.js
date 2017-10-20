@@ -81,7 +81,8 @@ class LineupListScreen extends Component {
 
         let lineupList = this.props.lineupList;
         let ids = lineupList.list.asMutable().map(o=>o.id);
-        let lineups : Array<types.List> = build(this.props.data, "lists", ids, {includeType: true});
+        //let lineups : Array<types.List> = build(this.props.data, "lists", ids, {includeType: true});
+        let lineups : Array<types.List> = ids.map((id) => ({id, type: "lists"}));
 
 
         let data: Array<types.List|types.Item>;
@@ -200,30 +201,33 @@ class LineupListScreen extends Component {
         ];
 
         client.search(queries, (err, content) => {
-            let i;
+
+            //FIXME: do not build object here. The main use-case is a result not in the redux store.
             if (err) {
                 console.error(err);
                 return;
             }
             let lists = content.results[0].hits.map((l) => {
-                return buildData(this.props.data, "lists", l.objectID) ||
+                return (
+                    // buildData(this.props.data, "lists", l.objectID) ||
                 {
                     id: l.objectID,
                     name: l.name,
                     user: Object.assign({type: "users"}, l.user, {id: l.user_id}),
                     type: "lists"
-                };
+                });
             });
 
             let savings = content.results[1].hits.map((flat) => {
-                return buildData(this.props.data, "savings", flat.objectID) ||
+                return (
+                // buildData(this.props.data, "savings", flat.objectID) ||
                 {
                     id: flat.objectID,
                     name: flat.name,
                     user: Object.assign({type: "users"}, flat.user, {id: flat.user_id}),
                     resource: {type: flat.type, image: flat.image, url: flat.url, title: flat.name},
                     type: "savings"
-                };
+                });
             });
             console.log(`search result lists: ${JSON.stringify(lists)}`);
             console.log(`search result savings: ${JSON.stringify(savings)}`);
@@ -267,6 +271,10 @@ class LineupListScreen extends Component {
 
         let result;
         let isLineup = item.type === 'lists';
+
+        //item can be from search, and not yet in redux store
+        item = buildData(this.props.data, item.type, item.id) || item;
+
 
         if (isLineup) {
             let handler = this.props.onLineupPressed ? () => this.props.onLineupPressed(item) : null;
