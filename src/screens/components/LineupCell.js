@@ -6,6 +6,7 @@ import * as Model from "../../models/index"
 import * as UI from "../UIStyles";
 import {assertUnique} from "../../utils/DataUtils";
 import List from "../../models/List";
+import {isEmpty} from "lodash";
 
 export default class LineupCell extends React.Component {
 
@@ -25,18 +26,27 @@ export default class LineupCell extends React.Component {
 
         return (
             <View style={{}}>
-                <Text style={Object.assign({backgroundColor: 'transparent'}, UI.SIDE_MARGINS(cardMargin))}>{lineup.name}</Text>
-
                 <View style={Object.assign({marginTop: cardMargin, marginBottom: cardMargin}, UI.CARD(cardMargin))}>
-                    <FlatList
-                        data={savings}
-                        renderItem={this.renderItem.bind(this)}
-                        keyExtractor={(item, index) => item.id}
-                        horizontal={true}
-                        ListHeaderComponent={
-                            this.renderAddInLineup(lineup)
-                        }
-                    />
+
+                    <Text style={
+                        Object.assign({backgroundColor: 'transparent'},
+                            UI.TEXT_LIST,
+                            UI.SIDE_MARGINS(cardMargin))}>
+                        {lineup.name}
+                    </Text>
+
+                    {
+                        isEmpty(savings) ?
+                            <Text style={{padding:8, ...UI.TEXT_NOT_IMPORTANT}}>This list is empty</Text> :
+                            <FlatList
+                                data={savings}
+                                renderItem={this.renderItem.bind(this)}
+                                keyExtractor={(item, index) => item.id}
+                                horizontal={true}
+                                ListHeaderComponent={
+                                    this.renderAddInLineup(lineup)
+                                }
+                            />}
                 </View>
             </View>
         )

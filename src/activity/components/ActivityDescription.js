@@ -33,7 +33,6 @@ export default class ActivityDescription extends React.Component {
             targetName = target.name;
             if (count) targetName += " (" + count + ")"
         }
-
         return <View style={{margin: cardMargin, marginBottom: 8, backgroundColor: 'transparent'}}>
 
 
@@ -52,7 +51,7 @@ export default class ActivityDescription extends React.Component {
                         }}>{i18n.t("activity_item.header.in")}</Text>
                         <TouchableOpacity>
                             <Text
-                                style={{fontSize: 14, color: UI.Colors.blue}}>
+                                style={UI.TEXT_LIST}>
                                 {targetName}
                             </Text>
                         </TouchableOpacity>

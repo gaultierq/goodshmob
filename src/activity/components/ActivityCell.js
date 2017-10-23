@@ -1,18 +1,16 @@
 // @flow
 
 import React from 'react';
-import {Image, Share, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
+import {Image, Linking, Share, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
 import * as Model from "../../models/index"
 import i18n from '../../i18n/i18n'
 import * as UI from "../../screens/UIStyles";
 import * as activityAction from "../actions"
 import {connect} from "react-redux";
 import {buildNonNullData} from "../../utils/DataUtils";
-import * as types from "../actionTypes";
 import ActivityDescription from "./ActivityDescription";
-import type {Activity, ActivityType, Id, List, Url, Item} from "../../types"
+import type {Activity, ActivityType, Id, Item, List, Url} from "../../types"
 import {saveItem} from "../../screens/actions";
-import {Linking} from "react-native";
 import FeedSeparator from "./FeedSeparator";
 
 class ActivityCell extends React.Component {
@@ -61,11 +59,10 @@ class ActivityCell extends React.Component {
 
                     <View style={{padding: 15}}>
                         <Text style={{fontSize: 18, fontFamily: 'Chivo-Light',}}>{resource.title}</Text>
-                        <Text style={{fontSize: 12, color: UI.Colors.grey2}}>{resource.subtitle}</Text>
+                        <Text style={UI.TEXT_NOT_IMPORTANT}>{resource.subtitle}</Text>
                     </View>
 
                     <FeedSeparator/>
-
 
                     <View style={{
                         flex: 1,

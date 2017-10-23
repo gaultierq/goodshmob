@@ -1,3 +1,4 @@
+//@flow
 
 
 export const NavStyles = Object.freeze({
@@ -39,3 +40,7 @@ export const TP_MARGINS = (margin) => {
         marginBottom: margin,
     }
 };
+
+
+export const TEXT_LIST = {fontSize: 14, color: Colors.blue};
+export const TEXT_NOT_IMPORTANT = {fontSize: 12, color: Colors.grey2};
