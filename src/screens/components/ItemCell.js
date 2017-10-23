@@ -10,6 +10,7 @@ export default class ItemCell extends React.Component {
 
     props: {
         onPressItem: Function;
+        displayDetails: boolean
     };
 
     render() {
@@ -42,8 +43,11 @@ export default class ItemCell extends React.Component {
                     />
                     }
                     <View style={{flex:1, padding: 15}}>
-                        <Text style={{fontSize: 18, fontFamily: 'Chivo-Light', }}>{resource.title}</Text>
-                        <Text style={{fontSize: 12, color: UI.Colors.grey2}}>{resource.subtitle}</Text>
+                        <Text
+                            style={styles.title}
+                            numberOfLines={this.props.displayDetails ? 7 : 3}
+                        >{resource.title}</Text>
+                        <Text style={styles.subtitle}>{resource.subtitle}</Text>
                     </View>
                     <Image source={require('../../img/mini-g-number.png')} resizeMode="contain"
                            style={{
@@ -59,3 +63,13 @@ export default class ItemCell extends React.Component {
 
 
 }
+
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    title: {fontSize: 18, fontFamily: 'Chivo-Light', },
+    subtitle: {fontSize: 12, color: UI.Colors.grey2}
+
+});

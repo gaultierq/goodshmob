@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import {View, Text, Image, TouchableHighlight, FlatList} from 'react-native';
+import {View, Text, Image, TouchableHighlight, FlatList, StyleSheet} from 'react-native';
 import * as Model from "../../models/index"
 import * as UI from "../UIStyles";
 import {assertUnique} from "../../utils/DataUtils";
@@ -19,35 +19,27 @@ export default class LineupCell extends React.Component {
         let lineup : Model.List = this.props.lineup;
         let savings: Model.Saving[] = lineup.savings;
 
-        let cardMargin = 12;
-
-
         assertUnique(savings);
 
         return (
-            <View style={{}}>
-                <View style={Object.assign({marginTop: cardMargin, marginBottom: cardMargin}, UI.CARD(cardMargin))}>
+            <View style={styles.container}>
 
-                    <Text style={
-                        Object.assign({backgroundColor: 'transparent'},
-                            UI.TEXT_LIST,
-                            UI.SIDE_MARGINS(cardMargin))}>
-                        {lineup.name}
-                    </Text>
+                <Text style={styles.lineupTitle}>
+                    {lineup.name}
+                </Text>
 
-                    {
-                        isEmpty(savings) ?
-                            <Text style={{padding:8, ...UI.TEXT_NOT_IMPORTANT}}>This list is empty</Text> :
-                            <FlatList
-                                data={savings}
-                                renderItem={this.renderItem.bind(this)}
-                                keyExtractor={(item, index) => item.id}
-                                horizontal={true}
-                                ListHeaderComponent={
-                                    this.renderAddInLineup(lineup)
-                                }
-                            />}
-                </View>
+                {
+                    isEmpty(savings) ?
+                        <Text style={{padding:8, ...UI.TEXT_NOT_IMPORTANT}}>This list is empty</Text> :
+                        <FlatList
+                            data={savings}
+                            renderItem={this.renderItem.bind(this)}
+                            keyExtractor={(item, index) => item.id}
+                            horizontal={true}
+                            ListHeaderComponent={
+                                this.renderAddInLineup(lineup)
+                            }
+                        />}
             </View>
         )
     }
@@ -81,3 +73,12 @@ export default class LineupCell extends React.Component {
         />
     }
 }
+
+const styles = StyleSheet.create({
+    container: {marginTop: 12, marginBottom: 12, paddingTop: 6, ...UI.CARD(12)},
+    lineupTitle: {
+        backgroundColor: 'transparent',
+        ...UI.TEXT_LIST,
+        ...UI.SIDE_MARGINS(12)
+    }
+});

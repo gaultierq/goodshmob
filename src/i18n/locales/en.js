@@ -150,13 +150,13 @@ export default {
     "search_item_screen":{
         "tabs": {
             "consumer_goods":"STUFF",
-            "places_and_people":"PLACES",
+            "places":"PLACES",
             "movies":"MOVIES",
             "musics":"MUSIC"
         },
         "placeholder": {
             "consumer_goods":"Stuff",
-            "places_and_people":"City, Address...",
+            "places":"City, Address...",
             "movies":"Movies",
             "musics":"Musics"
         },
@@ -176,7 +176,7 @@ export default {
         "place_placeholder":"City, Address...",
         "around_me":"Around me",
         "consumer_goods":"Stuff",
-        "places_and_people":"Places and people",
+        "places":"Places and people",
         "musics":"Musics",
         "movies":"Movies",
         "in_category":"in %{category}"

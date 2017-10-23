@@ -49,14 +49,14 @@ const store = createStore(
     )
 );
 
-let hydrated = false
+let hydrated = false;
 
 // begin periodically persisting the store
 persistStore(store,
     {
         storage: AsyncStorage,
         transforms: [createTransform(immutableTransform.in, immutableTransform.out, immutableTransform.config)],
-        whitelist: ['auth']
+        //whitelist: ['auth']
     },
     () => {
         console.log("persist store complete");

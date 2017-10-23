@@ -21,7 +21,6 @@ import * as Api from "../utils/Api";
 import i18n from '../i18n/i18n'
 import * as UI from "../screens/UIStyles";
 import {SearchBar} from 'react-native-elements'
-import build from 'redux-object'
 import Fuse from 'fuse.js'
 import type types, {Id, List} from "../types";
 import ItemCell from "./components/ItemCell";

@@ -16,15 +16,15 @@ import {MainBackground} from "./UIComponents";
 import ApiAction from "../utils/ApiAction";
 
 
-type SearchCategory = "consumer_goods" | "places_and_people" | "musics" | "movies";
+type SearchCategory = "consumer_goods" | "places" | "musics" | "movies";
 type SearchToken = string;
 
-const SEARCH_CATEGORIES : SearchCategory = [ "consumer_goods", "places_and_people", "musics", "movies"];
+const SEARCH_CATEGORIES : Array<SearchCategory> = [ "consumer_goods", "places", "musics", "movies"];
 
 type SearchState = {
     index: number,
     input: SearchToken,
-    routes: Array<string>,
+    routes: Array<String>,
     pendingSearch: number,
     isSearching: { [key: SearchCategory]: Array<SearchToken> }
 }
@@ -50,6 +50,7 @@ class SearchScreen extends Component {
     };
 
     state : SearchState = {
+        pendingSearch: -1,
         index: 0,
         input: '', //TODO : rename it to token
         routes: SEARCH_CATEGORIES.map((c, i) => ({key: `${i}`, title: SearchScreen.getTitle(c)})),

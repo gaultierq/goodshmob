@@ -149,13 +149,13 @@ export default {
     "search_item_screen":{
         "tabs": {
             "consumer_goods":"TRUC",
-            "places_and_people":"LIEU",
+            "places":"LIEU",
             "movies":"FILM",
             "musics":"SON"
         },
         "placeholder": {
             "consumer_goods":"Plein de trucs",
-            "places_and_people":"Plein d'endroits",
+            "places":"Plein d'endroits",
             "movies":"Plein de films",
             "musics":"Plein de sons"
         },
@@ -175,7 +175,7 @@ export default {
         "query_on_place_placeholder":"Pour un GOODSH' à partager, c’est ici",
         "around_me":"Autour de moi",
         "consumer_goods":"Plein de trucs",
-        "places_and_people":"Plein d'endroits",
+        "places":"Plein d'endroits",
         "musics":"Plein de son",
         "movies":"Plein de films",
         "in_category":"dans %{category}"
