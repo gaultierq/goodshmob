@@ -30,7 +30,7 @@ export default class LineupCell extends React.Component {
 
                 {
                     isEmpty(savings) ?
-                        <Text style={{padding:8, ...UI.TEXT_NOT_IMPORTANT}}>This list is empty</Text> :
+                        <Text style={{padding:8, ...UI.TEXT_LESS_IMPORTANT}}>This list is empty</Text> :
                         <FlatList
                             data={savings}
                             renderItem={this.renderItem.bind(this)}
@@ -75,7 +75,7 @@ export default class LineupCell extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    container: {marginTop: 12, marginBottom: 12, paddingTop: 6, ...UI.CARD(12)},
+    container: {marginTop: 12, marginBottom: 12, paddingTop: 6, ...UI.CARD()},
     lineupTitle: {
         backgroundColor: 'transparent',
         ...UI.TEXT_LIST,

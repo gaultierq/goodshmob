@@ -209,24 +209,24 @@ class LineupListScreen extends Component {
             let lists = content.results[0].hits.map((l) => {
                 return (
                     // buildData(this.props.data, "lists", l.objectID) ||
-                {
-                    id: l.objectID,
-                    name: l.name,
-                    user: Object.assign({type: "users"}, l.user, {id: l.user_id}),
-                    type: "lists"
-                });
+                    {
+                        id: l.objectID,
+                        name: l.name,
+                        user: Object.assign({type: "users"}, l.user, {id: l.user_id}),
+                        type: "lists"
+                    });
             });
 
             let savings = content.results[1].hits.map((flat) => {
                 return (
-                // buildData(this.props.data, "savings", flat.objectID) ||
-                {
-                    id: flat.objectID,
-                    name: flat.name,
-                    user: Object.assign({type: "users"}, flat.user, {id: flat.user_id}),
-                    resource: {type: flat.type, image: flat.image, url: flat.url, title: flat.name},
-                    type: "savings"
-                });
+                    // buildData(this.props.data, "savings", flat.objectID) ||
+                    {
+                        id: flat.objectID,
+                        name: flat.name,
+                        user: Object.assign({type: "users"}, flat.user, {id: flat.user_id}),
+                        resource: {type: flat.type, image: flat.image, url: flat.url, title: flat.name},
+                        type: "savings"
+                    });
             });
             console.log(`search result lists: ${JSON.stringify(lists)}`);
             console.log(`search result savings: ${JSON.stringify(savings)}`);
@@ -244,14 +244,15 @@ class LineupListScreen extends Component {
         if (this.isSearching()) return null;
         return <TouchableHighlight onPress={() => {this.setModalVisible(true)}}>
             <View style={
-                Object.assign({}, UI.CARD(12),{
+                [UI.CARD(),{
                     flex: 1,
                     flexDirection: 'row',
                     alignItems: 'center',
                     padding: 10,
                     marginTop: 10,
                     marginBottom: 10,
-                })}>
+                }]
+            }>
                 <Image source={require('../img/plus.png')}
                        resizeMode="contain"
                        style={{

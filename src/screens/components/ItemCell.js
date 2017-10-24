@@ -20,13 +20,11 @@ export default class ItemCell extends React.Component {
         let resource = item;
         let image = resource ? resource.image : undefined;
 
-        let cardMargin = 8;
-
         return (
             <TouchableHighlight
                 onPress={this.props.onPressItem}>
                 <View style={
-                    { ...UI.CARD(cardMargin), ...UI.TP_MARGINS(cardMargin), padding: cardMargin,
+                    { ...UI.CARD(8), ...UI.TP_MARGINS(8), padding: 8,
                         flex: 1,
                         flexDirection: 'row',
                         justifyContent: "flex-start"

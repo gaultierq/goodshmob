@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, ScrollView, StyleSheet, TouchableHighlight, View} from 'react-native';
+import {ActivityIndicator, FlatList, ScrollView, StyleSheet, Text, TouchableHighlight, View} from 'react-native';
 import * as actions from './actions'
 import * as actionTypes from './actionTypes'
 import {connect} from "react-redux";
@@ -13,6 +13,9 @@ import type {Activity} from "../types";
 import * as UI from "../screens/UIStyles";
 import FeedSeparator from "./components/FeedSeparator";
 import ActivityActionBar from "./components/ActivityActionBar";
+import * as _ from "lodash";
+import Icon from 'react-native-vector-icons/Entypo';
+import UserRow from "./components/UserRow";
 
 class ActivityDetailScreen extends Component {
 
@@ -46,48 +49,92 @@ class ActivityDetailScreen extends Component {
                             animating = {showLoader}
                             size = "small"
                         />
-                        { activity &&
-                        <View style={UI.CARD(12)}>
-                            <ActivityBody
-                                activity={activity}
-                                navigator={this.props.navigator}
-                                onPressItem={this.props.onPressItem}
-                            />
+                        { activity && <View>
+                            <View style={[UI.CARD(), {marginBottom: 40}]}>
+                                <ActivityBody
+                                    activity={activity}
+                                    navigator={this.props.navigator}
+                                    onPressItem={this.props.onPressItem}
+                                />
+
+                                <FeedSeparator/>
+
+                                <ActivityActionBar
+                                    activity={activity}
+                                    navigator={this.props.navigator}
+                                    actions={['share', 'save', 'buy']}
+                                />
+                            </View>
+
                             <FeedSeparator/>
 
-                            <ActivityActionBar
-                                activity={activity}
-                                navigator={this.props.navigator}
-                                actions={['share', 'save', 'buy']}
+                            <ActivityDescription activity={activity}/>
+
+                            {this.renderStuff(activity)}
+
+                            <FlatList
+                                data={relatedActivities}
+                                renderItem={this.renderRelatedActivities.bind(this)}
+                                keyExtractor={(item, index) => item.id}
                             />
                         </View>
                         }
-                        {activity && <ActivityDescription activity={activity}/>}
-                        {activity && <FlatList
-                            data={relatedActivities}
-                            renderItem={this.renderRelatedActivities.bind(this)}
-                            keyExtractor={(item, index) => item.id}
-                        />
-                        }
-
-
                     </View>
                 </ScrollView>
             </MainBackground>
         );
     }
 
-    renderRelatedActivities(it) {
-        let rel = it.item;
+    renderStuff(activity) {
         return (
             <TouchableHighlight
-                onPress={()=> this.displayActivityComments(rel)}
-            >
-                <View>
-                    <ActivityDescription activity={rel}/>
-                </View>
+                onPress={()=> this.displayActivityComments(activity)}>
+                <View style={[UI.CARD(0), {padding: 8, paddingLeft: 12, backgroundColor: "#fefefe"}]}>
 
-            </TouchableHighlight>
+                    {/*empty*/}
+                    {_.isEmpty(activity.commentators) &&
+                    <View style={{flex: 1,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                    }
+                    }>
+                        <Text style={[UI.TEXT_LEAST_IMPORTANT, {marginLeft: 18}]}>No one commented yet</Text>
+                        <Icon name="chevron-small-right" size={20} color={UI.Colors.grey1} />
+                    </View>
+                    }
+
+                    {/*non empty*/}
+                    {!_.isEmpty(activity.commentators) &&
+                    <View style={{flex: 1,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                    }
+                    }>
+                        <UserRow user={activity.commentators[0]} text={"answered"} small={true}/>
+                        <Icon name="chevron-small-right" size={20} color={UI.Colors.grey1} />
+                    </View>
+                    }
+
+
+
+                </View>
+            </TouchableHighlight>);
+    }
+
+    renderRelatedActivities({item}) {
+        return (<View>
+                <TouchableHighlight
+                    onPress={()=> this.displayActivityComments(item)}
+                >
+                    <View>
+                        <ActivityDescription activity={item}/>
+                    </View>
+
+                </TouchableHighlight>
+                {this.renderStuff(item)}
+            </View>
         );
     }
 

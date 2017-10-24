@@ -24,7 +24,6 @@ class ActivityCell extends React.Component {
 
     render() {
         let activity = this.getActivity();
-        let cardMargin = 12;
         return (
             <View style={{
                 backgroundColor: "transparent",
@@ -33,7 +32,7 @@ class ActivityCell extends React.Component {
             }}>
                 <ActivityDescription activity={activity}/>
 
-                <View style={UI.CARD(cardMargin)}>
+                <View style={UI.CARD()}>
                     <ActivityBody
                         activity={activity}
                         navigator={this.props.navigator}

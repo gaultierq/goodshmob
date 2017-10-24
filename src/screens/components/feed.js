@@ -61,7 +61,7 @@ export default class Feed<T> extends Component  {
                 onEndReached={ this.onEndReached.bind(this) }
                 onEndReachedThreshold={0}
                 ListFooterComponent={this.renderFetchMoreLoader()}
-                style={{...this.props.style, minHeight: 50}}
+                style={{...this.props.style,  minHeight: 50}}
                 {...attributes}
             />
         );

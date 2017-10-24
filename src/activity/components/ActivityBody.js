@@ -51,7 +51,7 @@ class ActivityBody extends React.Component {
 
                 <View style={{padding: 15}}>
                     <Text style={{fontSize: 18, fontFamily: 'Chivo-Light',}}>{resource.title}</Text>
-                    <Text style={UI.TEXT_NOT_IMPORTANT}>{resource.subtitle}</Text>
+                    <Text style={UI.TEXT_LESS_IMPORTANT}>{resource.subtitle}</Text>
                 </View>
 
             </View>

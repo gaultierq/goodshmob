@@ -13,11 +13,11 @@ export const Colors = Object.freeze({
     green: '#1ec',
     white: '#fff'
 });
-export const CARD = (cardMargin) => {
+export const CARD = (sideMargin: number = 12) => {
     return {
         backgroundColor: "white",
-        marginLeft: cardMargin,
-        marginRight: cardMargin,
+        marginLeft: sideMargin,
+        marginRight: sideMargin,
         shadowColor: "#000",
         shadowOpacity: 0.3,
         shadowOffset: {width: 2, height: 2},
@@ -44,4 +44,5 @@ export const TP_MARGINS = (margin) => {
 
 //TODO: convert to stylesheet
 export const TEXT_LIST = {fontSize: 14, color: Colors.blue};
-export const TEXT_NOT_IMPORTANT = {fontSize: 12, color: Colors.grey2};
+export const TEXT_LESS_IMPORTANT = {fontSize: 12, color: Colors.grey2};
+export const TEXT_LEAST_IMPORTANT = {fontSize: 9, color: Colors.grey2};
