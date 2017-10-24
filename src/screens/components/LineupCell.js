@@ -1,12 +1,11 @@
 // @flow
 
 import React from 'react';
-import {View, Text, Image, TouchableHighlight, FlatList, StyleSheet} from 'react-native';
-import * as Model from "../../models/index"
+import {FlatList, Image, StyleSheet, Text, TouchableHighlight, View} from 'react-native';
 import * as UI from "../UIStyles";
 import {assertUnique} from "../../utils/DataUtils";
-import List from "../../models/List";
 import {isEmpty} from "lodash";
+import type {Saving} from "../../types";
 
 export default class LineupCell extends React.Component {
 
@@ -16,8 +15,8 @@ export default class LineupCell extends React.Component {
     };
 
     render() {
-        let lineup : Model.List = this.props.lineup;
-        let savings: Model.Saving[] = lineup.savings;
+        let lineup : List = this.props.lineup;
+        let savings: Saving[] = lineup.savings;
 
         assertUnique(savings);
 
@@ -59,7 +58,7 @@ export default class LineupCell extends React.Component {
     }
 
     renderItem(item) {
-        let it: Model.Saving = item.item;
+        let it: Saving = item.item;
 
         let image = it.resource ? it.resource.image : undefined;
 

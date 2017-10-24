@@ -2,9 +2,7 @@
 
 import React from 'react';
 import {Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
-import * as Model from "../../models/index"
 import i18n from '../../i18n/i18n'
-import * as TimeUtils from '../../utils/TimeUtils'
 import * as UI from "../../screens/UIStyles";
 import {buildNonNullData} from "../../utils/DataUtils";
 import type {Activity, List, User} from "../../types";

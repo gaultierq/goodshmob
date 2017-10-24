@@ -84,4 +84,23 @@ export type Comment = Base & {
 export type Saving = Activity & {
 }
 
+export type Sending = Activity & {
+}
+
+/**
+privacy=0 (public)
+description: facebook-like
+user: creator
+target: null
+resource: item-id
+related-activities: other activities on this item from people in my network
+*/
+export type Post = Activity & {
+}
+
+
+export type Place = Item & {
+    location: any
+}
+
 

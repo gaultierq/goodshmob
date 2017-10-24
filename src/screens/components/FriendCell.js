@@ -1,15 +1,13 @@
 // @flow
 
-import React, {Component} from 'react';
-import {StyleSheet, View, Text, Image, Button, TouchableOpacity, TouchableHighlight, FlatList} from 'react-native';
-import * as Model from "../../models/index"
-import {connect} from "react-redux";
+import React from 'react';
+import {Button, FlatList, Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
+import type {User} from "../../types";
 
 class FriendCell extends React.Component {
 
-
     render() {
-        let friend : Model.User = this.props.friend;
+        let friend : User = this.props.friend;
 
         return (
             <View style={{
@@ -26,30 +24,10 @@ class FriendCell extends React.Component {
                         marginRight: 10
                     }}
                 />
-                <Text>{Model.User.fullname(friend)}</Text>
+                <Text>{`${friend.firstName} ${friend.lastName}`}</Text>
             </View>
         )
     }
-
-    getFriend() {
-        return this.props.friend.all[this.props.friendId];
-    }
-
-    renderItem(item) {
-        let it: Model.Saving = item.item;
-        let image = it.resource ? it.resource.image : undefined;
-
-
-        return <Image
-            source={{uri: image}}
-            style={{
-                height: 40,
-                width: 40,
-                margin: 5
-            }}
-        />;
-    }
-
 
 }
 export default FriendCell;

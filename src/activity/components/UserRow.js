@@ -5,7 +5,6 @@ import React from 'react';
 
 
 import {Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
-import * as Model from "../../models/index"
 import * as UI from "../../screens/UIStyles";
 import type {User} from "../../types";
 
@@ -19,7 +18,6 @@ type Props = {
 
 type State = {
 };
-
 
 export default class UserRow extends React.Component<Props, State> {
 
@@ -44,7 +42,7 @@ export default class UserRow extends React.Component<Props, State> {
                         <Text style={{
                             fontSize: 11,
                             color: UI.Colors.blue
-                        }}>{this.props.user ? Model.User.fullname(this.props.user):""}</Text>
+                        }}>{user ? `${user.firstName} ${user.lastName}` : ""}</Text>
                     </TouchableOpacity>
                     {this.props.text &&
                     <Text style={{

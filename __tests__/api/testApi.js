@@ -1,8 +1,8 @@
-import * as Models from "../../src/models"
 import Immutable from 'seamless-immutable';
 import util from 'util'
 import normalize from 'json-api-normalizer';
 import build from 'redux-object';
+import type {Place, Sending} from "../../src/types";
 
 let logObject = function (result2) {
     console.log(util.inspect(result2, false, null));
@@ -19,7 +19,7 @@ test('testing activities_fixtures', () => {
 
     expect(result).toBeDefined();
 
-    let sending: Models.Sending = result[0];
+    let sending: Sending = result[0];
     //expect(sending).toBeInstanceOf(Models.Sending);
 
     expect(sending.user).toBeDefined();
@@ -35,9 +35,9 @@ test('testing activities_fixtures2', () => {
 
     expect(result).toBeDefined();
 
-    let savings: Models.Saving = result[0];
-    //expect(savings).toBeInstanceOf(Models.Saving);
-    let resource: Models.Place = savings.resource;
+    let savings: Saving = result[0];
+    //expect(savings).toBeInstanceOf(Saving);
+    let resource: Place = savings.resource;
     //expect(resource).toBeInstanceOf(Models.Place);
     expect(resource.image).toBe("https://lh3.googleusercontent.com/p/AF1QipM_mxiOMo3vYOLIsvfKqcvjdWvYN_skmCAirsR9=s1600-w600");
 
@@ -95,7 +95,7 @@ test('testing pagination', () => {
 test('testing meta', () => {
     //let result = Util.parse(require("./activities_fixtures2.json"));
     let result = parse(require("./activities_fixtures2.json"), "./activities_fixtures2.json");
-    let post: Models.Post = result[1];
+    let post: Post = result[1];
     //expect(post).toBeInstanceOf(Models.Post);
     expect(post.meta).toBeDefined();
     expect(post.meta["comments-count"]).toBe(6);

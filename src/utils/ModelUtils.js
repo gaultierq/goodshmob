@@ -1,9 +1,7 @@
 // @flow
 
-import Base from "../models/Base";
-import * as Models from "../models/index"
 import * as StringUtils from "./StringUtils"
-
+/*
 
 export function parse(data: any) {
     let createStore =  (store) => {
@@ -111,14 +109,13 @@ function createFlatObject(source): Base {
     return obj;
 }
 
-/*
-    1. create flat object
-    2. fill relationship
-    3. flatten relationships
+    //1. create flat object
+    //2. fill relationship
+    //3. flatten relationships
 
-    if the store is provided, and contains the element for type x id,
-    then this element will be used to popoulate the resulting object.
-     */
+    //if the store is provided, and contains the element for type x id,
+    //then this element will be used to popoulate the resulting object.
+
 export function createObject(source: Source, store: any): Base {
 
     let result = createFlatObject(source);
@@ -159,7 +156,7 @@ export function createObject(source: Source, store: any): Base {
 
     return result;
 }
-
+*/
 
 export class Merge<T> {
     mergeInto: Array<T>;

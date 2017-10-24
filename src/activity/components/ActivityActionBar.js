@@ -7,11 +7,13 @@ import * as UI from "../../screens/UIStyles";
 import type {Activity, Item, List, Url} from "../../types";
 import i18n from '../../i18n/i18n'
 import {saveItem} from "../../screens/actions";
-import * as _ from "lodash";
+import type {Description, Visibility} from "../../screens/save";
+import {connect} from "react-redux";
 
 export type ActivityActionType = 'comment' | 'share' | 'save' | 'buy';
 const ACTIONS = ['comment', 'share', 'save', 'buy'];
 
+@connect()
 export default class ActivityActionBar extends React.Component {
 
     props: {
@@ -70,20 +72,40 @@ export default class ActivityActionBar extends React.Component {
     }
 
     save(activity: Activity) {
-        this.props.navigator.push({
-            screen: 'goodsh.LineupListScreen', // unique ID registered with Navigation.registerScreen
-            title: "Sauvegarder" + activity.resource.title, // navigation bar title of the pushed screen (optional)
+        this.props.navigator.showLightBox({
+            screen: 'goodsh.SaveScreen', // unique ID registered with Navigation.registerScreen
+            style: {
+                backgroundBlur: "light", // 'dark' / 'light' / 'xlight' / 'none' - the type of blur on the background
+                //backgroundColor: "#ffffff", // tint color for the background, you can specify alpha here (optional)
+                tapBackgroundToDismiss: true // dismisses LightBox on background taps (optional)
+            },
             passProps: {
                 activity,
-                canFilterOverItems: false,
-                onLineupPressed: (lineup: List)=> this.saveResourceInList(activity.resource, lineup)
+                containerStyle: {width: 300, height: 500},
+                onDescription:
+                    (description: Description,
+                     visibility: Visibility) => {
+                        this.props.navigator.showModal({
+                            screen: 'goodsh.LineupListScreen', // unique ID registered with Navigation.registerScreen
+                            title: "Sauvegarder" + activity.resource.title,
+                            animationType: 'none',
+                            passProps: {
+                                activity,
+                                canFilterOverItems: false,
+                                onLineupPressed: (lineup: List)=>
+                                    this.saveItemInList(activity, lineup, visibility, description)
+                            },
+                        });
+                    }
             },
         });
     }
 
-    saveResourceInList(item: Item, lineup: List) {
-        this.props.dispatch(saveItem(item.id, lineup.id)).then(()=>{
-            setTimeout(()=>this.props.navigator.pop(), 1000);
+    saveItemInList(activity: Activity, lineup: List, visibility: Visibility, description: Description) {
+        this.props.dispatch(
+            saveItem(activity.resource.id, lineup.id, visibility, description)
+        ).then(()=>{
+            setTimeout(()=>this.props.navigator.dismissAllModals(), 1000);
         });
     }
 

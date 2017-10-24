@@ -9,23 +9,20 @@ import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
 import ActionButton from 'react-native-action-button';
 import {screen as LineupList} from './lineups'
-import List from "../models/List";
-import * as types from "../types"
+import {Item, List} from "../types"
 import Snackbar from "react-native-snackbar"
 import i18n from '../i18n/i18n'
 import * as UIStyles from "./UIStyles";
+import {TP_MARGINS} from "./UIStyles";
 import CurrentUser from "../CurrentUser"
 import Icon from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal'
 import Button from 'apsl-react-native-button'
-import {TP_MARGINS} from "./UIStyles";
 import {createLineup, saveItem} from "./actions";
-import Item from "../models/Item";
 
 class HomeScreen extends Component {
 
     static navigationOptions = { title: 'Welcome', header: null };
-
 
     state : {
         pendingItem: Item,
@@ -203,7 +200,7 @@ class HomeScreen extends Component {
 
     }
 
-    onLineupPressed(lineup:types.List) {
+    onLineupPressed(lineup: List) {
         if (this.state.pendingItem) {
             this.setState({pendingList: lineup}, () => this.resolveAdd());
         }
@@ -219,7 +216,7 @@ class HomeScreen extends Component {
         }
     }
 
-    onSavingPressed(saving:types.Saving) {
+    onSavingPressed(saving: Saving) {
         if (this.state.pendingItem) {
             throw new Error("This should not happen");
         }
@@ -251,7 +248,7 @@ class HomeScreen extends Component {
                     i18n.t("tabs.search.title_in", {list_name: this.state.pendingList.name}) :
                     i18n.t("tabs.search.title"),
             passProps: {
-                onItemSelected: (item: types.Item) => {
+                onItemSelected: (item: Item) => {
                     this.props.navigator.dismissAllModals();
                     console.info("item selected: " + JSON.stringify(item.title));
 

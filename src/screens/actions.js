@@ -1,5 +1,3 @@
-
-
 import * as Api from "../utils/Api";
 import ApiAction from "../utils/ApiAction";
 
@@ -13,7 +11,7 @@ export function saveItem(itemId: Id, lineupId: Id, privacy = 0, description = ''
         saving: { list_id: lineupId, privacy}
     };
     if (description) {
-        Object.assign(body, description)
+        Object.assign(body, {description});
     }
     console.log("saving item, with body:");
     console.log(body);
