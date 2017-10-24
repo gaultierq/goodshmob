@@ -7,7 +7,7 @@ import * as UI from "../../screens/UIStyles";
 import type {Activity, Item, List, Url} from "../../types";
 import i18n from '../../i18n/i18n'
 import {saveItem} from "../../screens/actions";
-
+import * as _ from "lodash";
 
 export type ActivityActionType = 'comment' | 'share' | 'save' | 'buy';
 const ACTIONS = ['comment', 'share', 'save', 'buy'];
@@ -28,7 +28,7 @@ export default class ActivityActionBar extends React.Component {
         //let activity: Model.Activity = this.props.activity;
         let resource = activity.resource;
 
-        let commentsCount = activity.meta ? activity.meta["comments-count"] : 0;
+        let commentsCount = activity.comments ? activity.comments.length : 0;
 
         let goodshed = resource && resource.meta ? resource.meta["goodshed"] : false;
 
