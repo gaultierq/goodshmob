@@ -42,5 +42,6 @@ export const TP_MARGINS = (margin) => {
 };
 
 
+//TODO: convert to stylesheet
 export const TEXT_LIST = {fontSize: 14, color: Colors.blue};
 export const TEXT_NOT_IMPORTANT = {fontSize: 12, color: Colors.grey2};

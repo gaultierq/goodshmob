@@ -5,11 +5,14 @@ import {ActivityIndicator, FlatList, ScrollView, StyleSheet, TouchableHighlight,
 import * as actions from './actions'
 import * as actionTypes from './actionTypes'
 import {connect} from "react-redux";
-import ActivityCell from "./components/ActivityCell";
+import ActivityBody from "./components/ActivityBody";
 import {buildNonNullData} from "../utils/DataUtils";
 import {MainBackground} from "../screens/UIComponents";
 import ActivityDescription from "./components/ActivityDescription";
 import type {Activity} from "../types";
+import * as UI from "../screens/UIStyles";
+import FeedSeparator from "./components/FeedSeparator";
+import ActivityActionBar from "./components/ActivityActionBar";
 
 class ActivityDetailScreen extends Component {
 
@@ -44,12 +47,23 @@ class ActivityDetailScreen extends Component {
                             size = "small"
                         />
                         { activity &&
-                        <ActivityCell
-                            activityId={activity.id}
-                            activityType={activity.type}
-                        />}
-                        {activity &&
-                        <FlatList
+                        <View style={UI.CARD(12)}>
+                            <ActivityBody
+                                activity={activity}
+                                navigator={this.props.navigator}
+                                onPressItem={this.props.onPressItem}
+                            />
+                            <FeedSeparator/>
+
+                            <ActivityActionBar
+                                activity={activity}
+                                navigator={this.props.navigator}
+                                actions={['share', 'save', 'buy']}
+                            />
+                        </View>
+                        }
+                        {activity && <ActivityDescription activity={activity}/>}
+                        {activity && <FlatList
                             data={relatedActivities}
                             renderItem={this.renderRelatedActivities.bind(this)}
                             keyExtractor={(item, index) => item.id}

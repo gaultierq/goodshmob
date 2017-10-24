@@ -288,12 +288,7 @@ const actions = (() => {
                 .withRoute(`search/${category}`)
                 .addQuery({'search[term]': token});
 
-            return call.disptachForAction2(actiontypes.SEARCH,
-                //{actionName: composeSearchActionName(category, token),
-                // meta:
-                    {category, token}
-                // }
-                );
+            return call.disptachForAction2(actiontypes.SEARCH, {category, token});
         },
     };
 })();
