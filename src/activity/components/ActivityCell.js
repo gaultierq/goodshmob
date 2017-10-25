@@ -11,18 +11,27 @@ import * as UI from "../../screens/UIStyles";
 import FeedSeparator from "./FeedSeparator";
 import ActivityActionBar from "./ActivityActionBar";
 
-class ActivityCell extends React.Component {
 
-    props: {
-        data: any,
-        activity: Activity,
-        activityId: Id,
-        activityType: ActivityType,
-        navigator: any,
-        onPressItem: (any) => void
-    };
+type Props = {
+    data: any,
+    activity: Activity,
+    activityId: Id,
+    activityType: ActivityType,
+    navigator: any,
+    onPressItem: (any) => void,
+    skipLineup:? boolean;
+};
+
+type State = {
+};
+
+
+class ActivityCell extends React.Component<Props, State> {
+
 
     render() {
+        const {skipLineup} = this.props;
+
         let activity = this.getActivity();
         return (
             <View style={{
@@ -30,7 +39,11 @@ class ActivityCell extends React.Component {
                 marginTop: 10,
                 marginBottom: 10
             }}>
-                <ActivityDescription activity={activity} navigator={this.props.navigator}/>
+                <ActivityDescription
+                    activity={activity}
+                    navigator={this.props.navigator}
+                    skipLineup={!!skipLineup}
+                />
 
                 <View style={UI.CARD()}>
                     <ActivityBody

@@ -12,6 +12,7 @@ type Props = {
     activity: Activity,
     navigator: any,
     withFollowButton?: boolean,
+    skipLineup?: boolean
 };
 
 type State = {
@@ -22,6 +23,7 @@ export default class ActivityDescription extends React.Component<Props, State> {
 
     render() {
         let activity = this.getActivity();
+        const {skipLineup} = this.props;
 
         //let activity: Model.Activity = this.props.activity;
         let user: User = activity.user;
@@ -42,7 +44,7 @@ export default class ActivityDescription extends React.Component<Props, State> {
                 user={user}>
 
                 {/* in Séries(1) */}
-                {!!lineup &&
+                {!!lineup && !skipLineup &&
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                     <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                         <Text style={{

@@ -98,6 +98,7 @@ class SavingsScreen extends Component<Props, State> {
                 <ActivityCell
                     activityId={saving.id}
                     activityType={saving.type}
+                    skipLineup={true}
                 />
             </Swipeout>)
     }
