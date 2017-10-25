@@ -72,41 +72,50 @@ export default class ActivityActionBar extends React.Component {
     }
 
     save(activity: Activity) {
-        this.props.navigator.showLightBox({
-            screen: 'goodsh.SaveScreen', // unique ID registered with Navigation.registerScreen
-            style: {
-                backgroundBlur: "light", // 'dark' / 'light' / 'xlight' / 'none' - the type of blur on the background
-                //backgroundColor: "#ffffff", // tint color for the background, you can specify alpha here (optional)
-                tapBackgroundToDismiss: true // dismisses LightBox on background taps (optional)
-            },
+
+
+        this.props.navigator.showModal({
+            screen: 'goodsh.LineupListScreen', // unique ID registered with Navigation.registerScreen
+            title: "Ajouter à une liste",
+            animationType: 'none',
             passProps: {
                 activity,
-                containerStyle: {width: 300, height: 500},
-                onDescription:
-                    (description: Description,
-                     visibility: Visibility) => {
-                        this.props.navigator.showModal({
-                            screen: 'goodsh.LineupListScreen', // unique ID registered with Navigation.registerScreen
-                            title: "Sauvegarder" + activity.resource.title,
-                            animationType: 'none',
-                            passProps: {
-                                activity,
-                                canFilterOverItems: false,
-                                onLineupPressed: (lineup: List)=>
-                                    this.saveItemInList(activity, lineup, visibility, description)
-                            },
-                        });
-                    }
+                canFilterOverItems: false,
+                onLineupPressed: (lineup: List) => {
+
+                    //this.props.navigator.dismissModal({animationType: 'none'});
+
+                    this.props.navigator.showLightBox({
+                        screen: 'goodsh.SaveScreen', // unique ID registered with Navigation.registerScreen
+                        style: {
+                            backgroundBlur: "light", // 'dark' / 'light' / 'xlight' / 'none' - the type of blur on the background
+                            tapBackgroundToDismiss: true // dismisses LightBox on background taps (optional)
+                        },
+                        passProps: {
+                            activity,
+                            containerStyle: {width: 300, height: 500},
+                            onDescription:
+                                (description: Description,
+                                 visibility: Visibility) => {
+                                    setTimeout(() => {
+                                        this.props.dispatch(
+                                            saveItem(activity.resource.id, lineup.id, visibility, description)
+                                        ).then(() => {
+                                            this.props.navigator.dismissLightBox();
+                                            this.props.navigator.dismissAllModals({animationType: 'none'});
+                                        });
+                                    }, 500)
+                                }
+                        },
+                    });
+                }
+
+
             },
         });
-    }
 
-    saveItemInList(activity: Activity, lineup: List, visibility: Visibility, description: Description) {
-        this.props.dispatch(
-            saveItem(activity.resource.id, lineup.id, visibility, description)
-        ).then(()=>{
-            setTimeout(()=>this.props.navigator.dismissAllModals(), 1000);
-        });
+
+
     }
 
     comment(activity: Activity) {
