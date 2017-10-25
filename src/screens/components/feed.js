@@ -1,8 +1,8 @@
 //TODO: add flow
 
-import React, {Component} from 'react';
-import {FlatList, RefreshControl, ActivityIndicator} from 'react-native';
 import type {Node} from 'react';
+import React, {Component} from 'react';
+import {ActivityIndicator, FlatList, RefreshControl} from 'react-native';
 import {connect} from "react-redux";
 import {assertUnique} from "../../utils/DataUtils";
 import ApiAction from "../../utils/ApiAction";
@@ -76,9 +76,9 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     fetchIt(afterId?: Id) {
         return new Promise((resolve, reject) => {
 
-            let t = afterId ? 'isFetchingMore' : 'isFetchingFirst';
+            let requestName = afterId ? 'isFetchingMore' : 'isFetchingFirst';
 
-            if (this.state[t]) {
+            if (this.state[requestName]) {
                 reject();
             }
             else {
@@ -86,7 +86,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
                 if (!fetchSrc) return;
 
-                this.setState({[t]: true});
+                this.setState({[requestName]: true});
 
                 let call = fetchSrc.callFactory();
 
@@ -94,8 +94,14 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
                 this.props
                     .dispatch(call.disptachForAction2(fetchSrc.action, fetchSrc.options))
-                    .then(()=>this.setState({[t]: false}))
-                    .then(()=>resolve());
+                    .then((data)=> {
+                        let hasNoMore = data.length === 0;
+                        this.setState({[requestName]: false});
+                        if (hasNoMore) {
+                            this.setState({lastEmptyResultMs: Date.now()});
+                        }
+                        resolve();
+                    })
             }
         });
     }
@@ -128,6 +134,11 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     hasMore() {
+        let last = this.state.lastEmptyResultMs;
+        if (last && Date.now() - last < 1000 * 10) {
+            console.log("throttled -> hasMore=false");
+            return false;
+        }
         return !!this.props.hasMore;
     }
 

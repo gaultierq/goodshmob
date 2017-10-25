@@ -1,7 +1,4 @@
-// @flow
-
 import URL from "url-parse"
-import qs from "querystringify"
 import * as Util from "./ModelUtils";
 import normalize from 'json-api-normalizer';
 //hack for tests. FIXME: remove circular dep
@@ -122,49 +119,53 @@ export class Call {
         const call = this;
         return (dispatch) => {
             //let {meta} = options;
-
-            return call
-                .exec()
-                .then(resp => {
-                    console.debug("api: response");
-                    if (resp.ok) {
-                        let contentType = resp.headers.get("content-type");
-                        if (contentType && contentType.indexOf("application/json") !== -1) {
-                            return resp.json().then((json)=> ({json, original: resp}));
+            return new Promise((resolve, reject) => {
+                call
+                    .exec()
+                    .then(resp => {
+                        console.debug("api: response");
+                        if (resp.ok) {
+                            let contentType = resp.headers.get("content-type");
+                            if (contentType && contentType.indexOf("application/json") !== -1) {
+                                return resp.json().then((json)=> ({json, original: resp}));
+                            }
+                            return {json: "ok", original: resp};
                         }
-                        return {json: "ok", original: resp};
-                    }
-                    let status = resp.status;
+                        let status = resp.status;
 
-                    return resp.json().then(err => {
-                        throw {...err, status: status}
-                    });
-                })
-                .then(resp => {
-                        let response = resp.json;
-                        let data = normalize(response);
+                        return resp.json().then(err => {
+                            throw {...err, status: status}
+                        });
+                    })
+                    .then(resp => {
+                            let response = resp.json;
+                            let data = normalize(response);
 
-                        //write in data
-                        dispatch({ data, type: API_DATA_SUCCESS });
+                            //write in data
+                            dispatch({ data, type: API_DATA_SUCCESS });
 
-                        //let the reducer do something
-                        return dispatch(Object.assign({}, {type: apiAction.success(), payload: response, original: resp.original}, {options}));
-                    },
-                    //1., 2.
-                    error => {
-                        let errMsg = error.message || `Something bad happened (${error.status}): ${JSON.stringify(error)}`;
+                            //let the reducer do something
+                            dispatch(Object.assign({}, {type: apiAction.success(), payload: response, original: resp.original}, {options}));
 
-                        let errorAction = dispatch({ type: API_DATA_FAILURE, error: errMsg });
-                        if (error.status === 401) {
+                            resolve(response.data);
+                        },
+                        //1., 2.
+                        error => {
+                            let errMsg = error.message || `Something bad happened (${error.status}): ${JSON.stringify(error)}`;
+
+                            let errorAction = dispatch({ type: API_DATA_FAILURE, error: errMsg });
+                            if (error.status === 401) {
+                                dispatch(errorAction);
+                                dispatch(logout())
+                                reject();
+                            }
                             dispatch(errorAction);
-                            return dispatch(logout())
-                        }
-                        return dispatch(errorAction);
+                            reject();
 
-                    },
-                );
-        };
-
+                        },
+                    );
+            });
+        }
 
 
     }
