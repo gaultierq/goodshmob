@@ -1,11 +1,12 @@
-import build from 'redux-object'
+// @flow
+import build from '../../vendors/redux-object'
 import type {Id} from "../types";
 import * as _ from "lodash";
 import * as Util from "./ModelUtils";
 import dotprop from "dot-prop-immutable"
 
 //ask backend to sanitize types
-export let sanitizeActivityType = function (activityType) {
+export let sanitizeActivityType = activityType => {
     let type;
     switch (activityType.toLowerCase()) {
         case "post":

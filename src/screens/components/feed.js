@@ -1,12 +1,14 @@
-// @flow
+//TODO: add flow
 
 import React, {Component} from 'react';
-import {FlatList, RefreshControl, ActivityIndicator, ReactElement} from 'react-native';
+import {FlatList, RefreshControl, ActivityIndicator} from 'react-native';
+import type {Node} from 'react';
 import {connect} from "react-redux";
 import {assertUnique} from "../../utils/DataUtils";
 import ApiAction from "../../utils/ApiAction";
 import * as Api from "../../utils/Api";
 import {isEmpty} from "lodash";
+import type {Id} from "../../types";
 
 export type FeedSource = {
     callFactory: ()=>Api.Call,
@@ -15,24 +17,24 @@ export type FeedSource = {
 }
 
 
+type Props<T> = {
+    data: Array<T>,
+    renderItem: Function,
+    fetchSrc: FeedSource,
+    hasMore: boolean,
+    ListHeaderComponent?: Node,
+    style: any
+};
+
+type State = {
+    isFetchingFirst: boolean,
+    isFetchingMore: boolean,
+    isPulling: boolean,
+    lastEmptyResultMs: number
+};
+
 @connect()
-export default class Feed<T> extends Component  {
-
-    props: {
-        data: Array<T>,
-        renderItem: Function,
-        fetchSrc: FeedSource,
-        hasMore: boolean,
-        ListHeaderComponent?: ReactElement,
-        style: any
-    };
-
-
-    state:  {
-        isFetchingFirst: boolean,
-        isFetchingMore: boolean,
-        isPulling: boolean
-    };
+export default class Feed<T> extends Component<Props<T>, State>  {
 
     keyExtractor = (item, index) => item.id;
 
@@ -71,13 +73,13 @@ export default class Feed<T> extends Component  {
         this.fetchIt();
     }
 
-    fetchIt(afterId?) {
-        return new Promise((resolve) => {
+    fetchIt(afterId?: Id) {
+        return new Promise((resolve, reject) => {
 
             let t = afterId ? 'isFetchingMore' : 'isFetchingFirst';
 
             if (this.state[t]) {
-                resolve();
+                reject();
             }
             else {
                 let {fetchSrc}= this.props;

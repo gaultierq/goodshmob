@@ -8,25 +8,29 @@ import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
 import Feed from "./components/feed";
 import Swipeout from 'react-native-swipeout';
-import type * as types from "../types";
 import type {Saving} from "../types";
-import {buildNonNullData} from "../utils/DataUtils";
+import {buildNonNullData, doDataMergeInState, sanitizeActivityType} from "../utils/DataUtils";
 import CurrentUser from "../CurrentUser"
 import ApiAction from "../utils/ApiAction";
 import ActivityCell from "../activity/components/ActivityCell";
-import type {User} from "../types";
+import type {User, List} from "../types";
 
-class SavingsScreen extends Component {
 
-    props : {
-        lineupId: string,
-    };
+type Props = {
+    lineupId: string,
+    navigator: any
+};
+
+type State = {
+    title: null|{title: string, titleImage: string},
+    titleSet: boolean
+};
+
+class SavingsScreen extends Component<Props, State> {
+
 
     //titleSet because when navigating back, a render may change the nav bar title. this is a flaw in wix nav
-    state: {
-        title: null|{title: string, titleImage: string},
-        titleSet: boolean
-    } = {title: null, titleSet: false};
+    state = {title: null, titleSet: false};
 
     render() {
         const lineup = this.getLineup();
@@ -56,9 +60,10 @@ class SavingsScreen extends Component {
                         renderItem={item => this.renderItem(item, lineup)}
                         fetchSrc={{
                             callFactory:()=>actions.loadSavings(this.props.lineupId),
-                            action:actionTypes.LOAD_SAVINGS
+                            action:actionTypes.LOAD_SAVINGS,
+                            options: {listId: this.props.lineupId}
                         }}
-                        hasMore={!this.props.savings.hasNoMore}
+                        hasMore={true}
                     />
 
                 </View>
@@ -67,7 +72,7 @@ class SavingsScreen extends Component {
     }
 
     getLineup() : List {
-        return this.props.lineup || buildNonNullData(this.props.data, "lists", this.props.lineupId);
+        return /*this.props.lineup || */buildNonNullData(this.props.data, "lists", this.props.lineupId);
     }
 
     renderItem(item, lineup) {
@@ -81,6 +86,8 @@ class SavingsScreen extends Component {
             underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
             onPress: () => { this.deleteSaving(saving) }
         }];
+
+        if (!saving['built']) return null;
 
         return (
             <Swipeout right={swipeBtns}
@@ -125,10 +132,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state, ownProps) => ({
-    savings: state.savings,
     data: state.data,
-    app: state.app,
-    request: state.request
 });
 
 
@@ -163,13 +167,45 @@ const actions = (() => {
         }
     };
 })();
+//
+// const reducer = (() => {
+//     const initialState = Immutable(Api.initialListState());
+//
+//     return (state = initialState, action = {}) => {
+//         let desc = {fetchFirst: actionTypes.LOAD_SAVINGS, fetchMore: actionTypes.LOAD_MORE_SAVINGS};
+//         return Api.reduceList(state, action, desc);
+//     }
+// })();
+
 
 const reducer = (() => {
     const initialState = Immutable(Api.initialListState());
 
     return (state = initialState, action = {}) => {
-        let desc = {fetchFirst: actionTypes.LOAD_SAVINGS, fetchMore: actionTypes.LOAD_MORE_SAVINGS};
-        return Api.reduceList(state, action, desc);
+
+        switch (action.type) {
+            case actionTypes.LOAD_SAVINGS.success(): {
+                let {listId} = action.options;
+                let path = `lists.${listId}.relationships.savings.data`;
+
+                state = doDataMergeInState(state, path, action.payload.data);
+                break;
+            }
+            // case actionTypes.ADD_COMMENT.success(): {
+            //
+            //     let {id, type} = action.payload.data;
+            //     let {activityId, activityType} = action.options;
+            //     activityType = sanitizeActivityType(activityType);
+            //
+            //     let path = `${activityType}.${activityId}.comments.data`;
+            //     state = doDataMergeInState(state, path, [{id, type}]);
+            //     break;
+            // }
+
+        }
+        //let desc = {fetchFirst: actionTypes.LOAD_COMMENTS};
+        //return Api.reduceList(state, action, desc);
+        return state;
     }
 })();
 

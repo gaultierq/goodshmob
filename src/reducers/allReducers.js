@@ -22,7 +22,8 @@ function reduceReducers(...reducers) {
 let data = reduceReducers(
     data1,
     activity,
-    comments
+    comments,
+    savings
 );
 
 
@@ -32,7 +33,7 @@ export {
     network,
     lineupList,
     friend,
-    savings,
+    // savings,
     auth,
     search,
     // comments

@@ -30,7 +30,7 @@ class ActivityCell extends React.Component {
                 marginTop: 10,
                 marginBottom: 10
             }}>
-                <ActivityDescription activity={activity}/>
+                <ActivityDescription activity={activity} navigator={this.props.navigator}/>
 
                 <View style={UI.CARD()}>
                     <ActivityBody

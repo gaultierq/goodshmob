@@ -8,27 +8,30 @@ import {buildNonNullData} from "../../utils/DataUtils";
 import type {Activity, List, User} from "../../types";
 import UserActivity from "./UserActivity";
 
-export default class ActivityDescription extends React.Component {
+type Props = {
+    activity: Activity,
+    navigator: any,
+    withFollowButton?: boolean,
+};
 
-    props: {
-        activity: Activity,
-        activityId: number,
-        activityType: string,
-        withFollowButton: boolean
-    };
+type State = {
+};
+
+export default class ActivityDescription extends React.Component<Props, State> {
+
 
     render() {
         let activity = this.getActivity();
 
         //let activity: Model.Activity = this.props.activity;
         let user: User = activity.user;
-        let target: List = activity.target;
+        let lineup: List = activity.target;
 
         let cardMargin = 12;
         let targetName;
-        if (target) {
-            let count = target.meta ? target.meta["savings-count"] : 0;
-            targetName = target.name;
+        if (lineup) {
+            let count = lineup.meta ? lineup.meta["savings-count"] : 0;
+            targetName = lineup.name;
             if (count) targetName += " (" + count + ")"
         }
         return <View style={{margin: cardMargin, marginBottom: 8, backgroundColor: 'transparent'}}>
@@ -39,7 +42,7 @@ export default class ActivityDescription extends React.Component {
                 user={user}>
 
                 {/* in Séries(1) */}
-                {!!target &&
+                {!!lineup &&
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                     <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                         <Text style={{
@@ -47,7 +50,7 @@ export default class ActivityDescription extends React.Component {
                             color: UI.Colors.grey1,
                             marginRight: 4
                         }}>{i18n.t("activity_item.header.in")}</Text>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={()=>this.seeList(lineup)}>
                             <Text
                                 style={UI.TEXT_LIST}>
                                 {targetName}
@@ -56,7 +59,7 @@ export default class ActivityDescription extends React.Component {
                     </View>
 
                     {
-                        this.props.withFollowButton && this.renderFollowButton(target)
+                        this.props.withFollowButton && this.renderFollowButton(lineup)
                     }
 
                 </View>
@@ -67,6 +70,14 @@ export default class ActivityDescription extends React.Component {
         </View>;
     }
 
+    seeList(lineup: List) {
+        this.props.navigator.push({
+            screen: 'goodsh.SavingsScreen', // unique ID registered with Navigation.registerScreen
+            passProps: {
+                lineupId: lineup.id,
+            },
+        });
+    }
 
     getActivity() {
         return this.props.activity || buildNonNullData(this.props.data, this.props.activityType, this.props.activityId);
@@ -95,6 +106,4 @@ export default class ActivityDescription extends React.Component {
                 }}>{i18n.t("activity_item.buttons.follow_list")}</Text>
             </TouchableOpacity>;
     }
-
-
 }

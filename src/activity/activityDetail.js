@@ -68,7 +68,7 @@ class ActivityDetailScreen extends Component {
 
                             <FeedSeparator/>
 
-                            <ActivityDescription activity={activity}/>
+                            <ActivityDescription activity={activity} navigator={this.props.navigator}/>
 
                             {this.renderStuff(activity)}
 
@@ -129,7 +129,7 @@ class ActivityDetailScreen extends Component {
                     onPress={()=> this.displayActivityComments(item)}
                 >
                     <View>
-                        <ActivityDescription activity={item}/>
+                        <ActivityDescription activity={item} navigator={this.props.navigator}/>
                     </View>
 
                 </TouchableHighlight>

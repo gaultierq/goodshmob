@@ -144,9 +144,10 @@ export class Call {
                         let response = resp.json;
                         let data = normalize(response);
 
-                        //1., 2.
+                        //write in data
                         dispatch({ data, type: API_DATA_SUCCESS });
 
+                        //let the reducer do something
                         return dispatch(Object.assign({}, {type: apiAction.success(), payload: response, original: resp.original}, {options}));
                     },
                     //1., 2.
