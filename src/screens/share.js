@@ -7,6 +7,8 @@ import type {Item} from "../types";
 import {CheckBox} from "react-native-elements";
 import Snackbar from "react-native-snackbar"
 import i18n from '../i18n/i18n'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import * as UI from "./UIStyles";
 
 type Props = {
     item: Item,
@@ -21,9 +23,17 @@ class ShareScreen extends Component<Props, State> {
 
     render() {
         const {containerStyle} = this.props;
+        let s = "message";
         return (
             <View style={[styles.container, containerStyle]}>
-                <View style={{flex: 1}}>
+                <View style={{margin: 16}}>
+                    <Image source={require('../img/rounded_send_icon.png')}
+                           resizeMode="contain"
+                           style={{alignSelf: 'center',
+                               width: 60,
+                               height: 60,}}/>
+                </View>
+                <View style={{height: 300, margin: 16}}>
                     <TouchableOpacity
                         style={styles.button}
                         onPress={this.copyToClipboard.bind(this)}>
@@ -46,12 +56,25 @@ class ShareScreen extends Component<Props, State> {
                         <Image source={require('../img/share_icon.png')}
                                resizeMode="contain"
                                style={styles.image}/>
-                        <Text style={styles.buttonText}>ENVOYER SUR</Text>
+                        <View>
+                            <Text style={styles.buttonText}>ENVOYER SUR</Text>
+                            <View style={{flexDirection: 'row'}}>
+                                {["message", "facebook-messenger", "email", "whatsapp", "dots-horizontal"]
+                                    .map((s)=>this.renderIcon(s))
+                                }
+
+                            </View>
+                        </View>
+
                     </TouchableOpacity>
                 </View>
             </View>
         );
     }
+    renderIcon(iconName: string) {
+        return <Icon name={iconName} color={UI.Colors.green} size={16} style={styles.community} />;
+    }
+
     copyToClipboard() {
         const {item} = this.props;
         Clipboard.setString(item.url);
@@ -90,26 +113,35 @@ class ShareScreen extends Component<Props, State> {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        margin: 20,
+        flexDirection: 'row',
+        //margin: 20,
         backgroundColor: 'transparent',
-        //alignItems: 'center',
-
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     buttonText: {
-        fontFamily: 'Thonburi',
+        fontFamily: 'Chivo',
         color: 'black',
-        fontSize: 18,
-        marginLeft: 15
+        fontSize: 15,
+
     },
     image: {
         alignSelf: 'center',
-        width: 25,
-        height: 25,
+        width: 40,
+        height: 40,
+        marginRight: 14,
     },
     button: {
         flex: 1,
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        height: 50,
+    },
+    community: {
+        margin: 3,
+        alignItems: 'center',
+        alignSelf: 'center',
+        justifyContent: 'center',
     }
 });
 
