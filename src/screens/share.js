@@ -3,12 +3,16 @@ import React, {Component} from 'react';
 import {Clipboard, Image, Share, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
-import type {Item} from "../types";
+import type {Id, Item, User} from "../types";
 import {CheckBox} from "react-native-elements";
 import Snackbar from "react-native-snackbar"
 import i18n from '../i18n/i18n'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as UI from "./UIStyles";
+import CurrentUser from "../CurrentUser"
+import ApiAction from "../utils/ApiAction";
+import type {Description, Visibility} from "./save";
+import {connect} from "react-redux";
 
 type Props = {
     item: Item,
@@ -18,6 +22,7 @@ type Props = {
 type State = {
 };
 
+@connect()
 class ShareScreen extends Component<Props, State> {
 
 
@@ -104,7 +109,20 @@ class ShareScreen extends Component<Props, State> {
     }
 
     send() {
+        const {item} = this.props;
+        let navigator = this.props.navigator;
+        navigator.showModal({
+            screen: 'goodsh.CommunityScreen', // unique ID registered with Navigation.registerScreen
+            title: "Mes amis", // navigation bar title of the pushed screen (optional)
+            passProps: {
+                userId: CurrentUser.id,
+                onPressItem: (user: User) => {
 
+                    this.props.dispatch(actions.sendItem(item.id, user).disptachForAction2(actionTypes.SEND_ITEM))
+                        .then((res)=> navigator.dismissModal());
+                }
+            },
+        });
     }
 }
 
@@ -147,13 +165,31 @@ const styles = StyleSheet.create({
 
 
 const actionTypes = (() => {
-    return {};
+    const SEND_ITEM = new ApiAction("send_item");
+
+    return {SEND_ITEM};
 })();
 
 
 const actions = (() => {
     return {
+        sendItem: (item: Item, user: User, description?: Description = "", privacy?: Visibility = 0) => {
 
+            let body = {
+                sending: {
+                    receiver_id: user.id,
+                    description,
+                    privacy
+                }
+            };
+
+            return new Api.Call().withMethod('POST')
+                .withRoute(`items/${item.id}/sendings`)
+                .withBody(body)
+                .addQuery({
+                    include: "*.*"
+                });
+        },
     };
 })();
 

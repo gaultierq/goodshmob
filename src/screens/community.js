@@ -1,17 +1,20 @@
 // @flow
 
 import React, {Component} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import {connect} from "react-redux";
 import FriendCell from "./components/FriendCell";
 import {MainBackground} from "./UIComponents";
-import build from 'redux-object'
-import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
 import Feed from "./components/feed"
 import ApiAction from "../utils/ApiAction";
+import type {Id, User} from "../types";
+import {buildData} from "../utils/DataUtils";
 
 type Props = {
+    userId: Id,
+    onPressItem:? (item: User)=>void,
+    data?: any
 };
 
 type State = {
@@ -20,9 +23,22 @@ class CommunityScreen extends Component<Props, State> {
 
 
     render() {
-        let friend = this.props.friend;
 
-        let friends = (friend.list || []).map(object => build(this.props.data, object.type, object.id));
+        const {userId} = this.props;
+
+        let user: User = buildData(this.props.data, "users", userId);
+
+        let friends, callFactory, action;
+        if (user && user.friends) {
+            friends = user.friends;
+            callFactory = () => actions.fetchFriendsCall(userId);
+            action = actionTypes.LOAD_FRIENDS;
+        }
+        else {
+            friends = [];
+            callFactory = () => actions.getUser(userId);
+            action = actionTypes.GET_USER;
+        }
 
         return (
             <MainBackground>
@@ -31,10 +47,10 @@ class CommunityScreen extends Component<Props, State> {
                         data={friends}
                         renderItem={this.renderItem.bind(this)}
                         fetchSrc={{
-                            callFactory: () => actions.fetchFriendsCall(this.props.auth.currentUserId),
-                            action: actionTypes.LOAD_FRIENDS
+                            callFactory,
+                            action
                         }}
-                        hasMore={!this.props.friend.hasNoMore}
+                        hasMore={false}
                     />
                 </View>
             </MainBackground>
@@ -43,13 +59,16 @@ class CommunityScreen extends Component<Props, State> {
 
 
     renderItem({item}) {
-        return <FriendCell
-            friend={item}
-            onPressItem={() => this.navToFriendDetail(item)}
-        />
-    }
-
-    navToFriendDetail(it) {
+        const {onPressItem} = this.props;
+        return (
+            <TouchableOpacity
+                onPress={onPressItem}>
+                <FriendCell
+                    friend={item}
+                    onPressItem={this.props.onPressItem}
+                />
+            </TouchableOpacity>
+        )
     }
 }
 
@@ -62,17 +81,15 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state, ownProps) => ({
     friend: state.friend,
     data: state.data,
-    app: state.app,
-    auth: state.auth,
-    request: state.request
 });
 
 
 const actionTypes = (() => {
 
     const LOAD_FRIENDS = new ApiAction("load_friends");
+    const GET_USER = new ApiAction("get_user");
 
-    return {LOAD_FRIENDS};
+    return {LOAD_FRIENDS, GET_USER};
 })();
 
 
@@ -86,17 +103,17 @@ const actions = (() => {
                     include: "creator"
                 });
         },
+        getUser: (userId): Api.Call => new Api.Call()
+            .withMethod('GET')
+            .withRoute(`users/${userId}`)
+            .addQuery({
+                    include: "friends"
+                }
+            ),
     };
 })();
 
-const reducer = (() => {
-    const initialState = Immutable(Api.initialListState());
-
-    return (state = initialState, action = {}) => {
-        return Api.reduceList(state, action, {fetchFirst: actionTypes.LOAD_FRIENDS});
-    }
-})();
 
 let screen = connect(mapStateToProps)(CommunityScreen);
 
-export {reducer, screen};
+export {screen};

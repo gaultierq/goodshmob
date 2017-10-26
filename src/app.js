@@ -90,7 +90,7 @@ export default class App {
         },
         passProps: {
             item: {
-                id: "test_id",
+                id: "8ab94a3c-43b2-4e5c-acfb-d4ff268f93b1",
                 title: "test_title",
                 url: "test_url"
 
