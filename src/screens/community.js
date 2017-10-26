@@ -11,12 +11,12 @@ import * as Api from "../utils/Api";
 import Feed from "./components/feed"
 import ApiAction from "../utils/ApiAction";
 
+type Props = {
+};
 
-class CommunityScreen extends Component {
-
-    constructor(){
-        super();
-    }
+type State = {
+};
+class CommunityScreen extends Component<Props, State> {
 
 
     render() {
@@ -42,11 +42,10 @@ class CommunityScreen extends Component {
     }
 
 
-    renderItem(item) {
-        let it = item.item;
+    renderItem({item}) {
         return <FriendCell
-            onPressItem={() => this.navToFriendDetail(it)}
-            friend={it}
+            friend={item}
+            onPressItem={() => this.navToFriendDetail(item)}
         />
     }
 

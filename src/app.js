@@ -86,10 +86,15 @@ export default class App {
     // testScreen = {
     //     screen: {
     //         label: 'test',
-    //         screen: 'goodsh.LineupListScreen',
+    //         screen: 'goodsh.ShareScreen',
     //     },
     //     passProps: {
-    //         userId: "662a61d0-5473-4d09-9410-c63aadc12e6c",
+    //         item: {
+    //             id: "test_id",
+    //             title: "test_title",
+    //             url: "test_url"
+    //
+    //         },
     //     }
     // };
 

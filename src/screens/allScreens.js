@@ -11,6 +11,7 @@ import {screen as SavingsScreen} from './savings';
 import {screen as HomeScreen} from './home';
 import {screen as CommentsScreen} from './comments';
 import {screen as SaveScreen} from './save';
+import {screen as ShareScreen} from './share';
 
 // register all screens of the app (including internal ones)
 export function registerScreens(store, Provider) {
@@ -25,4 +26,5 @@ export function registerScreens(store, Provider) {
     Navigation.registerComponent('goodsh.SavingsScreen', () => SavingsScreen, store, Provider);
     Navigation.registerComponent('goodsh.CommentsScreen', () => CommentsScreen, store, Provider);
     Navigation.registerComponent('goodsh.SaveScreen', () => SaveScreen, store, Provider);
+    Navigation.registerComponent('goodsh.ShareScreen', () => ShareScreen, store, Provider);
 }

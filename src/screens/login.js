@@ -9,16 +9,16 @@ import {LoginManager} from 'react-native-fbsdk';
 import i18n from '../i18n/i18n'
 import { AccessToken } from "react-native-fbsdk";
 
-class Login extends Component {
+type Props = {
+};
 
-    state: {
-        loginInProgress: boolean;
-    };
+type State = {
+    loginInProgress: boolean;
+};
 
-    constructor(){
-        super();
-        this.state = {loginInProgress: false};
-    }
+class Login extends Component<Props, State> {
+
+    state = {loginInProgress: false};
 
     render() {
         return (
