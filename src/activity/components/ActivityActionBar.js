@@ -46,7 +46,7 @@ export default class ActivityActionBar extends React.Component {
 
             {actions.indexOf('comment') >= 0 && this.renderButton(require('../../img/comment.png'), i18n.t("activity_item.buttons.comment", {count: commentsCount}), () => this.comment(activity))}
 
-            {actions.indexOf('share') >= 0 && this.renderButton(require('../../img/send.png'), i18n.t("activity_item.buttons.share"), () => this.shareIntent(activity))}
+            {actions.indexOf('share') >= 0 && this.renderButton(require('../../img/send.png'), i18n.t("activity_item.buttons.share"), () => this.send(activity))}
             {
                 goodshed ?
                     actions.indexOf('save') >= 0 && this.renderButton(require('../../img/save-icon.png'), i18n.t("activity_item.buttons.saved"), null, true)
@@ -129,19 +129,35 @@ export default class ActivityActionBar extends React.Component {
         });
     }
 
-    shareIntent(activity: Activity) {
-        Share.share({
-            message: 'BAM: we\'re helping your business with awesome React Native apps',
-            url: 'http://bam.tech',
-            title: 'Wow, did you see that?'
-        }, {
-            // Android only:
-            dialogTitle: 'Share BAM goodness',
-            // iOS only:
-            excludedActivityTypes: [
-                'com.apple.UIKit.activity.PostToTwitter'
-            ]
-        })
+    send(activity: Activity) {
+        const {resource} = activity;
+
+        this.props.navigator.showLightBox({
+            screen: 'goodsh.ShareScreen', // unique ID registered with Navigation.registerScreen
+            style: {
+                backgroundBlur: "light", // 'dark' / 'light' / 'xlight' / 'none' - the type of blur on the background
+                tapBackgroundToDismiss: true // dismisses LightBox on background taps (optional)
+            },
+            passProps:{
+                itemId: resource.id,
+                itemType: resource.type,
+                //navigator: this.props.navigator
+            },
+        });
+
+
+        // Share.share({
+        //     message: 'BAM: we\'re helping your business with awesome React Native apps',
+        //     url: 'http://bam.tech',
+        //     title: 'Wow, did you see that?'
+        // }, {
+        //     // Android only:
+        //     dialogTitle: 'Share BAM goodness',
+        //     // iOS only:
+        //     excludedActivityTypes: [
+        //         'com.apple.UIKit.activity.PostToTwitter'
+        //     ]
+        // })
     }
 
     buy(activity: Activity) {

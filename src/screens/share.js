@@ -1,9 +1,8 @@
 // @flow
 import React, {Component} from 'react';
-import {Clipboard, Image, Share, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import Immutable from 'seamless-immutable';
+import {Clipboard, Image, Share, StyleSheet, Text, TextInput, TouchableOpacity, View, Dimensions} from 'react-native';
 import * as Api from "../utils/Api";
-import type {Id, Item, User} from "../types";
+import type {Id, Item, ItemType, User} from "../types";
 import {CheckBox} from "react-native-elements";
 import Snackbar from "react-native-snackbar"
 import i18n from '../i18n/i18n'
@@ -13,24 +12,60 @@ import CurrentUser from "../CurrentUser"
 import ApiAction from "../utils/ApiAction";
 import type {Description, Visibility} from "./save";
 import {connect} from "react-redux";
+import {buildNonNullData} from "../utils/DataUtils";
 
 type Props = {
-    item: Item,
-    containerStyle: any
+    itemId: Id,
+    itemType: ItemType,
+    navigator: any,
+    containerStyle:? any
 };
 
 type State = {
 };
 
-@connect()
+const mapStateToProps = (state, ownProps) => ({
+    data: state.data,
+});
+
+
+@connect(mapStateToProps)
 class ShareScreen extends Component<Props, State> {
 
 
     render() {
-        const {containerStyle} = this.props;
-        let s = "message";
+        const {containerStyle, itemType, itemId} = this.props;
+
+        const item = buildNonNullData(this.props.data, itemType, itemId);
+        const {height, width} = Dimensions.get('window');
+
+
+
         return (
-            <View style={[styles.container, containerStyle]}>
+            <View style={[styles.container, containerStyle,
+                {height, width}]}
+            >
+                <TouchableOpacity
+                    onPress={()=>this.props.navigator.dismissLightBox()}
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        marginLeft: 20,
+                        marginTop: 30,
+                    }}
+                >
+                    <Image source={require('../img/close_circle.png')}
+                           resizeMode="contain"
+                           style={{
+                               width: 30,
+                               height: 30,}}
+                    />
+                </TouchableOpacity>
+
+
+
+
                 <View style={{margin: 16}}>
                     <Image source={require('../img/rounded_send_icon.png')}
                            resizeMode="contain"
@@ -41,7 +76,7 @@ class ShareScreen extends Component<Props, State> {
                 <View style={{height: 300, margin: 16}}>
                     <TouchableOpacity
                         style={styles.button}
-                        onPress={this.copyToClipboard.bind(this)}>
+                        onPress={()=>this.copyToClipboard(item)}>
                         <Image source={require('../img/link_icon.png')}
                                resizeMode="contain"
                                style={styles.image}/>
@@ -49,7 +84,7 @@ class ShareScreen extends Component<Props, State> {
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.button}
-                        onPress={this.send.bind(this)}>
+                        onPress={()=>this.send(item)}>
                         <Image source={require('../img/network.png')}
                                resizeMode="contain"
                                style={styles.image}/>
@@ -57,7 +92,7 @@ class ShareScreen extends Component<Props, State> {
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.button}
-                        onPress={this.share.bind(this)}>
+                        onPress={()=>this.share(item)}>
                         <Image source={require('../img/share_icon.png')}
                                resizeMode="contain"
                                style={styles.image}/>
@@ -80,8 +115,7 @@ class ShareScreen extends Component<Props, State> {
         return <Icon key={iconName} name={iconName} color={UI.Colors.green} size={16} style={styles.community} />;
     }
 
-    copyToClipboard() {
-        const {item} = this.props;
+    copyToClipboard(item:Item) {
         Clipboard.setString(item.url);
 
         Snackbar.show({
@@ -89,8 +123,7 @@ class ShareScreen extends Component<Props, State> {
         });
     }
 
-    share() {
-        const {item} = this.props;
+    share(item:Item) {
         const {title, subtitle, url} = item;
 
         let intentMessage = 'Partager ' + title;
@@ -108,9 +141,8 @@ class ShareScreen extends Component<Props, State> {
         })
     }
 
-    send() {
+    send(item:Item) {
         //const {item} = this.props;
-        const item : Item = this.props.item;
         let navigator = this.props.navigator;
         navigator.showModal({
             screen: 'goodsh.CommunityScreen', // unique ID registered with Navigation.registerScreen
@@ -121,7 +153,7 @@ class ShareScreen extends Component<Props, State> {
 
                     let id : Id = item.id;
 
-                    let disptachForAction2 = actions.sendItem(/*id*/item, user).disptachForAction2(actionTypes.SEND_ITEM);
+                    let disptachForAction2 = actions.sendItem(/*id*/item, user).disptachForAction2(SEND_ITEM);
                     this.props.dispatch(disptachForAction2)
                         .then((res)=> navigator.dismissModal());
                 }
@@ -168,11 +200,7 @@ const styles = StyleSheet.create({
 });
 
 
-const actionTypes = (() => {
-    const SEND_ITEM = new ApiAction("send_item");
-
-    return {SEND_ITEM};
-})();
+const SEND_ITEM = new ApiAction("send_item");
 
 
 const actions = (() => {
@@ -197,16 +225,7 @@ const actions = (() => {
     };
 })();
 
-const reducer = (() => {
-    const initialState = Immutable(Api.initialListState());
-
-    return (state = initialState, action = {}) => {
-        return state;
-    }
-})();
-
-
 
 let screen = ShareScreen;
 
-export {reducer, screen, actions};
+export {screen, actions};

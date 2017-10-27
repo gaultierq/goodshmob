@@ -374,8 +374,6 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state, ownProps) => ({
-    lineupList: state.lineupList,
-    request: state.request,
     data: state.data,
 });
 

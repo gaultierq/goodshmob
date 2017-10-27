@@ -7,34 +7,29 @@ import dotprop from "dot-prop-immutable"
 
 //ask backend to sanitize types
 export let sanitizeActivityType = activityType => {
-    let type;
     switch (activityType.toLowerCase()) {
         case "post":
         case "posts":
-            type = "posts";
-            break;
+            return "posts";
         case "sending":
         case "sendings":
-            type = "sendings";
-            break;
+            return "sendings";
         case "saving":
         case "savings":
-            type = "savings";
-            break;
+            return "savings";
         case "creative-works":
         case "creative-work":
-            type = "creativeWorks";
-            break;
+            return "creativeWorks";
         case "tv-shows":
         case "tv-show":
-            type = "tvShows";
-            break;
+            return "tvShows";
         case "comments":
         case "comment":
-            type = "comments";
-            break;
+            return "comments";
+        case "places":
+        case "place":
+            return "places";
     }
-    //if (!type) throw new Error(`type not found for ${activityType}`);
     return type;
 };
 
