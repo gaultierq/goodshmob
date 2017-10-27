@@ -30,7 +30,7 @@ export let sanitizeActivityType = activityType => {
         case "place":
             return "places";
     }
-    return type;
+    return activityType;
 };
 
 export function buildData(store, type, id: Id) {

@@ -180,7 +180,7 @@ export default class App {
                 },
                 drawer: { // optional, add this if you want a side menu drawer in your app
                     left: { // optional, define if you want a drawer from the left
-                        // screen: 'goodsh.CommunityScreen',
+                        // screen: 'goodsh.FriendsScreen',
                         screen: 'goodsh.DebugScreen', // unique ID registered with Navigation.registerScreen
                         passProps: {} // simple serializable object that will pass as props to all top screens (optional)
                     },

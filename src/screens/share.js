@@ -1,7 +1,6 @@
 // @flow
 import React, {Component} from 'react';
-import {Clipboard, Image, Share, StyleSheet, Text, TextInput, TouchableOpacity, View, Dimensions} from 'react-native';
-import * as Api from "../utils/Api";
+import {Clipboard, Dimensions, Image, Share, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import type {Id, Item, ItemType, User} from "../types";
 import {CheckBox} from "react-native-elements";
 import Snackbar from "react-native-snackbar"
@@ -9,10 +8,9 @@ import i18n from '../i18n/i18n'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as UI from "./UIStyles";
 import CurrentUser from "../CurrentUser"
-import ApiAction from "../utils/ApiAction";
-import type {Description, Visibility} from "./save";
 import {connect} from "react-redux";
 import {buildNonNullData} from "../utils/DataUtils";
+import * as Nav from "./Nav";
 
 type Props = {
     itemId: Id,
@@ -145,21 +143,23 @@ class ShareScreen extends Component<Props, State> {
         //const {item} = this.props;
         let navigator = this.props.navigator;
         navigator.showModal({
-            screen: 'goodsh.CommunityScreen', // unique ID registered with Navigation.registerScreen
-            title: "Mes amis", // navigation bar title of the pushed screen (optional)
+            screen: 'goodsh.SendScreen', // unique ID registered with Navigation.registerScreen
+            title: `Envoyer '${item.title}'`,
+            navigatorButtons: {
+                leftButtons: [
+                    {
+                        id: Nav.CANCEL_DIALOG,
+                        title: "Cancel"
+                    }
+                ],
+            },
             passProps: {
                 userId: CurrentUser.id,
-                onPressItem: (user: User) => {
-
-                    let id : Id = item.id;
-
-                    let disptachForAction2 = actions.sendItem(/*id*/item, user).disptachForAction2(SEND_ITEM);
-                    this.props.dispatch(disptachForAction2)
-                        .then((res)=> navigator.dismissModal());
-                }
+                item
             },
         });
     }
+
 }
 
 
@@ -200,32 +200,6 @@ const styles = StyleSheet.create({
 });
 
 
-const SEND_ITEM = new ApiAction("send_item");
-
-
-const actions = (() => {
-    return {
-        sendItem: (item: Item, user: User, description?: Description = "", privacy?: Visibility = 0) => {
-
-            let body = {
-                sending: {
-                    receiver_id: user.id,
-                    description,
-                    privacy
-                }
-            };
-
-            return new Api.Call().withMethod('POST')
-                .withRoute(`items/${item.id}/sendings`)
-                .withBody(body)
-                .addQuery({
-                    include: "*.*"
-                });
-        },
-    };
-})();
-
-
 let screen = ShareScreen;
 
-export {screen, actions};
+export {screen};

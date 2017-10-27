@@ -64,9 +64,10 @@ class HomeScreen extends Component {
                     break;
                 case 'profile':
                     this.props.navigator.push({
-                        screen: 'goodsh.CommunityScreen', // unique ID registered with Navigation.registerScreen
-                        title: "Mes amis", // navigation bar title of the pushed screen (optional)
+                        screen: 'goodsh.CommunityScreen',
+                        title: "Mes amis",
                         passProps: {
+                            userId: CurrentUser.id
                         },
                     });
                     break;
