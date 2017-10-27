@@ -9,7 +9,7 @@ export type NavigableProps = {
     navigator: any
 };
 
-export type Item = {
+export type Item = Base & {
     title: string,
     subtitle: String,
     url: String,

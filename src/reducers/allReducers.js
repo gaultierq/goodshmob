@@ -1,11 +1,10 @@
 import data1 from './dataReducer'
 import activity from '../activity/reducer';
-//import request from './requestReducer'
-//import app from '../auth/reducer';
 import {reducer as network} from '../screens/network';
 import {reducer as savings} from '../screens/savings';
 import {reducer as search} from '../screens/search';
 import {reducer as comments} from '../screens/comments';
+import {reducer as lineups} from '../screens/lineups';
 import auth from '../auth/reducer';
 
 function reduceReducers(...reducers) {
@@ -20,18 +19,14 @@ let data = reduceReducers(
     data1,
     activity,
     comments,
-    savings
+    savings,
+    lineups
 );
 
 
 export {
     data,
-    // request,
     network,
-    // lineupList,
-    // friend,
-    // savings,
     auth,
     search,
-    // comments
 };

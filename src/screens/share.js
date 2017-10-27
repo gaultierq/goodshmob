@@ -77,7 +77,7 @@ class ShareScreen extends Component<Props, State> {
         );
     }
     renderIcon(iconName: string) {
-        return <Icon name={iconName} color={UI.Colors.green} size={16} style={styles.community} />;
+        return <Icon key={iconName} name={iconName} color={UI.Colors.green} size={16} style={styles.community} />;
     }
 
     copyToClipboard() {
@@ -109,7 +109,8 @@ class ShareScreen extends Component<Props, State> {
     }
 
     send() {
-        const {item} = this.props;
+        //const {item} = this.props;
+        const item : Item = this.props.item;
         let navigator = this.props.navigator;
         navigator.showModal({
             screen: 'goodsh.CommunityScreen', // unique ID registered with Navigation.registerScreen
@@ -118,7 +119,10 @@ class ShareScreen extends Component<Props, State> {
                 userId: CurrentUser.id,
                 onPressItem: (user: User) => {
 
-                    this.props.dispatch(actions.sendItem(item.id, user).disptachForAction2(actionTypes.SEND_ITEM))
+                    let id : Id = item.id;
+
+                    let disptachForAction2 = actions.sendItem(/*id*/item, user).disptachForAction2(actionTypes.SEND_ITEM);
+                    this.props.dispatch(disptachForAction2)
                         .then((res)=> navigator.dismissModal());
                 }
             },

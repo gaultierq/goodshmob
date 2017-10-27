@@ -22,48 +22,59 @@ import i18n from '../i18n/i18n'
 import * as UI from "../screens/UIStyles";
 import {SearchBar} from 'react-native-elements'
 import Fuse from 'fuse.js'
-import type types, {Id, List} from "../types";
+import type types, {Id, List, User} from "../types";
 import ItemCell from "./components/ItemCell";
 import Feed from "./components/feed";
 import Swipeout from "react-native-swipeout";
 import CurrentUser from "../CurrentUser"
 import {actions as savingsActions} from "./savings"
 import ApiAction from "../utils/ApiAction";
-import {buildData} from "../utils/DataUtils";
+import {buildData, doDataMergeInState} from "../utils/DataUtils";
 import {CREATE_LINEUP} from "./actions"
 import algoliasearch from 'algoliasearch/reactnative';
 
 
-class LineupListScreen extends Component {
+type Props = {
+    userId: Id,
+    onLineupPressed: (lineup: List) => void,
+    onSavingPressed: Function,
+    onAddInLineupPressed: Function,
+    canFilterOverItems: boolean | ()=>boolean,
+    data?: any
+};
 
-    props: {
-        userId: Id,
-        onLineupPressed: (lineup: List) => void,
-        onSavingPressed: Function,
-        onAddInLineupPressed: Function,
-        canFilterOverItems: boolean | ()=>boolean,
-        data: Object
+type State = {
+    isLoading: boolean,
+    isLoadingMore: boolean,
+    searchResult: {lists: Array, savings: Array}
+};
+class LineupListScreen extends Component<Props, State> {
+
+    // props: {
+    //     userId: Id,
+    //     onLineupPressed: (lineup: List) => void,
+    //     onSavingPressed: Function,
+    //     onAddInLineupPressed: Function,
+    //     canFilterOverItems: boolean | ()=>boolean,
+    //     data: Object
+    // };
+    //
+    // state: {
+    //     isLoading: boolean,
+    //     isLoadingMore: boolean,
+    //     searchResult: {lists: Array, savings: Array}
+    // };
+
+    state= {
+        filter: null,
+        isLoading: false,
+        isLoadingMore: false,
+        searchResult:  {lists: [], savings: []}
     };
-
-    state: {
-        isLoading: boolean,
-        isLoadingMore: boolean,
-        searchResult: {lists: Array, savings: Array}
-    };
-
-    constructor(){
-        super();
-        this.state= {
-            filter: null,
-            isLoading: false,
-            isLoadingMore: false,
-            searchResult:  {lists: [], savings: []}
-        }
-    }
 
     componentWillMount() {
         if (!this.getUser()) {
-            this.props.dispatch(actions.getUser(this.props.userId).disptachForAction2(actiontypes.FETCH_USER));
+            this.props.dispatch(actions.getUser(this.props.userId).disptachForAction2(FETCH_USER));
         }
     }
 
@@ -77,11 +88,33 @@ class LineupListScreen extends Component {
         // let lineups : Array<types.List> = user ? user.lists || [] : [];
 
         //let lineups = lineupList.list.map((l) => buildNonNullData(this.props.data, "lists", l.id));
-
+/*
         let lineupList = this.props.lineupList;
         let ids = lineupList.list.asMutable().map(o=>o.id);
         //let lineups : Array<types.List> = build(this.props.data, "lists", ids, {includeType: true});
         let lineups : Array<types.List> = ids.map((id) => ({id, type: "lists"}));
+       */
+        const {userId} = this.props;
+
+        let user: User = buildData(this.props.data, "users", userId);
+
+        let lists, fetchSrc;
+        if (user && user.lists) {
+            lists = user.lists;
+            fetchSrc = userId === CurrentUser.id ? {
+                callFactory: actions.fetchLineups,
+                action: FETCH_LINEUPS,
+                options: {userId}
+            } : null;
+        }
+        else {
+            lists = [];
+            fetchSrc = {
+                callFactory: actions.getUser,
+                action: GET_USER_W_LISTS
+            };
+        }
+
 
 
         let data: Array<types.List|types.Item>;
@@ -97,16 +130,16 @@ class LineupListScreen extends Component {
         //     data = this.applyFilter(lineups);
         // }
         else {
-            data = lineups;
+            data = lists;
         }
 
-        let fetchSrc = this.props.userId === CurrentUser.id ? {
-            callFactory: actions.fetchCall,
-            action: actiontypes.FETCH_LINEUPS
-        } : null;
+        // let fetchSrc = this.props.userId === CurrentUser.id ? {
+        //     callFactory: actions.fetchCall,
+        //     action: FETCH_LINEUPS
+        // } : null;
 
-        //let hasNoMore = !this.props.lineupList.hasNoMore;
-        let hasNoMore = true;
+
+
         return (
             <View>
                 <SearchBar
@@ -123,9 +156,7 @@ class LineupListScreen extends Component {
                     data={data}
                     renderItem={this.renderItem.bind(this)}
                     fetchSrc={fetchSrc}
-                    hasMore={!hasNoMore}
-                    //ListHeaderComponent={this.renderHeader()}
-                    style={{marginBottom: 120}} //FIXME: this is a hack.
+                    style={{marginBottom: 120, minHeight: 200}} //FIXME: this is a hack.
                 />
 
             </View>
@@ -269,12 +300,15 @@ class LineupListScreen extends Component {
     //render a lineup row
     renderItem({item}) {
 
+        const {userId} = this.props;
+
         let result;
         let isLineup = item.type === 'lists';
 
         //item can be from search, and not yet in redux store
-        item = buildData(this.props.data, item.type, item.id) || item;
+        item = buildData(this.props.data, item.type, item.id);
 
+        if (!item) return null;
 
         if (isLineup) {
             let handler = this.props.onLineupPressed ? () => this.props.onLineupPressed(item) : null;
@@ -304,7 +338,7 @@ class LineupListScreen extends Component {
             )
         }
 
-        let disabled = item.user.id !== CurrentUser.id;
+        let disabled = /*item.user.id*/userId !== CurrentUser.id;
 
         let swipeBtns = [{
             text: 'Delete',
@@ -345,19 +379,14 @@ const mapStateToProps = (state, ownProps) => ({
     data: state.data,
 });
 
-const actiontypes = (() => {
-    const FETCH_USER = new ApiAction("fetch_user");
-    const FETCH_LINEUPS = new ApiAction("fetch_lineups");
-    const DELETE_LINEUP = new ApiAction("delete_lineup");
-
-    return {FETCH_LINEUPS, DELETE_LINEUP, FETCH_USER};
-})();
-
+const GET_USER_W_LISTS = new ApiAction("get_user");
+const FETCH_LINEUPS = new ApiAction("fetch_lineups");
+const DELETE_LINEUP = new ApiAction("delete_lineup");
 
 const actions = (() => {
 
     return {
-        fetchCall: () => new Api.Call()
+        fetchLineups: () => new Api.Call()
             .withMethod('GET')
             .withRoute("lists")
         ,
@@ -373,7 +402,7 @@ const actions = (() => {
                 .withMethod('DELETE')
                 .withRoute(`lists/${lineup.id}`);
 
-            return call.disptachForAction(actiontypes.DELETE_LINEUP);
+            return call.disptachForAction(DELETE_LINEUP);
         },
     };
 })();
@@ -382,9 +411,13 @@ const reducer = (() => {
     const initialState = Immutable(Api.initialListState());
 
     return (state = initialState, action = {}) => {
-        let desc = {fetchFirst: actiontypes.FETCH_LINEUPS, fetchMore: actiontypes.FETCH_MORE_LINEUPS};
-        state = Api.reduceList(state, action, desc);
         switch (action.type) {
+            case FETCH_LINEUPS.success(): {
+                let {userId} = action.options;
+                let path = `users.${userId}.relationships.lists.data`;
+                state = doDataMergeInState(state, path, action.payload.data);
+                break;
+            }
             case CREATE_LINEUP.success():
                 let payload = action.payload;
                 let {id, type} = payload.data;

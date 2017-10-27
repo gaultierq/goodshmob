@@ -139,7 +139,8 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             console.log("throttled -> hasMore=false");
             return false;
         }
-        return !!this.props.hasMore;
+        if (typeof this.props.hasMore !== 'undefined') return this.props.hasMore;
+        return true;
     }
 
     onEndReached() {
