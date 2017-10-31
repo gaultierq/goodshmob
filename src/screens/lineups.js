@@ -22,7 +22,7 @@ import i18n from '../i18n/i18n'
 import * as UI from "../screens/UIStyles";
 import {SearchBar} from 'react-native-elements'
 import Fuse from 'fuse.js'
-import type types, {Id, List, User} from "../types";
+import type types, {Id, Item, List, Saving, User} from "../types";
 import ItemCell from "./components/ItemCell";
 import Feed from "./components/feed";
 import Swipeout from "react-native-swipeout";
@@ -32,7 +32,6 @@ import ApiAction from "../utils/ApiAction";
 import {buildData, doDataMergeInState} from "../utils/DataUtils";
 import {CREATE_LINEUP} from "./actions"
 import algoliasearch from 'algoliasearch/reactnative';
-
 
 type Props = {
     userId: Id,
@@ -46,35 +45,30 @@ type Props = {
 type State = {
     isLoading: boolean,
     isLoadingMore: boolean,
-    searchResult: {lists: Array, savings: Array}
+    filter: string,
+    search: { [string]: SearchState}
 };
+
+type SearchState = {
+    isSearching: boolean,
+    hasMore: boolean,
+    data: Array<List|Saving>
+};
+
+//token -> {data, hasMore, isSearching}
 class LineupListScreen extends Component<Props, State> {
 
-    // props: {
-    //     userId: Id,
-    //     onLineupPressed: (lineup: List) => void,
-    //     onSavingPressed: Function,
-    //     onAddInLineupPressed: Function,
-    //     canFilterOverItems: boolean | ()=>boolean,
-    //     data: Object
-    // };
-    //
-    // state: {
-    //     isLoading: boolean,
-    //     isLoadingMore: boolean,
-    //     searchResult: {lists: Array, savings: Array}
-    // };
 
     state= {
         filter: null,
         isLoading: false,
         isLoadingMore: false,
-        searchResult:  {lists: [], savings: []}
+        search: {}
     };
 
     componentWillMount() {
         if (!this.getUser()) {
-            this.props.dispatch(actions.getUser(this.props.userId).disptachForAction2(FETCH_USER));
+            this.props.dispatch(actions.getUser(this.props.userId).disptachForAction2(GET_USER_W_LISTS));
         }
     }
 
@@ -83,17 +77,6 @@ class LineupListScreen extends Component<Props, State> {
     }
 
     render() {
-        //TODO: when generalized include is working
-        // const user = this.getUser();
-        // let lineups : Array<types.List> = user ? user.lists || [] : [];
-
-        //let lineups = lineupList.list.map((l) => buildNonNullData(this.props.data, "lists", l.id));
-/*
-        let lineupList = this.props.lineupList;
-        let ids = lineupList.list.asMutable().map(o=>o.id);
-        //let lineups : Array<types.List> = build(this.props.data, "lists", ids, {includeType: true});
-        let lineups : Array<types.List> = ids.map((id) => ({id, type: "lists"}));
-       */
         const {userId} = this.props;
 
         let user: User = buildData(this.props.data, "users", userId);
@@ -115,30 +98,29 @@ class LineupListScreen extends Component<Props, State> {
             };
         }
 
-
-
         let data: Array<types.List|types.Item>;
+        let search = this.state.search[this.state.filter];
 
-        let searchResult = this.state.searchResult;
-        let hasSearchResult = searchResult.savings.length > 0 || searchResult.lists.length > 0;
 
-        if (this.state.filter && hasSearchResult) {
-            data = [].concat(searchResult.lists, searchResult.savings);
+
+        let searchResult: Array<Item|List> = search ? search.data : null;
+        let hasSearchResult = search && search.data && search.data.length > 0;
+
+        let emptySearchResult = false;
+        let isSearching = search && search.isSearching > 0;
+
+
+
+        let isSearchMode = this.isSearchMode();
+
+        if (isSearchMode) {
+            // data = [].concat(searchResult.lists, searchResult.savings);
+            data = searchResult;
+            emptySearchResult = !isSearching && !hasSearchResult;
         }
-        //deactivate local search until further notice
-        // else if (this.state.filter) {
-        //     data = this.applyFilter(lineups);
-        // }
         else {
             data = lists;
         }
-
-        // let fetchSrc = this.props.userId === CurrentUser.id ? {
-        //     callFactory: actions.fetchCall,
-        //     action: FETCH_LINEUPS
-        // } : null;
-
-
 
         return (
             <View>
@@ -152,15 +134,36 @@ class LineupListScreen extends Component<Props, State> {
                     autoCapitalize='none'
                     autoCorrect={false}
                 />
-                <Feed
+
+                {
+                    isSearchMode && <FlatList
+                        data={searchResult}
+                        renderItem={this.renderItem.bind(this)}
+                        keyExtractor={(item) => item.id}
+                        ListFooterComponent={this.renderSearchFooter.bind(this)}
+                    />
+                }
+
+                {!isSearchMode && <Feed
                     data={data}
                     renderItem={this.renderItem.bind(this)}
                     fetchSrc={fetchSrc}
-                    style={{marginBottom: 120, minHeight: 200}} //FIXME: this is a hack.
-                />
+                    //style={{marginBottom: 120, minHeight: 200}} //FIXME: this is a hack.
+                />}
+
+                {emptySearchResult && <Text>Pas de résultat</Text>}
 
             </View>
         );
+    }
+
+    isSearchMode() {
+        return !!this.state.filter;
+    }
+
+    renderSearchFooter() {
+        if (!this.isSearchMode()) return null;
+        return null;
     }
 
     canFilterOverItems() {
@@ -198,37 +201,41 @@ class LineupListScreen extends Component<Props, State> {
         return fuse.search(this.state.filter);
     }
 
-    onSearchInputChange(input) {
+    onSearchInputChange(input:string) {
         this.setState({filter: input});
 
         if (input) {
             this.performAlgoliaSearch(input);
         }
         else {
-            let lists = [], savings = [];
-            this.setState({searchResult: {lists, savings}});
+            this.setState({searchResult: []});
         }
     }
 
     performAlgoliaSearch(input) {
         let client = algoliasearch("8UTETUZKD3", "c80385095ff870f5ddf9ba25310a9d5a");
 
-        const queries = [{
-            indexName: 'List_development',
-            query: input,
-            params: {
-                hitsPerPage: 10,
-                filters: 'user_id:' + this.props.userId
+        const queries = [
+            {
+                indexName: 'Saving_development',
+                query: input,
+                params: {
+                    hitsPerPage: 10,
+                    facets: "[\"list_name\"]",
+                    filters: 'user_id:' + this.props.userId,
+                }
             }
-        }, {
-            indexName: 'Saving_development',
-            query: input,
-            params: {
-                hitsPerPage: 10,
-                filters: 'user_id:' + this.props.userId
-            }
-        }
         ];
+
+        // let searchingTokens = this.state.searchingTokens;
+        // searchingTokens = searchingTokens.slice();
+        //
+        // searchingTokens.push(input);
+
+        let search = this.state.search[input] || {};
+        search.isSearching = true;
+
+        this.setState({search: {...this.state.search, [input]: search}}, ()=> console.log("new search state "+JSON.stringify(this.state)));
 
         client.search(queries, (err, content) => {
 
@@ -237,33 +244,73 @@ class LineupListScreen extends Component<Props, State> {
                 console.error(err);
                 return;
             }
-            let lists = content.results[0].hits.map((l) => {
-                return (
-                    // buildData(this.props.data, "lists", l.objectID) ||
-                    {
-                        id: l.objectID,
-                        name: l.name,
-                        user: Object.assign({type: "users"}, l.user, {id: l.user_id}),
-                        type: "lists"
-                    });
-            });
+            let hits = content.results[0].hits;
+            console.log(`search result lists: ${JSON.stringify(content)}`);
+            let searchResult = this.createResultFromHit(hits);
 
-            let savings = content.results[1].hits.map((flat) => {
-                return (
-                    // buildData(this.props.data, "savings", flat.objectID) ||
-                    {
-                        id: flat.objectID,
-                        name: flat.name,
-                        user: Object.assign({type: "users"}, flat.user, {id: flat.user_id}),
-                        resource: {type: flat.type, image: flat.image, url: flat.url, title: flat.name},
-                        type: "savings"
-                    });
-            });
-            console.log(`search result lists: ${JSON.stringify(lists)}`);
-            console.log(`search result savings: ${JSON.stringify(savings)}`);
+            let search = this.state.search[input];
 
-            this.setState({searchResult: {lists, savings}});
+            if (!search.data) search.data = [];
+
+            search.data = search.data.concat(searchResult);
+            search.isSearching = false;
+            search.hasMore = hits.page < hits.nbPages - 1;
+
+            this.setState({search: {...this.state.search, input: search}});
         });
+
+    }
+
+    createResultFromHit(hits) {
+        let searchResult = [];
+        let listsById: { [Id]: List } = {};
+        hits.forEach((h) => {
+            let hR = h["_highlightResult"];
+            let matchedListName = hR["list_name"] && hR["list_name"]["matchLevel"] !== 'none';
+            let matchedItemTitle = hR["item_title"] && hR["item_title"]["matchLevel"] !== 'none';
+
+            const {
+                objectID,
+                list_name,
+                item_title,
+                list_id,
+                user_id,
+                type,
+                image,
+                url,
+                user
+            } = h;
+
+            let saving = {
+                id: objectID,
+                user: Object.assign({type: "users"}, user, {id: user_id}),
+                resource: {type, image, url, title: item_title},
+                type: "savings"
+            };
+
+            if (matchedListName) {
+                let list = listsById[list_id];
+                if (!list) {
+                    list = {
+                        id: list_id,
+                        name: list_name,
+                        user: Object.assign({type: "users"}, user, {id: user_id}),
+                        type: "lists",
+                        savings: []
+                    };
+                    listsById[list_id] = list;
+
+                    //adding to the result for 1st match
+                    searchResult.push(list);
+                }
+                list.savings.push(saving);
+            }
+
+            if (matchedItemTitle) {
+                searchResult.push(saving);
+            }
+        });
+        return searchResult;
     }
 
     isSearching() {
@@ -305,10 +352,10 @@ class LineupListScreen extends Component<Props, State> {
         let result;
         let isLineup = item.type === 'lists';
 
-        //item can be from search, and not yet in redux store
-        item = buildData(this.props.data, item.type, item.id);
+        //FIXME: item can be from search, and not yet in redux store
+        item = buildData(this.props.data, item.type, item.id) || item;
 
-        if (!item) return null;
+        //if (!item) return null;
 
         if (isLineup) {
             let handler = this.props.onLineupPressed ? () => this.props.onLineupPressed(item) : null;
