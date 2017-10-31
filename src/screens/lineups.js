@@ -3,6 +3,7 @@
 import React, {Component} from 'react';
 import {
     ActivityIndicator,
+    Button,
     FlatList,
     Image,
     RefreshControl,
@@ -49,13 +50,17 @@ type State = {
     search: { [string]: SearchState}
 };
 
+//token -> {data, hasMore, isSearching}
 type SearchState = {
-    isSearching: boolean,
-    hasMore: boolean,
-    data: Array<List|Saving>
+    searchState: number, //0,1,2,3
+    page: number,
+    nbPages: number,
+    data: Array<List|Saving>,
+    token: string
+
 };
 
-//token -> {data, hasMore, isSearching}
+
 class LineupListScreen extends Component<Props, State> {
 
 
@@ -101,15 +106,11 @@ class LineupListScreen extends Component<Props, State> {
         let data: Array<types.List|types.Item>;
         let search = this.state.search[this.state.filter];
 
-
-
         let searchResult: Array<Item|List> = search ? search.data : null;
         let hasSearchResult = search && search.data && search.data.length > 0;
 
         let emptySearchResult = false;
-        let isSearching = search && search.isSearching > 0;
-
-
+        let isSearching = search && search.searchState === 1;
 
         let isSearchMode = this.isSearchMode();
 
@@ -162,8 +163,13 @@ class LineupListScreen extends Component<Props, State> {
     }
 
     renderSearchFooter() {
-        if (!this.isSearchMode()) return null;
-        return null;
+        let search = this.state.search[this.state.filter];
+        if (!search) return null;
+        let nextPage = search.page + 1;
+
+        let hasMore = nextPage < search.nbPages;
+        if (!hasMore) return null;
+        return <Button title="load more" onPress={()=>{this.performAlgoliaSearch(search.token, nextPage)}}/>;
     }
 
     canFilterOverItems() {
@@ -205,38 +211,36 @@ class LineupListScreen extends Component<Props, State> {
         this.setState({filter: input});
 
         if (input) {
-            this.performAlgoliaSearch(input);
+            let search = this.state.search[input];
+            if (!search) {
+                this.performAlgoliaSearch(input);
+            }
         }
         else {
-            this.setState({searchResult: []});
+            //this.setState({searchResult: []});
         }
     }
 
-    performAlgoliaSearch(input) {
+    performAlgoliaSearch(token, page: number = 0) {
         let client = algoliasearch("8UTETUZKD3", "c80385095ff870f5ddf9ba25310a9d5a");
+        let search = this.state.search[token] || {token, searchState: 1};
 
         const queries = [
             {
                 indexName: 'Saving_development',
-                query: input,
+                query: token,
                 params: {
-                    hitsPerPage: 10,
+                    page,
+                    hitsPerPage: 2,
                     facets: "[\"list_name\"]",
                     filters: 'user_id:' + this.props.userId,
                 }
             }
         ];
 
-        // let searchingTokens = this.state.searchingTokens;
-        // searchingTokens = searchingTokens.slice();
-        //
-        // searchingTokens.push(input);
 
-        let search = this.state.search[input] || {};
-        search.isSearching = true;
-
-        this.setState({search: {...this.state.search, [input]: search}}, ()=> console.log("new search state "+JSON.stringify(this.state)));
-
+        this.setState({search: {...this.state.search, [token]: search}}, ()=> console.log("new search state "+JSON.stringify(this.state)));
+        console.log(`algolia: searching ${token}`);
         client.search(queries, (err, content) => {
 
             //FIXME: do not build object here. The main use-case is a result not in the redux store.
@@ -244,17 +248,19 @@ class LineupListScreen extends Component<Props, State> {
                 console.error(err);
                 return;
             }
-            let hits = content.results[0].hits;
+            let result = content.results[0];
+            let hits = result.hits;
             console.log(`search result lists: ${JSON.stringify(content)}`);
             let searchResult = this.createResultFromHit(hits);
 
-            let search = this.state.search[input];
+            let search: SearchState = this.state.search[token];
 
             if (!search.data) search.data = [];
 
             search.data = search.data.concat(searchResult);
-            search.isSearching = false;
-            search.hasMore = hits.page < hits.nbPages - 1;
+            search.searchState = 2;
+            search.page = result.page;
+            search.nbPages = result.nbPages;
 
             this.setState({search: {...this.state.search, input: search}});
         });

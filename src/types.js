@@ -4,6 +4,7 @@ export type Url = string;
 export type Id = string;
 
 export type ActivityType = 'saving' | 'post' | 'sending';
+
 export type ItemType = 'movie' | 'place';
 
 export type NavigableProps = {
@@ -103,5 +104,3 @@ export type Post = Activity & {
 export type Place = Item & {
     location: any
 }
-
-
