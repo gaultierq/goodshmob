@@ -71,15 +71,15 @@ class LineupListScreen extends Component<Props, State> {
         search: {}
     };
 
-    componentWillMount() {
-        if (!this.getUser()) {
-            this.props.dispatch(actions.getUser(this.props.userId).disptachForAction2(GET_USER_W_LISTS));
-        }
-    }
+    // componentWillMount() {
+    //     if (!this.getUser()) {
+    //         this.props.dispatch(actions.getUser(this.props.userId).disptachForAction2(GET_USER_W_LISTS));
+    //     }
+    // }
 
-    getUser() {
-        return buildData(this.props.data, "users", this.props.userId);
-    }
+    // getUser() {
+    //     return buildData(this.props.data, "users", this.props.userId);
+    // }
 
     render() {
         const {userId} = this.props;
@@ -444,7 +444,7 @@ const actions = (() => {
             .withRoute("lists")
             .addQuery({include})
         ,
-        
+
         getUser: (userId): Api.Call => new Api.Call()
             .withMethod('GET')
             .withRoute(`users/${userId}`)

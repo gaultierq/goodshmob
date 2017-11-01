@@ -67,7 +67,7 @@ export default class LineupCell extends React.Component<Props, State> {
 
         let image = item.resource ? item.resource.image : undefined;
         if (!image) {
-            console.warn(`no image found for item=${item}`);
+            console.warn(`no image found for item=${JSON.stringify(item)}`);
         }
         return <Image
             source={{uri: image}}
