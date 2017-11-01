@@ -79,3 +79,8 @@ export function doDataMergeInState(state, path, newList) {
     state = dotprop.set(state, path, currentList);
     return state;
 }
+
+
+export const dataStateToProps = (state, ownProps) => ({
+    data: state.data,
+});

@@ -62,41 +62,46 @@ class HomeScreen extends Component<Props, State> {
                     });
                     break;
                 case 'profile':
-                    this.props.navigator.push({
-                        screen: 'goodsh.CommunityScreen',
-                        title: "Mes amis",
-                        passProps: {
-                            userId: CurrentUser.id
-                        },
-                    });
+                    // this.props.navigator.push({
+                    //     screen: 'goodsh.ProfileScreen',
+                    //     title: "Mon compte",
+                    //     passProps: {
+                    //         userId: this.props.userId
+                    //     }
+                    // });
+
+                    this.props.navigator.toggleDrawer({
+                        side: 'left',
+                        animated: true
+                    })
+
                     break;
+
             }
+
         }
     }
 
     render() {
-        let rightButtons = this.getRightButtonDefinition();
+
+        const {pendingItem, pendingList} = this.state;
 
         this.props.navigator.setButtons({
-            leftButtons: [], // see "Adding buttons to the navigator" below for format (optional)
-            rightButtons,
+            leftButtons: this.getLeftButtonDefinition(), // see "Adding buttons to the navigator" below for format (optional)
+            rightButtons: this.getRightButtonDefinition(),
             animated: false// does the change have transition animation or does it happen immediately (optional)
         });
-
 
 
         let userId = CurrentUser.id;
 
         if (!userId) throw "currentUserId is not defined";
 
-        //user_id => user_object ?
-        // yes: user.list = base feed data
-        // no: get_user{include:list}
-        // fetch more => grow user object
 
         return (
             <MainBackground>
                 <View>
+                    {pendingItem && !pendingList && <Text style={styles.selectAList}>Sélectionnez une liste:</Text>}
                     <LineupList
                         userId={userId}
                         onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
@@ -184,12 +189,14 @@ class HomeScreen extends Component<Props, State> {
             {
                 title: 'Cancel',
                 id: 'cancel_add' // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
-            }] : [
-            {
-                icon: require('../img/drawer_community.png'),
-                id: 'profile'
-            }
-        ];
+            }] : [];
+    }
+
+    getLeftButtonDefinition() {
+        return (this.state.pendingItem || this.state.pendingList) ? [] : [{
+            icon: require('../img/drawer_community.png'),
+            id: 'profile'
+        }];
     }
 
     displayFloatingButton() {
@@ -284,7 +291,6 @@ class HomeScreen extends Component<Props, State> {
                 });
         }
     }
-
 }
 
 const styles = StyleSheet.create({
@@ -296,6 +302,14 @@ const styles = StyleSheet.create({
         height: 22,
         color: 'white',
     },
+    selectAList: {
+        padding: 10,
+        fontFamily: 'Chivo-Light',
+        color: 'black',
+        fontSize: 20,
+        alignSelf: "center",
+        backgroundColor:"transparent"
+    }
 });
 
 const mapStateToProps = (state, ownProps) => ({

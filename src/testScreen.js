@@ -30,10 +30,20 @@ const communityScreen = {
     }
 };
 
+const profileScreen = {
+    screen: {
+        label: 'test',
+        screen: 'goodsh.ProfileScreen',
+    },
+    passProps: {
+        userId: "662a61d0-5473-4d09-9410-c63aadc12e6c"
+    }
+};
+
 let testScreen = null;
 
 //change this line
-// testScreen = homeScreen;
+//testScreen = profileScreen;
 
 
 export default testScreen;

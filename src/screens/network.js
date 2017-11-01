@@ -27,18 +27,18 @@ class NetworkScreen extends Component {
 
 
     static navigatorButtons = {
-        leftButtons: [
-            {
-                icon: require('../img/drawer_community.png'), // for icon button, provide the local image asset name
-                id: 'community' // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
-            }
-        ],
-        rightButtons: [
-            {
-                icon: require('../img/drawer_line_up.png'), // for icon button, provide the local image asset name
-                id: 'line_up' // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
-            }
-        ],
+        // rightButtons: [
+        //     {
+        //         icon: require('../img/drawer_community.png'), // for icon button, provide the local image asset name
+        //         id: 'community' // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
+        //     }
+        // ],
+        // rightButtons: [
+        //     {
+        //         icon: require('../img/drawer_line_up.png'), // for icon button, provide the local image asset name
+        //         id: 'line_up' // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
+        //     }
+        // ],
     };
 
     static navigatorStyle = UIStyles.NavStyles;
@@ -55,15 +55,15 @@ class NetworkScreen extends Component {
 
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
         if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
-            if (event.id === 'line_up') { // this is the same id field from the static navigatorButtons definition
-                this.props.navigator.toggleDrawer({
-                    side: 'right',
-                    animated: true
-                })
-            }
+            // if (event.id === 'line_up') { // this is the same id field from the static navigatorButtons definition
+            //     this.props.navigator.toggleDrawer({
+            //         side: 'right',
+            //         animated: true
+            //     })
+            // }
             if (event.id === 'community') { // this is the same id field from the static navigatorButtons definition
                 this.props.navigator.toggleDrawer({
-                    side: 'left',
+                    side: 'right',
                     animated: true
                 })
             }

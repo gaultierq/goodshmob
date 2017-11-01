@@ -127,6 +127,7 @@ class LineupListScreen extends Component<Props, State> {
             <View>
                 <SearchBar
                     lightTheme
+                    round
                     onChangeText={this.onSearchInputChange.bind(this)}
                     placeholder={i18n.t('lineups.search.placeholder')}
                     clearIcon={{color: '#86939e'}}
@@ -418,11 +419,14 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     searchContainer: {
-        backgroundColor: 'white',
+        backgroundColor: 'transparent',
     },
     searchInput: {
-        backgroundColor: 'white'
-
+        backgroundColor: 'white',
+        borderWidth: 0.5,
+        // borderRadius: 30,
+        // padding: 20,
+        borderColor: UI.Colors.grey1
     },
 });
 

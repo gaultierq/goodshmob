@@ -67,7 +67,7 @@ export type User = Base & {
     provider: any,
     uid: any,
     lastName: any,
-    image: any,
+    image: string,
     email: any,
     timezone: any,
     goodshbox: List,

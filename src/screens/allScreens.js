@@ -12,6 +12,7 @@ import {screen as HomeScreen} from './home';
 import {screen as CommentsScreen} from './comments';
 import {screen as SaveScreen} from './save';
 import {screen as ShareScreen} from './share';
+import {screen as ProfileScreen} from './profile';
 import FriendScreen from './friends';
 import CommunityScreen from './community';
 import SendScreen from './send';
@@ -32,4 +33,5 @@ export function registerScreens(store, Provider) {
     Navigation.registerComponent('goodsh.ShareScreen', () => ShareScreen, store, Provider);
     Navigation.registerComponent('goodsh.CommunityScreen', () => CommunityScreen, store, Provider);
     Navigation.registerComponent('goodsh.SendScreen', () => SendScreen, store, Provider);
+    Navigation.registerComponent('goodsh.ProfileScreen', () => ProfileScreen, store, Provider);
 }

@@ -1,22 +1,22 @@
 // @flow
 
-import {compose, createStore, applyMiddleware, combineReducers} from "redux";
+import {applyMiddleware, combineReducers, compose, createStore} from "redux";
 import {Provider} from "react-redux";
-import { Navigation } from 'react-native-navigation';
-import { registerScreens} from './screens/allScreens';
+import {Navigation} from 'react-native-navigation';
+import {registerScreens} from './screens/allScreens';
 import * as reducers from "./reducers/allReducers";
 import {createWithReducers} from "./auth/reducer";
-import  * as appActions from './auth/actions'
+import * as appActions from './auth/actions'
 import thunk from "redux-thunk";
 import logger from 'redux-logger'
 
+import * as Api from './utils/Api';
 import {middleware as apiMiddleware} from './utils/Api';
-import {persistStore, autoRehydrate, createTransform} from 'redux-persist'
+import {autoRehydrate, createTransform, persistStore} from 'redux-persist'
 import {AsyncStorage} from 'react-native'
-import  immutableTransform from './immutableTransform'
+import immutableTransform from './immutableTransform'
 import {REHYDRATE} from 'redux-persist/constants'
 import Immutable from 'seamless-immutable';
-import * as Api from "./utils/Api";
 import i18n from './i18n/i18n'
 import * as CurrentUser from './CurrentUser'
 import testScreen from "./testScreen"
@@ -81,8 +81,6 @@ export default class App {
 
     logged = null;
 
-    testScreen = testScreen;
-
     constructor() {
         // since react-redux only works on components, we need to subscribe this class manually
         store.subscribe(this.onStoreUpdate.bind(this));
@@ -120,7 +118,7 @@ export default class App {
     }
 
     startApp(logged: boolean) {
-        console.debug(`starting app logged=${logged}, test=${(!!this.testScreen)}`);
+        console.debug(`starting app logged=${logged}, test=${(!!testScreen)}`);
 
         if (!logged) {
             Navigation.startSingleScreenApp({
@@ -133,10 +131,13 @@ export default class App {
                 }
             });
         }
-        else if (this.testScreen) {
-            Navigation.startSingleScreenApp(this.testScreen);
+        else if (testScreen) {
+            Navigation.startSingleScreenApp(testScreen);
         }
         else {
+            let userId = CurrentUser.currentUserId();
+            if (!userId) throw "wtf";
+
             Navigation.startTabBasedApp({
                 tabs: [
                     {
@@ -161,7 +162,7 @@ export default class App {
                     tabBarBackgroundColor: 'white',
                     forceTitlesDisplay: false,
                     tabBarShowLabels: 'hidden',
-                    initialTabIndex: 1,
+                    initialTabIndex: 0,
                 },
                 appStyle: {
                     orientation: 'portrait', // Sets a specific orientation to the entire app. Default: 'auto'. Supported values: 'auto', 'landscape', 'portrait'
@@ -171,13 +172,15 @@ export default class App {
                 drawer: { // optional, add this if you want a side menu drawer in your app
                     left: { // optional, define if you want a drawer from the left
                         // screen: 'goodsh.FriendsScreen',
-                        screen: 'goodsh.DebugScreen', // unique ID registered with Navigation.registerScreen
-                        passProps: {} // simple serializable object that will pass as props to all top screens (optional)
+                        screen: 'goodsh.ProfileScreen', // unique ID registered with Navigation.registerScreen
+                        passProps: {
+                            userId: userId
+                        } // simple serializable object that will pass as props to all top screens (optional)
                     },
-                    right: { // optional, define if you want a drawer from the right
-                        screen: 'goodsh.LineupListScreen', // unique ID registered with Navigation.registerScreen
-                        passProps: {} // simple serializable object that will pass as props to all top screens (optional)
-                    },
+                    // right: { // optional, define if you want a drawer from the right
+                    //     screen: 'goodsh.LineupListScreen', // unique ID registered with Navigation.registerScreen
+                    //     passProps: {} // simple serializable object that will pass as props to all top screens (optional)
+                    // },
                     style: { // ( iOS only )
                         drawerShadow: true, // optional, add this if you want a side menu drawer shadow
                         contentOverlayColor: 'rgba(0,0,0,0.25)', // optional, add this if you want a overlay color when drawer is open
