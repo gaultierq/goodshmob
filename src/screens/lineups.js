@@ -445,7 +445,7 @@ const actions = (() => {
             .withMethod('GET')
             .withRoute(`users/${userId}`)
             .addQuery({
-                    include: "lists,lists.*"
+                    include: "lists,lists.savings,savings.resource"
                 }
             ),
         deleteLineup : (lineup) => {

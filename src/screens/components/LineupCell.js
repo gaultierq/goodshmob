@@ -5,14 +5,20 @@ import {FlatList, Image, StyleSheet, Text, TouchableHighlight, View} from 'react
 import * as UI from "../UIStyles";
 import {assertUnique} from "../../utils/DataUtils";
 import {isEmpty} from "lodash";
-import type {Saving} from "../../types";
+import type {List, Saving} from "../../types";
 
-export default class LineupCell extends React.Component {
 
-    props: {
-        onAddInLineupPressed: Function,
-        lineup: Object
-    };
+
+type Props = {
+    onAddInLineupPressed: Function,
+    lineup: List
+};
+
+type State = {
+};
+
+export default class LineupCell extends React.Component<Props, State> {
+
 
     render() {
         let lineup : List = this.props.lineup;
@@ -57,11 +63,12 @@ export default class LineupCell extends React.Component {
             </TouchableHighlight>;
     }
 
-    renderItem(item) {
-        let it: Saving = item.item;
+    renderItem({item}: {item: Saving}) {
 
-        let image = it.resource ? it.resource.image : undefined;
-
+        let image = item.resource ? item.resource.image : undefined;
+        if (!image) {
+            console.warn(`no image found for item=${item}`);
+        }
         return <Image
             source={{uri: image}}
             style={{
