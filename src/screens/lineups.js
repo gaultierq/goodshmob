@@ -98,7 +98,7 @@ class LineupListScreen extends Component<Props, State> {
         else {
             lists = [];
             fetchSrc = {
-                callFactory: actions.getUser,
+                callFactory: () => actions.getUser(userId),
                 action: GET_USER_W_LISTS
             };
         }

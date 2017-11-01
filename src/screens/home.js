@@ -9,6 +9,7 @@ import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
 import ActionButton from 'react-native-action-button';
 import {screen as LineupList} from './lineups'
+import type {Id} from "../types";
 import {Item, List} from "../types"
 import Snackbar from "react-native-snackbar"
 import i18n from '../i18n/i18n'
@@ -20,28 +21,32 @@ import Modal from 'react-native-modal'
 import Button from 'apsl-react-native-button'
 import {createLineup, saveItem} from "./actions";
 
-class HomeScreen extends Component {
+
+type Props = {
+    userId: Id
+};
+
+type State = {
+    pendingItem: Item,
+    pendingList: List,
+    isCreatingLineup: boolean,
+    modalVisible: boolean,
+    newLineupName: null | string
+};
+
+class HomeScreen extends Component<Props, State> {
 
     static navigationOptions = { title: 'Welcome', header: null };
-
-    state : {
-        pendingItem: Item,
-        pendingList: List,
-        isCreatingLineup: boolean,
-        modalVisible: boolean,
-        newLineupName: null | string
+    state = {
+        pendingItem: null,
+        pendingList: null,
+        isCreatingLineup: false,
+        modalVisible: false,
+        newLineupName: null
     };
 
     constructor(props){
         super(props);
-        this.state = {
-            pendingItem: null,
-            pendingList: null,
-            isCreatingLineup: false,
-            modalVisible: false,
-            newLineupName: null
-        };
-
         props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
@@ -49,12 +54,6 @@ class HomeScreen extends Component {
 
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
         if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
-            // if (event.id === 'cancel_add') { // this is the same id field from the static navigatorButtons definition
-            //     this.setState({
-            //         pendingItem: null,
-            //         pendingList: null
-            //     });
-            // }
             switch (event.id) {
                 case 'cancel_add':
                     this.setState({
@@ -85,15 +84,21 @@ class HomeScreen extends Component {
         });
 
 
+
+        let userId = CurrentUser.id;
+
+        if (!userId) throw "currentUserId is not defined";
+
         //user_id => user_object ?
         // yes: user.list = base feed data
         // no: get_user{include:list}
         // fetch more => grow user object
+
         return (
             <MainBackground>
                 <View>
                     <LineupList
-                        userId={CurrentUser.id}
+                        userId={userId}
                         onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
                         onSavingPressed={(saving) => this.onSavingPressed(saving)}
                         //onAddInLineupPressed={(this.state.pendingItem) ? null : (lineup) => this.addInLineup(lineup)}
