@@ -1,3 +1,4 @@
+// @flow
 
 export default class ApiAction {
 
@@ -29,6 +30,10 @@ export default class ApiAction {
 
     name() {
         return this.actionName;
+    }
+
+    toString() {
+        return this.name();
     }
 
     static composeName(actionName: string, apiType: string): string {

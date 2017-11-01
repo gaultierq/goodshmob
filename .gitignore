@@ -55,3 +55,4 @@ fastlane/screenshots
 
 .tmp
 android/.java-version
+codesigndoc_exports/

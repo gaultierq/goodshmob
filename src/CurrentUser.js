@@ -34,4 +34,9 @@ export function init(store:Store) {
     instance.init(store);
 }
 
+export function currentUserId() {
+    return instance.id;
+}
+
+
 export default instance;

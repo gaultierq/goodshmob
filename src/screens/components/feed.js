@@ -79,7 +79,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             let requestName = afterId ? 'isFetchingMore' : 'isFetchingFirst';
 
             if (this.state[requestName]) {
-                reject();
+                reject(requestName + " is already running. state="+JSON.stringify(this.state));
             }
             else {
                 let {fetchSrc}= this.props;
@@ -95,26 +95,42 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                 this.props
                     .dispatch(call.disptachForAction2(fetchSrc.action, fetchSrc.options))
                     .then((data)=> {
-                        let hasNoMore = data.length === 0;
                         this.setState({[requestName]: false});
+                        if (!data) {
+                            return reject(`no data provided for ${fetchSrc.action}`);
+                        }
+                        let hasNoMore = data.length === 0;
                         if (hasNoMore) {
                             this.setState({lastEmptyResultMs: Date.now()});
                         }
-                        resolve();
+                        resolve(data);
+                    }, err => {
+                        console.warn("feed error:" + err);
+                        this.setState({[requestName]: false});
                     })
             }
         });
     }
 
+    setState(partialState, callback?) {
+        let t = Math.random();
+        console.debug(`DEBUG(${t}): partial=${JSON.stringify(partialState)}`);
+        callback = () => console.log(`DEBUG(${t}): state=${JSON.stringify(this.state)}`);
+
+        super.setState(partialState, callback);
+    }
+
     fetchMore() {
         let c = this.props.data;
-        c && this.fetchIt(c[c.length-1].id);
+        let last = c[c.length-1];
+        if (!last) return;
+        c && this.fetchIt(last.id);
     }
 
     onRefresh() {
         if (this.state.isPulling) return;
         this.setState({isPulling: true});
-        this.fetchIt().then(()=>this.setState({isPulling: false}));
+        this.fetchIt().catch(err=>{console.warn("error while fetching:" + err)}).then(()=>this.setState({isPulling: false}));
     }
 
     renderRefreshControl() {
@@ -124,6 +140,8 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             onRefresh={this.onRefresh.bind(this)}
         />);
     }
+
+
 
     renderFetchMoreLoader() {
         return (this.state.isFetchingMore ?

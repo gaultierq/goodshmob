@@ -151,16 +151,16 @@ export class Call {
                         },
                         //1., 2.
                         error => {
-                            let errMsg = error.message || `Something bad happened (${error.status}): ${JSON.stringify(error)}`;
+                            let errMsg = error.message || `${error.status}! [${apiAction}]: ${JSON.stringify(error)}`;
 
                             let errorAction = dispatch({ type: API_DATA_FAILURE, error: errMsg });
                             if (error.status === 401) {
                                 dispatch(errorAction);
                                 dispatch(logout())
-                                reject();
+                                reject("user lost authentification");
                             }
                             dispatch(errorAction);
-                            reject();
+                            reject("api error:" + errMsg);
 
                         },
                     );

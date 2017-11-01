@@ -176,8 +176,8 @@ class LineupListScreen extends Component<Props, State> {
         let cfoi = this.props.canFilterOverItems;
         if (cfoi instanceof Function) return cfoi();
         return cfoi;
-
     }
+
     applyFilter(lineups) {
         if (!lineups) return lineups;
         let searchIn = [];

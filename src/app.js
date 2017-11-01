@@ -98,6 +98,21 @@ export default class App {
     //     }
     // };
 
+    testScreen = {
+        screen: {
+            label: 'test',
+            screen: 'goodsh.HomeScreen',
+        },
+        passProps: {
+            // item: {
+            //     id: "8ab94a3c-43b2-4e5c-acfb-d4ff268f93b1",
+            //     title: "test_title",
+            //     url: "test_url"
+            // },
+            userId: "662a61d0-5473-4d09-9410-c63aadc12e6c"
+        }
+    };
+
     constructor() {
         // since react-redux only works on components, we need to subscribe this class manually
         store.subscribe(this.onStoreUpdate.bind(this));
@@ -112,13 +127,18 @@ export default class App {
     resolveLogged() {
         //waiting rehydration before starting app
         let rehydrated = store.getState().app.rehydrated;
-        if (!hydrated) {
+        if (!rehydrated) {
             console.debug("waiting for rehydration");
             return;
         }
         console.debug("resolving logged");
 
         const {currentUserId} = store.getState().auth;
+
+        let id = CurrentUser.currentUserId();
+
+        if (id !== currentUserId) throw "inconsistent current_user_id";
+
 
         let logged = !!currentUserId;
 
