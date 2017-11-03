@@ -44,7 +44,7 @@ export default class UserRow extends React.Component<Props, State> {
                             color: UI.Colors.blue
                         }}>{user ? `${user.firstName} ${user.lastName}` : ""}</Text>
                     </TouchableOpacity>
-                    {this.props.text &&
+                    {!!this.props.text &&
                     <Text style={{
                         fontSize: 9,
                         color: UI.Colors.grey1,

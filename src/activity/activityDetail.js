@@ -133,6 +133,7 @@ class ActivityDetailScreen extends Component {
                     </View>
 
                 </TouchableHighlight>
+
                 {this.renderStuff(item)}
             </View>
         );
