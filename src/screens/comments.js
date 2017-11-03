@@ -12,6 +12,7 @@ import {buildData, buildNonNullData, doDataMergeInState, sanitizeActivityType} f
 import UserActivity from "../activity/components/UserActivity";
 import i18n from '../i18n/i18n'
 import FeedSeparator from "../activity/components/FeedSeparator";
+import * as UI from "./UIStyles";
 
 class CommentsScreen extends Component {
 
@@ -61,14 +62,17 @@ class CommentsScreen extends Component {
                             </View>
                         }
                     />
-                    <TextInput
-                        editable={!this.state.isAddingComment}
-                        style={styles.input}
-                        onSubmitEditing={() => this.addComment(activity)}
-                        value={this.state.newComment}
-                        onChangeText={newComment => this.setState({newComment})}
-                        placeholder={i18n.t("activity_comments_screen.add_comment_placeholder")}
-                    />
+                    <View style={styles.inputContainer}>
+                        <TextInput
+                            editable={!this.state.isAddingComment}
+                            style={styles.input}
+                            onSubmitEditing={() => this.addComment(activity)}
+                            value={this.state.newComment}
+                            onChangeText={newComment => this.setState({newComment})}
+                            placeholder={i18n.t("activity_comments_screen.add_comment_placeholder")}
+                        />
+                    </View>
+
 
                 </View>
             </MainBackground>
@@ -106,10 +110,21 @@ class CommentsScreen extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         backgroundColor: 'transparent'
     },
-    input:{height: 40, borderColor: 'gray', borderWidth: 1, backgroundColor: 'white'}
+    input:{
+        height: 40,
+    },
+    inputContainer:{
+        // height: 40,
+        borderColor: UI.Colors.grey1,
+        borderWidth: 0.5,
+        borderRadius: 20,
+        paddingLeft: 14,
+        paddingRight: 14,
+        margin: 10,
+        backgroundColor: 'white'
+    },
 });
 
 const mapStateToProps = (state, ownProps) => ({
