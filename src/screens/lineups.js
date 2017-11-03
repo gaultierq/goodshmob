@@ -33,6 +33,7 @@ import ApiAction from "../utils/ApiAction";
 import {buildData, doDataMergeInState} from "../utils/DataUtils";
 import {CREATE_LINEUP} from "./actions"
 import algoliasearch from 'algoliasearch/reactnative';
+import * as Nav from "./Nav";
 
 type Props = {
     userId: Id,
@@ -40,7 +41,8 @@ type Props = {
     onSavingPressed: Function,
     onAddInLineupPressed: Function,
     canFilterOverItems: boolean | ()=>boolean,
-    data?: any
+    data?: any,
+    onCancel?: ()=>void
 };
 
 type State = {
@@ -57,29 +59,31 @@ type SearchState = {
     nbPages: number,
     data: Array<List|Saving>,
     token: string
-
 };
-
 
 class LineupListScreen extends Component<Props, State> {
 
-
-    state= {
+    state = {
         filter: null,
         isLoading: false,
         isLoadingMore: false,
         search: {}
     };
 
-    // componentWillMount() {
-    //     if (!this.getUser()) {
-    //         this.props.dispatch(actions.getUser(this.props.userId).disptachForAction2(GET_USER_W_LISTS));
-    //     }
-    // }
 
-    // getUser() {
-    //     return buildData(this.props.data, "users", this.props.userId);
-    // }
+    constructor(props){
+        super(props);
+        props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+    }
+
+
+    onNavigatorEvent(event) {
+        if (event.type === 'NavBarButtonPress') {
+            if (event.id === Nav.CANCEL) {
+                this.props.onCancel();
+            }
+        }
+    }
 
     render() {
         const {userId} = this.props;
@@ -226,16 +230,22 @@ class LineupListScreen extends Component<Props, State> {
         let client = algoliasearch("8UTETUZKD3", "c80385095ff870f5ddf9ba25310a9d5a");
         let search = this.state.search[token] || {token, searchState: 1};
 
+        let params = {
+            page,
+            hitsPerPage: 2,
+            facets: "[\"list_name\"]",
+            filters: 'user_id:' + this.props.userId,
+        };
+
+        if (!this.canFilterOverItems()) {
+            params = {...params, "restrictSearchableAttributes": "list_name"};
+        }
+
         const queries = [
             {
                 indexName: 'Saving_development',
                 query: token,
-                params: {
-                    page,
-                    hitsPerPage: 2,
-                    facets: "[\"list_name\"]",
-                    filters: 'user_id:' + this.props.userId,
-                }
+                params
             }
         ];
 
@@ -313,7 +323,8 @@ class LineupListScreen extends Component<Props, State> {
                 list.savings.push(saving);
             }
 
-            if (matchedItemTitle) {
+            //if matching a list, algolia will also notify us the item_title matching
+            if (matchedItemTitle && this.canFilterOverItems()) {
                 searchResult.push(saving);
             }
         });

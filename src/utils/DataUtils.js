@@ -19,6 +19,8 @@ export let sanitizeActivityType = activityType => {
             return "savings";
         case "creative-works":
         case "creative-work":
+        case "creativeworks":
+        case "creativework":
             return "creativeWorks";
         case "tv-shows":
         case "tv-show":

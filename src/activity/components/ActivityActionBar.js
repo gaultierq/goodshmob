@@ -9,6 +9,8 @@ import i18n from '../../i18n/i18n'
 import {saveItem} from "../../screens/actions";
 import type {Description, Visibility} from "../../screens/save";
 import {connect} from "react-redux";
+import {currentUserId} from "../../CurrentUser";
+import * as Nav from "../../screens/Nav";
 
 export type ActivityActionType = 'comment' | 'share' | 'save' | 'buy';
 const ACTIONS = ['comment', 'share', 'save', 'buy'];
@@ -77,9 +79,18 @@ export default class ActivityActionBar extends React.Component {
         this.props.navigator.showModal({
             screen: 'goodsh.LineupListScreen', // unique ID registered with Navigation.registerScreen
             title: "Ajouter à une liste",
-            animationType: 'none',
+            //animationType: 'none',
+            navigatorButtons: {
+                leftButtons: [
+                    {
+                        id: Nav.CANCEL,
+                        title: "Cancel"
+                    }
+                ],
+            },
             passProps: {
                 activity,
+                userId: currentUserId(),
                 canFilterOverItems: false,
                 onLineupPressed: (lineup: List) => {
 
@@ -108,9 +119,8 @@ export default class ActivityActionBar extends React.Component {
                                 }
                         },
                     });
-                }
-
-
+                },
+                onCancel: ()=>this.props.navigator.dismissModal()
             },
         });
 

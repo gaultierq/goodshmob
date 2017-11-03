@@ -99,6 +99,8 @@ class SavingsScreen extends Component<Props, State> {
                     activityId={saving.id}
                     activityType={saving.type}
                     skipLineup={true}
+                    skipDescription={true}
+                    navigator={this.props.navigator}
                 />
             </Swipeout>)
     }

@@ -148,7 +148,7 @@ class ShareScreen extends Component<Props, State> {
             navigatorButtons: {
                 leftButtons: [
                     {
-                        id: Nav.CANCEL_DIALOG,
+                        id: Nav.CANCEL,
                         title: "Cancel"
                     }
                 ],

@@ -41,7 +41,7 @@ export default class FriendsScreen extends Component<Props, State> {
 
     onNavigatorEvent(event) {
         if (event.type === 'NavBarButtonPress') {
-            if (event.id === Nav.CANCEL_DIALOG) {
+            if (event.id === Nav.CANCEL) {
                 this.props.navigator.dismissModal();
             }
         }

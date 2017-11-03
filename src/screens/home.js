@@ -108,6 +108,7 @@ class HomeScreen extends Component<Props, State> {
                         onSavingPressed={(saving) => this.onSavingPressed(saving)}
                         //onAddInLineupPressed={(this.state.pendingItem) ? null : (lineup) => this.addInLineup(lineup)}
                         canFilterOverItems={() => !this.state.pendingItem}
+                        navigator={this.props.navigator}
                     />
 
                 </View>

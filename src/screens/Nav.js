@@ -1,1 +1,1 @@
-export const CANCEL_DIALOG = 'cancel';
+export const CANCEL = 'cancel';

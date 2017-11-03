@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {Image, Linking, Share, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, View} from 'react-native';
+import {Image, Linking, Share, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
 import * as UI from "../../screens/UIStyles";
 import {connect} from "react-redux";
 import type {Activity} from "../../types"
@@ -8,19 +8,14 @@ import GoodshButton from "./GoodshButton";
 
 type Props = {
     activity: Activity,
-    onPressItem: (any) => void
+    onPressItem: (any) => void,
+    noGoodshButton?: boolean
 };
 
 type State = {
 };
 
 class ActivityBody extends React.Component<Props, State> {
-
-    props: {
-        activity: Activity,
-        onPressItem: (any) => void,
-        noGoodshButton?: boolean
-    };
 
     render() {
         const {activity, noGoodshButton} = this.props;
@@ -32,7 +27,7 @@ class ActivityBody extends React.Component<Props, State> {
             <View>
                 {/*Image And Button*/}
                 <View style={{alignItems: 'center',}}>
-                    <TouchableWithoutFeedback
+                    <TouchableHighlight
                         onPress={this.props.onPressItem}
                         style={{
                             alignSelf: 'center',
@@ -48,7 +43,7 @@ class ActivityBody extends React.Component<Props, State> {
                                 width: "100%",
                             }}
                         />
-                    </TouchableWithoutFeedback>
+                    </TouchableHighlight>
 
                     {!noGoodshButton && <GoodshButton activity={activity}/>}
 
