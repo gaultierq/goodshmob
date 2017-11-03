@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import {Image, Linking, Share, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
+import {Image, Linking, Share, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, View} from 'react-native';
 import * as UI from "../../screens/UIStyles";
 
 export default class FeedSeparator extends React.Component {

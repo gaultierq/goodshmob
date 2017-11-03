@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import {Image, Linking, Share, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
+import {Image, Linking, Share, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, View} from 'react-native';
 import * as UI from "../../screens/UIStyles";
 import type {Activity, Item, List, Url} from "../../types";
 import i18n from '../../i18n/i18n'

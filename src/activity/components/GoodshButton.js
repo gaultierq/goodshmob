@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import {Image, Linking, Share, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
+import {Image, Linking, Share, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, View} from 'react-native';
 import * as UI from "../../screens/UIStyles";
 import * as activityAction from "../actions"
 import type {Activity} from "../../types"
@@ -20,7 +20,7 @@ class GoodshButton extends React.Component {
         let goodshButtonColor = (this.isLiking() || this.isUnliking()) ? UI.Colors.grey1 : liked ? UI.Colors.green : UI.Colors.white;
 
         return (
-            <TouchableHighlight
+            <TouchableWithoutFeedback
                 onPress={this.onGoodshPressed.bind(this)}
                 style={
                     {
@@ -46,7 +46,7 @@ class GoodshButton extends React.Component {
                     {!!likesCount && <Text style={{fontSize: 12, marginLeft: 3}}>{likesCount}</Text>}
 
                 </View>
-            </TouchableHighlight>
+            </TouchableWithoutFeedback>
         )
     }
 

@@ -12,7 +12,7 @@ import logger from 'redux-logger'
 import * as Api from './utils/Api';
 import {middleware as apiMiddleware} from './utils/Api';
 import {autoRehydrate, createTransform, persistStore} from 'redux-persist'
-import {AsyncStorage, TouchableHighlight} from 'react-native'
+import {AsyncStorage, TouchableWithoutFeedback} from 'react-native'
 import immutableTransform from './immutableTransform'
 import {REHYDRATE} from 'redux-persist/constants'
 import Immutable from 'seamless-immutable';
@@ -20,7 +20,7 @@ import i18n from './i18n/i18n'
 import * as CurrentUser from './CurrentUser'
 import testScreen from "./testScreen"
 import {Client} from 'bugsnag-react-native';
-import {setCustomText, setCustomTouchableHighlight} from 'react-native-global-props';
+import {setCustomText, setCustomTextInput} from 'react-native-global-props';
 
 const initialState = Immutable({
     rehydrated: false,
@@ -72,18 +72,29 @@ persistStore(store,
             }
         });
 
-        // setCustomTouchableHighlight({
+        // setCustomTouchableWithoutFeedback({
         //     underlayColor: "red"
         // });
-
-        const DEFAULT_PROPS = {
-            activeOpacity: 0.85,
-            underlayColor: 'red',
+        // const DEFAULT_PROPS = {
+        //     activeOpacity: 0.85,
+        //     underlayColor: 'red',
+        // };
+        //
+        // TouchableWithoutFeedback.prototype.getDefaultProps = function getDefaultProps() {
+        //     return DEFAULT_PROPS;
+        // };
+        // Getting rid of that ugly line on Android and adding some custom style to all TextInput components.
+        const customTextInputProps = {
+            underlineColorAndroid: 'rgba(0,0,0,0)',
+            style: {
+                paddingVertical: 5,
+                paddingHorizontal: 10,
+                backgroundColor: 'white'
+            }
         };
 
-        TouchableHighlight.prototype.getDefaultProps = function getDefaultProps() {
-            return DEFAULT_PROPS;
-        };
+        setCustomTextInput(customTextInputProps);
+
 
         console.info("App initialized.");
     }

@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import {Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, View} from 'react-native';
 import i18n from '../../i18n/i18n'
 import * as UI from "../../screens/UIStyles";
 import {buildNonNullData} from "../../utils/DataUtils";

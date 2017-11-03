@@ -2,7 +2,7 @@
 
 import type {Node} from 'react';
 import React from 'react';
-import {Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, View} from 'react-native';
 import * as TimeUtils from '../../utils/TimeUtils'
 import type {User} from "../../types";
 import UserRow from "./UserRow";

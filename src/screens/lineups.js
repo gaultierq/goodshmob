@@ -10,7 +10,7 @@ import {
     StyleSheet,
     Text,
     TextInput,
-    TouchableHighlight,
+    TouchableWithoutFeedback,
     View
 } from 'react-native';
 
@@ -327,7 +327,7 @@ class LineupListScreen extends Component<Props, State> {
     //TODO: extract lineup card style
     renderHeader() {
         if (this.isSearching()) return null;
-        return <TouchableHighlight onPress={() => {this.setModalVisible(true)}}>
+        return <TouchableWithoutFeedback onPress={() => {this.setModalVisible(true)}}>
             <View style={
                 [UI.CARD(),{
                     flex: 1,
@@ -347,7 +347,7 @@ class LineupListScreen extends Component<Props, State> {
                 />
                 <Text>{i18n.t('create_list_controller.title')}</Text>
             </View>
-        </TouchableHighlight>
+        </TouchableWithoutFeedback>
             ;
     }
 
@@ -367,14 +367,14 @@ class LineupListScreen extends Component<Props, State> {
         if (isLineup) {
             let handler = this.props.onLineupPressed ? () => this.props.onLineupPressed(item) : null;
             result = (
-                <TouchableHighlight onPress={handler}>
+                <TouchableWithoutFeedback onPress={handler}>
                     <View>
                         <LineupCell
                             lineup={item}
                             onAddInLineupPressed={this.props.onAddInLineupPressed}
                         />
                     </View>
-                </TouchableHighlight>
+                </TouchableWithoutFeedback>
             )
         }
         else {

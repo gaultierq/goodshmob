@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import {Image, Linking, Share, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
+import {Image, Linking, Share, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
 import {buildNonNullData} from "../../utils/DataUtils";
 import ActivityDescription from "./ActivityDescription";

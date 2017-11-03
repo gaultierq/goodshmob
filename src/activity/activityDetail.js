@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, ScrollView, StyleSheet, Text, TouchableHighlight, View} from 'react-native';
+import {ActivityIndicator, FlatList, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
 import * as actions from './actions'
 import * as actionTypes from './actionTypes'
 import {connect} from "react-redux";
@@ -87,7 +87,7 @@ class ActivityDetailScreen extends Component {
 
     renderStuff(activity) {
         return (
-            <TouchableHighlight
+            <TouchableWithoutFeedback
                 onPress={()=> this.displayActivityComments(activity)}>
                 <View style={[UI.CARD(0), {padding: 8, paddingLeft: 12, backgroundColor: "#fefefe"}]}>
 
@@ -120,12 +120,12 @@ class ActivityDetailScreen extends Component {
 
 
                 </View>
-            </TouchableHighlight>);
+            </TouchableWithoutFeedback>);
     }
 
     renderRelatedActivities({item}) {
         return (<View>
-                <TouchableHighlight
+                <TouchableWithoutFeedback
                     // underlayColor={"red"}
                     onPress={()=> this.displayActivityComments(item)}
                 >
@@ -133,7 +133,7 @@ class ActivityDetailScreen extends Component {
                         <ActivityDescription activity={item} navigator={this.props.navigator}/>
                     </View>
 
-                </TouchableHighlight>
+                </TouchableWithoutFeedback>
 
                 {this.renderStuff(item)}
             </View>
