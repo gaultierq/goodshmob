@@ -6,22 +6,21 @@ import {Navigation} from 'react-native-navigation';
 import {registerScreens} from './screens/allScreens';
 import * as reducers from "./reducers/allReducers";
 import {createWithReducers} from "./auth/reducer";
-import * as appActions from './auth/actions'
 import thunk from "redux-thunk";
 import logger from 'redux-logger'
 
 import * as Api from './utils/Api';
 import {middleware as apiMiddleware} from './utils/Api';
 import {autoRehydrate, createTransform, persistStore} from 'redux-persist'
-import {AsyncStorage} from 'react-native'
+import {AsyncStorage, TouchableHighlight} from 'react-native'
 import immutableTransform from './immutableTransform'
 import {REHYDRATE} from 'redux-persist/constants'
 import Immutable from 'seamless-immutable';
 import i18n from './i18n/i18n'
 import * as CurrentUser from './CurrentUser'
 import testScreen from "./testScreen"
-import { Client } from 'bugsnag-react-native';
-
+import {Client} from 'bugsnag-react-native';
+import {setCustomText, setCustomTouchableHighlight} from 'react-native-global-props';
 
 const initialState = Immutable({
     rehydrated: false,
@@ -64,7 +63,29 @@ persistStore(store,
     () => {
         console.log("persist store complete");
         hydrated = true;
-        store.dispatch(appActions.onAppReady());
+        //store.dispatch(appActions.onAppReady());
+
+        setCustomText({
+            style: {
+                fontFamily: 'Thonburi',
+                color: 'black'
+            }
+        });
+
+        // setCustomTouchableHighlight({
+        //     underlayColor: "red"
+        // });
+
+        const DEFAULT_PROPS = {
+            activeOpacity: 0.85,
+            underlayColor: 'red',
+        };
+
+        TouchableHighlight.prototype.getDefaultProps = function getDefaultProps() {
+            return DEFAULT_PROPS;
+        };
+
+        console.info("App initialized.");
     }
 );
 

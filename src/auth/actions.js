@@ -2,20 +2,20 @@
 
 import * as Api from "../utils/Api";
 import * as actionTypes from "./actionTypes"
-import {  LoginManager as FacebookLoginManager} from "react-native-fbsdk";
-import {setCustomText} from 'react-native-global-props';
+import {LoginManager as FacebookLoginManager} from "react-native-fbsdk";
+// import {setCustomText} from 'react-native-global-props';
 
-export function onAppReady() {
-    //defining default font
-    setCustomText({
-        style: {
-            fontFamily: 'Thonburi',
-            color: 'black'
-        }
-    });
-
-    return {type: "APP_INITIALIZED"}
-}
+// export function onAppReady() {
+//     //defining default font
+//     setCustomText({
+//         style: {
+//             fontFamily: 'Thonburi',
+//             color: 'black'
+//         }
+//     });
+//
+//     return {type: "APP_INITIALIZED"}
+// }
 
 export function logout() {
     FacebookLoginManager.logOut();

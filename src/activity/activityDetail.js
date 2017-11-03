@@ -126,6 +126,7 @@ class ActivityDetailScreen extends Component {
     renderRelatedActivities({item}) {
         return (<View>
                 <TouchableHighlight
+                    // underlayColor={"red"}
                     onPress={()=> this.displayActivityComments(item)}
                 >
                     <View>
