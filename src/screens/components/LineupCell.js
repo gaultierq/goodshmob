@@ -71,20 +71,25 @@ export default class LineupCell extends React.Component<Props, State> {
         }
         return <Image
             source={{uri: image}}
-            style={{
-                height: 50,
-                width: 50,
-                margin: 10
-            }}
+            style={[{
+                height: 60,
+                width: 60,
+                borderWidth: 0.3,
+                borderColor: UI.Colors.grey1,
+                margin: 8,
+            }]}
         />
     }
 }
 
 const styles = StyleSheet.create({
-    container: {marginTop: 12, marginBottom: 12, paddingTop: 6, ...UI.CARD()},
+    container: { paddingBottom: 5, backgroundColor: "white"},
     lineupTitle: {
         backgroundColor: 'transparent',
         ...UI.TEXT_LIST,
-        ...UI.SIDE_MARGINS(12)
+        fontSize: 15,
+        fontFamily: 'Chivo',
+        ...UI.SIDE_MARGINS(8),
+        marginTop: 8,
     }
 });
