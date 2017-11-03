@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import {Button, FlatList, Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
+import {Button, FlatList, Image, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, View} from 'react-native';
 import type {User} from "../../types";
 
 

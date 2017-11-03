@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import {Button, FlatList, Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
+import {Button, FlatList, Image, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, View} from 'react-native';
 import * as UI from "../UIStyles";
 
 
@@ -21,7 +21,7 @@ export default class ItemCell extends React.Component {
         let image = resource ? resource.image : undefined;
 
         return (
-            <TouchableHighlight
+            <TouchableWithoutFeedback
                 onPress={this.props.onPressItem}>
                 <View style={
                     { ...UI.CARD(8), ...UI.TP_MARGINS(8), padding: 8,
@@ -55,7 +55,7 @@ export default class ItemCell extends React.Component {
                            }}
                     />
                 </View>
-            </TouchableHighlight>
+            </TouchableWithoutFeedback>
         )
     }
 

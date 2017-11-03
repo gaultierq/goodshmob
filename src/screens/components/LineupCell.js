@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import {FlatList, Image, StyleSheet, Text, TouchableHighlight, View} from 'react-native';
+import {FlatList, Image, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
 import * as UI from "../UIStyles";
 import {assertUnique} from "../../utils/DataUtils";
 import {isEmpty} from "lodash";
@@ -51,7 +51,7 @@ export default class LineupCell extends React.Component<Props, State> {
 
     renderAddInLineup(lineup:List) {
         return this.props.onAddInLineupPressed &&
-            <TouchableHighlight onPress={() => this.props.onAddInLineupPressed(lineup)}>
+            <TouchableWithoutFeedback onPress={() => this.props.onAddInLineupPressed(lineup)}>
                 <Image
                     source={require('../../img/plus.png')} resizeMode="contain"
                     style={{
@@ -60,7 +60,7 @@ export default class LineupCell extends React.Component<Props, State> {
                         margin: 20
                     }}
                 />
-            </TouchableHighlight>;
+            </TouchableWithoutFeedback>;
     }
 
     renderItem({item}: {item: Saving}) {
