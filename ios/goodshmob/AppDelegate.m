@@ -3,6 +3,7 @@
 #import <React/RCTBundleURLProvider.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <BugsnagReactNative/BugsnagReactNative.h>
 
 // **********************************************
 // *** DON'T MISS: THE NEXT LINE IS IMPORTANT ***
@@ -54,6 +55,8 @@
   [[FBSDKApplicationDelegate sharedInstance] application:application
                            didFinishLaunchingWithOptions:launchOptions];
   
+  [BugsnagReactNative start];
+
   return YES;
 }
 

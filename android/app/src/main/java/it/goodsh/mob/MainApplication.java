@@ -9,6 +9,7 @@ import android.app.Application;
 import android.content.Intent;
 
 import com.facebook.react.ReactApplication;
+import com.bugsnag.BugsnagReactNative;
 import com.azendoo.reactnativesnackbar.SnackbarPackage;
 import com.microsoft.codepush.react.CodePush;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -42,6 +43,7 @@ public class MainApplication extends NavigationApplication implements ReactAppli
   protected List<ReactPackage> getPackages() {
     return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            BugsnagReactNative.getPackage(),
             new SnackbarPackage(),
             new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey), getApplicationContext(), BuildConfig.DEBUG),
             new VectorIconsPackage(),
@@ -75,6 +77,8 @@ public class MainApplication extends NavigationApplication implements ReactAppli
     });
 
     FacebookSdk.sdkInitialize(this);
+    BugsnagReactNative.start(this);
+
     SoLoader.init(this, /* native exopackage */ false);
   }
 

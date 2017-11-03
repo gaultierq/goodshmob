@@ -20,6 +20,8 @@ import Immutable from 'seamless-immutable';
 import i18n from './i18n/i18n'
 import * as CurrentUser from './CurrentUser'
 import testScreen from "./testScreen"
+import { Client } from 'bugsnag-react-native';
+
 
 const initialState = Immutable({
     rehydrated: false,
@@ -68,6 +70,11 @@ persistStore(store,
 
 Api.init(store);
 CurrentUser.init(store);
+
+
+const bugsnag = new Client();
+
+//bugsnag.notify(new Error("Test Error"));
 
 
 // screen related book keeping

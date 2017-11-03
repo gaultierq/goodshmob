@@ -94,5 +94,7 @@
 	<false/>
 	<key>CodePushDeploymentKey</key>
 	<string>deployment-key-here</string>
+	<key>BugsnagAPIKey</key>
+	<string>e9d1e430d2405cc1e6f6d775fac95ca9</string>
 </dict>
 </plist>
