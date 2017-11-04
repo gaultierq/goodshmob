@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@types/react@^16.0.5":
-  version "16.0.9"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.0.9.tgz#2ad952abbb22617620927694f9a4bce292d7fb2b"
+"@types/react@^16.0.20":
+  version "16.0.20"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.0.20.tgz#dc16feb9c0bdf50e439482c6fd3c43d5a1d9f3b1"
 
 abab@^1.0.3:
   version "1.0.4"
@@ -1895,9 +1895,9 @@ eslint-scope@^3.7.1:
     esrecurse "^4.1.0"
     estraverse "^4.1.1"
 
-eslint@^4.8.0:
-  version "4.8.0"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-4.8.0.tgz#229ef0e354e0e61d837c7a80fdfba825e199815e"
+eslint@^4.10.0:
+  version "4.10.0"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-4.10.0.tgz#f25d0d7955c81968c2309aa5c9a229e045176bb7"
   dependencies:
     ajv "^5.2.0"
     babel-code-frame "^6.22.0"
@@ -2323,9 +2323,9 @@ functional-red-black-tree@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
 
-fuse.js@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/fuse.js/-/fuse.js-3.1.0.tgz#9062146c471552189b0f678b4f5a155731ae3b3c"
+fuse.js@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/fuse.js/-/fuse.js-3.2.0.tgz#f0448e8069855bf2a3e683cdc1d320e7e2a07ef4"
 
 gauge@~1.2.5:
   version "1.2.7"
@@ -2635,9 +2635,9 @@ https-proxy-agent@1, https-proxy-agent@^1.0.0:
     debug "2"
     extend "3"
 
-"i18n-js@github:fnando/i18n-js#v3.0.1":
-  version "3.0.1"
-  resolved "https://codeload.github.com/fnando/i18n-js/tar.gz/a4f947fd65d80bd3e09971f21ab02e967e676742"
+i18n-js@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/i18n-js/-/i18n-js-3.0.2.tgz#d14cff2562758e7d30d34ddd58dd12d53fd07b5f"
 
 iconv-lite@0.4.11:
   version "0.4.11"
@@ -3484,9 +3484,9 @@ jsesc@~0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-0.5.0.tgz#e7dee66e35d6fc16f710fe91d5cf69f70f08911d"
 
-json-api-normalizer@^0.4.2:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/json-api-normalizer/-/json-api-normalizer-0.4.2.tgz#6ddd59488cf03fac688156adf552fc042faaed45"
+json-api-normalizer@^0.4.5:
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/json-api-normalizer/-/json-api-normalizer-0.4.5.tgz#0bb4b635e375753f3cfa674619949595dc0c3a6f"
   dependencies:
     lodash "^4.17.2"
 
@@ -4555,9 +4555,9 @@ react-devtools-core@2.3.1:
     shell-quote "^1.6.1"
     ws "^2.0.3"
 
-react-instantsearch@^4.1.3:
-  version "4.1.3"
-  resolved "https://registry.yarnpkg.com/react-instantsearch/-/react-instantsearch-4.1.3.tgz#5d3f3ae2f37f161fd4b1b9055efe7e8b636e8fa5"
+react-instantsearch@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/react-instantsearch/-/react-instantsearch-4.2.0.tgz#96c11f6e0c6e343c93ed63648f4bd9a993429460"
   dependencies:
     algoliasearch "^3.24.0"
     algoliasearch-helper "^2.21.0"
@@ -4565,9 +4565,9 @@ react-instantsearch@^4.1.3:
     lodash "^4.17.4"
     prop-types "^15.5.10"
 
-react-native-action-button@^2.8.0:
-  version "2.8.0"
-  resolved "https://registry.yarnpkg.com/react-native-action-button/-/react-native-action-button-2.8.0.tgz#8446388f722c1a95619f28ab33b91bf9488075e9"
+react-native-action-button@^2.8.1:
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/react-native-action-button/-/react-native-action-button-2.8.1.tgz#703b2a7f23b86647cb9dba4bbbddcf23c18a0fda"
   dependencies:
     prop-types "^15.5.10"
 
@@ -4598,34 +4598,34 @@ react-native-elements@^0.17.0:
     react-native-side-menu "^1.0.2"
     react-native-tab-navigator "^0.3.4"
 
-react-native-fbsdk@facebook/react-native-fbsdk#065507a:
+"react-native-fbsdk@github:facebook/react-native-fbsdk#065507a":
   version "0.6.1"
-  resolved "https://codeload.github.com/facebook/react-native-fbsdk/tar.gz/065507a"
+  resolved "https://codeload.github.com/facebook/react-native-fbsdk/tar.gz/065507aa1d2b8b0b6cb50d13117694123f8303fa"
 
 react-native-fetch-polyfill@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/react-native-fetch-polyfill/-/react-native-fetch-polyfill-1.1.2.tgz#256b5a0abd78cc4992f7a7cf82543da2f2124a73"
 
-react-native-global-props@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-global-props/-/react-native-global-props-1.1.1.tgz#7d254a18b57a027e1006fe20c2502cddb646d9e5"
+react-native-global-props@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/react-native-global-props/-/react-native-global-props-1.1.3.tgz#4ea66136b03e42ff93a4fed544576e1993be0d70"
 
-react-native-i18n@^2.0.5:
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/react-native-i18n/-/react-native-i18n-2.0.6.tgz#474a3ad79aac34965b2eb7148cf2703398efb406"
+react-native-i18n@^2.0.9:
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/react-native-i18n/-/react-native-i18n-2.0.9.tgz#cd2afcf184bbaa7244917d30a57e81e939f79b88"
   dependencies:
-    i18n-js "github:fnando/i18n-js#v3.0.1"
+    i18n-js "^3.0.2"
 
-react-native-modal@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-4.0.0.tgz#1e11633d54ae073f42e74bb4f37ef81b5cb5a820"
+react-native-modal@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-4.1.1.tgz#4c1055dc045106542a8e3bb3fd656a6d3bc319d9"
   dependencies:
     prop-types "15.5.10"
     react-native-animatable "^1.2.3"
 
-react-native-navigation@^1.1.212:
-  version "1.1.235"
-  resolved "https://registry.yarnpkg.com/react-native-navigation/-/react-native-navigation-1.1.235.tgz#53e3dc0eeb2b41b3f8890329550b15d1d5de9ac5"
+react-native-navigation@^1.1.257:
+  version "1.1.257"
+  resolved "https://registry.yarnpkg.com/react-native-navigation/-/react-native-navigation-1.1.257.tgz#34805383d9b341727e1d2d79c49b05a3c0a6a530"
   dependencies:
     lodash "4.x.x"
 
@@ -4635,13 +4635,13 @@ react-native-side-menu@^1.0.2:
   dependencies:
     prop-types "^15.5.10"
 
-react-native-snackbar@^0.4.2:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/react-native-snackbar/-/react-native-snackbar-0.4.2.tgz#03979ff445be16115a385d80dc08dd1c77563219"
+react-native-snackbar@^0.4.3:
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/react-native-snackbar/-/react-native-snackbar-0.4.3.tgz#b865bd50388c5776d13b2b4ef28052c493b5107c"
 
-react-native-swipeout@^2.2.2:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/react-native-swipeout/-/react-native-swipeout-2.2.2.tgz#65221abbd7992c83ec325625a45496d804eccd9f"
+react-native-swipeout@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/react-native-swipeout/-/react-native-swipeout-2.3.1.tgz#f33e852b46d2cddb878a431a1c696428e3d9d2a5"
   dependencies:
     create-react-class "^15.6.0"
     prop-types "^15.5.10"
@@ -4660,9 +4660,9 @@ react-native-tab-view@^0.0.69:
   dependencies:
     prop-types "^15.5.8"
 
-react-native-vector-icons@^4.4.0:
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-4.4.0.tgz#cdfc1cd86ab495b2a4926bcec8f08c155475cbf1"
+react-native-vector-icons@^4.4.2:
+  version "4.4.2"
+  resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-4.4.2.tgz#090f42ee0396c4cc4eae0ddaa518028ba8df40c7"
   dependencies:
     lodash "^4.0.0"
     prop-types "^15.5.10"
@@ -4892,13 +4892,13 @@ redux-logger@^3.0.6:
   dependencies:
     deep-diff "^0.3.5"
 
-redux-object@^0.5.2:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/redux-object/-/redux-object-0.5.2.tgz#28707bc8d7c382018936a9b3eb715bd69661e867"
+redux-object@^0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/redux-object/-/redux-object-0.5.3.tgz#0b0b18d19e7edef0f16c657b7e1a134f896f8b0a"
 
-redux-persist@^4.10.1:
-  version "4.10.1"
-  resolved "https://registry.yarnpkg.com/redux-persist/-/redux-persist-4.10.1.tgz#4fb2b789942f10f56d51cc7ad068d9d6beb46124"
+redux-persist@^4.10.2:
+  version "4.10.2"
+  resolved "https://registry.yarnpkg.com/redux-persist/-/redux-persist-4.10.2.tgz#8efdb16cfe882c521a78a6d0bfdfef2437f49f96"
   dependencies:
     json-stringify-safe "^5.0.1"
     lodash "^4.17.4"
@@ -5056,7 +5056,7 @@ require-uncached@^1.0.3:
     caller-path "^0.1.0"
     resolve-from "^1.0.0"
 
-requires-port@1.0.x:
+requires-port@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
 
@@ -5768,12 +5768,12 @@ unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/unpipe/-/unpipe-1.0.0.tgz#b2bf4ee8514aae6165b4817829d21b2ef49904ec"
 
-url-parse@^1.1.9:
-  version "1.1.9"
-  resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.1.9.tgz#c67f1d775d51f0a18911dd7b3ffad27bb9e5bd19"
+url-parse@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.2.0.tgz#3a19e8aaa6d023ddd27dcc44cb4fc8f7fec23986"
   dependencies:
     querystringify "~1.0.0"
-    requires-port "1.0.x"
+    requires-port "~1.0.0"
 
 util-deprecate@1.0.2, util-deprecate@~1.0.1:
   version "1.0.2"
