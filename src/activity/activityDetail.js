@@ -3,13 +3,12 @@
 import React, {Component} from 'react';
 import {ActivityIndicator, FlatList, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
 import * as actions from './actions'
-import * as actionTypes from './actionTypes'
 import {connect} from "react-redux";
 import ActivityBody from "./components/ActivityBody";
 import {buildNonNullData} from "../utils/DataUtils";
 import {MainBackground} from "../screens/UIComponents";
 import ActivityDescription from "./components/ActivityDescription";
-import type {Activity} from "../types";
+import type {Activity, ActivityType, Id} from "../types";
 import * as UI from "../screens/UIStyles";
 import FeedSeparator from "./components/FeedSeparator";
 import ActivityActionBar from "./components/ActivityActionBar";
@@ -17,11 +16,24 @@ import * as _ from "lodash";
 import Icon from 'react-native-vector-icons/Entypo';
 import UserRow from "./components/UserRow";
 
-class ActivityDetailScreen extends Component {
+type Props = {
+    activityId: Id,
+    activityType: ActivityType,
+    navigator: any,
+    onPressItem?: () => void
+};
+
+type State = {
+};
+
+
+
+class ActivityDetailScreen extends Component<Props, State> {
+
+    state = {};
 
     constructor(){
         super();
-        this.state = {};
     }
 
     componentDidMount() {
@@ -154,7 +166,7 @@ class ActivityDetailScreen extends Component {
 
 
     isLoading() {
-        return !!this.props.request.isLoading[actionTypes.FETCH_ACTIVITY.name()];
+        return false;//!!this.props.request.isLoading[actionTypes.FETCH_ACTIVITY.name()];
     }
 
     makeActivity() {
@@ -170,7 +182,6 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state, ownProps) => ({
     data: state.data,
-    request: state.request,
 });
 
 

@@ -15,14 +15,19 @@ import * as Nav from "../../screens/Nav";
 export type ActivityActionType = 'comment' | 'share' | 'save' | 'buy';
 const ACTIONS = ['comment', 'share', 'save', 'buy'];
 
-@connect()
-export default class ActivityActionBar extends React.Component {
 
-    props: {
-        activity: Activity,
-        navigator: any,
-        actions?: Array<ActivityActionType>
-    };
+type Props = {
+    activity: Activity,
+    navigator: any,
+    actions?: Array<ActivityActionType>
+};
+
+type State = {
+};
+
+
+@connect()
+export default class ActivityActionBar extends React.Component<Props, State> {
 
 
     render() {
