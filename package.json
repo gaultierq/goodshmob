@@ -31,6 +31,7 @@
 		"react-native-code-push": "^5.1.0-beta",
 		"react-native-elements": "^0.17.0",
 		"react-native-fbsdk": "facebook/react-native-fbsdk#065507a",
+		"react-native-fetch-polyfill": "^1.1.2",
 		"react-native-global-props": "^1.1.1",
 		"react-native-i18n": "^2.0.5",
 		"react-native-modal": "^4.0.0",

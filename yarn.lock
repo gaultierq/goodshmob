@@ -4602,6 +4602,10 @@ react-native-fbsdk@facebook/react-native-fbsdk#065507a:
   version "0.6.1"
   resolved "https://codeload.github.com/facebook/react-native-fbsdk/tar.gz/065507a"
 
+react-native-fetch-polyfill@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/react-native-fetch-polyfill/-/react-native-fetch-polyfill-1.1.2.tgz#256b5a0abd78cc4992f7a7cf82543da2f2124a73"
+
 react-native-global-props@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/react-native-global-props/-/react-native-global-props-1.1.1.tgz#7d254a18b57a027e1006fe20c2502cddb646d9e5"

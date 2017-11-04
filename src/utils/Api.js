@@ -4,6 +4,7 @@ import normalize from 'json-api-normalizer';
 //hack for tests. FIXME: remove circular dep
 import {logout} from "../auth/actions";
 import ApiAction from "./ApiAction";
+import fetch from 'react-native-fetch-polyfill';
 
 
 export const API_DATA_REQUEST = 'API_DATA_REQUEST';
@@ -45,8 +46,10 @@ class Api {
 
 
     submit(url, method, body) {
+        let timeout = 20 * 1000;
         let options = Object.assign({
-            method: method,
+            method,
+            timeout,
             headers: this.headers()
         }, body ? {body: JSON.stringify(body)} : null);
 
