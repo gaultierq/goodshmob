@@ -21,17 +21,23 @@ type SearchToken = string;
 
 const SEARCH_CATEGORIES : Array<SearchCategory> = [ "consumer_goods", "places", "musics", "movies"];
 
-type SearchState = {
+
+type Props = {
+    onItemSelected: Function;
+    search: Function,
+    onCancel: Function
+};
+
+type State = {
     index: number,
     input: SearchToken,
     routes: Array<String>,
     pendingSearch: number,
     isSearching: { [key: SearchCategory]: Array<SearchToken> }
-}
-
-class SearchScreen extends Component {
+};
 
 
+class SearchScreen extends Component<Props, State> {
 
     static navigatorButtons = {
         rightButtons: [
@@ -43,15 +49,9 @@ class SearchScreen extends Component {
         ],
     };
 
-    props: {
-        onItemSelected: Function;
-        search: Function,
-        onCancel: Function
-    };
-
-    state : SearchState = {
+    state = {
         pendingSearch: -1,
-        index: 0,
+        index: 0, //tab index
         input: '', //TODO : rename it to token
         routes: SEARCH_CATEGORIES.map((c, i) => ({key: `${i}`, title: SearchScreen.getTitle(c)})),
         isSearching: {},
@@ -132,7 +132,7 @@ class SearchScreen extends Component {
     }
 
     onSearchInputChange(input) {
-        this.setState({input: input}, () => this.performSearch());
+        this.setState({input}, () => this.performSearch());
     }
 
     performSearch(hard: false) {
@@ -181,7 +181,6 @@ class SearchScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => ({
     search: state.search,
-    request: state.request,
     data: state.data,
     activity: state.activity
 });
@@ -216,19 +215,22 @@ const styles = StyleSheet.create({
     },
 });
 
+type PageProps = {
+    category: string,
+    isLoading: () => boolean;
+    onItemSelected: Function;
+};
+
+type PageState = {
+};
+
+
 @connect((state, ownProps) => ({
         search: state.search,
-        request: state.request,
         data: state.data,
     })
 )
-class SearchPage extends Component {
-
-    props: {
-        category: string,
-        isLoading: () => boolean;
-        onItemSelected: Function;
-    };
+class SearchPage extends Component<PageProps, PageState> {
 
     render() {
         let search = this.props.search[this.props.category];

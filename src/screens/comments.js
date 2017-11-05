@@ -14,17 +14,19 @@ import i18n from '../i18n/i18n'
 import FeedSeparator from "../activity/components/FeedSeparator";
 import * as UI from "./UIStyles";
 
-class CommentsScreen extends Component {
+type Props = {
+    activityId: Id,
+    activityType: ActivityType,
+};
 
-    props : {
-        activityId: Id,
-        activityType: ActivityType,
-    };
+type State = {
+    newComment?: string,
+    isAddingComment?: boolean
+};
 
-    state = {
-        newComment: '',
-        isAddingComment: false
-    };
+class CommentsScreen extends Component<Props, State> {
+
+    state = {};
 
     render() {
         let activity = this.getActivity();

@@ -14,53 +14,28 @@ import Feed from "./components/feed"
 import ApiAction from "../utils/ApiAction";
 import type {NavigableProps} from "../types";
 
-type FeedState = {
-    isFetchingFirst: boolean,
-    isFetchingMore: boolean,
-    isPulling: boolean
+type Props = NavigableProps;
+
+type State = {
+    isFetchingFirst?: boolean,
+    isFetchingMore?: boolean,
+    isPulling?: boolean
 };
 
-type NetworkState = {
-} & FeedState;
+class NetworkScreen extends Component<Props, State> {
 
-class NetworkScreen extends Component {
-
-
-    static navigatorButtons = {
-        // rightButtons: [
-        //     {
-        //         icon: require('../img/drawer_community.png'), // for icon button, provide the local image asset name
-        //         id: 'community' // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
-        //     }
-        // ],
-        // rightButtons: [
-        //     {
-        //         icon: require('../img/drawer_line_up.png'), // for icon button, provide the local image asset name
-        //         id: 'line_up' // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
-        //     }
-        // ],
-    };
 
     static navigatorStyle = UIStyles.NavStyles;
 
-    props: NavigableProps;
-
-    state: NetworkState;
+    state = {};
 
     constructor(props){
         super();
-        this.state = {isFetchingFirst: false, isFetchingMore: false};
         props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
         if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
-            // if (event.id === 'line_up') { // this is the same id field from the static navigatorButtons definition
-            //     this.props.navigator.toggleDrawer({
-            //         side: 'right',
-            //         animated: true
-            //     })
-            // }
             if (event.id === 'community') { // this is the same id field from the static navigatorButtons definition
                 this.props.navigator.toggleDrawer({
                     side: 'right',
@@ -137,7 +112,6 @@ class NetworkScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => ({
     network: state.network,
-    request: state.request,
     data: state.data,
     activity: state.activity
 });
@@ -145,7 +119,6 @@ const mapStateToProps = (state, ownProps) => ({
 
 const actiontypes = (() => {
     const FETCH_ACTIVITIES = new ApiAction("home/fetch_activities");
-
     return {FETCH_ACTIVITIES};
 })();
 
