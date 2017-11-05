@@ -82,7 +82,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
 
         this.props.navigator.showModal({
-            screen: 'goodsh.LineupListScreen', // unique ID registered with Navigation.registerScreen
+            screen: 'goodsh.AddInScreen', // unique ID registered with Navigation.registerScreen
             title: "Ajouter à une liste",
             //animationType: 'none',
             navigatorButtons: {

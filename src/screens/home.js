@@ -5,25 +5,29 @@ import {StyleSheet, Text, TextInput, View} from 'react-native';
 
 import {connect} from "react-redux";
 import {MainBackground} from "./UIComponents";
-import Immutable from 'seamless-immutable';
-import * as Api from "../utils/Api";
 import ActionButton from 'react-native-action-button';
 import {screen as LineupList} from './lineups'
-import type {Id} from "../types";
+import type {Id, Saving} from "../types";
 import {Item, List} from "../types"
 import Snackbar from "react-native-snackbar"
 import i18n from '../i18n/i18n'
-import * as UIStyles from "./UIStyles";
 import {TP_MARGINS} from "./UIStyles";
 import CurrentUser from "../CurrentUser"
 import Icon from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal'
 import Button from 'apsl-react-native-button'
 import {createLineup, saveItem} from "./actions";
+import {SearchBar} from 'react-native-elements'
+import * as UI from "./UIStyles";
+import { Navigation } from 'react-native-navigation';
 
+
+let DEEPLINK_SEARCH_TEXT_CHANGED = 'internal/home/search/change';
+let DEEPLINK_SEARCH_CLOSE = 'internal/home/search/close';
 
 type Props = {
-    userId: Id
+    userId: Id,
+    navigator: any
 };
 
 type State = {
@@ -31,28 +35,32 @@ type State = {
     pendingList: List,
     isCreatingLineup: boolean,
     modalVisible: boolean,
-    newLineupName: null | string
+    newLineupName: null | string,
+    isSearching: boolean,
+    searchToken:? string
 };
 
 class HomeScreen extends Component<Props, State> {
 
-    static navigationOptions = { title: 'Welcome', header: null };
     state = {
         pendingItem: null,
         pendingList: null,
         isCreatingLineup: false,
         modalVisible: false,
-        newLineupName: null
+        newLineupName: null,
+        isSearching: false,
+        searchToken: null
     };
+
+    static navigatorStyle = UI.NavStyles;
 
     constructor(props){
         super(props);
         props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
-    static navigatorStyle = UIStyles.NavStyles;
-
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
+        console.log("Home:NavEvent: "+JSON.stringify(event));
         if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
             switch (event.id) {
                 case 'cancel_add':
@@ -62,23 +70,29 @@ class HomeScreen extends Component<Props, State> {
                     });
                     break;
                 case 'profile':
-                    // this.props.navigator.push({
-                    //     screen: 'goodsh.ProfileScreen',
-                    //     title: "Mon compte",
-                    //     passProps: {
-                    //         userId: this.props.userId
-                    //     }
-                    // });
-
                     this.props.navigator.toggleDrawer({
                         side: 'left',
                         animated: true
-                    })
-
+                    });
                     break;
-
+                case 'search':
+                    this.setState({isSearching: true});
+                    break;
             }
+        }
 
+        //HACK
+        if (event.type === 'DeepLink') {
+            const payload = event.payload; // (optional) The payload
+
+            switch (event.link) {
+                case DEEPLINK_SEARCH_TEXT_CHANGED:
+                    this.setState({searchToken: payload});
+                    break;
+                case DEEPLINK_SEARCH_CLOSE:
+                    this.setState({isSearching: false});
+                    break;
+            }
         }
     }
 
@@ -86,11 +100,8 @@ class HomeScreen extends Component<Props, State> {
 
         const {pendingItem, pendingList} = this.state;
 
-        this.props.navigator.setButtons({
-            leftButtons: this.getLeftButtonDefinition(), // see "Adding buttons to the navigator" below for format (optional)
-            rightButtons: this.getRightButtonDefinition(),
-            animated: false// does the change have transition animation or does it happen immediately (optional)
-        });
+
+        this.renderNav();
 
 
         let userId = CurrentUser.id;
@@ -104,6 +115,7 @@ class HomeScreen extends Component<Props, State> {
                     {pendingItem && !pendingList && <Text style={styles.selectAList}>Sélectionnez une liste:</Text>}
                     <LineupList
                         userId={userId}
+                        filter={this.state.searchToken}
                         onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
                         onSavingPressed={(saving) => this.onSavingPressed(saving)}
                         //onAddInLineupPressed={(this.state.pendingItem) ? null : (lineup) => this.addInLineup(lineup)}
@@ -131,6 +143,54 @@ class HomeScreen extends Component<Props, State> {
 
             </MainBackground>
         );
+    }
+
+    renderNav() {
+        const {navigator} = this.props;
+        let leftButtons, rightButtons, navBarCustomView;
+
+        if (this.state.isSearching) {
+            // style = {
+            //     navBarCustomView: 'goodsh.HomeNavBar',
+            // };
+            navBarCustomView='goodsh.HomeNavBar';
+            leftButtons = [];
+            rightButtons = [];
+        }
+        else if (this.state.pendingItem || this.state.pendingList) {
+            navBarCustomView = null;
+            leftButtons = [];
+            rightButtons = [
+                {
+                    title: 'Cancel',
+                    id: 'cancel_add' // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
+                }];
+        }
+        else {
+            navBarCustomView = null;
+            leftButtons = [{
+                icon: require('../img/drawer_community.png'),
+                id: 'profile'
+            }];
+            rightButtons = [
+                {
+                    icon: require('../img/bottom_bar_search.png'),
+                    id: 'search'
+                }
+            ];
+        }
+
+        navigator.setStyle({navBarCustomView});
+        navigator.setButtons({
+            leftButtons,
+            rightButtons,
+            animated: true// does the change have transition animation or does it happen immediately (optional)
+        });
+
+        //HACK. event listener is unsubscribed for some reason...
+        setTimeout(()=>navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this)));
+
+
     }
 
     renderModal() {
@@ -183,21 +243,6 @@ class HomeScreen extends Component<Props, State> {
         this.setState({isCreatingLineup: true});
         this.props.dispatch(createLineup(this.state.newLineupName))
             .then(()=> this.setModalVisible(false)).then(()=> this.setState({isCreatingLineup: false}));
-    }
-
-    getRightButtonDefinition() {
-        return (this.state.pendingItem || this.state.pendingList) ? [
-            {
-                title: 'Cancel',
-                id: 'cancel_add' // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
-            }] : [];
-    }
-
-    getLeftButtonDefinition() {
-        return (this.state.pendingItem || this.state.pendingList) ? [] : [{
-            icon: require('../img/drawer_community.png'),
-            id: 'profile'
-        }];
     }
 
     displayFloatingButton() {
@@ -279,11 +324,13 @@ class HomeScreen extends Component<Props, State> {
     }
 
     resolveAdd() {
-        //action blabla
-        if (this.state.pendingItem && this.state.pendingList) {
-            console.info(`${this.state.pendingItem.title} waiting to be added in ${this.state.pendingList.name}`);
+        let pendingItem = this.state.pendingItem;
+        let pendingList = this.state.pendingList;
+
+        if (pendingItem && pendingList) {
+            console.info(`${pendingItem.title} waiting to be added in ${pendingList.name}`);
             this.props
-                .dispatch(saveItem(this.state.pendingItem.id, this.state.pendingList.id, ))
+                .dispatch(saveItem(pendingItem.id, pendingList.id, ))
                 .then(() => {
                     Snackbar.show({
                         title: i18n.t('shared.goodsh_saved'),
@@ -293,6 +340,68 @@ class HomeScreen extends Component<Props, State> {
         }
     }
 }
+
+
+const mapStateToProps = (state, ownProps) => ({
+});
+
+
+const screen = connect(mapStateToProps)(HomeScreen);
+
+type NavProps = {
+    onChangeText: (token: string) => void,
+    navigator: any
+};
+
+type NavState = {
+    input:? string,
+};
+
+
+//connect -> redux
+class HomeNavBar extends Component<NavProps, NavState> {
+
+    state = {input: null};
+
+    render() {
+
+        //if (this.props.test !== "test") throw "tg";
+
+        return (
+            <SearchBar
+                lightTheme
+                onChangeText={this.onChangeText.bind(this)}
+                onClearText={this.onClearText.bind(this)}
+                placeholder={i18n.t('lineups.search.placeholder')}
+                clearIcon={{color: '#86939e'}}
+                containerStyle={styles.searchContainer}
+                inputStyle={styles.searchInput}
+                autoCapitalize='none'
+                autoCorrect={false}
+            />
+        );
+
+    }
+
+    onChangeText(input: string) {
+        this.setState({input});
+        //because function props are not currently allowed by RNN
+
+        //this.props.onChangeText(input);
+        //become->
+        Navigation.handleDeepLink({
+            link: DEEPLINK_SEARCH_TEXT_CHANGED,
+            payload: input
+        });
+    }
+
+    onClearText() {
+        Navigation.handleDeepLink({
+            link: DEEPLINK_SEARCH_CLOSE
+        });
+    }
+}
+
 
 const styles = StyleSheet.create({
     container: {
@@ -310,52 +419,13 @@ const styles = StyleSheet.create({
         fontSize: 20,
         alignSelf: "center",
         backgroundColor:"transparent"
-    }
+    },
+    searchContainer: {
+        backgroundColor: 'transparent',
+    },
+    searchInput: {
+        backgroundColor: 'white',
+    },
 });
 
-const mapStateToProps = (state, ownProps) => ({
-});
-
-// const actiontypes = (() => {
-//
-//     const SAVE_ITEM = new ApiAction("save_item");
-//     return {SAVE_ITEM};
-// })();
-//
-
-// const actions = (() => {
-//     return {
-//         saveItem: saveItem
-//         // saveItem: (itemId: Id, lineupId: Id, privacy = 0, description = '') => {
-//         //
-//         //     let body = {
-//         //         saving: { list_id: lineupId, privacy}
-//         //     };
-//         //     if (description) {
-//         //         Object.assign(body, description)
-//         //     }
-//         //     console.log("saving item, with body:");
-//         //     console.log(body);
-//         //
-//         //     let call = new Api.Call()
-//         //         .withMethod('POST')
-//         //         .withRoute(`items/${itemId}/savings`)
-//         //         .withBody(body)
-//         //         .addQuery({'include': '*.*'});
-//         //
-//         //     return call.disptachForAction2(actiontypes.SAVE_ITEM);
-//         // },
-//     };
-// })();
-
-const reducer = (() => {
-    const initialState = Immutable(Api.initialListState());
-
-    return (state = initialState, action = {}) => {
-        return state;
-    }
-})();
-
-let screen = connect(mapStateToProps)(HomeScreen);
-
-export {reducer, screen};
+export {screen, HomeNavBar};

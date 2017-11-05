@@ -41,6 +41,7 @@ type Props = {
     onSavingPressed: Function,
     onAddInLineupPressed: Function,
     canFilterOverItems: boolean | ()=>boolean,
+    filter:? string,
     data?: any,
     onCancel?: ()=>void
 };
@@ -48,7 +49,7 @@ type Props = {
 type State = {
     isLoading: boolean,
     isLoadingMore: boolean,
-    filter: string,
+    // filter: string,  //filter lists over this search token
     search: { [string]: SearchState}
 };
 
@@ -64,7 +65,7 @@ type SearchState = {
 class LineupListScreen extends Component<Props, State> {
 
     state = {
-        filter: null,
+        // filter: null,
         isLoading: false,
         isLoadingMore: false,
         search: {}
@@ -74,6 +75,12 @@ class LineupListScreen extends Component<Props, State> {
     constructor(props){
         super(props);
         props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+    }
+
+    componentWillReceiveProps({filter}) {
+        if (this.props.filter !== filter) {
+            this.performAlgoliaSearch(filter);
+        }
     }
 
 
@@ -86,7 +93,7 @@ class LineupListScreen extends Component<Props, State> {
     }
 
     render() {
-        const {userId} = this.props;
+        const {userId, filter} = this.props;
 
         let user: User = buildData(this.props.data, "users", userId);
 
@@ -108,7 +115,7 @@ class LineupListScreen extends Component<Props, State> {
         }
 
         let data: Array<types.List|types.Item>;
-        let search = this.state.search[this.state.filter];
+        let search = this.getSearchObj();
 
         let searchResult: Array<Item|List> = search ? search.data : null;
         let hasSearchResult = search && search.data && search.data.length > 0;
@@ -129,17 +136,17 @@ class LineupListScreen extends Component<Props, State> {
 
         return (
             <View>
-                <SearchBar
-                    lightTheme
-                    round
-                    onChangeText={this.onSearchInputChange.bind(this)}
-                    placeholder={i18n.t('lineups.search.placeholder')}
-                    clearIcon={{color: '#86939e'}}
-                    containerStyle={styles.searchContainer}
-                    inputStyle={styles.searchInput}
-                    autoCapitalize='none'
-                    autoCorrect={false}
-                />
+                {/*<SearchBar*/}
+                    {/*lightTheme*/}
+                    {/*round*/}
+                    {/*onChangeText={this.onSearchInputChange.bind(this)}*/}
+                    {/*placeholder={i18n.t('lineups.search.placeholder')}*/}
+                    {/*clearIcon={{color: '#86939e'}}*/}
+                    {/*containerStyle={styles.searchContainer}*/}
+                    {/*inputStyle={styles.searchInput}*/}
+                    {/*autoCapitalize='none'*/}
+                    {/*autoCorrect={false}*/}
+                {/*/>*/}
 
                 {
                     isSearchMode && <FlatList
@@ -163,12 +170,16 @@ class LineupListScreen extends Component<Props, State> {
         );
     }
 
+    getSearchObj() {
+        return this.props.filter ? this.state.search[this.props.filter] : null;
+    }
+
     isSearchMode() {
-        return !!this.state.filter;
+        return !!this.props.filter;
     }
 
     renderSearchFooter() {
-        let search = this.state.search[this.state.filter];
+        let search = this.getSearchObj();
         if (!search) return null;
         let nextPage = search.page + 1;
 
@@ -212,19 +223,19 @@ class LineupListScreen extends Component<Props, State> {
         return fuse.search(this.state.filter);
     }
 
-    onSearchInputChange(input:string) {
-        this.setState({filter: input});
-
-        if (input) {
-            let search = this.state.search[input];
-            if (!search) {
-                this.performAlgoliaSearch(input);
-            }
-        }
-        else {
-            //this.setState({searchResult: []});
-        }
-    }
+    // onSearchInputChange(input:string) {
+    //     this.setState({filter: input});
+    //
+    //     if (input) {
+    //         let search = this.state.search[input];
+    //         if (!search) {
+    //             this.performAlgoliaSearch(input);
+    //         }
+    //     }
+    //     else {
+    //         //this.setState({searchResult: []});
+    //     }
+    // }
 
     performAlgoliaSearch(token, page: number = 0) {
         let client = algoliasearch("8UTETUZKD3", "c80385095ff870f5ddf9ba25310a9d5a");

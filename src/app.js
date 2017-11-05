@@ -115,9 +115,6 @@ registerScreens(store, Provider);
 
 export default class App {
 
-    //screen: 'goodsh.ActivityDetailScreen',
-    // screen: 'goodsh.LineupListScreen',
-
     logged = null;
 
     constructor() {
