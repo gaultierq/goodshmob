@@ -17,3 +17,7 @@ npm cache verify 1>/dev/null
 
 yarn
 npm i
+yarn
+npm i
+yarn
+npm i
