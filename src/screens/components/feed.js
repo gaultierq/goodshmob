@@ -8,10 +8,11 @@ import {assertUnique} from "../../utils/DataUtils";
 import ApiAction from "../../utils/ApiAction";
 import * as Api from "../../utils/Api";
 import {isEmpty} from "lodash";
-import type {Id} from "../../types";
+import type {Id, Url} from "../../types";
 
 export type FeedSource = {
     callFactory: ()=>Api.Call,
+    callMoreFactory:?()=>Api.Call,
     action: ApiAction,
     options?: any
 }
@@ -27,21 +28,17 @@ type Props<T> = {
 };
 
 type State = {
-    isFetchingFirst: boolean,
-    isFetchingMore: boolean,
-    isPulling: boolean,
-    lastEmptyResultMs: number
+    isFetchingFirst?: boolean,
+    isFetchingMore?: boolean,
+    isPulling?: boolean,
+    lastEmptyResultMs?: number,
+    moreLink?: Url
 };
 
 @connect()
 export default class Feed<T> extends Component<Props<T>, State>  {
 
     keyExtractor = (item, index) => item.id;
-
-    constructor(){
-        super();
-        this.state =  {isFetchingFirst: false, isFetchingMore: false, isPulling: false};
-    }
 
     render() {
         assertUnique(this.props.data);
@@ -88,9 +85,19 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
                 this.setState({[requestName]: true});
 
-                let call = fetchSrc.callFactory();
+                const {callFactory, callMoreFactory} = fetchSrc;
+                let call = callFactory();
 
-                if (afterId) call.addQuery({id_after: afterId});
+                if (afterId) {
+                    //backend api is not unified yet
+                    if (callMoreFactory) {
+                        call = callMoreFactory();
+                    }
+                    else {
+                        call.addQuery({id_after: afterId});
+                    }
+
+                }
 
                 this.props
                     .dispatch(call.disptachForAction2(fetchSrc.action, fetchSrc.options))
@@ -103,6 +110,9 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                         if (hasNoMore) {
                             this.setState({lastEmptyResultMs: Date.now()});
                         }
+
+                        //handle links
+
                         resolve(data);
                     }, err => {
                         console.warn("feed error:" + err);
@@ -130,7 +140,9 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     onRefresh() {
         if (this.state.isPulling) return;
         this.setState({isPulling: true});
-        this.fetchIt().catch(err=>{console.warn("error while fetching:" + err)}).then(()=>this.setState({isPulling: false}));
+        this.fetchIt()
+            .catch(err=>{console.warn("error while fetching:" + err)})
+            .then(()=>this.setState({isPulling: false}));
     }
 
     renderRefreshControl() {

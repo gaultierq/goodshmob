@@ -462,19 +462,17 @@ const DELETE_LINEUP = new ApiAction("delete_lineup");
 
 const actions = (() => {
 
-    const include = "lists,lists.savings,savings.resource";
-
     return {
         fetchLineups: () => new Api.Call()
             .withMethod('GET')
             .withRoute("lists")
-            .addQuery({include})
+            .addQuery({include: "savings,savings.resource"})
         ,
 
         getUser: (userId): Api.Call => new Api.Call()
             .withMethod('GET')
             .withRoute(`users/${userId}`)
-            .addQuery({include}),
+            .addQuery({include: "lists,lists.savings,lists.savings.resource"}),
 
         deleteLineup : (lineup) => {
             let call = new Api.Call()

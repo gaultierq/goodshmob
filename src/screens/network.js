@@ -76,8 +76,9 @@ class NetworkScreen extends Component<Props, State> {
                         data={activities}
                         renderItem={this.renderItem.bind(this)}
                         fetchSrc={{
-                            callFactory:actions.fetchActivities,
-                            action:actiontypes.FETCH_ACTIVITIES
+                            callFactory: actions.fetchActivities,
+                            callMoreFactory: () => actions.fetchActivities(),
+                            action: actiontypes.FETCH_ACTIVITIES
                         }}
                         hasMore={!this.props.network.hasNoMore}
                     />
@@ -126,13 +127,11 @@ const actiontypes = (() => {
 const actions = (() => {
     return {
         fetchActivities: () => {
-            let call = new Api.Call().withMethod('GET')
+            return new Api.Call()
+                .withMethod('GET')
                 .withRoute("activities")
                 .addQuery({include: "user,resource,target"});
-
-            return call;
         },
-
     };
 })();
 
