@@ -158,18 +158,30 @@ export function createObject(source: Source, store: any): Base {
 }
 */
 
+export type MergeOptions = {
+    afterId:? string,
+    hasMore:? boolean,
+    hasLess:? boolean
+}
+
+
+export function mergeLists<T>(mergeInto: Array<T>, mergeMe: Array<T>, options?: MergeOptions) {
+    new Merge(mergeInto, mergeMe)
+        .withOptions(options)
+        .merge();
+}
+
 export class Merge<T> {
+
     mergeInto: Array<T>;
 
     mergeMe: Array<T>;
 
-    afterId: string;
+    afterId:? string;
 
-    hasMore: boolean;
+    hasMore:? boolean;
 
-    hasLess: boolean;
-
-
+    hasLess:? boolean;
 
     constructor(mergeInto: Array<T>, mergeMe: Array<T>) {
         this.mergeInto = mergeInto;
@@ -190,6 +202,11 @@ export class Merge<T> {
     //!\\ do *not* rely on DataList#hasLess
     withHasLess(hasLess: boolean): Merge<T> {
         this.hasLess = hasLess;
+        return this;
+    }
+
+    withOptions(options?: MergeOptions): Merge<T> {
+        Object.assign(this, options || {});
         return this;
     }
 
@@ -233,7 +250,7 @@ export class Merge<T> {
 
         let mergeIds = this.getIds(this.mergeInto);
 
-        let resRemoved: { [string]: T } = null;
+        let resRemoved:? { [string]: T } = null;
         //merge=removing long segment, and adding the new items right after
         if (segment !== null) {
             resRemoved = {};
