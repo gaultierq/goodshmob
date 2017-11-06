@@ -190,7 +190,7 @@ const reducer = (() => {
                 let {activityId, activityType} = action.options;
                 activityType = sanitizeActivityType(activityType);
                 let path = `${activityType}.${activityId}.relationships.comments.data`;
-                state = doDataMergeInState(state, path, [{id, type}]);
+                state = doDataMergeInState(state, path, [{id, type}], {reverse: true});
                 break;
             }
 

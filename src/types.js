@@ -1,4 +1,6 @@
 
+import type {MergeOptions} from "./utils/ModelUtils";
+
 export type Url = string;
 
 export type Id = string;
@@ -104,3 +106,6 @@ export type Post = Activity & {
 export type Place = Item & {
     location: any
 }
+
+
+export type MergeOpts = MergeOptions<string>

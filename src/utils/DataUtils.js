@@ -1,9 +1,11 @@
 // @flow
 import build from '../../vendors/redux-object'
-import type {Id} from "../types";
+import type {Id, MergeOpts} from "../types";
 import * as _ from "lodash";
 import * as Util from "./ModelUtils";
 import dotprop from "dot-prop-immutable"
+import {mergeLists} from "./ModelUtils";
+import type {MergeOptions} from "./ModelUtils";
 
 //ask backend to sanitize types
 export let sanitizeActivityType = activityType => {
@@ -65,7 +67,7 @@ export function assertUnique(data: Array) {
 }
 
 
-export function doDataMergeInState(state, path, newList) {
+export function doDataMergeInState(state, path, newList, options?: MergeOpts) {
     let currentList = _.get(state, path, []);
     currentList = currentList.slice();
 
@@ -75,9 +77,8 @@ export function doDataMergeInState(state, path, newList) {
     });
 
     //3. merge state
-    new Util.Merge(currentList, newItems)
-        .withHasLess(true)
-        .merge();
+    //new Util.Merge(currentList, newItems).merge();
+    mergeLists(currentList, newItems, options);
 
     let newState = dotprop.set(state, path, currentList);
 
