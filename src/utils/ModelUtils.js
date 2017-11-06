@@ -158,61 +158,70 @@ export function createObject(source: Source, store: any): Base {
 }
 */
 
-export type MergeOptions = {
-    afterId:? string,
+export type MergeOptions<K> = {
+    afterId:? K,
+    beforeId:? K,
+
+    //has more and has less are used to know if we should extends segment to remove to list boundaries
     hasMore:? boolean,
-    hasLess:? boolean
+    hasLess:? boolean,
+    reverse:? boolean
 }
 
 
-export function mergeLists<T>(mergeInto: Array<T>, mergeMe: Array<T>, options?: MergeOptions) {
-    new Merge(mergeInto, mergeMe)
-        .withOptions(options)
+export function mergeLists<T, K>(mergeInto: Array<T>, mergeMe: Array<T>, options?: MergeOptions<K>) {
+    let merge : Merge<T,K> = new Merge(mergeInto, mergeMe);
+
+    merge.withOptions(options)
         .merge();
 }
 
-export class Merge<T> {
+export class Merge<T, K> {
 
     mergeInto: Array<T>;
 
     mergeMe: Array<T>;
 
-    afterId:? string;
+    afterId:? K;
+
+    beforeId:? K;
 
     hasMore:? boolean;
 
     hasLess:? boolean;
+
+    reverse:? boolean;
 
     constructor(mergeInto: Array<T>, mergeMe: Array<T>) {
         this.mergeInto = mergeInto;
         this.mergeMe = mergeMe.slice();
     }
 
-    setAfterKey(afterId: string): Merge<T> {
+    setAfterKey(afterId: K): Merge<T, K> {
         this.afterId = afterId;
         return this;
     }
 
     //!\\ do *not* rely on DataList#hasMore
-    hasMore(hasMore: boolean): Merge<T> {
+    hasMore(hasMore: boolean): Merge<T, K> {
         this.hasMore = hasMore;
         return this;
     }
 
     //!\\ do *not* rely on DataList#hasLess
-    withHasLess(hasLess: boolean): Merge<T> {
+    withHasLess(hasLess: boolean): Merge<T, K> {
         this.hasLess = hasLess;
         return this;
     }
 
-    withOptions(options?: MergeOptions): Merge<T> {
+    withOptions(options?: MergeOptions<K>): Merge<T, K> {
         Object.assign(this, options || {});
         return this;
     }
 
     getSegment() {
-        let mergeIds: Array<string> = this.getIds(this.mergeInto);
-        let addIds: Array<string> = this.getIds(this.mergeMe);
+        let mergeIds: Array<K> = this.getIds(this.mergeInto);
+        let addIds: Array<K> = this.getIds(this.mergeMe);
 
         let from = null, to = null;
         addIds.forEach((id) => {
@@ -236,11 +245,23 @@ export class Merge<T> {
     }
 
 
-    getIds(arr: Array<T>): Array<string> {
+    getIds(arr: Array<T>): Array<K> {
         return arr.map(e => this.getKey(e));
     }
 
-    merge() {
+    checkOptions() {
+
+    }
+
+    merge(): void {
+
+        this.checkOptions();
+
+        if (this.reverse) {
+            this.afterId = this.beforeId;
+            this.mergeInto.reverse();
+        }
+
         //console.log(`merging ${JSON.stringify(this.mergeMe)} into ${JSON.stringify(this.mergeInto)}`);
         let result = [];
 
@@ -248,16 +269,16 @@ export class Merge<T> {
         let segment = this.getSegment();
         console.log(`segment= ${JSON.stringify(segment)}`);
 
-        let mergeIds = this.getIds(this.mergeInto);
+        let mergeIds : Array<K> = this.getIds(this.mergeInto);
 
-        let resRemoved:? { [string]: T } = null;
+        let resRemoved:? { [K]: T } = null;
         //merge=removing long segment, and adding the new items right after
         if (segment !== null) {
             resRemoved = {};
             //removing the segment
             for (let i = segment.to; i >= segment.from; i--) {
                 let removed : T = this.mergeInto.splice(i, 1)[0];
-                let key: string = this.getKey(removed);
+                let key: K = this.getKey(removed);
                 resRemoved[key] = removed;
                 mergeIds.splice(mergeIds.indexOf(key), 1);
             }
@@ -286,11 +307,13 @@ export class Merge<T> {
             this.mergeInto.splice(i++, 0, d);
         });
 
+        if (this.reverse) {
+            this.mergeInto.reverse();
+        }
         //onMerged();
-        return result;
     }
 
-    getKey(d: T): string {
+    getKey(d: T): K {
         // $FlowFixMe
         return d['id'];
     }
