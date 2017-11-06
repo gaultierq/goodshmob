@@ -31,15 +31,14 @@ class CommentsScreen extends Component<Props, State> {
     render() {
         let activity = this.getActivity();
 
-        let comments = (activity.comments || []).reduce((res, com)=> {
-            let comment = buildData(this.props.data, com.type, com.id);
-            if (comment) {
-                res.push(comment);
-            }
-            return res;
-        }, []);
-
-        //let comments = activity.comments;
+        // let comments = (activity.comments || []).reduce((res, com)=> {
+        //     let comment = buildData(this.props.data, com.type, com.id);
+        //     if (comment) {
+        //         res.push(comment);
+        //     }
+        //     return res;
+        // }, []);
+        let comments = activity.comments;
 
         return (
             <MainBackground>
@@ -63,19 +62,19 @@ class CommentsScreen extends Component<Props, State> {
                                 <Text>{activity.description}</Text>
                             </View>
                         }
+                        ListFooterComponent={
+                            <View style={styles.inputContainer}>
+                                <TextInput
+                                    editable={!this.state.isAddingComment}
+                                    style={styles.input}
+                                    onSubmitEditing={() => this.addComment(activity)}
+                                    value={this.state.newComment}
+                                    onChangeText={newComment => this.setState({newComment})}
+                                    placeholder={i18n.t("activity_comments_screen.add_comment_placeholder")}
+                                />
+                            </View>
+                        }
                     />
-                    <View style={styles.inputContainer}>
-                        <TextInput
-                            editable={!this.state.isAddingComment}
-                            style={styles.input}
-                            onSubmitEditing={() => this.addComment(activity)}
-                            value={this.state.newComment}
-                            onChangeText={newComment => this.setState({newComment})}
-                            placeholder={i18n.t("activity_comments_screen.add_comment_placeholder")}
-                        />
-                    </View>
-
-
                 </View>
             </MainBackground>
         );
@@ -95,9 +94,10 @@ class CommentsScreen extends Component<Props, State> {
 
     }
 
-    renderItem(item) {
-        let comment : Comment = item.item;
-        comment = buildNonNullData(this.props.data, "comments", comment.id);
+    renderItem({item}) {
+        let comment : Comment = buildData(this.props.data, "comments", item.id);
+        if (!comment) return null;
+
         return (
             <View style={{padding: 12, backgroundColor:"white"}}>
                 <UserActivity
@@ -179,7 +179,7 @@ const reducer = (() => {
             case actionTypes.LOAD_COMMENTS.success(): {
                 let {activityId, activityType} = action.options;
                 activityType = sanitizeActivityType(activityType);
-                let path = `${activityType}.${activityId}.comments.data`;
+                let path = `${activityType}.${activityId}.relationships.comments.data`;
 
                 state = doDataMergeInState(state, path, action.payload.data);
                 break;
@@ -189,8 +189,7 @@ const reducer = (() => {
                 let {id, type} = action.payload.data;
                 let {activityId, activityType} = action.options;
                 activityType = sanitizeActivityType(activityType);
-
-                let path = `${activityType}.${activityId}.comments.data`;
+                let path = `${activityType}.${activityId}.relationships.comments.data`;
                 state = doDataMergeInState(state, path, [{id, type}]);
                 break;
             }

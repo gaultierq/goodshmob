@@ -66,7 +66,8 @@ export function assertUnique(data: Array) {
 
 
 export function doDataMergeInState(state, path, newList) {
-    let currentList = _.get(state, path, []).slice();
+    let currentList = _.get(state, path, []);
+    currentList = currentList.slice();
 
     let newItems = newList.map((c) => {
         let {id, type} = c;
@@ -78,8 +79,10 @@ export function doDataMergeInState(state, path, newList) {
         .withHasLess(true)
         .merge();
 
-    state = dotprop.set(state, path, currentList);
-    return state;
+    let newState = dotprop.set(state, path, currentList);
+
+    if (state === newState) throw "immutability violation";
+    return newState;
 }
 
 
