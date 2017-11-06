@@ -1,0 +1,34 @@
+---
+format_version: '4'
+default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
+project_type: react-native
+trigger_map:
+- push_branch: "*"
+  workflow: ios
+- pull_request_source_branch: "*"
+  workflow: ios
+workflows:
+  ios:
+    steps:
+    - npm@0.9.0:
+        inputs:
+        - command: test
+    - xcode-archive@2.3.7: {}
+    - hockeyapp-deploy@2.4.2:
+        inputs:
+        - api_token: f191e719336d431aa8e3210f64e44052
+        - app_id: '0718789d9866499cbc827f68e1627a17'
+app:
+  envs:
+  - opts:
+      is_expand: false
+    GRADLE_BUILD_FILE_PATH: android/build.gradle
+  - opts:
+      is_expand: false
+    GRADLEW_PATH: android/gradlew
+  - opts:
+      is_expand: false
+    BITRISE_PROJECT_PATH: ios/goodshmob.xcodeproj
+  - opts:
+      is_expand: false
+    BITRISE_SCHEME: goodshmob
