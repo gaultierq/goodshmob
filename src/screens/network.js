@@ -77,7 +77,7 @@ class NetworkScreen extends Component<Props, State> {
                         renderItem={this.renderItem.bind(this)}
                         fetchSrc={{
                             callFactory: actions.fetchActivities,
-                            callMoreFactory: () => actions.fetchActivities(),
+                            useLinks: true,
                             action: actiontypes.FETCH_ACTIVITIES
                         }}
                         hasMore={!this.props.network.hasNoMore}
@@ -139,7 +139,7 @@ const reducer = (() => {
     const initialState = Immutable(Api.initialListState());
 
     return (state = initialState, action = {}) => {
-        let desc = {fetchFirst: actiontypes.FETCH_ACTIVITIES, fetchMore: actiontypes.FETCH_MORE_ACTIVITIES};
+        let desc = {fetchFirst: actiontypes.FETCH_ACTIVITIES};
         return Api.reduceList(state, action, desc);
     }
 })();

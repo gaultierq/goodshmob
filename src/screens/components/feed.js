@@ -12,7 +12,7 @@ import type {Id, Url} from "../../types";
 
 export type FeedSource = {
     callFactory: ()=>Api.Call,
-    callMoreFactory:?()=>Api.Call,
+    useLinks:? boolean,
     action: ApiAction,
     options?: any
 }
@@ -39,6 +39,8 @@ type State = {
 export default class Feed<T> extends Component<Props<T>, State>  {
 
     keyExtractor = (item, index) => item.id;
+
+    state = {};
 
     render() {
         assertUnique(this.props.data);
@@ -85,23 +87,22 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
                 this.setState({[requestName]: true});
 
-                const {callFactory, callMoreFactory} = fetchSrc;
-                let call = callFactory();
-
-                if (afterId) {
-                    //backend api is not unified yet
-                    if (callMoreFactory) {
-                        call = callMoreFactory();
-                    }
-                    else {
+                const {callFactory, useLinks} = fetchSrc;
+                let call;
+                //backend api is not unified yet
+                if (this.state.moreLink) {
+                    call = Api.Call.parse(this.state.moreLink);
+                }
+                else {
+                    call = callFactory();
+                    if (afterId && !useLinks) {
                         call.addQuery({id_after: afterId});
                     }
-
                 }
 
                 this.props
                     .dispatch(call.disptachForAction2(fetchSrc.action, fetchSrc.options))
-                    .then((data)=> {
+                    .then(({data, links})=> {
                         this.setState({[requestName]: false});
                         if (!data) {
                             return reject(`no data provided for ${fetchSrc.action}`);
@@ -112,7 +113,14 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                         }
 
                         //handle links
+                        if (
+                            useLinks
+                            && links && links.next
+                            && (afterId || !this.state.moreLink)
+                        ) {
 
+                            this.setState({moreLink: links.next});
+                        }
                         resolve(data);
                     }, err => {
                         console.warn("feed error:" + err);

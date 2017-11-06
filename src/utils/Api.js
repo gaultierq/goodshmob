@@ -150,7 +150,7 @@ export class Call {
                             //let the reducer do something
                             dispatch(Object.assign({}, {type: apiAction.success(), payload: response, original: resp.original}, {options}));
 
-                            resolve(response.data);
+                            resolve(response);
                         },
                         //1., 2.
                         error => {
