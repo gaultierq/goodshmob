@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import {Image, Linking, Share, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, View} from 'react-native';
+import {Platform, Image, Linking, Share, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, View} from 'react-native';
 import * as UI from "../../screens/UIStyles";
 import type {Activity, Item, List, Url} from "../../types";
 import i18n from '../../i18n/i18n'
@@ -147,7 +147,13 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     send(activity: Activity) {
         const {resource} = activity;
 
-        this.props.navigator.showLightBox({
+        let navigator = this.props.navigator;
+
+        //TODO: rm platform specific rules when [1] is solved.
+        //1: https://github.com/wix/react-native-navigation/issues/1502
+        let show = Platform.OS === 'ios' ? navigator.showLightBox : navigator.showModal;
+        let hide = Platform.OS === 'ios' ? navigator.dismissLightBox : navigator.dismissModal;
+        show({
             screen: 'goodsh.ShareScreen', // unique ID registered with Navigation.registerScreen
             style: {
                 backgroundBlur: "light", // 'dark' / 'light' / 'xlight' / 'none' - the type of blur on the background
@@ -156,23 +162,12 @@ export default class ActivityActionBar extends React.Component<Props, State> {
             passProps:{
                 itemId: resource.id,
                 itemType: resource.type,
+                containerStyle: {backgroundColor: 'white'},
+                onClickClose: () => hide()
                 //navigator: this.props.navigator
             },
+            navigatorStyle: {navBarHidden: true},
         });
-
-
-        // Share.share({
-        //     message: 'BAM: we\'re helping your business with awesome React Native apps',
-        //     url: 'http://bam.tech',
-        //     title: 'Wow, did you see that?'
-        // }, {
-        //     // Android only:
-        //     dialogTitle: 'Share BAM goodness',
-        //     // iOS only:
-        //     excludedActivityTypes: [
-        //         'com.apple.UIKit.activity.PostToTwitter'
-        //     ]
-        // })
     }
 
     buy(activity: Activity) {

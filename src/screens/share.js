@@ -16,7 +16,8 @@ type Props = {
     itemId: Id,
     itemType: ItemType,
     navigator: any,
-    containerStyle:? any
+    containerStyle:? any,
+    onClickClose: () => void
 };
 
 type State = {
@@ -44,7 +45,7 @@ class ShareScreen extends Component<Props, State> {
                 {height, width}]}
             >
                 <TouchableOpacity
-                    onPress={()=>this.props.navigator.dismissLightBox()}
+                    onPress={()=>this.props.onClickClose()}
                     style={{
                         position: 'absolute',
                         top: 0,
