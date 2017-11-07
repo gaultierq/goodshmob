@@ -10,6 +10,7 @@ export const Colors = Object.freeze({
     blue: '#408be7',
     grey1: '#767676',
     grey2: '#AAAAAA',
+    grey3: '#CCCCCC',
     green: '#1ec',
     white: '#fff'
 });

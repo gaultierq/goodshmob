@@ -44,6 +44,8 @@ class HomeScreen extends Component<Props, State> {
 
     static navigatorStyle = UI.NavStyles;
 
+    lineupInput: TextInput;
+
     constructor(props){
         super(props);
         props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
@@ -102,16 +104,19 @@ class HomeScreen extends Component<Props, State> {
             <MainBackground>
                 <View>
                     {pendingItem && !pendingList && <Text style={styles.selectAList}>Sélectionnez une liste:</Text>}
-                    <LineupList
-                        userId={userId}
-                        filter={this.state.searchToken}
-                        onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
-                        onSavingPressed={(saving) => this.onSavingPressed(saving)}
-                        //onAddInLineupPressed={(this.state.pendingItem) ? null : (lineup) => this.addInLineup(lineup)}
-                        canFilterOverItems={() => !this.state.pendingItem}
-                        ListHeaderComponent={this.renderHeader()}
-                        navigator={this.props.navigator}
-                    />
+
+                    {this.renderHeader()}
+
+                    <View>
+                        <LineupList
+                            userId={userId}
+                            filter={this.state.searchToken}
+                            onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
+                            onSavingPressed={(saving) => this.onSavingPressed(saving)}
+                            canFilterOverItems={() => !this.state.pendingItem}
+                            navigator={this.props.navigator}
+                        />
+                    </View>
 
                 </View>
 
@@ -181,7 +186,10 @@ class HomeScreen extends Component<Props, State> {
                     isCreatingLineup: false,
                     newLineupTitle: ""
                 })
-            }, (err) => console.log(err))
+            }, (err) => {
+                this.lineupInput.focus();
+                console.log(err);
+            })
             .then(()=> {
                 this.setState({
                     isAddingLineup: false,
@@ -288,19 +296,21 @@ class HomeScreen extends Component<Props, State> {
 
     //TODO: extract lineup card style
     renderHeader() {
-        //if (this.isSearching()) return null;
-        if (!this.isCurrentUser()) return null;
         if (this.state.isCreatingLineup) {
+            let editable = !this.state.isAddingLineup;
 
+            //FIXME: changing color of the text doesnt work ?!
             return (
                 <View style={[UI.CARD(6), styles.header]}>
                     <TextInput
                         autoFocus
-                        editable={!this.state.isAddingLineup}
-                        style={styles.input}
-
+                        editable={editable}
+                        style={[styles.input, (editable ? {color: "black"} : {color: "grey"})]}
+                        //style={(editable ? {color: "black"} : {color: "grey"})}
                         onSubmitEditing={this.createLineup.bind(this)}
-                        onEndEditing={()=>this.setState({isCreatingLineup: false})}
+                        onEndEditing={()=>{
+                            if (!this.state.isAddingLineup) this.setState({isCreatingLineup: false})
+                        }}
                         value={this.state.newLineupTitle}
                         onChangeText={newLineupTitle => this.setState({newLineupTitle})}
                         placeholder={i18n.t("create_list_controller.placeholder")}
@@ -321,7 +331,7 @@ class HomeScreen extends Component<Props, State> {
                            marginRight: 10
                        }}
                 />
-                <Text style={styles.headerText}>{i18n.t('create_list_controller.title')}</Text>
+                <Text style={[styles.headerText, {color: UI.Colors.grey2}]}>{i18n.t('create_list_controller.title')}</Text>
             </View>
         </TouchableWithoutFeedback>);
     }
@@ -421,7 +431,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     header: {
-        flex: 1,
+        // flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
         padding: 10,
@@ -431,17 +441,20 @@ const styles = StyleSheet.create({
     input:{
         height: 40,
     },
+    colorActive:{
+        color: 'green',
+    },
+    colorInactive:{
+        color: 'black',
+    },
     headerText:{
         flex: 1,
         lineHeight: 40,
-        color: UI.Colors.grey2,
         fontFamily: 'Chivo',
         fontStyle: 'italic',
         fontSize: 18,
     },
     inputContainer:{
-        // height: 40,
-        borderColor: UI.Colors.grey1,
         borderWidth: 0.5,
         borderRadius: 20,
         paddingLeft: 14,

@@ -45,7 +45,6 @@ type Props = {
     filter:? string,
     data?: any,
     onCancel?: ()=>void,
-    ListHeaderComponent?: Node
 };
 
 type State = {
@@ -154,7 +153,6 @@ class LineupListScreen extends Component<Props, State> {
                     data={data}
                     renderItem={this.renderItem.bind(this)}
                     fetchSrc={fetchSrc}
-                    ListHeaderComponent={this.props.ListHeaderComponent}
                 />}
 
                 {emptySearchResult && <Text>Pas de résultat</Text>}
