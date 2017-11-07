@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react';
-import {StyleSheet, Text, TextInput, View} from 'react-native';
+import {Image, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View} from 'react-native';
 
 import {connect} from "react-redux";
 import {MainBackground} from "./UIComponents";
@@ -11,15 +11,12 @@ import type {Id, Saving} from "../types";
 import {Item, List} from "../types"
 import Snackbar from "react-native-snackbar"
 import i18n from '../i18n/i18n'
-import {TP_MARGINS} from "./UIStyles";
+import * as UI from "./UIStyles";
 import CurrentUser from "../CurrentUser"
 import Icon from 'react-native-vector-icons/Ionicons';
-import Modal from 'react-native-modal'
-import Button from 'apsl-react-native-button'
 import {createLineup, saveItem} from "./actions";
 import {SearchBar} from 'react-native-elements'
-import * as UI from "./UIStyles";
-import { Navigation } from 'react-native-navigation';
+import {Navigation} from 'react-native-navigation';
 
 
 let DEEPLINK_SEARCH_TEXT_CHANGED = 'internal/home/search/change';
@@ -31,26 +28,19 @@ type Props = {
 };
 
 type State = {
-    pendingItem: Item,
-    pendingList: List,
-    isCreatingLineup: boolean,
-    modalVisible: boolean,
-    newLineupName: null | string,
-    isSearching: boolean,
-    searchToken:? string
+    pendingItem?: Item,
+    pendingList?: List,
+    isCreatingLineup?: boolean,
+    isSearching?: boolean,
+    searchToken?: string,
+
+    isAddingLineup?: boolean, //request of adding
+    newLineupTitle?: string
 };
 
 class HomeScreen extends Component<Props, State> {
 
-    state = {
-        pendingItem: null,
-        pendingList: null,
-        isCreatingLineup: false,
-        modalVisible: false,
-        newLineupName: null,
-        isSearching: false,
-        searchToken: null
-    };
+    state = {};
 
     static navigatorStyle = UI.NavStyles;
 
@@ -108,7 +98,6 @@ class HomeScreen extends Component<Props, State> {
 
         if (!userId) throw "currentUserId is not defined";
 
-
         return (
             <MainBackground>
                 <View>
@@ -120,6 +109,7 @@ class HomeScreen extends Component<Props, State> {
                         onSavingPressed={(saving) => this.onSavingPressed(saving)}
                         //onAddInLineupPressed={(this.state.pendingItem) ? null : (lineup) => this.addInLineup(lineup)}
                         canFilterOverItems={() => !this.state.pendingItem}
+                        ListHeaderComponent={this.renderHeader()}
                         navigator={this.props.navigator}
                     />
 
@@ -138,9 +128,6 @@ class HomeScreen extends Component<Props, State> {
                     </ActionButton.Item>
                 </ActionButton>
                 }
-
-                {this.renderModal()}
-
             </MainBackground>
         );
     }
@@ -189,60 +176,26 @@ class HomeScreen extends Component<Props, State> {
 
         //HACK. event listener is unsubscribed for some reason...
         setTimeout(()=>navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this)));
-
-
-    }
-
-    renderModal() {
-        return (
-            <Modal
-                isVisible={this.state.modalVisible}
-            >
-                <View style={{
-                    backgroundColor: 'white',
-                    padding: 10,
-                    borderRadius: 4,
-                    borderColor: 'rgba(0, 0, 0, 0.1)',
-                }}>
-                    <View>
-                        <Text>Add a new lineup</Text>
-                        <Text>Be creative ;)</Text>
-
-                        <TextInput
-                            style={{...TP_MARGINS(20), height: 40, borderColor: 'gray', borderWidth: 1}}
-                            onChangeText={(text) => this.setState({newLineupName: text})}
-                            value={this.state.text}
-                        />
-
-                        <Button
-                            isLoading={this.state.isCreatingLineup}
-                            isDisabled={!this.state.newLineupName}
-                            onPress={this.createLineup.bind(this)}>
-                            <Text>Add</Text>
-                        </Button>
-
-                        <Button
-                            onPress={() => {
-                                this.setModalVisible(!this.state.modalVisible)
-                            }}>
-                            <Text>Cancel</Text>
-                        </Button>
-                    </View>
-                </View>
-            </Modal>
-        );
-    }
-
-    setModalVisible(visible) {
-        this.setState({modalVisible: visible});
     }
 
     createLineup() {
-        if (!this.state.newLineupName) return;
-        if (this.state.isCreatingLineup) return;
-        this.setState({isCreatingLineup: true});
-        this.props.dispatch(createLineup(this.state.newLineupName))
-            .then(()=> this.setModalVisible(false)).then(()=> this.setState({isCreatingLineup: false}));
+        if (!this.state.newLineupTitle) return;
+        if (this.state.isAddingLineup) return;
+        this.setState({isAddingLineup: true});
+        this.props.dispatch(createLineup(this.state.newLineupTitle))
+            .then(()=> {
+                this.setState({
+                    isCreatingLineup: false,
+                    newLineupTitle: ""
+                })
+            }, (err) => console.log(err))
+            .then(()=> {
+                this.setState({
+                    isAddingLineup: false,
+                })
+            })
+
+        ;
     }
 
     displayFloatingButton() {
@@ -339,6 +292,50 @@ class HomeScreen extends Component<Props, State> {
                 });
         }
     }
+
+    //TODO: extract lineup card style
+    renderHeader() {
+        //if (this.isSearching()) return null;
+        if (!this.isCurrentUser()) return null;
+        if (this.state.isCreatingLineup) {
+
+            return (
+                <View style={[UI.CARD(), styles.header]}>
+                    <TextInput
+                        autoFocus
+                        editable={!this.state.isAddingLineup}
+                        style={styles.input}
+
+                        onSubmitEditing={this.createLineup.bind(this)}
+                        onEndEditing={()=>this.setState({isCreatingLineup: false})}
+                        value={this.state.newLineupTitle}
+                        onChangeText={newLineupTitle => this.setState({newLineupTitle})}
+                        placeholder={i18n.t("create_list_controller.placeholder")}
+                    />
+                </View>
+            );
+        }
+
+        return (<TouchableWithoutFeedback onPress={() => {this.setState({isCreatingLineup: true})}}>
+            <View style={
+                [UI.CARD(), styles.header]
+            }>
+                <Image source={require('../img/plus.png')}
+                       resizeMode="contain"
+                       style={{
+                           width: 20,
+                           height: 20,
+                           marginRight: 10
+                       }}
+                />
+                <Text>{i18n.t('create_list_controller.title')}</Text>
+            </View>
+        </TouchableWithoutFeedback>);
+    }
+
+    isCurrentUser() {
+        return true;
+    }
 }
 
 
@@ -400,6 +397,10 @@ class HomeNavBar extends Component<NavProps, NavState> {
             link: DEEPLINK_SEARCH_CLOSE
         });
     }
+
+    isSearching() {
+        return this.state.isSearching;
+    }
 }
 
 
@@ -425,6 +426,27 @@ const styles = StyleSheet.create({
     },
     searchInput: {
         backgroundColor: 'white',
+    },
+    header: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 10,
+        marginTop: 10,
+        marginBottom: 10,
+    },
+    input:{
+        height: 40,
+    },
+    inputContainer:{
+        // height: 40,
+        borderColor: UI.Colors.grey1,
+        borderWidth: 0.5,
+        borderRadius: 20,
+        paddingLeft: 14,
+        paddingRight: 14,
+        margin: 10,
+        backgroundColor: 'white'
     },
 });
 

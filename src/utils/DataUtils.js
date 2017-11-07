@@ -2,10 +2,8 @@
 import build from '../../vendors/redux-object'
 import type {Id, MergeOpts} from "../types";
 import * as _ from "lodash";
-import * as Util from "./ModelUtils";
-import dotprop from "dot-prop-immutable"
 import {mergeLists} from "./ModelUtils";
-import type {MergeOptions} from "./ModelUtils";
+import dotprop from "dot-prop-immutable"
 
 //ask backend to sanitize types
 export let sanitizeActivityType = activityType => {

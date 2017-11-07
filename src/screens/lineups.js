@@ -13,7 +13,7 @@ import {
     TouchableWithoutFeedback,
     View
 } from 'react-native';
-
+import type {Node} from 'react';
 
 import {connect} from "react-redux";
 import LineupCell from "./components/LineupCell";
@@ -34,6 +34,7 @@ import {buildData, doDataMergeInState} from "../utils/DataUtils";
 import {CREATE_LINEUP} from "./actions"
 import algoliasearch from 'algoliasearch/reactnative';
 import * as Nav from "./Nav";
+import * as _ from "lodash";
 
 type Props = {
     userId: Id,
@@ -43,14 +44,15 @@ type Props = {
     canFilterOverItems: boolean | ()=>boolean,
     filter:? string,
     data?: any,
-    onCancel?: ()=>void
+    onCancel?: ()=>void,
+    ListHeaderComponent?: Node
 };
 
 type State = {
     isLoading: boolean,
     isLoadingMore: boolean,
     // filter: string,  //filter lists over this search token
-    search: { [string]: SearchState}
+    search: { [string]: SearchState},
 };
 
 //token -> {data, hasMore, isSearching}
@@ -152,6 +154,7 @@ class LineupListScreen extends Component<Props, State> {
                     data={data}
                     renderItem={this.renderItem.bind(this)}
                     fetchSrc={fetchSrc}
+                    ListHeaderComponent={this.props.ListHeaderComponent}
                 />}
 
                 {emptySearchResult && <Text>Pas de résultat</Text>}
@@ -336,33 +339,6 @@ class LineupListScreen extends Component<Props, State> {
         return !!this.state.filter;
     }
 
-    //TODO: extract lineup card style
-    renderHeader() {
-        if (this.isSearching()) return null;
-        return <TouchableWithoutFeedback onPress={() => {this.setModalVisible(true)}}>
-            <View style={
-                [UI.CARD(),{
-                    flex: 1,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    padding: 10,
-                    marginTop: 10,
-                    marginBottom: 10,
-                }]
-            }>
-                <Image source={require('../img/plus.png')}
-                       resizeMode="contain"
-                       style={{
-                           width: 20,
-                           height: 20,
-                       }}
-                />
-                <Text>{i18n.t('create_list_controller.title')}</Text>
-            </View>
-        </TouchableWithoutFeedback>
-            ;
-    }
-
     //render a lineup row
     renderItem({item}) {
 
@@ -404,7 +380,7 @@ class LineupListScreen extends Component<Props, State> {
             )
         }
 
-        let disabled = /*item.user.id*/userId !== CurrentUser.id;
+        let disabled = !this.isCurrentUser();
 
         let swipeBtns = [{
             text: 'Delete',
@@ -424,23 +400,13 @@ class LineupListScreen extends Component<Props, State> {
         )
 
     }
+
+    isCurrentUser() {
+        return this.props.userId === CurrentUser.id;
+    }
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    searchContainer: {
-        backgroundColor: 'transparent',
-    },
-    searchInput: {
-        backgroundColor: 'white',
-        borderWidth: 0.5,
-        // borderRadius: 30,
-        // padding: 20,
-        borderColor: UI.Colors.grey1
-    },
-});
+
 
 const mapStateToProps = (state, ownProps) => ({
     data: state.data,
@@ -486,15 +452,13 @@ const reducer = (() => {
                 break;
             }
             case CREATE_LINEUP.success():
-                let payload = action.payload;
-                let {id, type} = payload.data;
-                let newItem = {id, type};
+                let userId = CurrentUser.id;
+                let {id, type} = action.payload.data;
+                let path = `users.${userId}.relationships.lists.data`;
+                let goodshboxId = _.get(state, `users.${userId}.relationships.goodshbox.data.id`, null);
+                state = doDataMergeInState(state, path, [{id, type}], {afterId: goodshboxId});
 
-                let current = state.list;
-                let list = [current[0], newItem, ...current.slice(1)];
-
-
-                state = state.merge({list});
+                //state = state.merge({list});
                 break;
         }
 
@@ -502,6 +466,28 @@ const reducer = (() => {
     }
 })();
 
+
+// let path = `${activityType}.${activityId}.relationships.comments.data`;
+// state = doDataMergeInState(state, path, [{id, type}], {reverse: true});
+// break;
+
 let screen = connect(mapStateToProps)(LineupListScreen);
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    searchContainer: {
+        backgroundColor: 'transparent',
+    },
+    searchInput: {
+        backgroundColor: 'white',
+        borderWidth: 0.5,
+        // borderRadius: 30,
+        // padding: 20,
+        borderColor: UI.Colors.grey1
+    },
+
+});
 
 export {reducer, screen};
