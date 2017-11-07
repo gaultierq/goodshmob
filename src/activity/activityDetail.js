@@ -5,7 +5,7 @@ import {ActivityIndicator, FlatList, ScrollView, StyleSheet, Text, TouchableWith
 import * as actions from './actions'
 import {connect} from "react-redux";
 import ActivityBody from "./components/ActivityBody";
-import {buildNonNullData} from "../utils/DataUtils";
+import {buildData, buildNonNullData} from "../utils/DataUtils";
 import {MainBackground} from "../screens/UIComponents";
 import ActivityDescription from "./components/ActivityDescription";
 import type {Activity, ActivityType, Id} from "../types";
@@ -24,6 +24,7 @@ type Props = {
 };
 
 type State = {
+    isLoading?: boolean
 };
 
 
@@ -32,36 +33,39 @@ class ActivityDetailScreen extends Component<Props, State> {
 
     state = {};
 
-    constructor(){
-        super();
-    }
 
     componentDidMount() {
-        //this.activity = this.makeActivity();
         this.load();
     }
 
-
     load() {
-        this.props.dispatch(actions.fetchActivityAndRelated(this.props.activityId, this.props.activityType));
+        if (this.state.isLoading) return;
+        this.setState({isLoading: true});
+        this.props.dispatch(
+            actions
+                .fetchActivityAndRelated(this.props.activityId, this.props.activityType)
+        ).catch((err)=>console.log(err))
+            .then(this.setState({isLoading: false}))
     }
 
 
     render() {
         let activity = this.makeActivity();
 
-        let showLoader = !activity && this.isLoading();
-        let relatedActivities = activity.relatedActivities;
+        let showLoader = !activity && this.state.isLoading;
 
         return (
             <MainBackground>
-                <ScrollView>
+                <ScrollView contentContainerStyle={{flexGrow: 1}}>
+                    <ActivityIndicator
+                        animating = {showLoader}
+                        size = "large"
+                        style={styles.loader}
+                    />
                     <View style={styles.container}>
-                        <ActivityIndicator
-                            animating = {showLoader}
-                            size = "small"
-                        />
-                        { activity && <View>
+
+                        { activity &&
+                        <View>
                             <View style={[UI.CARD(), {marginBottom: 40}]}>
                                 <ActivityBody
                                     activity={activity}
@@ -85,7 +89,7 @@ class ActivityDetailScreen extends Component<Props, State> {
                             {this.renderStuff(activity)}
 
                             <FlatList
-                                data={relatedActivities}
+                                data={activity.relatedActivities}
                                 renderItem={this.renderRelatedActivities.bind(this)}
                                 keyExtractor={(item, index) => item.id}
                             />
@@ -165,18 +169,18 @@ class ActivityDetailScreen extends Component<Props, State> {
 
 
 
-    isLoading() {
-        return false;//!!this.props.request.isLoading[actionTypes.FETCH_ACTIVITY.name()];
-    }
-
     makeActivity() {
-        return this.props.activity || buildNonNullData(this.props.data, this.props.activityType, this.props.activityId);
+        return buildData(this.props.data, this.props.activityType, this.props.activityId);
     }
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    loader: {
+        top: "50%",
+        bottom: "50%",
     }
 });
 

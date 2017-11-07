@@ -136,20 +136,10 @@ class LineupListScreen extends Component<Props, State> {
 
         return (
             <View>
-                {/*<SearchBar*/}
-                    {/*lightTheme*/}
-                    {/*round*/}
-                    {/*onChangeText={this.onSearchInputChange.bind(this)}*/}
-                    {/*placeholder={i18n.t('lineups.search.placeholder')}*/}
-                    {/*clearIcon={{color: '#86939e'}}*/}
-                    {/*containerStyle={styles.searchContainer}*/}
-                    {/*inputStyle={styles.searchInput}*/}
-                    {/*autoCapitalize='none'*/}
-                    {/*autoCorrect={false}*/}
-                {/*/>*/}
 
                 {
-                    isSearchMode && <FlatList
+                    isSearchMode &&
+                    <FlatList
                         data={searchResult}
                         renderItem={this.renderItem.bind(this)}
                         keyExtractor={(item) => item.id}
@@ -157,11 +147,11 @@ class LineupListScreen extends Component<Props, State> {
                     />
                 }
 
-                {!isSearchMode && <Feed
+                {!isSearchMode &&
+                <Feed
                     data={data}
                     renderItem={this.renderItem.bind(this)}
                     fetchSrc={fetchSrc}
-                    //style={{marginBottom: 120, minHeight: 200}} //FIXME: this is a hack.
                 />}
 
                 {emptySearchResult && <Text>Pas de résultat</Text>}

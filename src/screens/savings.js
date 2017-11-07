@@ -78,31 +78,18 @@ class SavingsScreen extends Component<Props, State> {
     renderItem(item, lineup) {
         let saving: Saving = item.item;
 
-        let disabled = lineup.user.id !== CurrentUser.id;
-
-        let swipeBtns = [{
-            text: 'Delete',
-            backgroundColor: 'red',
-            underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-            onPress: () => { this.deleteSaving(saving) }
-        }];
-
         if (!saving['built']) return null;
 
         return (
-            <Swipeout right={swipeBtns}
-                      autoClose={true}
-                      backgroundColor= 'transparent'
-                      disabled={disabled}
-            >
-                <ActivityCell
-                    activityId={saving.id}
-                    activityType={saving.type}
-                    skipLineup={true}
-                    skipDescription={true}
-                    navigator={this.props.navigator}
-                />
-            </Swipeout>)
+            <ActivityCell
+                activityId={saving.id}
+                activityType={saving.type}
+                skipLineup={true}
+                skipDescription={true}
+                onPressItem={() => this.navToSavingDetail(saving)}
+                navigator={this.props.navigator}
+            />
+        )
     }
 
     deleteSaving(saving) {

@@ -41,11 +41,12 @@ class ActivityCell extends React.Component<Props, State> {
                 marginBottom: 10
             }}>
                 {
-                    !skipDescription && <ActivityDescription
-                    activity={activity}
-                    navigator={this.props.navigator}
-                    skipLineup={!!skipLineup}
-                />
+                    !skipDescription &&
+                    <ActivityDescription
+                        activity={activity}
+                        navigator={this.props.navigator}
+                        skipLineup={!!skipLineup}
+                    />
                 }
 
                 <View style={UI.CARD()}>
