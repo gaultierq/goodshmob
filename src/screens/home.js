@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react';
-import {Image, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View} from 'react-native';
+import {Image, Platform, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View} from 'react-native';
 
 import {connect} from "react-redux";
 import {MainBackground} from "./UIComponents";
@@ -13,7 +13,6 @@ import Snackbar from "react-native-snackbar"
 import i18n from '../i18n/i18n'
 import * as UI from "./UIStyles";
 import CurrentUser from "../CurrentUser"
-import Icon from 'react-native-vector-icons/Ionicons';
 import {createLineup, saveItem} from "./actions";
 import {SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
@@ -331,13 +330,15 @@ class HomeScreen extends Component<Props, State> {
                            marginRight: 10
                        }}
                 />
-                <Text style={[styles.headerText, {color: UI.Colors.grey2}]}>{i18n.t('create_list_controller.title')}</Text>
+                <Text
+                    style={[
+                        styles.headerText,
+                        {color: UI.Colors.grey2},
+                        Platform.OS === 'ios'? {lineHeight: 40} : {height: 40}
+                        ]}
+                >{i18n.t('create_list_controller.title')}</Text>
             </View>
         </TouchableWithoutFeedback>);
-    }
-
-    isCurrentUser() {
-        return true;
     }
 }
 
@@ -440,6 +441,10 @@ const styles = StyleSheet.create({
     },
     input:{
         height: 40,
+        width: "100%",
+        fontFamily: 'Chivo',
+        fontSize: 18,
+
     },
     colorActive:{
         color: 'green',
@@ -449,13 +454,11 @@ const styles = StyleSheet.create({
     },
     headerText:{
         flex: 1,
-        lineHeight: 40,
+        textAlignVertical: 'center',
         fontFamily: 'Chivo',
-        fontStyle: 'italic',
         fontSize: 18,
     },
     inputContainer:{
-        borderWidth: 0.5,
         borderRadius: 20,
         paddingLeft: 14,
         paddingRight: 14,
