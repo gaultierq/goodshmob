@@ -30,10 +30,10 @@ type Props = {
 type State = {
     pendingItem?: Item,
     pendingList?: List,
-    isCreatingLineup?: boolean,
     isSearching?: boolean,
     searchToken?: string,
 
+    isCreatingLineup?: boolean, //create lineup mode
     isAddingLineup?: boolean, //request of adding
     newLineupTitle?: string
 };
@@ -117,16 +117,9 @@ class HomeScreen extends Component<Props, State> {
 
                 {this.displayFloatingButton() &&
                 <ActionButton
-                    buttonColor="rgba(231,76,60,1)"
-                    // onPress={() => { this.onFloatingButtonPressed() }}
-                >
-                    <ActionButton.Item buttonColor='#3498db' title="Ajouter quelquechose" onPress={this.onFloatingButtonPressed.bind(this)}>
-                        <Icon name="md-notifications-off" style={styles.actionButtonIcon} />
-                    </ActionButton.Item>
-                    <ActionButton.Item buttonColor='#1abc9c' title="Ajouter une liste" onPress={() => this.setModalVisible(true)}>
-                        <Icon name="md-done-all" style={styles.actionButtonIcon} />
-                    </ActionButton.Item>
-                </ActionButton>
+                    buttonColor={UI.Colors.green}
+                    onPress={() => { this.onFloatingButtonPressed() }}
+                />
                 }
             </MainBackground>
         );
@@ -199,7 +192,7 @@ class HomeScreen extends Component<Props, State> {
     }
 
     displayFloatingButton() {
-        return this.state.pendingItem === null;
+        return !this.state.pendingItem && !this.state.isCreatingLineup;
     }
 
     addInLineup(lineup: List) {
@@ -300,7 +293,7 @@ class HomeScreen extends Component<Props, State> {
         if (this.state.isCreatingLineup) {
 
             return (
-                <View style={[UI.CARD(), styles.header]}>
+                <View style={[UI.CARD(6), styles.header]}>
                     <TextInput
                         autoFocus
                         editable={!this.state.isAddingLineup}
@@ -328,7 +321,7 @@ class HomeScreen extends Component<Props, State> {
                            marginRight: 10
                        }}
                 />
-                <Text>{i18n.t('create_list_controller.title')}</Text>
+                <Text style={styles.headerText}>{i18n.t('create_list_controller.title')}</Text>
             </View>
         </TouchableWithoutFeedback>);
     }
@@ -437,6 +430,14 @@ const styles = StyleSheet.create({
     },
     input:{
         height: 40,
+    },
+    headerText:{
+        flex: 1,
+        lineHeight: 40,
+        color: UI.Colors.grey2,
+        fontFamily: 'Chivo',
+        fontStyle: 'italic',
+        fontSize: 18,
     },
     inputContainer:{
         // height: 40,
