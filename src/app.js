@@ -151,7 +151,7 @@ export default class App {
         //TODO: use navigation to resolve the current screen
         if (this.logged !== logged) {
             this.logged = logged;
-            //this.startApp(logged);
+            this.startApp(logged);
         }
         if (!this.started) {
             this.started = true;
