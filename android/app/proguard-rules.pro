@@ -75,3 +75,9 @@
 
 -keep class com.facebook.react.devsupport.** { *; }
 -dontwarn com.facebook.react.devsupport.**
+
+# Google Play Services
+-keep class com.google.android.gms.** { *; }
+-dontwarn com.google.android.gms.**
+
+-keep class com.google.firebase.auth.** { *; }

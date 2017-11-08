@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "246122737219",
+    "firebase_url": "https://goodshit-staging.firebaseio.com",
+    "project_id": "goodshit-staging",
+    "storage_bucket": "goodshit-staging.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:246122737219:android:85706eec1f52ebb9",
+        "android_client_info": {
+          "package_name": "it.goodsh.mob.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "246122737219-oas3e00l3fbbumtab8vrsf470gea1pdn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVsEe5OTKLVGKMh8bMbVzYLQ8BCKStgKs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:246122737219:android:63a5191905cdc64f",
+        "android_client_info": {
+          "package_name": "it.goodsh.mob.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "246122737219-oas3e00l3fbbumtab8vrsf470gea1pdn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVsEe5OTKLVGKMh8bMbVzYLQ8BCKStgKs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

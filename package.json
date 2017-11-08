@@ -32,6 +32,7 @@
 		"react-native-elements": "^0.18.1",
 		"react-native-fbsdk": "github:facebook/react-native-fbsdk#065507a",
 		"react-native-fetch-polyfill": "^1.1.2",
+		"react-native-firebase": "^3.1.0",
 		"react-native-global-props": "^1.1.3",
 		"react-native-i18n": "^2.0.9",
 		"react-native-modal": "^4.1.1",

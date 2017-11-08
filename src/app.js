@@ -21,6 +21,7 @@ import * as CurrentUser from './CurrentUser'
 import testScreen from "./testScreen"
 import {Client} from 'bugsnag-react-native';
 import {setCustomText, setCustomTextInput} from 'react-native-global-props';
+import * as notification from './notification';
 
 const initialState = Immutable({
     rehydrated: false,
@@ -116,6 +117,7 @@ registerScreens(store, Provider);
 export default class App {
 
     logged = null;
+    started;
 
     constructor() {
         // since react-redux only works on components, we need to subscribe this class manually
@@ -149,7 +151,12 @@ export default class App {
         //TODO: use navigation to resolve the current screen
         if (this.logged !== logged) {
             this.logged = logged;
-            this.startApp(logged);
+            //this.startApp(logged);
+        }
+        if (!this.started) {
+            this.started = true;
+            notification.load();
+
         }
     }
 
