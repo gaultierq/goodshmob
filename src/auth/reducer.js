@@ -49,7 +49,8 @@ export function deviceReducer(state = Immutable({}), action) {
         case types.SAVE_DEVICE.success():
             let currentDeviceId = action.payload.data.id;
             let attr = action.payload.data.attributes;
-            let device = {currentDeviceId, ...attr};
+            let {fcmToken, ...attr2} = attr;
+            let device = {currentDeviceId, fcmToken, ...attr2};
             state = state.merge(device);
             break;
     }

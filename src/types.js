@@ -108,7 +108,25 @@ export type Place = Item & {
 }
 
 export type Device = {
-    fcmToken: string
+    fcmToken: string,
+    uniqueId:string,
+    manufacturer:string,
+    brand:string,
+    model:string,
+    deviceId:string,
+    systemName:string,
+    systemVersion:string,
+    bundleId:string,
+    buildNumber:string,
+    version:string,
+    readableVersion:string,
+    deviceName:string,
+    userAgent:string,
+    deviceLocale:string,
+    deviceCountry:string,
+    timezone:string,
+    isEmulator: boolean,
+    isTablet: boolean
 }
 
 

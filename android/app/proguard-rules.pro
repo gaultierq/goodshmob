@@ -80,4 +80,8 @@
 -keep class com.google.android.gms.** { *; }
 -dontwarn com.google.android.gms.**
 
--keep class com.google.firebase.auth.** { *; }
+#-keep class com.google.firebase.auth.** { *; }
+#-keep class com.google.firebase.** { *; }
+-dontwarn com.google.firebase.**
+
+-dontwarn io.invertase.firebase.messaging.**

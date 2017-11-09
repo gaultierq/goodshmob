@@ -255,16 +255,17 @@ dependencies {
     compile project(':react-native-device-info')
 
     // Firebase dependencies
-    compile "com.google.android.gms:play-services-base:11.4.2"
-    compile "com.google.firebase:firebase-core:11.4.2"
-    compile "com.google.firebase:firebase-messaging:11.4.2"
+    compile "com.google.android.gms:play-services-base:11.6.0"
+    compile "com.google.firebase:firebase-core:11.6.0"
+    compile "com.google.firebase:firebase-messaging:11.6.0"
+
 
     //FIXME:
-    compile project(':react-native-firebase')
+//    compile project(':react-native-firebase')
 
-//    compile(project(':react-native-firebase')) {
-//        transitive = false
-//    }
+    compile(project(':react-native-firebase')) {
+        transitive = false
+    }
     compile project(':bugsnag-react-native')
     compile project(':react-native-snackbar')
     compile project(':react-native-code-push')

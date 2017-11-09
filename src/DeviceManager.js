@@ -4,6 +4,10 @@ import RNFirebase from 'react-native-firebase'
 import type {Device} from "./types";
 import * as _ from "lodash";
 import * as appActions from "./auth/actions";
+import * as DeviceInfo from 'react-native-device-info'
+//import {toUppercase} from "./utils/StringUtils";
+import * as StringUtils from "./utils/StringUtils"
+
 
 let instance: DeviceManager;
 
@@ -57,5 +61,32 @@ export function generateCurrentDevice(): Promise<Device> {
     let firebase = RNFirebase.app();
     let messaging = firebase.messaging();
 
-    return messaging.getToken().then(fcmToken=>{return {fcmToken}});
+    const result = {};
+
+    let adapt = (fields, prepend) => {
+        fields.reduce((result, f) => {
+            let toUppercase = StringUtils.toUppercase(f);
+            let fx = DeviceInfo[prepend + toUppercase];
+            if (!fx) throw "not found:" + fx;
+            try {
+                result[f] = fx();
+            }
+            catch(err) {
+                console.warn(err);
+            }
+            return result;
+        }, result);
+    };
+    adapt([
+        "uniqueID","manufacturer","brand","model","deviceId","systemName",
+        "systemVersion","bundleId","buildNumber","version","readableVersion",
+        "deviceName","userAgent","deviceLocale","deviceCountry","timezone"
+    ], "get");
+    adapt(["emulator","tablet"], "is");
+
+    return messaging.getToken().then(fcmToken=>{
+        result.fcmToken = fcmToken;
+        console.info(`device manager: generated device:${JSON.stringify(result)}`);
+        return result
+    });
 }
