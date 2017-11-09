@@ -86,6 +86,10 @@ export function generateCurrentDevice(): Promise<Device> {
 
     return messaging.getToken().then(fcmToken=>{
         result.fcmToken = fcmToken;
+
+        //temp, so backend is has the token
+        result.token = fcmToken;
+
         console.info(`device manager: generated device:${JSON.stringify(result)}`);
         return result
     });
