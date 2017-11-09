@@ -8,6 +8,7 @@ import {connect} from 'react-redux';
 import {LoginManager} from 'react-native-fbsdk';
 import i18n from '../i18n/i18n'
 import { AccessToken } from "react-native-fbsdk";
+import {generateCurrentDevice} from "../DeviceManager";
 
 type Props = {
 };
@@ -78,8 +79,9 @@ class Login extends Component<Props, State> {
                                 console.info("facebook token:" + token);
                                 this.props
                                     .dispatch(appActions.login(token))
-                                    .then(() => this.setState({loginInProgress: false}))
-
+                                    .then((user) => {
+                                        this.setState({loginInProgress: false});
+                                    })
                             }
                         )
                     }
@@ -90,7 +92,7 @@ class Login extends Component<Props, State> {
                     this.setState({loginInProgress: false});
                 }
             )
-            ;
+        ;
     }
 }
 

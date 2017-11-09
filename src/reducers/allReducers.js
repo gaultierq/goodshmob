@@ -5,7 +5,7 @@ import {reducer as savings} from '../screens/savings';
 import {reducer as search} from '../screens/search';
 import {reducer as comments} from '../screens/comments';
 import {reducer as lineups} from '../screens/lineups';
-import auth from '../auth/reducer';
+import {authReducer as auth, deviceReducer as device} from '../auth/reducer';
 
 function reduceReducers(...reducers) {
     return (previous, current) =>
@@ -28,5 +28,6 @@ export {
     data,
     network,
     auth,
+    device,
     search,
 };

@@ -2,13 +2,13 @@ import Immutable from 'seamless-immutable';
 import * as types from "./actionTypes";
 import {API_AUTH} from "../utils/Api";
 
-const initialState = Immutable({
-    currentUserId: '',
-    client: '',
-    uid: '',
-    accessToken: ''
-
-});
+// const initialState = Immutable({
+//     currentUserId: '',
+//     client: '',
+//     uid: '',
+//     accessToken: ''
+//
+// });
 
 export function createWithReducers(appReducers) {
     return (state, action) => {
@@ -22,7 +22,7 @@ export function createWithReducers(appReducers) {
     }
 }
 
-export default function (state = initialState, action) {
+export function authReducer(state = Immutable({}), action) {
 
     switch (action.type) {
         case types.USER_LOGIN.success():
@@ -37,7 +37,20 @@ export default function (state = initialState, action) {
             state = state.merge({client, uid, accessToken, currentUserId});
             break;
         case types.USER_LOGOUT:
-            state = initialState;
+            state = Immutable({});
+            break;
+    }
+    return state;
+}
+
+export function deviceReducer(state = Immutable({}), action) {
+
+    switch (action.type) {
+        case types.SAVE_DEVICE.success():
+            let currentDeviceId = action.payload.data.id;
+            let attr = action.payload.data.attributes;
+            let device = {currentDeviceId, ...attr};
+            state = state.merge(device);
             break;
     }
     return state;

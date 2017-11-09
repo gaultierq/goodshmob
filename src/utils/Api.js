@@ -28,9 +28,9 @@ class Api {
     headers() {
         if (!this.store) return null; //tests
         let state = this.store.getState();
-        let auth = state.auth;
 
-        let {accessToken, client, uid} = auth;
+        let {accessToken, client, uid} = state.auth;
+        let {currentDeviceId} = state.device;
 
         let headers = {
             'Accept': 'application/json',
@@ -41,6 +41,7 @@ class Api {
         if (client) headers['Client'] = client;
         if (uid) headers['Uid'] = uid;
         if (accessToken) headers['Access-Token'] = accessToken;
+        if (currentDeviceId) headers['DeviceID'] = currentDeviceId;
         return headers;
     }
 

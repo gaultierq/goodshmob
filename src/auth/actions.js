@@ -3,19 +3,7 @@
 import * as Api from "../utils/Api";
 import * as actionTypes from "./actionTypes"
 import {LoginManager as FacebookLoginManager} from "react-native-fbsdk";
-// import {setCustomText} from 'react-native-global-props';
-
-// export function onAppReady() {
-//     //defining default font
-//     setCustomText({
-//         style: {
-//             fontFamily: 'Thonburi',
-//             color: 'black'
-//         }
-//     });
-//
-//     return {type: "APP_INITIALIZED"}
-// }
+import type {Device} from "../types";
 
 export function logout() {
     FacebookLoginManager.logOut();
@@ -28,4 +16,12 @@ export function login(token: string) {
         .withRoute(`auth/facebook/generate_token`)
         .withBody({auth: {access_token: token}})
         .disptachForAction2(actionTypes.USER_LOGIN);
+}
+
+export function saveDevice({fcmToken}: Device) {
+    return new Api.Call()
+        .withMethod('POST')
+        .withRoute(`devices`)
+        .withBody({device: {token: fcmToken}})
+        .disptachForAction2(actionTypes.SAVE_DEVICE);
 }

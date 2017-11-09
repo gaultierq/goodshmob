@@ -22,6 +22,7 @@ import testScreen from "./testScreen"
 import {Client} from 'bugsnag-react-native';
 import {setCustomText, setCustomTextInput} from 'react-native-global-props';
 import * as notification from './notification';
+import * as DeviceManager from "./DeviceManager";
 
 const initialState = Immutable({
     rehydrated: false,
@@ -103,6 +104,7 @@ persistStore(store,
 
 Api.init(store);
 CurrentUser.init(store);
+DeviceManager.init(store);
 
 
 const bugsnag = new Client();

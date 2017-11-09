@@ -9,7 +9,7 @@ export function load() {
 
     messaging.getToken().then((token)=>{
         console.info("fcm:token="+token);
-    }, (err) => console.log(err))
+    }, (err) => console.log(err));
 
     messaging.onMessage((message)=>console.log("message received from fcm: "+ JSON.stringify(message)));
 

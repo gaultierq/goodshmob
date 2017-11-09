@@ -107,5 +107,9 @@ export type Place = Item & {
     location: any
 }
 
+export type Device = {
+    fcmToken: string
+}
+
 
 export type MergeOpts = MergeOptions<string>
