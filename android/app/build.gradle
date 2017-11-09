@@ -252,6 +252,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-device-info')
 
     // Firebase dependencies
     compile "com.google.android.gms:play-services-base:11.4.2"
