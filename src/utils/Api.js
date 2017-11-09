@@ -41,7 +41,7 @@ class Api {
         if (client) headers['Client'] = client;
         if (uid) headers['Uid'] = uid;
         if (accessToken) headers['Access-Token'] = accessToken;
-        if (currentDeviceId) headers['DeviceID'] = currentDeviceId;
+        if (currentDeviceId) headers['Device-ID'] = currentDeviceId;
         return headers;
     }
 
