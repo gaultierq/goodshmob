@@ -31,7 +31,7 @@ import CurrentUser from "../CurrentUser"
 import {actions as savingsActions} from "./savings"
 import ApiAction from "../utils/ApiAction";
 import {buildData, doDataMergeInState} from "../utils/DataUtils";
-import {CREATE_LINEUP} from "./actions"
+import {CREATE_LINEUP, SAVE_ITEM} from "./actions"
 import algoliasearch from 'algoliasearch/reactnative';
 import * as Nav from "./Nav";
 import * as _ from "lodash";
@@ -450,6 +450,9 @@ const reducer = (() => {
                 state = doDataMergeInState(state, path, action.payload.data);
                 break;
             }
+
+
+            //FIXME: this does not belong here !
             case CREATE_LINEUP.success(): {
                 let userId = CurrentUser.id;
                 let {id, type} = action.payload.data;
@@ -460,6 +463,8 @@ const reducer = (() => {
                 //state = state.merge({list});
                 break;
             }
+
+            //FIXME: this does not belong here !
             case DELETE_LINEUP.success(): {
                 let userId = CurrentUser.id;
                 let {lineupId} = action.options;
@@ -467,6 +472,20 @@ const reducer = (() => {
                 let lists = _.get(state, path, null);
                 lists = _.filter(lists, (l) => l.id !== lineupId);
                 state = dotprop.set(state, path, lists);
+                break;
+            }
+
+            //FIXME: this does not belong here !
+            case SAVE_ITEM.success(): {
+                let {id, type} = action.payload.data;
+                let {lineupId} = action.options;
+                let path = `lists.${lineupId}.relationships.savings.data`;
+                let savings = _.get(state, path, null);
+                if (savings) {
+                    savings = savings.slice();
+                    savings.splice(0, 0, {id, type})
+                    state = dotprop.set(state, path, savings);
+                }
                 break;
             }
         }

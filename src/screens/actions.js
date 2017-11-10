@@ -22,7 +22,7 @@ export function saveItem(itemId: Id, lineupId: Id, privacy = 0, description = ''
         .withBody(body)
         .addQuery({'include': '*.*'});
 
-    return call.disptachForAction2(SAVE_ITEM);
+    return call.disptachForAction2(SAVE_ITEM, {lineupId});
 }
 
 export function createLineup(listName: string) {
