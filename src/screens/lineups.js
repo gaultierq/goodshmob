@@ -35,6 +35,7 @@ import {CREATE_LINEUP} from "./actions"
 import algoliasearch from 'algoliasearch/reactnative';
 import * as Nav from "./Nav";
 import * as _ from "lodash";
+import dotprop from "dot-prop-immutable"
 
 type Props = {
     userId: Id,
@@ -433,7 +434,7 @@ const actions = (() => {
                 .withMethod('DELETE')
                 .withRoute(`lists/${lineup.id}`);
 
-            return call.disptachForAction(DELETE_LINEUP);
+            return call.disptachForAction2(DELETE_LINEUP, {lineupId: lineup.id});
         },
     };
 })();
@@ -449,7 +450,7 @@ const reducer = (() => {
                 state = doDataMergeInState(state, path, action.payload.data);
                 break;
             }
-            case CREATE_LINEUP.success():
+            case CREATE_LINEUP.success(): {
                 let userId = CurrentUser.id;
                 let {id, type} = action.payload.data;
                 let path = `users.${userId}.relationships.lists.data`;
@@ -458,6 +459,16 @@ const reducer = (() => {
 
                 //state = state.merge({list});
                 break;
+            }
+            case DELETE_LINEUP.success(): {
+                let userId = CurrentUser.id;
+                let {lineupId} = action.options;
+                let path = `users.${userId}.relationships.lists.data`;
+                let lists = _.get(state, path, null);
+                lists = _.filter(lists, (l) => l.id !== lineupId);
+                state = dotprop.set(state, path, lists);
+                break;
+            }
         }
 
         return state;
