@@ -2,6 +2,7 @@
 #import <CodePush/CodePush.h>
 #import <React/RCTBundleURLProvider.h>
 
+#import <Firebase.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <BugsnagReactNative/BugsnagReactNative.h>
 
@@ -56,7 +57,8 @@
                            didFinishLaunchingWithOptions:launchOptions];
   
   [BugsnagReactNative start];
-
+  [FIRApp configure];
+  
   return YES;
 }
 
