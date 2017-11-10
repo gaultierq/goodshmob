@@ -24,11 +24,15 @@ import {setCustomText, setCustomTextInput} from 'react-native-global-props';
 import * as notification from './notification';
 import * as DeviceManager from "./DeviceManager";
 
-const initialState = Immutable({
-    rehydrated: false,
+
+let hydrated = false;
+
+//this is shit
+const initialState = () => Immutable({
+    rehydrated: hydrated,
 });
 
-const appReducer = (state = initialState, action) => {
+const appReducer = (state = initialState(), action) => {
     switch (action.type) {
         case REHYDRATE:
             return state.merge({rehydrated: true})
@@ -53,7 +57,7 @@ const store = createStore(
     )
 );
 
-let hydrated = false;
+
 
 // begin periodically persisting the store
 persistStore(store,

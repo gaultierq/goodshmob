@@ -2,14 +2,6 @@ import Immutable from 'seamless-immutable';
 import * as types from "./actionTypes";
 import {API_AUTH} from "../utils/Api";
 
-// const initialState = Immutable({
-//     currentUserId: '',
-//     client: '',
-//     uid: '',
-//     accessToken: ''
-//
-// });
-
 export function createWithReducers(appReducers) {
     return (state, action) => {
         switch (action.type) {
@@ -35,9 +27,6 @@ export function authReducer(state = Immutable({}), action) {
             let accessToken = resp.headers.get('Access-Token');
 
             state = state.merge({client, uid, accessToken, currentUserId});
-            break;
-        case types.USER_LOGOUT:
-            state = Immutable({});
             break;
     }
     return state;
