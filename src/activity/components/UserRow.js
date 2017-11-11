@@ -27,7 +27,7 @@ export default class UserRow extends React.Component<Props, State> {
         let imageDim = small ? 20 : 30;
 
 
-        return <View style={[style, {flex: 1, flexDirection: 'row'}]}>
+        return <View style={[style, {flexDirection: 'row'}]}>
             <Image
                 source={{uri: user ? user.image: ""}}
                 style={{
