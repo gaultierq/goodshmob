@@ -1,5 +1,6 @@
 // @flow
 
+import type {Node} from 'react';
 import React, {Component} from 'react';
 import {
     ActivityIndicator,
@@ -13,13 +14,11 @@ import {
     TouchableWithoutFeedback,
     View
 } from 'react-native';
-import type {Node} from 'react';
 
 import {connect} from "react-redux";
 import LineupCell from "./components/LineupCell";
 import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
-import i18n from '../i18n/i18n'
 import * as UI from "../screens/UIStyles";
 import {SearchBar} from 'react-native-elements'
 import Fuse from 'fuse.js'
@@ -46,6 +45,7 @@ type Props = {
     filter:? string,
     data?: any,
     onCancel?: ()=>void,
+    ListHeaderComponent?: Node
 };
 
 type State = {
@@ -154,6 +154,7 @@ class LineupListScreen extends Component<Props, State> {
                     data={data}
                     renderItem={this.renderItem.bind(this)}
                     fetchSrc={fetchSrc}
+                    ListHeaderComponent={this.props.ListHeaderComponent}
                 />}
 
                 {emptySearchResult && <Text>Pas de résultat</Text>}

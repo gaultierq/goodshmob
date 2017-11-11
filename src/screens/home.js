@@ -39,7 +39,7 @@ type State = {
 
 class HomeScreen extends Component<Props, State> {
 
-    state = {};
+    state : State = {};
 
     static navigatorStyle = UI.NavStyles;
 
@@ -89,31 +89,24 @@ class HomeScreen extends Component<Props, State> {
 
     render() {
 
-        const {pendingItem, pendingList} = this.state;
-
-
         this.renderNav();
-
-
-        let userId = CurrentUser.id;
-
-        if (!userId) throw "currentUserId is not defined";
 
         return (
             <MainBackground>
                 <View>
-                    {pendingItem && !pendingList && <Text style={styles.selectAList}>Sélectionnez une liste:</Text>}
+                    {/*{this.isSelectingAList() && <Text style={styles.selectAList}>Sélectionnez une liste:</Text>}*/}
 
-                    {this.renderHeader()}
+                    {/*{this.renderHeader()}*/}
 
                     <View>
                         <LineupList
-                            userId={userId}
+                            userId={CurrentUser.id}
                             filter={this.state.searchToken}
                             onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
                             onSavingPressed={(saving) => this.onSavingPressed(saving)}
                             canFilterOverItems={() => !this.state.pendingItem}
                             navigator={this.props.navigator}
+                            ListHeaderComponent={this.renderHeader()}
                         />
                     </View>
 
@@ -129,19 +122,25 @@ class HomeScreen extends Component<Props, State> {
         );
     }
 
+    isSelectingAList() {
+        const {pendingItem, pendingList} = this.state;
+        return pendingItem && !pendingList;
+    }
+
     renderNav() {
         const {navigator} = this.props;
-        let leftButtons, rightButtons, navBarCustomView;
+        let title, leftButtons, rightButtons, navBarCustomView;
 
         if (this.state.isSearching) {
-            // style = {
-            //     navBarCustomView: 'goodsh.HomeNavBar',
-            // };
+            title = null;
             navBarCustomView='goodsh.HomeNavBar';
             leftButtons = [];
             rightButtons = [];
         }
         else if (this.state.pendingItem || this.state.pendingList) {
+            title = this.isSelectingAList() ?
+                {title: "Sélectionnez une liste:"} :
+                {titleImage: require('../img/screen_title_home.png')};
             navBarCustomView = null;
             leftButtons = [];
             rightButtons = [
@@ -151,6 +150,7 @@ class HomeScreen extends Component<Props, State> {
                 }];
         }
         else {
+            title = {titleImage: require('../img/screen_title_home.png')};
             navBarCustomView = null;
             leftButtons = [{
                 icon: require('../img/drawer_community.png'),
@@ -164,13 +164,19 @@ class HomeScreen extends Component<Props, State> {
             ];
         }
 
+
         navigator.setStyle({navBarCustomView});
+
+
         navigator.setButtons({
             leftButtons,
             rightButtons,
             animated: true// does the change have transition animation or does it happen immediately (optional)
         });
 
+        if (title) {
+            navigator.setTitle(title);
+        }
         //HACK. event listener is unsubscribed for some reason...
         setTimeout(()=>navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this)));
     }
@@ -181,14 +187,15 @@ class HomeScreen extends Component<Props, State> {
         this.setState({isAddingLineup: true});
         this.props.dispatch(createLineup(this.state.newLineupTitle))
             .then(()=> {
-                this.setState({
-                    isCreatingLineup: false,
-                    newLineupTitle: ""
+                    this.setState({
+                        isCreatingLineup: false,
+                        newLineupTitle: ""
+                    })
+                },
+                (err) => {
+                    //this.lineupInput.focus();
+                    console.log(err);
                 })
-            }, (err) => {
-                this.lineupInput.focus();
-                console.log(err);
-            })
             .then(()=> {
                 this.setState({
                     isAddingLineup: false,
@@ -295,6 +302,9 @@ class HomeScreen extends Component<Props, State> {
 
     //TODO: extract lineup card style
     renderHeader() {
+        if (this.isSelectingAList()) {
+            return <View/>;
+        }
         if (this.state.isCreatingLineup) {
             let editable = !this.state.isAddingLineup;
 
@@ -334,7 +344,7 @@ class HomeScreen extends Component<Props, State> {
                         styles.headerText,
                         {color: UI.Colors.grey2},
                         Platform.OS === 'ios'? {lineHeight: 40} : {height: 40}
-                        ]}
+                    ]}
                 >{i18n.t('create_list_controller.title')}</Text>
             </View>
         </TouchableWithoutFeedback>);

@@ -49,7 +49,7 @@ class CommentsScreen extends Component<Props, State> {
 
         return (
             <MainBackground>
-                <View style={styles.container}>
+                <View style={[styles.container]}>
 
                     {activity &&
                     <View style={{padding: 12, backgroundColor:"transparent"}}>
@@ -61,7 +61,7 @@ class CommentsScreen extends Component<Props, State> {
                     </View>}
                     {activity &&
                     <Feed
-                        style={[{marginBottom: 50}]}
+                        style={[{marginBottom: 50, }]}
                         //ListHeaderComponent={<View style={{height: 50}}/>}
                         inverted
                         data={comments}
