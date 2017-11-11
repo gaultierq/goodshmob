@@ -51,6 +51,7 @@
 		BFA47067D8864920BA2BF128 /* Thonburi-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 83211284DF4F4A8897E908DC /* Thonburi-Bold.ttf */; };
 		CF503881D2F548EBB3960199 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4DEA90B06B614D008A105408 /* Feather.ttf */; };
 		D08F4DF21F5E900C0018E2DD /* libReactNativeNavigation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D9D9891F5E8FAF003772C8 /* libReactNativeNavigation.a */; };
+		D0DF636F1FB6C9050000AD5E /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0DF636E1FB6C9050000AD5E /* GameKit.framework */; };
 		D0E93E9A1FB55C5B003DB2BA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D0E93E991FB55C5B003DB2BA /* GoogleService-Info.plist */; };
 		D261BB129BE145FBBE97F010 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 61E1F585D8914B64BA2ED4CE /* Octicons.ttf */; };
 		D7516C65F12E4CBA8A19DFB2 /* Edo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8BB56482BD4A4BA5A06EEF8F /* Edo.ttf */; };
@@ -430,6 +431,7 @@
 		CB77874F92F7495C904FBF9C /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
 		D0D9D95F1F5E8FAF003772C8 /* ReactNativeNavigation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeNavigation.xcodeproj; path = "../node_modules/react-native-navigation/ios/ReactNativeNavigation.xcodeproj"; sourceTree = "<group>"; };
 		D0DF62B21FB58C0A0000AD5E /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
+		D0DF636E1FB6C9050000AD5E /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		D0E93E991FB55C5B003DB2BA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "goodshmob/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D0E93E9B1FB55DFA003DB2BA /* goodshmob.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = goodshmob.entitlements; path = goodshmob/goodshmob.entitlements; sourceTree = "<group>"; };
 		DE0AAD8B326D3DFECA5CA8A5 /* Pods-goodshmobTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-goodshmobTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-goodshmobTests/Pods-goodshmobTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -453,6 +455,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0DF636F1FB6C9050000AD5E /* GameKit.framework in Frameworks */,
 				D08F4DF21F5E900C0018E2DD /* libReactNativeNavigation.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
@@ -818,6 +821,7 @@
 		F193B04D1EF44D979793D005 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D0DF636E1FB6C9050000AD5E /* GameKit.framework */,
 				47158AD1F83943FD82888F9E /* libz.tbd */,
 				A06E8505DD3F65927823475C /* libPods-goodshmob.a */,
 				678FD9CE4201E629E6B7C3D1 /* libPods-goodshmobTests.a */,
@@ -887,7 +891,13 @@
 						DevelopmentTeam = 656VNMF77V;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
+							com.apple.GameCenter = {
+								enabled = 1;
+							};
 							com.apple.Push = {
+								enabled = 1;
+							};
+							com.apple.SafariKeychain = {
 								enabled = 1;
 							};
 						};

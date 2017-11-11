@@ -262,8 +262,8 @@ dependencies {
 
     //FIXME:
 //    compile(project(':react-native-firebase')) {
-        transitive = false
-    }
+//        transitive = false
+//    }
 
     compile(project(':react-native-firebase')) {
         transitive = false
