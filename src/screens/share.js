@@ -1,7 +1,7 @@
 // @flow
 import React, {Component} from 'react';
 import {Clipboard, Dimensions, Image, Share, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import type {Id, Item, ItemType, User} from "../types";
+import type {Id, Item, ItemType} from "../types";
 import {CheckBox} from "react-native-elements";
 import Snackbar from "react-native-snackbar"
 import i18n from '../i18n/i18n'
@@ -11,6 +11,7 @@ import CurrentUser from "../CurrentUser"
 import {connect} from "react-redux";
 import {buildNonNullData} from "../utils/DataUtils";
 import * as Nav from "./Nav";
+import Closable from "./closable";
 
 type Props = {
     itemId: Id,
@@ -31,39 +32,15 @@ const mapStateToProps = (state, ownProps) => ({
 @connect(mapStateToProps)
 class ShareScreen extends Component<Props, State> {
 
-
     render() {
-        const {containerStyle, itemType, itemId} = this.props;
-
+        const {containerStyle, itemType, itemId, onClickClose} = this.props;
         const item = buildNonNullData(this.props.data, itemType, itemId);
-        const {height, width} = Dimensions.get('window');
-
-
 
         return (
-            <View style={[styles.container, containerStyle,
-                {height, width}]}
+            <Closable
+                onClickClose={onClickClose}
+                containerStyle={containerStyle}
             >
-                <TouchableOpacity
-                    onPress={()=>this.props.onClickClose()}
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        marginLeft: 20,
-                        marginTop: 30,
-                    }}
-                >
-                    <Image source={require('../img/close_circle.png')}
-                           resizeMode="contain"
-                           style={{
-                               width: 30,
-                               height: 30,}}
-                    />
-                </TouchableOpacity>
-
-
-
 
                 <View style={{margin: 16}}>
                     <Image source={require('../img/rounded_send_icon.png')}
@@ -107,7 +84,7 @@ class ShareScreen extends Component<Props, State> {
 
                     </TouchableOpacity>
                 </View>
-            </View>
+            </Closable>
         );
     }
     renderIcon(iconName: string) {
@@ -166,14 +143,6 @@ class ShareScreen extends Component<Props, State> {
 
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        flexDirection: 'row',
-        //margin: 20,
-        backgroundColor: 'transparent',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
     buttonText: {
         fontFamily: 'Chivo',
         color: 'black',

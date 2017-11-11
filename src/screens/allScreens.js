@@ -17,6 +17,7 @@ import {screen as ProfileScreen} from './profile';
 import FriendScreen from './friends';
 import CommunityScreen from './community';
 import SendScreen from './send';
+import AskScreen from './ask';
 
 // register all screens of the app (including internal ones)
 export function registerScreens(store, Provider) {
@@ -37,4 +38,5 @@ export function registerScreens(store, Provider) {
     Navigation.registerComponent('goodsh.CommunityScreen', () => CommunityScreen, store, Provider);
     Navigation.registerComponent('goodsh.SendScreen', () => SendScreen, store, Provider);
     Navigation.registerComponent('goodsh.ProfileScreen', () => ProfileScreen, store, Provider);
+    Navigation.registerComponent('goodsh.AskScreen', () => AskScreen, store, Provider);
 }

@@ -305,7 +305,6 @@ class HomeScreen extends Component<Props, State> {
                         autoFocus
                         editable={editable}
                         style={[styles.input, (editable ? {color: "black"} : {color: "grey"})]}
-                        //style={(editable ? {color: "black"} : {color: "grey"})}
                         onSubmitEditing={this.createLineup.bind(this)}
                         onEndEditing={()=>{
                             if (!this.state.isAddingLineup) this.setState({isCreatingLineup: false})
@@ -444,7 +443,6 @@ const styles = StyleSheet.create({
         width: "100%",
         fontFamily: 'Chivo',
         fontSize: 18,
-
     },
     colorActive:{
         color: 'green',

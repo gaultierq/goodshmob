@@ -129,5 +129,16 @@ export type Device = {
     isTablet: boolean
 }
 
+export type Ask = Activity &  {
+    content: string,
+    answers: Array<Answer>,
+    answerers: Array<User>,
+}
+
+export type Answer = Activity &  {
+    content: string,
+    answers: Array<Answer>,
+    answerers: Array<User>,
+}
 
 export type MergeOpts = MergeOptions<string>

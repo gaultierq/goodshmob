@@ -25,7 +25,6 @@ type Props = {
 type State = {
 };
 
-
 @connect()
 export default class ActivityActionBar extends React.Component<Props, State> {
 
@@ -151,8 +150,9 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
         //TODO: rm platform specific rules when [1] is solved.
         //1: https://github.com/wix/react-native-navigation/issues/1502
-        let show = Platform.OS === 'ios' ? navigator.showLightBox : navigator.showModal;
-        let hide = Platform.OS === 'ios' ? navigator.dismissLightBox : navigator.dismissModal;
+        let ios = Platform.OS === 'ios';
+        let show = ios ? navigator.showLightBox : navigator.showModal;
+        let hide = ios ? navigator.dismissLightBox : navigator.dismissModal;
         show({
             screen: 'goodsh.ShareScreen', // unique ID registered with Navigation.registerScreen
             style: {
@@ -162,9 +162,8 @@ export default class ActivityActionBar extends React.Component<Props, State> {
             passProps:{
                 itemId: resource.id,
                 itemType: resource.type,
-                containerStyle: {backgroundColor: 'white'},
-                onClickClose: () => hide()
-                //navigator: this.props.navigator
+                containerStyle: {backgroundColor: ios ? 'transparent' : 'white'},
+                onClickClose: hide
             },
             navigatorStyle: {navBarHidden: true},
         });
@@ -186,7 +185,4 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
 });

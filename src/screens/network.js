@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react';
-import {View, FlatList, RefreshControl, ActivityIndicator} from 'react-native';
+import {Platform, View, FlatList, RefreshControl, ActivityIndicator} from 'react-native';
 import {connect} from "react-redux";
 import ActivityCell from "../activity/components/ActivityCell";
 import * as UIStyles from "./UIStyles"
@@ -12,7 +12,7 @@ import * as Api from "../utils/Api";
 import {isUnique} from "../utils/ArrayUtil";
 import Feed from "./components/feed"
 import ApiAction from "../utils/ApiAction";
-import type {NavigableProps} from "../types";
+import type {Ask, NavigableProps} from "../types";
 
 type Props = NavigableProps;
 
@@ -27,6 +27,17 @@ class NetworkScreen extends Component<Props, State> {
 
     static navigatorStyle = UIStyles.NavStyles;
 
+    static navigatorButtons = {
+        rightButtons: [
+            {
+                //icon: require('../img/drawer_line_up.png'), // for icon button, provide the local image asset name
+                id: 'ask', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
+                icon: require('../img/bottom_bar_ask.png'),
+                title: "Ask"
+            }
+        ],
+    };
+
     state = {};
 
     constructor(props){
@@ -35,12 +46,34 @@ class NetworkScreen extends Component<Props, State> {
     }
 
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
+        let navigator = this.props.navigator;
+
         if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
             if (event.id === 'community') { // this is the same id field from the static navigatorButtons definition
-                this.props.navigator.toggleDrawer({
+
+                navigator.toggleDrawer({
                     side: 'right',
                     animated: true
                 })
+            }
+            if (event.id === 'ask') {
+                //TODO: rm platform specific rules when [1] is solved.
+                //1: https://github.com/wix/react-native-navigation/issues/1502
+                let ios = Platform.OS === 'ios';
+                let show = ios ? navigator.showLightBox : navigator.showModal;
+                let hide = ios ? navigator.dismissLightBox : navigator.dismissModal;
+                show({
+                    screen: 'goodsh.AskScreen', // unique ID registered with Navigation.registerScreen
+                    style: {
+                        backgroundBlur: "light", // 'dark' / 'light' / 'xlight' / 'none' - the type of blur on the background
+                        tapBackgroundToDismiss: true // dismisses LightBox on background taps (optional)
+                    },
+                    passProps:{
+                        containerStyle: {backgroundColor: ios ? 'transparent' : 'white'},
+                        onClickClose: hide
+                    },
+                    navigatorStyle: {navBarHidden: true},
+                });
             }
         }
     }
