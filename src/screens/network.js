@@ -65,7 +65,7 @@ class NetworkScreen extends Component<Props, State> {
                 show({
                     screen: 'goodsh.AskScreen', // unique ID registered with Navigation.registerScreen
                     style: {
-                        backgroundBlur: "light", // 'dark' / 'light' / 'xlight' / 'none' - the type of blur on the background
+                        backgroundBlur: "dark", // 'dark' / 'light' / 'xlight' / 'none' - the type of blur on the background
                         tapBackgroundToDismiss: true // dismisses LightBox on background taps (optional)
                     },
                     passProps:{
