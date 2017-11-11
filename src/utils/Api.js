@@ -85,6 +85,13 @@ export class Call {
         return this;
     }
 
+    include(include: string): Call {
+        if (include) {
+            this.addQuery({include});
+        }
+        return this;
+    }
+
     withMethod(method:string): Call {
         this.method = method;
         return this;

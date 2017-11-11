@@ -8,11 +8,12 @@ import * as Api from "../utils/Api";
 import Feed from "./components/feed";
 import type {Activity, ActivityType, Comment, Id} from "../types";
 import ApiAction from "../utils/ApiAction";
-import {buildData, buildNonNullData, doDataMergeInState, sanitizeActivityType} from "../utils/DataUtils";
+import {buildData, doDataMergeInState, sanitizeActivityType} from "../utils/DataUtils";
 import UserActivity from "../activity/components/UserActivity";
 import i18n from '../i18n/i18n'
 import FeedSeparator from "../activity/components/FeedSeparator";
 import * as UI from "./UIStyles";
+import {fetchActivity} from "../activity/actions";
 
 type Props = {
     activityId: Id,
@@ -21,29 +22,48 @@ type Props = {
 
 type State = {
     newComment?: string,
-    isAddingComment?: boolean
+    isAddingComment?: boolean,
+    isFetchingActivity?: boolean
 };
 
 class CommentsScreen extends Component<Props, State> {
 
     state = {};
 
+
+    componentDidMount() {
+        this.load();
+    }
+
+    load() {
+        if (this.state.isFetchingActivity) return;
+        this.setState({isFetchingActivity: true});
+        this.props.dispatch(fetchActivity(this.props.activityId, this.props.activityType, {include: "comments"}))
+            .catch((err)=>console.log(err))
+            .then(this.setState({isFetchingActivity: false}))
+    }
+
     render() {
         let activity = this.getActivity();
-
-        // let comments = (activity.comments || []).reduce((res, com)=> {
-        //     let comment = buildData(this.props.data, com.type, com.id);
-        //     if (comment) {
-        //         res.push(comment);
-        //     }
-        //     return res;
-        // }, []);
-        let comments = activity.comments;
+        let comments = activity ? activity.comments : [];
 
         return (
             <MainBackground>
                 <View style={styles.container}>
+
+                    {activity &&
+                    <View style={{padding: 12, backgroundColor:"transparent"}}>
+                        <UserActivity
+                            activityTime={activity.createdAt}
+                            user={activity.user}/>
+
+                        <Text>{activity.description}</Text>
+                    </View>}
+                    {activity &&
                     <Feed
+                        style={[{marginBottom: 50}]}
+                        //ListHeaderComponent={<View style={{height: 50}}/>}
+                        inverted
                         data={comments}
                         renderItem={this.renderItem.bind(this)}
                         fetchSrc={{
@@ -51,37 +71,29 @@ class CommentsScreen extends Component<Props, State> {
                             action:actionTypes.LOAD_COMMENTS,
                             options: {activityId: activity.id, activityType: activity.type}
                         }}
-                        hasMore={false}
+                        //hasMore={false}
                         ItemSeparatorComponent={()=> <FeedSeparator/>}
-                        ListHeaderComponent={
-                            <View style={{padding: 12, backgroundColor:"transparent"}}>
-                                <UserActivity
-                                    activityTime={activity.createdAt}
-                                    user={activity.user}/>
+                    />}
 
-                                <Text>{activity.description}</Text>
-                            </View>
-                        }
-                        ListFooterComponent={
-                            <View style={styles.inputContainer}>
-                                <TextInput
-                                    editable={!this.state.isAddingComment}
-                                    style={styles.input}
-                                    onSubmitEditing={() => this.addComment(activity)}
-                                    value={this.state.newComment}
-                                    onChangeText={newComment => this.setState({newComment})}
-                                    placeholder={i18n.t("activity_comments_screen.add_comment_placeholder")}
-                                />
-                            </View>
-                        }
-                    />
+                    <View
+                        style={[styles.inputContainer, {position: 'absolute', bottom: 0, left: 0, right: 0}]}
+                    >
+                        <TextInput
+                            editable={!this.state.isAddingComment}
+                            style={styles.input}
+                            onSubmitEditing={() => this.addComment(activity)}
+                            value={this.state.newComment}
+                            onChangeText={newComment => this.setState({newComment})}
+                            placeholder={i18n.t("activity_comments_screen.add_comment_placeholder")}
+                        />
+                    </View>
                 </View>
             </MainBackground>
         );
     }
 
     getActivity() {
-        return buildNonNullData(this.props.data, this.props.activityType, this.props.activityId);
+        return buildData(this.props.data, this.props.activityType, this.props.activityId);
     }
 
     addComment(activity: Activity) {
@@ -99,7 +111,7 @@ class CommentsScreen extends Component<Props, State> {
         if (!comment) return null;
 
         return (
-            <View style={{padding: 12, backgroundColor:"white"}}>
+            <View style={{padding: 12, }}>
                 <UserActivity
                     activityTime={comment.createdAt}
                     user={comment.user}/>
@@ -110,24 +122,6 @@ class CommentsScreen extends Component<Props, State> {
     }
 }
 
-const styles = StyleSheet.create({
-    container: {
-        backgroundColor: 'transparent'
-    },
-    input:{
-        height: 40,
-    },
-    inputContainer:{
-        // height: 40,
-        borderColor: UI.Colors.grey1,
-        borderWidth: 0.5,
-        borderRadius: 20,
-        paddingLeft: 14,
-        paddingRight: 14,
-        margin: 10,
-        backgroundColor: 'white'
-    },
-});
 
 const mapStateToProps = (state, ownProps) => ({
     data: state.data,
@@ -204,3 +198,25 @@ const reducer = (() => {
 let screen = connect(mapStateToProps)(CommentsScreen);
 
 export {reducer, screen, actions};
+
+const styles = StyleSheet.create({
+    container: {
+        flex:1,
+        backgroundColor: 'transparent'
+    },
+    input:{
+        height: 40,
+    },
+    inputContainer:{
+        // height: 40,
+        borderColor: UI.Colors.grey1,
+        borderWidth: 0.5,
+        borderRadius: 20,
+        paddingLeft: 14,
+        paddingRight: 14,
+        margin: 10,
+        marginTop: 0,
+        backgroundColor: 'white'
+    },
+});
+

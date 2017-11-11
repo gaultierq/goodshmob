@@ -2,7 +2,7 @@
 
 import type {Node} from 'react';
 import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, RefreshControl} from 'react-native';
+import {View, ActivityIndicator, FlatList, RefreshControl} from 'react-native';
 import {connect} from "react-redux";
 import {assertUnique} from "../../utils/DataUtils";
 import ApiAction from "../../utils/ApiAction";
@@ -164,11 +164,15 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
 
     renderFetchMoreLoader() {
-        return (this.state.isFetchingMore ?
-            <ActivityIndicator
-                animating={this.state.isFetchingMore}
-                size = "small"
-            />:null)
+        return (<View>
+                {this.props.ListFooterComponent}
+                {this.state.isFetchingMore ?
+                    <ActivityIndicator
+                        animating={this.state.isFetchingMore}
+                        size = "small"
+                    />:null}
+            </View>
+        )
     }
 
     hasMore() {

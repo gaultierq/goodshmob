@@ -30,6 +30,17 @@ const communityScreen = {
     }
 };
 
+const commentsScreen = {
+    screen: {
+        label: 'test',
+        screen: 'goodsh.CommentsScreen',
+    },
+    passProps: {
+        activityId: "9f2cdcbd-4ff0-47d1-be11-c4b586a75cab",
+        activityType: "savings",
+    }
+};
+
 const profileScreen = {
     screen: {
         label: 'test',
@@ -44,6 +55,7 @@ let testScreen = null;
 
 //change this line
 //testScreen = profileScreen;
+testScreen = commentsScreen;
 
 
 export default testScreen;

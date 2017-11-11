@@ -2,17 +2,19 @@
 import * as types from "./actionTypes"
 import * as Api from "../utils/Api";
 import {sanitizeActivityType} from "../utils/DataUtils";
+import type {ActivityType, Id} from "../types";
 
 
-let fixtures = require("../fixtures/activities_fixtures2.json");
 
-
-export function fetchActivityAndRelated(activityId, activityType) {
+export function fetchActivity(activityId: Id, activityType: ActivityType, options?:any = {}) {
     let type = sanitizeActivityType(activityType);
+
+    let {include} = options;
 
     return new Api.Call()
         .withMethod('GET')
         .withRoute(`${type}/${activityId}`)
+        .include(include)
         .disptachForAction2(types.FETCH_ACTIVITY,
             {id: activityId, type: activityType}
         );

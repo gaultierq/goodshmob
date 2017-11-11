@@ -43,7 +43,7 @@ class ActivityDetailScreen extends Component<Props, State> {
         this.setState({isLoading: true});
         this.props.dispatch(
             actions
-                .fetchActivityAndRelated(this.props.activityId, this.props.activityType)
+                .fetchActivity(this.props.activityId, this.props.activityType)
         ).catch((err)=>console.log(err))
             .then(this.setState({isLoading: false}))
     }
