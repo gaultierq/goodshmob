@@ -2,7 +2,7 @@
 
 import type {Node} from 'react';
 import React, {Component} from 'react';
-import {ActivityIndicator, Button, FlatList, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
+import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
 import {connect} from "react-redux";
 import {combineReducers} from "redux";
 import {TabBar, TabViewAnimated} from 'react-native-tab-view';
@@ -12,6 +12,8 @@ import * as UIStyles from "../screens/UIStyles"
 import algoliasearch from 'algoliasearch/reactnative';
 import type {Item, List, SearchState, SearchToken} from "../types";
 import {createResultFromHit} from "../utils/AlgoliaUtils";
+import Button from 'apsl-react-native-button'
+import * as UI from "./UIStyles";
 
 type Props = {
     onClickClose: Function,
@@ -61,8 +63,6 @@ export default class NetworkSearchScreen extends Component<Props, State> {
     }
 
     render() {
-
-
         let search = this.getSearchObj();
 
         let searchResult: Array<Item|List> = (search && search.data) || [];
@@ -99,7 +99,6 @@ export default class NetworkSearchScreen extends Component<Props, State> {
             </View>
 
         );
-
     }
 
     renderSearchFooter() {
@@ -109,12 +108,24 @@ export default class NetworkSearchScreen extends Component<Props, State> {
 
         let hasMore = nextPage < search.nbPages;
         if (!hasMore) return null;
-        return <Button title="load more" onPress={()=>{this.performAlgoliaSearch(search.token, nextPage)}}/>;
+
+        //TODO: flaw
+        let isLoadingMore = /*search.page > 0 && */search.searchState === 1;
+
+        return (<Button
+            isLoading={isLoadingMore}
+            isDisabled={isLoadingMore}
+            onPress={()=>{this.performAlgoliaSearch(search.token, nextPage)}}
+            style={[styles.button, {marginTop: 15}]}
+            disabledStyle={styles.disabledButton}
+        >
+            <Text style={{color: isLoadingMore ? UI.Colors.grey1 : UI.Colors.black}}>load more</Text>
+        </Button>);
     }
 
 
 
-    getSearchObj() {
+    getSearchObj(): SearchState {
         return this.state.input ? this.state.searches[this.state.input] : null;
     }
 
@@ -123,9 +134,17 @@ export default class NetworkSearchScreen extends Component<Props, State> {
         this.performAlgoliaSearch(input);
     }
 
+    setState(partialState, callback?) {
+        let t = Math.random();
+        console.debug(`DEBUG(${t}): partial=${JSON.stringify(partialState)}`);
+        callback = () => console.log(`DEBUG(${t}): state=${JSON.stringify(this.state)}`);
+
+        super.setState(partialState, callback);
+    }
+
     performAlgoliaSearch(token: SearchToken, page: number = 0) {
         let client = algoliasearch("8UTETUZKD3", "c80385095ff870f5ddf9ba25310a9d5a");
-        let search = this.state.searches[token] || {token, searchState: 1};
+        let search = this.state.searches[token] || {token};
 
 
         const queries = this.props.queries.map(q=>{
@@ -134,10 +153,10 @@ export default class NetworkSearchScreen extends Component<Props, State> {
             return {...q, params, query: token}
         });
 
-
         console.info("algolia search:" + JSON.stringify(queries));
 
-        this.setState({searches: {...this.state.searches, [token]: search}}, ()=> console.log("new search state "+JSON.stringify(this.state)));
+        this.setState({searches: {...this.state.searches, [token]: {...search, searchState: 1}, page}});
+
         console.log(`algolia: searching ${token}`);
         client.search(queries, (err, content) => {
 
@@ -192,6 +211,15 @@ const styles = StyleSheet.create({
     },
     label: {
         color: '#000000',
+    },
+    button: {
+        padding: 8,
+        height: 30,
+        // color: UI.Colors.white,
+        // borderColor: UI.Colors.white,
+    },
+    disabledButton: {
+        borderColor: UI.Colors.grey1,
     },
 });
 

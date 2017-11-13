@@ -130,13 +130,13 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         });
     }
 
-    setState(partialState, callback?) {
-        let t = Math.random();
-        console.debug(`DEBUG(${t}): partial=${JSON.stringify(partialState)}`);
-        callback = () => console.log(`DEBUG(${t}): state=${JSON.stringify(this.state)}`);
-
-        super.setState(partialState, callback);
-    }
+    // setState(partialState, callback?) {
+    //     let t = Math.random();
+    //     console.debug(`DEBUG(${t}): partial=${JSON.stringify(partialState)}`);
+    //     callback = () => console.log(`DEBUG(${t}): state=${JSON.stringify(this.state)}`);
+    //
+    //     super.setState(partialState, callback);
+    // }
 
     fetchMore() {
         let c = this.props.data;

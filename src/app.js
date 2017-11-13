@@ -1,5 +1,6 @@
 // @flow
 
+import {Component} from 'react';
 import {applyMiddleware, combineReducers, compose, createStore} from "redux";
 import {Provider} from "react-redux";
 import {Navigation} from 'react-native-navigation';
@@ -58,7 +59,48 @@ const store = createStore(
 );
 
 
+let configureApp = function () {
+//store.dispatch(appActions.onAppReady());
 
+    setCustomText({
+        style: {
+            fontFamily: 'Thonburi',
+            color: 'black'
+        }
+    });
+
+    // setCustomTouchableWithoutFeedback({
+    //     underlayColor: "red"
+    // });
+    // const DEFAULT_PROPS = {
+    //     activeOpacity: 0.85,
+    //     underlayColor: 'red',
+    // };
+    //
+    // TouchableWithoutFeedback.prototype.getDefaultProps = function getDefaultProps() {
+    //     return DEFAULT_PROPS;
+    // };
+    // Getting rid of that ugly line on Android and adding some custom style to all TextInput components.
+    const customTextInputProps = {
+        underlineColorAndroid: 'rgba(0,0,0,0)',
+        style: {
+            paddingVertical: 5,
+            paddingHorizontal: 10,
+            backgroundColor: 'white'
+        }
+    };
+
+    setCustomTextInput(customTextInputProps);
+
+
+    // Component.setState.prototype = function setState(imconpleteState, callback) {
+    //     console.log("coucouc");
+    //     this.setState(imconpleteState, callback);
+    // };
+
+
+    console.info("App initialized.");
+};
 // begin periodically persisting the store
 persistStore(store,
     {
@@ -69,40 +111,7 @@ persistStore(store,
     () => {
         console.log("persist store complete");
         hydrated = true;
-        //store.dispatch(appActions.onAppReady());
-
-        setCustomText({
-            style: {
-                fontFamily: 'Thonburi',
-                color: 'black'
-            }
-        });
-
-        // setCustomTouchableWithoutFeedback({
-        //     underlayColor: "red"
-        // });
-        // const DEFAULT_PROPS = {
-        //     activeOpacity: 0.85,
-        //     underlayColor: 'red',
-        // };
-        //
-        // TouchableWithoutFeedback.prototype.getDefaultProps = function getDefaultProps() {
-        //     return DEFAULT_PROPS;
-        // };
-        // Getting rid of that ugly line on Android and adding some custom style to all TextInput components.
-        const customTextInputProps = {
-            underlineColorAndroid: 'rgba(0,0,0,0)',
-            style: {
-                paddingVertical: 5,
-                paddingHorizontal: 10,
-                backgroundColor: 'white'
-            }
-        };
-
-        setCustomTextInput(customTextInputProps);
-
-
-        console.info("App initialized.");
+        configureApp();
     }
 );
 
