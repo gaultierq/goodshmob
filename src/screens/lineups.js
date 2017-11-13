@@ -22,7 +22,7 @@ import * as Api from "../utils/Api";
 import * as UI from "../screens/UIStyles";
 import {SearchBar} from 'react-native-elements'
 import Fuse from 'fuse.js'
-import type types, {Id, Item, List, Saving, User} from "../types";
+import type types, {Id, Item, List, Saving, SearchState, User} from "../types";
 import ItemCell from "./components/ItemCell";
 import Feed from "./components/feed";
 import Swipeout from "react-native-swipeout";
@@ -35,6 +35,7 @@ import algoliasearch from 'algoliasearch/reactnative';
 import * as Nav from "./Nav";
 import * as _ from "lodash";
 import dotprop from "dot-prop-immutable"
+import {createResultFromHit} from "../utils/AlgoliaUtils";
 
 type Props = {
     userId: Id,
@@ -55,14 +56,7 @@ type State = {
     search: { [string]: SearchState},
 };
 
-//token -> {data, hasMore, isSearching}
-type SearchState = {
-    searchState: number, //0,1,2,3
-    page: number,
-    nbPages: number,
-    data: Array<List|Saving>,
-    token: string
-};
+
 
 class LineupListScreen extends Component<Props, State> {
 
@@ -253,7 +247,6 @@ class LineupListScreen extends Component<Props, State> {
             }
         ];
 
-
         this.setState({search: {...this.state.search, [token]: search}}, ()=> console.log("new search state "+JSON.stringify(this.state)));
         console.log(`algolia: searching ${token}`);
         client.search(queries, (err, content) => {
@@ -266,7 +259,9 @@ class LineupListScreen extends Component<Props, State> {
             let result = content.results[0];
             let hits = result.hits;
             console.log(`search result lists: ${JSON.stringify(content)}`);
-            let searchResult = this.createResultFromHit(hits);
+            let canFilterOverItems = this.canFilterOverItems();
+
+            let searchResult = createResultFromHit(hits, {filterItems: !canFilterOverItems});
 
             let search: SearchState = this.state.search[token];
 
@@ -282,58 +277,6 @@ class LineupListScreen extends Component<Props, State> {
 
     }
 
-    createResultFromHit(hits) {
-        let searchResult = [];
-        let listsById: { [Id]: List } = {};
-        hits.forEach((h) => {
-            let hR = h["_highlightResult"];
-            let matchedListName = hR["list_name"] && hR["list_name"]["matchLevel"] !== 'none';
-            let matchedItemTitle = hR["item_title"] && hR["item_title"]["matchLevel"] !== 'none';
-
-            const {
-                objectID,
-                list_name,
-                item_title,
-                list_id,
-                user_id,
-                type,
-                image,
-                url,
-                user
-            } = h;
-
-            let saving = {
-                id: objectID,
-                user: Object.assign({type: "users"}, user, {id: user_id}),
-                resource: {type, image, url, title: item_title},
-                type: "savings"
-            };
-
-            if (matchedListName) {
-                let list = listsById[list_id];
-                if (!list) {
-                    list = {
-                        id: list_id,
-                        name: list_name,
-                        user: Object.assign({type: "users"}, user, {id: user_id}),
-                        type: "lists",
-                        savings: []
-                    };
-                    listsById[list_id] = list;
-
-                    //adding to the result for 1st match
-                    searchResult.push(list);
-                }
-                list.savings.push(saving);
-            }
-
-            //if matching a list, algolia will also notify us the item_title matching
-            if (matchedItemTitle && this.canFilterOverItems()) {
-                searchResult.push(saving);
-            }
-        });
-        return searchResult;
-    }
 
     isSearching() {
         return !!this.state.filter;
@@ -341,8 +284,6 @@ class LineupListScreen extends Component<Props, State> {
 
     //render a lineup row
     renderItem({item}) {
-
-        const {userId} = this.props;
 
         let result;
         let isLineup = item.type === 'lists';
@@ -369,6 +310,7 @@ class LineupListScreen extends Component<Props, State> {
             let saving = item;
 
             let resource = saving.resource;
+
             //TODO: this is hack
             if (!resource) return null;
 
@@ -398,7 +340,6 @@ class LineupListScreen extends Component<Props, State> {
                 {result}
             </Swipeout>
         )
-
     }
 
     isCurrentUser() {

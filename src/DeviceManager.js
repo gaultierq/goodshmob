@@ -47,7 +47,7 @@ class DeviceManager {
             if (!_.isEqual(oldDevice, newDevice)) {
                 console.info("device manager: found differences in device. saving");
                 this.store.dispatch(appActions.saveDevice(newDevice))
-                    .then(()=>console.info("new device saved"), err=>console.error(err));
+                    .then(()=>console.info("new device saved"), err=>console.warn(err));
             }
         })
 

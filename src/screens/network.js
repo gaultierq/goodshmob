@@ -13,6 +13,9 @@ import {isUnique} from "../utils/ArrayUtil";
 import Feed from "./components/feed"
 import ApiAction from "../utils/ApiAction";
 import type {Ask, NavigableProps} from "../types";
+import ActionButton from 'react-native-action-button';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 
 type Props = NavigableProps;
 
@@ -115,10 +118,30 @@ class NetworkScreen extends Component<Props, State> {
                         }}
                         hasMore={!this.props.network.hasNoMore}
                     />
+
                 </View>
+
+
+                <ActionButton
+                    icon={<Icon name="search" size={30} color={UIStyles.Colors.white} />}
+                    buttonColor={UIStyles.Colors.green}
+                    onPress={() => { this.onFloatingButtonPressed() }}
+                />
 
             </MainBackground>
         );
+    }
+
+    onFloatingButtonPressed() {
+        let navigator = this.props.navigator;
+
+        navigator.showModal({
+            screen: 'goodsh.NetworkSearchScreen', // unique ID registered with Navigation.registerScreen
+            title: "Rechercher dans mon réseau", // navigation bar title of the pushed screen (optional)
+            passProps:{
+                onClickClose: navigator.dismissModal
+            },
+        });
     }
 
     static checkEmpty(activities) {
