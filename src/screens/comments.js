@@ -55,7 +55,9 @@ class CommentsScreen extends Component<Props, State> {
                     <View style={{padding: 12, backgroundColor:"transparent"}}>
                         <UserActivity
                             activityTime={activity.createdAt}
-                            user={activity.user}/>
+                            user={activity.user}
+                            navigator={this.props.navigator}
+                        />
 
                         <Text>{activity.description}</Text>
                     </View>}
@@ -114,7 +116,9 @@ class CommentsScreen extends Component<Props, State> {
             <View style={{padding: 12, }}>
                 <UserActivity
                     activityTime={comment.createdAt}
-                    user={comment.user}/>
+                    user={comment.user}
+                    navigator={this.props.navigator}
+                />
 
                 <Text>{comment.content}</Text>
             </View>

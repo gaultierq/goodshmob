@@ -1,23 +1,19 @@
 // @flow
 
 import React, {Component} from 'react';
-import {Platform, View, FlatList, RefreshControl, ActivityIndicator, TouchableWithoutFeedback} from 'react-native';
+import {ActivityIndicator, FlatList, Platform, RefreshControl, TouchableWithoutFeedback, View} from 'react-native';
 import {connect} from "react-redux";
 import ActivityCell from "../activity/components/ActivityCell";
 import * as UIStyles from "./UIStyles"
 import {MainBackground} from "./UIComponents"
-
-import Immutable from 'seamless-immutable';
-import * as Api from "../utils/Api";
-import {isUnique} from "../utils/ArrayUtil";
 import Feed from "./components/feed"
-import ApiAction from "../utils/ApiAction";
-import type {Ask, NavigableProps} from "../types";
+import type {Ask, List, NavigableProps} from "../types";
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {currentUserId} from "../CurrentUser";
 import ItemCell from "./components/ItemCell";
 import LineupCell from "./components/LineupCell";
+import {FETCH_ACTIVITIES, fetchMyNetwork} from "./networkActions";
 
 
 type Props = NavigableProps;
@@ -100,13 +96,10 @@ class NetworkScreen extends Component<Props, State> {
     }
 
     render() {
-        let network = this.props.network;
+        let userId = currentUserId();
 
+        let network = this.props.network[userId] || {};
         let activities = network.list;
-
-        NetworkScreen.checkEmpty(activities);
-        if (!isUnique(activities.map((a)=>a.id))) throw new Error(`activities ids not unique 2`);
-        if (!isUnique(activities)) throw new Error(`activities not unique`);
 
         return (
             <MainBackground>
@@ -115,15 +108,15 @@ class NetworkScreen extends Component<Props, State> {
                         data={activities}
                         renderItem={this.renderItem.bind(this)}
                         fetchSrc={{
-                            callFactory: actions.fetchActivities,
+                            callFactory: fetchMyNetwork,
                             useLinks: true,
-                            action: actiontypes.FETCH_ACTIVITIES
+                            action: FETCH_ACTIVITIES,
+                            options: {userId}
                         }}
-                        hasMore={!this.props.network.hasNoMore}
+                        hasMore={!network.hasNoMore}
                     />
 
                 </View>
-
 
                 <ActionButton
                     icon={<Icon name="search" size={30} color={UIStyles.Colors.white} />}
@@ -210,19 +203,17 @@ class NetworkScreen extends Component<Props, State> {
     }
 
 
-    renderItem(item) {
+    renderItem({item}) {
 
-        let it = item.item;
         return (
             <ActivityCell
-                onPressItem={() => this.navToActivity(it)}
-                activityId={it.id}
-                activityType={it.type}
+                onPressItem={() => this.navToActivity(item)}
+                activityId={item.id}
+                activityType={item.type}
                 navigator={this.props.navigator}
             />
         )
     }
-
 }
 
 const mapStateToProps = (state, ownProps) => ({
@@ -231,33 +222,37 @@ const mapStateToProps = (state, ownProps) => ({
     activity: state.activity
 });
 
-
-const actiontypes = (() => {
-    const FETCH_ACTIVITIES = new ApiAction("home/fetch_activities");
-    return {FETCH_ACTIVITIES};
-})();
+// const FETCH_ACTIVITIES = new ApiAction("home/fetch_activities");
 
 
-const actions = (() => {
-    return {
-        fetchActivities: () => {
-            return new Api.Call()
-                .withMethod('GET')
-                .withRoute("activities")
-                .addQuery({include: "user,resource,target"});
-        },
-    };
-})();
-
-const reducer = (() => {
-    const initialState = Immutable(Api.initialListState());
-
-    return (state = initialState, action = {}) => {
-        let desc = {fetchFirst: actiontypes.FETCH_ACTIVITIES};
-        return Api.reduceList(state, action, desc);
-    }
-})();
+// const actions = (() => {
+//     return {
+//         fetchMyNetwork: () => {
+//             return new Api.Call()
+//                 .withMethod('GET')
+//                 .withRoute("activities")
+//                 .addQuery({include: "user,resource,target"});
+//         },
+//     };
+// })();
+//
+// const reducer = (() => {
+//     const initialState = Immutable({});
+//     const initialSubState = Immutable(Api.initialListState());
+//
+//     return (state = initialState, action) => {
+//
+//         let {userId} = action.options || {};
+//
+//         if (userId) {
+//             let subState = state[userId] || initialSubState;
+//             subState = Api.reduceList(subState, action, {fetchFirst: FETCH_ACTIVITIES});
+//             state = state.merge({[userId]: subState}, {deep: true});
+//         }
+//         return state;
+//     }
+// })();
 
 let screen = connect(mapStateToProps)(NetworkScreen);
 
-export {reducer, screen};
+export {screen};

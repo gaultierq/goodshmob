@@ -95,15 +95,13 @@ class HomeScreen extends Component<Props, State> {
 
                         if (isLineup) {
                             let lineup: List = item;
-                            //let handler = this.props.onLineupPressed ? () => this.props.onLineupPressed(item) : null;
                             return (
                                 <TouchableWithoutFeedback
-                                    //onPress={handler}
+                                    onPress={this.onLineupPressed}
                                 >
                                     <View>
                                         <LineupCell
                                             lineup={lineup}
-                                            //onAddInLineupPressed={this.props.onAddInLineupPressed}
                                         />
                                     </View>
                                 </TouchableWithoutFeedback>
@@ -120,7 +118,7 @@ class HomeScreen extends Component<Props, State> {
                             return (
                                 <ItemCell
                                     item={resource}
-                                    //onPressItem={()=>this.props.onSavingPressed(saving)}
+                                    onPressItem={()=>this.onSavingPressed(saving)}
                                 />
                             )
                         }

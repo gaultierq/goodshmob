@@ -85,6 +85,7 @@ export default class NetworkSearchScreen extends Component<Props, State> {
                     inputStyle={styles.searchInput}
                     autoCapitalize='none'
                     autoCorrect={false}
+                    autoFocus
                 />
 
                 <FlatList

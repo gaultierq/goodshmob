@@ -13,7 +13,8 @@ type Props = {
     children?: Node,
     small?: boolean,
     text?: string,
-    style?: any
+    style?: any,
+    navigator: *
 };
 
 type State = {
@@ -26,7 +27,6 @@ export default class UserRow extends React.Component<Props, State> {
 
         let imageDim = small ? 20 : 30;
 
-
         return <View style={[style, {flexDirection: 'row'}]}>
             <Image
                 source={{uri: user ? user.image: ""}}
@@ -38,11 +38,13 @@ export default class UserRow extends React.Component<Props, State> {
             />
             <View style={{flex: 1, marginLeft: 8}}>
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={()=>this.navigateToUser(user)}
+                    >
                         <Text style={{
                             fontSize: 11,
                             color: UI.Colors.blue
-                        }}>{user ? `${user.firstName} ${user.lastName}` : ""}</Text>
+                        }}>{this.fullName(user)}</Text>
                     </TouchableOpacity>
                     {!!this.props.text &&
                     <Text style={{
@@ -60,6 +62,22 @@ export default class UserRow extends React.Component<Props, State> {
             </View>
 
         </View>
+    }
+
+
+    fullName(user) {
+        return user ? `${user.firstName} ${user.lastName}` : "";
+    }
+
+    navigateToUser(user) {
+        let navigator = this.props.navigator;
+
+        navigator.push({
+            screen: 'goodsh.UserScreen',
+            title: this.fullName(user),
+            passProps: {userId: user.id}
+        });
+
     }
 }
 const styles = StyleSheet.create({

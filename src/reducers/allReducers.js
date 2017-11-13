@@ -1,6 +1,6 @@
 import data1 from './dataReducer'
 import activity from '../activity/reducer';
-import {reducer as network} from '../screens/network';
+import {reducer as network} from '../screens/networkActions';
 import {reducer as savings} from '../screens/savings';
 import {reducer as search} from '../screens/search';
 import {reducer as comments} from '../screens/comments';

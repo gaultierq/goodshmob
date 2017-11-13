@@ -41,7 +41,9 @@ export default class ActivityDescription extends React.Component<Props, State> {
 
             <UserActivity
                 activityTime={activity.createdAt}
-                user={user}>
+                user={user}
+                navigator={this.props.navigator}
+            >
 
                 {/* in Séries(1) */}
                 {!!lineup && !skipLineup &&

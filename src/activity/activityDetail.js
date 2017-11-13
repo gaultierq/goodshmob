@@ -20,7 +20,8 @@ type Props = {
     activityId: Id,
     activityType: ActivityType,
     navigator: any,
-    onPressItem?: () => void
+    onPressItem?: () => void,
+    navigator: *
 };
 
 type State = {
@@ -128,7 +129,12 @@ class ActivityDetailScreen extends Component<Props, State> {
                         alignItems: 'center',
                     }
                     }>
-                        <UserRow user={activity.commentators[0]} text={"answered"} small={true}/>
+                        <UserRow
+                            user={activity.commentators[0]}
+                            text={"answered"}
+                            small={true}
+                            navigator={this.props.navigator}
+                        />
                         <Icon name="chevron-small-right" size={20} color={UI.Colors.grey1} />
                     </View>
                     }
