@@ -12,10 +12,12 @@ import {Item, List} from "../types"
 import Snackbar from "react-native-snackbar"
 import i18n from '../i18n/i18n'
 import * as UI from "./UIStyles";
-import CurrentUser from "../CurrentUser"
+import CurrentUser, {currentUserId} from "../CurrentUser"
 import {createLineup, saveItem} from "./actions";
 import {SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
+import ItemCell from "./components/ItemCell";
+import LineupCell from "./components/LineupCell";
 
 
 let DEEPLINK_SEARCH_TEXT_CHANGED = 'internal/home/search/change';
@@ -67,7 +69,75 @@ class HomeScreen extends Component<Props, State> {
                     });
                     break;
                 case 'search':
-                    this.setState({isSearching: true});
+                    //
+                    //this.setState({isSearching: true});
+                    const queries = [
+                        {
+                            indexName: 'Saving_development',
+                            params: {
+                                facets: "[\"list_name\"]",
+                                filters: 'user_id:' + currentUserId(),
+                            }
+                        }
+                    ];
+
+                    let navigator = this.props.navigator;
+
+
+                    let renderItem = ({item})=> {
+
+                        let isLineup = item.type === 'lists';
+
+                        //FIXME: item can be from search, and not yet in redux store
+                        //item = buildData(this.props.data, item.type, item.id) || item;
+
+                        //if (!item) return null;
+
+                        if (isLineup) {
+                            let lineup: List = item;
+                            //let handler = this.props.onLineupPressed ? () => this.props.onLineupPressed(item) : null;
+                            return (
+                                <TouchableWithoutFeedback
+                                    //onPress={handler}
+                                >
+                                    <View>
+                                        <LineupCell
+                                            lineup={lineup}
+                                            //onAddInLineupPressed={this.props.onAddInLineupPressed}
+                                        />
+                                    </View>
+                                </TouchableWithoutFeedback>
+                            )
+                        }
+                        else {
+                            let saving = item;
+
+                            let resource = saving.resource;
+
+                            //TODO: this is hack
+                            if (!resource) return null;
+
+                            return (
+                                <ItemCell
+                                    item={resource}
+                                    //onPressItem={()=>this.props.onSavingPressed(saving)}
+                                />
+                            )
+                        }
+                    };
+
+                    navigator.showModal({
+                        screen: 'goodsh.NetworkSearchScreen', // unique ID registered with Navigation.registerScreen
+                        title: "Rechercher dans mes listes", // navigation bar title of the pushed screen (optional)
+                        animationType: 'none',
+                        passProps:{
+                            onClickClose: () => navigator.dismissModal({animationType: 'none'}),
+                            queries,
+                            renderItem
+
+                        },
+                    });
+
                     break;
             }
         }
@@ -86,6 +156,8 @@ class HomeScreen extends Component<Props, State> {
             }
         }
     }
+
+
 
     render() {
 

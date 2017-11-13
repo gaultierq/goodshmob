@@ -18,7 +18,7 @@ import FriendScreen from './friends';
 import CommunityScreen from './community';
 import SendScreen from './send';
 import AskScreen from './ask';
-import NetworkSearchScreen from './networksearch';
+import NetworkSearchScreen from './algoliasearch';
 
 // register all screens of the app (including internal ones)
 export function registerScreens(store, Provider) {

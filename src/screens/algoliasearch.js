@@ -1,7 +1,8 @@
 // @flow
 
+import type {Node} from 'react';
 import React, {Component} from 'react';
-import {Button, Text, ActivityIndicator, FlatList, StyleSheet, View, TouchableWithoutFeedback} from 'react-native';
+import {ActivityIndicator, Button, FlatList, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
 import {connect} from "react-redux";
 import {combineReducers} from "redux";
 import {TabBar, TabViewAnimated} from 'react-native-tab-view';
@@ -11,13 +12,11 @@ import * as UIStyles from "../screens/UIStyles"
 import algoliasearch from 'algoliasearch/reactnative';
 import type {Item, List, SearchState, SearchToken} from "../types";
 import {createResultFromHit} from "../utils/AlgoliaUtils";
-import LineupCell from "./components/LineupCell";
-import ItemCell from "./components/ItemCell";
 
 type Props = {
-    onItemSelected: Function;
-    search: Function,
-    onClickClose: Function
+    onClickClose: Function,
+    renderItem: (item) => Node,
+    queries: Array<*>
 };
 
 type State = {
@@ -90,7 +89,7 @@ export default class NetworkSearchScreen extends Component<Props, State> {
 
                 <FlatList
                     data={searchResult}
-                    renderItem={this.renderItem.bind(this)}
+                    renderItem={this.props.renderItem.bind(this)}
                     keyExtractor={(item) => item.id}
                     ListFooterComponent={this.renderSearchFooter.bind(this)}
                 />
@@ -113,47 +112,7 @@ export default class NetworkSearchScreen extends Component<Props, State> {
         return <Button title="load more" onPress={()=>{this.performAlgoliaSearch(search.token, nextPage)}}/>;
     }
 
-    renderItem({item}) {
 
-        let isLineup = item.type === 'lists';
-
-        //FIXME: item can be from search, and not yet in redux store
-        //item = buildData(this.props.data, item.type, item.id) || item;
-
-        //if (!item) return null;
-
-        if (isLineup) {
-            let lineup: List = item;
-            //let handler = this.props.onLineupPressed ? () => this.props.onLineupPressed(item) : null;
-            return (
-                <TouchableWithoutFeedback
-                    //onPress={handler}
-                    >
-                    <View>
-                        <LineupCell
-                            lineup={lineup}
-                            //onAddInLineupPressed={this.props.onAddInLineupPressed}
-                        />
-                    </View>
-                </TouchableWithoutFeedback>
-            )
-        }
-        else {
-            let saving = item;
-
-            let resource = saving.resource;
-
-            //TODO: this is hack
-            if (!resource) return null;
-
-            return (
-                <ItemCell
-                    item={resource}
-                    //onPressItem={()=>this.props.onSavingPressed(saving)}
-                />
-            )
-        }
-    }
 
     getSearchObj() {
         return this.state.input ? this.state.searches[this.state.input] : null;
@@ -168,21 +127,15 @@ export default class NetworkSearchScreen extends Component<Props, State> {
         let client = algoliasearch("8UTETUZKD3", "c80385095ff870f5ddf9ba25310a9d5a");
         let search = this.state.searches[token] || {token, searchState: 1};
 
-        let params = {
-            page,
-            hitsPerPage: 2,
-            facets: "[\"list_name\"]",
-            //filters: 'user_id:' + this.props.userId,
-        };
 
-        const queries = [
-            {
-                indexName: 'Saving_development',
-                query: token,
-                params
-            }
-        ];
+        const queries = this.props.queries.map(q=>{
+            let params = q.params;
+            params = {...params, page, hitsPerPage: 2};
+            return {...q, params, query: token}
+        });
 
+
+        console.info("algolia search:" + JSON.stringify(queries));
 
         this.setState({searches: {...this.state.searches, [token]: search}}, ()=> console.log("new search state "+JSON.stringify(this.state)));
         console.log(`algolia: searching ${token}`);
@@ -195,7 +148,7 @@ export default class NetworkSearchScreen extends Component<Props, State> {
             }
             let result = content.results[0];
             let hits = result.hits;
-            console.log(`search result lists: ${JSON.stringify(content)}`);
+            console.log(`search result lists: ${JSON.stringify(content.length)}`);
             let searchResult = createResultFromHit(hits);
 
             let search: SearchState = this.state.searches[token];

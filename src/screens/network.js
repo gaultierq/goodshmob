@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react';
-import {Platform, View, FlatList, RefreshControl, ActivityIndicator} from 'react-native';
+import {Platform, View, FlatList, RefreshControl, ActivityIndicator, TouchableWithoutFeedback} from 'react-native';
 import {connect} from "react-redux";
 import ActivityCell from "../activity/components/ActivityCell";
 import * as UIStyles from "./UIStyles"
@@ -15,6 +15,9 @@ import ApiAction from "../utils/ApiAction";
 import type {Ask, NavigableProps} from "../types";
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {currentUserId} from "../CurrentUser";
+import ItemCell from "./components/ItemCell";
+import LineupCell from "./components/LineupCell";
 
 
 type Props = NavigableProps;
@@ -135,11 +138,66 @@ class NetworkScreen extends Component<Props, State> {
     onFloatingButtonPressed() {
         let navigator = this.props.navigator;
 
+
+        const queries = [
+            {
+                indexName: 'Saving_development',
+                params: {
+                    facets: "[\"list_name\"]",
+                    filters: 'user_id:' + currentUserId(),
+                }
+            }
+        ];
+
+        let renderItem = ({item})=> {
+
+            let isLineup = item.type === 'lists';
+
+            //FIXME: item can be from search, and not yet in redux store
+            //item = buildData(this.props.data, item.type, item.id) || item;
+
+            //if (!item) return null;
+
+            if (isLineup) {
+                let lineup: List = item;
+                //let handler = this.props.onLineupPressed ? () => this.props.onLineupPressed(item) : null;
+                return (
+                    <TouchableWithoutFeedback
+                        //onPress={handler}
+                    >
+                        <View>
+                            <LineupCell
+                                lineup={lineup}
+                                //onAddInLineupPressed={this.props.onAddInLineupPressed}
+                            />
+                        </View>
+                    </TouchableWithoutFeedback>
+                )
+            }
+            else {
+                let saving = item;
+
+                let resource = saving.resource;
+
+                //TODO: this is hack
+                if (!resource) return null;
+
+                return (
+                    <ItemCell
+                        item={resource}
+                        //onPressItem={()=>this.props.onSavingPressed(saving)}
+                    />
+                )
+            }
+        };
+
         navigator.showModal({
             screen: 'goodsh.NetworkSearchScreen', // unique ID registered with Navigation.registerScreen
             title: "Rechercher dans mon réseau", // navigation bar title of the pushed screen (optional)
             passProps:{
-                onClickClose: navigator.dismissModal
+                onClickClose: navigator.dismissModal,
+                queries,
+                renderItem
             },
         });
     }
