@@ -10,7 +10,7 @@ export default class ItemCell extends React.Component {
 
     props: {
         onPressItem: Function;
-        displayDetails: boolean
+        displayDetails?: boolean
     };
 
     render() {

@@ -18,8 +18,9 @@ import FriendScreen from './friends';
 import CommunityScreen from './community';
 import SendScreen from './send';
 import AskScreen from './ask';
-import NetworkSearchScreen from './algoliasearch';
+import AlgoliaSearchScreen from './algoliasearch';
 import UserScreen from './user';
+import NetworkSearchScreen from './networksearch';
 
 // register all screens of the app (including internal ones)
 export function registerScreens(store, Provider) {
@@ -41,6 +42,7 @@ export function registerScreens(store, Provider) {
     Navigation.registerComponent('goodsh.SendScreen', () => SendScreen, store, Provider);
     Navigation.registerComponent('goodsh.ProfileScreen', () => ProfileScreen, store, Provider);
     Navigation.registerComponent('goodsh.AskScreen', () => AskScreen, store, Provider);
-    Navigation.registerComponent('goodsh.NetworkSearchScreen', () => NetworkSearchScreen, store, Provider);
+    Navigation.registerComponent('goodsh.AlgoliaSearchScreen', () => AlgoliaSearchScreen, store, Provider);
     Navigation.registerComponent('goodsh.UserScreen', () => UserScreen, store, Provider);
+    Navigation.registerComponent('goodsh.NetworkSearchScreen', () => NetworkSearchScreen, store, Provider);
 }

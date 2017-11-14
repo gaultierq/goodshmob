@@ -129,22 +129,10 @@ export default {
         },
         "duplicated_list":"Cette Line up existe déjà.",
         "invalid_list_name":"Nom de line up non valide: %{list_name}",
-        "search_bar":{
-            "me_placeholder":"Rechercher une %{line_up}",
-            "friends_placeholder":"Rechercher une %{line_up} ou un %{person}"
-        }
     },
-    "home_screen":{
-        "search_bar":{
-            "placeholder":"Pour trouver un GOODSH' à partager, c'est par ici"
-        },
-        "feed":{
-            "unread_activities":"Refresh",
-            "check_it_out":"Ça m'intéresse !",
-            "comment":"Commentaire",
-            "one_comment":"commentaire",
-            "x_comments":"commentaires"
-        }
+    "search_bar":{
+        "me_placeholder":"Rechercher dans vos listes",
+        "network_placeholder":"Rechercher dans votre réseau"
     },
     "search_item_screen":{
         "tabs": {

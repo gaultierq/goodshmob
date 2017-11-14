@@ -10,15 +10,16 @@ import i18n from '../i18n/i18n'
 import {SearchBar} from 'react-native-elements'
 import * as UIStyles from "../screens/UIStyles"
 import algoliasearch from 'algoliasearch/reactnative';
-import type {Item, List, SearchState, SearchToken} from "../types";
+import type {i18Key, Item, List, SearchState, SearchToken} from "../types";
 import {createResultFromHit} from "../utils/AlgoliaUtils";
 import Button from 'apsl-react-native-button'
 import * as UI from "./UIStyles";
 
 type Props = {
-    onClickClose: Function,
+    onClickClose?: Function,
     renderItem: (item) => Node,
-    queries: Array<*>
+    queries: Array<*>,
+    placeholder: i18Key
 };
 
 type State = {
@@ -27,7 +28,7 @@ type State = {
 };
 
 @connect()
-export default class NetworkSearchScreen extends Component<Props, State> {
+export default class AlgoliaSearchScreen extends Component<Props, State> {
 
     static navigatorButtons = {
         rightButtons: [
@@ -45,7 +46,10 @@ export default class NetworkSearchScreen extends Component<Props, State> {
 
     constructor(props) {
         super(props);
-        props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+        if (props.onClickClose) {
+            props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+        }
+
     }
 
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
@@ -68,34 +72,34 @@ export default class NetworkSearchScreen extends Component<Props, State> {
         let searchResult: Array<Item|List> = (search && search.data) || [];
         let hasSearchResult = search && search.data && search.data.length > 0;
 
-        let isSearching = search && search.searchState === 1;
+        let isSearchRequesting = search && search.searchState === 1;
 
-        let emptySearchResult = !isSearching && !hasSearchResult;
+        let emptySearchResult = search && !isSearchRequesting && !hasSearchResult;
 
         console.debug("DEBUG: search render:" + searchResult.length);
 
         return (
             <View style={{width:"100%", height: "100%"}}>
                 <SearchBar
+                    autoFocus
                     lightTheme
                     onChangeText={this.onSearchInputChange.bind(this)}
-                    placeholder={i18n.t('search_item_screen.placeholder.lol')}
+                    placeholder={i18n.t(this.props.placeholder)}
                     clearIcon={{color: '#86939e'}}
                     containerStyle={styles.searchContainer}
                     inputStyle={styles.searchInput}
                     autoCapitalize='none'
                     autoCorrect={false}
-                    autoFocus
                 />
 
-                <FlatList
+                {!emptySearchResult && <FlatList
                     data={searchResult}
                     renderItem={this.props.renderItem.bind(this)}
                     keyExtractor={(item) => item.id}
                     ListFooterComponent={this.renderSearchFooter.bind(this)}
-                />
+                />}
 
-                {emptySearchResult && <Text>Pas de résultat</Text>}
+                {emptySearchResult && <Text style={{alignSelf: "center", marginTop: 20}}>Pas de résultat</Text>}
 
             </View>
 

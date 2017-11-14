@@ -14,6 +14,7 @@ import {currentUserId} from "../CurrentUser";
 import ItemCell from "./components/ItemCell";
 import LineupCell from "./components/LineupCell";
 import {FETCH_ACTIVITIES, fetchMyNetwork} from "./networkActions";
+import * as Nav from "./Nav";
 
 
 type Props = NavigableProps;
@@ -186,11 +187,19 @@ class NetworkScreen extends Component<Props, State> {
 
         navigator.showModal({
             screen: 'goodsh.NetworkSearchScreen', // unique ID registered with Navigation.registerScreen
-            title: "Rechercher dans mon réseau", // navigation bar title of the pushed screen (optional)
+            title: "Rechercher", // navigation bar title of the pushed screen (optional)
             passProps:{
-                onClickClose: navigator.dismissModal,
+                onClickClose: () => navigator.dismissModal(),
                 queries,
                 renderItem
+            },
+            navigatorButtons: {
+                leftButtons: [
+                    {
+                        id: Nav.CANCEL,
+                        title: "Cancel"
+                    }
+                ],
             },
         });
     }

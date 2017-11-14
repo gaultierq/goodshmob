@@ -10,7 +10,7 @@ import type {List, Saving} from "../../types";
 
 
 type Props = {
-    onAddInLineupPressed:? Function,
+    onAddInLineupPressed?: Function,
     lineup: List
 };
 

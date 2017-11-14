@@ -130,22 +130,10 @@ export default {
         },
         "duplicated_list":"You already have a list with this name.",
         "invalid_list_name":"Invalid list name: %{list_name}",
-        "search_bar":{
-            "me_placeholder":"Type name of %{line_up} to search!",
-            "friends_placeholder":"Type name of %{line_up} or a %{person} to search!"
-        }
     },
-    "home_screen":{
-        "search_bar":{
-            "placeholder":"Type here to find a GOODSH'"
-        },
-        "feed":{
-            "unread_activities":"Refresh",
-            "check_it_out":"Check it out",
-            "comment":"Comment",
-            "one_comment":"comment",
-            "x_comments":"comments"
-        }
+    "search_bar":{
+        "me_placeholder":"Search in your lists",
+        "network_placeholder":"Browse your network"
     },
     "search_item_screen":{
         "tabs": {

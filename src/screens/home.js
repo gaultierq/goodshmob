@@ -125,13 +125,14 @@ class HomeScreen extends Component<Props, State> {
                     };
 
                     navigator.showModal({
-                        screen: 'goodsh.NetworkSearchScreen', // unique ID registered with Navigation.registerScreen
-                        title: "Rechercher dans mes listes", // navigation bar title of the pushed screen (optional)
+                        screen: 'goodsh.AlgoliaSearchScreen', // unique ID registered with Navigation.registerScreen
+                        title: "Rechercher", // navigation bar title of the pushed screen (optional)
                         animationType: 'none',
                         passProps:{
                             onClickClose: () => navigator.dismissModal({animationType: 'none'}),
                             queries,
-                            renderItem
+                            renderItem,
+                            placeholder: "search_bar.me_placeholder"
 
                         },
                     });
@@ -449,6 +450,7 @@ class HomeNavBar extends Component<NavProps, NavState> {
 
         return (
             <SearchBar
+                autoFocus
                 lightTheme
                 onChangeText={this.onChangeText.bind(this)}
                 onClearText={this.onClearText.bind(this)}

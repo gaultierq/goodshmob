@@ -24,6 +24,7 @@ class AddInScreen extends Component<Props, State> {
         return (
             <View style={[styles.container]}>
                 <SearchBar
+                    autoFocus
                     lightTheme
                     round
                     onChangeText={this.onSearchInputChange.bind(this)}
