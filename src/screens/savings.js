@@ -1,19 +1,16 @@
 // @flow
 
 import React, {Component} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, View, Text} from 'react-native';
 import {connect} from "react-redux";
 import {MainBackground} from "./UIComponents";
 import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
 import Feed from "./components/feed";
-import Swipeout from 'react-native-swipeout';
-import type {Saving} from "../types";
-import {buildNonNullData, doDataMergeInState, sanitizeActivityType} from "../utils/DataUtils";
-import CurrentUser from "../CurrentUser"
+import type {List, Saving, User} from "../types";
+import {buildNonNullData, doDataMergeInState} from "../utils/DataUtils";
 import ApiAction from "../utils/ApiAction";
 import ActivityCell from "../activity/components/ActivityCell";
-import type {User, List} from "../types";
 
 
 type Props = {
@@ -55,6 +52,7 @@ class SavingsScreen extends Component<Props, State> {
         return (
             <MainBackground>
                 <View style={styles.container}>
+                    {lineup.description && <Text style={[styles.description]}>{lineup.description}</Text>}
                     <Feed
                         data={lineup.savings}
                         renderItem={item => this.renderItem(item, lineup)}
@@ -115,11 +113,6 @@ class SavingsScreen extends Component<Props, State> {
     }
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    }
-});
 
 const mapStateToProps = (state, ownProps) => ({
     data: state.data,
@@ -202,3 +195,14 @@ const reducer = (() => {
 let screen = connect(mapStateToProps)(SavingsScreen);
 
 export {reducer, screen, actions};
+
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    description: {
+        backgroundColor: 'transparent',
+        margin: 10
+    },
+});
