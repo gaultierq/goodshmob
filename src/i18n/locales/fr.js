@@ -134,6 +134,10 @@ export default {
         "me_placeholder":"Rechercher dans vos listes",
         "network_placeholder":"Rechercher dans votre réseau"
     },
+    "network_search_tabs":{
+        "savings":"Goodshs & Lineups",
+        "users":"Goodshers"
+    },
     "search_item_screen":{
         "tabs": {
             "consumer_goods":"TRUC",

@@ -18,6 +18,7 @@ import {SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import ItemCell from "./components/ItemCell";
 import LineupCell from "./components/LineupCell";
+import {createResultFromHit} from "../utils/AlgoliaUtils";
 
 
 let DEEPLINK_SEARCH_TEXT_CHANGED = 'internal/home/search/change';
@@ -130,8 +131,8 @@ class HomeScreen extends Component<Props, State> {
                                             filters: 'user_id:' + currentUserId(),
                                         }
                                     },
+                                    parseResponse: createResultFromHit,
                                     renderItem,
-                                    tabName: "lol"
                                 }
                             ],
                             placeholder: "search_bar.me_placeholder"

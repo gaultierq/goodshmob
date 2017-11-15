@@ -21,6 +21,7 @@ export type SearchCategoryType = string;
 export type SearchCategory = {
     type: SearchCategoryType,
     query: *,
+    parseResponse: (hits) => *,
     renderItem: (item: *) => Node,
     tabName: i18Key
 }
@@ -167,6 +168,7 @@ export default class AlgoliaSearchScreen extends Component<Props, State> {
             let categories = this.props.categories;
             categories.reduce((res, c) => {
                 res[c.type] = {token}
+                return res;
             }, search = {})
         }
 
@@ -208,7 +210,7 @@ export default class AlgoliaSearchScreen extends Component<Props, State> {
                 let hits = result.hits;
                 console.log(`search result lists: ${JSON.stringify(content.length)}`);
 
-                let searchResult = createResultFromHit(hits);
+                let searchResult = c.parseResponse(hits);
                 let type = c.type;
 
                 let search: SearchState = this.state.searches[token][type];
@@ -221,6 +223,7 @@ export default class AlgoliaSearchScreen extends Component<Props, State> {
                 search.nbPages = result.nbPages;
 
                 obj[type] = search;
+                return obj;
             }, res);
             //res = {savings: {data...}
 

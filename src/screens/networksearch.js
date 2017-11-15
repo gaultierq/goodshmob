@@ -9,6 +9,8 @@ import ItemCell from "./components/ItemCell";
 import LineupCell from "./components/LineupCell";
 import {currentUserId} from "../CurrentUser";
 import * as Nav from "./Nav";
+import UserRow from "../activity/components/UserRow";
+import {createResultFromHit, createResultFromHit2} from "../utils/AlgoliaUtils";
 
 
 type Props = NavigableProps & {
@@ -86,14 +88,54 @@ export default class NetworkSearchScreen extends Component<Props, State> {
             }
         };
 
+        let renderUser = ({item}) => {
+            return (
+                <UserRow user={item}
+                         navigator={this.props.navigator}
+                />
+            );
+        };
+
+        let categories = [
+            {
+                type: "savings",
+                query: {
+                    indexName: 'Saving_development',
+                    params: {
+                        facets: "[\"list_name\"]",
+                        //filters: 'user_id:' + currentUserId(),
+                    }
+
+                },
+                tabName: "network_search_tabs.savings",
+                parseResponse: createResultFromHit,
+                renderItem,
+            },
+            {
+                type: "users",
+                query: {
+                    indexName: 'User_development',
+                    params: {
+                        //facets: "[\"list_name\"]",
+                        //filters: 'user_id:' + currentUserId(),
+                    }
+
+                },
+                tabName: "network_search_tabs.users",
+                parseResponse: createResultFromHit2,
+                renderItem: renderUser,
+            },
+
+        ];
+
         let navigator = this.props.navigator;
-        return <AlgoliaSearchScreen
-            //onClickClose={() => navigator.dismissModal({animationType: 'none'})}
-            queries={queries}
-            renderItem={renderItem}
-            placeholder={"search_bar.network_placeholder"}
-            navigator={navigator}
-        />
+        return (
+            <AlgoliaSearchScreen
+                categories={categories}
+                placeholder={"search_bar.network_placeholder"}
+                navigator={navigator}
+            />
+        );
     }
 
 

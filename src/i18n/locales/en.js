@@ -135,6 +135,10 @@ export default {
         "me_placeholder":"Search in your lists",
         "network_placeholder":"Browse your network"
     },
+    "network_search_tabs":{
+        "savings":"Goodshs & Lineups",
+        "users":"Goodshers"
+    },
     "search_item_screen":{
         "tabs": {
             "consumer_goods":"STUFF",

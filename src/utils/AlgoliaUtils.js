@@ -53,3 +53,27 @@ export function createResultFromHit(hits, options = {}) {
     });
     return searchResult;
 }
+export function createResultFromHit2(hits, options = {}) {
+
+    return hits.map((h) => {
+
+        const {
+            objectID,
+            first_name,
+            last_name,
+            email,
+            image,
+        } = h;
+
+        return {
+            id: objectID,
+            firstName: first_name,
+            lastName: last_name,
+            email,
+            image,
+            type: "users"
+        };
+
+
+    });
+}
