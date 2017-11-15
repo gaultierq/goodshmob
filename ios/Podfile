@@ -18,7 +18,7 @@ target 'goodshmob' do
   target 'goodshmobTests' do
     inherit! :search_paths
     # Pods for testing
-  endr
+  end
 
 end
 
