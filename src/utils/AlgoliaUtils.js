@@ -63,6 +63,7 @@ export function createResultFromHit2(hits, options = {}) {
             last_name,
             email,
             image,
+            friends_id
         } = h;
 
         return {
@@ -71,7 +72,8 @@ export function createResultFromHit2(hits, options = {}) {
             lastName: last_name,
             email,
             image,
-            type: "users"
+            type: "users",
+            friends: friends_id.map(id=>{return {id, type: "users"}})
         };
 
 

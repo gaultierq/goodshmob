@@ -1,16 +1,16 @@
 // @flow
 
 import React from 'react';
-import {FlatList, Image, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
+import type {Node} from 'react';
+import {FlatList, Image, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, View} from 'react-native';
 import * as UI from "../UIStyles";
 import {assertUnique} from "../../utils/DataUtils";
 import {isEmpty} from "lodash";
 import type {List, Saving} from "../../types";
 
-
-
 type Props = {
     onAddInLineupPressed?: Function,
+    moreComponent?: Node,
     lineup: List
 };
 
@@ -26,12 +26,17 @@ export default class LineupCell extends React.Component<Props, State> {
 
         assertUnique(savings);
 
+        let moreComponent = this.props.moreComponent;
         return (
             <View style={styles.container}>
 
-                <Text style={styles.lineupTitle}>
-                    {lineup.name}
-                </Text>
+
+                <View style={{flexDirection: "row"}}>
+                    <Text style={styles.lineupTitle}>{lineup.name}</Text>
+                    {
+                        moreComponent && <View style={{position: "absolute", right: 20, top: 5}}>{moreComponent}</View>
+                    }
+                </View>
 
                 {
                     isEmpty(savings) ?
@@ -44,7 +49,9 @@ export default class LineupCell extends React.Component<Props, State> {
                             ListHeaderComponent={
                                 this.renderAddInLineup(lineup)
                             }
-                        />}
+                        />
+                }
+
             </View>
         )
     }

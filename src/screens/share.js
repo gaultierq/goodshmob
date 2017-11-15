@@ -51,7 +51,7 @@ class ShareScreen extends Component<Props, State> {
                 </View>
                 <View style={{height: 300, margin: 16}}>
                     <TouchableOpacity
-                        style={styles.button}
+                        style={styles.loadMoreButton}
                         onPress={()=>this.copyToClipboard(item)}>
                         <Image source={require('../img/link_icon.png')}
                                resizeMode="contain"
@@ -59,7 +59,7 @@ class ShareScreen extends Component<Props, State> {
                         <Text style={styles.buttonText}>COPIER LE LIEN</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        style={styles.button}
+                        style={styles.loadMoreButton}
                         onPress={()=>this.send(item)}>
                         <Image source={require('../img/network.png')}
                                resizeMode="contain"
@@ -67,7 +67,7 @@ class ShareScreen extends Component<Props, State> {
                         <Text style={styles.buttonText}>ENVOYER À UN {"\n"}AUTRE {"\n"}GOODSHER</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        style={styles.button}
+                        style={styles.loadMoreButton}
                         onPress={()=>this.share(item)}>
                         <Image source={require('../img/share_icon.png')}
                                resizeMode="contain"
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
         height: 40,
         marginRight: 14,
     },
-    button: {
+    loadMoreButton: {
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',

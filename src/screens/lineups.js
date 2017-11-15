@@ -11,6 +11,7 @@ import {
     StyleSheet,
     Text,
     TextInput,
+    TouchableOpacity,
     TouchableWithoutFeedback,
     View
 } from 'react-native';
@@ -21,50 +22,43 @@ import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
 import * as UI from "../screens/UIStyles";
 import {SearchBar} from 'react-native-elements'
-import Fuse from 'fuse.js'
-import type types, {Id, Item, List, Saving, SearchState, User} from "../types";
-import ItemCell from "./components/ItemCell";
+import type types, {Id, Item, List, User} from "../types";
 import Feed from "./components/feed";
-import Swipeout from "react-native-swipeout";
 import CurrentUser from "../CurrentUser"
-import {actions as savingsActions} from "./savings"
 import ApiAction from "../utils/ApiAction";
 import {buildData, doDataMergeInState} from "../utils/DataUtils";
 import {CREATE_LINEUP, SAVE_ITEM} from "./actions"
-import algoliasearch from 'algoliasearch/reactnative';
 import * as Nav from "./Nav";
 import * as _ from "lodash";
 import dotprop from "dot-prop-immutable"
-import {createResultFromHit} from "../utils/AlgoliaUtils";
+
+export const DELETE_LINEUP = new ApiAction("delete_lineup");
 
 type Props = {
     userId: Id,
     onLineupPressed: (lineup: List) => void,
     onSavingPressed: Function,
-    onAddInLineupPressed: Function,
     canFilterOverItems: boolean | ()=>boolean,
-    filter:? string,
+    // filter:? string,
     data?: any,
     onCancel?: ()=>void,
-    ListHeaderComponent?: Node
+    ListHeaderComponent?: Node,
+    renderItem: (item)=>Node,
+    navigator: *
+
 };
 
 type State = {
-    isLoading: boolean,
-    isLoadingMore: boolean,
-    // filter: string,  //filter lists over this search token
-    search: { [string]: SearchState},
+    isLoading?: boolean,
+    isLoadingMore?: boolean,
 };
-
 
 
 class LineupListScreen extends Component<Props, State> {
 
     state = {
-        // filter: null,
         isLoading: false,
         isLoadingMore: false,
-        search: {}
     };
 
 
@@ -72,13 +66,6 @@ class LineupListScreen extends Component<Props, State> {
         super(props);
         props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
-
-    componentWillReceiveProps({filter}) {
-        if (this.props.filter !== filter) {
-            this.performAlgoliaSearch(filter);
-        }
-    }
-
 
     onNavigatorEvent(event) {
         if (event.type === 'NavBarButtonPress') {
@@ -89,7 +76,7 @@ class LineupListScreen extends Component<Props, State> {
     }
 
     render() {
-        const {userId, filter} = this.props;
+        const {userId/*, filter*/} = this.props;
 
         let user: User = buildData(this.props.data, "users", userId);
 
@@ -110,241 +97,32 @@ class LineupListScreen extends Component<Props, State> {
             };
         }
 
-        let data: Array<types.List|types.Item>;
-        let search = this.getSearchObj();
-
-        let searchResult: Array<Item|List> = search ? search.data : null;
-        let hasSearchResult = search && search.data && search.data.length > 0;
-
-        let emptySearchResult = false;
-        let isSearching = search && search.searchState === 1;
-
-        let isSearchMode = this.isSearchMode();
-
-        if (isSearchMode) {
-            // data = [].concat(searchResult.lists, searchResult.savings);
-            data = searchResult;
-            emptySearchResult = !isSearching && !hasSearchResult;
-        }
-        else {
-            data = lists;
-        }
+        let data: Array<types.List|types.Item> = lists;
 
         return (
             <View>
-
-                {
-                    isSearchMode &&
-                    <FlatList
-                        data={searchResult}
-                        renderItem={this.renderItem.bind(this)}
-                        keyExtractor={(item) => item.id}
-                        ListFooterComponent={this.renderSearchFooter.bind(this)}
-                    />
-                }
-
-                {!isSearchMode &&
                 <Feed
                     data={data}
                     renderItem={this.renderItem.bind(this)}
                     fetchSrc={fetchSrc}
                     ListHeaderComponent={this.props.ListHeaderComponent}
-                />}
-
-                {emptySearchResult && <Text>Pas de résultat</Text>}
-
+                />
             </View>
         );
     }
 
-    getSearchObj() {
-        return this.props.filter ? this.state.search[this.props.filter] : null;
-    }
 
-    isSearchMode() {
-        return !!this.props.filter;
-    }
-
-    renderSearchFooter() {
-        let search = this.getSearchObj();
-        if (!search) return null;
-        let nextPage = search.page + 1;
-
-        let hasMore = nextPage < search.nbPages;
-        if (!hasMore) return null;
-        return <Button title="load more" onPress={()=>{this.performAlgoliaSearch(search.token, nextPage)}}/>;
-    }
-
-    canFilterOverItems() {
-        let cfoi = this.props.canFilterOverItems;
-        if (cfoi instanceof Function) return cfoi();
-        return cfoi;
-    }
-
-    applyFilter(lineups) {
-        if (!lineups) return lineups;
-        let searchIn = [];
-
-        lineups.forEach((lu: types.List) => {
-            searchIn.push(lu);
-
-            if (this.canFilterOverItems()) {
-                // searchIn = searchIn.concat(lu.savings.map((sa: types.Saving)=>sa.resource))
-                searchIn = searchIn.concat(lu.savings)
-            }
-        });
-
-        let fuse = new Fuse(searchIn, {
-            keys: [{
-                name: 'name',
-                weight: 0.6
-            }, {
-                name: 'resource.title',
-                weight: 0.4
-            }],
-            // keys: ['name', 'title'],
-            sort: true,
-            threshold: 0.6
-        });
-
-        return fuse.search(this.state.filter);
-    }
-
-    // onSearchInputChange(input:string) {
-    //     this.setState({filter: input});
-    //
-    //     if (input) {
-    //         let search = this.state.search[input];
-    //         if (!search) {
-    //             this.performAlgoliaSearch(input);
-    //         }
-    //     }
-    //     else {
-    //         //this.setState({searchResult: []});
-    //     }
-    // }
-
-    performAlgoliaSearch(token, page: number = 0) {
-        let client = algoliasearch("8UTETUZKD3", "c80385095ff870f5ddf9ba25310a9d5a");
-        let search = this.state.search[token] || {token, searchState: 1};
-
-        let params = {
-            page,
-            hitsPerPage: 2,
-            facets: "[\"list_name\"]",
-            filters: 'user_id:' + this.props.userId,
-        };
-
-        if (!this.canFilterOverItems()) {
-            params = {...params, "restrictSearchableAttributes": "list_name"};
-        }
-
-        const queries = [
-            {
-                indexName: 'Saving_development',
-                query: token,
-                params
-            }
-        ];
-
-        this.setState({search: {...this.state.search, [token]: search}}, ()=> console.log("new search state "+JSON.stringify(this.state)));
-        console.log(`algolia: searching ${token}`);
-        client.search(queries, (err, content) => {
-
-            //FIXME: do not build object here. The main use-case is a result not in the redux store.
-            if (err) {
-                console.error(err);
-                return;
-            }
-            let result = content.results[0];
-            let hits = result.hits;
-            console.log(`search result lists: ${JSON.stringify(content)}`);
-            let canFilterOverItems = this.canFilterOverItems();
-
-            let searchResult = createResultFromHit(hits, {filterItems: !canFilterOverItems});
-
-            let search: SearchState = this.state.search[token];
-
-            if (!search.data) search.data = [];
-
-            search.data = search.data.concat(searchResult);
-            search.searchState = 2;
-            search.page = result.page;
-            search.nbPages = result.nbPages;
-
-            this.setState({search: {...this.state.search, input: search}});
-        });
-
-    }
-
-
-    isSearching() {
-        return !!this.state.filter;
-    }
-
-    //render a lineup row
     renderItem({item}) {
 
-        let result;
-        let isLineup = item.type === 'lists';
+        if (!(item.type === 'lists')) throw "unexpected";
 
-        //FIXME: item can be from search, and not yet in redux store
         item = buildData(this.props.data, item.type, item.id) || item;
 
-        //if (!item) return null;
+        let {renderItem, navigator} = this.props;
 
-        if (isLineup) {
-            let handler = this.props.onLineupPressed ? () => this.props.onLineupPressed(item) : null;
-            result = (
-                <TouchableWithoutFeedback onPress={handler}>
-                    <View>
-                        <LineupCell
-                            lineup={item}
-                            onAddInLineupPressed={this.props.onAddInLineupPressed}
-                        />
-                    </View>
-                </TouchableWithoutFeedback>
-            )
-        }
-        else {
-            let saving = item;
-
-            let resource = saving.resource;
-
-            //TODO: this is hack
-            if (!resource) return null;
-
-            result = (
-                <ItemCell
-                    item={resource}
-                    onPressItem={()=>this.props.onSavingPressed(saving)}
-                />
-            )
-        }
-
-        let disabled = !this.isCurrentUser();
-
-        let swipeBtns = [{
-            text: 'Delete',
-            backgroundColor: 'red',
-            underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-            onPress: () => this.props.dispatch((isLineup? actions.deleteLineup : savingsActions.deleteSaving)(item))
-        }];
-
-        // return result;
-        return (
-            <Swipeout right={swipeBtns}
-                      autoClose={true}
-                      backgroundColor= 'transparent'
-                      disabled={disabled}>
-                {result}
-            </Swipeout>
-        )
+        return (renderItem || renderSimpleListItem(navigator))(item);
     }
 
-    isCurrentUser() {
-        return this.props.userId === CurrentUser.id;
-    }
 }
 
 
@@ -355,7 +133,6 @@ const mapStateToProps = (state, ownProps) => ({
 
 const GET_USER_W_LISTS = new ApiAction("get_user");
 const FETCH_LINEUPS = new ApiAction("fetch_lineups");
-const DELETE_LINEUP = new ApiAction("delete_lineup");
 
 const actions = (() => {
 
@@ -371,13 +148,13 @@ const actions = (() => {
             .withRoute(`users/${userId}`)
             .addQuery({include: "lists,lists.savings,lists.savings.resource"}),
 
-        deleteLineup : (lineup) => {
-            let call = new Api.Call()
-                .withMethod('DELETE')
-                .withRoute(`lists/${lineup.id}`);
-
-            return call.disptachForAction2(DELETE_LINEUP, {lineupId: lineup.id});
-        },
+        // deleteLineup : (lineup) => {
+        //     let call = new Api.Call()
+        //         .withMethod('DELETE')
+        //         .withRoute(`lists/${lineup.id}`);
+        //
+        //     return call.disptachForAction2(DELETE_LINEUP, {lineupId: lineup.id});
+        // },
     };
 })();
 
@@ -461,3 +238,18 @@ const styles = StyleSheet.create({
 });
 
 export {reducer, screen};
+
+export function renderSimpleListItem(navigator: *) {
+
+    return (item: List) => (<TouchableWithoutFeedback
+        onPress={() => {
+            navigator.push({
+                screen: 'goodsh.SavingsScreen', // unique ID registered with Navigation.registerScreen
+                passProps: {
+                    lineupId: item.id,
+                },
+            });
+        }}>
+        <LineupCell lineup={item}/>
+    </TouchableWithoutFeedback>)
+}

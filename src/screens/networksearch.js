@@ -1,9 +1,9 @@
 // @flow
 
 import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, Platform, RefreshControl, TouchableWithoutFeedback, View} from 'react-native';
+import {ActivityIndicator, FlatList, Platform, RefreshControl, TouchableWithoutFeedback, View, Text, StyleSheet} from 'react-native';
 import {connect} from "react-redux";
-import type {List, NavigableProps, Saving} from "../types";
+import type {Id, List, NavigableProps, Saving, User} from "../types";
 import AlgoliaSearchScreen from "./algoliasearch";
 import ItemCell from "./components/ItemCell";
 import LineupCell from "./components/LineupCell";
@@ -11,17 +11,25 @@ import {currentUserId} from "../CurrentUser";
 import * as Nav from "./Nav";
 import UserRow from "../activity/components/UserRow";
 import {createResultFromHit, createResultFromHit2} from "../utils/AlgoliaUtils";
-
+import Button from 'apsl-react-native-button'
+import * as Api from "../utils/Api";
+import ApiAction from "../utils/ApiAction";
+import * as UI from "./UIStyles";
+import UserRowI from "../activity/components/UserRowI";
+import * as _ from "lodash";
 
 type Props = NavigableProps & {
     onClickClose?: () => void,
 };
 
 type State = {
+    connect: {[Id]: number}
 };
 
 @connect()
 export default class NetworkSearchScreen extends Component<Props, State> {
+
+    state :State = {connect: {}};
 
     constructor(props) {
         super(props);
@@ -38,26 +46,11 @@ export default class NetworkSearchScreen extends Component<Props, State> {
 
     render() {
 
-        //this.setState({isSearching: true});
-        const queries = [
-            {
-                indexName: 'Saving_development',
-                params: {
-                    facets: "[\"list_name\"]",
-                    filters: 'user_id:' + currentUserId(),
-                }
-            }
-        ];
-
 
         let renderItem = ({item})=> {
 
             let isLineup = item.type === 'lists';
 
-            //FIXME: item can be from search, and not yet in redux store
-            //item = buildData(this.props.data, item.type, item.id) || item;
-
-            //if (!item) return null;
 
             if (isLineup) {
                 return (
@@ -90,8 +83,10 @@ export default class NetworkSearchScreen extends Component<Props, State> {
 
         let renderUser = ({item}) => {
             return (
-                <UserRow user={item}
+                <UserRowI user={item}
                          navigator={this.props.navigator}
+                         rightComponent={this.renderConnectButton(item)}
+                          style={styles.userRow}
                 />
             );
         };
@@ -138,6 +133,49 @@ export default class NetworkSearchScreen extends Component<Props, State> {
         );
     }
 
+    renderConnectButton(user: User) {
+        let req = this.state.connect[user.id];
+
+        let alreadyFriends = !!_.find(user.friends, (f)=>f.id === currentUserId());
+
+        if (alreadyFriends) {
+            return <Text style={{position: 'absolute', right: 12}}>amis</Text>
+        }
+
+        return (<Button
+            isLoading={req === 1}
+            isDisabled={req === 2}
+            onPress={()=> this.connectWith(user)}
+            style={[{position: 'absolute', right: 12}, styles.loadMoreButton]}
+            disabledStyle={styles.disabledButton}
+        >
+            <Text>Se connecter</Text>
+        </Button>);
+
+    }
+
+    connectWith(user: User) {
+        if (this.state.connect[user.id] === 1) return;
+
+        let setReq =  (number) => {
+            this.setState({connect: {...this.state.connect, [user.id]: number}});
+        };
+
+
+        setReq(1);
+        this.props.dispatch(actions.createFriendship(user.id)
+            .disptachForAction2(CONNECT))
+            .then(() => {
+                setReq(2);
+            }, err => {
+                console.error(err);
+                setReq(3);
+            })
+
+        ;
+
+    }
+
 
     onSavingPressed(saving: Saving) {
         this.props.navigator.push({
@@ -156,6 +194,29 @@ export default class NetworkSearchScreen extends Component<Props, State> {
             },
         });
     }
-
 }
 
+
+const styles = StyleSheet.create({
+    loadMoreButton: {
+        padding: 8,
+        height: 30,
+    },
+    disabledButton: {
+        borderColor: UI.Colors.grey1,
+    },
+    userRow: {
+        margin: 12
+    }
+});
+
+export const CONNECT = new ApiAction("connect");
+
+const actions = {
+    createFriendship: (userId: string) => {
+        return new Api.Call().withMethod('POST')
+            .withRoute(`users/${userId}/friendships`)
+            ;
+
+    }
+};

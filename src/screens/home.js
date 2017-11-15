@@ -1,12 +1,12 @@
 // @flow
 
 import React, {Component} from 'react';
-import {Image, Platform, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View} from 'react-native';
+import {Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity , TouchableWithoutFeedback, View} from 'react-native';
 
 import {connect} from "react-redux";
 import {MainBackground} from "./UIComponents";
 import ActionButton from 'react-native-action-button';
-import {screen as LineupList} from './lineups'
+import {DELETE_LINEUP, screen as LineupList} from './lineups'
 import type {Id, Saving} from "../types";
 import {Item, List} from "../types"
 import Snackbar from "react-native-snackbar"
@@ -19,6 +19,16 @@ import {Navigation} from 'react-native-navigation';
 import ItemCell from "./components/ItemCell";
 import LineupCell from "./components/LineupCell";
 import {createResultFromHit} from "../utils/AlgoliaUtils";
+import Icon from 'react-native-vector-icons/Ionicons';
+
+import { MenuContext } from 'react-native-popup-menu';
+import {
+    Menu,
+    MenuOptions,
+    MenuOption,
+    MenuTrigger,
+} from 'react-native-popup-menu';
+import * as Api from "../utils/Api";
 
 
 let DEEPLINK_SEARCH_TEXT_CHANGED = 'internal/home/search/change';
@@ -164,6 +174,9 @@ class HomeScreen extends Component<Props, State> {
         }
     }
 
+    showMore(lineup: List) {
+        console.log("show more");
+    }
 
 
     render() {
@@ -171,39 +184,75 @@ class HomeScreen extends Component<Props, State> {
         this.renderNav();
 
         return (
-            <MainBackground>
-                <View>
-                    {/*{this.isSelectingAList() && <Text style={styles.selectAList}>Sélectionnez une liste:</Text>}*/}
-
-                    {/*{this.renderHeader()}*/}
-
+            <MenuContext>
+                <MainBackground>
                     <View>
-                        <LineupList
-                            userId={CurrentUser.id}
-                            filter={this.state.searchToken}
-                            onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
-                            onSavingPressed={(saving) => this.onSavingPressed(saving)}
-                            canFilterOverItems={() => !this.state.pendingItem}
-                            navigator={this.props.navigator}
-                            ListHeaderComponent={this.renderHeader()}
-                        />
+                        {/*{this.isSelectingAList() && <Text style={styles.selectAList}>Sélectionnez une liste:</Text>}*/}
+
+                        {/*{this.renderHeader()}*/}
+
+                        <View>
+                            <LineupList
+                                userId={CurrentUser.id}
+                                filter={this.state.searchToken}
+                                onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
+                                onSavingPressed={(saving) => this.onSavingPressed(saving)}
+                                canFilterOverItems={() => !this.state.pendingItem}
+                                navigator={this.props.navigator}
+                                ListHeaderComponent={this.renderHeader()}
+                                renderItem={(item)=>this.renderListItem(item)}
+
+                            />
+                        </View>
+
                     </View>
 
-                </View>
-
-                {this.displayFloatingButton() &&
-                <ActionButton
-                    buttonColor={UI.Colors.green}
-                    onPress={() => { this.onFloatingButtonPressed() }}
-                />
-                }
-            </MainBackground>
+                    {this.displayFloatingButton() &&
+                    <ActionButton
+                        buttonColor={UI.Colors.green}
+                        onPress={() => { this.onFloatingButtonPressed() }}
+                    />
+                    }
+                </MainBackground>
+            </MenuContext>
         );
+    }
+
+
+    renderListItem(item) {
+        return (<TouchableWithoutFeedback
+            onPress={() => {
+                this.props.navigator.push({
+                    screen: 'goodsh.SavingsScreen', // unique ID registered with Navigation.registerScreen
+                    passProps: {
+                        lineupId: item.id,
+                    },
+                });
+            }}>
+            <LineupCell
+                lineup={item}
+                moreComponent={
+                    <Menu>
+                        <MenuTrigger>
+                            <Icon name="md-more" size={25} color={UI.Colors.blue} />
+                        </MenuTrigger>
+                        <MenuOptions>
+                            <MenuOption onSelect={() => this.deleteLineup(item)} text='Delete' />
+                        </MenuOptions>
+                    </Menu>
+                }
+            />
+
+        </TouchableWithoutFeedback>)
     }
 
     isSelectingAList() {
         const {pendingItem, pendingList} = this.state;
         return pendingItem && !pendingList;
+    }
+
+    deleteLineup(lineup: List) {
+        this.props.dispatch(actions.deleteLineup(lineup));
     }
 
     renderNav() {
@@ -490,11 +539,17 @@ class HomeNavBar extends Component<NavProps, NavState> {
             link: DEEPLINK_SEARCH_CLOSE
         });
     }
-
-    isSearching() {
-        return this.state.isSearching;
-    }
 }
+
+const actions = {
+    deleteLineup: (lineup) => {
+        let call = new Api.Call()
+            .withMethod('delete')
+            .withRoute(`lists/${lineup.id}`);
+
+        return call.disptachForAction2(DELETE_LINEUP, {lineupId: lineup.id});
+    }
+};
 
 
 const styles = StyleSheet.create({

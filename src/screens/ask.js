@@ -63,7 +63,7 @@ export default class AskScreen extends Component<Props, State> {
                         isLoading={this.state.isAsking}
                         isDisabled={buttonDisabled}
                         onPress={()=> this.createAsk()}
-                        style={[styles.button, {marginTop: 15}]}
+                        style={[styles.loadMoreButton, {marginTop: 15}]}
                         disabledStyle={styles.disabledButton}
                     >
                         <Text style={{color: buttonDisabled ? UI.Colors.grey1 : UI.Colors.white}}>Envoyer</Text>
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Chivo',
         color: UI.Colors.white
     },
-    button: {
+    loadMoreButton: {
         padding: 8,
         height: 30,
         color: UI.Colors.white,

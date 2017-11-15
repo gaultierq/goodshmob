@@ -97,8 +97,32 @@ export default class AlgoliaSearchScreen extends Component<Props, State> {
                 search={forType}
                 renderItem={category.renderItem}
                 onItemSelected={this.props.onItemSelected}
+                ListFooterComponent={this.renderSearchFooter(forType)}
             />
         );
+    }
+
+
+    renderSearchFooter(search: SearchState) {
+        //let search = this.props.search;
+        if (!search) return null;
+        let nextPage = search.page + 1;
+
+        let hasMore = nextPage < search.nbPages;
+        if (!hasMore) return null;
+
+        //TODO: flaw
+        let isLoadingMore = /*search.page > 0 && */search.searchState === 1;
+
+        return (<Button
+            isLoading={isLoadingMore}
+            isDisabled={isLoadingMore}
+            onPress={()=>{this.performAlgoliaSearch(search.token, nextPage)}}
+            style={[styles.loadMoreButton, {marginTop: 15}]}
+            disabledStyle={styles.loadMoreButton}
+        >
+            <Text style={{color: isLoadingMore ? UI.Colors.grey1 : UI.Colors.black}}>load more</Text>
+        </Button>);
     }
 
 
@@ -197,7 +221,6 @@ export default class AlgoliaSearchScreen extends Component<Props, State> {
         });
         client.search(queries, (err, content) => {
 
-            //FIXME: do not build object here. The main use-case is a result not in the redux store.
             if (err) {
                 console.error(err);
                 return;
@@ -225,13 +248,9 @@ export default class AlgoliaSearchScreen extends Component<Props, State> {
                 obj[type] = search;
                 return obj;
             }, res);
-            //res = {savings: {data...}
-
-            console.log("DEBUG: YOOOOO" + JSON.stringify(res));
 
             this.setState({searches: {...this.state.searches, [token]: {...res}}});
         });
-
     }
 }
 
@@ -241,7 +260,8 @@ type PageProps = {
     onItemSelected: Function,
     input: string,
     renderItem: (item: *) => Node,
-    search: SearchState
+    search: SearchState,
+    ListFooterComponent?: Node
 };
 
 type PageState = {
@@ -275,7 +295,7 @@ class SearchPage extends Component<PageProps, PageState> {
                         data={searchResult}
                         renderItem={this.props.renderItem}
                         keyExtractor={(item) => item.id}
-                        ListFooterComponent={this.renderSearchFooter.bind(this)}
+                        ListFooterComponent={this.props.ListFooterComponent}
                     />
 
 
@@ -286,37 +306,6 @@ class SearchPage extends Component<PageProps, PageState> {
 
         );
     }
-
-    renderSearchFooter() {
-        return null;
-        // let search = this.props.search;
-        // if (!search) return null;
-        // let nextPage = search.page + 1;
-        //
-        // let hasMore = nextPage < search.nbPages;
-        // if (!hasMore) return null;
-        //
-        // //TODO: flaw
-        // let isLoadingMore = /*search.page > 0 && */search.searchState === 1;
-        //
-        // return (<Button
-        //     isLoading={isLoadingMore}
-        //     isDisabled={isLoadingMore}
-        //     onPress={()=>{this.performAlgoliaSearch(search.token, nextPage)}}
-        //     style={[styles.button, {marginTop: 15}]}
-        //     disabledStyle={styles.disabledButton}
-        // >
-        //     <Text style={{color: isLoadingMore ? UI.Colors.grey1 : UI.Colors.black}}>load more</Text>
-        // </Button>);
-    }
-
-    // setState(partialState, callback?) {
-    //     let t = Math.random();
-    //     console.debug(`DEBUG(${t}): partial=${JSON.stringify(partialState)}`);
-    //     callback = () => console.log(`DEBUG(${t}): state=${JSON.stringify(this.state)}`);
-    //
-    //     super.setState(partialState, callback);
-    // }
 }
 
 
@@ -346,14 +335,10 @@ const styles = StyleSheet.create({
     label: {
         color: '#000000',
     },
-    button: {
+    loadMoreButton: {
         padding: 8,
         height: 30,
-        // color: UI.Colors.white,
-        // borderColor: UI.Colors.white,
-    },
-    disabledButton: {
-        borderColor: UI.Colors.grey1,
+        borderColor: "transparent",
     },
 
     //copied: rm useless

@@ -85,7 +85,7 @@ export default class SendScreen extends Component<Props, State> {
                 isLoading={sending}
                 isDisabled={sent}
                 onPress={()=> this.sendIt(friend)}
-                style={styles.button}
+                style={styles.loadMoreButton}
                 disabledStyle={styles.disabledButton}
             >
                 <Text style={{color: sent ? UI.Colors.grey1 : UI.Colors.black}}>{buttonText}</Text>
@@ -145,7 +145,7 @@ const actions = (() => {
 })();
 
 const styles = StyleSheet.create({
-    button: {
+    loadMoreButton: {
         padding: 8,
         height: 30,
     },

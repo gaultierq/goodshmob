@@ -36,16 +36,6 @@ class AddInScreen extends Component<Props, State> {
                     autoCorrect={false}
                 />
 
-
-                {/*
-                userId={userId}
-                    onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
-                    onSavingPressed={(saving) => this.onSavingPressed(saving)}
-                    //onAddInLineupPressed={(this.state.pendingItem) ? null : (lineup) => this.addInLineup(lineup)}
-                    canFilterOverItems={() => !this.state.pendingItem}
-                    navigator={this.props.navigator}
-                */}
-
                 <LineupListScreen
                     filter={this.state.filter}
                     {...this.props}
