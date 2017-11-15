@@ -4,45 +4,69 @@ default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 project_type: react-native
 trigger_map:
 - push_branch: "*"
-  workflow: primary
+  workflow: android
 - pull_request_source_branch: "*"
-  workflow: primary
+  workflow: android
 workflows:
   deploy:
     steps:
     - activate-ssh-key@3.1.1:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone@3.5.1: {}
-    - script@1.1.4:
-        title: Do anything with Script step
     - install-react-native@0.9.1: {}
     - npm@0.9.0:
         inputs:
         - command: install
     - install-missing-android-tools@2.0.1: {}
+    - file-downloader@0.9.1:
+        inputs:
+        - source: "$BITRISEIO_ANDROID_DEV_KEYSTORE_URL"
+        - destination: "$BITRISE_SOURCE_DIR/android/keystores/goodsh-dev.keystore"
     - gradle-runner@1.7.6:
         inputs:
         - gradle_file: "$GRADLE_BUILD_FILE_PATH"
-        - gradle_task: assembleRelease
+        - gradle_task: assembleDev
         - gradlew_path: "$GRADLEW_PATH"
-    - certificate-and-profile-installer@1.8.8: {}
-    - xcode-archive@2.1.1:
-        inputs:
-        - project_path: "$BITRISE_PROJECT_PATH"
-        - scheme: "$BITRISE_SCHEME"
-        - configuration: Release
-    - deploy-to-bitrise-io@1.3.6: {}
-    - certificate-and-profile-installer@1.8.8: {}
+    - certificate-and-profile-installer@1.9.2: {}
     - recreate-user-schemes@1.0.2:
         inputs:
         - project_path: "$BITRISE_PROJECT_PATH"
     - xcode-archive@2.1.1:
         inputs:
-        - project_path: "$BITRISE_PROJECT_PATH"
+#        - project_path: "$BITRISE_PROJECT_PATH"
         - scheme: "$BITRISE_SCHEME"
-        - configuration: Release
+        - configuration: Debug
+    - hockeyapp-deploy-android@1.1.1:
+        inputs:
+        - app_id: 9413859c01db4f2cbb918da583156db2
+        - api_token: 371fb124534f4777934cd8101157d47a
+        - notify: '0'
+    - hockeyapp-deploy@2.4.2:
+        inputs:
+        - api_token: f191e719336d431aa8e3210f64e44052
+        - app_id: '0718789d9866499cbc827f68e1627a17'
+        - notify: '0'
     - deploy-to-bitrise-io@1.3.6: {}
-  primary:
+  ios:
+    steps:
+    - activate-ssh-key@3.1.1:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    - git-clone@3.5.1: {}
+    - install-react-native@0.9.1: {}
+    - npm@0.9.0:
+        inputs:
+        - command: install
+    - npm@0.9.0:
+        inputs:
+        - command: test
+    - certificate-and-profile-installer@1.9.2: {}
+    - xcode-archive@2.3.7: {}
+    - hockeyapp-deploy@2.4.2:
+        inputs:
+        - api_token: f191e719336d431aa8e3210f64e44052
+        - app_id: '0718789d9866499cbc827f68e1627a17'
+    - deploy-to-bitrise-io@1.3.6: {}
+  android:
     steps:
     - activate-ssh-key@3.1.1:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
@@ -68,25 +92,6 @@ workflows:
         - app_id: 9413859c01db4f2cbb918da583156db2
         - api_token: 371fb124534f4777934cd8101157d47a
         - notify: '0'
-    - deploy-to-bitrise-io@1.3.6: {}
-  ios:
-    steps:
-    - activate-ssh-key@3.1.1:
-        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
-    - git-clone@3.5.1: {}
-    - install-react-native@0.9.1: {}
-    - npm@0.9.0:
-        inputs:
-        - command: install
-    - npm@0.9.0:
-        inputs:
-        - command: test
-    - certificate-and-profile-installer@1.9.2: {}
-    - xcode-archive@2.3.7: {}
-    - hockeyapp-deploy@2.4.2:
-        inputs:
-        - api_token: f191e719336d431aa8e3210f64e44052
-        - app_id: '0718789d9866499cbc827f68e1627a17'
     - deploy-to-bitrise-io@1.3.6: {}
 app:
   envs:

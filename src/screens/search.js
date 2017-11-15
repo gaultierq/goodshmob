@@ -31,7 +31,7 @@ type Props = {
 type State = {
     index: number,
     input: SearchToken,
-    routes: Array<String>,
+    routes: Array<*>,
     pendingSearch: number,
     isSearching: { [key: SearchCategory]: Array<SearchToken> }
 };

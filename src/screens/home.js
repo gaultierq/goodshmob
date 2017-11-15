@@ -71,16 +71,6 @@ class HomeScreen extends Component<Props, State> {
                 case 'search':
                     //
                     //this.setState({isSearching: true});
-                    const queries = [
-                        {
-                            indexName: 'Saving_development',
-                            params: {
-                                facets: "[\"list_name\"]",
-                                filters: 'user_id:' + currentUserId(),
-                            }
-                        }
-                    ];
-
                     let navigator = this.props.navigator;
 
 
@@ -130,8 +120,20 @@ class HomeScreen extends Component<Props, State> {
                         animationType: 'none',
                         passProps:{
                             onClickClose: () => navigator.dismissModal({animationType: 'none'}),
-                            queries,
-                            renderItem,
+                            categories: [
+                                {
+                                    type: "savings",
+                                    query: {
+                                        indexName: 'Saving_development',
+                                        params: {
+                                            facets: "[\"list_name\"]",
+                                            filters: 'user_id:' + currentUserId(),
+                                        }
+                                    },
+                                    renderItem,
+                                    tabName: "lol"
+                                }
+                            ],
                             placeholder: "search_bar.me_placeholder"
 
                         },
@@ -140,6 +142,11 @@ class HomeScreen extends Component<Props, State> {
                     break;
             }
         }
+
+        // type: SearchCategoryType,
+        //     query: *,
+        // renderItem: (item: *) => Node,
+        //     tabName: i18Key
 
         //HACK
         if (event.type === 'DeepLink') {
