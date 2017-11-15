@@ -29,15 +29,12 @@ export default class LineupCell extends React.Component<Props, State> {
         let moreComponent = this.props.moreComponent;
         return (
             <View style={styles.container}>
-
-
                 <View style={{flexDirection: "row"}}>
                     <Text style={styles.lineupTitle}>{lineup.name}</Text>
                     {
-                        moreComponent && <View style={{position: "absolute", right: 20, top: 5}}>{moreComponent}</View>
+                        moreComponent && <View style={{position: "absolute", right: 0}}>{moreComponent}</View>
                     }
                 </View>
-
                 {
                     isEmpty(savings) ?
                         <Text style={{padding:8, ...UI.TEXT_LESS_IMPORTANT}}>This list is empty</Text> :

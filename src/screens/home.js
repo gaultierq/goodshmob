@@ -20,7 +20,7 @@ import ItemCell from "./components/ItemCell";
 import LineupCell from "./components/LineupCell";
 import {createResultFromHit} from "../utils/AlgoliaUtils";
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import * as Api from "../utils/Api";
 import { MenuContext } from 'react-native-popup-menu';
 import {
     Menu,
@@ -28,7 +28,7 @@ import {
     MenuOption,
     MenuTrigger,
 } from 'react-native-popup-menu';
-import * as Api from "../utils/Api";
+
 
 
 let DEEPLINK_SEARCH_TEXT_CHANGED = 'internal/home/search/change';
@@ -218,9 +218,8 @@ class HomeScreen extends Component<Props, State> {
         );
     }
 
-
     renderListItem(item) {
-        return (<TouchableWithoutFeedback
+        return (<TouchableOpacity
             onPress={() => {
                 this.props.navigator.push({
                     screen: 'goodsh.SavingsScreen', // unique ID registered with Navigation.registerScreen
@@ -234,7 +233,7 @@ class HomeScreen extends Component<Props, State> {
                 moreComponent={
                     <Menu>
                         <MenuTrigger>
-                            <Icon name="md-more" size={25} color={UI.Colors.blue} />
+                            <Icon name="md-more" size={25} style={{padding: 5, paddingLeft: 15, paddingRight: 15}} color={UI.Colors.blue} />
                         </MenuTrigger>
                         <MenuOptions>
                             <MenuOption onSelect={() => this.deleteLineup(item)} text='Delete' />
@@ -243,7 +242,7 @@ class HomeScreen extends Component<Props, State> {
                 }
             />
 
-        </TouchableWithoutFeedback>)
+        </TouchableOpacity>)
     }
 
     isSelectingAList() {

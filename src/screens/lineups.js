@@ -36,7 +36,6 @@ export const DELETE_LINEUP = new ApiAction("delete_lineup");
 
 type Props = {
     userId: Id,
-    onLineupPressed: (lineup: List) => void,
     onSavingPressed: Function,
     canFilterOverItems: boolean | ()=>boolean,
     // filter:? string,
