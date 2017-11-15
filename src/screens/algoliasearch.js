@@ -111,6 +111,7 @@ export default class AlgoliaSearchScreen extends Component<Props, State> {
 
     render() {
 
+        let l = this.props.categories.length;
         return (
             <View style={{width:"100%", height: "100%"}}>
                 <SearchBar
@@ -124,13 +125,19 @@ export default class AlgoliaSearchScreen extends Component<Props, State> {
                     autoCapitalize='none'
                     autoCorrect={false}
                 />
-                <TabViewAnimated
+
+
+                { l>1 && <TabViewAnimated
                     style={styles.container}
                     navigationState={this.state}
                     renderScene={this.renderScene.bind(this)}
                     renderHeader={this.renderHeader.bind(this)}
                     onIndexChange={this.handleIndexChange.bind(this)}
-                />
+                />}
+
+                {
+                    l === 1 && this.renderSearchPage(this.props.categories[0])
+                }
 
             </View>
 
