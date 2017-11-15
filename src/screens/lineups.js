@@ -33,6 +33,7 @@ import * as _ from "lodash";
 import dotprop from "dot-prop-immutable"
 
 export const DELETE_LINEUP = new ApiAction("delete_lineup");
+export const EDIT_LINEUP = new ApiAction("edit_lineup");
 
 type Props = {
     userId: Id,

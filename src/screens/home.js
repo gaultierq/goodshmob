@@ -1,12 +1,21 @@
 // @flow
 
 import React, {Component} from 'react';
-import {Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity , TouchableWithoutFeedback, View} from 'react-native';
+import {
+    Image,
+    Platform,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    View,
+} from 'react-native';
 
 import {connect} from "react-redux";
 import {MainBackground} from "./UIComponents";
 import ActionButton from 'react-native-action-button';
-import {DELETE_LINEUP, screen as LineupList} from './lineups'
+import {DELETE_LINEUP, EDIT_LINEUP, screen as LineupList} from './lineups'
 import type {Id, Saving} from "../types";
 import {Item, List} from "../types"
 import Snackbar from "react-native-snackbar"
@@ -21,14 +30,9 @@ import LineupCell from "./components/LineupCell";
 import {createResultFromHit} from "../utils/AlgoliaUtils";
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as Api from "../utils/Api";
-import { MenuContext } from 'react-native-popup-menu';
-import {
-    Menu,
-    MenuOptions,
-    MenuOption,
-    MenuTrigger,
-} from 'react-native-popup-menu';
-
+import {Menu, MenuContext, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
+import Modal from 'react-native-modal'
+import Button from 'apsl-react-native-button'
 
 
 let DEEPLINK_SEARCH_TEXT_CHANGED = 'internal/home/search/change';
@@ -47,7 +51,8 @@ type State = {
 
     isCreatingLineup?: boolean, //create lineup mode
     isAddingLineup?: boolean, //request of adding
-    newLineupTitle?: string
+    newLineupTitle?: string,
+    changeLinupTitle?: {id: Id, name: string, request: number}
 };
 
 class HomeScreen extends Component<Props, State> {
@@ -213,9 +218,73 @@ class HomeScreen extends Component<Props, State> {
                         onPress={() => { this.onFloatingButtonPressed() }}
                     />
                     }
+                    {this.renderChangeTitleModal()}
                 </MainBackground>
             </MenuContext>
         );
+    }
+
+    renderChangeTitleModal() {
+        let lineup = this.state.changeLinupTitle;
+
+        let editable = lineup && lineup.request !== 1;
+
+        return (
+            lineup && <Modal visible={!!lineup}>
+                <View style={{ backgroundColor: "white"}}>
+                    <Text>Changer le nom de cette lineup!</Text>
+
+                    <TextInput
+                        autoFocus
+                        editable={editable}
+                        style={[styles.input, (editable ? {color: "black"} : {color: "grey"})]}
+                        onSubmitEditing={this.requestChangeName.bind(this)}
+                        onEndEditing={()=>{
+                            if (!this.state.isAddingLineup) this.setState({isCreatingLineup: false})
+                        }}
+                        value={lineup.name}
+                        onChangeText={name => this.setState({changeLinupTitle: {...lineup, name}})}
+                        placeholder={i18n.t("create_list_controller.placeholder")}
+                    />
+
+                    <Button
+                        isLoading={lineup.request === 1}
+                        isDisabled={!editable}
+                        onPress={()=> this.requestChangeName()}
+                        // style={[{position: 'absolute', right: 12}, styles.loadMoreButton]}
+                        // disabledStyle={styles.disabledButton}
+                    >
+                        <Text>Sauvegarder</Text>
+                    </Button>
+                    <Button
+                        isDisabled={!editable}
+                        onPress={()=> this.setState({changeLinupTitle: null})}
+                        // style={[{position: 'absolute', right: 12}, styles.loadMoreButton]}
+                        // disabledStyle={styles.disabledButton}
+                    >
+                        <Text>Annuler</Text>
+                    </Button>
+                </View>
+            </Modal>
+        );
+    }
+
+    requestChangeName() {
+        let editedLineup = this.state.changeLinupTitle;
+        if (editedLineup.request === 1) return;
+
+        let changeRequest = (request) => {
+            this.setState({changeLinupTitle: {...editedLineup, request}});
+        };
+        changeRequest(1);
+        this.props.dispatch(actions.patchLineup(editedLineup))
+            .then(()=> {
+                this.setState({changeLinupTitle: null})
+            }, err=> {
+                console.error(err);
+                changeRequest(3);
+            });
+
     }
 
     renderListItem(item) {
@@ -237,6 +306,7 @@ class HomeScreen extends Component<Props, State> {
                         </MenuTrigger>
                         <MenuOptions>
                             <MenuOption onSelect={() => this.deleteLineup(item)} text='Delete' />
+                            <MenuOption onSelect={() => this.changeTitle(item)} text='Changer le titre' />
                         </MenuOptions>
                     </Menu>
                 }
@@ -252,6 +322,11 @@ class HomeScreen extends Component<Props, State> {
 
     deleteLineup(lineup: List) {
         this.props.dispatch(actions.deleteLineup(lineup));
+    }
+
+    changeTitle(lineup: List) {
+        let {id, name} = lineup;
+        this.setState({changeLinupTitle: {id, name}});
     }
 
     renderNav() {
@@ -543,11 +618,19 @@ class HomeNavBar extends Component<NavProps, NavState> {
 const actions = {
     deleteLineup: (lineup) => {
         let call = new Api.Call()
-            .withMethod('delete')
+            .withMethod('DELETE')
             .withRoute(`lists/${lineup.id}`);
 
         return call.disptachForAction2(DELETE_LINEUP, {lineupId: lineup.id});
-    }
+    },
+    patchLineup: (editedLineup) => {
+        let call = new Api.Call()
+            .withMethod('PATCH')
+            .withRoute(`lists/${editedLineup.id}`)
+            .withBody(editedLineup)
+        ;
+        return call.disptachForAction2(EDIT_LINEUP, {lineupId: editedLineup.id});
+    },
 };
 
 
