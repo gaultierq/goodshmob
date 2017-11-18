@@ -5,8 +5,9 @@ import {CheckBox, SearchBar} from "react-native-elements";
 import * as UI from "./UIStyles";
 import i18n from '../i18n/i18n'
 import {screen as LineupListScreen} from './lineups';
+import type {LineupProps} from "./lineups";
 
-type Props = {
+type Props = LineupProps & {
 };
 
 type State = {

@@ -1,8 +1,6 @@
 // @flow
 import React, {Component} from 'react';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
-import Immutable from 'seamless-immutable';
-import * as Api from "../utils/Api";
 import type {Activity, Save} from "../types";
 import ActivityBody from "../activity/components/ActivityBody";
 import {CheckBox} from "react-native-elements";
@@ -23,7 +21,7 @@ type State = {
     visibility: Visibility,
 };
 
-class SaveScreen extends Component<Props, State> {
+export default class SaveScreen extends Component<Props, State> {
 
 
     state = {description: "", visibility: 0};
@@ -80,27 +78,4 @@ const styles = StyleSheet.create({
 });
 
 
-const actionTypes = (() => {
-    return {};
-})();
 
-
-const actions = (() => {
-    return {
-
-    };
-})();
-
-const reducer = (() => {
-    const initialState = Immutable(Api.initialListState());
-
-    return (state = initialState, action = {}) => {
-        return state;
-    }
-})();
-
-
-
-let screen = SaveScreen;
-
-export {reducer, screen, actions};

@@ -21,7 +21,7 @@ import {Item, List} from "../types"
 import Snackbar from "react-native-snackbar"
 import i18n from '../i18n/i18n'
 import * as UI from "./UIStyles";
-import CurrentUser, {currentUserId} from "../CurrentUser"
+import {currentGoodshbox, currentUserId} from "../CurrentUser"
 import {createLineup, saveItem} from "./actions";
 import {SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
@@ -33,6 +33,8 @@ import * as Api from "../utils/Api";
 import {Menu, MenuContext, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
 import Modal from 'react-native-modal'
 import Button from 'apsl-react-native-button'
+import {CheckBox} from "react-native-elements";
+import type {Visibility} from "./additem";
 
 
 let DEEPLINK_SEARCH_TEXT_CHANGED = 'internal/home/search/change';
@@ -52,18 +54,18 @@ type State = {
     isCreatingLineup?: boolean, //create lineup mode
     isAddingLineup?: boolean, //request of adding
     newLineupTitle?: string,
+    newLineupPrivacy?: Visibility,
     changeLinupTitle?: {id: Id, name: string, request: number}
 };
 
+@connect()
 class HomeScreen extends Component<Props, State> {
 
     state : State = {};
 
     static navigatorStyle = UI.NavStyles;
 
-    lineupInput: TextInput;
-
-    constructor(props){
+    constructor(props: Props){
         super(props);
         props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
@@ -198,7 +200,7 @@ class HomeScreen extends Component<Props, State> {
 
                         <View>
                             <LineupList
-                                userId={CurrentUser.id}
+                                userId={currentUserId()}
                                 filter={this.state.searchToken}
                                 onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
                                 onSavingPressed={(saving) => this.onSavingPressed(saving)}
@@ -462,7 +464,7 @@ class HomeScreen extends Component<Props, State> {
     }
 
     displaySearchScreen(onCancel?) {
-        this.props.navigator.showModal({
+        this.props.navigator.push({
             screen: 'goodsh.SearchScreen', // unique ID registered with Navigation.registerScreen
             title: // navigation bar title of the pushed screen (optional)
                 this.state.pendingList ?
@@ -470,14 +472,29 @@ class HomeScreen extends Component<Props, State> {
                     i18n.t("tabs.search.title"),
             passProps: {
                 onItemSelected: (item: Item) => {
-                    this.props.navigator.dismissAllModals();
-                    console.info("item selected: " + JSON.stringify(item.title));
+                    // this.props.navigator.dismissAllModals();
+                    // console.info("item selected: " + JSON.stringify(item.title));
+                    //
+                    // //TODO: add it to redux
+                    // this.setState({pendingItem: item}, () => this.resolveAdd());
 
-                    //TODO: add it to redux
-                    this.setState({pendingItem: item}, () => this.resolveAdd());
+                    this.props.navigator.push({
+                        screen: 'goodsh.AddItemScreen', // unique ID registered with Navigation.registerScreen
+                        title: "Ajouter",
+                        passProps: {
+                            item,
+                            defaultLineup: currentGoodshbox(),
+                            onCancel: () => {
+                                this.props.navigator.popToRoot();
+                                onCancel && onCancel();
+                            }
+
+                        }, // Object that will be passed as props to the pushed screen (optional)
+                    });
+
                 },
                 onCancel: () => {
-                    this.props.navigator.dismissAllModals();
+                    this.props.navigator.popToRoot();
                     onCancel && onCancel();
                 }
 
@@ -510,20 +527,36 @@ class HomeScreen extends Component<Props, State> {
         if (this.state.isCreatingLineup) {
             let editable = !this.state.isAddingLineup;
 
+
+            let grey1 = UI.Colors.grey1;
+
             //FIXME: changing color of the text doesnt work ?!
             return (
-                <View style={[UI.CARD(6), styles.header]}>
+                <View style={[UI.CARD(6), styles.header, {flexDirection: 'column'}]}>
                     <TextInput
                         autoFocus
                         editable={editable}
                         style={[styles.input, (editable ? {color: "black"} : {color: "grey"})]}
                         onSubmitEditing={this.createLineup.bind(this)}
-                        onEndEditing={()=>{
-                            if (!this.state.isAddingLineup) this.setState({isCreatingLineup: false})
-                        }}
+                        // onEndEditing={()=>{
+                        //     if (!this.state.isAddingLineup) this.setState({isCreatingLineup: false})
+                        // }}
                         value={this.state.newLineupTitle}
                         onChangeText={newLineupTitle => this.setState({newLineupTitle})}
                         placeholder={i18n.t("create_list_controller.placeholder")}
+                    />
+
+
+                    <CheckBox
+                        right
+                        title='Visible par mes amis'
+                        size={16}
+                        checkedColor={grey1}
+                        uncheckedColor={grey1}
+                        onPress={(newValue)=> this.setState({newLineupPrivacy: this.state.newLineupPrivacy === 1 ? 0 : 1})}
+                        checked={this.state.newLineupPrivacy===0}
+                        textStyle={{color: grey1, fontSize: 12, }}
+                        containerStyle={{ backgroundColor: "transparent", borderWidth: 0, width: "100%"}}
                     />
                 </View>
             );
@@ -554,11 +587,9 @@ class HomeScreen extends Component<Props, State> {
 }
 
 
-const mapStateToProps = (state, ownProps) => ({
-});
 
 
-const screen = connect(mapStateToProps)(HomeScreen);
+const screen = HomeScreen;
 
 type NavProps = {
     onChangeText: (token: string) => void,
@@ -670,6 +701,8 @@ const styles = StyleSheet.create({
         width: "100%",
         fontFamily: 'Chivo',
         fontSize: 18,
+        borderWidth: 0.5,
+        borderColor: UI.Colors.grey1
     },
     colorActive:{
         color: 'green',

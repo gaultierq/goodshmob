@@ -132,7 +132,7 @@ class ShareScreen extends Component<Props, State> {
                 ],
             },
             passProps: {
-                userId: CurrentUser.id,
+                userId: currentUserId(),
                 item
             },
         });

@@ -22,9 +22,9 @@ import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
 import * as UI from "../screens/UIStyles";
 import {SearchBar} from 'react-native-elements'
-import type types, {Id, Item, List, User} from "../types";
+import type types, {Id, List, User} from "../types";
 import Feed from "./components/feed";
-import CurrentUser from "../CurrentUser"
+import {currentUserId} from "../CurrentUser"
 import ApiAction from "../utils/ApiAction";
 import {buildData, doDataMergeInState} from "../utils/DataUtils";
 import {CREATE_LINEUP, SAVE_ITEM} from "./actions"
@@ -35,7 +35,7 @@ import dotprop from "dot-prop-immutable"
 export const DELETE_LINEUP = new ApiAction("delete_lineup");
 export const EDIT_LINEUP = new ApiAction("edit_lineup");
 
-type Props = {
+export type LineupProps = {
     userId: Id,
     onSavingPressed: Function,
     canFilterOverItems: boolean | ()=>boolean,
@@ -43,7 +43,7 @@ type Props = {
     data?: any,
     onCancel?: ()=>void,
     ListHeaderComponent?: Node,
-    renderItem: (item)=>Node,
+    renderItem: (item: *)=>Node,
     navigator: *
 
 };
@@ -54,7 +54,7 @@ type State = {
 };
 
 
-class LineupListScreen extends Component<Props, State> {
+class LineupListScreen extends Component<LineupProps, State> {
 
     state = {
         isLoading: false,
@@ -83,7 +83,7 @@ class LineupListScreen extends Component<Props, State> {
         let lists, fetchSrc;
         if (user && user.lists) {
             lists = user.lists;
-            fetchSrc = userId === CurrentUser.id ? {
+            fetchSrc = userId === currentUserId() ? {
                 callFactory: actions.fetchLineups,
                 action: FETCH_LINEUPS,
                 options: {userId}
@@ -173,7 +173,7 @@ const reducer = (() => {
 
             //FIXME: this does not belong here !
             case CREATE_LINEUP.success(): {
-                let userId = CurrentUser.id;
+                let userId = currentUserId();
                 let {id, type} = action.payload.data;
                 let path = `users.${userId}.relationships.lists.data`;
                 let goodshboxId = _.get(state, `users.${userId}.relationships.goodshbox.data.id`, null);
@@ -185,7 +185,7 @@ const reducer = (() => {
 
             //FIXME: this does not belong here !
             case DELETE_LINEUP.success(): {
-                let userId = CurrentUser.id;
+                let userId = currentUserId();
                 let {lineupId} = action.options;
                 let path = `users.${userId}.relationships.lists.data`;
                 let lists = _.get(state, path, null);
