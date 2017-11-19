@@ -95,7 +95,7 @@ export default class NetworkSearchScreen extends Component<Props, State> {
             {
                 type: "savings",
                 query: {
-                    indexName: 'Saving_development',
+                    indexName: 'Saving_staging',
                     params: {
                         facets: "[\"list_name\"]",
                         //filters: 'user_id:' + currentUserId(),
@@ -109,7 +109,7 @@ export default class NetworkSearchScreen extends Component<Props, State> {
             {
                 type: "users",
                 query: {
-                    indexName: 'User_development',
+                    indexName: 'User_staging',
                     params: {
                         //facets: "[\"list_name\"]",
                         //filters: 'user_id:' + currentUserId(),

@@ -135,7 +135,7 @@ class NetworkScreen extends Component<Props, State> {
 
         const queries = [
             {
-                indexName: 'Saving_development',
+                indexName: 'Saving_staging',
                 params: {
                     facets: "[\"list_name\"]",
                     filters: 'user_id:' + currentUserId(),

@@ -142,7 +142,7 @@ class HomeScreen extends Component<Props, State> {
                                 {
                                     type: "savings",
                                     query: {
-                                        indexName: 'Saving_development',
+                                        indexName: 'Saving_staging',
                                         params: {
                                             facets: "[\"list_name\"]",
                                             filters: 'user_id:' + currentUserId(),
