@@ -6,212 +6,27 @@ import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableWithoutFeedback,
 import {connect} from "react-redux";
 import {combineReducers} from "redux";
 import {TabBar, TabViewAnimated} from 'react-native-tab-view';
-import i18n from '../i18n/i18n'
 import {SearchBar} from 'react-native-elements'
-import * as UIStyles from "../screens/UIStyles"
+import SearchScreen from "./search2";
 import algoliasearch from 'algoliasearch/reactnative';
-import type {i18Key, Item, List, SearchState, SearchToken} from "../types";
-import {createResultFromHit} from "../utils/AlgoliaUtils";
-import Button from 'apsl-react-native-button'
-import * as UI from "./UIStyles";
-import * as _ from "lodash";
-
-export type SearchCategoryType = string;
-
-export type SearchCategory = {
-    type: SearchCategoryType,
-    query: *,
-    parseResponse: (hits) => *,
-    renderItem: (item: *) => Node,
-    tabName: i18Key
-}
-
-type Props = {
-    onClickClose?: Function,
-    //renderItem: (item) => Node,
-    //queries: Array<*>,
-    categories: Array<SearchCategory>,
-    placeholder: i18Key,
-    navigator: *
-};
-
-type State = {
-    input?: SearchToken,
-    routes: Array<*>,
-    searches: { [SearchToken]: {[SearchCategoryType]: SearchState}},
-    index: number
-};
-
+import type {SearchToken} from "../types";
 
 @connect()
-export default class AlgoliaSearchScreen extends Component<Props, State> {
-
-    static navigatorButtons = {
-        rightButtons: [
-            {
-                //icon: require('../img/drawer_line_up.png'), // for icon button, provide the local image asset name
-                id: 'cancel_search', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
-                title: "Cancel"
-            }
-        ],
-    };
-
-    state : State;
-
-    constructor(props: Props) {
-        super(props);
-        if (props.onClickClose) {
-            props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-        }
-
-        this.state = {
-            searches: {},
-            index: 0,
-            routes: props.categories.map((c, i) => ({key: `${i}`, title: i18n.t(c.tabName)})),
-        };
-    }
-
-    handleIndexChange(index: number) {
-        this.setState({ index }, () => this.performAlgoliaSearch(this.state.input));
-    }
-
-    renderHeader(props: *) {
-        return <TabBar {...props}
-                       indicatorStyle={styles.indicator}
-                       style={styles.tabbar}
-                       tabStyle={styles.tab}
-                       labelStyle={styles.label}/>;
-    }
-
-    renderScene({ route }: *) {
-        return this.renderSearchPage(this.props.categories[route.key])
-    };
-
-    renderSearchPage(category: SearchCategory) {
-        let forToken = this.state.searches[this.state.input];
-        if (!forToken) return null;
-        let forType : SearchState = forToken[category.type];
-
-        return (
-            <SearchPage
-                search={forType}
-                renderItem={category.renderItem}
-                onItemSelected={this.props.onItemSelected}
-                ListFooterComponent={this.renderSearchFooter(forType)}
-            />
-        );
-    }
-
-
-    renderSearchFooter(search: SearchState) {
-        //let search = this.props.search;
-        if (!search) return null;
-        let nextPage = search.page + 1;
-
-        let hasMore = nextPage < search.nbPages;
-        if (!hasMore) return null;
-
-        //TODO: flaw
-        let isLoadingMore = /*search.page > 0 && */search.searchState === 1;
-
-        return (<Button
-            isLoading={isLoadingMore}
-            isDisabled={isLoadingMore}
-            onPress={()=>{this.performAlgoliaSearch(search.token, nextPage)}}
-            style={[styles.loadMoreButton, {marginTop: 15}]}
-            disabledStyle={styles.loadMoreButton}
-        >
-            <Text style={{color: isLoadingMore ? UI.Colors.grey1 : UI.Colors.black}}>load more</Text>
-        </Button>);
-    }
-
-
-    onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
-        if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
-            if (event.id === 'cancel_search') { // this is the same id field from the static navigatorButtons definition
-                this.props.onClickClose();
-            }
-        }
-    }
+export default class AlgoliaSearchScreen extends SearchScreen {
 
     render() {
-
-        let l = this.props.categories.length;
-        return (
-            <View style={{width:"100%", height: "100%"}}>
-                <SearchBar
-                    autoFocus
-                    lightTheme
-                    onChangeText={this.onSearchInputChange.bind(this)}
-                    placeholder={i18n.t(this.props.placeholder)}
-                    clearIcon={{color: '#86939e'}}
-                    containerStyle={styles.searchContainer}
-                    inputStyle={styles.searchInput}
-                    autoCapitalize='none'
-                    autoCorrect={false}
-                />
-
-
-                { l>1 && <TabViewAnimated
-                    style={styles.container}
-                    navigationState={this.state}
-                    renderScene={this.renderScene.bind(this)}
-                    renderHeader={this.renderHeader.bind(this)}
-                    onIndexChange={this.handleIndexChange.bind(this)}
-                />}
-
-                {
-                    l === 1 && this.renderSearchPage(this.props.categories[0])
-                }
-
-            </View>
-
-        );
+        return <SearchScreen
+            searchEngine={{search: this.search.bind(this)}}
+            {...this.props}
+        />;
     }
 
-    onSearchInputChange(input) {
-        this.setState({input});
-        this.performAlgoliaSearch(input);
-    }
-
-    setState(partialState, callback?) {
-        let t = Math.random();
-        console.debug(`DEBUG(${t}): partial=${JSON.stringify(partialState)}`);
-        callback = () => console.log(`DEBUG(${t}): state=${JSON.stringify(this.state)}`);
-
-        super.setState(partialState, callback);
-    }
-
-    performAlgoliaSearch(token: SearchToken, page: number = 0) {
-        let client = algoliasearch("8UTETUZKD3", "c80385095ff870f5ddf9ba25310a9d5a");
-
-        //search: {category: searchState}
-        let search = this.state.searches[token];
-
-        if (!search) {
-            let categories = this.props.categories;
-            categories.reduce((res, c) => {
-                res[c.type] = {token}
-                return res;
-            }, search = {})
-        }
-
-        _.forIn(search, (val) => {
-            val.page = page;
-            val.searchState = 1;
-        });
-
-        let partialState = {
-            searches: {
-                ...this.state.searches,
-                [token]: {...search},
-            }
-        };
-
-        this.setState(partialState);
+    search(token: SearchToken, page: number): Promise<*> {
 
         //searching
         console.log(`algolia: searching ${token}`);
+
+        let client = algoliasearch("8UTETUZKD3", "c80385095ff870f5ddf9ba25310a9d5a");
 
         const queries = this.props.categories.map(c=>{
             let q = c.query;
@@ -219,152 +34,45 @@ export default class AlgoliaSearchScreen extends Component<Props, State> {
             params = {...params, page, hitsPerPage: 2};
             return {...q, params, query: token}
         });
-        client.search(queries, (err, content) => {
 
-            if (err) {
-                console.error(err);
-                return;
-            }
+        return new Promise((resolve, reject) => {
 
-            let res =  {};
-            this.props.categories.reduce((obj, c, i) => {
+            client.search(queries, (err, content) => {
 
-                let result = content.results[i];
-                let hits = result.hits;
-                console.log(`search result lists: ${JSON.stringify(content.length)}`);
+                if (err) {
+                    console.error(err);
+                    reject(err);
+                    return;
+                }
 
-                let searchResult = c.parseResponse(hits);
-                let type = c.type;
+                let res =  {};
+                this.props.categories.reduce((obj, c, i) => {
 
-                let search: SearchState = this.state.searches[token][type];
+                    let result = content.results[i];
+                    let hits = result.hits;
+                    console.log(`search result lists: ${content.length}`);
 
-                if (!search.data) search.data = [];
+                    let searchResult = c.parseResponse(hits);
 
-                search.data = search.data.concat(searchResult);
-                search.searchState = 2;
-                search.page = result.page;
-                search.nbPages = result.nbPages;
+                    let type = c.type;
 
-                obj[type] = search;
-                return obj;
-            }, res);
+                    let search = {};
 
-            this.setState({searches: {...this.state.searches, [token]: {...res}}});
+                    search.results = searchResult;
+                    search.page = result.page;
+                    search.nbPages = result.nbPages;
+
+                    obj[type] = search;
+                    return obj;
+                }, res);
+
+                resolve(res);
+            });
         });
     }
-}
 
-type PageProps = {
-    category: SearchCategory,
-    isLoading: () => boolean,
-    onItemSelected: Function,
-    input: string,
-    renderItem: (item: *) => Node,
-    search: SearchState,
-    ListFooterComponent?: Node
-};
-
-type PageState = {
-    //searches: { [SearchToken]: SearchState},
-};
-
-
-class SearchPage extends Component<PageProps, PageState> {
-
-
-    state : PageState = {
-    };
-
-    render() {
-        let search = this.props.search;
-
-        let searchResult: Array<Item|List> = (search && search.data) || [];
-        let hasSearchResult = search && search.data && search.data.length > 0;
-
-        let isSearchRequesting = search && search.searchState === 1;
-
-        let emptySearchResult = search && !isSearchRequesting && !hasSearchResult;
-
-        console.debug("DEBUG: search render:" + searchResult.length);
-
-        return (
-            <View style={{width:"100%", height: "100%"}}>
-                {
-                    !emptySearchResult &&
-                    <FlatList
-                        data={searchResult}
-                        renderItem={this.props.renderItem}
-                        keyExtractor={(item) => item.id}
-                        ListFooterComponent={this.props.ListFooterComponent}
-                    />
-
-
-                }
-                {emptySearchResult && <Text style={{alignSelf: "center", marginTop: 20}}>Pas de résultat</Text>}
-
-            </View>
-
-        );
-    }
 }
 
 
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    searchContainer: {
-        backgroundColor: 'white',
-    },
-    searchInput: {
-        backgroundColor: 'white',
-    },
-    indicator: {
-        backgroundColor: UIStyles.Colors.green,
-    },
-    activityIndicator: {
-        position: "absolute",
-        top: 30, left: 0, right: 0, justifyContent: 'center',
-        zIndex: 3000
-    },
-    tab: {
-        opacity: 1,
-        //width: 90,
-    },
-    label: {
-        color: '#000000',
-    },
-    loadMoreButton: {
-        padding: 8,
-        height: 30,
-        borderColor: "transparent",
-    },
-
-    //copied: rm useless
-    searchContainer: {
-        backgroundColor: 'white',
-    },
-    searchInput: {
-        backgroundColor: 'white',
-    },
-    tabbar: {
-        backgroundColor: 'white',
-    },
-    indicator: {
-        backgroundColor: UIStyles.Colors.green,
-    },
-    activityIndicator: {
-        position: "absolute",
-        top: 30, left: 0, right: 0, justifyContent: 'center',
-        zIndex: 3000
-    },
-    tab: {
-        opacity: 1,
-        //width: 90,
-    },
-    label: {
-        color: '#000000',
-    },
-});
 
