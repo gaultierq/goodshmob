@@ -21,7 +21,7 @@ import {Item, List} from "../types"
 import Snackbar from "react-native-snackbar"
 import i18n from '../i18n/i18n'
 import * as UI from "./UIStyles";
-import {currentGoodshbox, currentUserId} from "../CurrentUser"
+import {currentGoodshboxId, currentUserId} from "../CurrentUser"
 import {createLineup, saveItem} from "./actions";
 import {SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
@@ -35,7 +35,6 @@ import Modal from 'react-native-modal'
 import Button from 'apsl-react-native-button'
 import {CheckBox} from "react-native-elements";
 import type {Visibility} from "./additem";
-
 
 let DEEPLINK_SEARCH_TEXT_CHANGED = 'internal/home/search/change';
 let DEEPLINK_SEARCH_CLOSE = 'internal/home/search/close';
@@ -478,12 +477,13 @@ class HomeScreen extends Component<Props, State> {
                     // //TODO: add it to redux
                     // this.setState({pendingItem: item}, () => this.resolveAdd());
 
+
                     this.props.navigator.push({
                         screen: 'goodsh.AddItemScreen', // unique ID registered with Navigation.registerScreen
                         title: "Ajouter",
                         passProps: {
                             item,
-                            defaultLineup: currentGoodshbox(),
+                            defaultLineupId: currentGoodshboxId(),
                             onCancel: () => {
                                 this.props.navigator.popToRoot();
                                 onCancel && onCancel();

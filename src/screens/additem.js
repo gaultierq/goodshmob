@@ -6,17 +6,19 @@ import * as UI from "./UIStyles";
 import i18n from '../i18n/i18n'
 import LineupCell from "./components/LineupCell";
 import Button from 'apsl-react-native-button'
-import type {Item, List} from "../types";
+import type {Id, Item, List} from "../types";
 import {saveItem} from "./actions";
 import * as Nav from "./Nav";
 import {currentUserId} from "../CurrentUser";
 import Snackbar from "react-native-snackbar"
 import {connect} from "react-redux";
+import {buildNonNullData} from "../utils/DataUtils";
 
 type Props = {
-    defaultLineup: List,
+    defaultLineupId: Id,
     item: Item,
-    navigator: *
+    navigator: *,
+    data: *
 };
 
 export type Description = string;
@@ -25,24 +27,26 @@ export type Visibility = 0 | 1;
 type State = {
     description?: Description,
     visibility?: Visibility,
-    lineup: List,
+    lineupId: Id,
     reqAdd?: number
 };
 
-@connect()
+@connect((state, ownProps) => ({
+    data: state.data,
+}))
 export default class AddItemScreen extends Component<Props, State> {
 
     constructor(props: Props) {
         super(props);
         this.state = {
-            lineup: props.defaultLineup,
+            lineupId: props.defaultLineupId,
             visibility: 0
         };
     }
 
     render() {
 
-        let lineup = this.state.lineup;
+        let lineup = buildNonNullData(this.props.data, "lists", this.state.lineupId);
         const {description, visibility} = this.state;
 
         let grey = UI.Colors.grey1;
@@ -50,6 +54,23 @@ export default class AddItemScreen extends Component<Props, State> {
         let editable = req !== 1;
         return (
             <View style={[styles.container]}>
+
+
+                <TouchableOpacity onPress={this.pickLineup.bind(this)}>
+                    <Text>Ajouter à:</Text>
+                    <LineupCell lineup={lineup} />
+                </TouchableOpacity>
+
+
+                <TextInput
+                    autoFocus
+                    editable={editable}
+                    style={[styles.input, (editable ? {color: "black"} : {color: "grey"})]}
+                    onSubmitEditing={this.doAdd.bind(this)}
+                    value={description}
+                    onChangeText={description => this.setState({description})}
+                    placeholder={/*i18n.t("create_list_controller.placeholder")*/"Ajouter une description"}
+                />
 
                 <CheckBox
                     right
@@ -62,28 +83,16 @@ export default class AddItemScreen extends Component<Props, State> {
                     checked={visibility===0}
                     style={{backgroundColor: 'transparent'}}
                     textStyle={{color: grey, fontSize: 12, }}
+                    containerStyle={{ backgroundColor: "transparent", borderWidth: 0, width: "100%"}}
                 />
 
-                <TextInput
-                    autoFocus
-                    editable={editable}
-                    style={[styles.input, (editable ? {color: "black"} : {color: "grey"})]}
-                    onSubmitEditing={this.doAdd.bind(this)}
-                    value={description}
-                    onChangeText={description => this.setState({description})}
-                    placeholder={i18n.t("create_list_controller.placeholder")}
-                />
 
-                <TouchableOpacity onPress={this.pickLineup.bind(this)}>
-                    <LineupCell lineup={lineup} />
-                </TouchableOpacity>
-
-                <View style={{flexDirection: 'row'}}>
+                <View style={{flexDirection: 'row', width: "100%"}}>
                     <Button
                         isLoading={req === 1}
                         isDisabled={req === 2}
                         onPress={this.doAdd.bind(this)}
-                        style={[]}>
+                        style={[{position: "absolute", right: 0}]}>
                         <Text>Ajouter</Text>
                     </Button>
                 </View>
@@ -97,10 +106,10 @@ export default class AddItemScreen extends Component<Props, State> {
         this.setState({reqAdd: 1});
 
         let item = this.props.item;
-        let {lineup, description, visibility} = this.state;
+        let {lineupId, description, visibility} = this.state;
 
         this.props
-            .dispatch(saveItem(item.id, lineup.id, visibility, description))
+            .dispatch(saveItem(item.id, lineupId, visibility, description))
             .then(() => {
                 Snackbar.show({
                     title: i18n.t('shared.goodsh_saved'),
@@ -125,13 +134,13 @@ export default class AddItemScreen extends Component<Props, State> {
             },
             passProps: {
                 userId: currentUserId(),
-                onLineupPressed: (lineup: List) => {
-                    this.setState({lineup});
-                    this.props.navigator.dismissModal();
-                },
+                // onLineupPressed: (lineup: List) => {
+                //     this.setState({lineupId: lineup.id});
+                //     this.props.navigator.dismissModal();
+                // },
                 renderItem: (lineup) => {
                     return (<TouchableOpacity onPress={() => {
-                        this.setState({lineup});
+                        this.setState({lineupId: lineup.id});
                         this.props.navigator.dismissModal();
                     }}>
                         <LineupCell lineup={lineup} />

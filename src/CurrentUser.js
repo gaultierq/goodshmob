@@ -26,11 +26,10 @@ class CurrentUser {
         return this.store ? this.store.getState().auth.currentUserId : null;
     }
 
-    currentGoodshbox() {
+    currentGoodshboxId() {
         let state = this.store.getState();
         let userId : Id = this.id();
-        let goodshboxId = _.get(state, `data.users.${userId}.relationships.goodshbox.data.id`, null);
-        return buildNonNullData(state.data, "lists", goodshboxId);
+        return _.get(state, `data.users.${userId}.relationships.goodshbox.data.id`, null);
     }
 
     init(store: Store<*,*>) {
@@ -51,8 +50,8 @@ export function currentUserId() {
     return instance.id();
 }
 
-export function currentGoodshbox() {
-    return instance.currentGoodshbox();
+export function currentGoodshboxId() {
+    return instance.currentGoodshboxId();
 }
 
 
