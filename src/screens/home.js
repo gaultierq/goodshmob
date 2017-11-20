@@ -553,7 +553,7 @@ class HomeScreen extends Component<Props, State> {
                         size={16}
                         checkedColor={grey1}
                         uncheckedColor={grey1}
-                        onPress={(newValue)=> this.setState({newLineupPrivacy: this.state.newLineupPrivacy === 1 ? 0 : 1})}
+                        onPress={(newValue)=> this.setState({newLineupPrivacy: !!this.state.newLineupPrivacy ? 0 : 1})}
                         checked={this.state.newLineupPrivacy===0}
                         textStyle={{color: grey1, fontSize: 12, }}
                         containerStyle={{ backgroundColor: "transparent", borderWidth: 0, width: "100%"}}

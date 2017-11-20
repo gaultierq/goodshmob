@@ -53,6 +53,7 @@ class SavingsScreen extends Component<Props, State> {
             <MainBackground>
                 <View style={styles.container}>
                     {lineup.description && <Text style={[styles.description]}>{lineup.description}</Text>}
+                    {!lineup.savings.length && <Text style={[styles.description]}>Cette liste est vide</Text>}
                     <Feed
                         data={lineup.savings}
                         renderItem={item => this.renderItem(item, lineup)}

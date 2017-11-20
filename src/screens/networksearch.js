@@ -1,7 +1,16 @@
 // @flow
 
 import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, Platform, RefreshControl, TouchableWithoutFeedback, View, Text, StyleSheet} from 'react-native';
+import {
+    ActivityIndicator,
+    FlatList,
+    Platform,
+    RefreshControl,
+    StyleSheet,
+    Text,
+    TouchableWithoutFeedback,
+    View
+} from 'react-native';
 import {connect} from "react-redux";
 import type {Id, List, NavigableProps, Saving, User} from "../types";
 import AlgoliaSearchScreen from "./algoliasearch";
@@ -9,7 +18,6 @@ import ItemCell from "./components/ItemCell";
 import LineupCell from "./components/LineupCell";
 import {currentUserId} from "../CurrentUser";
 import * as Nav from "./Nav";
-import UserRow from "../activity/components/UserRow";
 import {createResultFromHit, createResultFromHit2} from "../utils/AlgoliaUtils";
 import Button from 'apsl-react-native-button'
 import * as Api from "../utils/Api";
@@ -146,7 +154,7 @@ export default class NetworkSearchScreen extends Component<Props, State> {
             isLoading={req === 1}
             isDisabled={req === 2}
             onPress={()=> this.connectWith(user)}
-            style={[{position: 'absolute', right: 12}, styles.loadMoreButton]}
+            style={[{position: 'absolute', right: 12}, styles.button]}
             disabledStyle={styles.disabledButton}
         >
             <Text>Se connecter</Text>
@@ -198,7 +206,7 @@ export default class NetworkSearchScreen extends Component<Props, State> {
 
 
 const styles = StyleSheet.create({
-    loadMoreButton: {
+    button: {
         padding: 8,
         height: 30,
     },

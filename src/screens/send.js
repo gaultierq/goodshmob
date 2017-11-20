@@ -2,7 +2,7 @@
 
 import React, {Component} from 'react';
 import type {Node} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View,TextInput} from 'react-native';
 import {connect} from "react-redux";
 import type {Id, Item, User} from "../types";
 import FriendsFeed from "./friends";
@@ -21,7 +21,9 @@ type Props = {
 };
 
 type State = {
-    statuses: any
+    statuses: any,
+    messages: {[Id]: string},
+    selected?: Id
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -32,7 +34,8 @@ const mapStateToProps = (state, ownProps) => ({
 export default class SendScreen extends Component<Props, State> {
 
     state = {
-        statuses: {}
+        statuses: {},
+        messages: {},
     };
 
     render() {
@@ -48,12 +51,42 @@ export default class SendScreen extends Component<Props, State> {
     }
 
     renderItem(friend: Item) : Node {
+
+        let status = this.state.statuses[friend.id];
+        let notEditable = status === 'sending' || status === 'sent';
+        let message = this.state.messages[friend.id];
+
+        let id = friend.id;
+        let isSelected = id === this.state.selected;
         return (
-            <FriendCell
-                friend={friend}
-                onPressItem={this.props.onPressItem}
-                children={this.renderButton(friend)}
-            />
+            <View>
+                <TouchableOpacity onPress={()=>this.setState({selected: isSelected ? null : id})}>
+                    <FriendCell friend={friend}/>
+                </TouchableOpacity>
+
+                {
+                    isSelected &&
+                    <View style={{padding: 12}}>
+                        <TextInput
+                            editable={!notEditable}
+                            onSubmitEditing={()=> this.sendIt(friend)}
+                            value={message}
+                            multiline
+                            onChangeText={(message) => this.setState({messages: {...this.state.messages, [friend.id]: message}})}
+                            placeholder={"Ajoutez un message"}
+                            style={[
+                                styles.input,
+                                (notEditable ? {color: "grey"} : {color: "black"}),
+                            ]}
+                        />
+                        <View style={{width: "100%"}}>
+                            {this.renderButton(friend)}
+                        </View>
+
+                    </View>
+                }
+
+            </View>
         )
     }
 
@@ -85,10 +118,15 @@ export default class SendScreen extends Component<Props, State> {
                 isLoading={sending}
                 isDisabled={sent}
                 onPress={()=> this.sendIt(friend)}
-                style={styles.loadMoreButton}
+                style={[styles.button, {width: 100, position:"absolute", right: 0}]}
+                textStyle={{margin: 0, padding: 0}}
                 disabledStyle={styles.disabledButton}
             >
-                <Text style={{color: sent ? UI.Colors.grey1 : UI.Colors.black}}>{buttonText}</Text>
+                <Text style={{
+                    color: sent ? UI.Colors.grey1 : UI.Colors.black,
+                    backgroundColor: "transparent"}}>
+                    {buttonText}
+                </Text>
             </Button>);
 
     }
@@ -145,9 +183,15 @@ const actions = (() => {
 })();
 
 const styles = StyleSheet.create({
-    loadMoreButton: {
-        padding: 8,
+    button: {
         height: 30,
+        width: 100,
+        borderWidth: 0
+    },
+    input:{
+        borderWidth: 0.5,
+        borderColor: UI.Colors.grey1,
+        borderRadius: 20
     },
     disabledButton: {
         borderWidth: 0,
