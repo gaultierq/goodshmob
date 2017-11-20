@@ -39,7 +39,8 @@ export default {
     },
     "activity_item":{
         header: {
-            in: "in"
+            in: "in",
+            to: "to",
         },
         buttons:{
             "comment": {

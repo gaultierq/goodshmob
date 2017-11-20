@@ -2,7 +2,7 @@
 
 import type {Node} from 'react';
 import React, {Component} from 'react';
-import {View, ActivityIndicator, FlatList, RefreshControl} from 'react-native';
+import {View, ActivityIndicator, FlatList, RefreshControl, Text} from 'react-native';
 import {connect} from "react-redux";
 import {assertUnique} from "../../utils/DataUtils";
 import ApiAction from "../../utils/ApiAction";

@@ -5,7 +5,7 @@ import {Image, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, Vie
 import i18n from '../../i18n/i18n'
 import * as UI from "../../screens/UIStyles";
 import {buildNonNullData} from "../../utils/DataUtils";
-import type {Activity, List, User} from "../../types";
+import type {Activity, i18Key, List, User} from "../../types";
 import UserActivity from "./UserActivity";
 
 type Props = {
@@ -23,19 +23,14 @@ export default class ActivityDescription extends React.Component<Props, State> {
 
     render() {
         let activity = this.getActivity();
-        const {skipLineup} = this.props;
+
 
         //let activity: Model.Activity = this.props.activity;
         let user: User = activity.user;
-        let lineup: List = activity.target;
 
         let cardMargin = 12;
-        let targetName;
-        if (lineup) {
-            let count = lineup.meta ? lineup.meta["savings-count"] : 0;
-            targetName = lineup.name;
-            if (count) targetName += " (" + count + ")"
-        }
+
+
         return <View style={{margin: cardMargin, marginBottom: 8, backgroundColor: 'transparent'}}>
 
 
@@ -46,31 +41,57 @@ export default class ActivityDescription extends React.Component<Props, State> {
             >
 
                 {/* in Séries(1) */}
-                {!!lineup && !skipLineup &&
-                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                    <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                        <Text style={{
-                            fontSize: 9,
-                            color: UI.Colors.grey1,
-                            marginRight: 4
-                        }}>{i18n.t("activity_item.header.in")}</Text>
-                        <TouchableOpacity onPress={()=>this.seeList(lineup)}>
-                            <Text
-                                style={UI.TEXT_LIST}>
-                                {targetName}
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-
-                    {
-                        this.props.withFollowButton && this.renderFollowButton(lineup)
-                    }
-
-                </View>
-                }
+                {this.renderTarget()}
             </UserActivity>
 
             <Text style={{fontSize: 14}}>{activity.description}</Text>
+        </View>;
+    }
+
+    renderTarget() {
+        const {skipLineup, withFollowButton} = this.props;
+        if (skipLineup) return null;
+        let activity, target, targetName: string, key: i18Key, press: () => void;
+        if (!(activity = this.getActivity())) return null;
+        if (!(target = activity.target)) return null;
+
+        if (target.type === 'lists') {
+            let count = target.meta ? target.meta["savings-count"] : 0;
+            targetName = target.name;
+            if (count) targetName += " (" + count + ")"
+
+            key = "activity_item.header.in";
+            press = () => this.seeList(target);
+        }
+        else if (target.type === 'users') {
+            targetName = target.firstName + " " + target.lastName;
+            key = "activity_item.header.to";
+            press = () => this.seeUser(target);
+        }
+
+
+
+
+
+        return <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+                <Text style={{
+                    fontSize: 9,
+                    color: UI.Colors.grey1,
+                    marginRight: 4
+                }}>{i18n.t(key)}</Text>
+                <TouchableOpacity onPress={press}>
+                    <Text
+                        style={UI.TEXT_LIST}>
+                        {targetName}
+                    </Text>
+                </TouchableOpacity>
+            </View>
+
+            {
+                withFollowButton && this.renderFollowButton(target)
+            }
+
         </View>;
     }
 
@@ -79,6 +100,15 @@ export default class ActivityDescription extends React.Component<Props, State> {
             screen: 'goodsh.SavingsScreen', // unique ID registered with Navigation.registerScreen
             passProps: {
                 lineupId: lineup.id,
+            },
+        });
+    }
+
+    seeUser(user: User) {
+        this.props.navigator.push({
+            screen: 'goodsh.UserScreen', // unique ID registered with Navigation.registerScreen
+            passProps: {
+                userId: user.id,
             },
         });
     }
@@ -111,3 +141,9 @@ export default class ActivityDescription extends React.Component<Props, State> {
             </TouchableOpacity>;
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+});
