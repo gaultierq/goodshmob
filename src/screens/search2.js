@@ -36,7 +36,7 @@ export type SearchResult = {
     }
 }
 
-export type SearchEngine = {search: (token: SearchToken, page: number) => Promise<SearchResult>};
+export type SearchEngine = {search: (token: SearchToken, category: SearchCategoryType, page: number) => Promise<SearchResult>};
 
 export type Props = {
     onClickClose?: Function,
@@ -204,7 +204,7 @@ export default class SearchScreen extends Component<Props, State> {
         if (!search) {
             let categories = this.props.categories;
             categories.reduce((res, c) => {
-                res[c.type] = {token}
+                res[c.type] = {token};
                 return res;
             }, search = {})
         }
@@ -223,10 +223,10 @@ export default class SearchScreen extends Component<Props, State> {
 
         this.setState(partialState);
 
-
+        let catType = this.getCurrentCategoryType();
 
         this.props
-            .searchEngine.search(token, page)
+            .searchEngine.search(token, catType, page)
             .then((results: SearchResult) => {
             let res =  {};
             this.props.categories.reduce((obj, c, i) => {
@@ -235,15 +235,18 @@ export default class SearchScreen extends Component<Props, State> {
 
                 let search /*: SearchState */ = this.state.searches[token][type];
 
-                if (!search.data) search.data = [];
-
                 let result = results[type];
-                search.data = search.data.concat(result.results);
-                search.searchState = 2;
-                search.page = result.page;
-                search.nbPages = result.nbPages;
 
-                obj[type] = search;
+                if (result) {
+                    if (!search.data) search.data = [];
+                    search.data = search.data.concat(result.results);
+                    search.searchState = 2;
+                    search.page = result.page;
+                    search.nbPages = result.nbPages;
+
+                    obj[type] = search;
+                }
+
                 return obj;
             }, res);
 
@@ -251,6 +254,10 @@ export default class SearchScreen extends Component<Props, State> {
         });
 
 
+    }
+
+    getCurrentCategoryType() {
+        return this.props.categories[this.state.index].type;
     }
 }
 

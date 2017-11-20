@@ -10,9 +10,18 @@ import {SearchBar} from 'react-native-elements'
 import SearchScreen from "./search2";
 import algoliasearch from 'algoliasearch/reactnative';
 import type {SearchToken} from "../types";
+import type {SearchCategoryType} from "./search2";
 
-@connect()
-export default class AlgoliaSearchScreen extends SearchScreen {
+export default class AlgoliaSearchScreen extends Component<*,*> {
+    static navigatorButtons = {
+        rightButtons: [
+            {
+                //icon: require('../img/drawer_line_up.png'), // for icon button, provide the local image asset name
+                id: 'cancel_search', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
+                title: "Cancel"
+            }
+        ],
+    };
 
     render() {
         return <SearchScreen
@@ -21,7 +30,7 @@ export default class AlgoliaSearchScreen extends SearchScreen {
         />;
     }
 
-    search(token: SearchToken, page: number): Promise<*> {
+    search(token: SearchToken, category: SearchCategoryType, page: number): Promise<*> {
 
         //searching
         console.log(`algolia: searching ${token}`);

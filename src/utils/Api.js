@@ -131,23 +131,7 @@ export class Call {
         return (dispatch) => {
             //let {meta} = options;
             return new Promise((resolve, reject) => {
-                call
-                    .exec()
-                    .then(resp => {
-                        console.debug("api: response");
-                        if (resp.ok) {
-                            let contentType = resp.headers.get("content-type");
-                            if (contentType && contentType.indexOf("application/json") !== -1) {
-                                return resp.json().then((json)=> ({json, original: resp}));
-                            }
-                            return {json: "ok", original: resp};
-                        }
-                        let status = resp.status;
-
-                        return resp.json().then(err => {
-                            throw {...err, status: status}
-                        });
-                    })
+                call.run()
                     .then(resp => {
                             let response = resp.json;
                             let data = normalize(response);
@@ -177,10 +161,26 @@ export class Call {
                     );
             });
         }
-
-
     }
 
+    run() {
+        return this.exec()
+            .then(resp => {
+                console.debug("api: response");
+                if (resp.ok) {
+                    let contentType = resp.headers.get("content-type");
+                    if (contentType && contentType.indexOf("application/json") !== -1) {
+                        return resp.json().then((json) => ({json, original: resp}));
+                    }
+                    return {json: "ok", original: resp};
+                }
+                let status = resp.status;
+
+                return resp.json().then(err => {
+                    throw {...err, status: status}
+                });
+            });
+    }
 
     exec() {
         //if (!this.method) throw new Error("call need a method");
