@@ -24,6 +24,7 @@ type Props<T> = {
     fetchSrc: FeedSource,
     hasMore: boolean,
     ListHeaderComponent?: Node,
+    empty: string,
     style: any
 };
 
@@ -50,9 +51,14 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             renderItem,
             fetchSrc,
             hasMore,
+            empty,
             ...attributes
         } = this.props;
 
+        let showEmpty = isEmpty(data) && !this.state.isFetchingFirst && empty;
+        if (showEmpty) {
+            return <Text>{empty}</Text>;
+        }
         return (
             <FlatList
                 data={data}

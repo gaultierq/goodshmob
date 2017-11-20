@@ -43,7 +43,7 @@ export default class SaveScreen extends Component<Props, State> {
                     checkedColor={grey}
                     uncheckedColor={grey}
                     onPress={(newValue)=> this.setState({visibility: visibility === 1 ? 0 : 1})}
-                    checked={visibility===0}
+                    checked={!visibility}
                     style={{backgroundColor: 'transparent'}}
                     textStyle={{color: grey, fontSize: 12, }}
                 />

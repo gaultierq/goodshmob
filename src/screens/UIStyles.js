@@ -1,5 +1,7 @@
 //@flow
-
+import {Text, StyleSheet} from 'react-native';
+import Button from 'apsl-react-native-button'
+import * as React from "react";
 
 export const NavStyles = Object.freeze({
     navBarButtonColor: 'black',
@@ -14,6 +16,7 @@ export const Colors = Object.freeze({
     green: '#1ec',
     white: '#fff'
 });
+
 export const CARD = (sideMargin: number = 12) => {
     return {
         backgroundColor: "white",
@@ -47,3 +50,33 @@ export const TP_MARGINS = (margin) => {
 export const TEXT_LIST = {fontSize: 14, color: Colors.blue};
 export const TEXT_LESS_IMPORTANT = {fontSize: 12, color: Colors.grey2};
 export const TEXT_LEAST_IMPORTANT = {fontSize: 9, color: Colors.grey2};
+
+type ButtonOptions = {disabled?: boolean, loading?: boolean, style?: *};
+
+export function renderSimpleButton(
+    text: string,
+    onPress: ()=> void ,
+    {disabled = false, loading = false, style = {}} : ButtonOptions) {
+
+    let color = disabled ? Colors.grey1 : Colors.black;
+
+    return (<Button
+        isLoading={loading}
+        isDisabled={disabled}
+        onPress={onPress}
+        style={[styles.button, style]}
+        disabledStyle={styles.disabledButton}
+    >
+        <Text style={{color: color}}>{text}</Text>
+    </Button>);
+}
+
+const styles = StyleSheet.create({
+    button: {
+        padding: 8,
+        borderColor: "transparent",
+    },
+    disabledButton: {
+        borderColor: "transparent"
+    }
+});

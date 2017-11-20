@@ -35,6 +35,7 @@ import Modal from 'react-native-modal'
 import Button from 'apsl-react-native-button'
 import {CheckBox} from "react-native-elements";
 import type {Visibility} from "./additem";
+import {renderSimpleButton} from "./UIStyles";
 
 let DEEPLINK_SEARCH_TEXT_CHANGED = 'internal/home/search/change';
 let DEEPLINK_SEARCH_CLOSE = 'internal/home/search/close';
@@ -538,9 +539,6 @@ class HomeScreen extends Component<Props, State> {
                         editable={editable}
                         style={[styles.input, (editable ? {color: "black"} : {color: "grey"})]}
                         onSubmitEditing={this.createLineup.bind(this)}
-                        // onEndEditing={()=>{
-                        //     if (!this.state.isAddingLineup) this.setState({isCreatingLineup: false})
-                        // }}
                         value={this.state.newLineupTitle}
                         onChangeText={newLineupTitle => this.setState({newLineupTitle})}
                         placeholder={i18n.t("create_list_controller.placeholder")}
@@ -554,10 +552,24 @@ class HomeScreen extends Component<Props, State> {
                         checkedColor={grey1}
                         uncheckedColor={grey1}
                         onPress={(newValue)=> this.setState({newLineupPrivacy: !!this.state.newLineupPrivacy ? 0 : 1})}
-                        checked={this.state.newLineupPrivacy===0}
+                        checked={!this.state.newLineupPrivacy}
                         textStyle={{color: grey1, fontSize: 12, }}
                         containerStyle={{ backgroundColor: "transparent", borderWidth: 0, width: "100%"}}
                     />
+
+                    <View style={{flexDirection: 'row'}}>
+                        {
+                            renderSimpleButton("Ajouter", this.createLineup.bind(this), {
+                                loading: this.state.isAddingLineup,
+                                disabled: !this.state.newLineupTitle
+                            })
+                        }
+                        {renderSimpleButton(
+                            "Annuler",
+                            ()=> {this.setState({isCreatingLineup: false})},
+                            {disabled: this.state.isAddingLineup})}
+                    </View>
+
                 </View>
             );
         }
