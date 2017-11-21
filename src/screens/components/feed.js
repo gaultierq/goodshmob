@@ -57,13 +57,13 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             ...attributes
         } = this.props;
 
-        let nothingInterestingToDisplay = isEmpty(data) && !this.isFetchingFirst() && empty;
+        let nothingInterestingToDisplay = isEmpty(data) && !this.isFetchingFirst();
 
         if (nothingInterestingToDisplay) {
             if (this.state.isFetchingFirst === 'ko') {
-                renderSimpleButton("Réessayer", ()=>this.fetchIt());
+                return renderSimpleButton("Réessayer", ()=>this.fetchIt());
             }
-            return <Text>{empty}</Text>;
+            if (empty) return <Text>{empty}</Text>;
         }
         return (
             <FlatList
@@ -97,7 +97,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
             let requestName = afterId ? 'isFetchingMore' : 'isFetchingFirst';
 
-            if (this.state[requestName]) {
+            if (this.state[requestName] === 'sending') {
                 reject(requestName + " is already running. state="+JSON.stringify(this.state));
             }
             else {
@@ -155,9 +155,10 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
     fetchMore() {
         let c = this.props.data;
+        if (!c) return;
         let last = c[c.length-1];
         if (!last) return;
-        c && this.fetchIt(last.id);
+        this.fetchIt(last.id);
     }
 
     onRefresh() {

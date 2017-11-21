@@ -285,7 +285,9 @@ class HomeScreen extends Component<Props, State> {
             }, err=> {
                 console.error(err);
                 changeRequest(3);
-            });
+            })
+            .then(()=> Snackbar.show({title: "Liste modifiée"}))
+        ;
 
     }
 
@@ -323,7 +325,9 @@ class HomeScreen extends Component<Props, State> {
     }
 
     deleteLineup(lineup: List) {
-        this.props.dispatch(actions.deleteLineup(lineup));
+        this.props
+            .dispatch(actions.deleteLineup(lineup))
+            .then(()=> Snackbar.show({title: "Liste effacée"}));
     }
 
     changeTitle(lineup: List) {
@@ -367,10 +371,7 @@ class HomeScreen extends Component<Props, State> {
                 }
             ];
         }
-
-
         navigator.setStyle({navBarCustomView});
-
 
         navigator.setButtons({
             leftButtons,
@@ -405,6 +406,7 @@ class HomeScreen extends Component<Props, State> {
                     isAddingLineup: false,
                 })
             })
+            .then(()=> Snackbar.show({title: "Liste créée"}))
 
         ;
     }
