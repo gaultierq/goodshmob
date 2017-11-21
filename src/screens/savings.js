@@ -39,10 +39,10 @@ class SavingsScreen extends Component<Props, State> {
             }
             else if (lineup) {
 
-                let user:User = lineup.user;
+                //let user:User = lineup.user;
 
                 let title = lineup.name;
-                let titleImage = user.goodshbox.id === lineup.id ? require('../img/goodshbox.png') : null;
+                let titleImage = /*user.goodshbox.id === lineup.id ? require('../img/goodshbox.png') : */null;
                 this.props.navigator.setTitle({title, titleImage});
                 this.setState({title: {title, titleImage}});
             }

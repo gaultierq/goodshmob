@@ -13,4 +13,7 @@ export function load() {
 
     messaging.onMessage((message)=>console.log("message received from fcm: "+ JSON.stringify(message)));
 
+    messaging.getInitialNotification().then((notif) => {
+        console.log("app opened from notification:" + JSON.stringify(notif));
+    });
 }

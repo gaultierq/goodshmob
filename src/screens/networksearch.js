@@ -63,7 +63,7 @@ export default class NetworkSearchScreen extends Component<Props, State> {
             if (isLineup) {
                 return (
                     <TouchableWithoutFeedback
-                        onPress={this.onLineupPressed}>
+                        onPress={this.onLineupPressed.bind(this)}>
                         <View>
                             <LineupCell
                                 lineup={item}
