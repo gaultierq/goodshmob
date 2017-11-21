@@ -66,7 +66,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                 keyExtractor={this.keyExtractor}
                 refreshControl={this.renderRefreshControl()}
                 onEndReached={ this.onEndReached.bind(this) }
-                onEndReachedThreshold={0}
+                onEndReachedThreshold={0.1}
                 ListFooterComponent={this.renderFetchMoreLoader()}
                 style={{...this.props.style,  minHeight: 50}}
                 {...attributes}
@@ -192,6 +192,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     onEndReached() {
+        console.debug("onEndReached");
         if (this.hasMore()) {
             this.fetchMore();
         }
