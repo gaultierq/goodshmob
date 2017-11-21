@@ -1,16 +1,17 @@
 // @flow
 
 import React, {Component} from 'react';
-import {ScrollView, StyleSheet, View, Text} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {connect} from "react-redux";
 import {MainBackground} from "./UIComponents";
 import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
 import Feed from "./components/feed";
-import type {List, Saving, User} from "../types";
+import type {List, Saving} from "../types";
 import {buildNonNullData, doDataMergeInState} from "../utils/DataUtils";
 import ApiAction from "../utils/ApiAction";
 import ActivityCell from "../activity/components/ActivityCell";
+import {currentUserId} from "../CurrentUser";
 
 
 type Props = {
@@ -23,7 +24,7 @@ type State = {
     titleSet: boolean
 };
 
-class SavingsScreen extends Component<Props, State> {
+class LineupScreen extends Component<Props, State> {
 
 
     //titleSet because when navigating back, a render may change the nav bar title. this is a flaw in wix nav
@@ -45,6 +46,13 @@ class SavingsScreen extends Component<Props, State> {
                 let titleImage = /*user.goodshbox.id === lineup.id ? require('../img/goodshbox.png') : */null;
                 this.props.navigator.setTitle({title, titleImage});
                 this.setState({title: {title, titleImage}});
+                let user = lineup.user;
+                if (user && user.id !== currentUserId()) {
+                    this.props.navigator.setSubTitle({
+                        subtitle: "Par " + user.firstName + " " + user.lastName
+                    });
+                }
+
             }
         }
 
@@ -195,7 +203,7 @@ const reducer = (() => {
     }
 })();
 
-let screen = connect(mapStateToProps)(SavingsScreen);
+let screen = connect(mapStateToProps)(LineupScreen);
 
 export {reducer, screen, actions};
 

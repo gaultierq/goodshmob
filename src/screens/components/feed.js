@@ -1,4 +1,4 @@
-//TODO: add flow
+//@flow
 
 import type {Node} from 'react';
 import React, {Component} from 'react';
@@ -8,7 +8,8 @@ import {assertUnique} from "../../utils/DataUtils";
 import ApiAction from "../../utils/ApiAction";
 import * as Api from "../../utils/Api";
 import {isEmpty} from "lodash";
-import type {Id, Url} from "../../types";
+import type {Id, RequestState, Url} from "../../types";
+import {renderSimpleButton} from "../UIStyles";
 
 export type FeedSource = {
     callFactory: ()=>Api.Call,
@@ -24,13 +25,14 @@ type Props<T> = {
     fetchSrc: FeedSource,
     hasMore: boolean,
     ListHeaderComponent?: Node,
+    ListFooterComponent?: Node,
     empty: string,
     style: any
 };
 
 type State = {
-    isFetchingFirst?: boolean,
-    isFetchingMore?: boolean,
+    isFetchingFirst?: RequestState,
+    isFetchingMore?: RequestState,
     isPulling?: boolean,
     lastEmptyResultMs?: number,
     moreLink?: Url
@@ -55,8 +57,12 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             ...attributes
         } = this.props;
 
-        let showEmpty = isEmpty(data) && !this.state.isFetchingFirst && empty;
-        if (showEmpty) {
+        let nothingInterestingToDisplay = isEmpty(data) && !this.isFetchingFirst() && empty;
+
+        if (nothingInterestingToDisplay) {
+            if (this.state.isFetchingFirst === 'ko') {
+                renderSimpleButton("Réessayer", ()=>this.fetchIt());
+            }
             return <Text>{empty}</Text>;
         }
         return (
@@ -72,6 +78,14 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                 {...attributes}
             />
         );
+    }
+
+    isFetchingFirst() {
+        return this.state.isFetchingFirst === 'sending';
+    }
+
+    isFetchingMore() {
+        return this.state.isFetchingMore === 'sending';
     }
 
     componentDidMount() {
@@ -91,7 +105,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
                 if (!fetchSrc) return;
 
-                this.setState({[requestName]: true});
+                this.setState({[requestName]: 'sending'});
 
                 const {callFactory, useLinks} = fetchSrc;
                 let call;
@@ -109,10 +123,13 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                 this.props
                     .dispatch(call.disptachForAction2(fetchSrc.action, fetchSrc.options))
                     .then(({data, links})=> {
-                        this.setState({[requestName]: false});
+
                         if (!data) {
+                            this.setState({[requestName]: 'ko'});
                             return reject(`no data provided for ${fetchSrc.action}`);
                         }
+                        this.setState({[requestName]: 'ok'});
+
                         let hasNoMore = data.length === 0;
                         if (hasNoMore) {
                             this.setState({lastEmptyResultMs: Date.now()});
@@ -130,19 +147,11 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                         resolve(data);
                     }, err => {
                         console.warn("feed error:" + err);
-                        this.setState({[requestName]: false});
+                        this.setState({[requestName]: 'ko'});
                     })
             }
         });
     }
-
-    // setState(partialState, callback?) {
-    //     let t = Math.random();
-    //     console.debug(`DEBUG(${t}): partial=${JSON.stringify(partialState)}`);
-    //     callback = () => console.log(`DEBUG(${t}): state=${JSON.stringify(this.state)}`);
-    //
-    //     super.setState(partialState, callback);
-    // }
 
     fetchMore() {
         let c = this.props.data;
@@ -160,26 +169,31 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     renderRefreshControl() {
-        let displayLoader = (this.state.isFetchingFirst && isEmpty(this.props.data)) || this.state.isPulling;
+        let displayLoader = (this.isFetchingFirst() && isEmpty(this.props.data)) || this.state.isPulling;
         return (<RefreshControl
-            refreshing={displayLoader}
+            refreshing={!!displayLoader}
             onRefresh={this.onRefresh.bind(this)}
         />);
     }
 
-
-
     renderFetchMoreLoader() {
         return (<View>
                 {this.props.ListFooterComponent}
-                {this.state.isFetchingMore ?
+                {
+                    this.state.isFetchingMore === 'sending' &&
                     <ActivityIndicator
-                        animating={this.state.isFetchingMore}
-                        size = "small"
-                    />:null}
+                        animating={this.isFetchingMore()}
+                        size="small"
+                        style={{margin: 12}}
+                    />
+                }
+                {
+                    this.state.isFetchingMore === 'ko' && renderSimpleButton("Réessayer", ()=>this.fetchMore())
+                }
             </View>
         )
     }
+
 
     hasMore() {
         let last = this.state.lastEmptyResultMs;

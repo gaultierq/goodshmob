@@ -15,7 +15,7 @@ import {
 import {connect} from "react-redux";
 import {MainBackground} from "./UIComponents";
 import ActionButton from 'react-native-action-button';
-import {DELETE_LINEUP, EDIT_LINEUP, screen as LineupList} from './lineups'
+import {DELETE_LINEUP, EDIT_LINEUP, screen as LineupList} from './lineuplist'
 import type {Id, Saving} from "../types";
 import {Item, List} from "../types"
 import Snackbar from "react-native-snackbar"
@@ -293,7 +293,7 @@ class HomeScreen extends Component<Props, State> {
         return (<TouchableOpacity
             onPress={() => {
                 this.props.navigator.push({
-                    screen: 'goodsh.SavingsScreen', // unique ID registered with Navigation.registerScreen
+                    screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
                     passProps: {
                         lineupId: item.id,
                     },
@@ -431,7 +431,7 @@ class HomeScreen extends Component<Props, State> {
 
             console.info("on linup pressed: " + JSON.stringify(lineup));
             this.props.navigator.push({
-                screen: 'goodsh.SavingsScreen', // unique ID registered with Navigation.registerScreen
+                screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
                 passProps: {
                     lineupId: lineup.id,
                 },

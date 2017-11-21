@@ -42,3 +42,12 @@ export function unlike(activityId: string, activityType: string) {
             {id: activityId, type: activityType}
         );
 }
+
+export function unsave(savingId: Id) {
+    return new Api.Call()
+        .withMethod('DELETE')
+        .withRoute(`savings/${savingId}`)
+        .disptachForAction(types.UNSAVE,
+            {id: savingId}
+        );
+}

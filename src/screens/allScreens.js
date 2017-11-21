@@ -6,9 +6,9 @@ import {screen as SearchScreen} from './search';
 import DebugScreen from './DebugScreen';
 
 import {screen as ActivityDetailScreen} from '../activity/activityDetail';
-import {screen as LineupListScreen} from './lineups';
+import {screen as LineupListScreen} from './lineuplist';
 import {screen as AddInScreen} from './addinscreen';
-import {screen as SavingsScreen} from './savings';
+import {screen as LineupScreen} from './lineup';
 import {screen as HomeScreen, HomeNavBar} from './home';
 import {screen as CommentsScreen} from './comments';
 import {screen as SaveScreen} from './save';
@@ -35,7 +35,7 @@ export function registerScreens(store, Provider) {
     Navigation.registerComponent('goodsh.AddInScreen', () => AddInScreen, store, Provider);
     Navigation.registerComponent('goodsh.HomeScreen', () => HomeScreen, store, Provider);
     Navigation.registerComponent('goodsh.HomeNavBar', () => HomeNavBar, store, Provider);
-    Navigation.registerComponent('goodsh.SavingsScreen', () => SavingsScreen, store, Provider);
+    Navigation.registerComponent('goodsh.LineupScreen', () => LineupScreen, store, Provider);
     Navigation.registerComponent('goodsh.CommentsScreen', () => CommentsScreen, store, Provider);
     Navigation.registerComponent('goodsh.SaveScreen', () => SaveScreen, store, Provider);
     Navigation.registerComponent('goodsh.ShareScreen', () => ShareScreen, store, Provider);

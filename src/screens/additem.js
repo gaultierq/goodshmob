@@ -73,9 +73,7 @@ export default class AddItemScreen extends Component<Props, State> {
                     </View>
                     <LineupCell lineup={lineup} style={{backgroundColor: "transparent"}} />
 
-
                     <TextInput
-                        autoFocus
                         editable={editable}
                         style={[styles.input, (editable ? {color: "black"} : {color: "grey"})]}
                         onSubmitEditing={this.doAdd.bind(this)}

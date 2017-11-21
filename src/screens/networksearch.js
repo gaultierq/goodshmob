@@ -196,7 +196,7 @@ export default class NetworkSearchScreen extends Component<Props, State> {
 
     onLineupPressed(lineup: List) {
         this.props.navigator.push({
-            screen: 'goodsh.SavingsScreen', // unique ID registered with Navigation.registerScreen
+            screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
             passProps: {
                 lineupId: lineup.id,
             },

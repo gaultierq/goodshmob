@@ -56,7 +56,7 @@ type ButtonOptions = {disabled?: boolean, loading?: boolean, style?: *};
 export function renderSimpleButton(
     text: string,
     onPress: ()=> void ,
-    {disabled = false, loading = false, style = {}} : ButtonOptions) {
+    {disabled = false, loading = false, style = {}} : ButtonOptions = {}) {
 
     let color = disabled ? Colors.grey1 : Colors.black;
 

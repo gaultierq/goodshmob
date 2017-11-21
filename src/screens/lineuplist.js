@@ -244,7 +244,7 @@ export function renderSimpleListItem(navigator: *) {
     return (item: List) => (<TouchableWithoutFeedback
         onPress={() => {
             navigator.push({
-                screen: 'goodsh.SavingsScreen', // unique ID registered with Navigation.registerScreen
+                screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
                 passProps: {
                     lineupId: item.id,
                 },

@@ -21,6 +21,16 @@ export default function reduce(state:any = initialState, action: any) {
             state = Immutable.setIn(state, newVar, --count);
             break;
         }
+        case types.UNSAVE.success():{
+            let {id} = action.options;
+
+            // state = Immutable.setIn(state, [type, id, "meta", "liked"], false);
+            // let newVar = [type, id, "meta", "likes-count"];
+            //
+            // let count = state.getIn(newVar);
+            // state = Immutable.setIn(state, newVar, --count);
+            break;
+        }
     }
     return state;
 }

@@ -2,15 +2,23 @@
 
 import React from 'react';
 
-import {Platform, Image, Linking, Share, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, View} from 'react-native';
+import {
+    Image,
+    Linking,
+    Platform,
+    Share,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    View
+} from 'react-native';
 import * as UI from "../../screens/UIStyles";
-import type {Activity, Item, List, Url} from "../../types";
+import type {Activity, Saving, Url} from "../../types";
 import i18n from '../../i18n/i18n'
-import {saveItem} from "../../screens/actions";
-import type {Description, Visibility} from "../../screens/save";
 import {connect} from "react-redux";
-import {currentGoodshboxId, currentUserId} from "../../CurrentUser";
-import * as Nav from "../../screens/Nav";
+import {currentGoodshboxId} from "../../CurrentUser";
+import {unsave} from "../actions";
 
 export type ActivityActionType = 'comment' | 'share' | 'save' | 'buy';
 const ACTIONS = ['comment', 'share', 'save', 'buy'];
@@ -55,7 +63,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
             {actions.indexOf('share') >= 0 && this.renderButton(require('../../img/send.png'), i18n.t("activity_item.buttons.share"), () => this.send(activity))}
             {
                 goodshed ?
-                    actions.indexOf('save') >= 0 && this.renderButton(require('../../img/save-icon.png'), i18n.t("activity_item.buttons.saved"), null, true)
+                    actions.indexOf('save') >= 0 && this.renderButton(require('../../img/save-icon.png'), i18n.t("activity_item.buttons.saved"), () => this.unsave(activity), true)
                     :
                     actions.indexOf('save') >= 0 && this.renderButton(require('../../img/save-icon.png'), i18n.t("activity_item.buttons.save"), () => this.save(activity))
             }
@@ -94,6 +102,10 @@ export default class ActivityActionBar extends React.Component<Props, State> {
             },
         });
 
+    }
+
+    unsave(saving: Saving) {
+        this.props.dispatch(unsave(saving.id)).then(console.info(`saving ${saving.id} unsaved`));
     }
 
     comment(activity: Activity) {
