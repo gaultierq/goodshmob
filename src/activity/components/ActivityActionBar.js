@@ -9,7 +9,7 @@ import i18n from '../../i18n/i18n'
 import {saveItem} from "../../screens/actions";
 import type {Description, Visibility} from "../../screens/save";
 import {connect} from "react-redux";
-import {currentUserId} from "../../CurrentUser";
+import {currentGoodshboxId, currentUserId} from "../../CurrentUser";
 import * as Nav from "../../screens/Nav";
 
 export type ActivityActionType = 'comment' | 'share' | 'save' | 'buy';
@@ -79,56 +79,20 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
     save(activity: Activity) {
 
+        let item = activity.resource;
 
-        this.props.navigator.showModal({
-            screen: 'goodsh.AddInScreen', // unique ID registered with Navigation.registerScreen
-            title: "Ajouter à une liste",
-            //animationType: 'none',
-            navigatorButtons: {
-                leftButtons: [
-                    {
-                        id: Nav.CANCEL,
-                        title: "Cancel"
-                    }
-                ],
-            },
+        this.props.navigator.push({
+            screen: 'goodsh.AddItemScreen', // unique ID registered with Navigation.registerScreen
+            title: "Ajouter",
             passProps: {
-                activity,
-                userId: currentUserId(),
-                canFilterOverItems: false,
-                onLineupPressed: (lineup: List) => {
-
-                    //this.props.navigator.dismissModal({animationType: 'none'});
-
-                    this.props.navigator.showLightBox({
-                        screen: 'goodsh.SaveScreen', // unique ID registered with Navigation.registerScreen
-                        style: {
-                            backgroundBlur: "light", // 'dark' / 'light' / 'xlight' / 'none' - the type of blur on the background
-                            tapBackgroundToDismiss: true // dismisses LightBox on background taps (optional)
-                        },
-                        passProps: {
-                            activity,
-                            containerStyle: {width: 300, height: 500},
-                            onDescription:
-                                (description: Description,
-                                 visibility: Visibility) => {
-                                    setTimeout(() => {
-                                        this.props.dispatch(
-                                            saveItem(activity.resource.id, lineup.id, visibility, description)
-                                        ).then(() => {
-                                            this.props.navigator.dismissLightBox();
-                                            this.props.navigator.dismissAllModals({animationType: 'none'});
-                                        });
-                                    }, 500)
-                                }
-                        },
-                    });
-                },
-                onCancel: ()=>this.props.navigator.dismissModal()
+                itemId: item.id,
+                itemType: item.type,
+                defaultLineupId: currentGoodshboxId(),
+                onCancel: () => {
+                    this.props.navigator.popToRoot();
+                }
             },
         });
-
-
 
     }
 

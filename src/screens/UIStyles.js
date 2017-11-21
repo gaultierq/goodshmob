@@ -1,5 +1,5 @@
 //@flow
-import {Text, StyleSheet} from 'react-native';
+import {Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Button from 'apsl-react-native-button'
 import * as React from "react";
 
@@ -70,6 +70,19 @@ export function renderSimpleButton(
         <Text style={{color: color}}>{text}</Text>
     </Button>);
 }
+
+export function renderSimpleLink(
+    text: string,
+    onPress: ()=> void ,
+    {disabled = false, loading = false, style = {}} : ButtonOptions) {
+
+    let color = disabled ? Colors.grey1 : Colors.blue;
+
+    return (<TouchableOpacity onPress={disabled ? null : onPress}>
+        <Text style={[{color}, style]}>{text}</Text>
+    </TouchableOpacity>);
+}
+
 
 const styles = StyleSheet.create({
     button: {

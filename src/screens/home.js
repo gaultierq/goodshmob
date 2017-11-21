@@ -483,7 +483,8 @@ class HomeScreen extends Component<Props, State> {
                         screen: 'goodsh.AddItemScreen', // unique ID registered with Navigation.registerScreen
                         title: "Ajouter",
                         passProps: {
-                            item,
+                            itemId: item.id,
+                            itemType: item.type,
                             defaultLineupId: currentGoodshboxId(),
                             onCancel: () => {
                                 this.props.navigator.popToRoot();

@@ -11,7 +11,8 @@ import type {List, Saving} from "../../types";
 type Props = {
     onAddInLineupPressed?: Function,
     moreComponent?: Node,
-    lineup: List
+    lineup: List,
+    style?: *
 };
 
 type State = {
@@ -24,11 +25,13 @@ export default class LineupCell extends React.Component<Props, State> {
         let lineup : List = this.props.lineup;
         let savings: Saving[] = lineup.savings;
 
+        let style = this.props.style || styles.container;
+
         assertUnique(savings);
 
         let moreComponent = this.props.moreComponent;
         return (
-            <View style={styles.container}>
+            <View style={style}>
                 <View style={{flexDirection: "row"}}>
                     <Text style={styles.lineupTitle}>{lineup.name}</Text>
                     {

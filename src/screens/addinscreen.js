@@ -24,18 +24,6 @@ class AddInScreen extends Component<Props, State> {
 
         return (
             <View style={[styles.container]}>
-                {/*<SearchBar*/}
-                    {/*autoFocus*/}
-                    {/*lightTheme*/}
-                    {/*round*/}
-                    {/*onChangeText={this.onSearchInputChange.bind(this)}*/}
-                    {/*placeholder={i18n.t('lineups.search.placeholder')}*/}
-                    {/*clearIcon={{color: '#86939e'}}*/}
-                    {/*containerStyle={styles.searchContainer}*/}
-                    {/*inputStyle={styles.searchInput}*/}
-                    {/*autoCapitalize='none'*/}
-                    {/*autoCorrect={false}*/}
-                {/*/>*/}
 
                 <LineupListScreen
                     filter={this.state.filter}
