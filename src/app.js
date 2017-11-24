@@ -235,10 +235,10 @@ export default class App {
                             userId: userId
                         } // simple serializable object that will pass as props to all top screens (optional)
                     },
-                    // right: { // optional, define if you want a drawer from the right
-                    //     screen: 'goodsh.LineupListScreen', // unique ID registered with Navigation.registerScreen
-                    //     passProps: {} // simple serializable object that will pass as props to all top screens (optional)
-                    // },
+                    right: { // optional, define if you want a drawer from the right
+                        screen: 'goodsh.CommunityScreen', // unique ID registered with Navigation.registerScreen
+                        passProps: {} // simple serializable object that will pass as props to all top screens (optional)
+                    },
                     style: { // ( iOS only )
                         drawerShadow: true, // optional, add this if you want a side menu drawer shadow
                         contentOverlayColor: 'rgba(0,0,0,0.25)', // optional, add this if you want a overlay color when drawer is open

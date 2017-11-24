@@ -140,6 +140,12 @@ export default {
         "savings":"Goodshs & Lineups",
         "users":"Goodshers"
     },
+    "community_screen":{
+        "tabs": {
+            "friends":"My friends",
+            "notifications":"Notifications",
+        },
+    },
     "search_item_screen":{
         "tabs": {
             "consumer_goods":"STUFF",

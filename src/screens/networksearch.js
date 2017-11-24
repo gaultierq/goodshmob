@@ -111,6 +111,7 @@ export default class NetworkSearchScreen extends Component<Props, State> {
 
                 },
                 tabName: "network_search_tabs.savings",
+                placeholder: "search_bar.network_placeholder",
                 parseResponse: createResultFromHit,
                 renderItem,
             },
@@ -125,6 +126,7 @@ export default class NetworkSearchScreen extends Component<Props, State> {
 
                 },
                 tabName: "network_search_tabs.users",
+                placeholder: "search_bar.network_placeholder",
                 parseResponse: createResultFromHit2,
                 renderItem: renderUser,
             },
@@ -135,7 +137,6 @@ export default class NetworkSearchScreen extends Component<Props, State> {
         return (
             <AlgoliaSearchScreen
                 categories={categories}
-                placeholder={"search_bar.network_placeholder"}
                 navigator={navigator}
             />
         );

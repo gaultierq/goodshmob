@@ -31,12 +31,19 @@ class NetworkScreen extends Component<Props, State> {
     static navigatorStyle = UIStyles.NavStyles;
 
     static navigatorButtons = {
-        rightButtons: [
+        leftButtons: [
             {
                 //icon: require('../img/drawer_line_up.png'), // for icon button, provide the local image asset name
                 id: 'ask', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
                 icon: require('../img/bottom_bar_ask.png'),
                 title: "Ask"
+            }
+        ],
+        rightButtons: [
+            {
+                id: 'community', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
+                icon: require('../img/drawer_community.png'),
+                title: "Community"
             }
         ],
     };

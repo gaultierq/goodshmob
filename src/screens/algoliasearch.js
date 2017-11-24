@@ -7,10 +7,10 @@ import {connect} from "react-redux";
 import {combineReducers} from "redux";
 import {TabBar, TabViewAnimated} from 'react-native-tab-view';
 import {SearchBar} from 'react-native-elements'
-import SearchScreen from "./search2";
+import SearchScreen from "./search";
 import algoliasearch from 'algoliasearch/reactnative';
 import type {SearchToken} from "../types";
-import type {SearchCategoryType} from "./search2";
+import type {SearchCategoryType} from "./search";
 
 export default class AlgoliaSearchScreen extends Component<*,*> {
     static navigatorButtons = {

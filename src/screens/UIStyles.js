@@ -67,7 +67,7 @@ export function renderSimpleButton(
         style={[styles.button, style]}
         disabledStyle={styles.disabledButton}
     >
-        <Text style={{color: color}}>{text}</Text>
+        <Text style={{color, backgroundColor: "transparent"}}>{text}</Text>
     </Button>);
 }
 

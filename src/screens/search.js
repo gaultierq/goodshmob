@@ -1,197 +1,360 @@
 // @flow
 
+import type {Node} from 'react';
 import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native';
+import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
 import {connect} from "react-redux";
-import Immutable from 'seamless-immutable';
-import * as Api from "../utils/Api";
 import {combineReducers} from "redux";
 import {TabBar, TabViewAnimated} from 'react-native-tab-view';
-import ItemCell from "./components/ItemCell";
-import {buildData, buildNonNullData} from "../utils/DataUtils";
 import i18n from '../i18n/i18n'
 import {SearchBar} from 'react-native-elements'
 import * as UIStyles from "../screens/UIStyles"
-import {MainBackground} from "./UIComponents";
-import ApiAction from "../utils/ApiAction";
-import type {SearchCategoryType} from "./search2";
-import SearchScreen from "./search2";
-import normalize from 'json-api-normalizer';
 
-type SearchCategory = "consumer_goods" | "places" | "musics" | "movies";
-type SearchToken = string;
-
-const SEARCH_CATEGORIES : Array<SearchCategory> = [ "consumer_goods", "places", "musics", "movies"];
+import type {i18Key, Item, List, SearchState, SearchToken} from "../types";
+import Button from 'apsl-react-native-button'
+import * as UI from "./UIStyles";
 
 
-type Props = {
-    onItemSelected: Function;
-    search: Function,
-    onCancel: Function
+import * as _ from "lodash";
+
+
+export type SearchCategoryType = string;
+
+export type SearchCategory = {
+    type: SearchCategoryType,
+    query: *,
+    parseResponse: (hits) => *,
+    renderItem: (item: *) => Node,
+    tabName: i18Key,
+    placeholder: i18Key,
+}
+
+export type SearchResult = {
+    [SearchCategoryType]: {
+        results: Array<*>,
+        page: number,
+        nbPages: number,
+    }
+}
+
+export type SearchEngine = {search: (token: SearchToken, category: SearchCategoryType, page: number) => Promise<SearchResult>};
+
+export type Props = {
+    onClickClose?: Function,
+    categories: Array<SearchCategory>,
+    navigator: *,
+    searchEngine: SearchEngine
 };
 
-type State = {
-    index: number,
-    input: SearchToken,
+export type State = {
+    input?: SearchToken,
     routes: Array<*>,
-    pendingSearch: number,
-    isSearching: { [key: SearchCategory]: Array<SearchToken> }
+    searches: { [SearchToken]: {[SearchCategoryType]: SearchState}},
+    index: number
 };
 
 
-// class SearchScreen extends Component<Props, State> {
-//
-//     static navigatorButtons = {
-//         rightButtons: [
-//             {
-//                 //icon: require('../img/drawer_line_up.png'), // for icon button, provide the local image asset name
-//                 id: 'cancel_search', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
-//                 title: "Cancel"
-//             }
-//         ],
-//     };
-//
-//     state = {
-//         pendingSearch: -1,
-//         index: 0, //tab index
-//         input: '', //TODO : rename it to token
-//         routes: SEARCH_CATEGORIES.map((c, i) => ({key: `${i}`, title: SearchScreen.getTitle(c)})),
-//         isSearching: {},
-//     };
-//
-//     constructor(props) {
-//         super(props);
-//         props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-//     }
-//
-//     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
-//         if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
-//             if (event.id === 'cancel_search') { // this is the same id field from the static navigatorButtons definition
-//                 this.props.onCancel();
-//             }
-//         }
-//     }
-//
-//     _handleIndexChange = index => {
-//         this.setState({ index }, () => this.performSearch(true));
-//     };
-//
-//     _renderHeader = props => <TabBar {...props}
-//                                      indicatorStyle={styles.indicator}
-//                                      style={styles.tabbar}
-//                                      tabStyle={styles.tab}
-//                                      labelStyle={styles.label}/>;
-//
-//     _renderScene = ({ route }) => { return this.renderSearchPage(SEARCH_CATEGORIES[route.key])};
-//
-//
-//     static getTitle(cat: SearchCategory) {
-//         return i18n.t('search_item_screen.tabs.' + cat);
-//     }
-//
-//     getPlaceholder() {
-//         let cat = this.getCategory();
-//         return i18n.t('search_item_screen.placeholder.' + cat);
-//     }
-//
-//     renderSearchPage(category: SearchCategory) {
-//         return (
-//             <SearchPage
-//                 category={category}
-//                 isLoading={() => this.isSearching(category)}
-//                 onItemSelected={this.props.onItemSelected}
-//             />
-//         );
-//     }
-//
-//     isSearching(category: SearchCategory) {
-//         return (this.state.isSearching[category] || []).length > 0;
-//     }
-//
-//     render() {
-//         return (
-//             <View style={{width:"100%", height: "100%"}}>
-//                 <SearchBar
-//                     autoFocus
-//                     lightTheme
-//                     onChangeText={this.onSearchInputChange.bind(this)}
-//                     placeholder={this.getPlaceholder()}
-//                     clearIcon={{color: '#86939e'}}
-//                     containerStyle={styles.searchContainer}
-//                     inputStyle={styles.searchInput}
-//                     autoCapitalize='none'
-//                     autoCorrect={false}
-//                 />
-//                 <TabViewAnimated
-//                     style={styles.container}
-//                     navigationState={this.state}
-//                     renderScene={this._renderScene}
-//                     renderHeader={this._renderHeader}
-//                     onIndexChange={this._handleIndexChange}
-//                 />
-//             </View>
-//
-//         );
-//     }
-//
-//     onSearchInputChange(input) {
-//         this.setState({input}, () => this.performSearch());
-//     }
-//
-//     performSearch(hard: false) {
-//         let when = -1;
-//         let cat : SearchCategory = this.getCategory();
-//         let data = this.props.search[cat];
-//         let input = this.state.input;
-//         if (data && data.token === input) {
-//             console.log("skipping request");
-//         }
-//         else {
-//             when = hard ? 0 : 400;
-//         }
-//
-//         if (when >= 0) {
-//             let timeoutId = setTimeout(() => {
-//
-//                 let tokenBeingSearched = this.state.isSearching[cat] || [];
-//                 tokenBeingSearched = tokenBeingSearched.slice();
-//
-//                 if (tokenBeingSearched.indexOf(input) > -1) throw new Error(`"${input}" is already being searched for`);
-//                 tokenBeingSearched.push(input);
-//
-//                 this.setState({isSearching: {[cat]: tokenBeingSearched}});
-//
-//                 this.props.dispatch(actions.searchFor(this.state.input, cat))
-//                     .then(()=> {
-//                         let tokenBeingSearched = this.state.isSearching[cat];
-//                         tokenBeingSearched = tokenBeingSearched.slice();
-//                         let indexOf = tokenBeingSearched.indexOf(input);
-//                         if (indexOf === -1) throw new Error(`"${input}" should be being searched for`);
-//
-//                         tokenBeingSearched.splice(indexOf, 1);
-//                         this.setState({isSearching: {[cat]: tokenBeingSearched}});
-//                     });
-//             }, when);
-//             clearTimeout(this.state.pendingSearch);
-//             this.setState({pendingSearch: timeoutId});
-//         }
-//     }
-//
-//     getCategory() : SearchCategory {
-//         return SEARCH_CATEGORIES[this.state.index];
-//     }
-// }
+@connect()
+export default class SearchScreen extends Component<Props, State> {
 
-const mapStateToProps = (state, ownProps) => ({
-    search: state.search,
-    data: state.data,
-    activity: state.activity
-});
+    static navigatorButtons = {
+        rightButtons: [
+            {
+                //icon: require('../img/drawer_line_up.png'), // for icon button, provide the local image asset name
+                id: 'cancel_search', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
+                title: "Cancel"
+            }
+        ],
+    };
+
+    state : State;
+
+    constructor(props: Props) {
+        super(props);
+        if (props.onClickClose) {
+            props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+        }
+
+        this.state = {
+            searches: {},
+            index: 0,
+            routes: props.categories.map((c, i) => ({key: `${i}`, title: i18n.t(c.tabName)})),
+        };
+    }
+
+    handleIndexChange(index: number) {
+        this.setState({ index }, () => this.performSearch(this.state.input, 0));
+    }
+
+    renderHeader(props: *) {
+        return <TabBar {...props}
+                       indicatorStyle={styles.indicator}
+                       style={styles.tabbar}
+                       tabStyle={styles.tab}
+                       labelStyle={styles.label}/>;
+    }
+
+    renderScene({ route }: *) {
+        return this.renderSearchPage(this.props.categories[route.key])
+    };
+
+    renderSearchPage(category: SearchCategory) {
+        let forToken = this.state.searches[this.state.input];
+        if (!forToken) return null;
+        let forType : SearchState = forToken[category.type];
+
+        return (
+            <SearchPage
+                search={forType}
+                renderItem={category.renderItem}
+                onItemSelected={this.props.onItemSelected}
+                ListFooterComponent={this.renderSearchFooter(forType)}
+            />
+        );
+    }
+
+
+    renderSearchFooter(search: SearchState) {
+        //let search = this.props.search;
+        if (!search) return null;
+        let nextPage = search.page + 1;
+
+        let hasMore = nextPage < search.nbPages;
+        if (!hasMore) return null;
+
+        //TODO: flaw
+        let isLoadingMore = /*search.page > 0 && */search.searchState === 1;
+
+        return (<Button
+            isLoading={isLoadingMore}
+            isDisabled={isLoadingMore}
+            onPress={()=>{this.performSearch(search.token, nextPage)}}
+            style={[styles.button, {marginTop: 15}]}
+            disabledStyle={styles.button}
+        >
+            <Text style={{color: isLoadingMore ? UI.Colors.grey1 : UI.Colors.black}}>load more</Text>
+        </Button>);
+    }
+
+
+    onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
+        if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
+            if (event.id === 'cancel_search') { // this is the same id field from the static navigatorButtons definition
+                this.props.onClickClose();
+            }
+        }
+    }
+
+    render() {
+
+        let l = this.props.categories.length;
+
+        return (
+            <View style={{width:"100%", height: "100%", backgroundColor: "white"}}>
+                <SearchBar
+                    autoFocus
+                    lightTheme
+                    onChangeText={this.onSearchInputChange.bind(this)}
+                    placeholder={i18n.t(this.getCurrentCategory().placeholder)}
+                    clearIcon={{color: '#86939e'}}
+                    containerStyle={styles.searchContainer}
+                    inputStyle={styles.searchInput}
+                    autoCapitalize='none'
+                    autoCorrect={false}
+                />
+
+
+                { l>1 && <TabViewAnimated
+                    style={styles.container}
+                    navigationState={this.state}
+                    renderScene={this.renderScene.bind(this)}
+                    renderHeader={this.renderHeader.bind(this)}
+                    onIndexChange={this.handleIndexChange.bind(this)}
+                />}
+
+                {
+                    l === 1 && this.renderSearchPage(this.props.categories[0])
+                }
+
+            </View>
+
+        );
+    }
+
+    onSearchInputChange(input: string) {
+        this.setState({input});
+        this.performSearch(input, 0);
+    }
+
+    // setState(partialState, callback?) {
+    //     let t = Math.random();
+    //     console.debug(`DEBUG(${t}): partial=${JSON.stringify(partialState)}`);
+    //     callback = () => console.log(`DEBUG(${t}): state=${JSON.stringify(this.state)}`);
+    //
+    //     super.setState(partialState, callback);
+    // }
+
+    performSearch(token: SearchToken, page: number) {
+        if (!token) return;
+
+        //1. prepare search
+        let search = this.state.searches[token];
+
+        if (!search) {
+            let categories = this.props.categories;
+            categories.reduce((res, c) => {
+                res[c.type] = {token};
+                return res;
+            }, search = {})
+        }
+
+        _.forIn(search, (val) => {
+            val.page = page;
+            val.searchState = 1;
+        });
+
+        let partialState = {
+            searches: {
+                ...this.state.searches,
+                [token]: {...search},
+            }
+        };
+
+        this.setState(partialState);
+
+        let catType = this.getCurrentCategory().type;
+
+        this.props
+            .searchEngine.search(token, catType, page)
+            .then((results: SearchResult) => {
+            let res =  {};
+            this.props.categories.reduce((obj, c, i) => {
+
+                let type = c.type;
+
+                let search /*: SearchState */ = this.state.searches[token][type];
+
+                let result = results[type];
+
+                if (result) {
+                    if (!search.data) search.data = [];
+                    search.data = search.data.concat(result.results);
+                    search.searchState = 2;
+                    search.page = result.page;
+                    search.nbPages = result.nbPages;
+
+                    obj[type] = search;
+                }
+
+                return obj;
+            }, res);
+
+            this.setState({searches: {...this.state.searches, [token]: {...res}}});
+        });
+
+
+    }
+
+    getCurrentCategory() {
+        return this.props.categories[this.state.index];
+    }
+}
+
+type PageProps = {
+    category: SearchCategory,
+    isLoading: () => boolean,
+    onItemSelected: Function,
+    input: string,
+    renderItem: (item: *) => Node,
+    search: SearchState,
+    ListFooterComponent?: Node
+};
+
+type PageState = {
+    //searches: { [SearchToken]: SearchState},
+};
+
+
+class SearchPage extends Component<PageProps, PageState> {
+
+
+    state : PageState = {
+    };
+
+    render() {
+        let search = this.props.search;
+
+
+        let searchResult: Array<Item|List> = (search && search.data) || [];
+        let hasSearchResult = search && search.data && search.data.length > 0;
+
+        let isSearchRequesting = search && search.searchState === 1;
+
+        let emptySearchResult = search && !isSearchRequesting && !hasSearchResult;
+
+
+        let loadingFirst = isSearchRequesting && search.page === 0;
+
+        return (
+            <View style={{flex: 1, width:"100%", height: "100%"}}>
+                {
+                    loadingFirst && <ActivityIndicator
+                        animating={loadingFirst}
+                        size="small"
+                        style={{margin: 12}}
+                    />
+                }
+                {
+                    !emptySearchResult &&
+                    <FlatList
+                        data={searchResult}
+                        renderItem={this.props.renderItem}
+                        keyExtractor={(item) => item.id}
+                        ListFooterComponent={this.props.ListFooterComponent}
+                    />
+                }
+                {emptySearchResult && <Text style={{alignSelf: "center", marginTop: 20}}>Pas de résultat</Text>}
+
+            </View>
+
+        );
+    }
+}
+
+
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
+    searchContainer: {
+        backgroundColor: 'white',
+    },
+    searchInput: {
+        backgroundColor: 'white',
+    },
+    indicator: {
+        backgroundColor: UIStyles.Colors.green,
+    },
+    activityIndicator: {
+        position: "absolute",
+        top: 30, left: 0, right: 0, justifyContent: 'center',
+        zIndex: 3000
+    },
+    tab: {
+        opacity: 1,
+        //width: 90,
+    },
+    label: {
+        color: '#000000',
+    },
+    button: {
+        padding: 8,
+        height: 30,
+        borderColor: "transparent",
+    },
+
+    //copied: rm useless
     searchContainer: {
         backgroundColor: 'white',
     },
@@ -211,250 +374,10 @@ const styles = StyleSheet.create({
     },
     tab: {
         opacity: 1,
-        width: 90,
+        //width: 90,
     },
     label: {
         color: '#000000',
     },
 });
 
-type PageProps = {
-    category: string,
-    isLoading: () => boolean;
-    onItemSelected: Function;
-};
-
-type PageState = {
-};
-
-
-@connect((state, ownProps) => ({
-        search: state.search,
-        data: state.data,
-    })
-)
-class SearchPage extends Component<PageProps, PageState> {
-
-    render() {
-        let search = this.props.search[this.props.category];
-        let results = search.list ;
-
-        return (
-            <MainBackground>
-                {this.props.isLoading() && <ActivityIndicator
-                    animating = {this.props.isLoading()}
-                    size = "large"
-                    style={styles.activityIndicator}
-                />}
-
-                <FlatList
-                    data={results}
-                    renderItem={this.renderItem.bind(this)}
-                    keyExtractor={(item, index) => item.id}
-                />
-            </MainBackground>
-        );
-
-    }
-
-    renderItem(item) {
-        let it = this.getItem(item.item);
-        if (!it) throw new Error(`no item${JSON.stringify(item.item)}`);
-
-        return <ItemCell
-            onPressItem={() => this.props.onItemSelected(it)}
-            item={it}
-            navigator={this.props.navigator}
-        />
-    }
-
-    getItem(item) {
-        return buildNonNullData(this.props.data, item.type, item.id);
-    }
-}
-
-
-const actiontypes = (() => {
-    const SEARCH = new ApiAction("search");
-    const SEARCH_MORE = new ApiAction("search_more");
-
-    return {SEARCH, SEARCH_MORE};
-})();
-
-
-let composeSearchActionName = (category, token) => `search/${category}?${token}`;
-
-const actions = {
-    searchFor: (token, category) => {
-
-        let call = new Api.Call()
-            .withMethod('GET')
-            .withRoute(`search/${category}`)
-            .addQuery({'search[term]': token});
-
-        return call.disptachForAction2(actiontypes.SEARCH, {category, token});
-    }
-};
-
-const reducerCreator = (reducerCategory) => (() => {
-    const initialState = Immutable({...Api.initialListState(), token: ''});
-
-    return (state = initialState, action = {}) => {
-
-        switch (action.type) {
-            case actiontypes.SEARCH.success():
-            case actiontypes.SEARCH_MORE.success():
-                let {category, token} = action.options;
-                if (!category || !token) throw new Error("we expect token and category");
-
-                if (category !== reducerCategory) return state;
-
-                if (state.token !== action.token) {
-                    state = initialState.merge({token});
-                }
-                state = Api.reduceList(
-                    state,
-                    action,
-                    {
-                        fetchFirst: actiontypes.SEARCH,
-                        fetchMore: actiontypes.SEARCH_MORE
-                    }
-                );
-                return state;
-        }
-
-        return state;
-    }
-})();
-
-//let screen = connect(mapStateToProps)(SearchScreen);
-
-
-let allReducers = SEARCH_CATEGORIES.reduce((acc, cu) => {
-    acc[cu] = reducerCreator(cu);
-    return acc
-}, {});
-
-let reducer = combineReducers(allReducers);
-
-
-class NewSearchScreen extends Component<*,*> {
-
-    render() {
-
-        let categories = SEARCH_CATEGORIES.map(c=>{
-            return {
-                type: c,
-                tabName: "search_item_screen.tabs." + c,
-                renderItem: ({item})=> <ItemCell
-                    onPressItem={() => this.props.onItemSelected(item)}
-                    item={item}
-                    navigator={this.props.navigator}
-                />
-
-            }
-        });
-
-        return <SearchScreen
-            searchEngine={{search: this.search.bind(this)}}
-            categories={categories}
-            {...this.props}
-        />;
-    }
-
-    search(token: SearchToken, category: SearchCategoryType, page: number): Promise<*> {
-
-        //searching
-        console.log(`api: searching ${token}`);
-
-        return new Promise((resolve, reject) => {
-
-            //actions.searchFor(this.state.input, cat)
-
-            let call = new Api.Call()
-                .withMethod('GET')
-                .withRoute(`search/${category}`)
-                .addQuery({'search[term]': token});
-
-            call
-                .run()
-                .then(response=>{
-                    let data = normalize(response.json);
-
-                    let results = response.json.data.map(d=>{
-                        return buildData(data, d.type, d.id);
-                    });
-
-
-                    // let res =  {};
-                    // this.props.categories.reduce((obj, c, i) => {
-                    //
-                    //     let searchResult = c.parseResponse(hits);
-                    //
-                    //     let type = c.type;
-                    //
-                    //     let search = {};
-                    //
-                    //     search.results = searchResult;
-                    //     search.page = result.page;
-                    //     search.nbPages = result.nbPages;
-                    //
-                    //     obj[type] = search;
-                    //     return obj;
-                    // }, res);
-                    //return res;
-
-                    resolve({
-                        [category]: {
-                            results, page: 0, nbPAge: 99
-                        }
-                    });
-                }, err=> {
-                    //console.warn(err)
-                    reject(err);
-                });
-            // this.props.dispatch(actions.searchFor(token, category)
-            //     .then((results)=> {
-            //
-            //     })
-            // );
-
-            // client.search(queries, (err, content) => {
-            //
-            //     if (err) {
-            //         console.error(err);
-            //         reject(err);
-            //         return;
-            //     }
-            //
-            //     let res =  {};
-            //     this.props.categories.reduce((obj, c, i) => {
-            //
-            //         let result = content.results[i];
-            //         let hits = result.hits;
-            //         console.log(`search result lists: ${content.length}`);
-            //
-            //         let searchResult = c.parseResponse(hits);
-            //
-            //         let type = c.type;
-            //
-            //         let search = {};
-            //
-            //         search.results = searchResult;
-            //         search.page = result.page;
-            //         search.nbPages = result.nbPages;
-            //
-            //         obj[type] = search;
-            //         return obj;
-            //     }, res);
-            //
-            //     resolve(res);
-            // });
-        });
-    }
-
-}
-
-let screen = NewSearchScreen;
-
-export {reducer, screen};

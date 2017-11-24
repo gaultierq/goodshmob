@@ -139,6 +139,12 @@ export default {
         "savings":"Goodshs & Lineups",
         "users":"Goodshers"
     },
+    "community_screen":{
+        "tabs": {
+            "friends":"Mes amis",
+            "notifications":"Notifications",
+        },
+    },
     "search_item_screen":{
         "tabs": {
             "consumer_goods":"TRUC",

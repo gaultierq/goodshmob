@@ -81,7 +81,7 @@ export default class AskScreen extends Component<Props, State> {
         this.setState({isAsking: true});
 
         this.props
-            .dispatch(actions.createAsk(content).disptachForAction2(CREATE_ASK))
+            .dispatch(actions.createAsk({content}).disptachForAction2(CREATE_ASK))
             .then(()=> {
                 Snackbar.show({
                     title: i18n.t('ask.sent'),

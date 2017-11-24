@@ -8,7 +8,7 @@ import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
 import Feed from "./components/feed";
 import type {List, Saving} from "../types";
-import {buildNonNullData, doDataMergeInState} from "../utils/DataUtils";
+import {buildData, doDataMergeInState} from "../utils/DataUtils";
 import ApiAction from "../utils/ApiAction";
 import ActivityCell from "../activity/components/ActivityCell";
 import {currentUserId} from "../CurrentUser";
@@ -30,6 +30,7 @@ class LineupScreen extends Component<Props, State> {
     //titleSet because when navigating back, a render may change the nav bar title. this is a flaw in wix nav
     state = {title: null, titleSet: false};
 
+
     render() {
         const lineup = this.getLineup();
 
@@ -39,9 +40,7 @@ class LineupScreen extends Component<Props, State> {
                 this.setState({titleSet: true}, () => this.props.navigator.setTitle(this.state.title));
             }
             else if (lineup) {
-
                 //let user:User = lineup.user;
-
                 let title = lineup.name;
                 let titleImage = /*user.goodshbox.id === lineup.id ? require('../img/goodshbox.png') : */null;
                 this.props.navigator.setTitle({title, titleImage});
@@ -52,18 +51,17 @@ class LineupScreen extends Component<Props, State> {
                         subtitle: "Par " + user.firstName + " " + user.lastName
                     });
                 }
-
             }
         }
 
+        let data = lineup ? lineup.savings : [];
 
-        let empty = (!lineup.savings || !lineup.savings.length);
         return (
             <MainBackground>
                 <View style={styles.container}>
-                    {lineup.description && <Text style={[styles.description]}>{lineup.description}</Text>}
+                    {lineup && lineup.description && <Text style={[styles.description]}>{lineup.description}</Text>}
                     <Feed
-                        data={lineup.savings}
+                        data={data}
                         renderItem={item => this.renderItem(item, lineup)}
                         fetchSrc={{
                             callFactory:()=>actions.loadSavings(this.props.lineupId),
@@ -80,7 +78,7 @@ class LineupScreen extends Component<Props, State> {
     }
 
     getLineup() : List {
-        return /*this.props.lineup || */buildNonNullData(this.props.data, "lists", this.props.lineupId);
+        return buildData(this.props.data, "lists", this.props.lineupId);
     }
 
     renderItem(item, lineup) {
@@ -138,8 +136,7 @@ const actionTypes = (() => {
 })();
 
 
-const actions = (() => {
-    return {
+const actions = {
 
         loadSavings: (lineupId: string) => {
             return new Api.Call().withMethod('GET')
@@ -151,6 +148,7 @@ const actions = (() => {
                 });
 
         },
+
         deleteSaving: (saving:types.Saving) => {
             let call = new Api.Call()
                 .withMethod('DELETE')
@@ -158,8 +156,7 @@ const actions = (() => {
 
             return call.disptachForAction2(actionTypes.DELETE_SAVING);
         }
-    };
-})();
+};
 
 
 // const reducer = (() => {

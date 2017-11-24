@@ -46,11 +46,6 @@ type Props = {
 };
 
 type State = {
-    pendingItem?: Item,
-    pendingList?: List,
-    isSearching?: boolean,
-    searchToken?: string,
-
     isCreatingLineup?: boolean, //create lineup mode
     isAddingLineup?: boolean, //request of adding
     newLineupTitle?: string,
@@ -65,6 +60,7 @@ class HomeScreen extends Component<Props, State> {
 
     static navigatorStyle = UI.NavStyles;
 
+
     constructor(props: Props){
         super(props);
         props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
@@ -74,12 +70,12 @@ class HomeScreen extends Component<Props, State> {
         console.log("Home:NavEvent: "+JSON.stringify(event));
         if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
             switch (event.id) {
-                case 'cancel_add':
-                    this.setState({
-                        pendingItem: null,
-                        pendingList: null
-                    });
-                    break;
+                // case 'cancel_add':
+                //     this.setState({
+                //         pendingItem: null,
+                //         pendingList: null
+                //     });
+                //     break;
                 case 'profile':
                     this.props.navigator.toggleDrawer({
                         side: 'left',
@@ -167,18 +163,18 @@ class HomeScreen extends Component<Props, State> {
         //     tabName: i18Key
 
         //HACK
-        if (event.type === 'DeepLink') {
-            const payload = event.payload; // (optional) The payload
-
-            switch (event.link) {
-                case DEEPLINK_SEARCH_TEXT_CHANGED:
-                    this.setState({searchToken: payload});
-                    break;
-                case DEEPLINK_SEARCH_CLOSE:
-                    this.setState({isSearching: false});
-                    break;
-            }
-        }
+        // if (event.type === 'DeepLink') {
+        //     const payload = event.payload; // (optional) The payload
+        //
+        //     switch (event.link) {
+        //         case DEEPLINK_SEARCH_TEXT_CHANGED:
+        //             this.setState({searchToken: payload});
+        //             break;
+        //         case DEEPLINK_SEARCH_CLOSE:
+        //             this.setState({isSearching: false});
+        //             break;
+        //     }
+        // }
     }
 
     showMore(lineup: List) {
@@ -201,10 +197,10 @@ class HomeScreen extends Component<Props, State> {
                         <View>
                             <LineupList
                                 userId={currentUserId()}
-                                filter={this.state.searchToken}
+                                // filter={this.state.searchToken}
                                 onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
                                 onSavingPressed={(saving) => this.onSavingPressed(saving)}
-                                canFilterOverItems={() => !this.state.pendingItem}
+                                // canFilterOverItems={() => !this.state.pendingItem}
                                 navigator={this.props.navigator}
                                 ListHeaderComponent={this.renderHeader()}
                                 renderItem={(item)=>this.renderListItem(item)}
@@ -319,10 +315,10 @@ class HomeScreen extends Component<Props, State> {
         </TouchableOpacity>)
     }
 
-    isSelectingAList() {
-        const {pendingItem, pendingList} = this.state;
-        return pendingItem && !pendingList;
-    }
+    // isSelectingAList() {
+    //     const {pendingItem, pendingList} = this.state;
+    //     return pendingItem && !pendingList;
+    // }
 
     deleteLineup(lineup: List) {
         this.props
@@ -339,38 +335,18 @@ class HomeScreen extends Component<Props, State> {
         const {navigator} = this.props;
         let title, leftButtons, rightButtons, navBarCustomView;
 
-        if (this.state.isSearching) {
-            title = null;
-            navBarCustomView='goodsh.HomeNavBar';
-            leftButtons = [];
-            rightButtons = [];
-        }
-        else if (this.state.pendingItem || this.state.pendingList) {
-            title = this.isSelectingAList() ?
-                {title: "Sélectionnez une liste:"} :
-                {titleImage: require('../img/screen_title_home.png')};
-            navBarCustomView = null;
-            leftButtons = [];
-            rightButtons = [
-                {
-                    title: 'Cancel',
-                    id: 'cancel_add' // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
-                }];
-        }
-        else {
-            title = {titleImage: require('../img/screen_title_home.png')};
-            navBarCustomView = null;
-            leftButtons = [{
-                icon: require('../img/drawer_community.png'),
-                id: 'profile'
-            }];
-            rightButtons = [
-                {
-                    icon: require('../img/bottom_bar_search.png'),
-                    id: 'search'
-                }
-            ];
-        }
+        title = {titleImage: require('../img/screen_title_home.png')};
+        navBarCustomView = null;
+        leftButtons = [{
+            icon: require('../img/drawer_community.png'),
+            id: 'profile'
+        }];
+        rightButtons = [
+            {
+                icon: require('../img/bottom_bar_search.png'),
+                id: 'search'
+            }
+        ];
         navigator.setStyle({navBarCustomView});
 
         navigator.setButtons({
@@ -412,53 +388,53 @@ class HomeScreen extends Component<Props, State> {
     }
 
     displayFloatingButton() {
-        return !this.state.pendingItem && !this.state.isCreatingLineup;
+        return /*!this.state.pendingItem && */!this.state.isCreatingLineup;
     }
 
-    addInLineup(lineup: List) {
-        this.setState({pendingList: lineup}, () => {
-            console.log(`add in lineup: ${lineup.id}`);
-            this.displaySearchScreen(()=> {
-                this.setState({pendingList: null});
-            });
-        });
-
-    }
+    // addInLineup(lineup: List) {
+    //     this.setState({pendingList: lineup}, () => {
+    //         console.log(`add in lineup: ${lineup.id}`);
+    //         this.displaySearchScreen(()=> {
+    //             this.setState({pendingList: null});
+    //         });
+    //     });
+    //
+    // }
 
     onLineupPressed(lineup: List) {
-        if (this.state.pendingItem) {
-            this.setState({pendingList: lineup}, () => this.resolveAdd());
-        }
-        else {
+        // if (this.state.pendingItem) {
+        //     this.setState({pendingList: lineup}, () => this.resolveAdd());
+        // }
+        // else {
 
-            console.info("on linup pressed: " + JSON.stringify(lineup));
-            this.props.navigator.push({
-                screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
-                passProps: {
-                    lineupId: lineup.id,
-                },
-            });
-        }
+        console.info("on linup pressed: " + JSON.stringify(lineup));
+        this.props.navigator.push({
+            screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
+            passProps: {
+                lineupId: lineup.id,
+            },
+        });
+        // }
     }
 
     onSavingPressed(saving: Saving) {
-        if (this.state.pendingItem) {
-            throw new Error("This should not happen");
-        }
-        else {
-            this.props.navigator.push({
-                screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
-                title: "Details", // navigation bar title of the pushed screen (optional)
-                titleImage: require('../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
-                passProps: {activityId: saving.id, activityType: saving.type}, // Object that will be passed as props to the pushed screen (optional)
-                animated: true, // does the push have transition animation or does it happen immediately (optional)
-                animationType: 'slide-up', // 'fade' (for both) / 'slide-horizontal' (for android) does the push have different transition animation (optional)
-                backButtonTitle: undefined, // override the back button title (optional)
-                backButtonHidden: false, // hide the back button altogether (optional)
-                navigatorStyle: {}, // override the navigator style for the pushed screen (optional)
-                navigatorButtons: {} // override the nav buttons for the pushed screen (optional)
-            });
-        }
+        // if (this.state.pendingItem) {
+        //     throw new Error("This should not happen");
+        // }
+        // else {
+        this.props.navigator.push({
+            screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
+            title: "Details", // navigation bar title of the pushed screen (optional)
+            titleImage: require('../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
+            passProps: {activityId: saving.id, activityType: saving.type}, // Object that will be passed as props to the pushed screen (optional)
+            animated: true, // does the push have transition animation or does it happen immediately (optional)
+            animationType: 'slide-up', // 'fade' (for both) / 'slide-horizontal' (for android) does the push have different transition animation (optional)
+            backButtonTitle: undefined, // override the back button title (optional)
+            backButtonHidden: false, // hide the back button altogether (optional)
+            navigatorStyle: {}, // override the navigator style for the pushed screen (optional)
+            navigatorButtons: {} // override the nav buttons for the pushed screen (optional)
+        });
+        // }
     }
 
     onFloatingButtonPressed() {
@@ -467,7 +443,7 @@ class HomeScreen extends Component<Props, State> {
 
     displaySearchScreen(onCancel?) {
         this.props.navigator.push({
-            screen: 'goodsh.SearchScreen', // unique ID registered with Navigation.registerScreen
+            screen: 'goodsh.SearchItemsScreen', // unique ID registered with Navigation.registerScreen
             title: // navigation bar title of the pushed screen (optional)
                 this.state.pendingList ?
                     i18n.t("tabs.search.title_in", {list_name: this.state.pendingList.name}) :
@@ -506,28 +482,28 @@ class HomeScreen extends Component<Props, State> {
         });
     }
 
-    resolveAdd() {
-        let pendingItem = this.state.pendingItem;
-        let pendingList = this.state.pendingList;
-
-        if (pendingItem && pendingList) {
-            console.info(`${pendingItem.title} waiting to be added in ${pendingList.name}`);
-            this.props
-                .dispatch(saveItem(pendingItem.id, pendingList.id, ))
-                .then(() => {
-                    Snackbar.show({
-                        title: i18n.t('shared.goodsh_saved'),
-                    });
-                    return this.setState({pendingItem: null, pendingList: null});
-                });
-        }
-    }
+    // resolveAdd() {
+    //     let pendingItem = this.state.pendingItem;
+    //     let pendingList = this.state.pendingList;
+    //
+    //     if (pendingItem && pendingList) {
+    //         console.info(`${pendingItem.title} waiting to be added in ${pendingList.name}`);
+    //         this.props
+    //             .dispatch(saveItem(pendingItem.id, pendingList.id, ))
+    //             .then(() => {
+    //                 Snackbar.show({
+    //                     title: i18n.t('shared.goodsh_saved'),
+    //                 });
+    //                 return this.setState({pendingItem: null, pendingList: null});
+    //             });
+    //     }
+    // }
 
     //TODO: extract lineup card style
     renderHeader() {
-        if (this.isSelectingAList()) {
-            return <View/>;
-        }
+        // if (this.isSelectingAList()) {
+        //     return <View/>;
+        // }
         if (this.state.isCreatingLineup) {
             let editable = !this.state.isAddingLineup;
 

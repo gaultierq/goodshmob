@@ -148,13 +148,6 @@ const actions = (() => {
             .withRoute(`users/${userId}`)
             .addQuery({include: "lists,lists.savings,lists.savings.resource"}),
 
-        // deleteLineup : (lineup) => {
-        //     let call = new Api.Call()
-        //         .withMethod('DELETE')
-        //         .withRoute(`lists/${lineup.id}`);
-        //
-        //     return call.disptachForAction2(DELETE_LINEUP, {lineupId: lineup.id});
-        // },
     };
 })();
 

@@ -2,7 +2,7 @@ import { Navigation } from 'react-native-navigation';
 
 import {screen as LoginScreen} from './login';
 import {screen as NetworkScreen} from './network';
-import {screen as SearchScreen} from './search';
+import {screen as SearchItemScreen} from './searchitems';
 import DebugScreen from './DebugScreen';
 
 import {screen as ActivityDetailScreen} from '../activity/activityDetail';
@@ -27,7 +27,7 @@ import AddItemScreen from './additem';
 export function registerScreens(store, Provider) {
     Navigation.registerComponent('goodsh.LoginScreen', () => LoginScreen, store, Provider);
     Navigation.registerComponent('goodsh.NetworkScreen', () => NetworkScreen, store, Provider);
-    Navigation.registerComponent('goodsh.SearchScreen', () => SearchScreen, store, Provider);
+    Navigation.registerComponent('goodsh.SearchItemsScreen', () => SearchItemScreen, store, Provider);
     Navigation.registerComponent('goodsh.DebugScreen', () => DebugScreen, store, Provider);
     Navigation.registerComponent('goodsh.FriendsScreen', () => FriendScreen, store, Provider);
     Navigation.registerComponent('goodsh.ActivityDetailScreen', () => ActivityDetailScreen, store, Provider);
