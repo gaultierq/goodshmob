@@ -12,7 +12,9 @@ import {buildData, doDataMergeInState} from "../utils/DataUtils";
 import ApiAction from "../utils/ApiAction";
 import ActivityCell from "../activity/components/ActivityCell";
 import {currentUserId} from "../CurrentUser";
-
+import ActionButton from 'react-native-action-button';
+import {startAddItem} from "./actions";
+import * as UI from "./UIStyles";
 
 type Props = {
     lineupId: string,
@@ -29,7 +31,6 @@ class LineupScreen extends Component<Props, State> {
 
     //titleSet because when navigating back, a render may change the nav bar title. this is a flaw in wix nav
     state = {title: null, titleSet: false};
-
 
     render() {
         const lineup = this.getLineup();
@@ -71,11 +72,30 @@ class LineupScreen extends Component<Props, State> {
                         hasMore={true}
                         empty={"Cette liste est vide"}
                     />
+                    {
+                        this.displayFloatingButton() &&
+                        <ActionButton
+                            buttonColor={UI.Colors.green}
+                            onPress={() => { this.onFloatingButtonPressed() }}
+                        />
+                    }
 
                 </View>
             </MainBackground>
         );
     }
+
+
+    displayFloatingButton() {
+        let lineup = this.getLineup();
+
+        return lineup && lineup.user && lineup.user.id === currentUserId();
+    }
+
+    onFloatingButtonPressed() {
+        startAddItem(this.props.navigator, this.props.lineupId);
+    }
+
 
     getLineup() : List {
         return buildData(this.props.data, "lists", this.props.lineupId);

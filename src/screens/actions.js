@@ -6,6 +6,8 @@ import dotprop from "dot-prop-immutable"
 import {doDataMergeInState} from "../utils/DataUtils";
 import {currentUserId} from "../CurrentUser";
 import * as _ from "lodash";
+import i18n from '../i18n/i18n'
+import type {Item} from "../types";
 
 export const SAVE_ITEM = new ApiAction("save_item");
 export const CREATE_LINEUP = new ApiAction("create_lineup");
@@ -44,6 +46,42 @@ export function createLineup(listName: string) {
         });
 
     return call.disptachForAction2(CREATE_LINEUP);
+}
+
+
+export function startAddItem(navigator: *, defaultLineupId: Id) {
+    let doublePop = () => {
+        navigator.pop({animated: false});
+        navigator.pop({animated: false});
+    };
+
+    navigator.push({
+        screen: 'goodsh.SearchItemsScreen', // unique ID registered with Navigation.registerScreen
+        title: i18n.t("tabs.search.title"),
+        passProps: {
+            onItemSelected: (item: Item) => {
+
+
+                navigator.push({
+                    screen: 'goodsh.AddItemScreen', // unique ID registered with Navigation.registerScreen
+                    title: "Ajouter",
+                    passProps: {
+                        itemId: item.id,
+                        itemType: item.type,
+                        item,
+                        defaultLineupId: defaultLineupId,
+                        onCancel: () => doublePop(),
+                        onAdded: () => doublePop(),
+                    },
+                });
+
+            },
+            onCancel: () => {
+                doublePop();
+            }
+
+        }, // Object that will be passed as props to the pushed screen (optional)
+    });
 }
 
 export const reducer = (state = {}, action = {}) => {

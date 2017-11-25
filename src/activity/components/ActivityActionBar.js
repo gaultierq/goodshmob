@@ -96,9 +96,8 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                 itemId: item.id,
                 itemType: item.type,
                 defaultLineupId: currentGoodshboxId(),
-                onCancel: () => {
-                    this.props.navigator.popToRoot();
-                }
+                onCancel: () => this.props.navigator.popToRoot(),
+                onAdded: () => this.props.navigator.popToRoot(),
             },
         });
 

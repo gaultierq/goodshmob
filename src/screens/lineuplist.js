@@ -27,10 +27,7 @@ import Feed from "./components/feed";
 import {currentUserId} from "../CurrentUser"
 import ApiAction from "../utils/ApiAction";
 import {buildData, doDataMergeInState} from "../utils/DataUtils";
-import {CREATE_LINEUP, SAVE_ITEM} from "./actions"
 import * as Nav from "./Nav";
-import * as _ from "lodash";
-import dotprop from "dot-prop-immutable"
 
 export const DELETE_LINEUP = new ApiAction("delete_lineup");
 export const EDIT_LINEUP = new ApiAction("edit_lineup");

@@ -22,6 +22,7 @@ type Props = {
     itemId: Id,
     itemType: ItemType,
     item?: Item,
+    onAdded: () => void,
     navigator: *,
     data: *
 };
@@ -128,7 +129,9 @@ export default class AddItemScreen extends Component<Props, State> {
                     title: i18n.t('shared.goodsh_saved'),
                 });
                 this.setState({reqAdd: 2});
-                this.props.navigator.popToRoot();
+
+                this.props.onAdded();
+
             }, (err)=> this.setState({reqAdd: 3}));
     }
 
@@ -147,10 +150,6 @@ export default class AddItemScreen extends Component<Props, State> {
             },
             passProps: {
                 userId: currentUserId(),
-                // onLineupPressed: (lineup: List) => {
-                //     this.setState({lineupId: lineup.id});
-                //     this.props.navigator.dismissModal();
-                // },
                 renderItem: (lineup) => {
                     return (<TouchableOpacity onPress={() => {
                         this.setState({lineupId: lineup.id});

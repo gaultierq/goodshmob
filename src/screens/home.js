@@ -17,13 +17,12 @@ import {MainBackground} from "./UIComponents";
 import ActionButton from 'react-native-action-button';
 import {DELETE_LINEUP, EDIT_LINEUP, screen as LineupList} from './lineuplist'
 import type {Id, Saving} from "../types";
-import {Item, List} from "../types"
+import {List} from "../types"
 import Snackbar from "react-native-snackbar"
 import i18n from '../i18n/i18n'
 import * as UI from "./UIStyles";
 import {currentGoodshboxId, currentUserId} from "../CurrentUser"
-import {createLineup, saveItem} from "./actions";
-import {SearchBar} from 'react-native-elements'
+import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import ItemCell from "./components/ItemCell";
 import LineupCell from "./components/LineupCell";
@@ -33,10 +32,9 @@ import * as Api from "../utils/Api";
 import {Menu, MenuContext, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
 import Modal from 'react-native-modal'
 import Button from 'apsl-react-native-button'
-import {CheckBox} from "react-native-elements";
 import type {Visibility} from "./additem";
-import {renderSimpleButton} from "./UIStyles";
 import AddLineupComponent from "./components/addlineup";
+import {startAddItem} from "./actions";
 
 let DEEPLINK_SEARCH_TEXT_CHANGED = 'internal/home/search/change';
 let DEEPLINK_SEARCH_CLOSE = 'internal/home/search/close';
@@ -358,7 +356,7 @@ class HomeScreen extends Component<Props, State> {
     }
 
     displayFloatingButton() {
-        return /*!this.state.pendingItem && */!this.state.isCreatingLineup;
+        return !this.state.isCreatingLineup;
     }
 
 
@@ -394,46 +392,11 @@ class HomeScreen extends Component<Props, State> {
     }
 
     onFloatingButtonPressed() {
-        this.displaySearchScreen();
+        startAddItem(this.props.navigator, currentGoodshboxId());
     }
 
-    displaySearchScreen(onCancel?) {
-        this.props.navigator.push({
-            screen: 'goodsh.SearchItemsScreen', // unique ID registered with Navigation.registerScreen
-            title: // navigation bar title of the pushed screen (optional)
-                this.state.pendingList ?
-                    i18n.t("tabs.search.title_in", {list_name: this.state.pendingList.name}) :
-                    i18n.t("tabs.search.title"),
-            passProps: {
-                onItemSelected: (item: Item) => {
 
-                    this.props.navigator.push({
-                        screen: 'goodsh.AddItemScreen', // unique ID registered with Navigation.registerScreen
-                        title: "Ajouter",
-                        passProps: {
-                            itemId: item.id,
-                            itemType: item.type,
-                            item,
-                            defaultLineupId: currentGoodshboxId(),
-                            onCancel: () => {
-                                this.props.navigator.popToRoot();
-                                onCancel && onCancel();
-                            }
-
-                        }, // Object that will be passed as props to the pushed screen (optional)
-                    });
-
-                },
-                onCancel: () => {
-                    this.props.navigator.popToRoot();
-                    onCancel && onCancel();
-                }
-
-            }, // Object that will be passed as props to the pushed screen (optional)
-        });
-    }
-
-    //TODO: extract lineup card style
+//TODO: extract lineup card style
     renderHeader() {
         return <AddLineupComponent/>;
     }
