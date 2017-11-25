@@ -330,10 +330,12 @@ class HomeScreen extends Component<Props, State> {
 
         title = {titleImage: require('../img/screen_title_home.png')};
         navBarCustomView = null;
-        leftButtons = [{
-            icon: require('../img/profil.png'),
-            id: 'profile'
-        }];
+        leftButtons = [
+            //     {
+            //     icon: require('../img/profil.png'),
+            //     id: 'profile'
+            // }
+        ];
         rightButtons = [
             {
                 icon: require('../img/bottom_bar_search.png'),

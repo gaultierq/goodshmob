@@ -35,8 +35,8 @@ export class CommunityScreen extends Component<Props, State> {
     state = {
         index: 0,
         routes: [
+            {key: `interactions`, title: i18n.t("community_screen.tabs.notifications")},
             {key: `friends`, title: i18n.t("community_screen.tabs.friends")},
-            {key: `interactions`, title: i18n.t("community_screen.tabs.notifications")}
         ],
     };
 
