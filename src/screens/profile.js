@@ -3,7 +3,7 @@
 
 import React, {Component} from 'react';
 
-import {ActivityIndicator, Button, Image, ImageBackground, StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, Button, Image, ImageBackground, StyleSheet, Text, View, TextInput} from 'react-native';
 import {connect} from 'react-redux';
 import type {Id, User} from "../types";
 import {buildData, dataStateToProps} from "../utils/DataUtils";
@@ -11,6 +11,11 @@ import ApiAction from "../utils/ApiAction";
 import * as Api from "../utils/Api";
 import * as authActions from '../auth/actions'
 import {currentUserId} from "../CurrentUser";
+import i18n from '../i18n/i18n'
+import * as UI from "./UIStyles";
+import {renderSimpleLink} from "./UIStyles";
+import {renderLink} from "./UIStyles";
+import {renderSimpleButton} from "./UIStyles";
 
 type Props = {
     // userId: Id,
@@ -18,7 +23,8 @@ type Props = {
 };
 
 type State = {
-    user?: User
+    //user?: User
+    feedback?: string
 };
 
 class Profile extends Component<Props, State> {
@@ -39,14 +45,16 @@ class Profile extends Component<Props, State> {
 
         if (!this.getUser(userId)) {
             this.props.dispatch(actions.getUser(userId).disptachForAction2(GET_USER)).then(({data})=>{
-                let user = this.getUser(userId);
-                this.setState({user});
+                //let user = this.getUser(userId);
+                //this.setState({user});
             });
         }
     }
 
     render() {
-        let {user} = this.state;
+        let user = this.getUser(currentUserId());
+
+        let notEditable = false;
 
         return (
             <ImageBackground
@@ -59,9 +67,32 @@ class Profile extends Component<Props, State> {
                     justifyContent: 'center',
                 }}
             >
+
+
+                {/*user*/}
                 <View style={{
                     alignItems: 'center',
                 }}>
+
+                    <Image style={{marginBottom: 20}} source={require('../img/goodsh.png')}/>
+                    <Text style={{marginBottom: 20}}>{i18n.t('profile_screen.title', {love: i18n.t('profile_screen.love')})}</Text>
+                    <Text style={{fontFamily: 'Thonburi', fontSize: 11, textAlign: "center"}}>{i18n.t('profile_screen.subtitle')}</Text>
+
+
+                    <TextInput
+                        editable={!notEditable}
+                        onSubmitEditing={this.createFeedback.bind(this)}
+                        value={this.state.feedback}
+                        multiline
+                        onChangeText={(feedback) => this.setState({feedback})}
+                        placeholder={i18n.t('profile_screen.feedback_textfield.placeholder')}
+                        style={[
+                            styles.input,
+                            (notEditable ? {color: "grey"} : {color: "black"}),
+                            {margin: 20}
+                        ]}
+                    />
+
                     <View style={{
                         flexDirection: 'row',
                         alignItems: 'center',
@@ -69,18 +100,23 @@ class Profile extends Component<Props, State> {
                     >
                         {user && user.image && <Image source={{uri: user.image}}
                                                       style={styles.userAvatar}
-
                         />}
                         {user && <Text style={styles.userName}>{user.firstName + " " + user.lastName}</Text>}
 
                     </View>
-                    <Button
-                        title="logout"
-                        onPress={this.logout.bind(this)}
-                    />
+
+                    {renderSimpleButton("logout", this.logout.bind(this))}
+
+                    {renderLink("Terms", "https://goodsh.it/terms")}
+
                 </View>
             </ImageBackground>
         );
+    }
+
+
+    createFeedback() {
+
     }
 
     logout() {
@@ -101,7 +137,7 @@ const actions = (() => {
     const include = "";
 
     return {
-        getUser: (userId): Api.Call => new Api.Call()
+        getUser: (userId: Id) => new Api.Call()
             .withMethod('GET')
             .withRoute(`users/${userId}`)
             .addQuery({include}),
@@ -111,6 +147,15 @@ const actions = (() => {
 
 
 const styles = StyleSheet.create({
+    input:{
+        height: 140,
+        width: "100%",
+        fontFamily: 'Chivo',
+        fontSize: 18,
+        borderWidth: 0.5,
+        borderColor: UI.Colors.grey1,
+
+    },
     userName: {
         fontSize: 20,
         fontFamily: 'Chivo',
@@ -118,9 +163,9 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     userAvatar: {
-        height: 50,
-        width: 50,
-        borderRadius: 25
+        height: 30,
+        width: 30,
+        borderRadius: 15
     },
 });
 

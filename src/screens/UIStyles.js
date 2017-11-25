@@ -1,5 +1,5 @@
 //@flow
-import {Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {Linking, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Button from 'apsl-react-native-button'
 import * as React from "react";
 
@@ -74,15 +74,34 @@ export function renderSimpleButton(
 export function renderSimpleLink(
     text: string,
     onPress: ()=> void ,
-    {disabled = false, loading = false, style = {}} : ButtonOptions) {
+    options :? ButtonOptions) {
+    let {disabled = false, loading = false, style = {}} = options || {};
 
     let color = disabled ? Colors.grey1 : Colors.blue;
 
-    return (<TouchableOpacity onPress={disabled ? null : onPress}>
-        <Text style={[{color}, style]}>{text}</Text>
-    </TouchableOpacity>);
+    return (
+        <TouchableOpacity onPress={disabled ? null : onPress}>
+            <Text style={[{color}, style]}>{text}</Text>
+        </TouchableOpacity>
+    );
 }
 
+export function renderLink(
+    text: string,
+    url: string,
+    options:? ButtonOptions) {
+
+    let handler = ()=> {
+        Linking.canOpenURL(url).then(supported => {
+            if (supported) {
+                Linking.openURL(url);
+            } else {
+                console.log("Don't know how to open URI: " + url);
+            }
+        })};
+
+    return renderSimpleLink(text, handler, options);
+}
 
 const styles = StyleSheet.create({
     button: {
