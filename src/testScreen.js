@@ -54,7 +54,7 @@ const profileScreen = {
 let testScreen = null;
 
 //change this line
-testScreen = profileScreen;
+// testScreen = profileScreen;
 // testScreen = commentsScreen;
 // testScreen = communityScreen;
 

@@ -31,7 +31,7 @@ class GoodshButton extends React.Component<Props, State>  {
                 style={
                     {
                         backgroundColor : "white",
-                        width: 60,
+                        width: 80,
                         height: 30,
                         position: 'absolute',
                         bottom: 0,
@@ -41,15 +41,18 @@ class GoodshButton extends React.Component<Props, State>  {
                 }>
 
                 <View
-                    style={[styles.goodshButton, {backgroundColor : goodshButtonColor}]}
+                    style={[styles.goodshButton, /*{backgroundColor : "black"}*/]}
+
+
                 >
-                    <Image source={require('../../img/mini-g-number.png')} resizeMode="contain"
+                    <Image source={liked ? require('../../img/yeah_liked.png') : require('../../img/yeah_normal3.png')} resizeMode="contain"
+
                            style={{
-                               width: 20,
-                               height: 20,
+                               //width: 20,
+                               //height: 20,
                            }}
                     />
-                    {!!likesCount && <Text style={{fontSize: 12, marginLeft: 3}}>{likesCount}</Text>}
+                    {/*{!!likesCount && <Text style={{fontSize: 12, marginLeft: 3}}>{likesCount}</Text>}*/}
 
                 </View>
             </TouchableHighlight>
