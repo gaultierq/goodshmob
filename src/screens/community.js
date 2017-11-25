@@ -2,7 +2,7 @@
 
 import type {Node} from 'react';
 import React, {Component} from 'react';
-import {ScrollView, StyleSheet, TouchableOpacity, View, Text} from 'react-native';
+import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
 import type {Id, Item} from "../types";
 import FriendsScreen from "./friends";
@@ -12,10 +12,10 @@ import {TabBar, TabViewAnimated} from 'react-native-tab-view';
 import * as UIStyles from "./UIStyles";
 import i18n from '../i18n/i18n'
 import ApiAction from "../utils/ApiAction";
-import Feed from "./components/feed";
 import * as Api from "../utils/Api";
 import Immutable from 'seamless-immutable';
 import {buildData} from "../utils/DataUtils";
+import {InteractionScreen} from "./interactions";
 
 type Props = {
     navigator:any
@@ -36,7 +36,7 @@ export class CommunityScreen extends Component<Props, State> {
         index: 0,
         routes: [
             {key: `friends`, title: i18n.t("community_screen.tabs.friends")},
-            {key: `notifications`, title: i18n.t("community_screen.tabs.notifications")}
+            {key: `interactions`, title: i18n.t("community_screen.tabs.notifications")}
         ],
     };
 
@@ -61,6 +61,13 @@ export class CommunityScreen extends Component<Props, State> {
                 renderItem={(item) => this.renderItem(item)}
                 ListFooterComponent={this.renderFriendsSuggestion.bind(this)}
             />
+        )
+    }
+
+    renderInteractions() {
+        const {navigator} = this.props;
+        return (
+            <InteractionScreen navigator={navigator}/>
         )
     }
 
@@ -105,7 +112,10 @@ export class CommunityScreen extends Component<Props, State> {
         if (route.key === 'friends') {
             return this.renderFriends();
         }
-        return null
+        if (route.key === 'interactions') {
+            return this.renderInteractions();
+        }
+        throw "unexpected"
     };
 
     renderItem(item: Item) : Node {

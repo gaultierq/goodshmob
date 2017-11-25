@@ -6,6 +6,7 @@ import {reducer as comments} from '../screens/comments';
 import {reducer as lineups} from '../screens/lineuplist';
 import {reducer as lineups2} from '../screens/actions';
 import {reducer as peopleYouMayKnow} from '../screens/community';
+import {reducer as interaction} from '../screens/interactions';
 import {authReducer as auth, deviceReducer as device} from '../auth/reducer';
 
 function reduceReducers(...reducers) {
@@ -32,5 +33,6 @@ export {
     peopleYouMayKnow,
     auth,
     device,
+    interaction
     // search,
 };

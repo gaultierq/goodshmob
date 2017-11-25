@@ -201,7 +201,7 @@ export default class App {
                     {
                         label: i18n.t('tabs.home.label'),
                         screen: 'goodsh.HomeScreen',
-                        icon: require('./img/bottom_bar_home.png'),
+                        icon: require('./img/drawer_line_up.png'),
                         titleImage: require('./img/screen_title_home.png'),
                         title: i18n.t('tabs.home.title')
                     },
