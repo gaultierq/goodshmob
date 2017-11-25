@@ -33,6 +33,7 @@ type Props<T> = {
 type State = {
     isFetchingFirst?: RequestState,
     isFetchingMore?: RequestState,
+    firstLoad?: number,
     isPulling?: boolean,
     lastEmptyResultMs?: number,
     moreLink?: Url
@@ -54,10 +55,14 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             fetchSrc,
             hasMore,
             empty,
+            ListHeaderComponent,
             ...attributes
         } = this.props;
 
-        let nothingInterestingToDisplay = isEmpty(data) && !this.isFetchingFirst();
+        let empt = isEmpty(data);
+        let nothingInterestingToDisplay = empt && !this.isFetchingFirst();
+
+        let firstEmptyLoader = this.state.firstLoad && empt;
 
         if (nothingInterestingToDisplay) {
             if (this.state.isFetchingFirst === 'ko') {
@@ -73,8 +78,9 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                 refreshControl={this.renderRefreshControl()}
                 onEndReached={ this.onEndReached.bind(this) }
                 onEndReachedThreshold={0.1}
-                ListFooterComponent={this.renderFetchMoreLoader()}
+                ListFooterComponent={!firstEmptyLoader && this.renderFetchMoreLoader()}
                 style={{...this.props.style,  minHeight: 50}}
+                ListHeaderComponent={!firstEmptyLoader && ListHeaderComponent}
                 {...attributes}
             />
         );
@@ -89,10 +95,17 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     componentDidMount() {
-        this.fetchIt();
+        console.debug("componentDidMount " + JSON.stringify(this.props.fetchSrc.action));
+        if (this.state.firstLoad) return;
+        this.setState({firstLoad: 1});
+        this.fetchIt()
+            .catch(err=>{console.warn("error while firstLoad:" + err)})
+            .then(()=>this.setState({firstLoad: 2}));
+
     }
 
     fetchIt(afterId?: Id) {
+
         return new Promise((resolve, reject) => {
 
             let requestName = afterId ? 'isFetchingMore' : 'isFetchingFirst';
@@ -123,7 +136,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                 this.props
                     .dispatch(call.disptachForAction2(fetchSrc.action, fetchSrc.options))
                     .then(({data, links})=> {
-
+                        console.debug("disptachForAction3 " + JSON.stringify(this.props.fetchSrc.action));
                         if (!data) {
                             this.setState({[requestName]: 'ko'});
                             return reject(`no data provided for ${fetchSrc.action}`);

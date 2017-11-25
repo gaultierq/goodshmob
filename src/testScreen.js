@@ -56,6 +56,7 @@ let testScreen = null;
 //change this line
 //testScreen = profileScreen;
 // testScreen = commentsScreen;
+// testScreen = communityScreen;
 
 
 export default testScreen;

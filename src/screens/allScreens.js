@@ -15,7 +15,7 @@ import {screen as SaveScreen} from './save';
 import {screen as ShareScreen} from './share';
 import {screen as ProfileScreen} from './profile';
 import FriendScreen from './friends';
-import CommunityScreen from './community';
+import {CommunityScreen} from './community';
 import SendScreen from './send';
 import AskScreen from './ask';
 import AlgoliaSearchScreen from './algoliasearch';

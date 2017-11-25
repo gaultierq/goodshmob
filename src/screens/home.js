@@ -190,17 +190,11 @@ class HomeScreen extends Component<Props, State> {
             <MenuContext>
                 <MainBackground>
                     <View>
-                        {/*{this.isSelectingAList() && <Text style={styles.selectAList}>Sélectionnez une liste:</Text>}*/}
-
-                        {/*{this.renderHeader()}*/}
-
                         <View>
                             <LineupList
                                 userId={currentUserId()}
-                                // filter={this.state.searchToken}
                                 onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
                                 onSavingPressed={(saving) => this.onSavingPressed(saving)}
-                                // canFilterOverItems={() => !this.state.pendingItem}
                                 navigator={this.props.navigator}
                                 ListHeaderComponent={this.renderHeader()}
                                 renderItem={(item)=>this.renderListItem(item)}

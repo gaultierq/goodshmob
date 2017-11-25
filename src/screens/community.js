@@ -1,16 +1,21 @@
 // @flow
 
-import React, {Component} from 'react';
 import type {Node} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import React, {Component} from 'react';
+import {ScrollView, StyleSheet, TouchableOpacity, View, Text} from 'react-native';
 import {connect} from "react-redux";
-import type {Id, Item, User} from "../types";
+import type {Id, Item} from "../types";
 import FriendsScreen from "./friends";
 import FriendCell from "./components/FriendCell";
 import {currentUserId} from "../CurrentUser";
 import {TabBar, TabViewAnimated} from 'react-native-tab-view';
 import * as UIStyles from "./UIStyles";
 import i18n from '../i18n/i18n'
+import ApiAction from "../utils/ApiAction";
+import Feed from "./components/feed";
+import * as Api from "../utils/Api";
+import Immutable from 'seamless-immutable';
+import {buildData} from "../utils/DataUtils";
 
 type Props = {
     navigator:any
@@ -19,9 +24,13 @@ type Props = {
 type State = {
 };
 
+const FETCH_PEOPLE_YOU_MAY_KNOW = new ApiAction("people_you_may_know");
 
-@connect()
-export default class CommunityScreen extends Component<Props, State> {
+@connect((state, ownProps) => ({
+    peopleYouMayKnow: state.peopleYouMayKnow,
+    data: state.data,
+}))
+export class CommunityScreen extends Component<Props, State> {
 
     state = {
         index: 0,
@@ -50,14 +59,39 @@ export default class CommunityScreen extends Component<Props, State> {
                 userId={currentUserId()}
                 navigator={navigator}
                 renderItem={(item) => this.renderItem(item)}
+                ListFooterComponent={this.renderFriendsSuggestion.bind(this)}
             />
         )
+    }
+
+    renderFriendsSuggestion() {
+        let peopleYouMayKnow = this.props.peopleYouMayKnow.list;
+        return (
+            <View>
+                {/*<Text>People you may know</Text>*/}
+                {/*<Feed*/}
+                    {/*data={peopleYouMayKnow}*/}
+                    {/*renderItem={this.renderItem.bind(this)}*/}
+                    {/*fetchSrc={{*/}
+                        {/*callFactory: ()=> this.fetchPeopleYouMayKnow(currentUserId()),*/}
+                        {/*action: FETCH_PEOPLE_YOU_MAY_KNOW,*/}
+                    {/*}}*/}
+                    {/*hasMore={false}*/}
+                {/*/>*/}
+            </View>
+        );
     }
 
     handleIndexChange(index: number) {
         this.setState({ index });
     }
 
+    fetchPeopleYouMayKnow(user_id: Id) {
+        console.info("==fetchPeopleYouMayKnow==");
+        return new Api.Call()
+            .withMethod('GET')
+            .withRoute(`users/${user_id}/people_you_may_know`);
+    }
 
     renderHeader(props: *) {
         return <TabBar {...props}
@@ -75,15 +109,11 @@ export default class CommunityScreen extends Component<Props, State> {
     };
 
     renderItem(item: Item) : Node {
-        const {onPressItem} = this.props;
+        let user = buildData(this.props.data, "users", item.id);
         return (
-            <TouchableOpacity
-                onPress={onPressItem}>
-                <FriendCell
-                    friend={item}
-                    onPressItem={this.props.onPressItem}
-                />
-            </TouchableOpacity>
+            <FriendCell
+                friend={user}
+            />
         )
     }
 }
@@ -115,3 +145,12 @@ const styles = StyleSheet.create({
         color: '#000000',
     },
 });
+
+export const reducer = (() => {
+    const initialState = Immutable(Api.initialListState());
+
+    return (state = initialState, action) => {
+        return Api.reduceList(state, action, {fetchFirst: FETCH_PEOPLE_YOU_MAY_KNOW});
+    }
+})();
+

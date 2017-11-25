@@ -51,7 +51,8 @@ export default class FriendsScreen extends Component<Props, State> {
 
         const {
             userId,
-            renderItem
+            renderItem,
+            ...attributes
         } = this.props;
 
         let user: User = buildData(this.props.data, "users", userId);
@@ -72,14 +73,13 @@ export default class FriendsScreen extends Component<Props, State> {
             <MainBackground>
                 <View style={styles.container}>
                     <Feed
+                        {...attributes}
                         data={friends}
                         renderItem={({item}) => renderItem(item)}
-                        //hasMore={false}
                         fetchSrc={{
                             callFactory,
                             action
                         }}
-
                     />
                 </View>
             </MainBackground>

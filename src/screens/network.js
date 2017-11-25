@@ -238,36 +238,6 @@ const mapStateToProps = (state, ownProps) => ({
     activity: state.activity
 });
 
-// const FETCH_ACTIVITIES = new ApiAction("home/fetch_activities");
-
-
-// const actions = (() => {
-//     return {
-//         fetchMyNetwork: () => {
-//             return new Api.Call()
-//                 .withMethod('GET')
-//                 .withRoute("activities")
-//                 .addQuery({include: "user,resource,target"});
-//         },
-//     };
-// })();
-//
-// const reducer = (() => {
-//     const initialState = Immutable({});
-//     const initialSubState = Immutable(Api.initialListState());
-//
-//     return (state = initialState, action) => {
-//
-//         let {userId} = action.options || {};
-//
-//         if (userId) {
-//             let subState = state[userId] || initialSubState;
-//             subState = Api.reduceList(subState, action, {fetchFirst: FETCH_ACTIVITIES});
-//             state = state.merge({[userId]: subState}, {deep: true});
-//         }
-//         return state;
-//     }
-// })();
 
 let screen = connect(mapStateToProps)(NetworkScreen);
 

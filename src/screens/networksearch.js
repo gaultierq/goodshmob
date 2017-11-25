@@ -25,6 +25,7 @@ import ApiAction from "../utils/ApiAction";
 import * as UI from "./UIStyles";
 import UserRowI from "../activity/components/UserRowI";
 import * as _ from "lodash";
+import UserConnectItem from "./userConnectItem";
 
 type Props = NavigableProps & {
     onClickClose?: () => void,
@@ -91,11 +92,7 @@ export default class NetworkSearchScreen extends Component<Props, State> {
 
         let renderUser = ({item}) => {
             return (
-                <UserRowI user={item}
-                         navigator={this.props.navigator}
-                         rightComponent={this.renderConnectButton(item)}
-                          style={styles.userRow}
-                />
+                <UserConnectItem user={item}/>
             );
         };
 
@@ -106,7 +103,6 @@ export default class NetworkSearchScreen extends Component<Props, State> {
                     indexName: 'Saving_staging',
                     params: {
                         facets: "[\"list_name\"]",
-                        //filters: 'user_id:' + currentUserId(),
                     }
 
                 },
@@ -142,49 +138,6 @@ export default class NetworkSearchScreen extends Component<Props, State> {
         );
     }
 
-    renderConnectButton(user: User) {
-        let req = this.state.connect[user.id];
-
-        let alreadyFriends = !!_.find(user.friends, (f)=>f.id === currentUserId());
-
-        if (alreadyFriends) {
-            return <Text style={{position: 'absolute', right: 12}}>amis</Text>
-        }
-
-        return (<Button
-            isLoading={req === 1}
-            isDisabled={req === 2}
-            onPress={()=> this.connectWith(user)}
-            style={[{position: 'absolute', right: 12}, styles.button]}
-            disabledStyle={styles.disabledButton}
-        >
-            <Text>Se connecter</Text>
-        </Button>);
-
-    }
-
-    connectWith(user: User) {
-        if (this.state.connect[user.id] === 1) return;
-
-        let setReq =  (number) => {
-            this.setState({connect: {...this.state.connect, [user.id]: number}});
-        };
-
-
-        setReq(1);
-        this.props.dispatch(actions.createFriendship(user.id)
-            .disptachForAction2(CONNECT))
-            .then(() => {
-                setReq(2);
-            }, err => {
-                console.error(err);
-                setReq(3);
-            })
-
-        ;
-
-    }
-
 
     onSavingPressed(saving: Saving) {
         this.props.navigator.push({
@@ -205,27 +158,3 @@ export default class NetworkSearchScreen extends Component<Props, State> {
     }
 }
 
-
-const styles = StyleSheet.create({
-    button: {
-        padding: 8,
-        height: 30,
-    },
-    disabledButton: {
-        borderColor: UI.Colors.grey1,
-    },
-    userRow: {
-        margin: 12
-    }
-});
-
-export const CONNECT = new ApiAction("connect");
-
-const actions = {
-    createFriendship: (userId: string) => {
-        return new Api.Call().withMethod('POST')
-            .withRoute(`users/${userId}/friendships`)
-            ;
-
-    }
-};
