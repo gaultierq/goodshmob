@@ -411,12 +411,6 @@ class HomeScreen extends Component<Props, State> {
                     i18n.t("tabs.search.title"),
             passProps: {
                 onItemSelected: (item: Item) => {
-                    // this.props.navigator.dismissAllModals();
-                    // console.info("item selected: " + JSON.stringify(item.title));
-                    //
-                    // //TODO: add it to redux
-                    // this.setState({pendingItem: item}, () => this.resolveAdd());
-
 
                     this.props.navigator.push({
                         screen: 'goodsh.AddItemScreen', // unique ID registered with Navigation.registerScreen
@@ -424,6 +418,7 @@ class HomeScreen extends Component<Props, State> {
                         passProps: {
                             itemId: item.id,
                             itemType: item.type,
+                            item,
                             defaultLineupId: currentGoodshboxId(),
                             onCancel: () => {
                                 this.props.navigator.popToRoot();

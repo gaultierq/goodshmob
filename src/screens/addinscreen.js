@@ -6,6 +6,7 @@ import * as UI from "./UIStyles";
 import i18n from '../i18n/i18n'
 import {screen as LineupListScreen} from './lineuplist';
 import type {LineupProps} from "./lineuplist";
+import AddLineupComponent from "./components/addlineup";
 
 type Props = LineupProps & {
 };
@@ -26,7 +27,7 @@ class AddInScreen extends Component<Props, State> {
             <View style={[styles.container]}>
 
                 <LineupListScreen
-                    filter={this.state.filter}
+                    ListHeaderComponent={<AddLineupComponent/>}
                     {...this.props}
                 />
             </View>

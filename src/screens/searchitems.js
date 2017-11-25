@@ -9,7 +9,6 @@ import {TabBar, TabViewAnimated} from 'react-native-tab-view';
 import ItemCell from "./components/ItemCell";
 import {buildData} from "../utils/DataUtils";
 import {SearchBar} from 'react-native-elements'
-import * as UIStyles from "../screens/UIStyles"
 import type {SearchCategoryType} from "./search";
 import SearchScreen from "./search";
 import normalize from 'json-api-normalizer';
@@ -59,6 +58,7 @@ class SearchItem extends Component<*,*> {
                 .withRoute(`search/${category}`)
                 .addQuery({'search[term]': token});
 
+            //maybe use redux here ?
             call
                 .run()
                 .then(response=>{
@@ -67,7 +67,6 @@ class SearchItem extends Component<*,*> {
                     let results = response.json.data.map(d=>{
                         return buildData(data, d.type, d.id);
                     });
-
 
                     resolve({
                         [category]: {
@@ -82,35 +81,6 @@ class SearchItem extends Component<*,*> {
     }
 
 }
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    searchContainer: {
-        backgroundColor: 'white',
-    },
-    searchInput: {
-        backgroundColor: 'white',
-    },
-    tabbar: {
-        backgroundColor: 'white',
-    },
-    indicator: {
-        backgroundColor: UIStyles.Colors.green,
-    },
-    activityIndicator: {
-        position: "absolute",
-        top: 30, left: 0, right: 0, justifyContent: 'center',
-        zIndex: 3000
-    },
-    tab: {
-        opacity: 1,
-        width: 90,
-    },
-    label: {
-        color: '#000000',
-    },
-});
 let screen = SearchItem;
 
 export {screen};

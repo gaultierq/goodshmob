@@ -21,6 +21,7 @@ type Props = {
     defaultLineupId: Id,
     itemId: Id,
     itemType: ItemType,
+    item?: Item,
     navigator: *,
     data: *
 };
@@ -51,7 +52,7 @@ export default class AddItemScreen extends Component<Props, State> {
     render() {
 
         let lineup = buildNonNullData(this.props.data, "lists", this.state.lineupId);
-        let item = buildNonNullData(this.props.data, this.props.itemType, this.props.itemId);
+        let item = this.props.item || buildNonNullData(this.props.data, this.props.itemType, this.props.itemId);
 
         const {description, visibility} = this.state;
 
@@ -68,7 +69,7 @@ export default class AddItemScreen extends Component<Props, State> {
 
                     <View style={{flexDirection: "row", justifyContent: 'space-between', margin: 6}}>
                         <Text>Dans:</Text>
-                        {renderSimpleLink("Changer", this.pickLineup.bind(this), {disabled: !editable})}
+                        {renderSimpleLink("Changer", this.changeLineup.bind(this), {disabled: !editable})}
 
                     </View>
                     <LineupCell lineup={lineup} style={{backgroundColor: "transparent"}} />
@@ -131,7 +132,7 @@ export default class AddItemScreen extends Component<Props, State> {
             }, (err)=> this.setState({reqAdd: 3}));
     }
 
-    pickLineup() {
+    changeLineup() {
         this.props.navigator.showModal({
             screen: 'goodsh.AddInScreen', // unique ID registered with Navigation.registerScreen
             title: "Ajouter à une liste",
