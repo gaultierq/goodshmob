@@ -66,7 +66,21 @@ class HomeScreen extends Component<Props, State> {
     }
 
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
-        console.log("Home:NavEvent: "+JSON.stringify(event));
+        console.debug("home:onNavigatorEvent" + JSON.stringify(event));
+
+        switch(event.id) {
+            case 'willAppear':
+                this.props.navigator.setDrawerEnabled({side: 'left', enabled: true});
+                this.props.navigator.setDrawerEnabled({side: 'right', enabled: false});
+                break;
+            case 'didAppear':
+                break;
+            case 'willDisappear':
+                this.props.navigator.setDrawerEnabled({side: 'left', enabled: false});
+                break;
+            case 'didDisappear':
+                break;
+        }
         if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
             switch (event.id) {
                 // case 'cancel_add':
@@ -156,24 +170,6 @@ class HomeScreen extends Component<Props, State> {
             }
         }
 
-        // type: SearchCategoryType,
-        //     query: *,
-        // renderItem: (item: *) => Node,
-        //     tabName: i18Key
-
-        //HACK
-        // if (event.type === 'DeepLink') {
-        //     const payload = event.payload; // (optional) The payload
-        //
-        //     switch (event.link) {
-        //         case DEEPLINK_SEARCH_TEXT_CHANGED:
-        //             this.setState({searchToken: payload});
-        //             break;
-        //         case DEEPLINK_SEARCH_CLOSE:
-        //             this.setState({isSearching: false});
-        //             break;
-        //     }
-        // }
     }
 
     showMore(lineup: List) {

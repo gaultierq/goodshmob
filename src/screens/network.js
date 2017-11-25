@@ -56,7 +56,26 @@ class NetworkScreen extends Component<Props, State> {
     }
 
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
+        console.debug("network:onNavigatorEvent" + JSON.stringify(event));
         let navigator = this.props.navigator;
+
+
+        switch(event.id) {
+            case 'willAppear':
+                this.props.navigator.setDrawerEnabled({side: 'right', enabled: true});
+                this.props.navigator.setDrawerEnabled({side: 'left', enabled: false});
+                break;
+            case 'didAppear':
+
+                // this.props.navigator.setDrawerEnabled({side: 'left', enabled: false});
+                break;
+            case 'willDisappear':
+                this.props.navigator.setDrawerEnabled({side: 'right', enabled: false});
+                break;
+            case 'didDisappear':
+                break;
+        }
+
 
         if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
             if (event.id === 'community') { // this is the same id field from the static navigatorButtons definition
@@ -85,6 +104,7 @@ class NetworkScreen extends Component<Props, State> {
                     navigatorStyle: {navBarHidden: true},
                 });
             }
+
         }
     }
 

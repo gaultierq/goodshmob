@@ -54,6 +54,7 @@ export class InteractionScreen extends Component<Props, State> {
                     }}
                     hasMore={!interaction.hasNoMore}
                     ItemSeparatorComponent={()=> <FeedSeparator vMargin={12} />}
+                    contentContainerStyle={{paddingTop: 10}}
                 />
 
             </View>
@@ -65,7 +66,6 @@ export class InteractionScreen extends Component<Props, State> {
             .withRoute(`interactions`)
             .include("user,resource,resource.resource")
     }
-
 
     renderItem({item}) {
         let activity: Activity = buildNonNullData(this.props.data, item.type, item.id);
@@ -130,6 +130,7 @@ export const reducer = (state = Immutable(Api.initialListState()), action) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: "white",
     },
     description: {
         backgroundColor: 'transparent',
