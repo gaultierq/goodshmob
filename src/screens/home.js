@@ -36,6 +36,7 @@ import Button from 'apsl-react-native-button'
 import {CheckBox} from "react-native-elements";
 import type {Visibility} from "./additem";
 import {renderSimpleButton} from "./UIStyles";
+import AddLineupComponent from "./components/addlineup";
 
 let DEEPLINK_SEARCH_TEXT_CHANGED = 'internal/home/search/change';
 let DEEPLINK_SEARCH_CLOSE = 'internal/home/search/close';
@@ -356,44 +357,10 @@ class HomeScreen extends Component<Props, State> {
         setTimeout(()=>navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this)));
     }
 
-    createLineup() {
-        if (!this.state.newLineupTitle) return;
-        if (this.state.isAddingLineup) return;
-        this.setState({isAddingLineup: true});
-        this.props.dispatch(createLineup(this.state.newLineupTitle))
-            .then(()=> {
-                    this.setState({
-                        isCreatingLineup: false,
-                        newLineupTitle: ""
-                    })
-                },
-                (err) => {
-                    //this.lineupInput.focus();
-                    console.log(err);
-                })
-            .then(()=> {
-                this.setState({
-                    isAddingLineup: false,
-                })
-            })
-            .then(()=> Snackbar.show({title: "Liste créée"}))
-
-        ;
-    }
-
     displayFloatingButton() {
         return /*!this.state.pendingItem && */!this.state.isCreatingLineup;
     }
 
-    // addInLineup(lineup: List) {
-    //     this.setState({pendingList: lineup}, () => {
-    //         console.log(`add in lineup: ${lineup.id}`);
-    //         this.displaySearchScreen(()=> {
-    //             this.setState({pendingList: null});
-    //         });
-    //     });
-    //
-    // }
 
     onLineupPressed(lineup: List) {
         // if (this.state.pendingItem) {
@@ -476,98 +443,9 @@ class HomeScreen extends Component<Props, State> {
         });
     }
 
-    // resolveAdd() {
-    //     let pendingItem = this.state.pendingItem;
-    //     let pendingList = this.state.pendingList;
-    //
-    //     if (pendingItem && pendingList) {
-    //         console.info(`${pendingItem.title} waiting to be added in ${pendingList.name}`);
-    //         this.props
-    //             .dispatch(saveItem(pendingItem.id, pendingList.id, ))
-    //             .then(() => {
-    //                 Snackbar.show({
-    //                     title: i18n.t('shared.goodsh_saved'),
-    //                 });
-    //                 return this.setState({pendingItem: null, pendingList: null});
-    //             });
-    //     }
-    // }
-
     //TODO: extract lineup card style
     renderHeader() {
-        // if (this.isSelectingAList()) {
-        //     return <View/>;
-        // }
-        if (this.state.isCreatingLineup) {
-            let editable = !this.state.isAddingLineup;
-
-
-            let grey1 = UI.Colors.grey1;
-
-            //FIXME: changing color of the text doesnt work ?!
-            return (
-                <View style={[UI.CARD(6), styles.header, {flexDirection: 'column'}]}>
-                    <TextInput
-                        autoFocus
-                        editable={editable}
-                        style={[styles.input, (editable ? {color: "black"} : {color: "grey"})]}
-                        onSubmitEditing={this.createLineup.bind(this)}
-                        value={this.state.newLineupTitle}
-                        onChangeText={newLineupTitle => this.setState({newLineupTitle})}
-                        placeholder={i18n.t("create_list_controller.placeholder")}
-                    />
-
-
-                    <CheckBox
-                        right
-                        title='Visible par mes amis'
-                        size={16}
-                        checkedColor={grey1}
-                        uncheckedColor={grey1}
-                        onPress={(newValue)=> this.setState({newLineupPrivacy: !!this.state.newLineupPrivacy ? 0 : 1})}
-                        checked={!this.state.newLineupPrivacy}
-                        textStyle={{color: grey1, fontSize: 12, }}
-                        containerStyle={{ backgroundColor: "transparent", borderWidth: 0, width: "100%"}}
-                    />
-
-                    <View style={{flexDirection: 'row'}}>
-                        {
-                            renderSimpleButton("Ajouter", this.createLineup.bind(this), {
-                                loading: this.state.isAddingLineup,
-                                disabled: !this.state.newLineupTitle
-                            })
-                        }
-                        {renderSimpleButton(
-                            "Annuler",
-                            ()=> {this.setState({isCreatingLineup: false})},
-                            {disabled: this.state.isAddingLineup})}
-                    </View>
-
-                </View>
-            );
-        }
-
-        return (<TouchableWithoutFeedback onPress={() => {this.setState({isCreatingLineup: true})}}>
-            <View style={
-                [UI.CARD(), styles.header]
-            }>
-                <Image source={require('../img/plus.png')}
-                       resizeMode="contain"
-                       style={{
-                           width: 20,
-                           height: 20,
-                           marginRight: 10
-                       }}
-                />
-                <Text
-                    style={[
-                        styles.headerText,
-                        {color: UI.Colors.grey2},
-                        Platform.OS === 'ios'? {lineHeight: 40} : {height: 40}
-                    ]}
-                >{i18n.t('create_list_controller.title')}</Text>
-            </View>
-        </TouchableWithoutFeedback>);
+        return <AddLineupComponent/>;
     }
 }
 
