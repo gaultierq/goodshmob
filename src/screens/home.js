@@ -363,11 +363,6 @@ class HomeScreen extends Component<Props, State> {
 
 
     onLineupPressed(lineup: List) {
-        // if (this.state.pendingItem) {
-        //     this.setState({pendingList: lineup}, () => this.resolveAdd());
-        // }
-        // else {
-
         console.info("on linup pressed: " + JSON.stringify(lineup));
         this.props.navigator.push({
             screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen

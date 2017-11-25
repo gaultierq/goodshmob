@@ -111,7 +111,6 @@ class LineupListScreen extends Component<LineupProps, State> {
         );
     }
 
-
     renderItem({item}) {
 
         if (!(item.type === 'lists')) throw "unexpected";
@@ -163,43 +162,43 @@ const reducer = (() => {
                 break;
             }
 
-
-            //FIXME: this does not belong here !
-            case CREATE_LINEUP.success(): {
-                let userId = currentUserId();
-                let {id, type} = action.payload.data;
-                let path = `users.${userId}.relationships.lists.data`;
-                let goodshboxId = _.get(state, `users.${userId}.relationships.goodshbox.data.id`, null);
-                state = doDataMergeInState(state, path, [{id, type}], {afterId: goodshboxId});
-
-                //state = state.merge({list});
-                break;
-            }
-
-            //FIXME: this does not belong here !
-            case DELETE_LINEUP.success(): {
-                let userId = currentUserId();
-                let {lineupId} = action.options;
-                let path = `users.${userId}.relationships.lists.data`;
-                let lists = _.get(state, path, null);
-                lists = _.filter(lists, (l) => l.id !== lineupId);
-                state = dotprop.set(state, path, lists);
-                break;
-            }
-
-            //FIXME: this does not belong here !
-            case SAVE_ITEM.success(): {
-                let {id, type} = action.payload.data;
-                let {lineupId} = action.options;
-                let path = `lists.${lineupId}.relationships.savings.data`;
-                let savings = _.get(state, path, null);
-                if (savings) {
-                    savings = savings.slice();
-                    savings.splice(0, 0, {id, type})
-                    state = dotprop.set(state, path, savings);
-                }
-                break;
-            }
+            //
+            // //FIXME: this does not belong here !
+            // case CREATE_LINEUP.success(): {
+            //     let userId = currentUserId();
+            //     let {id, type} = action.payload.data;
+            //     let path = `users.${userId}.relationships.lists.data`;
+            //     let goodshboxId = _.get(state, `users.${userId}.relationships.goodshbox.data.id`, null);
+            //     state = doDataMergeInState(state, path, [{id, type}], {afterId: goodshboxId});
+            //
+            //     //state = state.merge({list});
+            //     break;
+            // }
+            //
+            // //FIXME: this does not belong here !
+            // case DELETE_LINEUP.success(): {
+            //     let userId = currentUserId();
+            //     let {lineupId} = action.options;
+            //     let path = `users.${userId}.relationships.lists.data`;
+            //     let lists = _.get(state, path, null);
+            //     lists = _.filter(lists, (l) => l.id !== lineupId);
+            //     state = dotprop.set(state, path, lists);
+            //     break;
+            // }
+            //
+            // //FIXME: this does not belong here !
+            // case SAVE_ITEM.success(): {
+            //     let {id, type} = action.payload.data;
+            //     let {lineupId} = action.options;
+            //     let path = `lists.${lineupId}.relationships.savings.data`;
+            //     let savings = _.get(state, path, null);
+            //     if (savings) {
+            //         savings = savings.slice();
+            //         savings.splice(0, 0, {id, type})
+            //         state = dotprop.set(state, path, savings);
+            //     }
+            //     break;
+            // }
         }
 
         return state;
