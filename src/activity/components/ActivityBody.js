@@ -15,7 +15,8 @@ type Props = {
 type State = {
 };
 
-class ActivityBody extends React.Component<Props, State> {
+@connect()
+export default class ActivityBody extends React.Component<Props, State> {
 
     render() {
         const {activity, noGoodshButton} = this.props;
@@ -50,10 +51,12 @@ class ActivityBody extends React.Component<Props, State> {
                 </View>
 
 
+                { resource &&
                 <View style={{padding: 15}}>
                     <Text style={{fontSize: 18, fontFamily: 'Chivo-Light',}}>{resource.title}</Text>
                     <Text style={UI.TEXT_LESS_IMPORTANT}>{resource.subtitle}</Text>
                 </View>
+                }
 
             </View>
         )
@@ -61,10 +64,6 @@ class ActivityBody extends React.Component<Props, State> {
 
 }
 
-const mapStateToProps = (state, ownProps) => ({
-    data: state.data,
-});
 
-export default connect(mapStateToProps)(ActivityBody);
 
 
