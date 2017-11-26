@@ -41,6 +41,7 @@ export default {
         header: {
             in: "dans",
             to: "à",
+            ask: "cherche des recommendations",
         },
         buttons:{
             "comment": {
@@ -52,6 +53,11 @@ export default {
             "save":"ENREGISTRER",
             "saved":"ENREGISTRÉ",
             "buy":"ACHETER",
+            "answer": {
+                zero: "RÉPONDRE",
+                one: "RÉPONDRE (1)",
+                other: "RÉPONDRE (%{count})"
+            },
             "follow_list": "SUIVRE LA LISTE",
             "unfollow_list": "NE PLUS SUIVRE",
         }

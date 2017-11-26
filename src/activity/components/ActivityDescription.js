@@ -24,7 +24,6 @@ export default class ActivityDescription extends React.Component<Props, State> {
     render() {
         let activity = this.getActivity();
 
-
         //let activity: Model.Activity = this.props.activity;
         let user: User = activity.user;
 
@@ -41,11 +40,20 @@ export default class ActivityDescription extends React.Component<Props, State> {
             >
 
                 {/* in Séries(1) */}
-                {this.renderTarget()}
+                {activity.type === 'asks' ? this.renderAsk() : this.renderTarget()}
             </UserActivity>
 
-            <Text style={{fontSize: 14}}>{activity.description}</Text>
+            {!!activity.description && <Text style={{fontSize: 14}}>{activity.description}</Text>}
         </View>;
+    }
+
+    renderAsk() {
+        return <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+            <Text
+                style={{fontSize: 13, fontFamily: 'Chivo-Light'}}>
+                {i18n.t('activity_item.header.ask')}
+            </Text>
+        </View>
     }
 
     renderTarget() {
@@ -68,10 +76,6 @@ export default class ActivityDescription extends React.Component<Props, State> {
             key = "activity_item.header.to";
             press = () => this.seeUser(target);
         }
-
-
-
-
 
         return <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
@@ -141,9 +145,3 @@ export default class ActivityDescription extends React.Component<Props, State> {
             </TouchableOpacity>;
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-});

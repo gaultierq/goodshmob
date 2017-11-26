@@ -50,11 +50,12 @@ class ActivityCell extends React.Component<Props, State> {
                 }
 
                 <View style={UI.CARD()}>
-                    <ActivityBody
-                        activity={activity}
-                        navigator={this.props.navigator}
-                        onPressItem={this.props.onPressItem}
-                    />
+                    <TouchableOpacity onPress={this.props.onPressItem}>
+                        <ActivityBody
+                            activity={activity}
+                            navigator={this.props.navigator}
+                        />
+                    </TouchableOpacity>
 
                     <FeedSeparator/>
 

@@ -21,37 +21,19 @@ export default class ActivityBody extends React.Component<Props, State> {
     render() {
         const {activity, noGoodshButton} = this.props;
         let resource = activity.resource;
-        let image = resource ? resource.image : undefined;
-        let imageHeight = 250;
 
+        let bgc = null;//{backgroundColor: activity.type === 'asks' ?  'red' : 'transparent'}
         return (
             <View>
                 {/*Image And Button*/}
-                <View style={{alignItems: 'center',}}>
-                    <TouchableHighlight
-                        onPress={this.props.onPressItem}
-                        style={{
-                            alignSelf: 'center',
-                            height: imageHeight+15,
-                            width: "100%",
-                        }}>
-                        <Image
-                            source={{uri: image}}
-                            resizeMode='contain'
-                            style={{
-                                alignSelf: 'center',
-                                height: imageHeight,
-                                width: "100%",
-                            }}
-                        />
-                    </TouchableHighlight>
+                <View style={[{alignItems: 'center',width: "100%"}, bgc]}>
+                    {this.body()}
 
-                    {!noGoodshButton && <GoodshButton activity={activity}/>}
+                    {!noGoodshButton && activity.type !== 'asks' && <GoodshButton activity={activity}/>}
 
                 </View>
 
-
-                { resource &&
+                {resource &&
                 <View style={{padding: 15}}>
                     <Text style={{fontSize: 18, fontFamily: 'Chivo-Light',}}>{resource.title}</Text>
                     <Text style={UI.TEXT_LESS_IMPORTANT}>{resource.subtitle}</Text>
@@ -62,6 +44,33 @@ export default class ActivityBody extends React.Component<Props, State> {
         )
     }
 
+    body() {
+
+        const {activity} = this.props;
+        let resource = activity.resource;
+        let image = resource ? resource.image : undefined;
+        let imageHeight = 250;
+        if (activity.type === 'asks'){
+            return <Text style={[{margin: 12, fontFamily: 'Chivo-Light', fontSize: 30}]}>{activity.content}</Text>;
+        }
+        return <View style={{
+            flex:1,
+            alignSelf: 'center',
+            height: imageHeight + 15,
+            width: "100%",
+        }}>
+            {!!image && <Image
+                source={{uri: image}}
+                resizeMode='contain'
+                style={{
+                    alignSelf: 'center',
+                    height: imageHeight,
+                    width: "100%",
+                }}
+            />
+            }
+        </View>
+    }
 }
 
 

@@ -24,6 +24,7 @@ import {Client} from 'bugsnag-react-native';
 import {setCustomText, setCustomTextInput} from 'react-native-global-props';
 import * as notification from './notification';
 import * as DeviceManager from "./DeviceManager";
+import * as UI from "./screens/UIStyles";
 
 
 let hydrated = false;
@@ -158,7 +159,7 @@ export default class App {
 
         let id = CurrentUser.currentUserId();
 
-        if (id !== currentUserId) throw "inconsistent current_user_id";
+        if (id !== currentUserId) throw `inconsistent current_user_id: ${id}!=${currentUserId}`;
 
 
         let logged = !!currentUserId;
@@ -216,7 +217,7 @@ export default class App {
                 ],
                 tabsStyle: { // optional, add this if you want to style the tab bar beyond the defaults
                     tabBarButtonColor: '#000', // optional, change the color of the tab icons and text (also unselected)
-                    //tabBarSelectedButtonColor: '#40E7BB', // optional, change the color of the selected tab icon and text (only selected)
+                    tabBarSelectedButtonColor: UI.Colors.green, // optional, change the color of the selected tab icon and text (only selected)
                     tabBarBackgroundColor: 'white',
                     forceTitlesDisplay: false,
                     tabBarShowLabels: 'hidden',
@@ -225,7 +226,9 @@ export default class App {
                 appStyle: {
                     orientation: 'portrait', // Sets a specific orientation to the entire app. Default: 'auto'. Supported values: 'auto', 'landscape', 'portrait'
                     bottomTabBadgeTextColor: 'red', // Optional, change badge text color. Android only
-                    bottomTabBadgeBackgroundColor: 'green' // Optional, change badge background color. Android only
+                    bottomTabBadgeBackgroundColor: 'green', // Optional, change badge background color. Android only
+                    backButtonImage: require('./img/back.png'),
+                    hideBackButtonTitle: true
                 },
                 drawer: { // optional, add this if you want a side menu drawer in your app
                     left: { // optional, define if you want a drawer from the left

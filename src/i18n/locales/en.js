@@ -41,6 +41,7 @@ export default {
         header: {
             in: "in",
             to: "to",
+            ask: "cherche des recommendations",
         },
         buttons:{
             "comment": {
@@ -53,6 +54,11 @@ export default {
             "save":"SAVE",
             "saved":"SAVED",
             "buy":"BUY",
+            "answer": {
+                zero: "ANSWER",
+                one: "ANSWER (1)",
+                other: "ANSWER (%{count})"
+            },
             "follow_list": "FOLLOW LIST",
             "unfollow_list": "UNFOLLOW LIST",
         }

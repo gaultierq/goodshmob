@@ -28,8 +28,6 @@ type State = {
     isLoading?: boolean
 };
 
-
-
 class ActivityDetailScreen extends Component<Props, State> {
 
     state = {};
@@ -79,7 +77,7 @@ class ActivityDetailScreen extends Component<Props, State> {
                                 <ActivityActionBar
                                     activity={activity}
                                     navigator={this.props.navigator}
-                                    actions={['share', 'save', 'buy']}
+                                    actions={['answer', 'share', 'save', 'buy']}
                                 />
                             </View>
 

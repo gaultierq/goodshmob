@@ -20,8 +20,8 @@ import {connect} from "react-redux";
 import {currentGoodshboxId} from "../../CurrentUser";
 import {unsave} from "../actions";
 
-export type ActivityActionType = 'comment' | 'share' | 'save' | 'buy';
-const ACTIONS = ['comment', 'share', 'save', 'buy'];
+export type ActivityActionType = 'comment' | 'share' | 'save' | 'buy' | 'answer';
+const ACTIONS = ['comment', 'share', 'save', 'buy', 'answer'];
 
 
 type Props = {
@@ -48,8 +48,6 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
         let goodshed = resource && resource.meta ? resource.meta["goodshed"] : false;
 
-        const actions : Array<ActivityActionType> = this.props.actions || ACTIONS;
-
         return <View style={{
             flex: 1,
             flexDirection: 'row',
@@ -58,20 +56,47 @@ export default class ActivityActionBar extends React.Component<Props, State> {
             paddingRight: 10
         }}>
 
-            {actions.indexOf('comment') >= 0 && this.renderButton(require('../../img/comment.png'), i18n.t("activity_item.buttons.comment", {count: commentsCount}), () => this.comment(activity))}
-
-            {actions.indexOf('share') >= 0 && this.renderButton(require('../../img/send.png'), i18n.t("activity_item.buttons.share"), () => this.send(activity))}
+            {
+                this.canExec('answer') && this.renderButton(require('../../img/comment.png'), i18n.t("activity_item.buttons.answer", {count: commentsCount}), () => this.comment(activity))
+            }
+            {
+                this.canExec('comment') && this.renderButton(require('../../img/comment.png'), i18n.t("activity_item.buttons.comment", {count: commentsCount}), () => this.comment(activity))
+            }
+            {
+                this.canExec('share') && this.renderButton(require('../../img/send.png'), i18n.t("activity_item.buttons.share"), () => this.send(activity))
+            }
             {
                 goodshed ?
-                    actions.indexOf('save') >= 0 && this.renderButton(require('../../img/save-icon.png'), i18n.t("activity_item.buttons.saved"), () => this.unsave(activity), true)
-                    :
-                    actions.indexOf('save') >= 0 && this.renderButton(require('../../img/save-icon.png'), i18n.t("activity_item.buttons.save"), () => this.save(activity))
+                    this.canExec('save') && this.renderButton(require('../../img/save-icon.png'), i18n.t("activity_item.buttons.saved"), () => this.unsave(activity), true) :
+                    this.canExec('save') && this.renderButton(require('../../img/save-icon.png'), i18n.t("activity_item.buttons.save"), () => this.save(activity))
             }
-            {actions.indexOf('buy') >= 0 && this.renderButton(require('../../img/buy-icon.png'), i18n.t("activity_item.buttons.buy"), () => this.buy(activity))}
+            {
+                this.canExec('buy') && this.renderButton(require('../../img/buy-icon.png'), i18n.t("activity_item.buttons.buy"), () => this.buy(activity))
+            }
 
         </View>;
     }
 
+
+    canExec(action: ActivityActionType) {
+        let {actions, activity} = this.props;
+        if ((actions || ACTIONS).indexOf(action) < 0) {
+            return false;
+        }
+        let type = activity.type;
+
+        switch(action) {
+            case 'answer':
+                return type === 'asks';
+            case 'save':
+            case 'buy':
+            case 'comment':
+                return type !== 'asks';
+        }
+
+        return true;
+
+    }
 
     renderButton(img: Url, text: string, handler: ()=>void, active:boolean = false) {
         let color = active ? UI.Colors.green: UI.Colors.black;
