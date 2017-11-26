@@ -75,8 +75,8 @@ class Profile extends Component<Props, State> {
                 }}>
 
                     <Image style={{marginBottom: 20}} source={require('../img/goodsh.png')}/>
-                    <Text style={{marginBottom: 20}}>{i18n.t('profile_screen.title', {love: i18n.t('profile_screen.love')})}</Text>
-                    <Text style={{fontFamily: 'Thonburi', fontSize: 11, textAlign: "center"}}>{i18n.t('profile_screen.subtitle')}</Text>
+                    <Text style={{fontFamily: 'Chivo', marginBottom: 20, fontSize: 14, fontWeight: 'bold'}}>{i18n.t('profile_screen.title', {love: i18n.t('profile_screen.love')})}</Text>
+                    <Text style={{fontSize: 14, textAlign: "center"}}>{i18n.t('profile_screen.subtitle')}</Text>
 
 
                     <TextInput
@@ -148,11 +148,12 @@ const actions = (() => {
 
 const styles = StyleSheet.create({
     input:{
-        height: 140,
-        width: "100%",
+        height: 100,
+        width: "80%",
         fontFamily: 'Chivo',
-        fontSize: 18,
+        fontSize: 14,
         borderWidth: 0.5,
+        borderRadius: 5,
         borderColor: UI.Colors.grey1,
 
     },

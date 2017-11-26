@@ -21,7 +21,7 @@ import i18n from './i18n/i18n'
 import * as CurrentUser from './CurrentUser'
 import testScreen from "./testScreen"
 import {Client} from 'bugsnag-react-native';
-import {setCustomText, setCustomTextInput} from 'react-native-global-props';
+import * as globalProps from 'react-native-global-props';
 import * as notification from './notification';
 import * as DeviceManager from "./DeviceManager";
 import * as UI from "./screens/UIStyles";
@@ -63,10 +63,16 @@ const store = createStore(
 let configureApp = function () {
 //store.dispatch(appActions.onAppReady());
 
-    setCustomText({
+    globalProps.setCustomText({
         style: {
             fontFamily: 'Thonburi',
-            color: 'black'
+            color: 'black',
+        }
+    });
+
+    globalProps.setCustomView({
+        style: {
+            backgroundColor: 'transparent'
         }
     });
 
@@ -91,7 +97,7 @@ let configureApp = function () {
         }
     };
 
-    setCustomTextInput(customTextInputProps);
+    globalProps.setCustomTextInput(customTextInputProps);
 
 
     // Component.setState.prototype = function setState(imconpleteState, callback) {
@@ -204,7 +210,8 @@ export default class App {
                         screen: 'goodsh.HomeScreen',
                         icon: require('./img/drawer_line_up.png'),
                         titleImage: require('./img/screen_title_home.png'),
-                        title: i18n.t('tabs.home.title')
+                        title: i18n.t('tabs.home.title'),
+                        navigatorStyle: UI.NavStyles
                     },
                     {
                         label: 'Network', // tab label as appears under the icon in iOS (optional)
@@ -212,6 +219,7 @@ export default class App {
                         icon: require('./img/bottom_bar_search.png'), // local image asset for the tab icon unselected state (optional on iOS)
                         title: 'Mon réseau', // title of the screen as appears in the nav bar (optional)
                         titleImage: require('./img/screen_title_home.png'),
+                        navigatorStyle: UI.NavStyles
                     },
 
                 ],

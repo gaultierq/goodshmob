@@ -17,8 +17,8 @@ import AlgoliaSearchScreen from "./algoliasearch";
 import ItemCell from "./components/ItemCell";
 import LineupCell from "./components/LineupCell";
 import * as Nav from "./Nav";
-import {createResultFromHit, createResultFromHit2} from "../utils/AlgoliaUtils";
-import UserConnectItem from "./userConnectItem";
+import {createResultFromHit} from "../utils/AlgoliaUtils";
+import {currentUserId} from "../CurrentUser";
 
 type Props = NavigableProps & {
     onClickClose?: () => void,
@@ -29,9 +29,11 @@ type State = {
 };
 
 @connect()
-export default class NetworkSearchScreen extends Component<Props, State> {
+export default class HomeSearchScreen extends Component<Props, State> {
 
     state :State = {connect: {}};
+
+    // static navigatorStyle = {navBarHidden: true};
 
     constructor(props) {
         super(props);
@@ -47,21 +49,22 @@ export default class NetworkSearchScreen extends Component<Props, State> {
     }
 
     render() {
-
-
         let renderItem = ({item})=> {
-
             let isLineup = item.type === 'lists';
 
+            //FIXME: item can be from search, and not yet in redux store
+            //item = buildData(this.props.data, item.type, item.id) || item;
+
+            //if (!item) return null;
 
             if (isLineup) {
+                let lineup: List = item;
                 return (
                     <TouchableWithoutFeedback
-                        onPress={this.onLineupPressed.bind(this)}>
+                        onPress={this.onLineupPressed}
+                    >
                         <View>
-                            <LineupCell
-                                lineup={item}
-                            />
+                            <LineupCell lineup={lineup}/>
                         </View>
                     </TouchableWithoutFeedback>
                 )
@@ -83,12 +86,6 @@ export default class NetworkSearchScreen extends Component<Props, State> {
             }
         };
 
-        let renderUser = ({item}) => {
-            return (
-                <UserConnectItem user={item}/>
-            );
-        };
-
         let categories = [
             {
                 type: "savings",
@@ -96,30 +93,13 @@ export default class NetworkSearchScreen extends Component<Props, State> {
                     indexName: 'Saving_staging',
                     params: {
                         facets: "[\"list_name\"]",
+                        filters: 'user_id:' + currentUserId(),
                     }
-
                 },
-                tabName: "network_search_tabs.savings",
-                placeholder: "search_bar.network_placeholder",
+                placeholder: "search_bar.me_placeholder",
                 parseResponse: createResultFromHit,
                 renderItem,
-            },
-            {
-                type: "users",
-                query: {
-                    indexName: 'User_staging',
-                    params: {
-                        //facets: "[\"list_name\"]",
-                        //filters: 'user_id:' + currentUserId(),
-                    }
-
-                },
-                tabName: "network_search_tabs.users",
-                placeholder: "search_bar.network_placeholder",
-                parseResponse: createResultFromHit2,
-                renderItem: renderUser,
-            },
-
+            }
         ];
 
         let navigator = this.props.navigator;
@@ -130,7 +110,6 @@ export default class NetworkSearchScreen extends Component<Props, State> {
             />
         );
     }
-
 
     onSavingPressed(saving: Saving) {
         this.props.navigator.push({

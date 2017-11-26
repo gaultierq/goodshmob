@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 
 import {connect} from "react-redux";
-import {MainBackground} from "./UIComponents";
 import ActionButton from 'react-native-action-button';
 import {DELETE_LINEUP, EDIT_LINEUP, screen as LineupList} from './lineuplist'
 import type {Id, Saving} from "../types";
@@ -24,9 +23,7 @@ import * as UI from "./UIStyles";
 import {currentGoodshboxId, currentUserId} from "../CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
-import ItemCell from "./components/ItemCell";
 import LineupCell from "./components/LineupCell";
-import {createResultFromHit} from "../utils/AlgoliaUtils";
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as Api from "../utils/Api";
 import {Menu, MenuContext, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
@@ -35,9 +32,9 @@ import Button from 'apsl-react-native-button'
 import type {Visibility} from "./additem";
 import AddLineupComponent from "./components/addlineup";
 import {startAddItem} from "./actions";
+import * as Nav from "./Nav";
+import {MainBackground} from "./UIComponents";
 
-let DEEPLINK_SEARCH_TEXT_CHANGED = 'internal/home/search/change';
-let DEEPLINK_SEARCH_CLOSE = 'internal/home/search/close';
 
 type Props = {
     userId: Id,
@@ -56,9 +53,6 @@ type State = {
 class HomeScreen extends Component<Props, State> {
 
     state : State = {};
-
-    static navigatorStyle = UI.NavStyles;
-
 
     constructor(props: Props){
         super(props);
@@ -96,73 +90,22 @@ class HomeScreen extends Component<Props, State> {
                     });
                     break;
                 case 'search':
-                    //
-                    //this.setState({isSearching: true});
                     let navigator = this.props.navigator;
 
-
-                    let renderItem = ({item})=> {
-
-                        let isLineup = item.type === 'lists';
-
-                        //FIXME: item can be from search, and not yet in redux store
-                        //item = buildData(this.props.data, item.type, item.id) || item;
-
-                        //if (!item) return null;
-
-                        if (isLineup) {
-                            let lineup: List = item;
-                            return (
-                                <TouchableWithoutFeedback
-                                    onPress={this.onLineupPressed}
-                                >
-                                    <View>
-                                        <LineupCell
-                                            lineup={lineup}
-                                        />
-                                    </View>
-                                </TouchableWithoutFeedback>
-                            )
-                        }
-                        else {
-                            let saving = item;
-
-                            let resource = saving.resource;
-
-                            //TODO: this is hack
-                            if (!resource) return null;
-
-                            return (
-                                <ItemCell
-                                    item={resource}
-                                    onPressItem={()=>this.onSavingPressed(saving)}
-                                />
-                            )
-                        }
-                    };
-
                     navigator.showModal({
-                        screen: 'goodsh.AlgoliaSearchScreen', // unique ID registered with Navigation.registerScreen
+                        screen: 'goodsh.HomeSearchScreen', // unique ID registered with Navigation.registerScreen
                         title: "Rechercher", // navigation bar title of the pushed screen (optional)
                         animationType: 'none',
                         passProps:{
                             onClickClose: () => navigator.dismissModal({animationType: 'none'}),
-                            categories: [
+                        },
+                        navigatorButtons: {
+                            leftButtons: [
                                 {
-                                    type: "savings",
-                                    query: {
-                                        indexName: 'Saving_staging',
-                                        params: {
-                                            facets: "[\"list_name\"]",
-                                            filters: 'user_id:' + currentUserId(),
-                                        }
-                                    },
-                                    parseResponse: createResultFromHit,
-                                    renderItem,
+                                    id: Nav.CANCEL,
+                                    title: "Cancel"
                                 }
                             ],
-                            placeholder: "search_bar.me_placeholder"
-
                         },
                     });
 
@@ -171,11 +114,6 @@ class HomeScreen extends Component<Props, State> {
         }
 
     }
-
-    showMore(lineup: List) {
-        console.log("show more");
-    }
-
 
     render() {
 
@@ -327,10 +265,10 @@ class HomeScreen extends Component<Props, State> {
         title = {titleImage: require('../img/screen_title_home.png')};
         navBarCustomView = null;
         leftButtons = [
-            //     {
-            //     icon: require('../img/profil.png'),
-            //     id: 'profile'
-            // }
+            {
+                icon: require('../img/profil.png'),
+                id: 'profile'
+            }
         ];
         rightButtons = [
             {
@@ -416,49 +354,49 @@ type NavState = {
 
 
 //connect -> redux
-class HomeNavBar extends Component<NavProps, NavState> {
-
-    state = {input: null};
-
-    render() {
-
-        //if (this.props.test !== "test") throw "tg";
-
-        return (
-            <SearchBar
-                autoFocus
-                lightTheme
-                onChangeText={this.onChangeText.bind(this)}
-                onClearText={this.onClearText.bind(this)}
-                placeholder={i18n.t('lineups.search.placeholder')}
-                clearIcon={{color: '#86939e'}}
-                containerStyle={styles.searchContainer}
-                inputStyle={styles.searchInput}
-                autoCapitalize='none'
-                autoCorrect={false}
-            />
-        );
-
-    }
-
-    onChangeText(input: string) {
-        this.setState({input});
-        //because function props are not currently allowed by RNN
-
-        //this.props.onChangeText(input);
-        //become->
-        Navigation.handleDeepLink({
-            link: DEEPLINK_SEARCH_TEXT_CHANGED,
-            payload: input
-        });
-    }
-
-    onClearText() {
-        Navigation.handleDeepLink({
-            link: DEEPLINK_SEARCH_CLOSE
-        });
-    }
-}
+// class HomeNavBar extends Component<NavProps, NavState> {
+//
+//     state = {input: null};
+//
+//     render() {
+//
+//         //if (this.props.test !== "test") throw "tg";
+//
+//         return (
+//             <SearchBar
+//                 autoFocus
+//                 lightTheme
+//                 onChangeText={this.onChangeText.bind(this)}
+//                 onClearText={this.onClearText.bind(this)}
+//                 placeholder={i18n.t('lineups.search.placeholder')}
+//                 clearIcon={{color: '#86939e'}}
+//                 containerStyle={styles.searchContainer}
+//                 inputStyle={styles.searchInput}
+//                 autoCapitalize='none'
+//                 autoCorrect={false}
+//             />
+//         );
+//
+//     }
+//
+//     onChangeText(input: string) {
+//         this.setState({input});
+//         //because function props are not currently allowed by RNN
+//
+//         //this.props.onChangeText(input);
+//         //become->
+//         Navigation.handleDeepLink({
+//             link: DEEPLINK_SEARCH_TEXT_CHANGED,
+//             payload: input
+//         });
+//     }
+//
+//     onClearText() {
+//         Navigation.handleDeepLink({
+//             link: DEEPLINK_SEARCH_CLOSE
+//         });
+//     }
+// }
 
 const actions = {
     deleteLineup: (lineup) => {
@@ -539,4 +477,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export {screen, HomeNavBar};
+export {screen};

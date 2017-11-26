@@ -46,7 +46,7 @@ export function init(store:Store<*,*>) {
     instance.init(store);
 }
 
-export function currentUserId() {
+export function currentUserId() : Id {
     return instance.id();
 }
 

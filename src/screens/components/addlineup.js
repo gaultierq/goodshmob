@@ -22,6 +22,8 @@ import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import {Menu, MenuContext, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
 import type {Visibility} from "../additem";
+import Modal from 'react-native-modal'
+
 
 type Props = {
 };
@@ -39,76 +41,78 @@ export default class AddLineupComponent extends Component<Props, State> {
     state : State = {};
 
     render() {
-        if (this.state.isCreatingLineup) {
-            let editable = !this.state.isAddingLineup;
 
+        let editable = !this.state.isAddingLineup;
+        let grey1 = UI.Colors.grey1;
 
-            let grey1 = UI.Colors.grey1;
+        return (
+            <View>
+                <TouchableWithoutFeedback onPress={() => {this.setState({isCreatingLineup: true})}}>
+                    <View style={
+                        [UI.CARD(), styles.header]
+                    }>
+                        <Image source={require('../../img/plus.png')}
+                               resizeMode="contain"
+                               style={{
+                                   width: 20,
+                                   height: 20,
+                                   marginRight: 10
+                               }}
+                        />
+                        <Text
+                            style={[
+                                styles.headerText,
+                                {color: UI.Colors.grey2},
+                                Platform.OS === 'ios'? {lineHeight: 40} : {height: 40}
+                            ]}
+                        >{i18n.t('create_list_controller.title')}</Text>
+                    </View>
+                </TouchableWithoutFeedback>
 
-            //FIXME: changing color of the text doesnt work ?!
-            return (
-                <View style={[UI.CARD(6), styles.header, {flexDirection: 'column'}]}>
-                    <TextInput
-                        autoFocus
-                        editable={editable}
-                        style={[styles.input, (editable ? {color: "black"} : {color: "grey"})]}
-                        onSubmitEditing={this.createLineup.bind(this)}
-                        value={this.state.newLineupTitle}
-                        onChangeText={newLineupTitle => this.setState({newLineupTitle})}
-                        placeholder={i18n.t("create_list_controller.placeholder")}
-                    />
+                <Modal visible={!!this.state.isCreatingLineup}>
+                    <View>
+                        <View style={[UI.CARD(6), styles.header, {flexDirection: 'column'}]}>
+                            <TextInput
+                                autoFocus
+                                editable={editable}
+                                style={[styles.input, (editable ? {color: "black"} : {color: "grey"})]}
+                                onSubmitEditing={this.createLineup.bind(this)}
+                                value={this.state.newLineupTitle}
+                                onChangeText={newLineupTitle => this.setState({newLineupTitle})}
+                                placeholder={i18n.t("create_list_controller.placeholder")}
+                            />
 
+                            <CheckBox
+                                right
+                                title='Visible par mes amis'
+                                size={16}
+                                checkedColor={grey1}
+                                uncheckedColor={grey1}
+                                onPress={(newValue)=> this.setState({newLineupPrivacy: !!this.state.newLineupPrivacy ? 0 : 1})}
+                                checked={!this.state.newLineupPrivacy}
+                                textStyle={{color: grey1, fontSize: 12, }}
+                                containerStyle={{ backgroundColor: "transparent", borderWidth: 0, width: "100%"}}
+                            />
 
-                    <CheckBox
-                        right
-                        title='Visible par mes amis'
-                        size={16}
-                        checkedColor={grey1}
-                        uncheckedColor={grey1}
-                        onPress={(newValue)=> this.setState({newLineupPrivacy: !!this.state.newLineupPrivacy ? 0 : 1})}
-                        checked={!this.state.newLineupPrivacy}
-                        textStyle={{color: grey1, fontSize: 12, }}
-                        containerStyle={{ backgroundColor: "transparent", borderWidth: 0, width: "100%"}}
-                    />
+                            <View style={{flexDirection: 'row'}}>
+                                {
+                                    renderSimpleButton("Ajouter", this.createLineup.bind(this), {
+                                        loading: this.state.isAddingLineup,
+                                        disabled: !this.state.newLineupTitle
+                                    })
+                                }
+                                {renderSimpleButton(
+                                    "Annuler",
+                                    ()=> {this.setState({isCreatingLineup: false})},
+                                    {disabled: this.state.isAddingLineup})}
+                            </View>
 
-                    <View style={{flexDirection: 'row'}}>
-                        {
-                            renderSimpleButton("Ajouter", this.createLineup.bind(this), {
-                                loading: this.state.isAddingLineup,
-                                disabled: !this.state.newLineupTitle
-                            })
-                        }
-                        {renderSimpleButton(
-                            "Annuler",
-                            ()=> {this.setState({isCreatingLineup: false})},
-                            {disabled: this.state.isAddingLineup})}
+                        </View>
                     </View>
 
-                </View>
-            );
-        }
-
-        return (<TouchableWithoutFeedback onPress={() => {this.setState({isCreatingLineup: true})}}>
-            <View style={
-                [UI.CARD(), styles.header]
-            }>
-                <Image source={require('../../img/plus.png')}
-                       resizeMode="contain"
-                       style={{
-                           width: 20,
-                           height: 20,
-                           marginRight: 10
-                       }}
-                />
-                <Text
-                    style={[
-                        styles.headerText,
-                        {color: UI.Colors.grey2},
-                        Platform.OS === 'ios'? {lineHeight: 40} : {height: 40}
-                    ]}
-                >{i18n.t('create_list_controller.title')}</Text>
+                </Modal>
             </View>
-        </TouchableWithoutFeedback>);
+        );
     }
 
     createLineup() {

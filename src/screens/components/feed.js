@@ -66,7 +66,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
         if (nothingInterestingToDisplay) {
             if (this.state.isFetchingFirst === 'ko') {
-                return renderSimpleButton("Réessayer", ()=>this.fetchIt());
+                return this.renderFail(()=>this.fetchIt());
             }
             if (empty) return <Text>{empty}</Text>;
         }
@@ -202,12 +202,21 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                     />
                 }
                 {
-                    this.state.isFetchingMore === 'ko' && renderSimpleButton("Réessayer", ()=>this.fetchMore())
+                    this.state.isFetchingMore === 'ko' && this.renderFail(() => this.fetchMore())
                 }
             </View>
         )
     }
 
+
+    renderFail(fetch) {
+        return (
+            <View style={{padding: 12}}>
+                <Text style={{alignSelf: "center"}}>Le chargement a échoué...</Text>
+                {renderSimpleButton("Réessayer", fetch)}
+            </View>
+        );
+    }
 
     hasMore() {
         let last = this.state.lastEmptyResultMs;

@@ -9,7 +9,7 @@ import {screen as ActivityDetailScreen} from '../activity/activityDetail';
 import {screen as LineupListScreen} from './lineuplist';
 import {screen as AddInScreen} from './addinscreen';
 import {screen as LineupScreen} from './lineup';
-import {screen as HomeScreen, HomeNavBar} from './home';
+import {screen as HomeScreen} from './home';
 import {screen as CommentsScreen} from './comments';
 import {screen as SaveScreen} from './save';
 import {screen as ShareScreen} from './share';
@@ -21,6 +21,7 @@ import AskScreen from './ask';
 import AlgoliaSearchScreen from './algoliasearch';
 import UserScreen from './user';
 import NetworkSearchScreen from './networksearch';
+import HomeSearchScreen from './homesearch';
 import AddItemScreen from './additem';
 
 // register all screens of the app (including internal ones)
@@ -34,7 +35,7 @@ export function registerScreens(store, Provider) {
     Navigation.registerComponent('goodsh.LineupListScreen', () => LineupListScreen, store, Provider);
     Navigation.registerComponent('goodsh.AddInScreen', () => AddInScreen, store, Provider);
     Navigation.registerComponent('goodsh.HomeScreen', () => HomeScreen, store, Provider);
-    Navigation.registerComponent('goodsh.HomeNavBar', () => HomeNavBar, store, Provider);
+    // Navigation.registerComponent('goodsh.HomeNavBar', () => HomeNavBar, store, Provider);
     Navigation.registerComponent('goodsh.LineupScreen', () => LineupScreen, store, Provider);
     Navigation.registerComponent('goodsh.CommentsScreen', () => CommentsScreen, store, Provider);
     Navigation.registerComponent('goodsh.SaveScreen', () => SaveScreen, store, Provider);
@@ -46,5 +47,6 @@ export function registerScreens(store, Provider) {
     Navigation.registerComponent('goodsh.AlgoliaSearchScreen', () => AlgoliaSearchScreen, store, Provider);
     Navigation.registerComponent('goodsh.UserScreen', () => UserScreen, store, Provider);
     Navigation.registerComponent('goodsh.NetworkSearchScreen', () => NetworkSearchScreen, store, Provider);
+    Navigation.registerComponent('goodsh.HomeSearchScreen', () => HomeSearchScreen, store, Provider);
     Navigation.registerComponent('goodsh.AddItemScreen', () => AddItemScreen, store, Provider);
 }
