@@ -55,7 +55,7 @@ let testScreen = null;
 
 //change this line
 // testScreen = profileScreen;
-testScreen = commentsScreen;
+// testScreen = commentsScreen;
 // testScreen = communityScreen;
 
 

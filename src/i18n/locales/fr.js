@@ -210,8 +210,8 @@ export default {
         "add_comment_placeholder":"Ajouter un commentaire"
     },
     "interactions":{
-        "saving":"%{username} a enregistré %{item_title}",
-        "comment":"%{username} a commenté %{item_title}",
+        "saving":"a enregistré %{item_title}",
+        "comment":"a commenté %{item_title}",
         "like":"%{username} a dit YEAAH! à %{item_title}",
         "list":"%{username} a crée la lineup %{list_title}",
         "post":"%{username} a posté %{item_title}",

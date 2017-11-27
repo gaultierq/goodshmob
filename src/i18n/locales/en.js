@@ -211,8 +211,8 @@ export default {
         "add_comment_placeholder":"Add a comment"
     },
     "interactions":{
-        "saving":"%{username} saved %{item_title}",
-        "comment":"%{username} commented %{item_title}",
+        "saving":"saved %{what}",
+        "comment":"commented %{what}",
         "like":"%{username} said YEAAH! on %{item_title}",
         "list":"%{username} created the lineup %{list_title}",
         "post":"%{username} posted %{item_title}",

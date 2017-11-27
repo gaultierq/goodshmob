@@ -101,14 +101,30 @@ export class InteractionScreen extends Component<Props, State> {
         let type = activity.type.toLowerCase();
 
         let build = (key) => {
-            let item_title = activity.resource.resource.title.toUpperCase();
+            let resource = activity.resource;
             let username = activity.user.firstName + " " + activity.user.lastName;
 
-            let text = i18n.t(key, {username, item_title});
-            return <Text style={{fontSize: 12}}>{text}</Text>
+            if (resource.type === 'asks') {
+                // return <Text style={{fontSize: 12}}>{username + " ask"}</Text>
+                return <Text style={{fontSize: 12}}>
+                    {i18n.t(key, {username, what: "ask"})}
+                </Text>
+            }
+            else {
+                let innerResource = resource.resource;
+                if (!innerResource) throw "No resource for " + JSON.stringify(activity);
+                let item_title = innerResource.title.toUpperCase();
+
+                return <Text style={{fontSize: 12}}>
+                    {i18n.t(key, {username, what: item_title})}
+                </Text>
+            }
+
         };
 
         switch(type) {
+            case 'answer':
+                return build("interactions.answer");
             case 'comment':
                 return build("interactions.comment");
             case 'like':
