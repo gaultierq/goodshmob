@@ -80,7 +80,7 @@ let testScreen = null;
 // testScreen = communityScreen;
 //  testScreen = sendScreen;
 //  testScreen = test;
-//  testScreen = homeScreen;
+ testScreen = homeScreen;
 
 
 export default testScreen;

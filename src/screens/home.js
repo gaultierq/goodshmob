@@ -27,7 +27,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import * as Api from "../utils/Api";
 import {Menu, MenuContext, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
 import Modal from 'react-native-modal'
-import Button from 'apsl-react-native-button'
 import type {Visibility} from "./additem";
 import AddLineupComponent from "./components/addlineup";
 import {startAddItem} from "./actions";
@@ -44,7 +43,7 @@ type Props = {
 type State = {
     newLineupTitle?: string,
     newLineupPrivacy?: Visibility,
-    changeLinupTitleId?: Id
+    changeLinupTitleId?: {id:Id, name: string}
 };
 
 @connect()
@@ -165,35 +164,26 @@ class HomeScreen extends Component<Props, State> {
     _closeChangeNameModal = ()=> this.setState({changeLinupTitleId: null});
 
     renderChangeTitleModal() {
-        let changeLinupTitleId = this.state.changeLinupTitleId;
+        let {id, name} = this.state.changeLinupTitleId || {};
 
-        let editable = changeLinupTitleId && changeLinupTitleId.request !== 1;
+
+        let visible = !!id;
 
         return <Modal
-            isVisible={!!changeLinupTitleId}
+            isVisible={visible}
             avoidKeyboard={true}
             backdropOpacity={0.3}
-            onBackdropPress={()=>console.log('onBackdropPress')}
+            onBackdropPress={this._closeChangeNameModal}
         >
-            <View style={{ flex: 1, alignItems: 'center'}}>
-                <View style={{ backgroundColor: "white"}}>
-                    <Text>Changer le nom de cette lineup!</Text>
-
+            <View style={{ alignItems: 'center'}}>
+                <View style={{ backgroundColor: "white", padding: 12, borderRadius: 6, width: '100%'}}>
+                    <Text style={{fontSize: 16, marginBottom: 12}}>Changer le nom de cette liste:</Text>
                     <SmartInput
-                        // containerStyle={{padding: 6}}
-                        // inputStyle={{fontSize: 15}}
-                        // inputContainerStyle={{borderRadius: 1}}
-                        execAction={(input: string) => this.requestChangeName(changeLinupTitleId, input)}
+                        execAction={(input: string) => this.requestChangeName(id, input)}
                         placeholder={"create_list_controller.placeholder"}
-                        height={30}
-                        canSendEmpty={true}
+                        defaultValue={name}
+                        button={<Text>Changer</Text>}
                     />
-                    <Button
-                        isDisabled={!editable}
-                        onPress={this._closeChangeNameModal}
-                    >
-                        <Text>Annuler</Text>
-                    </Button>
                 </View>
             </View>
         </Modal>;
@@ -239,10 +229,6 @@ class HomeScreen extends Component<Props, State> {
         </TouchableOpacity>)
     }
 
-    // isSelectingAList() {
-    //     const {pendingItem, pendingList} = this.state;
-    //     return pendingItem && !pendingList;
-    // }
 
     deleteLineup(lineup: List) {
         this.props
@@ -252,7 +238,7 @@ class HomeScreen extends Component<Props, State> {
 
     changeTitle(lineup: List) {
         let {id, name} = lineup;
-        this.setState({changeLinupTitleId: id});
+        this.setState({changeLinupTitleId: {id, name}});
     }
 
     displayFloatingButton() {
@@ -268,14 +254,9 @@ class HomeScreen extends Component<Props, State> {
                 lineupId: lineup.id,
             },
         });
-        // }
     }
 
     onSavingPressed(saving: Saving) {
-        // if (this.state.pendingItem) {
-        //     throw new Error("This should not happen");
-        // }
-        // else {
         this.props.navigator.push({
             screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
             title: "Details", // navigation bar title of the pushed screen (optional)
@@ -325,64 +306,6 @@ const actions = {
 };
 
 
-const styles = StyleSheet.create({
-    // container: {
-    //     flex: 1,
-    // },
-    // actionButtonIcon: {
-    //     fontSize: 20,
-    //     height: 22,
-    //     color: 'white',
-    // },
-    // selectAList: {
-    //     padding: 10,
-    //     fontFamily: 'Chivo-Light',
-    //     color: 'black',
-    //     fontSize: 20,
-    //     alignSelf: "center",
-    //     backgroundColor:"transparent"
-    // },
-    // searchContainer: {
-    //     backgroundColor: 'transparent',
-    // },
-    // searchInput: {
-    //     backgroundColor: 'white',
-    // },
-    // header: {
-    //     // flex: 1,
-    //     flexDirection: 'row',
-    //     alignItems: 'center',
-    //     padding: 10,
-    //     marginTop: 10,
-    //     marginBottom: 10,
-    // },
-    // input:{
-    //     height: 40,
-    //     width: "100%",
-    //     fontFamily: 'Chivo',
-    //     fontSize: 18,
-    //     borderWidth: 0.5,
-    //     borderColor: UI.Colors.grey1
-    // },
-    // colorActive:{
-    //     color: 'green',
-    // },
-    // colorInactive:{
-    //     color: 'black',
-    // },
-    // headerText:{
-    //     flex: 1,
-    //     textAlignVertical: 'center',
-    //     fontFamily: 'Chivo',
-    //     fontSize: 18,
-    // },
-    // inputContainer:{
-    //     borderRadius: 20,
-    //     paddingLeft: 14,
-    //     paddingRight: 14,
-    //     margin: 10,
-    //     backgroundColor: 'white'
-    // },
-});
+const styles = StyleSheet.create({});
 
 export {screen};

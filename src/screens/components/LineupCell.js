@@ -18,7 +18,7 @@ type Props = {
 type State = {
 };
 
-export default class LineupCell extends React.Component<Props, State> {
+export default class LineupCell extends React.PureComponent<Props, State> {
 
 
     render() {
@@ -41,9 +41,7 @@ export default class LineupCell extends React.Component<Props, State> {
             padding = spaceLeft / (n + 2);
         } while (padding<w/5);
 
-
-
-        console.log(`DEBUG w=${w} n=${n} spaceLeft=${spaceLeft} padding=${padding}`);
+        console.log(`DEBUG: render LineupCell w=${w} n=${n} spaceLeft=${spaceLeft} padding=${padding}`);
 
         let moreComponent = this.props.moreComponent;
         return (

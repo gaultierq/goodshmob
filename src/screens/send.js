@@ -96,7 +96,7 @@ export default class SendScreen extends Component<Props, State> {
                     placeholder={"send_screen.add_description_placeholder"}
                     multiline
                     height={30}
-                    canSendEmpty={true}
+                    canSendDefault={true}
                 />
             </View>;
     }

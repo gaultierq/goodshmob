@@ -12,13 +12,15 @@ import * as UI from "../UIStyles";
 type Props = {
     placeholder: i18Key,
     execAction: (input: string) => Promise<*>,
-    canSendEmpty?: boolean,
+    defaultValue?: string,
+    canSendDefault?: boolean,
     containerStyle?: *,
     inputContainerStyle?: *,
     inputStyle?: *,
     height?: number,
     buttonStyle?: *,
     disabledButtonStyle?: *,
+    button?: Node
 };
 
 type State = {
@@ -31,8 +33,19 @@ const HEIGHT = 40;
 
 export default class SmartInput extends React.Component<Props, State> {
 
-
     state = {};
+
+    static defaultProps = {
+        defaultValue: '',
+        button: <Image source={require('../../img/send.png')} resizeMode="contain"/>
+    };
+
+
+
+    constructor(props: Props) {
+        super(props);
+        this.state = {input: props.defaultValue}
+    }
 
     render() {
         const {
@@ -42,7 +55,8 @@ export default class SmartInput extends React.Component<Props, State> {
             containerStyle,
             inputContainerStyle,
             inputStyle,
-            canSendEmpty,
+            canSendDefault,
+            button,
             // height,
             ...attributes
         } = this.props;
@@ -70,12 +84,12 @@ export default class SmartInput extends React.Component<Props, State> {
                 {
                     this.showButton() && <Button
                         isLoading={this.isSending()}
-                        isDisabled={(!canSendEmpty && !this.state.input) || this.isSending()}
+                        isDisabled={(!canSendDefault && this.isDefault()) || this.isSending()}
                         onPress={this.exec.bind(this)}
                         style={[styles.button, buttonStyle, {height}]}
                         disabledStyle={[styles.disabledButton, disabledButtonStyle]}
                     >
-                        <Image style={styles.image} source={require('../../img/send.png')} resizeMode="contain"/>
+                        {button}
                     </Button>
 
                 }
@@ -85,10 +99,14 @@ export default class SmartInput extends React.Component<Props, State> {
         );
     }
 
+    isDefault() {
+        return this.state.input === this.props.defaultValue;
+    }
+
     showButton() {
         if (this.state.focus) return true;
         if (this.isSending()) return true;
-        if (this.props.canSendEmpty || this.state.input) return true;
+        if (this.props.canSendDefault || !this.isDefault()) return true;
         return false;
     }
 
@@ -138,8 +156,6 @@ const styles = StyleSheet.create({
     input:{
         fontSize: 18,
         fontFamily: 'Chivo',
-    },
-    image: {
     },
     button: {
         // height: HEIGHT,

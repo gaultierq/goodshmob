@@ -27,8 +27,11 @@ export default class TestScreen extends Component<Props, State> {
                 <TouchableOpacity onPress={this._showModal}>
                     <Text>Show Modal</Text>
                 </TouchableOpacity>
-                <Modal isVisible={this.state.isModalVisible}>
-                    <View style={{ flex: 1 }}>
+                <Modal
+                    isVisible={this.state.isModalVisible}
+                    onBackdropPress={this._hideModal}
+                >
+                    <View style={{ flex: 1, backgroundColor: 'white'}}>
                         <Text>Hello!</Text>
                     </View>
                 </Modal>
