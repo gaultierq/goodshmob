@@ -254,5 +254,6 @@ export default {
                 other: "%{count} years ago"
             },
         }
-    }
+    },
+    loadmore: "Loading more awesomeness..."
 };

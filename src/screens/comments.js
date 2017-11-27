@@ -10,10 +10,10 @@ import type {Activity, ActivityType, Comment, Id} from "../types";
 import ApiAction from "../utils/ApiAction";
 import {buildData, doDataMergeInState, sanitizeActivityType} from "../utils/DataUtils";
 import UserActivity from "../activity/components/UserActivity";
-import i18n from '../i18n/i18n'
 import FeedSeparator from "../activity/components/FeedSeparator";
 import * as UI from "./UIStyles";
 import {fetchActivity} from "../activity/actions";
+import SmartInput from "./components/SmartInput";
 
 type Props = {
     activityId: Id,
@@ -77,18 +77,34 @@ class CommentsScreen extends Component<Props, State> {
                         ItemSeparatorComponent={()=> <FeedSeparator/>}
                     />}
 
-                    <View
-                        style={[styles.inputContainer, {position: 'absolute', bottom: 0, left: 0, right: 0}]}
-                    >
-                        <TextInput
-                            editable={!this.state.isAddingComment}
-                            style={styles.input}
-                            onSubmitEditing={() => this.addComment(activity)}
-                            value={this.state.newComment}
-                            onChangeText={newComment => this.setState({newComment})}
-                            placeholder={i18n.t("activity_comments_screen.add_comment_placeholder")}
+                    {/*<View*/}
+                    {/*style={[styles.inputContainer, {position: 'absolute', bottom: 0, left: 0, right: 0}]}*/}
+                    {/*>*/}
+                    {/*<TextInput*/}
+                    {/*editable={!this.state.isAddingComment}*/}
+                    {/*style={styles.input}*/}
+                    {/*onSubmitEditing={() => this.addComment(activity)}*/}
+                    {/*value={this.state.newComment}*/}
+                    {/*onChangeText={newComment => this.setState({newComment})}*/}
+                    {/*placeholder={i18n.t("activity_comments_screen.add_comment_placeholder")}*/}
+                    {/*/>*/}
+
+                    {/*<SmartInput*/}
+                    {/*execAction={(input: string) => this.addComment2()}*/}
+                    {/*placeholder={"activity_comments_screen.add_comment_placeholder"}*/}
+                    {/*/>*/}
+
+                    {/*</View>*/}
+
+                    {
+                        activity && <SmartInput
+                            containerStyle={{position: 'absolute', bottom: 0, left: 0, right: 0, }}
+                            inputContainerStyle={{borderRadius: 0}}
+                            execAction={(input: string) => this.addComment2(activity, input)}
+                            placeholder={"activity_comments_screen.add_comment_placeholder"}
+                            multiline
                         />
-                    </View>
+                    }
                 </View>
             </MainBackground>
         );
@@ -106,6 +122,13 @@ class CommentsScreen extends Component<Props, State> {
                 this.setState({newComment: '', isAddingComment: false});
             });
 
+    }
+
+    addComment2(activity: Activity, newComment: string) {
+        return this.props.dispatch(actions.addComment(activity, newComment))
+            .then(()=> {
+
+            },(e)=> {throw e});
     }
 
     renderItem({item}) {

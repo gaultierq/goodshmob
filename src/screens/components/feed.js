@@ -10,6 +10,7 @@ import * as Api from "../../utils/Api";
 import {isEmpty} from "lodash";
 import type {Id, RequestState, Url} from "../../types";
 import {renderSimpleButton} from "../UIStyles";
+import i18n from '../../i18n/i18n'
 
 export type FeedSource = {
     callFactory: ()=>Api.Call,
@@ -79,7 +80,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                 onEndReached={ this.onEndReached.bind(this) }
                 onEndReachedThreshold={0.1}
                 ListFooterComponent={!firstEmptyLoader && this.renderFetchMoreLoader()}
-                style={{...this.props.style,  minHeight: 50}}
+                style={{...this.props.style,  minHeight: 100}}
                 ListHeaderComponent={!firstEmptyLoader && ListHeaderComponent}
                 {...attributes}
             />
@@ -194,12 +195,16 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         return (<View>
                 {this.props.ListFooterComponent}
                 {
-                    this.state.isFetchingMore === 'sending' &&
-                    <ActivityIndicator
-                        animating={this.isFetchingMore()}
-                        size="small"
-                        style={{margin: 12}}
-                    />
+                    this.state.isFetchingMore === 'sending' && (
+
+                        <View style={{flex:1, margin:12, justifyContent:'center'}}>
+                            <Text style={{fontSize: 10, alignSelf: "center", marginRight: 8}}>{i18n.t('loadmore')}</Text>
+                            <ActivityIndicator
+                                animating={this.isFetchingMore()}
+                                size="small"
+                            />
+                        </View>
+                    )
                 }
                 {
                     this.state.isFetchingMore === 'ko' && this.renderFail(() => this.fetchMore())

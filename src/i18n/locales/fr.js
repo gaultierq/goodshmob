@@ -252,5 +252,7 @@ export default {
                 other: "Il y a %{count} ans"
             },
         }
-    }
+    },
+    loadmore: "Chargement de plus de kif..."
+
 };

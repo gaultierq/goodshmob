@@ -36,7 +36,7 @@ const commentsScreen = {
         screen: 'goodsh.CommentsScreen',
     },
     passProps: {
-        activityId: "9f2cdcbd-4ff0-47d1-be11-c4b586a75cab",
+        activityId: "dfa4b934-d1f7-43fb-b3ca-893e76658c14",
         activityType: "savings",
     }
 };
@@ -55,7 +55,7 @@ let testScreen = null;
 
 //change this line
 // testScreen = profileScreen;
-// testScreen = commentsScreen;
+testScreen = commentsScreen;
 // testScreen = communityScreen;
 
 

@@ -92,7 +92,7 @@ let configureApp = function () {
         underlineColorAndroid: 'rgba(0,0,0,0)',
         style: {
             paddingVertical: 5,
-            paddingHorizontal: 10,
+            paddingHorizontal: 8,
             backgroundColor: 'white'
         }
     };
