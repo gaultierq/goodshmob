@@ -46,7 +46,7 @@ export default class SmartInput extends React.Component<Props, State> {
                 <View style={[styles.inputContainer, inputContainerStyle]}>
                     <TextInput
                         editable={!this.isSending()}
-                        style={[styles.input]}
+                        style={[styles.input, {color: this.isSending() ? UI.Colors.grey1 : 'black'}]}
                         onSubmitEditing={this.exec.bind(this)}
                         value={input}
                         onFocus={()=>this.setState({focus:true})}

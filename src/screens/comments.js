@@ -14,6 +14,8 @@ import FeedSeparator from "../activity/components/FeedSeparator";
 import * as UI from "./UIStyles";
 import {fetchActivity} from "../activity/actions";
 import SmartInput from "./components/SmartInput";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
 
 type Props = {
     activityId: Id,
@@ -49,7 +51,14 @@ class CommentsScreen extends Component<Props, State> {
 
         return (
             <MainBackground>
-                <View style={[styles.container]}>
+                <KeyboardAwareScrollView
+                    // style={{ backgroundColor: '#4c69a5' }}
+                    // resetScrollToCoords={{ x: 0, y: 0 }}
+                    contentContainerStyle={styles.container}
+                    scrollEnabled={false}
+                    keyboardShouldPersistTaps={true}
+                >
+                    {/*<View style={[styles.container]}>*/}
 
                     {activity &&
                     <View style={{padding: 12, backgroundColor:"transparent"}}>
@@ -77,35 +86,17 @@ class CommentsScreen extends Component<Props, State> {
                         ItemSeparatorComponent={()=> <FeedSeparator/>}
                     />}
 
-                    {/*<View*/}
-                    {/*style={[styles.inputContainer, {position: 'absolute', bottom: 0, left: 0, right: 0}]}*/}
-                    {/*>*/}
-                    {/*<TextInput*/}
-                    {/*editable={!this.state.isAddingComment}*/}
-                    {/*style={styles.input}*/}
-                    {/*onSubmitEditing={() => this.addComment(activity)}*/}
-                    {/*value={this.state.newComment}*/}
-                    {/*onChangeText={newComment => this.setState({newComment})}*/}
-                    {/*placeholder={i18n.t("activity_comments_screen.add_comment_placeholder")}*/}
-                    {/*/>*/}
-
-                    {/*<SmartInput*/}
-                    {/*execAction={(input: string) => this.addComment2()}*/}
-                    {/*placeholder={"activity_comments_screen.add_comment_placeholder"}*/}
-                    {/*/>*/}
-
-                    {/*</View>*/}
-
                     {
                         activity && <SmartInput
-                            // containerStyle={{position: 'absolute', bottom: 0, left: 0, right: 0, }}
-                            inputContainerStyle={{borderRadius: 0}}
+                            containerStyle={{padding: 6, backgroundColor: UI.Colors.grey4}}
+                            inputContainerStyle={{borderRadius: 4, borderWidth: 0}}
                             execAction={(input: string) => this.addComment2(activity, input)}
                             placeholder={"activity_comments_screen.add_comment_placeholder"}
                             multiline
                         />
                     }
-                </View>
+                    {/*</View>*/}
+                </KeyboardAwareScrollView>
             </MainBackground>
         );
     }
