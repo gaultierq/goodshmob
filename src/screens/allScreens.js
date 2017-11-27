@@ -23,6 +23,7 @@ import UserScreen from './user';
 import NetworkSearchScreen from './networksearch';
 import HomeSearchScreen from './homesearch';
 import AddItemScreen from './additem';
+import TestScreen from './test';
 
 // register all screens of the app (including internal ones)
 export function registerScreens(store, Provider) {
@@ -49,4 +50,5 @@ export function registerScreens(store, Provider) {
     Navigation.registerComponent('goodsh.NetworkSearchScreen', () => NetworkSearchScreen, store, Provider);
     Navigation.registerComponent('goodsh.HomeSearchScreen', () => HomeSearchScreen, store, Provider);
     Navigation.registerComponent('goodsh.AddItemScreen', () => AddItemScreen, store, Provider);
+    Navigation.registerComponent('goodsh.TestScreen', () => TestScreen, store, Provider);
 }

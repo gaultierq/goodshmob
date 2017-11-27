@@ -18,7 +18,6 @@ import {DELETE_LINEUP, EDIT_LINEUP, screen as LineupList} from './lineuplist'
 import type {Id, Saving} from "../types";
 import {List} from "../types"
 import Snackbar from "react-native-snackbar"
-import i18n from '../i18n/i18n'
 import * as UI from "./UIStyles";
 import {currentGoodshboxId, currentUserId} from "../CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
@@ -34,6 +33,7 @@ import AddLineupComponent from "./components/addlineup";
 import {startAddItem} from "./actions";
 import * as Nav from "./Nav";
 import {MainBackground} from "./UIComponents";
+import SmartInput from "./components/SmartInput";
 
 
 type Props = {
@@ -44,7 +44,7 @@ type Props = {
 type State = {
     newLineupTitle?: string,
     newLineupPrivacy?: Visibility,
-    changeLinupTitle?: {id: Id, name: string, request: number}
+    changeLinupTitleId?: Id
 };
 
 @connect()
@@ -126,7 +126,6 @@ class HomeScreen extends Component<Props, State> {
                     break;
             }
         }
-
     }
 
     render() {
@@ -135,18 +134,16 @@ class HomeScreen extends Component<Props, State> {
         return (
             <MenuContext>
                 <MainBackground>
-                    <View>
-                        <View>
-                            <LineupList
-                                userId={currentUserId()}
-                                onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
-                                onSavingPressed={(saving) => this.onSavingPressed(saving)}
-                                navigator={this.props.navigator}
-                                ListHeaderComponent={this.renderHeader()}
-                                renderItem={(item)=>this.renderListItem(item)}
 
-                            />
-                        </View>
+                    <View>
+                        <LineupList
+                            userId={currentUserId()}
+                            onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
+                            onSavingPressed={(saving) => this.onSavingPressed(saving)}
+                            navigator={this.props.navigator}
+                            ListHeaderComponent={this.renderHeader()}
+                            renderItem={(item)=>this.renderListItem(item)}
+                        />
 
                     </View>
 
@@ -156,69 +153,61 @@ class HomeScreen extends Component<Props, State> {
                         onPress={() => { this.onFloatingButtonPressed() }}
                     />
                     }
-                    {this.renderChangeTitleModal()}
+
+                    <View >
+                        {this.renderChangeTitleModal()}
+                    </View>
                 </MainBackground>
             </MenuContext>
         );
     }
 
+    _closeChangeNameModal = ()=> this.setState({changeLinupTitleId: null});
+
     renderChangeTitleModal() {
-        let lineup = this.state.changeLinupTitle;
+        let changeLinupTitleId = this.state.changeLinupTitleId;
 
-        let editable = lineup && lineup.request !== 1;
+        let editable = changeLinupTitleId && changeLinupTitleId.request !== 1;
 
-        return (
-            lineup && <Modal visible={!!lineup}>
+        return <Modal
+            isVisible={!!changeLinupTitleId}
+            avoidKeyboard={true}
+            backdropOpacity={0.3}
+            onBackdropPress={()=>console.log('onBackdropPress')}
+        >
+            <View style={{ flex: 1, alignItems: 'center'}}>
                 <View style={{ backgroundColor: "white"}}>
                     <Text>Changer le nom de cette lineup!</Text>
 
-                    <TextInput
-                        autoFocus
-                        editable={editable}
-                        style={[styles.input, (editable ? {color: "black"} : {color: "grey"})]}
-                        onSubmitEditing={this.requestChangeName.bind(this)}
-                        value={lineup.name}
-                        onChangeText={name => this.setState({changeLinupTitle: {...lineup, name}})}
-                        placeholder={i18n.t("create_list_controller.placeholder")}
+                    <SmartInput
+                        // containerStyle={{padding: 6}}
+                        // inputStyle={{fontSize: 15}}
+                        // inputContainerStyle={{borderRadius: 1}}
+                        execAction={(input: string) => this.requestChangeName(changeLinupTitleId, input)}
+                        placeholder={"create_list_controller.placeholder"}
+                        height={30}
+                        canSendEmpty={true}
                     />
-
-                    <Button
-                        isLoading={lineup.request === 1}
-                        isDisabled={!editable}
-                        onPress={()=> this.requestChangeName()}
-                    >
-                        <Text>Sauvegarder</Text>
-                    </Button>
                     <Button
                         isDisabled={!editable}
-                        onPress={()=> this.setState({changeLinupTitle: null})}
-                        // style={[{position: 'absolute', right: 12}, styles.loadMoreButton]}
-                        // disabledStyle={styles.disabledButton}
+                        onPress={this._closeChangeNameModal}
                     >
                         <Text>Annuler</Text>
                     </Button>
                 </View>
-            </Modal>
-        );
+            </View>
+        </Modal>;
     }
 
-    requestChangeName() {
-        let editedLineup = this.state.changeLinupTitle;
-        if (editedLineup.request === 1) return;
+    requestChangeName(lineupId: Id, name: string) {
+        let editedLineup = {id: lineupId, name};
 
-        let changeRequest = (request) => {
-            this.setState({changeLinupTitle: {...editedLineup, request}});
-        };
-        changeRequest(1);
-        this.props.dispatch(actions.patchLineup(editedLineup))
+        return this.props.dispatch(actions.patchLineup(editedLineup))
             .then(()=> {
-                this.setState({changeLinupTitle: null})
-            }, err=> {
-                console.error(err);
-                changeRequest(3);
+                this.setState({changeLinupTitleId: null})
             })
             .then(()=> Snackbar.show({title: "Liste modifiée"}))
-        ;
+            ;
 
     }
 
@@ -263,7 +252,7 @@ class HomeScreen extends Component<Props, State> {
 
     changeTitle(lineup: List) {
         let {id, name} = lineup;
-        this.setState({changeLinupTitle: {id, name}});
+        this.setState({changeLinupTitleId: id});
     }
 
     displayFloatingButton() {
@@ -314,64 +303,8 @@ class HomeScreen extends Component<Props, State> {
 }
 
 
-
-
 const screen = HomeScreen;
 
-type NavProps = {
-    onChangeText: (token: string) => void,
-    navigator: any
-};
-
-type NavState = {
-    input:? string,
-};
-
-
-//connect -> redux
-// class HomeNavBar extends Component<NavProps, NavState> {
-//
-//     state = {input: null};
-//
-//     render() {
-//
-//         //if (this.props.test !== "test") throw "tg";
-//
-//         return (
-//             <SearchBar
-//                 autoFocus
-//                 lightTheme
-//                 onChangeText={this.onChangeText.bind(this)}
-//                 onClearText={this.onClearText.bind(this)}
-//                 placeholder={i18n.t('lineups.search.placeholder')}
-//                 clearIcon={{color: '#86939e'}}
-//                 containerStyle={styles.searchContainer}
-//                 inputStyle={styles.searchInput}
-//                 autoCapitalize='none'
-//                 autoCorrect={false}
-//             />
-//         );
-//
-//     }
-//
-//     onChangeText(input: string) {
-//         this.setState({input});
-//         //because function props are not currently allowed by RNN
-//
-//         //this.props.onChangeText(input);
-//         //become->
-//         Navigation.handleDeepLink({
-//             link: DEEPLINK_SEARCH_TEXT_CHANGED,
-//             payload: input
-//         });
-//     }
-//
-//     onClearText() {
-//         Navigation.handleDeepLink({
-//             link: DEEPLINK_SEARCH_CLOSE
-//         });
-//     }
-// }
 
 const actions = {
     deleteLineup: (lineup) => {
@@ -393,63 +326,63 @@ const actions = {
 
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    actionButtonIcon: {
-        fontSize: 20,
-        height: 22,
-        color: 'white',
-    },
-    selectAList: {
-        padding: 10,
-        fontFamily: 'Chivo-Light',
-        color: 'black',
-        fontSize: 20,
-        alignSelf: "center",
-        backgroundColor:"transparent"
-    },
-    searchContainer: {
-        backgroundColor: 'transparent',
-    },
-    searchInput: {
-        backgroundColor: 'white',
-    },
-    header: {
-        // flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 10,
-        marginTop: 10,
-        marginBottom: 10,
-    },
-    input:{
-        height: 40,
-        width: "100%",
-        fontFamily: 'Chivo',
-        fontSize: 18,
-        borderWidth: 0.5,
-        borderColor: UI.Colors.grey1
-    },
-    colorActive:{
-        color: 'green',
-    },
-    colorInactive:{
-        color: 'black',
-    },
-    headerText:{
-        flex: 1,
-        textAlignVertical: 'center',
-        fontFamily: 'Chivo',
-        fontSize: 18,
-    },
-    inputContainer:{
-        borderRadius: 20,
-        paddingLeft: 14,
-        paddingRight: 14,
-        margin: 10,
-        backgroundColor: 'white'
-    },
+    // container: {
+    //     flex: 1,
+    // },
+    // actionButtonIcon: {
+    //     fontSize: 20,
+    //     height: 22,
+    //     color: 'white',
+    // },
+    // selectAList: {
+    //     padding: 10,
+    //     fontFamily: 'Chivo-Light',
+    //     color: 'black',
+    //     fontSize: 20,
+    //     alignSelf: "center",
+    //     backgroundColor:"transparent"
+    // },
+    // searchContainer: {
+    //     backgroundColor: 'transparent',
+    // },
+    // searchInput: {
+    //     backgroundColor: 'white',
+    // },
+    // header: {
+    //     // flex: 1,
+    //     flexDirection: 'row',
+    //     alignItems: 'center',
+    //     padding: 10,
+    //     marginTop: 10,
+    //     marginBottom: 10,
+    // },
+    // input:{
+    //     height: 40,
+    //     width: "100%",
+    //     fontFamily: 'Chivo',
+    //     fontSize: 18,
+    //     borderWidth: 0.5,
+    //     borderColor: UI.Colors.grey1
+    // },
+    // colorActive:{
+    //     color: 'green',
+    // },
+    // colorInactive:{
+    //     color: 'black',
+    // },
+    // headerText:{
+    //     flex: 1,
+    //     textAlignVertical: 'center',
+    //     fontFamily: 'Chivo',
+    //     fontSize: 18,
+    // },
+    // inputContainer:{
+    //     borderRadius: 20,
+    //     paddingLeft: 14,
+    //     paddingRight: 14,
+    //     margin: 10,
+    //     backgroundColor: 'white'
+    // },
 });
 
 export {screen};
