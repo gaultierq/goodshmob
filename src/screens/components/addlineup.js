@@ -46,45 +46,6 @@ export default class AddLineupComponent extends Component<Props, State> {
 
     render() {
 
-        let grey1 = UI.Colors.grey1;
-
-        let visiblee = !!this.state.isCreatingLineup;
-
-        // return (
-        //     <View style={{ flex: 1 }}>
-        //         <TouchableWithoutFeedback onPress={this._openModal}>
-        //             <View style={
-        //                 [UI.CARD(), styles.header]
-        //             }>
-        //                 <Image source={require('../../img/plus.png')}
-        //                        resizeMode="contain"
-        //                        style={{
-        //                            width: 20,
-        //                            height: 20,
-        //                            marginRight: 10
-        //                        }}
-        //                 />
-        //                 <Text
-        //                     style={[
-        //                         styles.headerText,
-        //                         {color: UI.Colors.grey2},
-        //                         Platform.OS === 'ios'? {lineHeight: 40} : {height: 40}
-        //                     ]}
-        //                 >{i18n.t('create_list_controller.title')}</Text>
-        //             </View>
-        //         </TouchableWithoutFeedback>
-        //         <Modal
-        //             isVisible={visiblee}
-        //             backdropOpacity={0.3}
-        //             onBackdropPress={this._closeModal}
-        //         >
-        //             <View style={{ flex: 1 }}>
-        //                 <Text>Hello!</Text>
-        //             </View>
-        //         </Modal>
-        //     </View>
-        // );
-
         return (
             <View style={{flex: 1}}>
                 <TouchableWithoutFeedback onPress={this._openModal}>
@@ -110,7 +71,7 @@ export default class AddLineupComponent extends Component<Props, State> {
                 </TouchableWithoutFeedback>
 
                 <Modal
-                    isVisible={visiblee}
+                    isVisible={!!this.state.isCreatingLineup}
                     backdropOpacity={0.3}
                     onBackdropPress={this._closeModal}
                 >
@@ -128,11 +89,11 @@ export default class AddLineupComponent extends Component<Props, State> {
                             right
                             title='Visible par mes amis'
                             size={16}
-                            checkedColor={grey1}
-                            uncheckedColor={grey1}
+                            checkedColor={UI.Colors.grey1}
+                            uncheckedColor={UI.Colors.grey1}
                             onPress={(newValue)=> this.setState({newLineupPrivacy: !!this.state.newLineupPrivacy ? 0 : 1})}
                             checked={!this.state.newLineupPrivacy}
-                            textStyle={{color: grey1, fontSize: 12, }}
+                            textStyle={{color: UI.Colors.grey1, fontSize: 12, }}
                             containerStyle={{ backgroundColor: "transparent", borderWidth: 0, width: "100%"}}
                         />
 
@@ -155,25 +116,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    actionButtonIcon: {
-        fontSize: 20,
-        height: 22,
-        color: 'white',
-    },
-    selectAList: {
-        padding: 10,
-        fontFamily: 'Chivo-Light',
-        color: 'black',
-        fontSize: 20,
-        alignSelf: "center",
-        backgroundColor:"transparent"
-    },
-    searchContainer: {
-        backgroundColor: 'transparent',
-    },
-    searchInput: {
-        backgroundColor: 'white',
-    },
     header: {
         // flex: 1,
         flexDirection: 'row',
@@ -182,31 +124,10 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 10,
     },
-    input:{
-        height: 40,
-        width: "100%",
-        fontFamily: 'Chivo',
-        fontSize: 18,
-        borderWidth: 0.5,
-        borderColor: UI.Colors.grey1
-    },
-    colorActive:{
-        color: 'green',
-    },
-    colorInactive:{
-        color: 'black',
-    },
     headerText:{
         flex: 1,
         textAlignVertical: 'center',
         fontFamily: 'Chivo',
         fontSize: 18,
-    },
-    inputContainer:{
-        borderRadius: 20,
-        paddingLeft: 14,
-        paddingRight: 14,
-        margin: 10,
-        backgroundColor: 'white'
     },
 });
