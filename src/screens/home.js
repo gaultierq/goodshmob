@@ -186,8 +186,6 @@ class HomeScreen extends Component<Props, State> {
                         isLoading={lineup.request === 1}
                         isDisabled={!editable}
                         onPress={()=> this.requestChangeName()}
-                        // style={[{position: 'absolute', right: 12}, styles.loadMoreButton]}
-                        // disabledStyle={styles.disabledButton}
                     >
                         <Text>Sauvegarder</Text>
                     </Button>
@@ -239,7 +237,7 @@ class HomeScreen extends Component<Props, State> {
                 moreComponent={
                     <Menu>
                         <MenuTrigger>
-                            <Icon name="md-more" size={25} style={{padding: 5, paddingLeft: 15, paddingRight: 15}} color={UI.Colors.blue} />
+                            <Icon name="md-more" size={25} style={{padding: 5, paddingLeft: 15}} color={UI.Colors.blue} />
                         </MenuTrigger>
                         <MenuOptions>
                             <MenuOption onSelect={() => this.deleteLineup(item)} text='Delete' />
