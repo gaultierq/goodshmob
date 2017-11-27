@@ -7,7 +7,9 @@ import type {User} from "../../types";
 
 type Props = {
     friend: User,
-    children: Node
+    children?: Node,
+    childrenBelow?: boolean
+
 };
 
 type State = {
@@ -16,7 +18,7 @@ type State = {
 export default class FriendCell extends React.Component<Props, State> {
 
     render() {
-        const {friend, children} = this.props;
+        const {friend, children, childrenBelow} = this.props;
 
         return (
             <View style={{
@@ -44,11 +46,15 @@ export default class FriendCell extends React.Component<Props, State> {
                             marginRight: 10
                         }}
                     />
-                    <Text>{`${friend.firstName} ${friend.lastName}`}</Text>
+                    <View style={childrenBelow ? {flex: 1}: {}}>
+                        <Text>{`${friend.firstName} ${friend.lastName}`}</Text>
+                        {childrenBelow && children}
+                    </View>
+
 
                 </View>
                 <View>
-                    {children}
+                    {!childrenBelow && children}
                 </View>
             </View>
         )

@@ -12,8 +12,11 @@ import * as UI from "../UIStyles";
 type Props = {
     placeholder: i18Key,
     execAction: (input: string) => Promise<*>,
+    canSendEmpty?: boolean,
     containerStyle?: *,
     inputContainerStyle?: *,
+    inputStyle?: *,
+    height?: number,
     buttonStyle?: *,
     disabledButtonStyle?: *,
 };
@@ -23,6 +26,8 @@ type State = {
     requestState?: RequestState,
     focus?: boolean
 };
+
+const HEIGHT = 40;
 
 export default class SmartInput extends React.Component<Props, State> {
 
@@ -36,17 +41,23 @@ export default class SmartInput extends React.Component<Props, State> {
             disabledButtonStyle,
             containerStyle,
             inputContainerStyle,
+            inputStyle,
+            canSendEmpty,
+            // height,
             ...attributes
         } = this.props;
+
+        const height = this.props.height || HEIGHT;
+
 
         const {input} = this.state;
 
         return (
             <View style={[styles.container, containerStyle]}>
-                <View style={[styles.inputContainer, inputContainerStyle]}>
+                <View style={[styles.inputContainer, inputContainerStyle, {minHeight: height}]}>
                     <TextInput
                         editable={!this.isSending()}
-                        style={[styles.input, {color: this.isSending() ? UI.Colors.grey1 : 'black'}]}
+                        style={[styles.input, inputStyle, {color: this.isSending() ? UI.Colors.grey1 : 'black'}]}
                         onSubmitEditing={this.exec.bind(this)}
                         value={input}
                         onFocus={()=>this.setState({focus:true})}
@@ -59,9 +70,9 @@ export default class SmartInput extends React.Component<Props, State> {
                 {
                     this.showButton() && <Button
                         isLoading={this.isSending()}
-                        isDisabled={!this.state.input || this.isSending()}
+                        isDisabled={(!canSendEmpty && !this.state.input) || this.isSending()}
                         onPress={this.exec.bind(this)}
-                        style={[styles.button, buttonStyle]}
+                        style={[styles.button, buttonStyle, {height}]}
                         disabledStyle={[styles.disabledButton, disabledButtonStyle]}
                     >
                         <Image style={styles.image} source={require('../../img/send.png')} resizeMode="contain"/>
@@ -77,7 +88,7 @@ export default class SmartInput extends React.Component<Props, State> {
     showButton() {
         if (this.state.focus) return true;
         if (this.isSending()) return true;
-        if (this.state.input) return true;
+        if (this.props.canSendEmpty || this.state.input) return true;
         return false;
     }
 
@@ -107,35 +118,31 @@ export default class SmartInput extends React.Component<Props, State> {
     }
 }
 
-const HEIGHT = 40;
+
 const styles = StyleSheet.create({
 
     container:{
         flexDirection: 'row',
         alignItems: 'center',
-        // minHeight: HEIGHT,
-        // backgroundColor: 'red',
     },
     inputContainer:{
 
         flex:1,
-        padding: 0,
         justifyContent: "center",
-        minHeight: HEIGHT,
+        // minHeight: HEIGHT,
         borderColor: UI.Colors.grey1,
         borderWidth: 0.5,
         borderRadius: 6,
         backgroundColor: 'white',
     },
     input:{
-
         fontSize: 18,
         fontFamily: 'Chivo',
     },
     image: {
     },
     button: {
-        height: HEIGHT,
+        // height: HEIGHT,
         marginBottom: 0,
         marginLeft: 8,
         marginRight: 8,

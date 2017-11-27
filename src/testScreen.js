@@ -51,12 +51,23 @@ const profileScreen = {
     }
 };
 
+const sendScreen = {
+    screen: {
+        label: 'test',
+        screen: 'goodsh.SendScreen',
+    },
+    passProps: {
+        itemId: "8ab94a3c-43b2-4e5c-acfb-d4ff268f93b1",
+    }
+};
+
 let testScreen = null;
 
 //change this line
 // testScreen = profileScreen;
 // testScreen = commentsScreen;
 // testScreen = communityScreen;
+ testScreen = sendScreen;
 
 
 export default testScreen;

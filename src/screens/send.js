@@ -1,28 +1,29 @@
 // @flow
 
-import React, {Component} from 'react';
 import type {Node} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View,TextInput} from 'react-native';
+import React, {Component} from 'react';
+import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
 import type {Id, Item, User} from "../types";
 import FriendsFeed from "./friends";
 import FriendCell from "./components/FriendCell";
-import Button from 'apsl-react-native-button'
 import ApiAction from "../utils/ApiAction";
 import type {Description, Visibility} from "./save";
 import * as Api from "../utils/Api";
 import * as UI from "./UIStyles";
+import SmartInput from "./components/SmartInput";
+import {currentUserId} from "../CurrentUser";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import {MainBackground} from "./UIComponents";
 
 type Props = {
-    userId: Id,
-    item: Item,
+    itemId: Id,
     data?: any,
     navigator?:any
 };
 
 type State = {
-    statuses: any,
-    messages: {[Id]: string},
+    sent: {[Id]: string},
     selected?: Id
 };
 
@@ -34,124 +35,78 @@ const mapStateToProps = (state, ownProps) => ({
 export default class SendScreen extends Component<Props, State> {
 
     state = {
-        statuses: {},
-        messages: {},
+        sent: {},
     };
 
     render() {
-        const {navigator, userId, item} = this.props;
+        const {navigator} = this.props;
 
         return (
-            <FriendsFeed
-                userId={userId}
-                navigator={navigator}
-                renderItem={(friend) => this.renderItem(friend)}
-            />
+            <MainBackground>
+                <KeyboardAwareScrollView
+                    contentContainerStyle={{flex:1}}
+                    scrollEnabled={false}
+                    keyboardShouldPersistTaps={true}
+                >
+                    <FriendsFeed
+                        userId={currentUserId()}
+                        navigator={navigator}
+                        renderItem={(friend) => this.renderItem(friend)}
+                    />
+
+                </KeyboardAwareScrollView>
+            </MainBackground>
         )
     }
 
     renderItem(friend: Item) : Node {
 
-        let status = this.state.statuses[friend.id];
-        let notEditable = status === 'sending' || status === 'sent';
-        let message = this.state.messages[friend.id];
-
         let id = friend.id;
+
+        let sent : boolean = id in this.state.sent;
+
         let isSelected = id === this.state.selected;
         return (
             <View>
-                <TouchableOpacity onPress={()=>this.setState({selected: isSelected ? null : id})}>
-                    <FriendCell friend={friend}/>
+                <TouchableOpacity
+                    disabled={sent}
+                    onPress={()=>this.setState({selected: isSelected ? null : id})}>
+                    <FriendCell
+                        friend={friend}
+                        childrenBelow={!sent}
+                    >
+                        {
+                            this.renderChildren(isSelected, sent, friend)
+                        }
+                    </FriendCell>
                 </TouchableOpacity>
-
-                {
-                    isSelected &&
-                    <View style={{padding: 12}}>
-                        <TextInput
-                            editable={!notEditable}
-                            onSubmitEditing={()=> this.sendIt(friend)}
-                            value={message}
-                            multiline
-                            onChangeText={(message) => this.setState({messages: {...this.state.messages, [friend.id]: message}})}
-                            placeholder={"Ajoutez un message"}
-                            style={[
-                                styles.input,
-                                (notEditable ? {color: "grey"} : {color: "black"}),
-                            ]}
-                        />
-                        <View style={{width: "100%"}}>
-                            {this.renderButton(friend)}
-                        </View>
-
-                    </View>
-                }
-
             </View>
         )
     }
 
-    renderButton(friend: User) : Node {
-        let {statuses} = this.state;
-        let status = statuses[friend.id] || 'idle';
-
-        let buttonText;
-        switch (status) {
-            case 'idle':
-                buttonText = "Envoyer";
-                break;
-            case 'sending':
-                buttonText = "envoi...";
-                break;
-            case 'sent':
-                buttonText = "Envoyé";
-                break;
-            case 'fail':
-                buttonText = "Réessayer";
-                break;
-
-
-        }
-        let sent = status === 'sent';
-        let sending = status === 'sending';
-        return (
-            <Button
-                isLoading={sending}
-                isDisabled={sent}
-                onPress={()=> this.sendIt(friend)}
-                style={[styles.button, {width: 100, position:"absolute", right: 0}]}
-                textStyle={{margin: 0, padding: 0}}
-                disabledStyle={styles.disabledButton}
-            >
-                <Text style={{
-                    color: sent ? UI.Colors.grey1 : UI.Colors.black,
-                    backgroundColor: "transparent"}}>
-                    {buttonText}
-                </Text>
-            </Button>);
-
+    renderChildren(isSelected: boolean, sent: boolean, friend: User) {
+        if (sent) return <Text style={UI.TEXT_LESS_IMPORTANT}>Envoyé</Text>
+        return isSelected &&
+            <View style={{flex: 1}}>
+                <SmartInput
+                    containerStyle={{padding: 6}}
+                    inputStyle={{fontSize: 15}}
+                    inputContainerStyle={{borderRadius: 1}}
+                    execAction={(input: string) => this.sendIt2(friend, input)}
+                    placeholder={"send_screen.add_description_placeholder"}
+                    multiline
+                    height={30}
+                    canSendEmpty={true}
+                />
+            </View>;
     }
 
-    sendIt(friend: User)  {
+    sendIt2(friend: User, description: string)  {
+        return this.props
+            .dispatch(actions.sendItem(this.props.itemId, friend, description)
+                .disptachForAction2(SEND_ITEM)).then(()=> {
+                this.setState({sent: {...this.state.sent, [friend.id]: description}});
 
-
-        let setStat = (stat) => {
-            this.setState(
-                {
-                    statuses: {
-                        ...this.state.statuses,
-                        [friend.id]: stat}
-                }
-            )
-        };
-
-        setStat('sending');
-        let disptachForAction2 = actions.sendItem(/*id*/this.props.item, friend).disptachForAction2(SEND_ITEM);
-        this.props.dispatch(disptachForAction2)
-            .then(()=> {
-                setStat('sent');
-            })
-            .catch(()=> {
-                setStat('fail');
             });
     }
 
@@ -162,7 +117,7 @@ const SEND_ITEM = new ApiAction("send_item");
 
 const actions = (() => {
     return {
-        sendItem: (item: Item, user: User, description?: Description = "", privacy?: Visibility = 0) => {
+        sendItem: (itemId: Id, user: User, description?: Description = "", privacy?: Visibility = 0) => {
 
             let body = {
                 sending: {
@@ -173,7 +128,7 @@ const actions = (() => {
             };
 
             return new Api.Call().withMethod('POST')
-                .withRoute(`items/${item.id}/sendings`)
+                .withRoute(`items/${itemId}/sendings`)
                 .withBody(body)
                 .addQuery({
                     include: "*.*"

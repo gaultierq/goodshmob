@@ -209,6 +209,9 @@ export default {
     "activity_comments_screen":{
         "add_comment_placeholder":"Ajouter un commentaire"
     },
+    "send_screen":{
+        "add_description_placeholder":"Ajouter un petit mot"
+    },
     "interactions":{
         "saving":"a enregistré %{item_title}",
         "comment":"a commenté %{item_title}",

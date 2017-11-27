@@ -69,21 +69,15 @@ export default class FriendsScreen extends Component<Props, State> {
             action = actionTypes.GET_USER;
         }
 
-        return (
-            <MainBackground>
-                <View style={styles.container}>
-                    <Feed
-                        {...attributes}
-                        data={friends}
-                        renderItem={({item}) => renderItem(item)}
-                        fetchSrc={{
-                            callFactory,
-                            action
-                        }}
-                    />
-                </View>
-            </MainBackground>
-        );
+        return (<Feed
+            {...attributes}
+            data={friends}
+            renderItem={({item}) => renderItem(item)}
+            fetchSrc={{
+                callFactory,
+                action
+            }}
+        />);
     }
 
 
@@ -100,12 +94,6 @@ export default class FriendsScreen extends Component<Props, State> {
         )
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    }
-});
 
 
 
@@ -138,3 +126,10 @@ const actions = (() => {
     };
 })();
 
+
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    }
+});

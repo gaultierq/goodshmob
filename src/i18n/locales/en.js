@@ -210,6 +210,9 @@ export default {
     "activity_comments_screen":{
         "add_comment_placeholder":"Add a comment"
     },
+    "send_screen":{
+        "add_description_placeholder":"Say something nice"
+    },
     "interactions":{
         "saving":"saved %{what}",
         "comment":"commented %{what}",
