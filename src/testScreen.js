@@ -67,7 +67,7 @@ let testScreen = null;
 // testScreen = profileScreen;
 // testScreen = commentsScreen;
 // testScreen = communityScreen;
- testScreen = sendScreen;
+//  testScreen = sendScreen;
 
 
 export default testScreen;
