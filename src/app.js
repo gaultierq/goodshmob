@@ -203,6 +203,17 @@ export default class App {
             let userId = CurrentUser.currentUserId();
             if (!userId) throw "wtf";
 
+            let tabsStyle = { // optional, add this if you want to style the tab bar beyond the defaults
+                tabBarButtonColor: '#000', // optional, change the color of the tab icons and text (also unselected)
+                tabBarSelectedButtonColor: UI.Colors.green, // optional, change the color of the selected tab icon and text (only selected)
+                tabBarBackgroundColor: 'white',
+                forceTitlesDisplay: false,
+                tabBarShowLabels: 'hidden',
+                initialTabIndex: 0,
+            };
+
+            let navigatorStyle = {...UI.NavStyles};
+
             Navigation.startTabBasedApp({
                 tabs: [
                     {
@@ -211,7 +222,8 @@ export default class App {
                         icon: require('./img/drawer_line_up.png'),
                         titleImage: require('./img/screen_title_home.png'),
                         title: i18n.t('tabs.home.title'),
-                        navigatorStyle: UI.NavStyles
+                        navigatorStyle
+
                     },
                     {
                         label: 'Network', // tab label as appears under the icon in iOS (optional)
@@ -219,24 +231,18 @@ export default class App {
                         icon: require('./img/bottom_bar_search.png'), // local image asset for the tab icon unselected state (optional on iOS)
                         title: 'Mon réseau', // title of the screen as appears in the nav bar (optional)
                         titleImage: require('./img/screen_title_home.png'),
-                        navigatorStyle: UI.NavStyles
+                        navigatorStyle
                     },
 
                 ],
-                tabsStyle: { // optional, add this if you want to style the tab bar beyond the defaults
-                    tabBarButtonColor: '#000', // optional, change the color of the tab icons and text (also unselected)
-                    tabBarSelectedButtonColor: UI.Colors.green, // optional, change the color of the selected tab icon and text (only selected)
-                    tabBarBackgroundColor: 'white',
-                    forceTitlesDisplay: false,
-                    tabBarShowLabels: 'hidden',
-                    initialTabIndex: 0,
-                },
+                tabsStyle,
                 appStyle: {
                     orientation: 'portrait', // Sets a specific orientation to the entire app. Default: 'auto'. Supported values: 'auto', 'landscape', 'portrait'
                     bottomTabBadgeTextColor: 'red', // Optional, change badge text color. Android only
                     bottomTabBadgeBackgroundColor: 'green', // Optional, change badge background color. Android only
                     backButtonImage: require('./img/back.png'),
-                    hideBackButtonTitle: true
+                    hideBackButtonTitle: true,
+                    ...tabsStyle,
                 },
                 drawer: { // optional, add this if you want a side menu drawer in your app
                     left: { // optional, define if you want a drawer from the left

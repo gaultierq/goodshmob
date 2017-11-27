@@ -42,8 +42,6 @@ type Props = {
 };
 
 type State = {
-    isCreatingLineup?: boolean, //create lineup mode
-    isAddingLineup?: boolean, //request of adding
     newLineupTitle?: string,
     newLineupPrivacy?: Visibility,
     changeLinupTitle?: {id: Id, name: string, request: number}
@@ -51,6 +49,22 @@ type State = {
 
 @connect()
 class HomeScreen extends Component<Props, State> {
+
+
+    static navigatorButtons = {
+        leftButtons: [
+            {
+                icon: require('../img/profil.png'),
+                id: 'profile'
+            }
+        ],
+        rightButtons: [
+            {
+                icon: require('../img/bottom_bar_search.png'),
+                id: 'search'
+            }
+        ],
+    };
 
     state : State = {};
 
@@ -117,7 +131,6 @@ class HomeScreen extends Component<Props, State> {
 
     render() {
 
-        this.renderNav();
 
         return (
             <MenuContext>
@@ -164,9 +177,6 @@ class HomeScreen extends Component<Props, State> {
                         editable={editable}
                         style={[styles.input, (editable ? {color: "black"} : {color: "grey"})]}
                         onSubmitEditing={this.requestChangeName.bind(this)}
-                        onEndEditing={()=>{
-                            if (!this.state.isAddingLineup) this.setState({isCreatingLineup: false})
-                        }}
                         value={lineup.name}
                         onChangeText={name => this.setState({changeLinupTitle: {...lineup, name}})}
                         placeholder={i18n.t("create_list_controller.placeholder")}
@@ -258,41 +268,8 @@ class HomeScreen extends Component<Props, State> {
         this.setState({changeLinupTitle: {id, name}});
     }
 
-    renderNav() {
-        const {navigator} = this.props;
-        let title, leftButtons, rightButtons, navBarCustomView;
-
-        title = {titleImage: require('../img/screen_title_home.png')};
-        navBarCustomView = null;
-        leftButtons = [
-            {
-                icon: require('../img/profil.png'),
-                id: 'profile'
-            }
-        ];
-        rightButtons = [
-            {
-                icon: require('../img/bottom_bar_search.png'),
-                id: 'search'
-            }
-        ];
-        navigator.setStyle({navBarCustomView});
-
-        navigator.setButtons({
-            leftButtons,
-            rightButtons,
-            animated: true// does the change have transition animation or does it happen immediately (optional)
-        });
-
-        if (title) {
-            navigator.setTitle(title);
-        }
-        //HACK. event listener is unsubscribed for some reason...
-        setTimeout(()=>navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this)));
-    }
-
     displayFloatingButton() {
-        return !this.state.isCreatingLineup;
+        return true;
     }
 
 
