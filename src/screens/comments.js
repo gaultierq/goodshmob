@@ -98,7 +98,7 @@ class CommentsScreen extends Component<Props, State> {
 
                     {
                         activity && <SmartInput
-                            containerStyle={{position: 'absolute', bottom: 0, left: 0, right: 0, }}
+                            // containerStyle={{position: 'absolute', bottom: 0, left: 0, right: 0, }}
                             inputContainerStyle={{borderRadius: 0}}
                             execAction={(input: string) => this.addComment2(activity, input)}
                             placeholder={"activity_comments_screen.add_comment_placeholder"}
@@ -114,15 +114,15 @@ class CommentsScreen extends Component<Props, State> {
         return buildData(this.props.data, this.props.activityType, this.props.activityId);
     }
 
-    addComment(activity: Activity) {
-        if (this.state.isAddingComment) return;
-        this.setState({isAddingComment: true});
-        this.props.dispatch(actions.addComment(activity, this.state.newComment))
-            .then(()=>{
-                this.setState({newComment: '', isAddingComment: false});
-            });
-
-    }
+    // addComment(activity: Activity) {
+    //     if (this.state.isAddingComment) return;
+    //     this.setState({isAddingComment: true});
+    //     this.props.dispatch(actions.addComment(activity, this.state.newComment))
+    //         .then(()=>{
+    //             this.setState({newComment: '', isAddingComment: false});
+    //         });
+    //
+    // }
 
     addComment2(activity: Activity, newComment: string) {
         return this.props.dispatch(actions.addComment(activity, newComment))
