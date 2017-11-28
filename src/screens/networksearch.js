@@ -19,6 +19,8 @@ import LineupCell from "./components/LineupCell";
 import * as Nav from "./Nav";
 import {createResultFromHit, createResultFromHit2} from "../utils/AlgoliaUtils";
 import UserConnectItem from "./userConnectItem";
+import UserRowI from "../activity/components/UserRowI";
+import {Colors} from "./UIStyles";
 
 type Props = NavigableProps & {
     onClickClose?: () => void,
@@ -55,11 +57,26 @@ export default class NetworkSearchScreen extends Component<Props, State> {
 
 
             if (isLineup) {
+                let user = item.user;
+
+                let userXml = (
+                    <View style={{flex:1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                        <Text style={{fontSize: 12, color: Colors.grey1, marginLeft: 8, marginRight: 3}}>- by</Text>
+                        <UserRowI
+                            user={user}
+                            navigator={this.props.navigator}
+                            style={{flex:1, }}
+                        />
+                    </View>);
+
                 return (
                     <TouchableWithoutFeedback
-                        onPress={this.onLineupPressed.bind(this)}>
+                        onPress={() => this.onLineupPressed(item)}>
                         <View>
-                            <LineupCell lineup={item}/>
+                            <LineupCell
+                                lineup={item}
+                                titleChildren={userXml}
+                            />
                         </View>
                     </TouchableWithoutFeedback>
                 )

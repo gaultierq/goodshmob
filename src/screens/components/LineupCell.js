@@ -4,7 +4,7 @@ import React from 'react';
 import type {Node} from 'react';
 import {Dimensions, FlatList, Image, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, View} from 'react-native';
 import * as UI from "../UIStyles";
-import {assertUnique} from "../../utils/DataUtils";
+import {assertUnique, buildData} from "../../utils/DataUtils";
 import {isEmpty} from "lodash";
 import type {List, Saving} from "../../types";
 //;
@@ -44,13 +44,16 @@ export default class LineupCell extends React.PureComponent<Props, State> {
 
         console.log(`DEBUG: render LineupCell w=${w} n=${n} spaceLeft=${spaceLeft} padding=${padding}`);
 
-        let savingCount = _.get(lineup, `meta.savings-count`, null) || 0;
+        let savingCount = _.get(lineup, `meta.savings-count`, null);
 
         let {titleChildren} = this.props;
+        let countString = savingCount  !== null ? ' (' + savingCount + ')' : '';
+
         return (
             <View style={[styles.container, {paddingLeft: padding, paddingRight: padding, paddingBottom: padding}]}>
                 <View style={{flexDirection: "row"}}>
-                    <Text style={styles.lineupTitle}>{lineup.name + ' (' + savingCount + ')'}</Text>
+                    <Text style={styles.lineupTitle}>{lineup.name + countString}</Text>
+
                     {titleChildren}
                 </View>
                 {this.renderList(n, padding, savings)}

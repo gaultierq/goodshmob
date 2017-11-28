@@ -27,16 +27,21 @@ export default class UserRowI extends React.Component<Props, State> {
 
         let imageDim = small ? 20 : 30;
 
+        let uri = user ? user.image: "";
         return <View style={[style, {flexDirection: 'row'}]}>
-            <Image
-                source={{uri: user ? user.image: ""}}
-                style={{
-                    height: imageDim,
-                    width: imageDim,
-                    borderRadius: imageDim / 2
-                }}
-            />
-            <View style={{flex: 1, marginLeft: 8}}>
+            {
+                uri && <Image
+                    source={{uri}}
+                    style={{
+                        height: imageDim,
+                        width: imageDim,
+                        borderRadius: imageDim / 2,
+                        marginRight: 8
+                    }}
+                />
+            }
+
+            <View style={{flex: 1}}>
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                     <TouchableOpacity
                         onPress={()=>this.navigateToUser(user)}

@@ -21,9 +21,15 @@ export function createResultFromHit(hits, options = {}) {
             user
         } = h;
 
+        user2 = {
+            firstName: user.first_name,
+            lastName: user.last_name,
+            ...user
+        };
+
         let saving = {
             id: objectID,
-            user: Object.assign({type: "users"}, user, {id: user_id}),
+            user: Object.assign({type: "users"}, user2, {id: user_id}),
             resource: {type, image, url, title: item_title},
             type: "savings"
         };
@@ -34,7 +40,7 @@ export function createResultFromHit(hits, options = {}) {
                 list = {
                     id: list_id,
                     name: list_name,
-                    user: Object.assign({type: "users"}, user, {id: user_id}),
+                    user: Object.assign({type: "users"}, user2, {id: user_id}),
                     type: "lists",
                     savings: []
                 };

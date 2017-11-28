@@ -100,7 +100,7 @@ let testScreen = null;
 //  testScreen = test;
 //  testScreen = homeScreen;
 //  testScreen = interactionsScreen;
- testScreen = userScreen;
+//  testScreen = userScreen;
 
 
 export default testScreen;
