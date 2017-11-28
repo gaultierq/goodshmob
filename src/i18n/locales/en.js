@@ -16,10 +16,10 @@ export default {
     },
     "shared":{
         "ok":"OK",
-        "goodsh_sent":"GOODSH' sent",
-        "goodsh_posted":"GOODSH' posted",
-        "goodsh_saved":"GOODSH' saved in your Line Up",
-        "goodsh":"GOODSH'",
+        "goodsh_sent":"Goodsh sent",
+        "goodsh_posted":"Goodsh posted",
+        "goodsh_saved":"Goodsh saved in your Line Up",
+        "goodsh":"Goodsh",
         "goodshbox":"GoodshBox",
         "line_up":"LINE UP",
         "person":"GOODSHER",
@@ -29,8 +29,8 @@ export default {
         "confirm":"Are you (really) sure? :)"
     },
     "sharing":{
-        "title":"Sent you a GOODSH' %{title}",
-        "invite_title":"- Hey, do you have some GOODSH'?"
+        "title":"Sent you a Goodsh %{title}",
+        "invite_title":"- Hey, do you have some Goodsh?"
     },
     "sending_choice_screen":{
         "copy":"Copy the link",
@@ -77,7 +77,7 @@ export default {
     },
     "login_screen":{
         "facebook_signin":"SIGN IN WITH FACEBOOK",
-        "no_publication":"Goodsh'it doesn't publish anything on Facebook.",
+        "no_publication":"Goodsh doesn't publish anything on Facebook.",
         "definition":{
             "example":"Bouquin, restaurant, film, série, artiste,lieu, musique, gadget, fringue, vin, …"
         },
@@ -96,24 +96,24 @@ export default {
         },
         "terms_of_use":"Terms of use",
         "mail":{
-            "subject":"GOODSH'IT Feedback",
+            "subject":"Goodsh Feedback",
             "recipient":"feedback@goodsh.it"
         }
     },
     "friends_screen":{
         "connections":"CONNECTIONS",
         "interactions":"NOTIFICATIONS",
-        "share":"Share your GOODSH' to other friends",
-        "send_invitation_to":"Invite friends on Goodsh'it via:",
+        "share":"Share your Goodsh to other friends",
+        "send_invitation_to":"Invite friends on Goodsh via:",
         "connect_error":"Error while trying to connect!",
         "connect_success":"You are now connected!",
         "send_success":"GOODSH sent",
         "sms":{
-            "subject":"GOODSH'IT invitation",
-            "body":"SMS Time to GOODSH! Join me on GOODSH'IT: https:\/\/itunes.apple.com\/us\/app\/goodsh\/id1049336202?l=fr&ls=1&mt=8"
+            "subject":"Goodsh invitation",
+            "body":"SMS Time to GOODSH! Join me on Goodsh: https:\/\/itunes.apple.com\/us\/app\/goodsh\/id1049336202?l=fr&ls=1&mt=8"
         },
         "sections":{
-            "friends":"GOODSH'IT FRIENDS",
+            "friends":"Goodsh FRIENDS",
             "contacts":"PHONE CONTACTS",
             "people_you_may_know":"PEOPLE YOU MAY KNOW"
         },
@@ -181,7 +181,7 @@ export default {
             "movies":"Cinéma\nSérie\nDVD\n...",
             "musics":"Track\nAlbum\nArtiste\n..."
         },
-        "query_on_place_placeholder":"To share a GOODSH', it's here",
+        "query_on_place_placeholder":"To share a Goodsh, it's here",
         "place_placeholder":"City, Address...",
         "around_me":"Around me",
         "consumer_goods":"Stuff",
@@ -202,7 +202,7 @@ export default {
         },
         "duplicated_list_item":{
             "title":"Ooooops…",
-            "body":"This GOODSH' is already in this line up ;)"
+            "body":"This Goodsh is already in this line up ;)"
         },
         "in_list":"in %{list_name}",
         "invalid_activity":{
@@ -262,5 +262,7 @@ export default {
             },
         }
     },
-    loadmore: "Loading more awesomeness..."
+    loadmore: "Loading more awesomeness...",
+    send_message: "I found something for you:\n%{what}\n\nSpotted on Goodsh: %{url}",
+    goodsh_url: "https:\/\/goodsh.it\/",
 };

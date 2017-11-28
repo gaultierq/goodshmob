@@ -76,7 +76,7 @@ export default {
     },
     "login_screen":{
         "facebook_signin":"SE CONNECTER AVEC FACEBOOK",
-        "no_publication":"Goodsh’it ne publie rien sur Facebook.",
+        "no_publication":"Goodsh ne publie rien sur Facebook.",
         "definition":{
             "example":"Bouquin, restaurant, film, série, artiste,\nlieu, musique, gadget, fringue, vin, …"
         },
@@ -91,24 +91,24 @@ export default {
         },
         "terms_of_use":"Charte d'utilisation",
         "mail":{
-            "subject":"GOODSH'IT Feedback",
+            "subject":"Goodsh Feedback",
             "recipient":"feedback@goodsh.it"
         }
     },
     "friends_screen":{
         "connections":"CONNEXIONS",
         "interactions":"NOTIFICATIONS",
-        "share":"Partager ce GOODSH' ailleurs que sur Goodsh'it ?",
-        "send_invitation_to":"Inviter des amis sur Goodsh'it via :",
+        "share":"Partager ce GOODSH' ailleurs que sur Goodsh ?",
+        "send_invitation_to":"Inviter des amis sur Goodsh via :",
         "connect_error":"Impossible de vous connecter!",
         "connect_success":"Vous êtes maintenant amis!",
         "send_success":"GOODSH envoyé",
         "sms":{
-            "subject":"invitation GOODSH'IT",
+            "subject":"invitation Goodsh",
             "body":"Eh, t'as pas du GOODSH' ?\nhttps:\/\/itunes.apple.com\/us\/app\/goodsh\/id1049336202?l=fr&ls=1&mt=8"
         },
         "sections":{
-            "friends":"CONNECTÉS AVEC MOI SUR GOODSH'IT",
+            "friends":"CONNECTÉS AVEC MOI SUR Goodsh",
             "contacts":"MES CONTACTS",
             "people_you_may_know":"DES GENS QUE JE POURRAIS CONNAÎTRE (ON NE SAIT JAMAIS...)"
         },
@@ -204,7 +204,7 @@ export default {
             "title":"Ooooops…",
             "body":"Un GOODSH' c'est mieux avec un commentaire plus long."
         },
-        "share":"Partager ce GOODSH' ailleurs que sur Goodsh'it ?"
+        "share":"Partager ce GOODSH' ailleurs que sur Goodsh ?"
     },
     "activity_comments_screen":{
         "add_comment_placeholder":"Ajouter un commentaire"
@@ -256,6 +256,7 @@ export default {
             },
         }
     },
-    loadmore: "Chargement de plus de kif..."
-
+    loadmore: "Chargement de plus de kif...",
+    send_message: "J'ai quelquechose à te recommender:\n%{what}\n\nJe l'ai trouvé grace a Goodsh: %{url}",
+    goodsh_url: "https:\/\/goodsh.it\/",
 };

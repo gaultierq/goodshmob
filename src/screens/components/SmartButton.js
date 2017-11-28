@@ -41,6 +41,7 @@ export default class SmartButton extends React.Component<Props, State> {
         const {
             style,
             disabledButtonStyle,
+            textStyle,
             textKey,
             button,
             disabled,
@@ -58,7 +59,7 @@ export default class SmartButton extends React.Component<Props, State> {
                 disabledStyle={styles.disabledButton}
                 {...attributes}
             >
-                {button || <Text style={{color, fontWeight: "bold", fontSize: 18, fontFamily: "Chivo"}}>{text}</Text>}
+                {button || <Text style={[{color, fontWeight: "bold", fontSize: 18, fontFamily: "Chivo"}, textStyle]}>{text}</Text>}
             </Button>
         );
     }

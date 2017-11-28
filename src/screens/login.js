@@ -8,6 +8,7 @@ import {connect} from 'react-redux';
 import {AccessToken, LoginManager} from 'react-native-fbsdk';
 import i18n from '../i18n/i18n'
 import SmartButton from "./components/SmartButton";
+import {Colors} from "./UIStyles";
 
 type Props = {
 };
@@ -55,9 +56,13 @@ class Login extends Component<Props, State> {
                         <SmartButton
                             textKey={'login_screen.facebook_signin'}
                             execAction={this.handleFacebookLogin2}
+                            style={[styles.facebookButton]}
+                            textStyle={[styles.facebookButtonText]}
                         />
 
-                        <Text>{i18n.t('login_screen.no_publication')}</Text>
+                        <Text style={{fontSize: 13, textAlign: 'center', marginTop: 22}}>
+                            {i18n.t('login_screen.no_publication')}
+                        </Text>
 
                     </View>
                 </View>
@@ -105,3 +110,16 @@ class Login extends Component<Props, State> {
 let screen = connect()(Login);
 
 export {screen};
+
+const styles = StyleSheet.create({
+    facebookButton: {
+        backgroundColor: 'white',
+        borderColor: Colors.green,
+        borderWidth: 1,
+        borderRadius: 8,
+    },
+    facebookButtonText: {
+        color: Colors.green,
+        fontSize: 15
+    },
+});
