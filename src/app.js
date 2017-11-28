@@ -126,8 +126,9 @@ Api.init(store);
 CurrentUser.init(store);
 DeviceManager.init(store);
 
-
-const bugsnag = new Client();
+if (!__DEV__) {
+    const bugsnag = new Client();
+}
 
 //bugsnag.notify(new Error("Test Error"));
 

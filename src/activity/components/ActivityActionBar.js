@@ -88,8 +88,9 @@ export default class ActivityActionBar extends React.Component<Props, State> {
         switch(action) {
             case 'answer':
                 return type === 'asks';
-            case 'save':
             case 'buy':
+                return activity && activity.resource && activity.resource.url;
+            case 'save':
             case 'comment':
                 return type !== 'asks';
         }
@@ -170,8 +171,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     }
 
     buy(activity: Activity) {
-        let resource = activity.resource;
-        let url = resource.url;
+        let url = activity.resource.url;
         Linking.canOpenURL(url).then(supported => {
             if (supported) {
                 Linking.openURL(url);
