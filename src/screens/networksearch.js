@@ -59,9 +59,7 @@ export default class NetworkSearchScreen extends Component<Props, State> {
                     <TouchableWithoutFeedback
                         onPress={this.onLineupPressed.bind(this)}>
                         <View>
-                            <LineupCell
-                                lineup={item}
-                            />
+                            <LineupCell lineup={item}/>
                         </View>
                     </TouchableWithoutFeedback>
                 )

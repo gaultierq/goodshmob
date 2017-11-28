@@ -5,7 +5,7 @@ import ApiAction from "../utils/ApiAction";
 import dotprop from "dot-prop-immutable"
 import {doDataMergeInState} from "../utils/DataUtils";
 import {currentUserId} from "../CurrentUser";
-import * as _ from "lodash";
+;
 import i18n from '../i18n/i18n'
 import type {Item} from "../types";
 

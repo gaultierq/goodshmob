@@ -69,6 +69,16 @@ const interactionsScreen = {
     }
 };
 
+const userScreen = {
+    screen: {
+        label: 'test',
+        screen: 'goodsh.UserScreen',
+    },
+    passProps: {
+        userId: "b871ecdf-f15c-43bf-b94f-abcbaab637ba",
+    }
+};
+
 
 const test = {
     screen: {
@@ -90,6 +100,7 @@ let testScreen = null;
 //  testScreen = test;
 //  testScreen = homeScreen;
 //  testScreen = interactionsScreen;
+ testScreen = userScreen;
 
 
 export default testScreen;

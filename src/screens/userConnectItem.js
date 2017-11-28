@@ -19,7 +19,7 @@ import * as Api from "../utils/Api";
 import ApiAction from "../utils/ApiAction";
 import * as UI from "./UIStyles";
 import UserRowI from "../activity/components/UserRowI";
-import * as _ from "lodash";
+;
 
 type Props = NavigableProps & {
     user: User

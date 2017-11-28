@@ -32,20 +32,17 @@ export default class UserScreen extends Component<Props, State> {
 
 
         return (
-            <View>
-                <Feed
-                    data={activities}
-                    renderItem={this.renderItem.bind(this)}
-                    fetchSrc={{
-                        callFactory: ()=>fetchUserNetwork(userId),
-                        useLinks: true,
-                        action: FETCH_ACTIVITIES,
-                        options: {userId}
-                    }}
-                    hasMore={!network.hasNoMore}
-                />
-
-            </View>
+            <Feed
+                data={activities}
+                renderItem={this.renderItem.bind(this)}
+                fetchSrc={{
+                    callFactory: ()=>fetchUserNetwork(userId),
+                    useLinks: true,
+                    action: FETCH_ACTIVITIES,
+                    options: {userId}
+                }}
+                hasMore={!network.hasNoMore}
+            />
         );
     }
 

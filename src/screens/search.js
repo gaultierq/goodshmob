@@ -15,9 +15,6 @@ import Button from 'apsl-react-native-button'
 import * as UI from "./UIStyles";
 
 
-import * as _ from "lodash";
-
-
 export type SearchCategoryType = string;
 
 export type SearchCategory = {

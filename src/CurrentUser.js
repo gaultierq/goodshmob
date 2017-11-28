@@ -1,7 +1,7 @@
 // @flow
 
 import type {Store} from 'redux'
-import * as _ from "lodash";
+;
 import {buildNonNullData} from "./utils/DataUtils";
 import type {Id} from "./types";
 

@@ -1,7 +1,7 @@
 // @flow
 import build from '../../vendors/redux-object'
 import type {Id, MergeOpts} from "../types";
-import * as _ from "lodash";
+;
 import {mergeLists} from "./ModelUtils";
 import dotprop from "dot-prop-immutable"
 

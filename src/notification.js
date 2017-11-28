@@ -3,7 +3,7 @@
 import RNFirebase from 'react-native-firebase'
 import type {Deeplink} from "./types";
 import URL from "url-parse"
-import * as _ from "lodash";
+;
 import {Navigation} from 'react-native-navigation';
 
 let handleNotif = function (notif) {

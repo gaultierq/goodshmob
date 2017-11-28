@@ -12,7 +12,7 @@ import type {Activity, ActivityType, Id} from "../types";
 import * as UI from "../screens/UIStyles";
 import FeedSeparator from "./components/FeedSeparator";
 import ActivityActionBar from "./components/ActivityActionBar";
-import * as _ from "lodash";
+;
 import Icon from 'react-native-vector-icons/Entypo';
 import UserRow from "./components/UserRow";
 

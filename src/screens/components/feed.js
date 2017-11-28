@@ -48,6 +48,11 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
     state = {};
 
+    constructor(props: Props<T>) {
+        super(props);
+        this.postFetchFirst();
+    }
+
     componentWillReceiveProps(nextProps: Props<*>) {
         if (this.props.scrollUpOnBack !== nextProps.scrollUpOnBack) {
             if (nextProps.scrollUpOnBack) {
@@ -70,28 +75,29 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                 this._listener = null;
             }
         }
-        setTimeout(() => {
+
             //hack: let the next props become the props
-            this.fetchFirst(nextProps);
-        });
+            this.postFetchFirst();
 
     }
 
-    fetchFirst(nextProps: Props<T>) {
-        if (!nextProps.cannotFetch) {
-            if (this.state.firstLoad !== 2) {
-                let setReq = (firstLoad) => {
-                    this.setState({firstLoad});
-                };
-                setReq(1);
-                this.fetchIt()
-                    .catch(err => {
-                        console.warn("error while firstLoad:" + err);
-                        setReq(3);
-                    })
-                    .then(() => setReq(2));
+    postFetchFirst() {
+        setTimeout(() => {
+            if (!this.props.cannotFetch) {
+                if (this.state.firstLoad !== 2) {
+                    let setReq = (firstLoad) => {
+                        this.setState({firstLoad});
+                    };
+                    setReq(1);
+                    this.fetchIt()
+                        .catch(err => {
+                            console.warn("error while firstLoad:" + err);
+                            setReq(3);
+                        })
+                        .then(() => setReq(2));
+                }
             }
-        }
+        });
     }
 
     render() {

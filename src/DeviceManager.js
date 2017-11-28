@@ -2,7 +2,7 @@
 
 import RNFirebase from 'react-native-firebase'
 import type {Device} from "./types";
-import * as _ from "lodash";
+;
 import * as appActions from "./auth/actions";
 import * as DeviceInfo from 'react-native-device-info'
 //import {toUppercase} from "./utils/StringUtils";
