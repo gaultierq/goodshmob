@@ -216,11 +216,11 @@ export default {
     "interactions":{
         "saving":"saved %{what}",
         "comment":"commented %{what}",
-        "like":"%{username} said YEAAH! on %{item_title}",
-        "list":"%{username} created the lineup %{list_title}",
-        "post":"%{username} posted %{item_title}",
-        "sending":"%{username} sended %{item_title} to you",
-        "invitation":"%{username} and %{you} are now connected",
+        "like":"said YEAAH! on %{what}",
+        "list":"created the lineup %{what}",
+        "post":"posted %{what}",
+        "sending":"sended %{what} to you",
+        "invitation":"and %{you} are now connected",
         "you":"you"
     },
 

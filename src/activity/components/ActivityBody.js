@@ -55,22 +55,23 @@ export default class ActivityBody extends React.Component<Props, State> {
         if (activity.type === 'asks'){
             return <Text style={[{margin: 12, fontFamily: 'Chivo-Light', fontSize: 30}]}>{activity.content}</Text>;
         }
+        // image = null;
         return <View style={{
             flex:1,
             alignSelf: 'center',
             height: imageHeight + 15,
             width: "100%",
         }}>
-            {!!image && <Image
-                source={{uri: image}}
-                resizeMode='contain'
+            <Image
+                source={image ? {uri: image} : require('../../img/goodsh_placeholder.png')}
+                resizeMode={image ? 'contain' : 'cover'}
                 style={{
                     alignSelf: 'center',
                     height: imageHeight,
                     width: "100%",
                 }}
+                defaultSource={{}}
             />
-            }
         </View>
     }
 }

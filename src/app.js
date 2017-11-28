@@ -166,8 +166,10 @@ export default class App {
 
         let id = CurrentUser.currentUserId();
 
-        if (id !== currentUserId) throw `inconsistent current_user_id: ${id}!=${currentUserId}`;
-
+        if (id !== currentUserId) {
+            console.warn(`inconsistent current_user_id: ${id}!=${currentUserId}`);
+            return;
+        }
 
         let logged = !!currentUserId;
 

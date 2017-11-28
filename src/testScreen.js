@@ -60,6 +60,14 @@ const sendScreen = {
         itemId: "8ab94a3c-43b2-4e5c-acfb-d4ff268f93b1",
     }
 };
+const interactionsScreen = {
+    screen: {
+        label: 'test',
+        screen: 'goodsh.InteractionScreen',
+    },
+    passProps: {
+    }
+};
 
 
 const test = {
@@ -81,6 +89,7 @@ let testScreen = null;
 //  testScreen = sendScreen;
 //  testScreen = test;
 //  testScreen = homeScreen;
+//  testScreen = interactionsScreen;
 
 
 export default testScreen;

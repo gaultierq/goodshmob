@@ -60,6 +60,7 @@ export class CommunityScreen extends Component<Props, State> {
                 navigator={navigator}
                 renderItem={(item) => this.renderItem(item)}
                 ListFooterComponent={this.renderFriendsSuggestion.bind(this)}
+                style={{backgroundColor: 'white'}}
             />
         )
     }

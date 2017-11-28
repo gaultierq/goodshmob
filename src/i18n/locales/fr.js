@@ -213,13 +213,13 @@ export default {
         "add_description_placeholder":"Ajouter un petit mot"
     },
     "interactions":{
-        "saving":"a enregistré %{item_title}",
-        "comment":"a commenté %{item_title}",
-        "like":"%{username} a dit YEAAH! à %{item_title}",
-        "list":"%{username} a crée la lineup %{list_title}",
-        "post":"%{username} a posté %{item_title}",
-        "sending":"%{username} t’a envoyé %{item_title} to you",
-        "invitation":"%{username} et %{you} êtes désormais connectés",
+        "saving":"a enregistré %{what}",
+        "comment":"a commenté %{what}",
+        "like":"a dit YEAAH! à %{what}",
+        "list":"a crée la lineup %{what}",
+        "post":"a posté %{what}",
+        "sending":"t’a envoyé %{item_title} to you",
+        "invitation":"et %{you} êtes désormais connectés",
         "you":"toi"
     },
     util: {
