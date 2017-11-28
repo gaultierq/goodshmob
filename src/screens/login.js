@@ -42,7 +42,7 @@ class Login extends Component<Props, State> {
                 >
                     <Text>{i18n.t('login_screen.value_proposal')}</Text>
                     <Text>{i18n.t('login_screen.definition.example')}</Text>
-                    <Image source={require('../img/goodshit_beta.png')}/>
+                    <Image source={require('../img/goodsh.png')}/>
                     <Button
                         onPress={this.handleFacebookLogin.bind(this)}
                         title={i18n.t('login_screen.facebook_signin')}
