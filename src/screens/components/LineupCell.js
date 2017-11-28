@@ -7,12 +7,13 @@ import * as UI from "../UIStyles";
 import {assertUnique} from "../../utils/DataUtils";
 import {isEmpty} from "lodash";
 import type {List, Saving} from "../../types";
-import * as _ from "lodash";
+//import * as _ from "lodash";
 
 type Props = {
-    moreComponent?: Node,
+
     lineup: List,
-    style?: *
+    style?: *,
+    titleChildren?: Node,
 };
 
 type State = {
@@ -43,14 +44,14 @@ export default class LineupCell extends React.PureComponent<Props, State> {
 
         console.log(`DEBUG: render LineupCell w=${w} n=${n} spaceLeft=${spaceLeft} padding=${padding}`);
 
-        let moreComponent = this.props.moreComponent;
+        let savingCount = _.get(lineup, `meta.savings-count`, null) || 0;
+
+        let {titleChildren} = this.props;
         return (
             <View style={[styles.container, {paddingLeft: padding, paddingRight: padding, paddingBottom: padding}]}>
                 <View style={{flexDirection: "row"}}>
-                    <Text style={styles.lineupTitle}>{lineup.name}</Text>
-                    {
-                        moreComponent && <View style={{position: "absolute", right: 0}}>{moreComponent}</View>
-                    }
+                    <Text style={styles.lineupTitle}>{lineup.name + ' (' + savingCount + ')'}</Text>
+                    {titleChildren}
                 </View>
                 {this.renderList(n, padding, savings)}
             </View>

@@ -25,6 +25,7 @@ import * as globalProps from 'react-native-global-props';
 import * as notification from './notification';
 import * as DeviceManager from "./DeviceManager";
 import * as UI from "./screens/UIStyles";
+import global from "./global";
 
 
 let hydrated = false;
