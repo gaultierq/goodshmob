@@ -3,9 +3,8 @@ import React, {Component} from 'react';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
 import {CheckBox, SearchBar} from "react-native-elements";
 import * as UI from "./UIStyles";
-import i18n from '../i18n/i18n'
+import type {Props as LineupProps} from "./lineuplist";
 import {screen as LineupListScreen} from './lineuplist';
-import type {LineupProps} from "./lineuplist";
 import AddLineupComponent from "./components/addlineup";
 
 type Props = LineupProps & {
@@ -20,8 +19,6 @@ class AddInScreen extends Component<Props, State> {
     state = {filter: null};
 
     render() {
-
-        //const {} = this.props;
 
         return (
             <View style={[styles.container]}>

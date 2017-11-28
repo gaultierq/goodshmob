@@ -23,6 +23,7 @@ import * as Api from "../utils/Api";
 import * as UI from "../screens/UIStyles";
 import {SearchBar} from 'react-native-elements'
 import type types, {Id, List, User} from "../types";
+import type {FeedProps} from "./components/feed";
 import Feed from "./components/feed";
 import {currentUserId} from "../CurrentUser"
 import ApiAction from "../utils/ApiAction";
@@ -32,7 +33,7 @@ import * as Nav from "./Nav";
 export const DELETE_LINEUP = new ApiAction("delete_lineup");
 export const EDIT_LINEUP = new ApiAction("edit_lineup");
 
-export type LineupProps = {
+export type Props = FeedProps & {
     userId: Id,
     onSavingPressed: Function,
     canFilterOverItems: boolean | ()=>boolean,
@@ -42,7 +43,6 @@ export type LineupProps = {
     ListHeaderComponent?: Node,
     renderItem: (item: *)=>Node,
     navigator: *
-
 };
 
 type State = {
@@ -51,13 +51,14 @@ type State = {
 };
 
 
-class LineupListScreen extends Component<LineupProps, State> {
+class LineupListScreen extends Component<Props, State> {
 
     state = {
         isLoading: false,
         isLoadingMore: false,
     };
-
+    refs = {};
+    refs2 = {};
 
     constructor(props){
         super(props);
@@ -75,11 +76,22 @@ class LineupListScreen extends Component<LineupProps, State> {
         }
     }
 
+
     render() {
-        const {userId/*, filter*/} = this.props;
+        const {
+            userId,
+            onSavingPressed,
+            canFilterOverItems,
+            data,
+            onCancel,
+            renderItem,
+            navigator,
+            //ListHeaderComponent,
+            ...attributes
+        } = this.props;
 
         let user: User = buildData(this.props.data, "users", userId);
-
+        console.log("Feed attributes: scrollUpOnBack="+attributes.scrollUpOnBack);
         let lists, fetchSrc;
         if (user && user.lists) {
             lists = user.lists;
@@ -97,17 +109,15 @@ class LineupListScreen extends Component<LineupProps, State> {
             };
         }
 
-        let data: Array<types.List|types.Item> = lists;
+        let items: Array<types.List|types.Item> = lists;
 
         return (
-            <View>
-                <Feed
-                    data={data}
-                    renderItem={this.renderItem.bind(this)}
-                    fetchSrc={fetchSrc}
-                    ListHeaderComponent={this.props.ListHeaderComponent}
-                />
-            </View>
+            <Feed
+                data={items}
+                renderItem={this.renderItem.bind(this)}
+                fetchSrc={fetchSrc}
+                {...attributes}
+            />
         );
     }
 
@@ -123,8 +133,6 @@ class LineupListScreen extends Component<LineupProps, State> {
     }
 
 }
-
-
 
 const mapStateToProps = (state, ownProps) => ({
     data: state.data,
@@ -162,43 +170,6 @@ const reducer = (() => {
                 break;
             }
 
-            //
-            // //FIXME: this does not belong here !
-            // case CREATE_LINEUP.success(): {
-            //     let userId = currentUserId();
-            //     let {id, type} = action.payload.data;
-            //     let path = `users.${userId}.relationships.lists.data`;
-            //     let goodshboxId = _.get(state, `users.${userId}.relationships.goodshbox.data.id`, null);
-            //     state = doDataMergeInState(state, path, [{id, type}], {afterId: goodshboxId});
-            //
-            //     //state = state.merge({list});
-            //     break;
-            // }
-            //
-            // //FIXME: this does not belong here !
-            // case DELETE_LINEUP.success(): {
-            //     let userId = currentUserId();
-            //     let {lineupId} = action.options;
-            //     let path = `users.${userId}.relationships.lists.data`;
-            //     let lists = _.get(state, path, null);
-            //     lists = _.filter(lists, (l) => l.id !== lineupId);
-            //     state = dotprop.set(state, path, lists);
-            //     break;
-            // }
-            //
-            // //FIXME: this does not belong here !
-            // case SAVE_ITEM.success(): {
-            //     let {id, type} = action.payload.data;
-            //     let {lineupId} = action.options;
-            //     let path = `lists.${lineupId}.relationships.savings.data`;
-            //     let savings = _.get(state, path, null);
-            //     if (savings) {
-            //         savings = savings.slice();
-            //         savings.splice(0, 0, {id, type})
-            //         state = dotprop.set(state, path, savings);
-            //     }
-            //     break;
-            // }
         }
 
         return state;

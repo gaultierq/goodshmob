@@ -15,7 +15,7 @@ import ItemCell from "./components/ItemCell";
 import LineupCell from "./components/LineupCell";
 import {FETCH_ACTIVITIES, fetchMyNetwork} from "./networkActions";
 import * as Nav from "./Nav";
-
+import Screen from "./components/Screen";
 
 type Props = NavigableProps;
 
@@ -25,7 +25,7 @@ type State = {
     isPulling?: boolean
 };
 
-class NetworkScreen extends Component<Props, State> {
+class NetworkScreen extends Screen<Props, State> {
 
 
     static navigatorButtons = {
@@ -49,8 +49,8 @@ class NetworkScreen extends Component<Props, State> {
     state = {};
 
     constructor(props){
-        super();
-        props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+        super(props);
+        props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
@@ -127,6 +127,13 @@ class NetworkScreen extends Component<Props, State> {
         let network = this.props.network[userId] || {};
         let activities = network.list;
 
+        let scrollUpOnBack = super.isVisible() ? ()=> {
+            this.props.navigator.switchToTab({
+                tabIndex: 0
+            });
+            return true;
+        } : null;
+
         return (
             <MainBackground>
                 <View>
@@ -140,6 +147,7 @@ class NetworkScreen extends Component<Props, State> {
                             options: {userId}
                         }}
                         hasMore={!network.hasNoMore}
+                        scrollUpOnBack={scrollUpOnBack}
                     />
 
                 </View>

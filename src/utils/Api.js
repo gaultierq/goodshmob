@@ -5,7 +5,7 @@ import normalize from 'json-api-normalizer';
 import {logout} from "../auth/actions";
 import ApiAction from "./ApiAction";
 import fetch from 'react-native-fetch-polyfill';
-
+import Snackbar from "react-native-snackbar"
 
 export const API_DATA_REQUEST = 'API_DATA_REQUEST';
 export const API_DATA_SUCCESS = 'API_DATA_SUCCESS';
@@ -149,10 +149,16 @@ export class Call {
                             let errMsg = error.message || `${error.status}! [${apiAction}]: ${JSON.stringify(error)}`;
 
                             let errorAction = dispatch({ type: API_DATA_FAILURE, error: errMsg });
+
+                            Snackbar.show({
+                                title: "request failure",
+                            });
+
                             if (error.status === 401) {
                                 dispatch(errorAction);
                                 dispatch(logout())
                                 reject("user lost authentification");
+                                return;
                             }
                             dispatch(errorAction);
                             reject("api error:" + errMsg);

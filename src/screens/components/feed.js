@@ -2,7 +2,7 @@
 
 import type {Node} from 'react';
 import React, {Component} from 'react';
-import {View, ActivityIndicator, FlatList, RefreshControl, Text} from 'react-native';
+import {View, ActivityIndicator, FlatList, RefreshControl, Text, BackHandler} from 'react-native';
 import {connect} from "react-redux";
 import {assertUnique} from "../../utils/DataUtils";
 import ApiAction from "../../utils/ApiAction";
@@ -19,8 +19,7 @@ export type FeedSource = {
     options?: any
 }
 
-
-type Props<T> = {
+export type Props<T> = {
     data: Array<T>,
     renderItem: Function,
     fetchSrc: FeedSource,
@@ -28,7 +27,8 @@ type Props<T> = {
     ListHeaderComponent?: Node,
     ListFooterComponent?: Node,
     empty: string,
-    style: any
+    style: any,
+    scrollUpOnBack?: ()=>boolean
 };
 
 type State = {
@@ -46,6 +46,31 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     keyExtractor = (item, index) => item.id;
 
     state = {};
+
+    componentWillReceiveProps(nextProps: Props<*>) {
+        if (this.props.scrollUpOnBack !== nextProps.scrollUpOnBack) {
+            if (nextProps.scrollUpOnBack) {
+                console.info("Feed listening to back navigation");
+
+                this._listener = () => {
+                    console.info("Feed onBackPressed");
+                    if (this._scrollY > 100) {
+                        this.refs.feed.scrollToOffset({x: 0, y: 0, animated: true});
+                        return true;
+                    }
+
+                    return nextProps.scrollUpOnBack();
+                };
+
+                BackHandler.addEventListener('hardwareBackPress', this._listener);
+            }
+            else {
+                BackHandler.removeEventListener('hardwareBackPress', this._listener);
+                this._listener = null;
+            }
+        }
+
+    }
 
     render() {
         assertUnique(this.props.data);
@@ -74,6 +99,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         return (
             <FlatList
                 data={data}
+                ref="feed"
                 renderItem={renderItem}
                 keyExtractor={this.keyExtractor}
                 refreshControl={this.renderRefreshControl()}
@@ -82,6 +108,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                 ListFooterComponent={!firstEmptyLoader && this.renderFetchMoreLoader()}
                 style={{...this.props.style,  minHeight: 100}}
                 ListHeaderComponent={!firstEmptyLoader && ListHeaderComponent}
+                onScroll={this._handleScroll}
                 {...attributes}
             />
         );
@@ -95,14 +122,29 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         return this.state.isFetchingMore === 'sending';
     }
 
+    _scrollY = 0;
+
+    _handleScroll = (event: Object) => {
+        this._scrollY = event.nativeEvent.contentOffset.y;
+    };
+
+    _listener = () => {
+        console.info("Feed onBackPressed");
+        if (this._scrollY > 100) {
+            this.refs.feed.scrollToOffset({x: 0, y: 0, animated: true});
+            return true;
+        }
+        return false;
+    };
+
     componentDidMount() {
-        console.debug("componentDidMount " + JSON.stringify(this.props.fetchSrc.action));
+        console.debug("Feed componentDidMount " + JSON.stringify(this.props.fetchSrc.action));
+
         if (this.state.firstLoad) return;
         this.setState({firstLoad: 1});
         this.fetchIt()
             .catch(err=>{console.warn("error while firstLoad:" + err)})
             .then(()=>this.setState({firstLoad: 2}));
-
     }
 
     fetchIt(afterId?: Id) {

@@ -2,6 +2,7 @@
 
 import React, {Component} from 'react';
 import {
+    BackHandler,
     Image,
     Platform,
     StyleSheet,
@@ -9,7 +10,7 @@ import {
     TextInput,
     TouchableOpacity,
     TouchableWithoutFeedback,
-    View,
+    View
 } from 'react-native';
 
 import {connect} from "react-redux";
@@ -33,6 +34,7 @@ import {startAddItem} from "./actions";
 import * as Nav from "./Nav";
 import {MainBackground} from "./UIComponents";
 import SmartInput from "./components/SmartInput";
+import Screen from "./components/Screen";
 
 
 type Props = {
@@ -47,8 +49,7 @@ type State = {
 };
 
 @connect()
-class HomeScreen extends Component<Props, State> {
-
+class HomeScreen extends Screen<Props, State> {
 
     static navigatorButtons = {
         leftButtons: [
@@ -67,35 +68,27 @@ class HomeScreen extends Component<Props, State> {
 
     state : State = {};
 
+
     constructor(props: Props){
         super(props);
-        props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+        props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+    }
+
+    componentWillAppear() {
+        this.props.navigator.setDrawerEnabled({side: 'left', enabled: true});
+        this.props.navigator.setDrawerEnabled({side: 'right', enabled: false});
+        this._appear = true;
+    }
+
+
+    componentWillDisappear() {
+        this.props.navigator.setDrawerEnabled({side: 'left', enabled: false});
     }
 
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
         console.debug("home:onNavigatorEvent" + JSON.stringify(event));
-
-        switch(event.id) {
-            case 'willAppear':
-                this.props.navigator.setDrawerEnabled({side: 'left', enabled: true});
-                this.props.navigator.setDrawerEnabled({side: 'right', enabled: false});
-                break;
-            case 'didAppear':
-                break;
-            case 'willDisappear':
-                this.props.navigator.setDrawerEnabled({side: 'left', enabled: false});
-                break;
-            case 'didDisappear':
-                break;
-        }
         if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
             switch (event.id) {
-                // case 'cancel_add':
-                //     this.setState({
-                //         pendingItem: null,
-                //         pendingList: null
-                //     });
-                //     break;
                 case 'profile':
                     this.props.navigator.toggleDrawer({
                         side: 'left',
@@ -121,14 +114,12 @@ class HomeScreen extends Component<Props, State> {
                             ],
                         },
                     });
-
                     break;
             }
         }
     }
 
     render() {
-
 
         return (
             <MenuContext>
@@ -142,6 +133,7 @@ class HomeScreen extends Component<Props, State> {
                             navigator={this.props.navigator}
                             ListHeaderComponent={this.renderHeader()}
                             renderItem={(item)=>this.renderListItem(item)}
+                            scrollUpOnBack={super.isVisible() ? ()=>false : null}
                         />
 
                     </View>
