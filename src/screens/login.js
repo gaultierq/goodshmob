@@ -2,24 +2,22 @@
 // @flow
 import React, {Component} from 'react';
 
-import {Button, ImageBackground, Image, StyleSheet, Text, View, ActivityIndicator} from 'react-native';
+import {ActivityIndicator, Button, Image, ImageBackground, StyleSheet, Text, View} from 'react-native';
 import * as appActions from "../auth/actions"
 import {connect} from 'react-redux';
-import {LoginManager} from 'react-native-fbsdk';
+import {AccessToken, LoginManager} from 'react-native-fbsdk';
 import i18n from '../i18n/i18n'
-import { AccessToken } from "react-native-fbsdk";
-import {generateCurrentDevice} from "../DeviceManager";
+import SmartButton from "./components/SmartButton";
 
 type Props = {
 };
 
 type State = {
-    loginInProgress: boolean;
 };
 
 class Login extends Component<Props, State> {
 
-    state = {loginInProgress: false};
+    state = {};
 
     render() {
         return (
@@ -36,38 +34,45 @@ class Login extends Component<Props, State> {
                 <View style={{
                     flex: 1,
                     alignItems: 'center',
-                    justifyContent: 'space-between',
+                    justifyContent: 'space-around',
                     margin: '10%'
                 }}
                 >
-                    <Text>{i18n.t('login_screen.value_proposal')}</Text>
-                    <Text>{i18n.t('login_screen.definition.example')}</Text>
-                    <Image source={require('../img/goodsh.png')}/>
-                    <Button
-                        onPress={this.handleFacebookLogin.bind(this)}
-                        title={i18n.t('login_screen.facebook_signin')}
-                        color="#40e7bb"
-                        accessibilityLabel={i18n.t('login_screen.facebook_signin')}
-                        disabled={this.state.loginInProgress}
-                    />
-                    <ActivityIndicator
-                        animating = {this.state.loginInProgress}
-                        size = "small"
-                    />
-                    <Text>{i18n.t('login_screen.no_publication')}</Text>
+                    <View style={{
+                        alignItems: 'center',
+                    }}>
+                        <Text style={{fontSize: 20, textAlign: 'center'}}>{i18n.t('login_screen.value_proposal')}</Text>
+                        {/*<Text>{i18n.t('login_screen.definition.example')}</Text>*/}
+                        <Image
+                            source={require('../img/screen_title_home.png')}
+                            resizeMode="contain"
+
+                        />
+                    </View>
+                    <View style={{
+                    }}>
+
+                        <SmartButton
+                            textKey={'login_screen.facebook_signin'}
+                            execAction={this.handleFacebookLogin2}
+                        />
+
+                        <Text>{i18n.t('login_screen.no_publication')}</Text>
+
+                    </View>
                 </View>
             </ImageBackground>
         );
     }
 
-    handleFacebookLogin () {
-        this.setState({loginInProgress: true});
+    handleFacebookLogin2 = () => new Promise((resolve, reject)=> {
 
         LoginManager.logInWithReadPermissions(['public_profile', 'email', 'user_friends'])
             .then(
                 result => {
                     if (result.isCancelled) {
-                        console.log('Login cancelled')
+                        //console.log('Login cancelled');
+                        reject('Login cancelled');
                     }
                     else {
                         console.log(`Login success with permissions: ${result.grantedPermissions ? result.grantedPermissions.toString() : 'null'}`);
@@ -80,7 +85,7 @@ class Login extends Component<Props, State> {
                                 this.props
                                     .dispatch(appActions.login(token))
                                     .then((user) => {
-                                        this.setState({loginInProgress: false});
+                                        resolve();
                                     })
                             }
                         )
@@ -89,11 +94,12 @@ class Login extends Component<Props, State> {
                 },
                 error => {
                     console.log('Login fail with error: ' + error);
-                    this.setState({loginInProgress: false});
+                    reject('Login fail with error: ' + error);
                 }
             )
         ;
-    }
+    });
+
 }
 
 let screen = connect()(Login);

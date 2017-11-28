@@ -49,7 +49,7 @@ export default {
                 one: "DONNER SON AVIS (1)",
                 other: "DONNER SON AVIS (%{count})"
             },
-            "share":"PARTAGER",
+            "share":"ENVOYER LE LIEN",
             "save":"ENREGISTRER",
             "saved":"ENREGISTRÉ",
             "buy":"ACHETER",

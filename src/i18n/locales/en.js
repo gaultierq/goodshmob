@@ -50,7 +50,7 @@ export default {
                 other: "COMMENT (%{count})"
             },
 
-            "share":"SHARE",
+            "share":"SEND THE LINK",
             "save":"SAVE",
             "saved":"SAVED",
             "buy":"BUY",
@@ -81,7 +81,11 @@ export default {
         "definition":{
             "example":"Bouquin, restaurant, film, série, artiste,lieu, musique, gadget, fringue, vin, …"
         },
-        "value_proposal":"Don't want to forget advice and good stuff?"
+        "value_proposal":"I was said it is\n" +
+        "very good.\n" +
+        "Not to forget it\n" +
+        "I stored it\n" +
+        "in"
     },
     "profile_screen":{
         "love":" LOOOVE ",
