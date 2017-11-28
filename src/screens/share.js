@@ -4,7 +4,7 @@ import {Clipboard, Dimensions, Image, Share, StyleSheet, Text, TextInput, Toucha
 import type {Id, Item, ItemType} from "../types";
 import {CheckBox} from "react-native-elements";
 import Snackbar from "react-native-snackbar"
-import i18n from '../i18n/i18n'
+
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as UI from "./UIStyles";
 import {currentUserId} from "../CurrentUser"

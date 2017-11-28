@@ -10,7 +10,7 @@ import ApiAction from "../utils/ApiAction";
 import UserActivity from "../activity/components/UserActivity";
 import {buildNonNullData} from "../utils/DataUtils";
 import type {Activity} from "../types";
-import i18n from '../i18n/i18n'
+
 import FeedSeparator from "../activity/components/FeedSeparator";
 import Screen from "./components/Screen";
 

@@ -7,7 +7,7 @@ import {connect} from "react-redux";
 import Closable from "./closable";
 import * as Api from "../utils/Api";
 import ApiAction from "../utils/ApiAction";
-import i18n from '../i18n/i18n'
+
 import Snackbar from "react-native-snackbar"
 import * as UI from "./UIStyles";
 import Button from 'apsl-react-native-button'

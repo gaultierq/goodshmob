@@ -21,7 +21,7 @@ import ApiAction from "../utils/ApiAction";
 import * as Api from "../utils/Api";
 import * as authActions from '../auth/actions'
 import {currentUserId} from "../CurrentUser";
-import i18n from '../i18n/i18n'
+
 import * as UI from "./UIStyles";
 import {renderLink, renderSimpleButton} from "./UIStyles";
 import SmartInput from "./components/SmartInput";

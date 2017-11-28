@@ -10,7 +10,7 @@ import FriendCell from "./components/FriendCell";
 import {currentUserId} from "../CurrentUser";
 import {TabBar, TabViewAnimated} from 'react-native-tab-view';
 import * as UIStyles from "./UIStyles";
-import i18n from '../i18n/i18n'
+
 import ApiAction from "../utils/ApiAction";
 import * as Api from "../utils/Api";
 import Immutable from 'seamless-immutable';

@@ -6,7 +6,7 @@ import {ActivityIndicator, Button, Image, ImageBackground, StyleSheet, Text, Vie
 import * as appActions from "../auth/actions"
 import {connect} from 'react-redux';
 import {AccessToken, LoginManager} from 'react-native-fbsdk';
-import i18n from '../i18n/i18n'
+
 import SmartButton from "./components/SmartButton";
 import {Colors} from "./UIStyles";
 

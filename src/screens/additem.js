@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import {StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView} from 'react-native';
 import {CheckBox, SearchBar} from "react-native-elements";
 import * as UI from "./UIStyles";
-import i18n from '../i18n/i18n'
+
 import LineupCell from "./components/LineupCell";
 import Button from 'apsl-react-native-button'
 import type {Id, Item, ItemType, List} from "../types";

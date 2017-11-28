@@ -6,7 +6,7 @@ import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableWithoutFeedback,
 import {connect} from "react-redux";
 import {combineReducers} from "redux";
 import {TabBar, TabViewAnimated} from 'react-native-tab-view';
-import i18n from '../i18n/i18n'
+
 import {SearchBar} from 'react-native-elements'
 import * as UIStyles from "../screens/UIStyles"
 
