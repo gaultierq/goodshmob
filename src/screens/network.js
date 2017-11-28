@@ -148,6 +148,7 @@ class NetworkScreen extends Screen<Props, State> {
                         }}
                         hasMore={!network.hasNoMore}
                         scrollUpOnBack={scrollUpOnBack}
+                        cannotFetch={!super.isVisible()}
                     />
 
                 </View>

@@ -7,7 +7,11 @@ export type ScreenState = {
     onScreen: boolean
 }
 
-export default class Screen<P: NavigableProps, S> extends Component<P, S> {
+export type ScreenProps = NavigableProps & {
+    onScreen?: boolean //when not a screen root, my parent screen can tell me I'm visible
+}
+
+export default class Screen<P: ScreenProps, S> extends Component<P, S> {
 
 
     state = {onSreen: false};
@@ -30,7 +34,7 @@ export default class Screen<P: NavigableProps, S> extends Component<P, S> {
                 case 'willDisappear':
 
                     let method = 'component' + toUppercase(id);
-                    console.debug(this.toString() + ' ' + id);
+                    console.debug('screen visib event' + ' ' + id);
 
                     // $FlowFixMe
                     if (this[method]) this[method]();
@@ -42,6 +46,6 @@ export default class Screen<P: NavigableProps, S> extends Component<P, S> {
     }
 
     isVisible() {
-        return this.state.onScreen;
+        return this.props.onScreen || this.state.onScreen;
     }
 }

@@ -247,6 +247,12 @@ export default class App {
                     hideBackButtonTitle: true,
                     ...tabsStyle,
                 },
+                // passProps: {
+                //     // could be passed to the drawer
+                //     drawerRight: {
+                //         onScreen: true
+                //     }
+                // },
                 drawer: { // optional, add this if you want a side menu drawer in your app
                     left: { // optional, define if you want a drawer from the left
                         // screen: 'goodsh.FriendsScreen',
@@ -258,8 +264,10 @@ export default class App {
                     },
                     right: { // optional, define if you want a drawer from the right
                         screen: 'goodsh.CommunityScreen', // unique ID registered with Navigation.registerScreen
-                        enabled: false,
-                        passProps: {} // simple serializable object that will pass as props to all top screens (optional)
+                        // enabled: false,
+                        passProps: {
+                            onScreen: true //with current RNN version there are no way to detect if drawer is opened yet
+                        } // simple serializable object that will pass as props to all top screens (optional)
                     },
                     style: { // ( iOS only )
                         drawerShadow: true, // optional, add this if you want a side menu drawer shadow

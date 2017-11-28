@@ -16,6 +16,7 @@ import * as Api from "../utils/Api";
 import Immutable from 'seamless-immutable';
 import {buildData} from "../utils/DataUtils";
 import {InteractionScreen} from "./interactions";
+import Screen from "./components/Screen";
 
 type Props = {
     navigator:any
@@ -30,7 +31,7 @@ const FETCH_PEOPLE_YOU_MAY_KNOW = new ApiAction("people_you_may_know");
     peopleYouMayKnow: state.peopleYouMayKnow,
     data: state.data,
 }))
-export class CommunityScreen extends Component<Props, State> {
+export class CommunityScreen extends Screen<Props, State> {
 
     state = {
         index: 0,
@@ -40,11 +41,15 @@ export class CommunityScreen extends Component<Props, State> {
         ],
     };
 
+    constructor(props: Props) {
+        super(props);
+    }
+
     render() {
         return (
             <TabViewAnimated
                 style={styles.container}
-                navigationState={this.state}
+                navigationState={{...this.state, visible: this.isVisible()}}
                 renderScene={this.renderScene.bind(this)}
                 renderHeader={this.renderHeader.bind(this)}
                 onIndexChange={this.handleIndexChange.bind(this)}
@@ -61,6 +66,7 @@ export class CommunityScreen extends Component<Props, State> {
                 renderItem={(item) => this.renderItem(item)}
                 ListFooterComponent={this.renderFriendsSuggestion.bind(this)}
                 style={{backgroundColor: 'white'}}
+                onScreen={this.isVisible()}
             />
         )
     }
@@ -68,7 +74,10 @@ export class CommunityScreen extends Component<Props, State> {
     renderInteractions() {
         const {navigator} = this.props;
         return (
-            <InteractionScreen navigator={navigator}/>
+            <InteractionScreen
+                navigator={navigator}
+                onScreen={this.isVisible()}
+            />
         )
     }
 

@@ -134,6 +134,7 @@ class HomeScreen extends Screen<Props, State> {
                             ListHeaderComponent={this.renderHeader()}
                             renderItem={(item)=>this.renderListItem(item)}
                             scrollUpOnBack={super.isVisible() ? ()=>false : null}
+                            cannotFetch={!super.isVisible()}
                         />
 
                     </View>

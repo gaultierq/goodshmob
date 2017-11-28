@@ -12,7 +12,7 @@ import {buildNonNullData} from "../utils/DataUtils";
 import type {Activity} from "../types";
 import i18n from '../i18n/i18n'
 import FeedSeparator from "../activity/components/FeedSeparator";
-
+import Screen from "./components/Screen";
 
 type Props = {
     navigator: *,
@@ -32,10 +32,9 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 @connect(mapStateToProps)
-export class InteractionScreen extends Component<Props, State> {
+export class InteractionScreen extends Screen<Props, State> {
 
 
-    //titleSet because when navigating back, a render may change the nav bar title. this is a flaw in wix nav
     state = {};
 
     render() {
@@ -55,6 +54,7 @@ export class InteractionScreen extends Component<Props, State> {
                     hasMore={!interaction.hasNoMore}
                     ItemSeparatorComponent={()=> <FeedSeparator vMargin={12} />}
                     contentContainerStyle={{paddingTop: 10}}
+                    // cannotFetch={!super.isVisible()}
                 />
 
             </View>

@@ -1,17 +1,17 @@
 // @flow
 
+import type {Node} from 'react';
 import React, {Component} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import type {Node} from 'react';
 import {connect} from "react-redux";
 import FriendCell from "./components/FriendCell";
-import {MainBackground} from "./UIComponents";
 import * as Api from "../utils/Api";
 import Feed from "./components/feed"
 import ApiAction from "../utils/ApiAction";
 import type {Id, Item, User} from "../types";
 import {buildData} from "../utils/DataUtils";
 import * as Nav from "./Nav";
+import Screen from "./components/Screen";
 
 type Props = {
     userId: Id,
@@ -30,14 +30,13 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 @connect(mapStateToProps)
-export default class FriendsScreen extends Component<Props, State> {
+export default class FriendsScreen extends Screen<Props, State> {
 
 
-    constructor(props){
+    constructor(props: Props){
         super(props);
-        props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+        props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
-
 
     onNavigatorEvent(event) {
         if (event.type === 'NavBarButtonPress') {
@@ -77,6 +76,7 @@ export default class FriendsScreen extends Component<Props, State> {
                 callFactory,
                 action
             }}
+            // cannotFetch={!super.isVisible()}
         />);
     }
 
@@ -94,8 +94,6 @@ export default class FriendsScreen extends Component<Props, State> {
         )
     }
 }
-
-
 
 const actionTypes = (() => {
 

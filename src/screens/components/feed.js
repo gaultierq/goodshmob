@@ -28,7 +28,8 @@ export type Props<T> = {
     ListFooterComponent?: Node,
     empty: string,
     style: any,
-    scrollUpOnBack?: ()=>boolean
+    scrollUpOnBack?: ()=>boolean,
+    cannotFetch?: boolean
 };
 
 type State = {
@@ -69,7 +70,28 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                 this._listener = null;
             }
         }
+        setTimeout(() => {
+            //hack: let the next props become the props
+            this.fetchFirst(nextProps);
+        });
 
+    }
+
+    fetchFirst(nextProps: Props<T>) {
+        if (!nextProps.cannotFetch) {
+            if (this.state.firstLoad !== 2) {
+                let setReq = (firstLoad) => {
+                    this.setState({firstLoad});
+                };
+                setReq(1);
+                this.fetchIt()
+                    .catch(err => {
+                        console.warn("error while firstLoad:" + err);
+                        setReq(3);
+                    })
+                    .then(() => setReq(2));
+            }
+        }
     }
 
     render() {
@@ -137,23 +159,15 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         return false;
     };
 
-    componentDidMount() {
-        console.debug("Feed componentDidMount " + JSON.stringify(this.props.fetchSrc.action));
-
-        if (this.state.firstLoad) return;
-        this.setState({firstLoad: 1});
-        this.fetchIt()
-            .catch(err=>{console.warn("error while firstLoad:" + err)})
-            .then(()=>this.setState({firstLoad: 2}));
-    }
 
     fetchIt(afterId?: Id) {
 
         return new Promise((resolve, reject) => {
-
             let requestName = afterId ? 'isFetchingMore' : 'isFetchingFirst';
-
-            if (this.state[requestName] === 'sending') {
+            if (this.props.cannotFetch) {
+                reject(requestName + " fetch prevented");
+            }
+            else if (this.state[requestName] === 'sending') {
                 reject(requestName + " is already running. state="+JSON.stringify(this.state));
             }
             else {
