@@ -165,6 +165,7 @@ class HomeScreen extends Screen<Props, State> {
             isVisible={visible}
             avoidKeyboard={true}
             backdropOpacity={0.3}
+            onBackButtonPress={()=> {this._closeChangeNameModal(); return true;}}
             onBackdropPress={this._closeChangeNameModal}
         >
             <View style={{ alignItems: 'center'}}>

@@ -73,6 +73,7 @@ export default class AddLineupComponent extends Component<Props, State> {
                 <Modal
                     isVisible={!!this.state.isCreatingLineup}
                     backdropOpacity={0.3}
+                    onBackButtonPress={()=> {this._closeModal(); return true;}}
                     onBackdropPress={this._closeModal}
                 >
 
