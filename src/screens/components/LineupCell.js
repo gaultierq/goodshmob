@@ -19,7 +19,7 @@ type Props = {
 type State = {
 };
 
-export default class LineupCell extends React.PureComponent<Props, State> {
+export default class LineupCell extends React.Component<Props, State> {
 
 
     render() {

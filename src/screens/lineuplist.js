@@ -51,14 +51,16 @@ type State = {
 };
 
 
-class LineupListScreen extends Component<Props, State> {
+
+@connect((state, ownProps) => ({
+    data: state.data,
+}))
+export class LineupListScreen extends Component<Props, State> {
 
     state = {
         isLoading: false,
         isLoadingMore: false,
     };
-    refs = {};
-    refs2 = {};
 
     constructor(props){
         super(props);
@@ -134,9 +136,6 @@ class LineupListScreen extends Component<Props, State> {
 
 }
 
-const mapStateToProps = (state, ownProps) => ({
-    data: state.data,
-});
 
 const GET_USER_W_LISTS = new ApiAction("get_user");
 const FETCH_LINEUPS = new ApiAction("fetch_lineups");
@@ -181,7 +180,7 @@ const reducer = (() => {
 // state = doDataMergeInState(state, path, [{id, type}], {reverse: true});
 // break;
 
-let screen = connect(mapStateToProps)(LineupListScreen);
+//let screen = connect(mapStateToProps)(LineupListScreen);
 
 const styles = StyleSheet.create({
     container: {
@@ -200,7 +199,7 @@ const styles = StyleSheet.create({
 
 });
 
-export {reducer, screen};
+export {reducer};
 
 export function renderSimpleListItem(navigator: *) {
 

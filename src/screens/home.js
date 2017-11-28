@@ -15,7 +15,7 @@ import {
 
 import {connect} from "react-redux";
 import ActionButton from 'react-native-action-button';
-import {DELETE_LINEUP, EDIT_LINEUP, screen as LineupList} from './lineuplist'
+import {DELETE_LINEUP, EDIT_LINEUP, LineupListScreen} from './lineuplist'
 import type {Id, Saving} from "../types";
 import {List} from "../types"
 import Snackbar from "react-native-snackbar"
@@ -126,7 +126,7 @@ class HomeScreen extends Screen<Props, State> {
                 <MainBackground>
 
                     <View>
-                        <LineupList
+                        <LineupListScreen
                             userId={currentUserId()}
                             onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
                             onSavingPressed={(saving) => this.onSavingPressed(saving)}

@@ -206,6 +206,29 @@ export function initialListState() {
     };
 }
 
+export function safeDispatchAction(dispatch, action, stateName) {
+    let setRequestState: (reqFetch: RequestState) => Promise<*> = (reqFetch: RequestState) => {
+        return new Promise((resolve, reject) => {
+            this.setState({reqFetch}, resolve);
+        });
+
+    };
+    // $FlowFixMe
+    if (this.state[stateName] !== 'sending') {
+
+        return setRequestState('sending')
+            .then(() => dispatch(action))
+            .then(
+                () => setRequestState('ok'),
+                err => {
+                    setRequestState('ko');
+                    console.error(err);
+                    throw err;
+                }
+            );
+    }
+};
+
 export const reduceList = (state, action, desc) => {
     switch (action.type) {
         case desc.fetchFirst.success():

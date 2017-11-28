@@ -11,7 +11,7 @@ export type ScreenProps = NavigableProps & {
     onScreen?: boolean //when not a screen root, my parent screen can tell me I'm visible
 }
 
-export default class Screen<P: ScreenProps, S> extends Component<P, S> {
+export default class Screen<P, S> extends Component<P & ScreenProps,  S> {
 
 
     state = {onSreen: false};

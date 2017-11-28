@@ -4,7 +4,7 @@ import {StyleSheet, Text, TextInput, View} from 'react-native';
 import {CheckBox, SearchBar} from "react-native-elements";
 import * as UI from "./UIStyles";
 import type {Props as LineupProps} from "./lineuplist";
-import {screen as LineupListScreen} from './lineuplist';
+import {LineupListScreen} from './lineuplist';
 import AddLineupComponent from "./components/addlineup";
 
 type Props = LineupProps & {

@@ -79,6 +79,18 @@ const userScreen = {
     }
 };
 
+const addItemScreen = {
+    screen: {
+        label: 'test',
+        screen: 'goodsh.AddItemScreen',
+    },
+    passProps: {
+        itemId: 'ca2a01a0-6431-4704-aef2-0c6b493b6957',
+        itemType: 'CreativeWork',
+        defaultLineupId: null
+    }
+};
+
 
 const test = {
     screen: {
@@ -101,6 +113,7 @@ let testScreen = null;
 //  testScreen = homeScreen;
 //  testScreen = interactionsScreen;
 //  testScreen = userScreen;
+//  testScreen = addItemScreen;
 
 
 export default testScreen;

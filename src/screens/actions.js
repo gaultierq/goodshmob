@@ -5,8 +5,9 @@ import ApiAction from "../utils/ApiAction";
 import dotprop from "dot-prop-immutable"
 import {doDataMergeInState} from "../utils/DataUtils";
 import {currentUserId} from "../CurrentUser";
-import type {Item} from "../types";
+import type {Id, Item} from "../types";
 
+export const FETCH_ITEM = new ApiAction("fetch_item");
 export const SAVE_ITEM = new ApiAction("save_item");
 export const CREATE_LINEUP = new ApiAction("create_lineup");
 export const DELETE_LINEUP = new ApiAction("delete_lineup");
@@ -30,6 +31,13 @@ export function saveItem(itemId: Id, lineupId: Id, privacy = 0, description = ''
         .addQuery({'include': '*.*'});
 
     return call.disptachForAction2(SAVE_ITEM, {lineupId});
+}
+
+export function fetchItemCall(itemId: Id) {
+    return new Api.Call()
+        .withMethod('GET')
+        .withRoute(`items/${itemId}`)
+        .addQuery({'include': '*.*'});
 }
 
 export function createLineup(listName: string) {
@@ -62,7 +70,7 @@ export function startAddItem(navigator: *, defaultLineupId: Id) {
 
                 navigator.push({
                     screen: 'goodsh.AddItemScreen', // unique ID registered with Navigation.registerScreen
-                    title: "Ajouter",
+                    title: "Choisissez une liste",
                     passProps: {
                         itemId: item.id,
                         itemType: item.type,
