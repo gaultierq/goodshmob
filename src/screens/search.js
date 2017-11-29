@@ -13,7 +13,9 @@ import * as UIStyles from "../screens/UIStyles"
 import type {i18Key, Item, List, Saving, SearchToken} from "../types";
 import Button from 'apsl-react-native-button'
 import * as UI from "./UIStyles";
-import update from 'immutability-helper';
+import {Navigation} from 'react-native-navigation';
+import {logger} from "../utils/StringUtils";
+import update from "immutability-helper";
 
 export type SearchCategoryType = string;
 
@@ -215,7 +217,7 @@ export default class SearchScreen extends Component<Props, State> {
 
         let catType = this.getCurrentCategory().type;
 
-        console.log("performSearch:" + token);
+        console.log(`performSearch:token=${token} page=${page}`);
 
         if (!token) {
             console.log(`perform search aborted: no token to search`);
@@ -234,9 +236,9 @@ export default class SearchScreen extends Component<Props, State> {
             searches: {
                 ...this.state.searches,
                 [token]: {
-                    ..._.get(this.state, `.searches.${token}`, null),
+                    ..._.get(this.state, `searches.${token}`, null),
                     [catType]: {
-                        ..._.get(this.state, `.searches.${token}.${catType}`, null),
+                        ..._.get(this.state, `searches.${token}.${catType}`, null),
                         page, searchState: 1, token
                     }
                 }
@@ -246,29 +248,45 @@ export default class SearchScreen extends Component<Props, State> {
         this.props
             .searchEngine.search(token, catType, page)
             .then((results: SearchResult) => {
-                let res =  {};
-                this.props.categories.reduce((obj, c, i) => {
 
-                    let type = c.type;
+                const catType = this.getCurrentCategory().type;
+                let result = results[catType];
+                if (result) {
+                    let {page, nbPages} = result;
+                    let newItems = result.results;
+                    let searchState = 2;
+                    let merge = {page, nbPages, searchState};
 
-                    let search /*: SearchState */ = this.state.searches[token][type];
-
-                    let result = results[type];
-
-                    if (result) {
-                        if (!search.data) search.data = [];
-                        search.data = search.data.concat(result.results);
-                        search.searchState = 2;
-                        search.page = result.page;
-                        search.nbPages = result.nbPages;
-
-                        obj[type] = search;
-                    }
-
-                    return obj;
-                }, res);
-
-                this.setState({searches: {...this.state.searches, [token]: {...res}}});
+                    if (!page) merge = {...merge, data: []};
+                    let newState = this.state;
+                    newState = update(newState, {searches: {[token]: {[catType]: {$merge: merge}}}},);
+                    newState = update(newState, {searches: {[token]: {[catType]: {data: {$push: newItems}}}}});
+                    this.setState(newState);
+                }
+                //
+                // let res =  {};
+                // this.props.categories.reduce((obj, c, i) => {
+                //
+                //     let type = c.type;
+                //
+                //     let search /*: SearchState */ = this.state.searches[token][type];
+                //
+                //     let result = results[type];
+                //
+                //     if (result) {
+                //         if (!search.data) search.data = [];
+                //         search.data = search.data.concat(result.results);
+                //         search.searchState = 2;
+                //         search.page = result.page;
+                //         search.nbPages = result.nbPages;
+                //
+                //         obj[type] = search;
+                //     }
+                //
+                //     return obj;
+                // }, res);
+                //
+                // this.setState({searches: {...this.state.searches, [token]: {...res}}});
             });
 
 
@@ -339,9 +357,6 @@ class SearchPage extends Component<PageProps, PageState> {
         );
     }
 }
-
-
-import {Navigation} from 'react-native-navigation';
 
 
 type NavProps = {

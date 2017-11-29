@@ -31,6 +31,7 @@ import type {SearchCategoryType} from "./search";
 //     }
 //
 // }
+const HITSPERPAGE = 2;
 
 export function makeAlgoliaSearch(categories, navigator) {
 
@@ -44,14 +45,23 @@ export function makeAlgoliaSearch(categories, navigator) {
         // const queries = categories.map(c => {
         //     let q = c.query;
         //     let params = q.params;
-        //     params = {...params, page, hitsPerPage: 2};
+        //     params = {...params, page, HITSPERPAGE: 2};
         //     return {...q, params, query: token}
         // });
 
         //separate searches
         let categFiltered = categories.filter((c) => c.type === category);
 
-        const queries = categFiltered.map(c=> {return {...c.query, params: c.params, query: token}});
+
+        // const queries = categFiltered.map(c=> {return {...c.query, params: c.params, query: token}});
+
+        const queries = categFiltered.map(c => {
+            let q = c.query;
+            let params = q.params;
+            
+            params = {...params, page, hitsPerPage: HITSPERPAGE};
+            return {...q, params, query: token}
+        });
 
         return new Promise((resolve, reject) => {
 
@@ -70,7 +80,7 @@ export function makeAlgoliaSearch(categories, navigator) {
 
                     let result = content.results[i];
                     let hits = result.hits;
-                    console.log(`search result lists: ${content.length}`);
+                    console.log(`search result lists: ${hits.length}`);
 
                     let searchResult = c.parseResponse(hits);
 
