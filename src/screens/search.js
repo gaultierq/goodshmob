@@ -40,7 +40,7 @@ export type Props = {
     onClickClose?: Function,
     categories: Array<SearchCategory>,
     navigator: *,
-    searchEngine: SearchEngine
+    searchEngine: SearchEngine,
 };
 
 export type State = {
@@ -68,15 +68,19 @@ export default class SearchScreen extends Component<Props, State> {
 
     constructor(props: Props) {
         super(props);
-        if (props.onClickClose) {
-            props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-        }
+
+        props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 
         this.state = {
             searches: {},
             index: 0,
             routes: props.categories.map((c, i) => ({key: `${i}`, title: i18n.t(c.tabName)})),
         };
+
+        props.navigator.setStyle({
+            navBarCustomView: 'goodsh.SearchNavBar',
+
+        });
     }
 
     handleIndexChange(index: number) {
@@ -140,6 +144,20 @@ export default class SearchScreen extends Component<Props, State> {
                 this.props.onClickClose();
             }
         }
+
+        //HACK
+        if (event.type === 'DeepLink') {
+            const payload = event.payload; // (optional) The payload
+
+            switch (event.link) {
+                case DEEPLINK_SEARCH_TEXT_CHANGED:
+                    this.onSearchInputChange(payload);
+                    break;
+                case DEEPLINK_SEARCH_CLOSE:
+                    // this.setState({isSearching: false});
+                    break;
+            }
+        }
     }
 
     render() {
@@ -148,17 +166,17 @@ export default class SearchScreen extends Component<Props, State> {
 
         return (
             <View style={{width:"100%", height: "100%", backgroundColor: "white"}}>
-                <SearchBar
-                    autoFocus
-                    lightTheme
-                    onChangeText={this.onSearchInputChange.bind(this)}
-                    placeholder={i18n.t(this.getCurrentCategory().placeholder)}
-                    clearIcon={{color: '#86939e'}}
-                    containerStyle={styles.searchContainer}
-                    inputStyle={styles.searchInput}
-                    autoCapitalize='none'
-                    autoCorrect={false}
-                />
+                {/*<SearchBar*/}
+                    {/*autoFocus*/}
+                    {/*lightTheme*/}
+                    {/*onChangeText={this.onSearchInputChange.bind(this)}*/}
+                    {/*placeholder={i18n.t(this.getCurrentCategory().placeholder)}*/}
+                    {/*clearIcon={{color: '#86939e'}}*/}
+                    {/*containerStyle={styles.searchContainer}*/}
+                    {/*inputStyle={styles.searchInput}*/}
+                    {/*autoCapitalize='none'*/}
+                    {/*autoCorrect={false}*/}
+                {/*/>*/}
 
 
                 { l>1 && <TabViewAnimated
@@ -319,16 +337,73 @@ class SearchPage extends Component<PageProps, PageState> {
 }
 
 
+import {Navigation} from 'react-native-navigation';
+
+
+type NavProps = {
+    onChangeText: (token: string) => void,
+    navigator: any
+};
+
+type NavState = {
+    input:? string,
+};
+
+const DEEPLINK_SEARCH_TEXT_CHANGED = 'DEEPLINK_SEARCH_TEXT_CHANGED';
+const DEEPLINK_SEARCH_CLOSE = 'DEEPLINK_SEARCH_CLOSE';
+
+//connect -> redux
+export class SearchNavBar extends Component<NavProps, NavState> {
+
+    state = {input: null};
+
+    render() {
+
+        return (
+            <SearchBar
+                autoFocus
+                lightTheme
+                onChangeText={this.onChangeText.bind(this)}
+                onClearText={this.onClearText.bind(this)}
+                placeholder={i18n.t('lineups.search.placeholder')}
+                clearIcon={{color: '#86939e'}}
+                containerStyle={styles.searchContainer}
+                inputStyle={styles.searchInput}
+                autoCapitalize='none'
+                autoCorrect={false}
+            />
+        );
+
+    }
+
+    onChangeText(input: string) {
+        this.setState({input});
+        //because function props are not currently allowed by RNN
+
+        //this.props.onChangeText(input);
+        //become->
+        Navigation.handleDeepLink({
+            link: DEEPLINK_SEARCH_TEXT_CHANGED,
+            payload: input
+        });
+    }
+
+    onClearText() {
+        Navigation.handleDeepLink({
+            link: DEEPLINK_SEARCH_CLOSE
+        });
+    }
+
+    isSearching() {
+        return this.state.isSearching;
+    }
+}
+
+
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-    },
-    searchContainer: {
-        backgroundColor: 'white',
-    },
-    searchInput: {
-        backgroundColor: 'white',
     },
     indicator: {
         backgroundColor: UIStyles.Colors.green,
@@ -354,6 +429,9 @@ const styles = StyleSheet.create({
     //copied: rm useless
     searchContainer: {
         backgroundColor: 'white',
+        borderColor: 'red',
+        borderTopColor: 'transparent',
+        //borderBottomColor: '#e1e1e1',
     },
     searchInput: {
         backgroundColor: 'white',
@@ -377,4 +455,3 @@ const styles = StyleSheet.create({
         color: '#000000',
     },
 });
-

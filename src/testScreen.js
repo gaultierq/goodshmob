@@ -91,11 +91,20 @@ const addItemScreen = {
     }
 };
 
+const networkSearchScreen = {
+    screen: {
+        label: 'test',
+        screen: 'goodsh.NetworkSearchScreen',
+        title: 'Test network search',
+    },
+};
+
 
 const test = {
     screen: {
         label: 'test',
         screen: 'goodsh.TestScreen',
+
     },
     passProps: {
         itemId: "8ab94a3c-43b2-4e5c-acfb-d4ff268f93b1",
@@ -114,6 +123,7 @@ let testScreen = null;
 //  testScreen = interactionsScreen;
 //  testScreen = userScreen;
 //  testScreen = addItemScreen;
+//  testScreen = networkSearchScreen;
 
 
 export default testScreen;

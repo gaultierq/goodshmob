@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import {connect} from "react-redux";
 import type {Id, List, NavigableProps, Saving} from "../types";
-import AlgoliaSearchScreen, {makeAlgoliaSearch} from "./algoliasearch";
+import {makeAlgoliaSearch} from "./algoliasearch";
 import ItemCell from "./components/ItemCell";
 import LineupCell from "./components/LineupCell";
 import * as Nav from "./Nav";
@@ -21,6 +21,7 @@ import {createResultFromHit, createResultFromHit2} from "../utils/AlgoliaUtils";
 import UserConnectItem from "./userConnectItem";
 import UserRowI from "../activity/components/UserRowI";
 import {Colors} from "./UIStyles";
+
 
 type Props = NavigableProps & {
     onClickClose?: () => void,
@@ -37,7 +38,7 @@ export default class NetworkSearchScreen extends Component<Props, State> {
 
     constructor(props) {
         super(props);
-        props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+        props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together

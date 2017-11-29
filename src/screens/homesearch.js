@@ -37,7 +37,7 @@ export default class HomeSearchScreen extends Component<Props, State> {
 
     constructor(props) {
         super(props);
-        props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+        props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together

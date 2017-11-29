@@ -65,7 +65,7 @@ export class LineupListScreen extends Component<Props, State> {
     constructor(props){
         super(props);
         if (props.onCancel) {
-            props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+            props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
         }
 
     }

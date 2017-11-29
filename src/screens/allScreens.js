@@ -3,6 +3,7 @@ import { Navigation } from 'react-native-navigation';
 import {screen as LoginScreen} from './login';
 import {screen as NetworkScreen} from './network';
 import {screen as SearchItemScreen} from './searchitems';
+import {SearchNavBar} from './search';
 import DebugScreen from './DebugScreen';
 
 import {screen as ActivityDetailScreen} from '../activity/activityDetail';
@@ -37,7 +38,7 @@ export function registerScreens(store, Provider) {
     Navigation.registerComponent('goodsh.LineupListScreen', () => LineupListScreen, store, Provider);
     Navigation.registerComponent('goodsh.AddInScreen', () => AddInScreen, store, Provider);
     Navigation.registerComponent('goodsh.HomeScreen', () => HomeScreen, store, Provider);
-    // Navigation.registerComponent('goodsh.HomeNavBar', () => HomeNavBar, store, Provider);
+    Navigation.registerComponent('goodsh.SearchNavBar', () => SearchNavBar, store, Provider);
     Navigation.registerComponent('goodsh.LineupScreen', () => LineupScreen, store, Provider);
     Navigation.registerComponent('goodsh.CommentsScreen', () => CommentsScreen, store, Provider);
     Navigation.registerComponent('goodsh.SaveScreen', () => SaveScreen, store, Provider);
