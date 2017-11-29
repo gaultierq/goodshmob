@@ -12,32 +12,36 @@ import algoliasearch from 'algoliasearch/reactnative';
 import type {SearchToken} from "../types";
 import type {SearchCategoryType} from "./search";
 
-export default class AlgoliaSearchScreen extends Component<*,*> {
-    static navigatorButtons = {
-        rightButtons: [
-            {
-                //icon: require('../img/drawer_line_up.png'), // for icon button, provide the local image asset name
-                id: 'cancel_search', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
-                title: "Cancel"
-            }
-        ],
-    };
+// export default class AlgoliaSearchScreen extends Component<*,*> {
+//     static navigatorButtons = {
+//         rightButtons: [
+//             {
+//                 //icon: require('../img/drawer_line_up.png'), // for icon button, provide the local image asset name
+//                 id: 'cancel_search', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
+//                 title: "Cancel"
+//             }
+//         ],
+//     };
+//
+//     render() {
+//         return <SearchScreen
+//             searchEngine={{search: this.search.bind(this)}}
+//             {...this.props}
+//         />;
+//     }
+//
+// }
 
-    render() {
-        return <SearchScreen
-            searchEngine={{search: this.search.bind(this)}}
-            {...this.props}
-        />;
-    }
+export function makeAlgoliaSearch(categories, navigator) {
 
-    search(token: SearchToken, category: SearchCategoryType, page: number): Promise<*> {
+    let search = (token: SearchToken, category: SearchCategoryType, page: number): Promise<*> => {
 
         //searching
         console.log(`algolia: searching ${token}`);
 
         let client = algoliasearch("8UTETUZKD3", "c80385095ff870f5ddf9ba25310a9d5a");
 
-        const queries = this.props.categories.map(c=>{
+        const queries = categories.map(c => {
             let q = c.query;
             let params = q.params;
             params = {...params, page, hitsPerPage: 2};
@@ -54,8 +58,8 @@ export default class AlgoliaSearchScreen extends Component<*,*> {
                     return;
                 }
 
-                let res =  {};
-                this.props.categories.reduce((obj, c, i) => {
+                let res = {};
+                categories.reduce((obj, c, i) => {
 
                     let result = content.results[i];
                     let hits = result.hits;
@@ -78,8 +82,13 @@ export default class AlgoliaSearchScreen extends Component<*,*> {
                 resolve(res);
             });
         });
-    }
+    };
 
+    return <SearchScreen
+        searchEngine={{search}}
+        categories={categories}
+        navigator={navigator}
+    />;
 }
 
 

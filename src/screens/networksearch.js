@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import {connect} from "react-redux";
 import type {Id, List, NavigableProps, Saving} from "../types";
-import AlgoliaSearchScreen from "./algoliasearch";
+import AlgoliaSearchScreen, {makeAlgoliaSearch} from "./algoliasearch";
 import ItemCell from "./components/ItemCell";
 import LineupCell from "./components/LineupCell";
 import * as Nav from "./Nav";
@@ -138,12 +138,14 @@ export default class NetworkSearchScreen extends Component<Props, State> {
         ];
 
         let navigator = this.props.navigator;
-        return (
-            <AlgoliaSearchScreen
-                categories={categories}
-                navigator={navigator}
-            />
-        );
+        // return (
+        //     <AlgoliaSearchScreen
+        //         categories={categories}
+        //         navigator={navigator}
+        //     />
+        // );
+
+        return makeAlgoliaSearch(categories, navigator);
     }
 
 
