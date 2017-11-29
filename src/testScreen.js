@@ -123,7 +123,7 @@ let testScreen = null;
 //  testScreen = interactionsScreen;
 //  testScreen = userScreen;
 //  testScreen = addItemScreen;
-//  testScreen = networkSearchScreen;
+ testScreen = networkSearchScreen;
 
 
 export default testScreen;

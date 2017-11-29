@@ -143,15 +143,6 @@ export type Answer = Activity &  {
 
 export type MergeOpts = MergeOptions<string>
 
-//token -> {data, hasMore, isSearching}
-export type SearchState = {
-    searchState: number, //0,1,2,3
-    page: number,
-    nbPages: number,
-    data: Array<List|Saving>,
-    token: string
-};
-
 export type SearchToken = string;
 
 export type i18Key = string;

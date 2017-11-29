@@ -30,7 +30,7 @@ export default class UserRowI extends React.Component<Props, State> {
         let uri = user ? user.image: "";
         return <View style={[style, {flexDirection: 'row'}]}>
             {
-                uri && <Image
+                !!uri && <Image
                     source={{uri}}
                     style={{
                         height: imageDim,

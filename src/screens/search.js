@@ -10,10 +10,10 @@ import {TabBar, TabViewAnimated} from 'react-native-tab-view';
 import {SearchBar} from 'react-native-elements'
 import * as UIStyles from "../screens/UIStyles"
 
-import type {i18Key, Item, List, SearchState, SearchToken} from "../types";
+import type {i18Key, Item, List, Saving, SearchToken} from "../types";
 import Button from 'apsl-react-native-button'
 import * as UI from "./UIStyles";
-
+import update from 'immutability-helper';
 
 export type SearchCategoryType = string;
 
@@ -42,6 +42,17 @@ export type Props = {
     navigator: *,
     searchEngine: SearchEngine,
 };
+
+
+//token -> {data, hasMore, isSearching}
+export type SearchState = {
+    searchState: number, //0,1,2,3
+    page: number,
+    nbPages: number,
+    data: Array<List|Saving>,
+    token: string
+};
+
 
 export type State = {
     input?: SearchToken,
@@ -84,7 +95,8 @@ export default class SearchScreen extends Component<Props, State> {
     }
 
     handleIndexChange(index: number) {
-        this.setState({ index }, () => this.performSearch(this.state.input, 0));
+        console.log('tab changed to' + index);
+        this.setState({index}, () => this.performSearch(this.state.input, 0));
     }
 
     renderHeader(props: *) {
@@ -166,17 +178,6 @@ export default class SearchScreen extends Component<Props, State> {
 
         return (
             <View style={{width:"100%", height: "100%", backgroundColor: "white"}}>
-                {/*<SearchBar*/}
-                    {/*autoFocus*/}
-                    {/*lightTheme*/}
-                    {/*onChangeText={this.onSearchInputChange.bind(this)}*/}
-                    {/*placeholder={i18n.t(this.getCurrentCategory().placeholder)}*/}
-                    {/*clearIcon={{color: '#86939e'}}*/}
-                    {/*containerStyle={styles.searchContainer}*/}
-                    {/*inputStyle={styles.searchInput}*/}
-                    {/*autoCapitalize='none'*/}
-                    {/*autoCorrect={false}*/}
-                {/*/>*/}
 
 
                 { l>1 && <TabViewAnimated
@@ -197,75 +198,78 @@ export default class SearchScreen extends Component<Props, State> {
     }
 
     onSearchInputChange(input: string) {
-        this.setState({input});
-        this.performSearch(input, 0);
+        this.setState({input}, () => this.performSearch(input, 0));
     }
 
-    // setState(partialState, callback?) {
-    //     let t = Math.random();
-    //     console.debug(`DEBUG(${t}): partial=${JSON.stringify(partialState)}`);
-    //     callback = () => console.log(`DEBUG(${t}): state=${JSON.stringify(this.state)}`);
-    //
-    //     super.setState(partialState, callback);
-    // }
 
+    //searches: { [SearchToken]: {[SearchCategoryType]: SearchState}},
+
+    // export type SearchState = {
+    //     searchState: number, //0,1,2,3
+    //     page: number,
+    //     nbPages: number,
+    //     data: Array<List|Saving>,
+    //     token: string
+    // };
     performSearch(token: SearchToken, page: number) {
-        if (!token) return;
-
-        //1. prepare search
-        let search = this.state.searches[token];
-
-        if (!search) {
-            let categories = this.props.categories;
-            categories.reduce((res, c) => {
-                res[c.type] = {token};
-                return res;
-            }, search = {})
-        }
-
-        _.forIn(search, (val) => {
-            val.page = page;
-            val.searchState = 1;
-        });
-
-        let partialState = {
-            searches: {
-                ...this.state.searches,
-                [token]: {...search},
-            }
-        };
-
-        this.setState(partialState);
 
         let catType = this.getCurrentCategory().type;
+
+        console.log("performSearch:" + token);
+
+        if (!token) {
+            console.log(`perform search aborted: no token to search`);
+            return;
+        }
+
+        let lastPage = _.get(this.state.searches, `${token}.${catType}.page`, -1);
+
+        if (lastPage >= page) {
+            console.log(`perform search aborted: lastPage>=page : ${lastPage} >= ${page}`);
+            return;
+        }
+
+        //set searching
+        this.setState({
+            searches: {
+                ...this.state.searches,
+                [token]: {
+                    ..._.get(this.state, `.searches.${token}`, null),
+                    [catType]: {
+                        ..._.get(this.state, `.searches.${token}.${catType}`, null),
+                        page, searchState: 1, token
+                    }
+                }
+            }
+        });
 
         this.props
             .searchEngine.search(token, catType, page)
             .then((results: SearchResult) => {
-            let res =  {};
-            this.props.categories.reduce((obj, c, i) => {
+                let res =  {};
+                this.props.categories.reduce((obj, c, i) => {
 
-                let type = c.type;
+                    let type = c.type;
 
-                let search /*: SearchState */ = this.state.searches[token][type];
+                    let search /*: SearchState */ = this.state.searches[token][type];
 
-                let result = results[type];
+                    let result = results[type];
 
-                if (result) {
-                    if (!search.data) search.data = [];
-                    search.data = search.data.concat(result.results);
-                    search.searchState = 2;
-                    search.page = result.page;
-                    search.nbPages = result.nbPages;
+                    if (result) {
+                        if (!search.data) search.data = [];
+                        search.data = search.data.concat(result.results);
+                        search.searchState = 2;
+                        search.page = result.page;
+                        search.nbPages = result.nbPages;
 
-                    obj[type] = search;
-                }
+                        obj[type] = search;
+                    }
 
-                return obj;
-            }, res);
+                    return obj;
+                }, res);
 
-            this.setState({searches: {...this.state.searches, [token]: {...res}}});
-        });
+                this.setState({searches: {...this.state.searches, [token]: {...res}}});
+            });
 
 
     }

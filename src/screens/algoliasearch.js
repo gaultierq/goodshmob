@@ -41,12 +41,17 @@ export function makeAlgoliaSearch(categories, navigator) {
 
         let client = algoliasearch("8UTETUZKD3", "c80385095ff870f5ddf9ba25310a9d5a");
 
-        const queries = categories.map(c => {
-            let q = c.query;
-            let params = q.params;
-            params = {...params, page, hitsPerPage: 2};
-            return {...q, params, query: token}
-        });
+        // const queries = categories.map(c => {
+        //     let q = c.query;
+        //     let params = q.params;
+        //     params = {...params, page, hitsPerPage: 2};
+        //     return {...q, params, query: token}
+        // });
+
+        //separate searches
+        let categFiltered = categories.filter((c) => c.type === category);
+
+        const queries = categFiltered.map(c=> {return {...c.query, params: c.params, query: token}});
 
         return new Promise((resolve, reject) => {
 
@@ -59,7 +64,9 @@ export function makeAlgoliaSearch(categories, navigator) {
                 }
 
                 let res = {};
-                categories.reduce((obj, c, i) => {
+
+                categFiltered.reduce((obj, c, i) => {
+                // categories.reduce((obj, c, i) => {
 
                     let result = content.results[i];
                     let hits = result.hits;
