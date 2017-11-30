@@ -384,7 +384,7 @@ export class SearchNavBar extends Component<NavProps, NavState> {
                 lightTheme
                 onChangeText={this.onChangeText.bind(this)}
                 onClearText={this.onClearText.bind(this)}
-                placeholder={i18n.t('lineups.search.placeholder')}
+                placeholder={i18n.t('search')}
                 clearIcon={{color: '#86939e'}}
                 containerStyle={styles.searchContainer}
                 inputStyle={styles.searchInput}

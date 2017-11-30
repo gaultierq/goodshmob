@@ -14,6 +14,7 @@ export default {
             placeholder: "Rechercher dans mes listes"
         }
     },
+    search: "Rechercher",
     "shared":{
         "ok":"OK",
         "goodsh_sent":"C'est bon, c'est goodshé.",

@@ -1,3 +1,5 @@
+// @flow
+
 import URL from "url-parse"
 import * as Util from "./ModelUtils";
 import normalize from 'json-api-normalizer';
@@ -6,6 +8,7 @@ import {logout} from "../auth/actions";
 import ApiAction from "./ApiAction";
 import fetch from 'react-native-fetch-polyfill';
 import Snackbar from "react-native-snackbar"
+import type {RequestState} from "../types";
 
 export const API_DATA_REQUEST = 'API_DATA_REQUEST';
 export const API_DATA_SUCCESS = 'API_DATA_SUCCESS';
@@ -207,6 +210,11 @@ export function initialListState() {
 }
 
 export function safeDispatchAction(dispatch, action, stateName) {
+    return safeExecBlock(() => dispatch(action));
+}
+
+export function safeExecBlock(block: ()=>Promise<*>, stateName: string) {
+
     let setRequestState: (reqFetch: RequestState) => Promise<*> = (reqFetch: RequestState) => {
         return new Promise((resolve, reject) => {
             this.setState({reqFetch}, resolve);
@@ -217,7 +225,7 @@ export function safeDispatchAction(dispatch, action, stateName) {
     if (this.state[stateName] !== 'sending') {
 
         return setRequestState('sending')
-            .then(() => dispatch(action))
+            .then(block)
             .then(
                 () => setRequestState('ok'),
                 err => {
@@ -227,7 +235,11 @@ export function safeDispatchAction(dispatch, action, stateName) {
                 }
             );
     }
-};
+    else {
+        console.debug('exec block skipped');
+        return null;
+    }
+}
 
 export const reduceList = (state, action, desc) => {
     switch (action.type) {

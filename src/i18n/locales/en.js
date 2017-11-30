@@ -14,6 +14,7 @@ export default {
             placeholder: "Search into my lists"
         }
     },
+    search: "Search",
     "shared":{
         "ok":"OK",
         "goodsh_sent":"Goodsh sent",

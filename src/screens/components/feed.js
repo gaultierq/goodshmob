@@ -12,6 +12,7 @@ import type {Id, RequestState, Url} from "../../types";
 import {renderSimpleButton} from "../UIStyles";
 import i18n from '../../i18n/i18n'
 
+
 export type FeedSource = {
     callFactory: ()=>Api.Call,
     useLinks:? boolean,
@@ -35,7 +36,7 @@ export type Props<T> = {
 type State = {
     isFetchingFirst?: RequestState,
     isFetchingMore?: RequestState,
-    firstLoad?: number,
+    firstLoad?: RequestState,
     isPulling?: boolean,
     lastEmptyResultMs?: number,
     moreLink?: Url
@@ -47,6 +48,8 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     keyExtractor = (item, index) => item.id;
 
     state = {};
+
+    lastFetchFail: number;
 
     constructor(props: Props<T>) {
         super(props);
@@ -76,26 +79,19 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             }
         }
 
-            //hack: let the next props become the props
-            this.postFetchFirst();
+        //hack: let the next props become the props
+        this.postFetchFirst();
 
     }
 
     postFetchFirst() {
         setTimeout(() => {
             if (!this.props.cannotFetch) {
-                if (this.state.firstLoad !== 2) {
-                    let setReq = (firstLoad) => {
-                        this.setState({firstLoad});
-                    };
-                    setReq(1);
-                    this.fetchIt()
-                        .catch(err => {
-                            console.warn("error while firstLoad:" + err);
-                            setReq(3);
-                        })
-                        .then(() => setReq(2));
-                }
+                Api.safeExecBlock.call(
+                    this,
+                    () => this.fetchIt(),
+                    'firstLoad'
+                );
             }
         });
     }
@@ -116,7 +112,8 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         let empt = isEmpty(data);
         let nothingInterestingToDisplay = empt && !this.isFetchingFirst();
 
-        let firstEmptyLoader = this.state.firstLoad && empt;
+        let firstEmptyLoader = this.state.firstLoad !== 'ok' && empt;
+        // firstEmptyLoader = true;
 
         if (nothingInterestingToDisplay) {
             if (this.state.isFetchingFirst === 'ko') {
@@ -167,65 +164,70 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
 
     fetchIt(afterId?: Id) {
+        let requestName = afterId ? 'isFetchingMore' : 'isFetchingFirst';
+        if (this.props.cannotFetch) {
+            console.log(requestName + " fetch prevented");
+            return;
+        }
+        else if (this.state[requestName] === 'sending') {
+            console.log(requestName + " is already running. state="+JSON.stringify(this.state));
+            return;
+        }
+        else if (this.lastFetchFail + 2000 > Date.now()) {
+            console.log("request debounced");
+            return;
+        }
 
         return new Promise((resolve, reject) => {
-            let requestName = afterId ? 'isFetchingMore' : 'isFetchingFirst';
-            if (this.props.cannotFetch) {
-                reject(requestName + " fetch prevented");
-            }
-            else if (this.state[requestName] === 'sending') {
-                reject(requestName + " is already running. state="+JSON.stringify(this.state));
+            let {fetchSrc}= this.props;
+
+            if (!fetchSrc) return;
+
+            this.setState({[requestName]: 'sending'});
+
+            const {callFactory, useLinks} = fetchSrc;
+            let call;
+            //backend api is not unified yet
+            if (this.state.moreLink) {
+                call = Api.Call.parse(this.state.moreLink);
             }
             else {
-                let {fetchSrc}= this.props;
-
-                if (!fetchSrc) return;
-
-                this.setState({[requestName]: 'sending'});
-
-                const {callFactory, useLinks} = fetchSrc;
-                let call;
-                //backend api is not unified yet
-                if (this.state.moreLink) {
-                    call = Api.Call.parse(this.state.moreLink);
+                call = callFactory();
+                if (afterId && !useLinks) {
+                    call.addQuery({id_after: afterId});
                 }
-                else {
-                    call = callFactory();
-                    if (afterId && !useLinks) {
-                        call.addQuery({id_after: afterId});
-                    }
-                }
-
-                this.props
-                    .dispatch(call.disptachForAction2(fetchSrc.action, fetchSrc.options))
-                    .then(({data, links})=> {
-                        console.debug("disptachForAction3 " + JSON.stringify(this.props.fetchSrc.action));
-                        if (!data) {
-                            this.setState({[requestName]: 'ko'});
-                            return reject(`no data provided for ${fetchSrc.action}`);
-                        }
-                        this.setState({[requestName]: 'ok'});
-
-                        let hasNoMore = data.length === 0;
-                        if (hasNoMore) {
-                            this.setState({lastEmptyResultMs: Date.now()});
-                        }
-
-                        //handle links
-                        if (
-                            useLinks
-                            && links && links.next
-                            && (afterId || !this.state.moreLink)
-                        ) {
-
-                            this.setState({moreLink: links.next});
-                        }
-                        resolve(data);
-                    }, err => {
-                        console.warn("feed error:" + err);
-                        this.setState({[requestName]: 'ko'});
-                    })
             }
+
+            this.props
+                .dispatch(call.disptachForAction2(fetchSrc.action, fetchSrc.options))
+                .then(({data, links})=> {
+                    console.debug("disptachForAction3 " + JSON.stringify(this.props.fetchSrc.action));
+                    if (!data) {
+                        this.setState({[requestName]: 'ko'});
+                        return reject(`no data provided for ${fetchSrc.action}`);
+                    }
+                    this.setState({[requestName]: 'ok'});
+
+                    let hasNoMore = data.length === 0;
+                    if (hasNoMore) {
+                        this.setState({lastEmptyResultMs: Date.now()});
+                    }
+
+                    //handle links
+                    if (
+                        useLinks
+                        && links && links.next
+                        && (afterId || !this.state.moreLink)
+                    ) {
+
+                        this.setState({moreLink: links.next});
+                    }
+                    resolve(data);
+                }, err => {
+                    console.warn("feed error:" + err);
+                    this.lastFetchFail = Date.now();
+                    this.setState({[requestName]: 'ko'});
+                })
         });
     }
 
@@ -240,9 +242,13 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     onRefresh() {
         if (this.state.isPulling) return;
         this.setState({isPulling: true});
-        this.fetchIt()
-            .catch(err=>{console.warn("error while fetching:" + err)})
-            .then(()=>this.setState({isPulling: false}));
+        let fetch = this.fetchIt();
+        if (fetch) {
+            fetch
+                .catch(err=>{console.warn("error while fetching:" + err)})
+                .then(()=>this.setState({isPulling: false}));
+        }
+
     }
 
     renderRefreshControl() {
@@ -275,8 +281,8 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         )
     }
 
+    renderFail(fetch: () => Promise<*>) {
 
-    renderFail(fetch) {
         return (
             <View style={{padding: 12}}>
                 <Text style={{alignSelf: "center"}}>Le chargement a échoué...</Text>

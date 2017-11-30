@@ -63,10 +63,9 @@ export function startAddItem(navigator: *, defaultLineupId: Id) {
 
     navigator.push({
         screen: 'goodsh.SearchItemsScreen', // unique ID registered with Navigation.registerScreen
-        title: i18n.t("tabs.search.title"),
+        // title: i18n.t("tabs.search.title"),
         passProps: {
             onItemSelected: (item: Item) => {
-
 
                 navigator.push({
                     screen: 'goodsh.AddItemScreen', // unique ID registered with Navigation.registerScreen
