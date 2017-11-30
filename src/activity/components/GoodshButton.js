@@ -45,14 +45,14 @@ class GoodshButton extends React.Component<Props, State>  {
 
 
                 >
-                    <Image source={liked ? require('../../img/yeah_liked.png') : require('../../img/yeah_normal3.png')} resizeMode="contain"
+                    <Image source={liked ? require('../../img/yeah_on.png') : require('../../img/yeah_off.png')} resizeMode="contain"
 
                            style={{
                                //width: 20,
                                //height: 20,
                            }}
                     />
-                    {/*{!!likesCount && <Text style={{fontSize: 12, marginLeft: 3}}>{likesCount}</Text>}*/}
+                    {!!likesCount && <Text style={{position: 'absolute', right: 6, fontSize: 12, marginLeft: 3}}>{likesCount}</Text>}
 
                 </View>
             </TouchableHighlight>
@@ -106,7 +106,8 @@ const styles = StyleSheet.create({
         borderWidth: 0.5,
         borderColor: '#d6d7da',
         alignItems: 'center',
-        padding: 2.5,
+        // padding: 2.5,
+
     }
 });
 
