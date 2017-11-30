@@ -132,7 +132,7 @@ let testScreen = null;
 //  testScreen = userScreen;
 //  testScreen = addItemScreen;
 //  testScreen = networkSearchScreen;
- testScreen = networkSearchItemsScreen;
+//  testScreen = networkSearchItemsScreen;
 
 
 export default testScreen;
