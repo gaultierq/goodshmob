@@ -33,6 +33,7 @@ export type Props<T> = {
     cannotFetch?: boolean
 };
 
+
 type State = {
     isFetchingFirst?: RequestState,
     isFetchingMore?: RequestState,
@@ -86,7 +87,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
     postFetchFirst() {
         setTimeout(() => {
-            if (this.state.firstLoad === 'idle') {
+            if (this.canFetch() && this.state.firstLoad === 'idle') {
                 Api.safeExecBlock.call(
                     this,
                     () => this.fetchIt(),
@@ -117,7 +118,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
         if (nothingInterestingToDisplay) {
             if (this.state.isFetchingFirst === 'ko') {
-                return this.renderFail(()=>this.fetchIt());
+                return this.renderFail(()=>this.tryFetchIt());
             }
             if (empty) return <Text>{empty}</Text>;
         }
@@ -163,21 +164,31 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     };
 
 
-    fetchIt(afterId?: Id) {
-        let requestName = afterId ? 'isFetchingMore' : 'isFetchingFirst';
+    canFetch(requestName: string = 'isFetchingFirst'): boolean {
         if (this.props.cannotFetch) {
             console.log(requestName + " fetch prevented");
-            return;
+            return false;
         }
         else if (this.state[requestName] === 'sending') {
             console.log(requestName + " is already running. state="+JSON.stringify(this.state));
-            return;
+            return false;
         }
         else if (this.lastFetchFail + 2000 > Date.now()) {
             console.log("request debounced");
-            return;
+            return false;
         }
+        return true;
+    }
 
+    tryFetchIt(afterId?: Id) {
+        let requestName = afterId ? 'isFetchingMore' : 'isFetchingFirst';
+        if (this.canFetch(requestName)) {
+            this.fetchIt(afterId);
+        }
+    }
+
+    fetchIt(afterId?: Id) {
+        let requestName = afterId ? 'isFetchingMore' : 'isFetchingFirst';
         return new Promise((resolve, reject) => {
             let {fetchSrc}= this.props;
 
@@ -236,15 +247,15 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         if (!c) return;
         let last = c[c.length-1];
         if (!last) return;
-        this.fetchIt(last.id);
+        this.tryFetchIt(last.id);
     }
 
     onRefresh() {
         if (this.state.isPulling) return;
         this.setState({isPulling: true});
-        let fetch = this.fetchIt();
-        if (fetch) {
-            fetch
+
+        if (this.canFetch()) {
+            this.fetchIt()
                 .catch(err=>{console.warn("error while fetching:" + err)})
                 .then(()=>this.setState({isPulling: false}));
         }

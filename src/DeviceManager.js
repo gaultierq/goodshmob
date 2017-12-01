@@ -45,7 +45,12 @@ class DeviceManager {
         let oldDevice: Device= {...this.store.getState().device};
         generateCurrentDevice().then(newDevice => {
             if (!_.isEqual(oldDevice, newDevice)) {
-                console.info("device manager: found differences in device. saving");
+                console.info(`device manager: found
+                 differences in device. 
+                 oldDevice=${JSON.stringify(oldDevice)}
+                 !=
+                 newDevice=${JSON.stringify(newDevice)}`);
+
                 this.store.dispatch(appActions.saveDevice(newDevice))
                     .then(()=>console.info("new device saved"), err=>console.warn(err));
             }

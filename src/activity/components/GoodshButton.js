@@ -30,13 +30,13 @@ class GoodshButton extends React.Component<Props, State>  {
                 onPress={this.onGoodshPressed.bind(this)}
                 style={
                     {
-                        backgroundColor : "white",
+                        // backgroundColor : "white",
                         width: 80,
-                        height: 30,
+                        // height: 30,
                         position: 'absolute',
                         bottom: 0,
-                        borderRadius: 5,
-                        padding: 2.5,
+                        // borderRadius: 5,
+                        // padding: 2.5,
                     }
                 }>
 
@@ -48,11 +48,11 @@ class GoodshButton extends React.Component<Props, State>  {
                     <Image source={liked ? require('../../img/yeah_on.png') : require('../../img/yeah_off.png')} resizeMode="contain"
 
                            style={{
-                               //width: 20,
-                               //height: 20,
+                               // width: 20,
+                               // height: 20,
                            }}
                     />
-                    {!!likesCount && <Text style={{position: 'absolute', right: 6, fontSize: 12, marginLeft: 3}}>{likesCount}</Text>}
+                    {!!likesCount && <Text style={{position: 'absolute', right: 8, fontSize: 12, marginLeft: 3}}>{likesCount}</Text>}
 
                 </View>
             </TouchableHighlight>
@@ -103,8 +103,8 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'center',
-        borderWidth: 0.5,
-        borderColor: '#d6d7da',
+        // borderWidth: 0.5,
+        // borderColor: '#d6d7da',
         alignItems: 'center',
         // padding: 2.5,
 
