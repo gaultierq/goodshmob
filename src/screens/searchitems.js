@@ -62,6 +62,7 @@ class SearchItem extends Component<*,*> {
             call
                 .run()
                 .then(response=>{
+                    console.log(response);
                     let data = normalize(response.json);
 
                     let results = response.json.data.map(d=>{
@@ -70,7 +71,7 @@ class SearchItem extends Component<*,*> {
 
                     resolve({
                         [category]: {
-                            results, page: 0, nbPAge: 99
+                            results, page, nbPages: 0
                         }
                     });
                 }, err=> {

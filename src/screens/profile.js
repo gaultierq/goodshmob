@@ -83,7 +83,7 @@ class Profile extends Component<Props, State> {
                         justifyContent: 'center',
                     }}>
 
-                        <Image style={{width: 200, marginBottom: 25}} source={require('../img/goodsh.png')}
+                        <Image style={{width: 200, marginBottom: 25}} source={require('../img/logo_goodsh.png')}
                                resizeMode="contain"/>
 
                         {this.renderUser(user)}
