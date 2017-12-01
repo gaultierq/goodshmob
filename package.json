@@ -30,6 +30,7 @@
 		"react-native": "0.50.4",
 		"react-native-action-button": "^2.8.1",
 		"react-native-code-push": "^5.1.0-beta",
+		"react-native-config": "^0.2.1",
 		"react-native-device-info": "^0.12.1",
 		"react-native-elements": "^0.18.1",
 		"react-native-fbsdk": "github:facebook/react-native-fbsdk#065507a",

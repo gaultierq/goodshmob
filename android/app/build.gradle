@@ -252,6 +252,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-config')
     compile project(':react-native-device-info')
 
     // Firebase dependencies

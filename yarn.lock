@@ -4560,6 +4560,10 @@ react-native-code-push@^5.1.0-beta:
     plist "1.2.0"
     xcode "0.9.2"
 
+react-native-config@^0.2.1:
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/react-native-config/-/react-native-config-0.2.5.tgz#1d804b77de381a02aa35974c95e1bec0c8286485"
+
 react-native-device-info@^0.12.1:
   version "0.12.1"
   resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-0.12.1.tgz#659ed145caa5a86a4815904381b25e9ebe0c24f6"

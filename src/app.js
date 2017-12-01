@@ -25,8 +25,14 @@ import * as globalProps from 'react-native-global-props';
 import * as notification from './notification';
 import * as DeviceManager from "./DeviceManager";
 import * as UI from "./screens/UIStyles";
-import global from "./global";
+import {init as initGlobal} from "./global";
+import Config from 'react-native-config'
 
+
+
+console.log(`staring app with env=${JSON.stringify(Config)}`);
+
+initGlobal();
 
 let hydrated = false;
 
@@ -46,8 +52,9 @@ const appReducer = (state = initialState(), action) => {
 //see the network requests in the debugger
 //TODO: doesnt work yet
 //GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
-
-console.disableYellowBox = true;
+if (!__IS_LOCAL__) {
+    console.disableYellowBox = true;
+}
 
 let allReducers = combineReducers({...reducers, app: appReducer});
 const reducer = createWithReducers(allReducers);
@@ -127,7 +134,7 @@ Api.init(store);
 CurrentUser.init(store);
 DeviceManager.init(store);
 
-if (!__DEV__) {
+if (!__IS_LOCAL__) {
     const bugsnag = new Client();
 }
 

@@ -38,7 +38,7 @@ export default class ActivityBody extends React.Component<Props, State> {
                     <Text style={{fontSize: 18, fontFamily: 'Chivo-Light',}}>{resource.title}</Text>
                     <Text style={UI.TEXT_LESS_IMPORTANT}>{resource.subtitle}</Text>
 
-                    {__DEV__ && <Text style={UI.TEXT_LESS_IMPORTANT}>{activity.type + " " + activity.id}</Text>}
+                    {__IS_LOCAL__ && <Text style={UI.TEXT_LESS_IMPORTANT}>{activity.type + " " + activity.id}</Text>}
                 </View>
                 }
 
