@@ -17,10 +17,16 @@ type Props = {
 };
 
 type State = {
+    colors: Array<string>
 };
 
 export default class LineupCell extends React.Component<Props, State> {
 
+
+    constructor() {
+        super();
+        this.state = {colors: _.sampleSize(UI.RandomColors, 5)};
+    }
 
     render() {
         let lineup : List = this.props.lineup;
@@ -64,28 +70,29 @@ export default class LineupCell extends React.Component<Props, State> {
     renderList(n:number, padding:  number, savings: List<Saving>) {
         let result = [];
         for (let i = 0; i < n; i++) {
-            result.push(this.renderItem({item: _.nth(savings, i)}))
+            result.push(this.renderItem({item: _.nth(savings, i), index: i}))
         }
         return <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>{result}</View>;
     }
 
-    renderItem({item}: {item: Saving}) {
+
+    renderItem({item, index}: {item: Saving}) {
 
         let image = item && item.resource && item.resource.image;
         return (
             <View style={[{
                 height: 60,
                 width: 60,
-                borderWidth: 0.5,
+                borderWidth: 1,
                 borderColor: UI.Colors.grey2,
-            }, !image && {backgroundColor: UI.Colors.grey4}]}>
+            }, !image && {opacity: 0.3, backgroundColor: this.state.colors[index]}]}>
                 {
                     image && <Image
                         source={{uri: image}}
                         style={[{
                             height: 60,
                             width: 60,
-                            borderWidth: 0.3,
+                            borderWidth: 0.5,
                             borderColor: UI.Colors.grey1,
 
                         }]}

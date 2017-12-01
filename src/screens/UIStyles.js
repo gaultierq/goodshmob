@@ -23,6 +23,24 @@ export const Colors = Object.freeze({
     white: '#fff'
 });
 
+//http://colormind.io/
+export const RandomColors = Object.freeze([
+        '#83DB5E',
+        '#EEAC82',
+        '#E36995',
+        '#5F2C60',
+        '#26547C',
+        '#EF476F',
+        '#FFD166',
+        '#FCFCFC',
+        '#FF8360',
+        '#E8E288',
+        '#7DCE82',
+        '#F0D2D1',
+    ]
+);
+
+
 export const CARD = (sideMargin: number = 12) => {
     return {
         backgroundColor: "white",
