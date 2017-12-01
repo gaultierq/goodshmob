@@ -5,11 +5,6 @@ const homeScreen = {
         screen: 'goodsh.HomeScreen',
     },
     passProps: {
-        // item: {
-        //     id: "8ab94a3c-43b2-4e5c-acfb-d4ff268f93b1",
-        //     title: "test_title",
-        //     url: "test_url"
-        // },
         userId: "662a61d0-5473-4d09-9410-c63aadc12e6c"
     }
 };
@@ -107,6 +102,13 @@ const networkSearchItemsScreen = {
     },
 };
 
+const homeSearchItemsScreen = {
+    screen: {
+        screen: 'goodsh.HomeSearchScreen',
+        title: 'Test goodsh.HomeSearchScreen',
+    },
+};
+
 
 const test = {
     screen: {
@@ -127,12 +129,13 @@ let testScreen = null;
 // testScreen = communityScreen;
 //  testScreen = sendScreen;
 //  testScreen = test;
- testScreen = homeScreen;
+//  testScreen = homeScreen;
 //  testScreen = interactionsScreen;
 //  testScreen = userScreen;
 //  testScreen = addItemScreen;
 //  testScreen = networkSearchScreen;
 //  testScreen = networkSearchItemsScreen;
+ // testScreen = homeSearchItemsScreen;
 
 
 export default testScreen;

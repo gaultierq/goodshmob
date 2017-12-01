@@ -13,14 +13,15 @@ import {
 } from 'react-native';
 import {connect} from "react-redux";
 import type {Id, List, NavigableProps, Saving} from "../types";
-import {makeAlgoliaSearch} from "./algoliasearch";
 import ItemCell from "./components/ItemCell";
 import LineupCell from "./components/LineupCell";
 import * as Nav from "./Nav";
-import {createResultFromHit, createResultFromHit2} from "../utils/AlgoliaUtils";
+import {createResultFromHit, createResultFromHit2, makeAlgoliaSearch} from "../utils/AlgoliaUtils";
 import UserConnectItem from "./userConnectItem";
 import UserRowI from "../activity/components/UserRowI";
 import {Colors} from "./UIStyles";
+import algoliasearch from 'algoliasearch/reactnative';
+import {currentUserId} from "../CurrentUser";
 
 
 type Props = NavigableProps & {
@@ -105,16 +106,29 @@ export default class NetworkSearchScreen extends Component<Props, State> {
             );
         };
 
+        let client = algoliasearch("8UTETUZKD3", "c80385095ff870f5ddf9ba25310a9d5a");
+
+        let index = client.initIndex('Saving_staging');
+        index.setSettings({
+                searchableAttributes: [
+                    'item_title',
+                    'list_name'
+                ],
+                attributeForDistinct: 'item_id',
+                distinct: true,
+                attributesForFaceting: ['user_id', 'type'],
+            }
+        );
+
+        let query = {
+            filters: `NOT type:List AND NOT user_id:${currentUserId()}`,
+        };
+
         let categories = [
             {
                 type: "savings",
-                query: {
-                    indexName: 'Saving_staging',
-                    params: {
-                        facets: "[\"list_name\"]",
-                    }
-
-                },
+                index,
+                query,
                 tabName: "network_search_tabs.savings",
                 placeholder: "search_bar.network_placeholder",
                 parseResponse: createResultFromHit,
@@ -122,12 +136,9 @@ export default class NetworkSearchScreen extends Component<Props, State> {
             },
             {
                 type: "users",
+                index: client.initIndex('User_staging'),
                 query: {
-                    indexName: 'User_staging',
-                    params: {
-                        //facets: "[\"list_name\"]",
-                        //filters: 'user_id:' + currentUserId(),
-                    }
+                    filters: `NOT objectID:${currentUserId()}`,
 
                 },
                 tabName: "network_search_tabs.users",

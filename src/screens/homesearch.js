@@ -13,12 +13,12 @@ import {
 } from 'react-native';
 import {connect} from "react-redux";
 import type {Id, List, NavigableProps, Saving} from "../types";
-import AlgoliaSearchScreen, {makeAlgoliaSearch} from "./algoliasearch";
 import ItemCell from "./components/ItemCell";
 import LineupCell from "./components/LineupCell";
 import * as Nav from "./Nav";
-import {createResultFromHit} from "../utils/AlgoliaUtils";
+import {createResultFromHit, makeAlgoliaSearch} from "../utils/AlgoliaUtils";
 import {currentUserId} from "../CurrentUser";
+import algoliasearch from 'algoliasearch/reactnative';
 
 type Props = NavigableProps & {
     onClickClose?: () => void,
@@ -86,16 +86,34 @@ export default class HomeSearchScreen extends Component<Props, State> {
             }
         };
 
+
+        let client = algoliasearch("8UTETUZKD3", "c80385095ff870f5ddf9ba25310a9d5a");
+
+        let index = client.initIndex('Saving_staging');
+        index.setSettings({
+                searchableAttributes: [
+                    'item_title',
+                    'list_name'
+                ],
+                attributesForFaceting: ['user_id'],
+            }
+        );
+
+        let query = {
+            filters: `user_id:${currentUserId()}`,
+        };
+
         let categories = [
             {
                 type: "savings",
-                query: {
+                index,
+                query/*: {
                     indexName: 'Saving_staging',
                     params: {
                         facets: "[\"list_name\"]",
                         filters: 'user_id:' + currentUserId(),
                     }
-                },
+                }*/,
                 placeholder: "search_bar.me_placeholder",
                 parseResponse: createResultFromHit,
                 renderItem,
