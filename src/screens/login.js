@@ -91,7 +91,7 @@ class Login extends Component<Props, State> {
                                     .dispatch(appActions.login(token))
                                     .then((user) => {
                                         resolve();
-                                    })
+                                    }, err => reject(err))
                             }
                         )
                     }

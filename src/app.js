@@ -189,7 +189,10 @@ export default class App {
     startApp(logged: boolean) {
         console.debug(`starting app logged=${logged}, test=${(!!testScreen)}`);
 
-        if (!logged) {
+        if (testScreen) {
+            Navigation.startSingleScreenApp(testScreen);
+        }
+        else if (!logged) {
             Navigation.startSingleScreenApp({
                 screen: {
                     label: 'Login',

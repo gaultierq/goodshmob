@@ -47,7 +47,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
     keyExtractor = (item, index) => item.id;
 
-    state = {};
+    state = {firstLoad: 'idle'};
 
     lastFetchFail: number;
 
@@ -86,7 +86,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
     postFetchFirst() {
         setTimeout(() => {
-            if (!this.props.cannotFetch) {
+            if (this.state.firstLoad === 'idle') {
                 Api.safeExecBlock.call(
                     this,
                     () => this.fetchIt(),
