@@ -61,15 +61,19 @@ export default class NetworkSearchScreen extends Component<Props, State> {
             if (isLineup) {
                 let user = item.user;
 
+
                 let userXml = (
-                    <View style={{flex:1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                        <Text style={{fontSize: 12, color: Colors.grey1, marginLeft: 8, marginRight: 3}}>- by</Text>
-                        <UserRowI
-                            user={user}
-                            navigator={this.props.navigator}
-                            style={{flex:1, }}
-                        />
-                    </View>);
+                    <View  style={{flex:1}}>
+                        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', marginBottom: 8}}>
+                            <Text style={{fontSize: 12, color: Colors.grey1, marginLeft: 8, marginRight: 3}}>by</Text>
+                            <UserRowI
+                                user={item.user}
+                                navigator={this.props.navigator}
+                                noImage={true}
+                            />
+                        </View>
+                    </View>
+                );
 
                 return (
                     <TouchableWithoutFeedback
@@ -78,6 +82,7 @@ export default class NetworkSearchScreen extends Component<Props, State> {
                             <LineupCell
                                 lineup={item}
                                 titleChildren={userXml}
+                                titleChildrenBelow={true}
                             />
                         </View>
                     </TouchableWithoutFeedback>
@@ -111,7 +116,7 @@ export default class NetworkSearchScreen extends Component<Props, State> {
         let index = client.initIndex('Saving_staging');
         index.setSettings({
                 searchableAttributes: [
-                    'item_title',
+                    // 'item_title',
                     'list_name'
                 ],
                 attributeForDistinct: 'item_id',
@@ -121,7 +126,7 @@ export default class NetworkSearchScreen extends Component<Props, State> {
         );
 
         let query = {
-            filters: `NOT type:List AND NOT user_id:${currentUserId()}`,
+            // filters: `NOT type:List AND NOT user_id:${currentUserId()}`,
         };
 
         let categories = [

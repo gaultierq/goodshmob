@@ -10,6 +10,7 @@ import type {User} from "../../types";
 
 type Props = {
     user: User,
+    noImage?: boolean,
     children?: Node,
     rightComponent?: Node,
     small?: boolean,
@@ -23,14 +24,14 @@ type State = {
 export default class UserRowI extends React.Component<Props, State> {
 
     render() {
-        const {small, user, style} = this.props;
+        const {small, user, style, noImage} = this.props;
 
         let imageDim = small ? 20 : 30;
 
         let uri = user ? user.image: "";
         return <View style={[style, {flexDirection: 'row'}]}>
             {
-                !!uri && <Image
+                !!uri && !noImage && <Image
                     source={{uri}}
                     style={{
                         height: imageDim,
@@ -41,7 +42,7 @@ export default class UserRowI extends React.Component<Props, State> {
                 />
             }
 
-            <View style={{flex: 1}}>
+            <View style={{}}>
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                     <TouchableOpacity
                         onPress={()=>this.navigateToUser(user)}
@@ -79,8 +80,3 @@ export default class UserRowI extends React.Component<Props, State> {
 
     }
 }
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    }
-});

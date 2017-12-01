@@ -94,7 +94,7 @@ const networkSearchScreen = {
     },
 };
 
-const networkSearchItemsScreen = {
+const searchItemsScreen = {
     screen: {
         label: 'test',
         screen: 'goodsh.SearchItemsScreen',
@@ -134,7 +134,7 @@ let testScreen = null;
 //  testScreen = userScreen;
 //  testScreen = addItemScreen;
 //  testScreen = networkSearchScreen;
-//  testScreen = networkSearchItemsScreen;
+//  testScreen = searchItemsScreen;
  // testScreen = homeSearchItemsScreen;
 
 

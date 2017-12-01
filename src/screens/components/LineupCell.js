@@ -14,6 +14,7 @@ type Props = {
     lineup: List,
     style?: *,
     titleChildren?: Node,
+    titleChildrenBelow?: boolean,
 };
 
 type State = {
@@ -52,13 +53,13 @@ export default class LineupCell extends React.Component<Props, State> {
 
         let savingCount = _.get(lineup, `meta.savings-count`, null);
 
-        let {titleChildren} = this.props;
+        let {titleChildren, titleChildrenBelow} = this.props;
         let countString = savingCount  !== null ? ' (' + savingCount + ')' : '';
 
         return (
             <View style={[styles.container, {paddingLeft: padding, paddingRight: padding, paddingBottom: padding}]}>
-                <View style={{flexDirection: "row"}}>
-                    <Text style={styles.lineupTitle}>{lineup.name + countString}</Text>
+                <View style={{flexDirection: titleChildrenBelow ? 'column' : 'row'}}>
+                    <Text style={[styles.lineupTitle]}>{lineup.name + countString}</Text>
 
                     {titleChildren}
                 </View>
