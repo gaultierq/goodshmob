@@ -104,7 +104,10 @@ export class InteractionScreen extends Screen<Props, State> {
             let resource = activity.resource;
             let username = activity.user.firstName + " " + activity.user.lastName;
 
-            if (resource.type === 'asks') {
+            if (!resource) {
+                console.error("say QG no resource found on activityId=" + activity.id);
+            }
+            else if (resource.type === 'asks') {
                 // return <Text style={{fontSize: 12}}>{username + " ask"}</Text>
                 return <Text style={{fontSize: 12}}>
                     {i18n.t(key, {username, what: "ask"})}
