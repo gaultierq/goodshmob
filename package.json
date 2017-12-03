@@ -27,7 +27,7 @@
 		"ramda": "^0.24.1",
 		"react": "16.2.0",
 		"react-instantsearch": "^4.2.0",
-		"react-native": "0.50.4",
+		"react-native": "0.47.1",
 		"react-native-action-button": "^2.8.1",
 		"react-native-code-push": "^5.1.0-beta",
 		"react-native-config": "^0.9.1",

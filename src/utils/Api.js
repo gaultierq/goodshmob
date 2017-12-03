@@ -15,9 +15,12 @@ export const API_DATA_SUCCESS = 'API_DATA_SUCCESS';
 export const API_DATA_FAILURE = 'API_DATA_FAILURE';
 
 export const API_SYMBOL = Symbol("api");
+import Config from 'react-native-config'
 
 
-export const API_END_POINT = "https://goodshitapp-staging.herokuapp.com/";
+
+
+export const API_END_POINT = Config.SERVER_URL;
 
 
 let instance : Api = null;
