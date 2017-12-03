@@ -60,3 +60,4 @@ codesigndoc_exports/
 
 ios/Pods
 .env
+clean_script.local.sh
