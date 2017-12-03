@@ -1,11 +1,12 @@
+// @flow
+
 import Immutable from 'seamless-immutable';
 import * as types from "./actionTypes";
-import {API_AUTH} from "../utils/Api";
 
 export function createWithReducers(appReducers) {
     return (state, action) => {
         switch (action.type) {
-            case types.USER_LOGOUT:
+            case types.USER_LOGOUT.success():
                 state = undefined;
                 break;
         }

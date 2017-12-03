@@ -156,7 +156,7 @@ class Profile extends Component<Props, State> {
     }
 
     logout() {
-        this.props.dispatch(authActions.logout());
+        authActions.logout(this.props.dispatch);
     }
 
     getUser(userId: Id) {

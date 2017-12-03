@@ -30,7 +30,7 @@ class DebugScreen extends Component {
     }
 
     logout() {
-        this.props.dispatch(appActions.logout());
+        appActions.logout(this.props.dispatch);
     }
 
     printStorage() {

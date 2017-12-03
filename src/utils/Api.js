@@ -159,7 +159,7 @@ export class Call {
 
                             if (error.status === 401) {
                                 dispatch(errorAction);
-                                dispatch(logout())
+                                logout(dispatch)
                                 reject("user lost authentification");
                                 return;
                             }
@@ -329,7 +329,7 @@ let middleware = store => next => action => {
                 if (error.status === 401) {
                     console.log("unauthorized user. loging out")
                     next(errorAction);
-                    return next(logout())
+                    return logout(next)
                 }
                 return next(errorAction);
 

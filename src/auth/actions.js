@@ -5,9 +5,16 @@ import * as actionTypes from "./actionTypes"
 import {LoginManager as FacebookLoginManager} from "react-native-fbsdk";
 import type {Device} from "../types";
 
-export function logout() {
-    FacebookLoginManager.logOut();
-    return {type: actionTypes.USER_LOGOUT};
+export function logout(dispatch) {
+    dispatch(
+        new Api.Call()
+            .withMethod('POST')
+            .withRoute(`logout`)
+            .disptachForAction2(actionTypes.USER_LOGOUT)
+    ).then(()=> {
+        FacebookLoginManager.logOut();
+    }, err => {console.error(err)})
+    ;
 }
 
 export function login(token: string) {
