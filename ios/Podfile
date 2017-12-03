@@ -2,18 +2,39 @@
 platform :ios, '9.0'
 
 
-
 target 'goodshmob' do
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
   # use_frameworks!
 
+
   # Pods for goodshmob
   pod 'Firebase/Core'
   pod 'Firebase/Messaging'
+  pod 'react-native-config', :path => '../node_modules/react-native-config'
+
+  pod 'yoga', path: '../node_modules/react-native/ReactCommon/yoga'
+  pod 'React', :path => '../node_modules/react-native', :subspecs => [
+    'BatchedBridge', # Required For React Native 0.45.0+
+    'Core',
+    'ART',
+    'RCTActionSheet',
+    'RCTAnimation',
+    #'RCTAdSupport',
+    'RCTGeolocation',
+    'RCTImage',
+    'RCTNetwork',
+    'RCTPushNotification',
+    'RCTSettings',
+    'RCTText',
+    'RCTVibration',
+    'RCTWebSocket',
+    'RCTLinkingIOS'
+]
   
-  # pod 'React', path: '../node_modules/react-native'
-  # pod 'Yoga', path: '../node_modules/react-native/ReactCommon/yoga'
+
   # pod 'RNDeviceInfo', path: '../node_modules/react-native-device-info'
+
+  
 
   target 'goodshmobTests' do
     inherit! :search_paths
@@ -22,3 +43,23 @@ target 'goodshmob' do
 
 end
 
+post_install do |installer|
+  
+  installer.pods_project.targets.each do |target|
+    if target.name == 'react-native-config' then
+      phase = target.new_shell_script_build_phase("Build env file")
+      phase.shell_script = "cd ../../node_modules/react-native-config/"\
+                           " && export SYMROOT=./ios/ReactNativeConfig"\
+                           " && export BUILD_DIR=./ios/ReactNativeConfig"\
+                           " && ruby ./ios/ReactNativeConfig/BuildDotenvConfig.ruby"
+
+      phase.shell_script = "cd ../../"\
+                           " && RNC_ROOT=./node_modules/react-native-config/"\
+                           " && export SYMROOT=$RNC_ROOT/ios/ReactNativeConfig"\
+                           " && export BUILD_DIR=$RNC_ROOT/ios/ReactNativeConfig"\
+                           " && ruby $RNC_ROOT/ios/ReactNativeConfig/BuildDotenvConfig.ruby"
+
+      target.build_phases.move(phase,0)
+    end
+  end
+end

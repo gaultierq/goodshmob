@@ -85,3 +85,7 @@
 -dontwarn com.google.firebase.**
 
 -dontwarn io.invertase.firebase.messaging.**
+
+
+-keep class it.goodsh.mob.BuildConfig { *; }
+-keep class it.goodsh.mob.debug.BuildConfig { *; }
