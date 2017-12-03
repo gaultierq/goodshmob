@@ -46,6 +46,11 @@ end
 post_install do |installer|
   
   installer.pods_project.targets.each do |target|
+    #https://github.com/facebook/react-native/issues/12814
+    if target.name == "React"
+       target.remove_from_project
+    end
+
     if target.name == 'react-native-config' then
       phase = target.new_shell_script_build_phase("Build env file")
       phase.shell_script = "cd ../../node_modules/react-native-config/"\
