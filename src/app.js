@@ -198,7 +198,7 @@ export default class App {
     startApp(logged: boolean) {
         console.debug(`starting app logged=${logged}, test=${(!!testScreen)}`);
 
-        if (testScreen) {
+        if (__IS_LOCAL__ && testScreen) {
             Navigation.startSingleScreenApp(testScreen);
         }
         else if (!logged) {
