@@ -20,7 +20,6 @@ import * as UI from "./UIStyles";
 import {renderSimpleButton} from "./UIStyles";
 import UserRowI from "../activity/components/UserRowI";
 
-;
 
 type Props = NavigableProps & {
     user: User

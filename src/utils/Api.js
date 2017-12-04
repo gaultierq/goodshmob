@@ -163,7 +163,7 @@ export class Call {
 
                             if (error.status === 401) {
                                 dispatch(errorAction);
-                                logout(dispatch)
+                                logout(dispatch);
                                 reject("user lost authentification");
                                 return;
                             }

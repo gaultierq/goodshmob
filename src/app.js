@@ -171,7 +171,7 @@ export default class App {
         //waiting rehydration before starting app
         let rehydrated = store.getState().app.rehydrated;
         if (!rehydrated) {
-            console.debug("waiting for rehydration");
+            console.debug("waiting for rehydration1");
             return;
         }
         console.debug("resolving logged");
@@ -202,10 +202,10 @@ export default class App {
     startApp(logged: boolean) {
         console.debug(`starting app logged=${logged}, test=${(!!testScreen)}`);
 
-        if (__IS_LOCAL__ && testScreen) {
+        /*if (__IS_LOCAL__ && testScreen) {
             Navigation.startSingleScreenApp(testScreen);
         }
-        else if (!logged) {
+        else */if (!logged) {
             Navigation.startSingleScreenApp({
                 screen: {
                     label: 'Login',
@@ -216,7 +216,7 @@ export default class App {
                 }
             });
         }
-        else if (testScreen) {
+        else if (__IS_LOCAL__ && testScreen) {
             Navigation.startSingleScreenApp(testScreen);
         }
         else {
