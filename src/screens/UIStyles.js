@@ -75,12 +75,13 @@ export const TEXT_LIST = {fontSize: 14, color: Colors.blue};
 export const TEXT_LESS_IMPORTANT = {fontSize: 12, color: Colors.grey2};
 export const TEXT_LEAST_IMPORTANT = {fontSize: 9, color: Colors.grey2};
 
+
 type ButtonOptions = {disabled?: boolean, loading?: boolean, style?: *};
 
 export function renderSimpleButton(
     text: string,
     onPress: ()=> void ,
-    {disabled = false, loading = false, style = {}} : ButtonOptions = {}) {
+    {disabled = false, loading = false, style = {}, textStyle = {}} : ButtonOptions = {}) {
 
     let color = disabled ? Colors.grey1 : Colors.black;
 
@@ -88,10 +89,10 @@ export function renderSimpleButton(
         isLoading={loading}
         isDisabled={disabled}
         onPress={onPress}
-        style={[styles.button, style]}
+        style={[{marginBottom: 0}, styles.button, style]}
         disabledStyle={styles.disabledButton}
     >
-        <Text style={{color, fontWeight: "bold", fontSize: 18, fontFamily: "Chivo"}}>{text}</Text>
+        <Text style={[{color, fontWeight: "bold", fontSize: 18, fontFamily: "Chivo"}, textStyle]}>{text}</Text>
     </Button>);
 }
 
@@ -129,7 +130,7 @@ export function renderLink(
 
 const styles = StyleSheet.create({
     button: {
-        padding: 8,
+        padding: 0,
         borderColor: "transparent",
     },
     disabledButton: {

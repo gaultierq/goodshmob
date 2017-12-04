@@ -12,13 +12,14 @@ import {
     View
 } from 'react-native';
 import {connect} from "react-redux";
-import type {NavigableProps, User} from "../types";
+import type {NavigableProps, RequestState, User} from "../types";
 import {currentUserId} from "../CurrentUser";
-import Button from 'apsl-react-native-button'
 import * as Api from "../utils/Api";
 import ApiAction from "../utils/ApiAction";
 import * as UI from "./UIStyles";
+import {renderSimpleButton} from "./UIStyles";
 import UserRowI from "../activity/components/UserRowI";
+
 ;
 
 type Props = NavigableProps & {
@@ -26,14 +27,14 @@ type Props = NavigableProps & {
 };
 
 type State = {
-    connect: number,
-    disconnect: number,
+    connect?: RequestState,
+    disconnect?: RequestState,
 };
 
 @connect()
 export default class UserConnectItem extends Component<Props, State> {
 
-    state : State = {connect: 0, disconnect: 0};
+    state : State = {};
 
     render() {
         let item = this.props.user;
@@ -45,72 +46,32 @@ export default class UserConnectItem extends Component<Props, State> {
     }
 
     renderConnectButton(user: User) {
-        let connect = this.state.connect;
-        let disconnect = this.state.disconnect;
 
         let alreadyFriends = !!_.find(user.friends, (f)=>f.id === currentUserId());
+        let remainingAction = alreadyFriends ? 'disconnect' : 'connect';
+        let reqState = this.state[remainingAction];
 
-        if (alreadyFriends) {
-            //return <Text style={{position: 'absolute', right: 12}}>amis</Text>
-            return (<Button
-                isLoading={disconnect === 1}
-                isDisabled={disconnect === 2}
-                onPress={()=> this.disconnectWith(user)}
-                style={[{position: 'absolute', right: 12}, styles.button]}
-                disabledStyle={styles.disabledButton}
-            >
-                <Text>Se déconnecter</Text>
-            </Button>);
-        }
 
-        return (<Button
-            isLoading={connect === 1}
-            isDisabled={connect === 2}
-            onPress={()=> this.connectWith(user)}
-            style={[{position: 'absolute', right: 12}, styles.button]}
-            disabledStyle={styles.disabledButton}
-        >
-            <Text>Se connecter</Text>
-        </Button>);
+        let ok = reqState === 'ok';
 
+        return <View style={{position: 'absolute', right: 0, alignItems: 'center'}}>{
+            renderSimpleButton(
+                i18n.t(`friends.` + (ok ? 'messages' : 'buttons') + `.${remainingAction}`),
+                alreadyFriends ? ()=> this.disconnectWith(user) : ()=> this.connectWith(user),
+                {loading: reqState === 'sending', disabled: ok, textStyle: {fontWeight: "normal", fontSize: 16, }}
+            )
+        }</View>
     }
 
     connectWith(user: User) {
-        if (this.state.connect === 1) return;
-
-        let setReq =  (connect) => {
-            this.setState({connect});
-        };
-
-
-        setReq(1);
-        this.props.dispatch(actions.createFriendship(user.id)
-            .disptachForAction2(CONNECT))
-            .then(() => {
-                setReq(2);
-            }, err => {
-                console.error(err);
-                setReq(3);
-            })
+        let action = actions.createFriendship(user.id).disptachForAction2(CONNECT);
+        Api.safeDispatchAction.call(this, this.props.dispatch, action, 'connect');
     }
 
     disconnectWith(user: User) {
-        if (this.state.disconnect === 1) return;
 
-        let setReq =  (disconnect) => {
-            this.setState({disconnect});
-        };
-
-
-        setReq(1);
-        this.props.dispatch(actions.deleteFriendship(user.id)
-            .disptachForAction2(DISCONNECT))
-            .then(() => {
-                setReq(2);
-            }, err => {
-                console.error(err);
-                setReq(3);
-            })
+        let action = actions.deleteFriendship(user.id).disptachForAction2(DISCONNECT);
+        Api.safeDispatchAction.call(this, this.props.dispatch, action, 'disconnect');
     }
 }
 

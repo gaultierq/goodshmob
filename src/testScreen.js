@@ -133,9 +133,9 @@ let testScreen = null;
 //  testScreen = interactionsScreen;
 //  testScreen = userScreen;
 //  testScreen = addItemScreen;
-//  testScreen = networkSearchScreen;
+ testScreen = networkSearchScreen;
 //  testScreen = searchItemsScreen;
- // testScreen = homeSearchItemsScreen;
+//  testScreen = homeSearchItemsScreen;
 
 
 export default testScreen;

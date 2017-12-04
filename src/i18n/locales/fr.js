@@ -260,4 +260,14 @@ export default {
     loadmore: "Chargement de plus de kif...",
     send_message: "J'ai quelquechose à te recommender:\n%{what}\n\nJe l'ai trouvé grace a Goodsh: %{url}",
     goodsh_url: "https:\/\/goodsh.it\/",
+    friends: {
+        buttons: {
+            connect: "Se connecter",
+            disconnect: "Se déconnecter",
+        },
+        messages: {
+            connect: "connectés",
+            disconnect: "déconnectés",
+        }
+    }
 };
