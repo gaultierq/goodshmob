@@ -212,11 +212,11 @@ export function initialListState() {
     };
 }
 
-export function safeDispatchAction(dispatch, action, stateName) {
-    return safeExecBlock(() => dispatch(action));
+export function safeDispatchAction(dispatch, action, stateName: string) {
+    return safeExecBlock.call(this, function(){return dispatch(action)}, stateName);
 }
 
-export function safeExecBlock(block: ()=>Promise<*>, stateName: string) {
+export function safeExecBlock(block, stateName: string) {
 
     let setRequestState: (reqFetch: RequestState) => Promise<*> = (reqFetch: RequestState) => {
         return new Promise((resolve, reject) => {

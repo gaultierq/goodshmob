@@ -22,6 +22,7 @@ export type FeedSource = {
 
 export type Props<T> = {
     data: Array<T>,
+    feedId?: string,
     renderItem: Function,
     fetchSrc: FeedSource,
     hasMore: boolean,
@@ -107,6 +108,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             hasMore,
             empty,
             ListHeaderComponent,
+            feedId,
             ...attributes
         } = this.props;
 
@@ -115,6 +117,10 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
         let firstEmptyLoader = this.state.firstLoad !== 'ok' && empt;
         // firstEmptyLoader = true;
+
+        if (feedId) {
+            console.debug(`feed '${feedId}' render: empt=${empt} nitd=${nothingInterestingToDisplay} fil=${firstEmptyLoader} data.len=${data ? data.length : -1}`);
+        }
 
         if (nothingInterestingToDisplay) {
             if (this.state.isFetchingFirst === 'ko') {
