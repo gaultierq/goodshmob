@@ -19,7 +19,7 @@ import Config from 'react-native-config'
 
 
 
-
+const CURRENT_API_VERSION = 'v2.0.0';
 export const API_END_POINT = Config.SERVER_URL;
 
 
@@ -41,6 +41,7 @@ class Api {
         let headers = {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
+            'Api-Version': CURRENT_API_VERSION
         };
 
         //TODO: find nicer syntax
