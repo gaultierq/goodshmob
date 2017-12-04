@@ -112,7 +112,7 @@ class ShareScreen extends Component<Props, State> {
 
         Share.share(intent, {
             // Android only:
-            dialogTitle: 'poom',
+            dialogTitle: title,
             // iOS only:
             // excludedActivityTypes: [
             //     'com.apple.UIKit.activity.PostToTwitter'
