@@ -15,7 +15,7 @@ import {
     View
 } from 'react-native';
 import {connect} from 'react-redux';
-import type {Id} from "../types";
+import type {Id, RequestState} from "../types";
 import {buildData, dataStateToProps} from "../utils/DataUtils";
 import ApiAction from "../utils/ApiAction";
 import * as Api from "../utils/Api";
@@ -34,7 +34,8 @@ type Props = {
 
 type State = {
     //user?: User
-    feedback?: string
+    feedback?: string,
+    reqLogout?: RequestState
 };
 
 class Profile extends Component<Props, State> {
@@ -110,7 +111,7 @@ class Profile extends Component<Props, State> {
 
 
 
-                        {renderSimpleButton("logout", this.logout.bind(this))}
+                        {renderSimpleButton("logout", this.logout.bind(this), {loading: this.state.reqLogout === 'sending'})}
 
                         {renderLink("Terms", "https://goodsh.it/terms")}
 
@@ -120,7 +121,6 @@ class Profile extends Component<Props, State> {
 
         );
     }
-
 
     renderUser(user) {
         return <View style={{
@@ -156,7 +156,13 @@ class Profile extends Component<Props, State> {
     }
 
     logout() {
-        authActions.logout(this.props.dispatch);
+        Api.safeExecBlock.call(
+            this,
+            () => {
+                return authActions.logout(this.props.dispatch)
+            },
+            'reqLogout'
+        );
     }
 
     getUser(userId: Id) {
