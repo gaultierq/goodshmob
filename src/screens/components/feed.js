@@ -56,6 +56,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     constructor(props: Props<T>) {
         super(props);
         this.postFetchFirst();
+        props.feedId && console.log(`constructing feed '${props.feedId}'`);
     }
 
     componentWillReceiveProps(nextProps: Props<*>) {
@@ -119,7 +120,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         // firstEmptyLoader = true;
 
         if (feedId) {
-            console.debug(`feed '${feedId}' render: empt=${empt} nitd=${nothingInterestingToDisplay} fil=${firstEmptyLoader} data.len=${data ? data.length : -1}`);
+            console.log(`feed '${feedId}' render: empt=${empt} nitd=${nothingInterestingToDisplay} fil=${firstEmptyLoader} data.len=${data ? data.length : -1}`);
         }
 
         if (nothingInterestingToDisplay) {

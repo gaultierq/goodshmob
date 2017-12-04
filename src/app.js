@@ -118,12 +118,16 @@ let configureApp = function () {
     console.info("App initialized.");
 };
 // begin periodically persisting the store
+let persistConfig = {
+    storage: AsyncStorage,
+    transforms: [createTransform(immutableTransform.in, immutableTransform.out, immutableTransform.config)],
+    whitelist: ['auth','device']
+};
+if (!__IS_LOCAL__) {
+    persistConfig = {...persistConfig, whitelist: ['auth','device']};
+}
 persistStore(store,
-    {
-        storage: AsyncStorage,
-        transforms: [createTransform(immutableTransform.in, immutableTransform.out, immutableTransform.config)],
-        whitelist: ['auth','device']
-    },
+    persistConfig,
     () => {
         console.log("persist store complete");
         hydrated = true;

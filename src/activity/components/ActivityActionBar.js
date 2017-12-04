@@ -92,6 +92,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                 return activity && activity.resource && activity.resource.url;
             case 'save':
             case 'comment':
+            case 'share':
                 return type !== 'asks';
         }
 
