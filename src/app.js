@@ -121,7 +121,7 @@ let configureApp = function () {
 let persistConfig = {
     storage: AsyncStorage,
     transforms: [createTransform(immutableTransform.in, immutableTransform.out, immutableTransform.config)],
-    whitelist: ['auth','device']
+    // whitelist: ['auth','device']
 };
 if (!__IS_LOCAL__) {
     persistConfig = {...persistConfig, whitelist: ['auth','device']};

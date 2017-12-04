@@ -209,14 +209,17 @@ class HomeScreen extends Screen<Props, State> {
             <LineupCell
                 lineup={item}
                 titleChildren={
-                    <View style={{position: "absolute", right: 0}}>
+                    <View
+                        style={{position: "absolute", right: 0}}
+                        // hitSlop={{top: 50, bottom: 50, left: 50, right: 50}}
+                    >
                         <Menu>
                             <MenuTrigger>
-                                <Icon name="md-more" size={25} style={{padding: 5, paddingLeft: 15}} color={UI.Colors.blue} />
+                                <Icon name="md-more" size={25} style={{padding: 8, paddingRight: 0, paddingLeft: 25}} color={UI.Colors.blue} />
                             </MenuTrigger>
                             <MenuOptions>
-                                <MenuOption onSelect={() => this.deleteLineup(item)} text='Delete' />
-                                <MenuOption onSelect={() => this.changeTitle(item)} text='Changer le titre' />
+                                <MenuOption onSelect={() => this.deleteLineup(item)} text='#Delete' />
+                                <MenuOption onSelect={() => this.changeTitle(item)} text='#Changer le titre' />
                             </MenuOptions>
                         </Menu>
                     </View>
