@@ -123,7 +123,10 @@ let persistConfig = {
     transforms: [createTransform(immutableTransform.in, immutableTransform.out, immutableTransform.config)],
     // whitelist: ['auth','device']
 };
-if (!__IS_LOCAL__) {
+
+const USE_CACHE = false;
+
+if (!__IS_LOCAL__ || !USE_CACHE) {
     persistConfig = {...persistConfig, whitelist: ['auth','device']};
 }
 persistStore(store,

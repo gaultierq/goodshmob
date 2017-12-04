@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'center',
-        // borderWidth: 0.5,
+        // borderWidth: StyleSheet.hairlineWidth,
         // borderColor: '#d6d7da',
         alignItems: 'center',
         // padding: 2.5,

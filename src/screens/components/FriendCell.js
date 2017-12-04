@@ -30,7 +30,7 @@ export default class FriendCell extends React.Component<Props, State> {
                 alignItems: 'center',
                 backgroundColor: "transparent",
                 justifyContent: 'space-between',
-                //borderWidth: 0.5,
+                //borderWidth: StyleSheet.hairlineWidth,
                 margin: 10,
             }}>
                 <View style={{
@@ -38,7 +38,7 @@ export default class FriendCell extends React.Component<Props, State> {
                     flexDirection: 'row',
                     alignItems: 'center',
                     backgroundColor: "transparent",
-                    //borderWidth: 0.5,
+                    //borderWidth: StyleSheet.hairlineWidth,
                     margin: 10,
                 }}>
                     <Image

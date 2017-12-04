@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
         borderWidth: 0
     },
     input:{
-        borderWidth: 0.5,
+        borderWidth: StyleSheet.hairlineWidth,
         borderColor: UI.Colors.grey1,
         borderRadius: 20
     },

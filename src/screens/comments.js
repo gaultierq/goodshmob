@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
     inputContainer:{
         // height: 40,
         borderColor: UI.Colors.grey1,
-        borderWidth: 0.5,
+        borderWidth: StyleSheet.hairlineWidth,
         borderRadius: 20,
         paddingLeft: 14,
         paddingRight: 14,

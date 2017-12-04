@@ -19,6 +19,7 @@ import i18n from '../../i18n/i18n'
 import {connect} from "react-redux";
 import {currentGoodshboxId} from "../../CurrentUser";
 import {unsave} from "../actions";
+import Snackbar from "react-native-snackbar"
 
 export type ActivityActionType = 'comment' | 'share' | 'save' | 'buy' | 'answer';
 const ACTIONS = ['comment', 'share', 'save', 'buy', 'answer'];
@@ -46,7 +47,15 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
         let commentsCount = activity.comments ? activity.comments.length : 0;
 
-        let goodshed = resource && resource.meta ? resource.meta["goodshed"] : false;
+        let savedIn = _.get(resource, 'meta.saved-in', []);
+        let target = activity.target;
+        let goodshed;
+        if (target && target.type === 'lists') {
+            goodshed = _.indexOf(savedIn, target.id) > -1;
+        }
+
+        //let goodshed = resource && resource.meta ? savedIn : false;
+
 
         return <View style={{
             flex: 1,
@@ -67,7 +76,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
             }
             {
                 goodshed ?
-                    this.canExec('save') && this.renderButton(require('../../img/save-icon.png'), i18n.t("activity_item.buttons.saved"), () => this.unsave(activity), true) :
+                    this.canExec('save') && this.renderButton(require('../../img/save-icon.png'), i18n.t("activity_item.buttons.saved"), () => this.unsave(activity)/*, true*/) :
                     this.canExec('save') && this.renderButton(require('../../img/save-icon.png'), i18n.t("activity_item.buttons.save"), () => this.save(activity))
             }
             {
@@ -131,7 +140,10 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     }
 
     unsave(saving: Saving) {
-        this.props.dispatch(unsave(saving.id)).then(console.info(`saving ${saving.id} unsaved`));
+        this.props.dispatch(unsave(saving.id, saving.target.id)).then(() => {
+            console.info(`saving ${saving.id} unsaved`)
+            Snackbar.show({title: "#Goodsh effacé"});
+        });
     }
 
     comment(activity: Activity) {

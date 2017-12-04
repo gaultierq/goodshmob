@@ -53,7 +53,7 @@ export default {
 
             "share":"SEND THE LINK",
             "save":"SAVE",
-            "saved":"SAVED",
+            "saved":"DELETE",
             "buy":"BUY",
             "answer": {
                 zero: "ANSWER",

@@ -43,11 +43,11 @@ export function unlike(activityId: string, activityType: string) {
         );
 }
 
-export function unsave(savingId: Id) {
+export function unsave(savingId: Id, lineupId: Id) {
     return new Api.Call()
         .withMethod('DELETE')
         .withRoute(`savings/${savingId}`)
         .disptachForAction(types.UNSAVE,
-            {id: savingId}
+            {id: savingId, lineupId}
         );
 }

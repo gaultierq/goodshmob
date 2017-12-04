@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     },
     searchInput: {
         backgroundColor: 'white',
-        borderWidth: 0.5,
+        borderWidth: StyleSheet.hairlineWidth,
         // borderRadius: 30,
         // padding: 20,
         borderColor: UI.Colors.grey1

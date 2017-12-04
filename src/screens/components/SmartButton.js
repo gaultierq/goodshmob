@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         // minHeight: HEIGHT,
         borderColor: UI.Colors.grey1,
-        borderWidth: 0.5,
+        borderWidth: StyleSheet.hairlineWidth,
         borderRadius: 6,
         backgroundColor: 'white',
     },

@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
         width: "100%",
         fontFamily: 'Chivo',
         fontSize: 18,
-        // borderWidth: 1,
+        // borderWidth: StyleSheet.hairlineWidth,
         borderColor: UI.Colors.grey1,
         borderRadius: 5
 

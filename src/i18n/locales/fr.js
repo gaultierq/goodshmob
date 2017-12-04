@@ -52,7 +52,7 @@ export default {
             },
             "share":"ENVOYER LE LIEN",
             "save":"ENREGISTRER",
-            "saved":"ENREGISTRÉ",
+            "saved":"SUPPRIMER",
             "buy":"ACHETER",
             "answer": {
                 zero: "RÉPONDRE",

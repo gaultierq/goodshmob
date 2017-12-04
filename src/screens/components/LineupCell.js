@@ -84,7 +84,7 @@ export default class LineupCell extends React.Component<Props, State> {
             <View style={[{
                 height: 60,
                 width: 60,
-                borderWidth: 1,
+                borderWidth: StyleSheet.hairlineWidth,
                 borderColor: UI.Colors.grey2,
             }, !image && {opacity: 0.3, backgroundColor: this.state.colors[index]}]}>
                 {
@@ -93,7 +93,7 @@ export default class LineupCell extends React.Component<Props, State> {
                         style={[{
                             height: 60,
                             width: 60,
-                            borderWidth: 0.5,
+                            borderWidth: StyleSheet.hairlineWidth,
                             borderColor: UI.Colors.grey1,
 
                         }]}

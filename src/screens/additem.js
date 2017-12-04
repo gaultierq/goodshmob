@@ -177,6 +177,6 @@ const styles = StyleSheet.create({
         marginTop: 20,
         fontSize: 16,
         borderColor: UI.Colors.grey1,
-        borderWidth: 0.5,
+        borderWidth: StyleSheet.hairlineWidth,
     }
 });

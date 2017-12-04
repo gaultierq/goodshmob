@@ -102,7 +102,7 @@ class Profile extends Component<Props, State> {
                         <SmartInput
                             containerStyle={{padding: 6}}
                             inputStyle={{fontSize: 17}}
-                            inputContainerStyle={{padding: 4, borderRadius: 4, borderWidth: 1}}
+                            inputContainerStyle={{padding: 4, borderRadius: 4, borderWidth: StyleSheet.hairlineWidth}}
                             execAction={(input: string) => this.sendFeedback(input)}
                             placeholder={"profile_screen.feedback_textfield.placeholder"}
                             multiline
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
         width: "80%",
         fontFamily: 'Chivo',
         fontSize: 14,
-        borderWidth: 0.5,
+        borderWidth: StyleSheet.hairlineWidth,
         borderRadius: 5,
         borderColor: UI.Colors.grey1,
 

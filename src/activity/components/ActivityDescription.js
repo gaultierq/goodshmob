@@ -130,7 +130,7 @@ export default class ActivityDescription extends React.Component<Props, State> {
                     color: UI.Colors.grey1,
                     padding: 5,
                     borderRadius: 5,
-                    borderWidth: 0.5,
+                    borderWidth: StyleSheet.hairlineWidth,
                     borderColor: UI.Colors.grey1
                 }}>{i18n.t("activity_item.buttons.unfollow_list")}</Text>
             </TouchableOpacity>
