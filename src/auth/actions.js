@@ -32,3 +32,10 @@ export function saveDevice({fcmToken}: Device) {
         .withBody({device: {token: fcmToken}})
         .disptachForAction2(actionTypes.SAVE_DEVICE);
 }
+
+export function me() {
+    return new Api.Call()
+        .withMethod('GET')
+        .withRoute(`me`)
+        .disptachForAction2(actionTypes.FETCH_ME);
+}

@@ -8,11 +8,64 @@ import {combineReducers} from "redux";
 import {TabBar, TabViewAnimated} from 'react-native-tab-view';
 import {SearchBar} from 'react-native-elements'
 import SearchScreen from "../screens/search";
-import algoliasearch from 'algoliasearch/reactnative';
 import type {SearchToken} from "../types";
 import type {SearchCategoryType} from "../screens/search";
+import algoliasearch from 'algoliasearch/reactnative';
+import * as appActions from "../auth/actions";
 
-const HITSPERPAGE = 20;
+type AlgoliaIndexName = string;
+type AlgoliaIndex = *;
+
+
+
+class AlgoliaClient {
+    store: *;
+    client: *;
+
+    init(store): AlgoliaClient {
+        this.store = store;
+        return this;
+    }
+
+    createAlgoliaIndex(indexName: AlgoliaIndexName, count: number = 0) : Promise<AlgoliaIndex> {
+        return new Promise((resolve, reject) => {
+            if (this.client) {
+                resolve(this.client.initIndex(indexName));
+            }
+            else {
+                let {auth} = this.store.getState();
+
+                if (!auth) {
+                    reject("waiting for auth state");
+                }
+                else if (auth.algoliaToken) {
+                    let algoliaToken = auth.algoliaToken;
+
+                    algoliaToken = 'c80385095ff870f5ddf9ba25310a9d5a';
+
+                    this.client = algoliasearch("8UTETUZKD3", algoliaToken);
+                    resolve(this.client.initIndex(indexName));
+                }
+                else {
+                    if (count > 0) {
+                        reject("looping request");
+                    }
+                    else {
+                        this.store.dispatch(appActions.me())
+                            .then(this.createAlgoliaIndex(indexName, ++count), err=>console.warn(err));
+                    }
+                }
+
+            }
+        });
+
+    }
+}
+
+const instance = new AlgoliaClient();
+
+
+export {instance as AlgoliaClient};
 
 export function makeAlgoliaSearch(categories, navigator) {
 
@@ -21,75 +74,69 @@ export function makeAlgoliaSearch(categories, navigator) {
         //searching
         console.log(`algolia: searching ${token}`);
 
-        let client = algoliasearch("8UTETUZKD3", "c80385095ff870f5ddf9ba25310a9d5a");
-
         //separate searches
         let categFiltered = categories.filter((c) => c.type === categoryType);
         let category = categFiltered[0];
 
 
         // const queries = categFiltered.map(c=> {return {...c.query, params: c.params, query: token}});
-        const query = {...category.query, params: category.query.params, query: token};
+        const query = {...category.query, params: category.query.params, page, query: token};
 
-        // const queries = categFiltered.map(c => {
-        //     let q = c.query;
-        //     let params = q.params;
-        //
-        //     params = {...params, page, hitsPerPage: HITSPERPAGE};
-        //     return {...q, params, query: token}
-        // });
 
-        let index = category.index;
+        let indexResolver = category.index;
 
         return new Promise((resolve, reject) => {
 
-            // index.search(queries, (err, content) => {
-            index.search(query, (err, content) => {
+            indexResolver.then(index => {
+                index.search(query, (err, content) => {
 
-                if (err) {
-                    console.error(err);
-                    reject(err);
-                    return;
-                }
-                let res = {};
-                let result = content;
-                let hits = result.hits;
-                console.log(`search result lists: ${hits.length}`);
+                    if (err) {
+                        console.error(err);
+                        reject(err);
+                        return;
+                    }
+                    let res = {};
+                    let result = content;
+                    let hits = result.hits;
+                    console.log(`search result lists: ${hits.length}`);
 
-                let searchResult = category.parseResponse(hits);
+                    let searchResult = category.parseResponse(hits);
 
-                let type = category.type;
+                    let type = category.type;
 
-                let search = {};
+                    let search = {};
 
-                search.results = searchResult;
-                search.page = result.page;
-                search.nbPages = result.nbPages;
-                res[type] = search;
+                    search.results = searchResult;
+                    search.page = result.page;
+                    search.nbPages = result.nbPages;
+                    res[type] = search;
 
-                // categFiltered.reduce((obj, c, i) => {
-                //     // categories.reduce((obj, c, i) => {
-                //
-                //     let result = _.get(content.results, 0, {hits: []});
-                //     let hits = result.hits;
-                //     console.log(`search result lists: ${hits.length}`);
-                //
-                //     let searchResult = c.parseResponse(hits);
-                //
-                //     let type = c.type;
-                //
-                //     let search = {};
-                //
-                //     search.results = searchResult;
-                //     search.page = result.page;
-                //     search.nbPages = result.nbPages;
-                //
-                //     obj[type] = search;
-                //     return obj;
-                // }, res);
+                    // categFiltered.reduce((obj, c, i) => {
+                    //     // categories.reduce((obj, c, i) => {
+                    //
+                    //     let result = _.get(content.results, 0, {hits: []});
+                    //     let hits = result.hits;
+                    //     console.log(`search result lists: ${hits.length}`);
+                    //
+                    //     let searchResult = c.parseResponse(hits);
+                    //
+                    //     let type = c.type;
+                    //
+                    //     let search = {};
+                    //
+                    //     search.results = searchResult;
+                    //     search.page = result.page;
+                    //     search.nbPages = result.nbPages;
+                    //
+                    //     obj[type] = search;
+                    //     return obj;
+                    // }, res);
 
-                resolve(res);
+                    resolve(res);
+                });
             });
+            // index.search(queries, (err, content) => {
+
         });
     };
 
@@ -102,6 +149,12 @@ export function makeAlgoliaSearch(categories, navigator) {
 
 
 
+export function obtainClient(): Promise<AlgoliaClient> {
+    return new Promise((resolve, reject) => {
+        let client = algoliasearch("8UTETUZKD3", "c80385095ff870f5ddf9ba25310a9d5a");
+        resolve(client);
+    });
+}
 
 
 

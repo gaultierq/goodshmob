@@ -18,7 +18,7 @@ import LineupCell from "./components/LineupCell";
 import * as Nav from "./Nav";
 import {createResultFromHit, makeAlgoliaSearch} from "../utils/AlgoliaUtils";
 import {currentUserId} from "../CurrentUser";
-import algoliasearch from 'algoliasearch/reactnative';
+import {AlgoliaClient} from "../utils/AlgoliaUtils";
 
 type Props = NavigableProps & {
     onClickClose?: () => void,
@@ -87,17 +87,33 @@ export default class HomeSearchScreen extends Component<Props, State> {
         };
 
 
-        let client = algoliasearch("8UTETUZKD3", "c80385095ff870f5ddf9ba25310a9d5a");
+        // let client = algoliasearch("8UTETUZKD3", "c80385095ff870f5ddf9ba25310a9d5a");
+        //
+        // let index = client.initIndex('Saving_staging');
+        // index.setSettings({
+        //         searchableAttributes: [
+        //             'item_title',
+        //             'list_name'
+        //         ],
+        //         attributesForFaceting: ['user_id'],
+        //     }
+        // );
+        //
 
-        let index = client.initIndex('Saving_staging');
-        index.setSettings({
-                searchableAttributes: [
-                    'item_title',
-                    'list_name'
-                ],
-                attributesForFaceting: ['user_id'],
-            }
-        );
+        let index = new Promise(resolve => {
+            AlgoliaClient.createAlgoliaIndex('Saving_staging').then(index => {
+                index.setSettings({
+                        searchableAttributes: [
+                            'item_title',
+                            'list_name'
+                        ],
+                        attributesForFaceting: ['user_id'],
+                    }
+                );
+                resolve(index);
+            });
+        });
+
 
         let query = {
             filters: `user_id:${currentUserId()}`,

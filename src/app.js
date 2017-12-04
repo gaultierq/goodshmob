@@ -27,6 +27,7 @@ import * as DeviceManager from "./DeviceManager";
 import * as UI from "./screens/UIStyles";
 import {init as initGlobal} from "./global";
 import Config from 'react-native-config'
+import {AlgoliaClient} from "./utils/AlgoliaUtils";
 
 
 
@@ -52,9 +53,9 @@ const appReducer = (state = initialState(), action) => {
 //see the network requests in the debugger
 //TODO: doesnt work yet
 //GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
-if (!__IS_LOCAL__) {
-    console.disableYellowBox = true;
-}
+//if (!__IS_LOCAL__) {
+console.disableYellowBox = true;
+//}
 
 let allReducers = combineReducers({...reducers, app: appReducer});
 const reducer = createWithReducers(allReducers);
@@ -133,6 +134,7 @@ persistStore(store,
 Api.init(store);
 CurrentUser.init(store);
 DeviceManager.init(store);
+AlgoliaClient.init(store);
 
 if (!__IS_LOCAL__) {
     const bugsnag = new Client();

@@ -29,6 +29,10 @@ export function authReducer(state = Immutable({}), action) {
 
             state = state.merge({client, uid, accessToken, currentUserId});
             break;
+        case types.FETCH_ME.success():
+            let algoliaToken = _.get(action.payload, "meta.key", null);
+            state = state.merge({algoliaToken});
+            break;
     }
     return state;
 }

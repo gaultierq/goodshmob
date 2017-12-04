@@ -22,7 +22,7 @@ import UserRowI from "../activity/components/UserRowI";
 import {Colors} from "./UIStyles";
 import algoliasearch from 'algoliasearch/reactnative';
 import {currentUserId} from "../CurrentUser";
-
+import {AlgoliaClient} from '../utils/AlgoliaUtils';
 
 type Props = NavigableProps & {
     onClickClose?: () => void,
@@ -111,22 +111,26 @@ export default class NetworkSearchScreen extends Component<Props, State> {
             );
         };
 
-        let client = algoliasearch("8UTETUZKD3", "c80385095ff870f5ddf9ba25310a9d5a");
+        // let client = algoliasearch("8UTETUZKD3", "c80385095ff870f5ddf9ba25310a9d5a");
 
-        let index = client.initIndex('Saving_staging');
-        index.setSettings({
-                searchableAttributes: [
-                    // 'item_title',
-                    'list_name'
-                ],
-                attributeForDistinct: 'item_id',
-                distinct: true,
-                attributesForFaceting: ['user_id', 'type'],
-            }
-        );
+        let index = new Promise(resolve => {
+            AlgoliaClient.createAlgoliaIndex('Saving_staging').then(index => {
+                index.setSettings({
+                        searchableAttributes: [
+                            'item_title',
+                            'list_name'
+                        ],
+                        attributeForDistinct: 'item_id',
+                        distinct: true,
+                        attributesForFaceting: ['user_id', 'type'],
+                    }
+                );
+                resolve(index);
+            });
+        });
 
         let query = {
-            // filters: `NOT type:List AND NOT user_id:${currentUserId()}`,
+            filters: `NOT type:List AND NOT user_id:${currentUserId()}`,
         };
 
         let categories = [
@@ -141,7 +145,8 @@ export default class NetworkSearchScreen extends Component<Props, State> {
             },
             {
                 type: "users",
-                index: client.initIndex('User_staging'),
+                index: AlgoliaClient.createAlgoliaIndex('User_staging'),
+                //index: client.initIndex('User_staging'),
                 query: {
                     filters: `NOT objectID:${currentUserId()}`,
 
