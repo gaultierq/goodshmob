@@ -255,7 +255,6 @@ export default class App {
                         titleImage: require('./img/screen_title_home.png'),
                         navigatorStyle
                     },
-
                 ],
                 tabsStyle,
                 appStyle: {

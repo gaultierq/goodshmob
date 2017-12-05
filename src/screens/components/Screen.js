@@ -4,6 +4,9 @@ import type {NavigableProps} from "../../types";
 import {toUppercase} from "../../utils/StringUtils";
 import * as Nav from "../Nav";
 
+
+export type ScreenVisibility = 'unknown' | 'visible' | 'hidden';
+
 export type ScreenState = {
     onScreen: boolean
 }
@@ -53,7 +56,16 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  S> {
         });
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return !!this.isVisible();
+    }
+
+
     isVisible() {
         return this.props.onScreen || this.state.onScreen;
+    }
+
+    getVisibility() : ScreenVisibility {
+        return this.isVisible() ? 'visible' : 'hidden';
     }
 }

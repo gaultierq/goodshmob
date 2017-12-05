@@ -111,20 +111,7 @@ class NetworkScreen extends Screen<Props, State> {
         }
     }
 
-    navToActivity(activity) {
-        this.props.navigator.push({
-            screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
-            title: "Details", // navigation bar title of the pushed screen (optional)
-            titleImage: require('../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
-            passProps: {activityId: activity.id, activityType: activity.type}, // Object that will be passed as props to the pushed screen (optional)
-            animated: true, // does the push have transition animation or does it happen immediately (optional)
-            animationType: 'slide-up', // 'fade' (for both) / 'slide-horizontal' (for android) does the push have different transition animation (optional)
-            backButtonTitle: undefined, // override the back button title (optional)
-            backButtonHidden: false, // hide the back button altogether (optional)
-            navigatorStyle: {}, // override the navigator style for the pushed screen (optional)
-            navigatorButtons: {} // override the nav buttons for the pushed screen (optional)
-        });
-    }
+
 
     render() {
         let userId = currentUserId();
@@ -154,6 +141,7 @@ class NetworkScreen extends Screen<Props, State> {
                         hasMore={!network.hasNoMore}
                         scrollUpOnBack={scrollUpOnBack}
                         cannotFetch={!super.isVisible()}
+                        visibility={super.getVisibility()}
                     />
 
                 </View>
@@ -166,6 +154,21 @@ class NetworkScreen extends Screen<Props, State> {
 
             </MainBackground>
         );
+    }
+
+    navToActivity(activity) {
+        this.props.navigator.push({
+            screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
+            title: "Details", // navigation bar title of the pushed screen (optional)
+            titleImage: require('../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
+            passProps: {activityId: activity.id, activityType: activity.type}, // Object that will be passed as props to the pushed screen (optional)
+            animated: true, // does the push have transition animation or does it happen immediately (optional)
+            animationType: 'slide-up', // 'fade' (for both) / 'slide-horizontal' (for android) does the push have different transition animation (optional)
+            backButtonTitle: undefined, // override the back button title (optional)
+            backButtonHidden: false, // hide the back button altogether (optional)
+            navigatorStyle: {}, // override the navigator style for the pushed screen (optional)
+            navigatorButtons: {} // override the nav buttons for the pushed screen (optional)
+        });
     }
 
     onFloatingButtonPressed() {

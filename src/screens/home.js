@@ -135,6 +135,7 @@ class HomeScreen extends Screen<Props, State> {
                             renderItem={(item)=>this.renderListItem(item)}
                             scrollUpOnBack={super.isVisible() ? ()=>false : null}
                             cannotFetch={!super.isVisible()}
+                            visibility={super.getVisibility()}
                             feedId={"home list"}
                         />
 

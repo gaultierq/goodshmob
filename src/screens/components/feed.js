@@ -11,6 +11,7 @@ import {isEmpty} from "lodash";
 import type {Id, RequestState, Url} from "../../types";
 import {renderSimpleButton} from "../UIStyles";
 import i18n from '../../i18n/i18n'
+import type {ScreenVisibility} from "./Screen";
 
 
 export type FeedSource = {
@@ -31,7 +32,8 @@ export type Props<T> = {
     empty: string,
     style: any,
     scrollUpOnBack?: ()=>boolean,
-    cannotFetch?: boolean
+    cannotFetch?: boolean,
+    visibility: ScreenVisibility
 };
 
 
@@ -50,6 +52,10 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     keyExtractor = (item, index) => item.id;
 
     state = {firstLoad: 'idle'};
+
+    static defaultProps = {
+        visiblility: 'unknown'
+    };
 
     lastFetchFail: number;
 
@@ -85,6 +91,15 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         //hack: let the next props become the props
         this.postFetchFirst();
 
+    }
+
+
+    shouldComponentUpdate(nextProps, nextState) {
+        if (this.props.visibility === 'hidden') {
+            console.debug('feed component update saved');
+            return false;
+        }
+        return true;
     }
 
     postFetchFirst() {
