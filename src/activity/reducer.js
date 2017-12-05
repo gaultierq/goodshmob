@@ -37,7 +37,7 @@ export default function reduce(state:any = initialState, action: any) {
             {
                 const resource = _.get(state, `savings.${id}.relationships.resource.data`, {});
 
-                state = deleteItem(state, `${resource.type}.${resource.id}.meta.saved-in`, item => item === lineupId);
+                state = deleteItem(state, `${resource.type}.${resource.id}.meta.saved-in`, it => it === lineupId);
             }
 
             //decrement

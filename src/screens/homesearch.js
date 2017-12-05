@@ -19,6 +19,7 @@ import * as Nav from "./Nav";
 import {createResultFromHit, makeAlgoliaSearch} from "../utils/AlgoliaUtils";
 import {currentUserId} from "../CurrentUser";
 import {AlgoliaClient} from "../utils/AlgoliaUtils";
+import Screen from "./components/Screen";
 
 type Props = NavigableProps & {
     onClickClose?: () => void,
@@ -29,7 +30,7 @@ type State = {
 };
 
 @connect()
-export default class HomeSearchScreen extends Component<Props, State> {
+export default class HomeSearchScreen extends Screen<Props, State> {
 
     state :State = {connect: {}};
 

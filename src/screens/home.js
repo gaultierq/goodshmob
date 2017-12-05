@@ -86,7 +86,7 @@ class HomeScreen extends Screen<Props, State> {
     }
 
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
-        console.debug("home:onNavigatorEvent" + JSON.stringify(event));
+        //console.debug("home:onNavigatorEvent" + JSON.stringify(event));
         if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
             switch (event.id) {
                 case 'profile':

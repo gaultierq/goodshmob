@@ -21,7 +21,7 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  S> {
         let navigator = props.navigator;
         if (!navigator) throw "please provide navigator";
         navigator.addOnNavigatorEvent((event) => {
-            console.debug("home:onNavigatorEvent" + JSON.stringify(event));
+            //console.debug("home:onNavigatorEvent" + JSON.stringify(event));
 
             let id = event.id;
             let onScreen;
@@ -34,7 +34,7 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  S> {
                 case 'willDisappear':
 
                     let method = 'component' + toUppercase(id);
-                    console.debug('screen visib event' + ' ' + id);
+                    console.debug(`Screen ${this.constructor.name} visib event ${id}`);
 
                     // $FlowFixMe
                     if (this[method]) this[method]();
