@@ -23,9 +23,9 @@ import {Colors} from "./UIStyles";
 import algoliasearch from 'algoliasearch/reactnative';
 import {currentUserId} from "../CurrentUser";
 import {AlgoliaClient} from '../utils/AlgoliaUtils';
+import Screen from "./components/Screen";
 
 type Props = NavigableProps & {
-    onClickClose?: () => void,
 };
 
 type State = {
@@ -33,22 +33,10 @@ type State = {
 };
 
 @connect()
-export default class NetworkSearchScreen extends Component<Props, State> {
+export default class NetworkSearchScreen extends Screen<Props, State> {
 
-    state :State = {connect: {}};
+    state: State = {connect: {}};
 
-    constructor(props) {
-        super(props);
-        props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-    }
-
-    onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
-        if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
-            if (event.id === Nav.CANCEL) { // this is the same id field from the static navigatorButtons definition
-                this.props.onClickClose();
-            }
-        }
-    }
 
     render() {
 

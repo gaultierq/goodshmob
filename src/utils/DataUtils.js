@@ -61,7 +61,10 @@ export function buildNonNullData(store, type, id: Id, assertNonNull?: boolean = 
 export function assertUnique(data: Array<>) {
     let ids = [];
     data && data.forEach((d) => {
-        if (ids.indexOf(d.id)>=0) throw new Error(`id already in this array: ${d.id}`);
+        if (ids.indexOf(d.id)>=0) {
+            //throw new Error(`id already in this array: ${d.id}`);
+            console.warn(`id already in this array: ${d.id}`);
+        }
         ids.push(d.id);
     });
 }

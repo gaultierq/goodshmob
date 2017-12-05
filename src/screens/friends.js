@@ -33,18 +33,18 @@ const mapStateToProps = (state, ownProps) => ({
 export default class FriendsScreen extends Screen<Props, State> {
 
 
-    constructor(props: Props){
-        super(props);
-        props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-    }
-
-    onNavigatorEvent(event) {
-        if (event.type === 'NavBarButtonPress') {
-            if (event.id === Nav.CANCEL) {
-                this.props.navigator.dismissModal();
-            }
-        }
-    }
+    // constructor(props: Props){
+    //     super(props);
+    //     props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+    // }
+    //
+    // onNavigatorEvent(event) {
+    //     if (event.type === 'NavBarButtonPress') {
+    //         if (event.id === Nav.CANCEL) {
+    //             this.props.navigator.dismissModal();
+    //         }
+    //     }
+    // }
 
     render() {
 

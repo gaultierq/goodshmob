@@ -13,6 +13,7 @@ import type {Activity} from "../types";
 
 import FeedSeparator from "../activity/components/FeedSeparator";
 import Screen from "./components/Screen";
+import * as Nav from "./Nav";
 
 type Props = {
     navigator: *,
@@ -79,9 +80,20 @@ export class InteractionScreen extends Screen<Props, State> {
                 onPress={() => {
                     this.props.navigator.showModal({
                         screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
-                        title: "Details", // navigation bar title of the pushed screen (optional)
+                        title: "#Details", // navigation bar title of the pushed screen (optional)
                         titleImage: require('../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
-                        passProps: {activityId: activity.id, activityType: activity.type}, // Object that will be passed as props to the pushed screen (optional)
+                        passProps: {
+                            activityId: activity.id,
+                            activityType: activity.type
+                        },
+                        navigatorButtons: {
+                            leftButtons: [
+                                {
+                                    id: Nav.CLOSE_MODAL,
+                                    title: "#Cancel"
+                                }
+                            ],
+                        },
                     });
                 }}>
                 <UserActivity
@@ -105,7 +117,7 @@ export class InteractionScreen extends Screen<Props, State> {
             let username = activity.user.firstName + " " + activity.user.lastName;
 
             if (!resource) {
-                console.error(`say QG no resource found on activityId=${activity.id} type=${activity.type}`);
+                console.warn(`say QG no resource found on activityId=${activity.id} type=${activity.type}`);
             }
             else if (resource.type === 'asks') {
                 // return <Text style={{fontSize: 12}}>{username + " ask"}</Text>

@@ -1,1 +1,1 @@
-export const CANCEL = 'cancel';
+export const CLOSE_MODAL = 'close_modal';

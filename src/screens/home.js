@@ -100,7 +100,7 @@ class HomeScreen extends Screen<Props, State> {
 
                     navigator.showModal({
                         screen: 'goodsh.HomeSearchScreen', // unique ID registered with Navigation.registerScreen
-                        title: "Rechercher", // navigation bar title of the pushed screen (optional)
+                        title: "#Rechercher", // navigation bar title of the pushed screen (optional)
                         animationType: 'none',
                         passProps:{
                             onClickClose: () => navigator.dismissModal({animationType: 'none'}),
@@ -108,8 +108,8 @@ class HomeScreen extends Screen<Props, State> {
                         navigatorButtons: {
                             leftButtons: [
                                 {
-                                    id: Nav.CANCEL,
-                                    title: "Cancel"
+                                    id: Nav.CLOSE_MODAL,
+                                    title: "#Cancel"
                                 }
                             ],
                         },

@@ -39,7 +39,6 @@ export type SearchResult = {
 export type SearchEngine = {search: (token: SearchToken, category: SearchCategoryType, page: number) => Promise<SearchResult>};
 
 export type Props = {
-    onClickClose?: Function,
     categories: Array<SearchCategory>,
     navigator: *,
     searchEngine: SearchEngine,
@@ -153,11 +152,6 @@ export default class SearchScreen extends Component<Props, State> {
 
 
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
-        if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
-            if (event.id === 'cancel_search') { // this is the same id field from the static navigatorButtons definition
-                this.props.onClickClose();
-            }
-        }
 
         //HACK
         if (event.type === 'DeepLink') {

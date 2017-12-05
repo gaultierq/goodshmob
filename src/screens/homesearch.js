@@ -15,14 +15,11 @@ import {connect} from "react-redux";
 import type {Id, List, NavigableProps, Saving} from "../types";
 import ItemCell from "./components/ItemCell";
 import LineupCell from "./components/LineupCell";
-import * as Nav from "./Nav";
-import {createResultFromHit, makeAlgoliaSearch} from "../utils/AlgoliaUtils";
+import {AlgoliaClient, createResultFromHit, makeAlgoliaSearch} from "../utils/AlgoliaUtils";
 import {currentUserId} from "../CurrentUser";
-import {AlgoliaClient} from "../utils/AlgoliaUtils";
 import Screen from "./components/Screen";
 
 type Props = NavigableProps & {
-    onClickClose?: () => void,
 };
 
 type State = {
@@ -33,21 +30,6 @@ type State = {
 export default class HomeSearchScreen extends Screen<Props, State> {
 
     state :State = {connect: {}};
-
-    // static navigatorStyle = {navBarHidden: true};
-
-    constructor(props) {
-        super(props);
-        props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-    }
-
-    onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
-        if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
-            if (event.id === Nav.CANCEL) { // this is the same id field from the static navigatorButtons definition
-                this.props.onClickClose();
-            }
-        }
-    }
 
     render() {
         let renderItem = ({item})=> {

@@ -12,9 +12,9 @@ import type {Activity, ActivityType, Id} from "../types";
 import * as UI from "../screens/UIStyles";
 import FeedSeparator from "./components/FeedSeparator";
 import ActivityActionBar from "./components/ActivityActionBar";
-;
 import Icon from 'react-native-vector-icons/Entypo';
 import UserRow from "./components/UserRow";
+import Screen from "../screens/components/Screen";
 
 type Props = {
     activityId: Id,
@@ -28,10 +28,9 @@ type State = {
     isLoading?: boolean
 };
 
-class ActivityDetailScreen extends Component<Props, State> {
+class ActivityDetailScreen extends Screen<Props, State> {
 
     state = {};
-
 
     componentDidMount() {
         this.load();

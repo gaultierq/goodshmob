@@ -2,13 +2,15 @@
 import {Component} from 'react';
 import type {NavigableProps} from "../../types";
 import {toUppercase} from "../../utils/StringUtils";
+import * as Nav from "../Nav";
 
 export type ScreenState = {
     onScreen: boolean
 }
 
 export type ScreenProps = NavigableProps & {
-    onScreen?: boolean //when not a screen root, my parent screen can tell me I'm visible
+    onScreen?: boolean, //when not a screen root, my parent screen can tell me I'm visible
+    onClickClose?: () => void
 }
 
 export default class Screen<P, S> extends Component<P & ScreenProps,  S> {
@@ -41,6 +43,12 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  S> {
 
                     this.setState({onScreen});
                     break;
+            }
+
+            if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
+                if (event.id === Nav.CLOSE_MODAL) { // this is the same id field from the static navigatorButtons definition
+                    (this.props.onClickClose || navigator.dismissModal)();
+                }
             }
         });
     }

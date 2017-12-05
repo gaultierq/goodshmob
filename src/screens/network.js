@@ -221,17 +221,16 @@ class NetworkScreen extends Screen<Props, State> {
 
         navigator.showModal({
             screen: 'goodsh.NetworkSearchScreen', // unique ID registered with Navigation.registerScreen
-            title: "Rechercher", // navigation bar title of the pushed screen (optional)
+            title: "#Rechercher", // navigation bar title of the pushed screen (optional)
             passProps:{
-                onClickClose: () => navigator.dismissModal(),
                 queries,
                 renderItem
             },
             navigatorButtons: {
                 leftButtons: [
                     {
-                        id: Nav.CANCEL,
-                        title: "Cancel"
+                        id: Nav.CLOSE_MODAL,
+                        title: "#Cancel"
                     }
                 ],
             },
