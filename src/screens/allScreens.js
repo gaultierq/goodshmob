@@ -27,31 +27,61 @@ import AddItemScreen from './additem';
 import TestScreen from './test';
 import {InteractionScreen} from './interactions';
 
+
+import RnRenderPerfs from 'rn-render-perfs';
+import Perf from 'ReactPerf';
+
+import React from 'react';
+import {View} from 'react-native';
+
+
+function wrap(screenName,screenCreator,store,provider) {
+
+    if (__IS_LOCAL__) {
+        let Screen = screenCreator();
+        screenCreator = () => class extends React.Component {
+            render () {
+                let perf = Perf;
+                setTimeout(() => perf.start());
+                return (
+                    <View style={{flex: 1}}>
+                        {<Screen {...this.props} />}
+                        <RnRenderPerfs monitor={perf} />
+                    </View>
+                )
+            }
+        };
+    }
+
+
+    Navigation.registerComponent(screenName, screenCreator, store, provider);
+}
+
 // register all screens of the app (including internal ones)
 export function registerScreens(store, Provider) {
-    Navigation.registerComponent('goodsh.LoginScreen', () => LoginScreen, store, Provider);
-    Navigation.registerComponent('goodsh.NetworkScreen', () => NetworkScreen, store, Provider);
-    Navigation.registerComponent('goodsh.SearchItemsScreen', () => SearchItemScreen, store, Provider);
-    Navigation.registerComponent('goodsh.DebugScreen', () => DebugScreen, store, Provider);
-    Navigation.registerComponent('goodsh.FriendsScreen', () => FriendScreen, store, Provider);
-    Navigation.registerComponent('goodsh.ActivityDetailScreen', () => ActivityDetailScreen, store, Provider);
-    Navigation.registerComponent('goodsh.LineupListScreen', () => LineupListScreen, store, Provider);
-    Navigation.registerComponent('goodsh.AddInScreen', () => AddInScreen, store, Provider);
-    Navigation.registerComponent('goodsh.HomeScreen', () => HomeScreen, store, Provider);
-    Navigation.registerComponent('goodsh.SearchNavBar', () => SearchNavBar, store, Provider);
-    Navigation.registerComponent('goodsh.LineupScreen', () => LineupScreen, store, Provider);
-    Navigation.registerComponent('goodsh.CommentsScreen', () => CommentsScreen, store, Provider);
-    Navigation.registerComponent('goodsh.SaveScreen', () => SaveScreen, store, Provider);
-    Navigation.registerComponent('goodsh.ShareScreen', () => ShareScreen, store, Provider);
-    Navigation.registerComponent('goodsh.CommunityScreen', () => CommunityScreen, store, Provider);
-    Navigation.registerComponent('goodsh.SendScreen', () => SendScreen, store, Provider);
-    Navigation.registerComponent('goodsh.ProfileScreen', () => ProfileScreen, store, Provider);
-    Navigation.registerComponent('goodsh.AskScreen', () => AskScreen, store, Provider);
-    Navigation.registerComponent('goodsh.AlgoliaSearchScreen', () => AlgoliaSearchScreen, store, Provider);
-    Navigation.registerComponent('goodsh.UserScreen', () => UserScreen, store, Provider);
-    Navigation.registerComponent('goodsh.NetworkSearchScreen', () => NetworkSearchScreen, store, Provider);
-    Navigation.registerComponent('goodsh.HomeSearchScreen', () => HomeSearchScreen, store, Provider);
-    Navigation.registerComponent('goodsh.AddItemScreen', () => AddItemScreen, store, Provider);
-    Navigation.registerComponent('goodsh.TestScreen', () => TestScreen, store, Provider);
-    Navigation.registerComponent('goodsh.InteractionScreen', () => InteractionScreen, store, Provider);
+    wrap('goodsh.LoginScreen', () => LoginScreen, store, Provider);
+    wrap('goodsh.NetworkScreen', () => NetworkScreen, store, Provider);
+    wrap('goodsh.SearchItemsScreen', () => SearchItemScreen, store, Provider);
+    wrap('goodsh.DebugScreen', () => DebugScreen, store, Provider);
+    wrap('goodsh.FriendsScreen', () => FriendScreen, store, Provider);
+    wrap('goodsh.ActivityDetailScreen', () => ActivityDetailScreen, store, Provider);
+    wrap('goodsh.LineupListScreen', () => LineupListScreen, store, Provider);
+    wrap('goodsh.AddInScreen', () => AddInScreen, store, Provider);
+    wrap('goodsh.HomeScreen', () => HomeScreen, store, Provider);
+    wrap('goodsh.SearchNavBar', () => SearchNavBar, store, Provider);
+    wrap('goodsh.LineupScreen', () => LineupScreen, store, Provider);
+    wrap('goodsh.CommentsScreen', () => CommentsScreen, store, Provider);
+    wrap('goodsh.SaveScreen', () => SaveScreen, store, Provider);
+    wrap('goodsh.ShareScreen', () => ShareScreen, store, Provider);
+    wrap('goodsh.CommunityScreen', () => CommunityScreen, store, Provider);
+    wrap('goodsh.SendScreen', () => SendScreen, store, Provider);
+    wrap('goodsh.ProfileScreen', () => ProfileScreen, store, Provider);
+    wrap('goodsh.AskScreen', () => AskScreen, store, Provider);
+    wrap('goodsh.AlgoliaSearchScreen', () => AlgoliaSearchScreen, store, Provider);
+    wrap('goodsh.UserScreen', () => UserScreen, store, Provider);
+    wrap('goodsh.NetworkSearchScreen', () => NetworkSearchScreen, store, Provider);
+    wrap('goodsh.HomeSearchScreen', () => HomeSearchScreen, store, Provider);
+    wrap('goodsh.AddItemScreen', () => AddItemScreen, store, Provider);
+    wrap('goodsh.TestScreen', () => TestScreen, store, Provider);
+    wrap('goodsh.InteractionScreen', () => InteractionScreen, store, Provider);
 }
