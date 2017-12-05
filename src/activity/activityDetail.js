@@ -28,6 +28,10 @@ type State = {
     isLoading?: boolean
 };
 
+
+@connect((state, ownProps) => ({
+    data: state.data,
+}))
 class ActivityDetailScreen extends Screen<Props, State> {
 
     state = {};
@@ -187,11 +191,6 @@ const styles = StyleSheet.create({
     }
 });
 
-const mapStateToProps = (state, ownProps) => ({
-    data: state.data,
-});
-
-
-let screen = connect(mapStateToProps)(ActivityDetailScreen);
+let screen = ActivityDetailScreen;
 
 export {screen};

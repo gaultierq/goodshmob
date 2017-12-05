@@ -25,6 +25,11 @@ type State = {
     isPulling?: boolean
 };
 
+@connect((state, ownProps) => ({
+    network: state.network,
+    data: state.data,
+    activity: state.activity
+}))
 class NetworkScreen extends Screen<Props, State> {
 
 
@@ -258,13 +263,7 @@ class NetworkScreen extends Screen<Props, State> {
     }
 }
 
-const mapStateToProps = (state, ownProps) => ({
-    network: state.network,
-    data: state.data,
-    activity: state.activity
-});
 
-
-let screen = connect(mapStateToProps)(NetworkScreen);
+let screen = NetworkScreen;
 
 export {screen};

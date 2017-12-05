@@ -26,6 +26,9 @@ type State = {
     titleSet: boolean
 };
 
+@connect((state, ownProps) => ({
+    data: state.data,
+}))
 class LineupScreen extends Component<Props, State> {
 
 
@@ -142,10 +145,6 @@ class LineupScreen extends Component<Props, State> {
 }
 
 
-const mapStateToProps = (state, ownProps) => ({
-    data: state.data,
-});
-
 
 const actionTypes = (() => {
 
@@ -220,7 +219,7 @@ const reducer = (() => {
     }
 })();
 
-let screen = connect(mapStateToProps)(LineupScreen);
+let screen = LineupScreen;
 
 export {reducer, screen, actions};
 

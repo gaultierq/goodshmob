@@ -16,8 +16,8 @@ type Props = {
 type State = {
 };
 
-
-class GoodshButton extends React.Component<Props, State>  {
+@connect()
+export default class GoodshButton extends React.Component<Props, State>  {
 
     render() {
         let activity = this.getActivity();
@@ -112,4 +112,3 @@ const styles = StyleSheet.create({
 });
 
 
-export default connect()(GoodshButton);

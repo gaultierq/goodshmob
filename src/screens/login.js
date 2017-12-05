@@ -16,6 +16,7 @@ type Props = {
 type State = {
 };
 
+@connect()
 class Login extends Component<Props, State> {
 
     state = {};
@@ -107,7 +108,7 @@ class Login extends Component<Props, State> {
 
 }
 
-let screen = connect()(Login);
+let screen = Login;
 
 export {screen};
 

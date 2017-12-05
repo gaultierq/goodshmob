@@ -28,6 +28,9 @@ type State = {
     isFetchingActivity?: boolean
 };
 
+@connect((state, ownProps) => ({
+    data: state.data,
+}))
 class CommentsScreen extends Component<Props, State> {
 
     state = {};
@@ -141,10 +144,6 @@ class CommentsScreen extends Component<Props, State> {
 }
 
 
-const mapStateToProps = (state, ownProps) => ({
-    data: state.data,
-});
-
 
 const actionTypes = (() => {
 
@@ -213,7 +212,7 @@ const reducer = (() => {
     }
 })();
 
-let screen = connect(mapStateToProps)(CommentsScreen);
+let screen = CommentsScreen;
 
 export {reducer, screen, actions};
 

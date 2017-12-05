@@ -4,7 +4,8 @@ import  * as appActions from '../auth/actions'
 import {connect} from "react-redux";
 import {AsyncStorage} from "react-native";
 
-class DebugScreen extends Component {
+@connect()
+export default class DebugScreen extends Component {
 
     constructor(){
         super();
@@ -55,5 +56,3 @@ const styles = StyleSheet.create({
         backgroundColor: '#F5FCFF',
     }
 });
-
-export default connect()(DebugScreen);

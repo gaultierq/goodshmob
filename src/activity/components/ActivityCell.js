@@ -26,8 +26,10 @@ type Props = {
 type State = {
 };
 
-
-class ActivityCell extends React.Component<Props, State> {
+@connect((state, ownProps) => ({
+    data: state.data,
+}))
+export default class ActivityCell extends React.Component<Props, State> {
 
 
     render() {
@@ -71,12 +73,3 @@ class ActivityCell extends React.Component<Props, State> {
         return buildNonNullData(this.props.data, this.props.activityType, this.props.activityId);
     }
 }
-
-
-const mapStateToProps = (state, ownProps) => ({
-    data: state.data,
-});
-
-export default connect(mapStateToProps)(ActivityCell);
-
-
