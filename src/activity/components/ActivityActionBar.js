@@ -11,7 +11,8 @@ import {
     Text,
     TouchableOpacity,
     TouchableWithoutFeedback,
-    View
+    View,
+    Alert
 } from 'react-native';
 import * as UI from "../../screens/UIStyles";
 import type {Activity, Saving, Url} from "../../types";
@@ -140,10 +141,25 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     }
 
     unsave(saving: Saving) {
-        this.props.dispatch(unsave(saving.id, saving.target.id)).then(() => {
-            console.info(`saving ${saving.id} unsaved`)
-            Snackbar.show({title: "#Goodsh effacé"});
-        });
+
+        Alert.alert(
+            '#Suppression',
+            '#Êtes-vous sûr de vouloir effacer cet élément',
+            [
+                {text: '#Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                {text: '#OK', onPress: () => {
+                    console.log('OK Pressed');
+                    this.props.dispatch(unsave(saving.id, saving.target.id)).then(() => {
+                        console.info(`saving ${saving.id} unsaved`)
+                        Snackbar.show({title: "#Goodsh effacé"});
+                    });
+                }
+                    },
+            ],
+            { cancelable: true }
+        );
+
+
     }
 
     comment(activity: Activity) {

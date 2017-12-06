@@ -49,7 +49,7 @@ export default class LineupCell extends React.Component<Props, State> {
             padding = spaceLeft / (n + 2);
         } while (padding<w/5);
 
-        console.log(`DEBUG: render LineupCell w=${w} n=${n} spaceLeft=${spaceLeft} padding=${padding}`);
+        //console.log(`DEBUG: render LineupCell w=${w} n=${n} spaceLeft=${spaceLeft} padding=${padding}`);
 
         let savingCount = _.get(lineup, `meta.savings-count`, null);
 

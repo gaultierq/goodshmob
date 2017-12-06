@@ -110,7 +110,7 @@ export class Call {
     }
 
     toString() {
-        return "call:" + url.toString();
+        return "call:" + this.url.toString();
     }
 
     buildUrl() {
@@ -126,10 +126,6 @@ export class Call {
                     .then(resp => {
                             let response = resp.json;
 
-                            if (apiAction.success() === "get_user_w_lists_success") {
-                                superLog("HELLO");
-                                superLog(JSON.stringify(response));
-                            }
 
                             let data = normalize(response);
 
@@ -145,7 +141,7 @@ export class Call {
                         error => {
                             let errMsg = error.message || `${error.status}! [${apiAction}]: ${JSON.stringify(error)}`;
 
-                            let errorAction = dispatch({ type: API_DATA_FAILURE, error: errMsg, origin: call});
+                            let errorAction = dispatch({ type: API_DATA_FAILURE, error: errMsg, origin: apiAction});
 
                             Snackbar.show({
                                 title: "#request failure",

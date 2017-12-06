@@ -53,7 +53,10 @@ export default class ActivityBody extends React.Component<Props, State> {
         let image = resource ? resource.image : undefined;
         let imageHeight = 250;
         if (activity.type === 'asks'){
-            return <Text style={[{margin: 12, fontFamily: 'Chivo-Light', fontSize: 30}]}>{activity.content}</Text>;
+
+            let content = activity.content;
+            if (__IS_LOCAL__) content += ` (id=${activity.id.substr(0, 5)})`;
+            return <Text style={[{margin: 12, fontFamily: 'Chivo-Light', fontSize: 30}]}>{content}</Text>;
         }
         // image = null;
         return <View style={{
