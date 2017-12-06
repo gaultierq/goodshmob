@@ -11,7 +11,6 @@ import thunk from "redux-thunk";
 import logger from 'redux-logger'
 
 import * as Api from './utils/Api';
-import {middleware as apiMiddleware} from './utils/Api';
 import {autoRehydrate, createTransform, persistStore} from 'redux-persist'
 import {AsyncStorage, TouchableWithoutFeedback} from 'react-native'
 import immutableTransform from './immutableTransform'
@@ -66,7 +65,7 @@ const store = createStore(
     reducer,
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
     compose(
-        applyMiddleware(apiMiddleware, thunk, logger),
+        applyMiddleware(thunk, logger),
         autoRehydrate()
     )
 );

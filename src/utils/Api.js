@@ -14,7 +14,6 @@ export const API_DATA_REQUEST = 'API_DATA_REQUEST';
 export const API_DATA_SUCCESS = 'API_DATA_SUCCESS';
 export const API_DATA_FAILURE = 'API_DATA_FAILURE';
 
-export const API_SYMBOL = Symbol("api");
 import Config from 'react-native-config'
 
 
@@ -116,21 +115,6 @@ export class Call {
 
     buildUrl() {
         return this.url.toString();
-    }
-
-    disptachForAction(apiAction: ApiAction, options?: any = {}) {
-
-        //fetch
-        // on result -> dispatch other action
-
-        return {
-            [API_SYMBOL]: Object.assign(
-                {},
-                {
-                    call: this,
-                    apiAction
-                }, {options})
-        };
     }
 
     disptachForAction2(apiAction: ApiAction, options?: any = {}) {
@@ -282,73 +266,3 @@ export const reduceList = (state, action, desc) => {
     }
     return state;
 };
-
-
-//1. edit store.request : .isLoading, .isLastSuccess, .isLastFailure, .isLastFinished
-//2. edit store.data : request has flag -> dataReducer; or other actions
-let middleware = store => next => action => {
-    const callAPI = action[API_SYMBOL];
-
-    if (typeof callAPI === 'undefined') {
-        return next(action);
-    }
-
-    const { call, apiAction, options} = callAPI;
-
-    const actionWith = (data) => {
-        const finalAction = Object.assign({}, callAPI, data, {apiAction});
-        delete finalAction[API_SYMBOL];
-        return finalAction;
-    };
-
-    //1.
-    next(actionWith({ type: API_DATA_REQUEST}));
-
-
-    return call
-        .exec()
-        .then(resp => {
-            console.debug("api: response")
-            if (resp.ok) {
-                let contentType = resp.headers.get("content-type");
-                if (contentType && contentType.indexOf("application/json") !== -1) {
-                    return resp.json().then((json)=> ({json, original: resp}));
-                }
-                return {json: "ok", original: resp};
-            }
-            let status = resp.status;
-
-            return resp.json().then(err => {
-                throw {...err, status: status}
-            });
-        })
-        .then(resp => {
-                let response = resp.json;
-                // if (apiAction.success() === "get_user_w_lists_success") {
-                //     superLog("HELLO")
-                //     superLog(JSON.toString(response));
-                // }
-                let data = normalize(response);
-
-                //1., 2.
-                next(actionWith({ data, type: API_DATA_SUCCESS }));
-
-                return next(Object.assign({}, {type: apiAction.success(), payload: response, original: resp.original}, {options}));
-            },
-            //1., 2.
-            error => {
-                let errMsg = error.message || `Something bad happened (${error.status}): ${JSON.stringify(error)}`;
-
-                let errorAction = actionWith({ type: API_DATA_FAILURE, error: errMsg });
-                if (error.status === 401) {
-                    console.log("unauthorized user. loging out")
-                    next(errorAction);
-                    return logout(next)
-                }
-                return next(errorAction);
-
-            },
-        );
-};
-
-export {middleware}
