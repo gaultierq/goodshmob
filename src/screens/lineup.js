@@ -26,6 +26,10 @@ type State = {
     titleSet: boolean
 };
 
+const FETCH_LINEUP = new ApiAction("fetch_lineup");
+const FETCH_SAVINGS = new ApiAction("fetch_savings");
+const DELETE_SAVING = new ApiAction("delete_saving");
+
 @connect((state, ownProps) => ({
     data: state.data,
 }))
@@ -58,22 +62,34 @@ class LineupScreen extends Component<Props, State> {
             }
         }
 
-        let data = lineup ? lineup.savings : [];
+        let savings, fetchSrc;
+        if (lineup && lineup.savings) {
+            savings = lineup.savings;
+            fetchSrc = {
+                callFactory:()=>actions.fetchSavings(this.props.lineupId),
+                action:FETCH_SAVINGS,
+                options: {listId: this.props.lineupId}
+            };
+        }
+        else {
+            savings = [];
+            fetchSrc = {
+                callFactory:()=>actions.fetchLineup(this.props.lineupId),
+                action: FETCH_LINEUP,
+                options: {listId: this.props.lineupId}
+            };
+        }
 
         return (
             <MainBackground>
                 <View style={styles.container}>
                     {lineup && lineup.description && <Text style={[styles.description]}>{lineup.description}</Text>}
                     <Feed
-                        data={data}
+                        data={savings}
                         renderItem={item => this.renderItem(item, lineup)}
-                        fetchSrc={{
-                            callFactory:()=>actions.loadSavings(this.props.lineupId),
-                            action:actionTypes.LOAD_SAVINGS,
-                            options: {listId: this.props.lineupId}
-                        }}
+                        fetchSrc={fetchSrc}
                         hasMore={true}
-                        empty={"Cette liste est vide"}
+                        empty={"#Cette liste est vide"}
                     />
                     {
                         this.displayFloatingButton() &&
@@ -146,18 +162,16 @@ class LineupScreen extends Component<Props, State> {
 
 
 
-const actionTypes = (() => {
-
-    const LOAD_SAVINGS = new ApiAction("load_savings");
-    const DELETE_SAVING = new ApiAction("delete_saving");
-
-    return {LOAD_SAVINGS, DELETE_SAVING};
-})();
-
-
 const actions = {
 
-        loadSavings: (lineupId: string) => {
+        fetchLineup: (lineupId: string) => {
+            return new Api.Call().withMethod('GET')
+                .withRoute(`lists/${lineupId}`)
+                .addQuery({
+                    include: "savings,savings.user"
+                });
+        },
+        fetchSavings: (lineupId: string) => {
             return new Api.Call().withMethod('GET')
                 .withRoute(`lists/${lineupId}/savings`)
                 .addQuery({
@@ -165,27 +179,17 @@ const actions = {
                     per_page: 10,
                     include: "*.*"
                 });
-
         },
 
-        deleteSaving: (saving:types.Saving) => {
+        deleteSaving: (saving:Saving) => {
             let call = new Api.Call()
                 .withMethod('DELETE')
                 .withRoute(`savings/${saving.id}`);
 
-            return call.disptachForAction2(actionTypes.DELETE_SAVING);
+            return call.disptachForAction2(DELETE_SAVING);
         }
 };
 
-
-// const reducer = (() => {
-//     const initialState = Immutable(Api.initialListState());
-//
-//     return (state = initialState, action = {}) => {
-//         let desc = {fetchFirst: actionTypes.LOAD_SAVINGS, fetchMore: actionTypes.LOAD_MORE_SAVINGS};
-//         return Api.reduceList(state, action, desc);
-//     }
-// })();
 
 
 const reducer = (() => {
@@ -194,27 +198,13 @@ const reducer = (() => {
     return (state = initialState, action = {}) => {
 
         switch (action.type) {
-            case actionTypes.LOAD_SAVINGS.success(): {
+            case FETCH_SAVINGS.success(): {
                 let {listId} = action.options;
                 let path = `lists.${listId}.relationships.savings.data`;
-
                 state = doDataMergeInState(state, path, action.payload.data);
                 break;
             }
-            // case actionTypes.ADD_COMMENT.success(): {
-            //
-            //     let {id, type} = action.payload.data;
-            //     let {activityId, activityType} = action.options;
-            //     activityType = sanitizeActivityType(activityType);
-            //
-            //     let path = `${activityType}.${activityId}.comments.data`;
-            //     state = doDataMergeInState(state, path, [{id, type}]);
-            //     break;
-            // }
-
         }
-        //let desc = {fetchFirst: actionTypes.LOAD_COMMENTS};
-        //return Api.reduceList(state, action, desc);
         return state;
     }
 })();

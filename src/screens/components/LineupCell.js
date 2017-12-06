@@ -56,10 +56,14 @@ export default class LineupCell extends React.Component<Props, State> {
         let {titleChildren, titleChildrenBelow} = this.props;
         let countString = savingCount  !== null ? ' (' + savingCount + ')' : '';
 
+        let title = lineup.name + countString;
+        if (__IS_LOCAL__) {
+            title += ` id=(#${lineup.id.substr(0, 5)})`;
+        }
         return (
             <View style={[styles.container, {paddingLeft: padding, paddingRight: padding, paddingBottom: padding}]}>
                 <View style={{flexDirection: titleChildrenBelow ? 'column' : 'row'}}>
-                    <Text style={[styles.lineupTitle]}>{lineup.name + countString}</Text>
+                    <Text style={[styles.lineupTitle]}>{title}</Text>
 
                     {titleChildren}
                 </View>

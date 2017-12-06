@@ -143,7 +143,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             if (this.state.isFetchingFirst === 'ko') {
                 return this.renderFail(()=>this.tryFetchIt());
             }
-            if (empty) return <Text>{empty}</Text>;
+            if (empty) return this.renderEmpty();
         }
         return (
             <FlatList
@@ -161,6 +161,10 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                 {...attributes}
             />
         );
+    }
+
+    renderEmpty() {
+        return <Text>{i18n.t(this.props.empty)}</Text>;
     }
 
     isFetchingFirst() {
