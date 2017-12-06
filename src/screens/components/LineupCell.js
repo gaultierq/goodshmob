@@ -10,7 +10,6 @@ import type {List, Saving} from "../../types";
 //;
 
 type Props = {
-
     lineup: List,
     style?: *,
     titleChildren?: Node,
@@ -23,6 +22,7 @@ type State = {
 
 export default class LineupCell extends React.Component<Props, State> {
 
+    static displayName = "LineupCell";
 
     constructor() {
         super();
@@ -74,6 +74,21 @@ export default class LineupCell extends React.Component<Props, State> {
             result.push(this.renderItem({item: _.nth(savings, i), index: i}))
         }
         return <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>{result}</View>;
+    }
+
+    shouldComponentUpdate(nextProps: Props, nextState: State) {
+        if (!ENABLE_PERF_OPTIM) return true;
+        let act = this.readLineup(nextProps);
+
+        if (act === this.lastRenderedActivity) {
+            superLog('ActivityCell render saved');
+            return false;
+        }
+        return true;
+    }
+
+    readLineup(nextProps) {
+        return _.get(nextProps, `data.${nextProps.activityType}.${nextProps.activityId}`);
     }
 
 

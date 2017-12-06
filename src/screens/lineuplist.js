@@ -120,7 +120,7 @@ export class LineupListScreen extends Component<Props, State> {
 }
 
 
-const GET_USER_W_LISTS = new ApiAction("get_user");
+const GET_USER_W_LISTS = new ApiAction("get_user_w_lists");
 const FETCH_LINEUPS = new ApiAction("fetch_lineups");
 
 const actions = (() => {

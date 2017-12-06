@@ -31,11 +31,13 @@ type State = {
 }))
 export default class ActivityCell extends React.Component<Props, State> {
 
+    lastRenderedActivity: any;
 
     render() {
         const {skipLineup, skipDescription} = this.props;
 
         let activity = this.getActivity();
+        this.lastRenderedActivity = this.readActivity(this.props);
         return (
             <View style={{
                 backgroundColor: "transparent",
@@ -64,9 +66,23 @@ export default class ActivityCell extends React.Component<Props, State> {
                     <ActivityActionBar activity={activity} navigator={this.props.navigator}/>
 
                 </View>
-
             </View>
         )
+    }
+
+    shouldComponentUpdate(nextProps: Props, nextState: State) {
+        if (!ENABLE_PERF_OPTIM) return true;
+        let act = this.readActivity(nextProps);
+
+        if (act === this.lastRenderedActivity) {
+            superLog('ActivityCell render saved');
+            return false;
+        }
+        return true;
+    }
+
+    readActivity(nextProps) {
+        return _.get(nextProps, `data.${nextProps.activityType}.${nextProps.activityId}`);
     }
 
     getActivity() {

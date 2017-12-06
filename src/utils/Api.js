@@ -61,7 +61,7 @@ class Api {
             headers: this.headers()
         }, body ? {body: JSON.stringify(body)} : null);
 
-        console.debug(`sending request url=${url}, options: ${JSON.stringify(options)}`);
+        console.debug(`%c sending request url=${url}, options: ${JSON.stringify(options)}`, 'background: #FCFCFC; color: #26547C');
         return fetch(url, options);
     }
 }
@@ -141,10 +141,16 @@ export class Call {
                 call.run()
                     .then(resp => {
                             let response = resp.json;
+
+                            if (apiAction.success() === "get_user_w_lists_success") {
+                                superLog("HELLO");
+                                superLog(JSON.stringify(response));
+                            }
+
                             let data = normalize(response);
 
                             //write in data
-                            dispatch({ data, type: API_DATA_SUCCESS });
+                            dispatch({ data, type: API_DATA_SUCCESS, origin: apiAction});
 
                             //let the reducer do something
                             dispatch(Object.assign({}, {type: apiAction.success(), payload: response, original: resp.original}, {options}));
@@ -318,6 +324,10 @@ let middleware = store => next => action => {
         })
         .then(resp => {
                 let response = resp.json;
+                // if (apiAction.success() === "get_user_w_lists_success") {
+                //     superLog("HELLO")
+                //     superLog(JSON.toString(response));
+                // }
                 let data = normalize(response);
 
                 //1., 2.

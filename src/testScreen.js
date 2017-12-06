@@ -108,6 +108,12 @@ const homeSearchItemsScreen = {
         title: 'Test goodsh.HomeSearchScreen',
     },
 };
+const networkScreen = {
+    screen: {
+        screen: 'goodsh.NetworkScreen',
+        title: 'Test goodsh.NetworkScreen',
+    },
+};
 
 
 const test = {
@@ -136,6 +142,7 @@ let testScreen = null;
 //  testScreen = networkSearchScreen;
 //  testScreen = searchItemsScreen;
 //  testScreen = homeSearchItemsScreen;
+//  testScreen = networkScreen;
 
 
 export default testScreen;

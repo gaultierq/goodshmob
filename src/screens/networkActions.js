@@ -28,13 +28,16 @@ export const reducer = (() => {
 
     return (state = initialState, action) => {
 
-        let {userId} = action.options || {};
+        if (action.type === FETCH_ACTIVITIES.success()) {
+            let {userId} = action.options || {};
 
-        if (userId) {
-            let subState = state[userId] || initialSubState;
-            subState = Api.reduceList(subState, action, {fetchFirst: FETCH_ACTIVITIES});
-            state = state.merge({[userId]: subState}, {deep: true});
+            if (userId) {
+                let subState = state[userId] || initialSubState;
+                subState = Api.reduceList(subState, action, {fetchFirst: FETCH_ACTIVITIES});
+                state = state.merge({[userId]: subState}, {deep: true});
+            }
         }
+
         return state;
     }
 })();

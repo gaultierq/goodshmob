@@ -1,10 +1,9 @@
 // @flow
 
 import React from 'react';
-import {Image, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
 import i18n from '../../i18n/i18n'
 import * as UI from "../../screens/UIStyles";
-import {buildNonNullData} from "../../utils/DataUtils";
 import type {Activity, i18Key, List, User} from "../../types";
 import UserActivity from "./UserActivity";
 
@@ -22,8 +21,7 @@ export default class ActivityDescription extends React.Component<Props, State> {
 
 
     render() {
-        let activity = this.getActivity();
-
+        let activity = this.props.activity;
         //let activity: Model.Activity = this.props.activity;
         let user: User = activity.user;
 
@@ -60,7 +58,7 @@ export default class ActivityDescription extends React.Component<Props, State> {
         const {skipLineup, withFollowButton} = this.props;
         if (skipLineup) return null;
         let activity, target, targetName: string, key: i18Key, press: () => void;
-        if (!(activity = this.getActivity())) return null;
+        if (!(activity = this.props.activity)) return null;
         if (!(target = activity.target)) return null;
 
         if (target.type === 'lists') {
@@ -115,10 +113,6 @@ export default class ActivityDescription extends React.Component<Props, State> {
                 userId: user.id,
             },
         });
-    }
-
-    getActivity() {
-        return this.props.activity || buildNonNullData(this.props.data, this.props.activityType, this.props.activityId);
     }
 
     renderFollowButton(target) {

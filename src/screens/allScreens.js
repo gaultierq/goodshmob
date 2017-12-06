@@ -37,7 +37,7 @@ import {View} from 'react-native';
 
 function wrap(screenName,screenCreator,store,provider) {
 
-    if (__IS_LOCAL__) {
+    if (__IS_LOCAL__ && __DEBUG_PERFS__) {
         let Screen = screenCreator();
         screenCreator = () => class extends React.Component {
             render () {

@@ -3,12 +3,14 @@ import {Component} from 'react';
 import type {NavigableProps} from "../../types";
 import {toUppercase} from "../../utils/StringUtils";
 import * as Nav from "../Nav";
+import {superConsole} from "../../global";
 
 
 export type ScreenVisibility = 'unknown' | 'visible' | 'hidden';
 
 export type ScreenState = {
-    onScreen: boolean
+    onScreen: boolean,
+    dirty: boolean
 }
 
 export type ScreenProps = NavigableProps & {
@@ -19,7 +21,7 @@ export type ScreenProps = NavigableProps & {
 export default class Screen<P, S> extends Component<P & ScreenProps,  S> {
 
 
-    state = {onSreen: false};
+    state = {onSreen: false, dirty: false};
 
     constructor(props:P) {
         super(props);
@@ -29,23 +31,26 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  S> {
             //console.debug("home:onNavigatorEvent" + JSON.stringify(event));
 
             let id = event.id;
-            let onScreen;
 
-            switch (id) {
-                case 'didDisappear':
-                case 'didAppear':
-                    onScreen = id === 'didAppear';
-                case 'willAppear':
-                case 'willDisappear':
 
-                    let method = 'component' + toUppercase(id);
-                    console.debug(`Screen ${this.constructor.name} visib event ${id}`);
+            if (event.type === "ScreenChangedEvent") {
 
-                    // $FlowFixMe
-                    if (this[method]) this[method]();
+                let method = 'component' + toUppercase(id);
+                console.debug(`Screen ${this.constructor.name} visib event ${id}`);
 
-                    this.setState({onScreen});
-                    break;
+                // $FlowFixMe
+                if (this[method]) this[method]();
+
+                const didAppear = id === 'didAppear';
+
+                this.setState({onScreen: didAppear});
+
+                if (didAppear && this.state.dirty) {
+                    //screen dirty, re-rendering
+                    superLog("screen dirty, re-rendering");
+                    this.setState({dirty: false});
+                }
+
             }
 
             if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
@@ -56,8 +61,18 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  S> {
         });
     }
 
+    // askRenderOnVisible: boolean;
+
     shouldComponentUpdate(nextProps, nextState) {
-        return !!this.isVisible();
+        if (!ENABLE_PERF_OPTIM) return true;
+
+        if (!this.isVisible()) {
+            // this.askRenderOnVisible = true;
+            superLog("shouldComponentUpdate skipped");
+            this.setState({dirty: true});
+            return false;
+        }
+        return true;
     }
 
 
