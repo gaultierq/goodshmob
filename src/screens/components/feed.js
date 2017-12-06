@@ -57,6 +57,8 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         visiblility: 'unknown'
     };
 
+    _listener: ()=>boolean;
+
     lastFetchFail: number;
 
     constructor(props: Props<T>) {
@@ -67,17 +69,18 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
     componentWillReceiveProps(nextProps: Props<*>) {
         if (this.props.scrollUpOnBack !== nextProps.scrollUpOnBack) {
-            if (nextProps.scrollUpOnBack) {
+            let scrollUpOnBack = nextProps.scrollUpOnBack;
+            if (scrollUpOnBack) {
                 console.info("Feed listening to back navigation");
 
                 this._listener = () => {
                     console.info("Feed onBackPressed");
-                    if (this._scrollY > 100) {
+                    if (this.getScrollY() > 100) {
                         this.refs.feed.scrollToOffset({x: 0, y: 0, animated: true});
                         return true;
                     }
 
-                    return nextProps.scrollUpOnBack();
+                    return scrollUpOnBack();
                 };
 
                 BackHandler.addEventListener('hardwareBackPress', this._listener);
@@ -180,21 +183,55 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         return this.state.isFetchingMore === 'sending';
     }
 
-    _scrollY = 0;
+    lastEvent: any;
+
+    getScrollY() {
+        if (!this.lastEvent) return this.lastEvent.contentOffset.y;
+        return 0;
+    }
 
     _handleScroll = (event: Object) => {
-        this._scrollY = event.nativeEvent.contentOffset.y;
+        let lastEvent = event.nativeEvent;
+        this.lastEvent = lastEvent;
+
+        this.prefetch(lastEvent);
     };
 
-    _listener = () => {
-        console.info("Feed onBackPressed");
-        if (this._scrollY > 100) {
-            this.refs.feed.scrollToOffset({x: 0, y: 0, animated: true});
-            return true;
+    prefetch(lastEvent) {
+//
+        let scrollY = lastEvent.contentOffset.y;
+        let height = lastEvent.layoutMeasurement.height;
+        let totalSize = lastEvent.contentSize.height;
+
+        let data = this.props.data;
+        let elem = (data || []).length;
+        if (elem) {
+            let rowHeight = totalSize / elem;
+
+            let scrolled = scrollY + height;
+            let hidden = totalSize - scrolled;
+            let remainingRows = hidden / rowHeight;
+
+            if (remainingRows < 5) {
+                console.log("Only " + remainingRows + " left. Prefetching...");
+                this.gentleFetchMore();
+            }
         }
-        return false;
-    };
+    }
 
+    onEndReached() {
+        console.debug("onEndReached");
+        this.gentleFetchMore();
+    }
+
+    gentleFetchMore() {
+        if (this.hasMore()) {
+            this.fetchMore();
+        }
+        else {
+            console.info("== end of feed ==")
+        }
+    }
 
     canFetch(requestName: string = 'isFetchingFirst'): boolean {
         if (this.props.cannotFetch) {
@@ -344,15 +381,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         return true;
     }
 
-    onEndReached() {
-        console.debug("onEndReached");
-        if (this.hasMore()) {
-            this.fetchMore();
-        }
-        else {
-            console.info("== end of feed ==")
-        }
-    }
+
 }
 
 
