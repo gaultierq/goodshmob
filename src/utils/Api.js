@@ -4,7 +4,7 @@ import URL from "url-parse"
 import * as Util from "./ModelUtils";
 import normalize from 'json-api-normalizer';
 //hack for tests. FIXME: remove circular dep
-import {logout} from "../auth/actions";
+import {logout, logoutOffline} from "../auth/actions";
 import ApiAction from "./ApiAction";
 import fetch from 'react-native-fetch-polyfill';
 import Snackbar from "react-native-snackbar"
@@ -153,7 +153,8 @@ export class Call {
 
                             if (error.status === 401) {
                                 dispatch(errorAction);
-                                logout(dispatch);
+                                //logout(dispatch);
+                                logoutOffline();
                                 reject("user lost authentification");
                                 return;
                             }
