@@ -130,7 +130,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         } = this.props;
 
         let empt = isEmpty(data);
-        let nothingInterestingToDisplay = empt && !this.isFetchingFirst();
+        let nothingInterestingToDisplay = empt && this.state.isFetchingFirst === 'ok';
 
         let firstEmptyLoader = this.state.firstLoad !== 'ok' && empt;
         // firstEmptyLoader = true;
