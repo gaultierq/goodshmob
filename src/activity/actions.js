@@ -27,7 +27,7 @@ export function like(activityId: string, activityType: string) {
     return new Api.Call()
         .withMethod('POST')
         .withRoute(`${type}/${activityId}/likes`)
-        .disptachForAction(types.LIKE,
+        .disptachForAction2(types.LIKE,
             {id: activityId, type: activityType}
         );
 }
@@ -38,7 +38,7 @@ export function unlike(activityId: string, activityType: string) {
     return new Api.Call()
         .withMethod('DELETE')
         .withRoute(`${type}/${activityId}/likes`)
-        .disptachForAction(types.UNLIKE,
+        .disptachForAction2(types.UNLIKE,
             {id: activityId, type: activityType}
         );
 }
@@ -47,7 +47,7 @@ export function unsave(savingId: Id, lineupId: Id) {
     return new Api.Call()
         .withMethod('DELETE')
         .withRoute(`savings/${savingId}`)
-        .disptachForAction(types.UNSAVE,
+        .disptachForAction2(types.UNSAVE,
             {id: savingId, lineupId}
         );
 }
