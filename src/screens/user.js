@@ -8,6 +8,7 @@ import Feed from "./components/feed";
 import {FETCH_ACTIVITIES, fetchUserNetwork} from "./networkActions";
 import ActivityCell from "../activity/components/ActivityCell";
 import Screen from "./components/Screen";
+import {MainBackground} from "./UIComponents";
 
 type Props = {
     userId: Id,
@@ -33,17 +34,21 @@ export default class UserScreen extends Screen<Props, State> {
 
 
         return (
-            <Feed
-                data={activities}
-                renderItem={this.renderItem.bind(this)}
-                fetchSrc={{
-                    callFactory: ()=>fetchUserNetwork(userId),
-                    useLinks: true,
-                    action: FETCH_ACTIVITIES,
-                    options: {userId}
-                }}
-                hasMore={!network.hasNoMore}
-            />
+            <MainBackground>
+                <View>
+                    <Feed
+                        data={activities}
+                        renderItem={this.renderItem.bind(this)}
+                        fetchSrc={{
+                            callFactory: ()=>fetchUserNetwork(userId),
+                            useLinks: true,
+                            action: FETCH_ACTIVITIES,
+                            options: {userId}
+                        }}
+                        hasMore={!network.hasNoMore}
+                    />
+                </View>
+            </MainBackground>
         );
     }
 

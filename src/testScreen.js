@@ -154,7 +154,7 @@ let testScreen = null;
 //  testScreen = searchItemsScreen;
 //  testScreen = homeSearchItemsScreen;
 //  testScreen = networkScreen;
- testScreen = lineupScreen;
+//  testScreen = lineupScreen;
 
 
 export default testScreen;
