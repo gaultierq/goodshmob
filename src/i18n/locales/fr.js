@@ -52,7 +52,8 @@ export default {
             },
             "share":"ENVOYER LE LIEN",
             "save":"ENREGISTRER",
-            "saved":"SUPPRIMER",
+            "unsave":"SUPPRIMER",
+            "see":"VOIR",
             "buy":"ACHETER",
             "answer": {
                 zero: "RÉPONDRE",

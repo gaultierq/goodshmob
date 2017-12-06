@@ -18,12 +18,13 @@ import * as UI from "../../screens/UIStyles";
 import type {Activity, Saving, Url} from "../../types";
 import i18n from '../../i18n/i18n'
 import {connect} from "react-redux";
-import {currentGoodshboxId} from "../../CurrentUser";
+import {currentGoodshboxId, currentUserId} from "../../CurrentUser";
 import {unsave} from "../actions";
 import Snackbar from "react-native-snackbar"
+import {toUppercase} from "../../utils/StringUtils";
 
-export type ActivityActionType = 'comment' | 'share' | 'save' | 'buy' | 'answer';
-const ACTIONS = ['comment', 'share', 'save', 'buy', 'answer'];
+export type ActivityActionType = 'comment'| 'share'| 'save'| 'unsave'| 'see'| 'buy'| 'answer';
+const ACTIONS = ['comment', 'share', 'save', 'unsave', 'see', 'buy', 'answer'];
 
 
 type Props = {
@@ -44,18 +45,22 @@ export default class ActivityActionBar extends React.Component<Props, State> {
         let activity = this.props.activity;
 
         //let activity: Model.Activity = this.props.activity;
-        let resource = activity.resource;
-
-        let commentsCount = activity.comments ? activity.comments.length : 0;
-
-        let savedIn = _.get(resource, 'meta.saved-in', []);
-        let target = activity.target;
-        let goodshed;
-        if (target && target.type === 'lists') {
-            goodshed = _.indexOf(savedIn, target.id) > -1;
-        }
 
         //let goodshed = resource && resource.meta ? savedIn : false;
+
+        let buttons = ACTIONS.reduce((res, a) => {
+            if (this.canExec(a)) {
+                res.push(
+                    this.renderButton(
+                        this.renderImageButton(a),
+                        this.renderTextButton(a, activity),
+                        //$FlowFixMe
+                        ()=>this['exec' + toUppercase(a)](activity)
+                    )
+                );
+            }
+            return res;
+        },[]);
 
 
         return <View style={{
@@ -66,26 +71,43 @@ export default class ActivityActionBar extends React.Component<Props, State> {
             paddingRight: 10
         }}>
 
-            {
-                this.canExec('answer') && this.renderButton(require('../../img/comment.png'), i18n.t("activity_item.buttons.answer", {count: commentsCount}), () => this.comment(activity))
-            }
-            {
-                this.canExec('comment') && this.renderButton(require('../../img/comment.png'), i18n.t("activity_item.buttons.comment", {count: commentsCount}), () => this.comment(activity))
-            }
-            {
-                this.canExec('share') && this.renderButton(require('../../img/send.png'), i18n.t("activity_item.buttons.share"), () => this.send(activity))
-            }
-            {
-                goodshed ?
-                    this.canExec('save') && this.renderButton(require('../../img/save-icon.png'), i18n.t("activity_item.buttons.saved"), () => this.unsave(activity)/*, true*/) :
-                    this.canExec('save') && this.renderButton(require('../../img/save-icon.png'), i18n.t("activity_item.buttons.save"), () => this.save(activity))
-            }
-            {
-                this.canExec('buy') && this.renderButton(require('../../img/buy-icon.png'), i18n.t("activity_item.buttons.buy"), () => this.buy(activity))
-            }
+            {buttons}
 
         </View>;
     }
+
+    renderTextButton(action: ActivityActionType, activity: Activity) {
+        let commentsCount = activity.comments ? activity.comments.length : 0;
+
+        switch(action) {
+            case 'comment':
+                return i18n.t(`activity_item.buttons.${action}`,{count: commentsCount});
+            case 'answer':
+                return i18n.t(`activity_item.buttons.${action}`, {count: commentsCount});
+        }
+        return i18n.t(`activity_item.buttons.${action}`);
+    }
+
+    renderImageButton(action: ActivityActionType) {
+        switch(action) {
+            case 'comment':
+                return require('../../img/comment.png')
+            case 'share':
+                return require('../../img/send.png')
+            case 'save':
+                return require('../../img/save-icon.png')
+            case 'unsave':
+                return require('../../img/save-icon.png')
+            case 'see':
+                return require('../../img/save-icon.png')
+            case 'buy':
+                return require('../../img/buy-icon.png')
+            case 'answer':
+                return require('../../img/comment.png')
+        }
+        throw "Unknown action: " +action
+    }
+
 
 
     canExec(action: ActivityActionType) {
@@ -93,7 +115,13 @@ export default class ActivityActionBar extends React.Component<Props, State> {
         if ((actions || ACTIONS).indexOf(action) < 0) {
             return false;
         }
+
+        let canCheck = this['can' + toUppercase(action)];
+
+        if (canCheck) return canCheck.call(this, this.props.activity);
+
         let type = activity.type;
+
 
         switch(action) {
             case 'answer':
@@ -106,8 +134,31 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                 return type !== 'asks';
         }
 
-        return true;
+        return false;
+    }
 
+    canUnsave(activity: Activity) {
+        return this.isGoodshed2(activity) && this.byMe(activity);
+    }
+
+    canSave(activity: Activity) {
+        return !this.isGoodshed2(activity) && this.byMe(activity);
+    }
+
+
+    byMe(activity) {
+        return activity.user.id === currentUserId();
+    }
+
+    isGoodshed2(activity) {
+        let resource = activity.resource;
+        let savedIn = _.get(resource, 'meta.saved-in', []);
+        let target = activity.target;
+        let goodshed;
+        if (target && target.type === 'lists') {
+            goodshed = _.indexOf(savedIn, target.id) > -1;
+        }
+        return goodshed;
     }
 
     renderButton(img: Url, text: string, handler: ()=>void, active:boolean = false) {
@@ -122,7 +173,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
         );
     }
 
-    save(activity: Activity) {
+    execSave(activity: Activity) {
 
         let item = activity.resource;
 
@@ -140,7 +191,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
     }
 
-    unsave(saving: Saving) {
+    execUnsave(saving: Saving) {
 
         Alert.alert(
             '#Suppression',
@@ -154,7 +205,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                         Snackbar.show({title: "#Goodsh effacé"});
                     });
                 }
-                    },
+                },
             ],
             { cancelable: true }
         );
@@ -162,7 +213,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
     }
 
-    comment(activity: Activity) {
+    execComment(activity: Activity) {
         this.props.navigator.push({
             screen: 'goodsh.CommentsScreen', // unique ID registered with Navigation.registerScreen
             title: "Commentaires", // navigation bar title of the pushed screen (optional)
@@ -173,7 +224,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
         });
     }
 
-    send(activity: Activity) {
+    execShare(activity: Activity) {
         const {resource} = activity;
 
         let navigator = this.props.navigator;
@@ -199,7 +250,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
         });
     }
 
-    buy(activity: Activity) {
+    execBuy(activity: Activity) {
         let url = activity.resource.url;
         Linking.canOpenURL(url).then(supported => {
             if (supported) {
