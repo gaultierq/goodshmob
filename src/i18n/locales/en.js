@@ -275,5 +275,8 @@ export default {
             connect: "connected",
             disconnect: "disconnected",
         }
+    },
+    empty: {
+        lineup: "This list is empty"
     }
 };

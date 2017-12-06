@@ -8,7 +8,7 @@ import {assertUnique} from "../../utils/DataUtils";
 import ApiAction from "../../utils/ApiAction";
 import * as Api from "../../utils/Api";
 import {isEmpty} from "lodash";
-import type {Id, RequestState, Url} from "../../types";
+import type {i18Key, Id, RequestState, Url} from "../../types";
 import {renderSimpleButton} from "../UIStyles";
 import i18n from '../../i18n/i18n'
 import type {ScreenVisibility} from "./Screen";
@@ -29,7 +29,7 @@ export type Props<T> = {
     hasMore: boolean,
     ListHeaderComponent?: Node,
     ListFooterComponent?: Node,
-    empty: string,
+    empty: i18Key,
     style: any,
     scrollUpOnBack?: ()=>boolean,
     cannotFetch?: boolean,
@@ -164,7 +164,12 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     renderEmpty() {
-        return <Text>{i18n.t(this.props.empty)}</Text>;
+        return <Text style={{
+            fontSize: 20,
+            fontFamily: 'Chivo-Light',
+            margin: '10%',
+            textAlign: 'center'
+        }}>{i18n.t(this.props.empty)}</Text>;
     }
 
     isFetchingFirst() {

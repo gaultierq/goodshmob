@@ -269,5 +269,9 @@ export default {
             connect: "connectés",
             disconnect: "déconnectés",
         }
+    },
+    empty: {
+        lineup: "Cette liste est vide"
     }
+
 };

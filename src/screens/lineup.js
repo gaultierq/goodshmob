@@ -89,7 +89,7 @@ class LineupScreen extends Component<Props, State> {
                         renderItem={item => this.renderItem(item, lineup)}
                         fetchSrc={fetchSrc}
                         hasMore={true}
-                        empty={"#Cette liste est vide"}
+                        empty={"empty.lineup"}
                     />
                     {
                         this.displayFloatingButton() &&

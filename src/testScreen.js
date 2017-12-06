@@ -92,9 +92,8 @@ const lineupScreen = {
         screen: 'goodsh.LineupScreen',
     },
     passProps: {
-        // lineupId: 'cd8b06aa-3c56-4231-80b6-55c39001559a',
-        lineupId: '37e67b05-c86c-4aeb-b3af-bf1c34862cd0',
-        empty: 'this is empty man'
+        lineupId: 'cd8b06aa-3c56-4231-80b6-55c39001559a',
+        // lineupId: '37e67b05-c86c-4aeb-b3af-bf1c34862cd0',
     }
 };
 
