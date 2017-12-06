@@ -7,6 +7,7 @@ import React from 'react';
 import {Image, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, View} from 'react-native';
 import * as UI from "../../screens/UIStyles";
 import type {User} from "../../types";
+import {fullName} from "../../utils/StringUtils";
 
 type Props = {
     user: User,
@@ -50,7 +51,7 @@ export default class UserRowI extends React.Component<Props, State> {
                         <Text style={{
                             fontSize: 11,
                             color: UI.Colors.blue
-                        }}>{this.fullName(user)}</Text>
+                        }}>{fullName(user)}</Text>
                     </TouchableOpacity>
                     {this.props.rightComponent}
 
@@ -64,17 +65,12 @@ export default class UserRowI extends React.Component<Props, State> {
         </View>
     }
 
-
-    fullName(user) {
-        return user ? `${user.firstName} ${user.lastName}` : "";
-    }
-
-    navigateToUser(user) {
+    navigateToUser(user: User) {
         let navigator = this.props.navigator;
 
         navigator.push({
             screen: 'goodsh.UserScreen',
-            title: this.fullName(user),
+            title: fullName(user),
             passProps: {userId: user.id}
         });
 

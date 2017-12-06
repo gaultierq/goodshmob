@@ -253,7 +253,7 @@ export default class App {
                         label: 'Network', // tab label as appears under the icon in iOS (optional)
                         screen: 'goodsh.NetworkScreen', // unique ID registered with Navigation.registerScreen
                         icon: require('./img/bottom_bar_search.png'), // local image asset for the tab icon unselected state (optional on iOS)
-                        title: 'Mon réseau', // title of the screen as appears in the nav bar (optional)
+                        title: '#Mon réseau', // title of the screen as appears in the nav bar (optional)
                         titleImage: require('./img/screen_title_home.png'),
                         navigatorStyle
                     },
@@ -267,12 +267,12 @@ export default class App {
                     hideBackButtonTitle: true,
                     ...tabsStyle,
                 },
-                // passProps: {
-                //     // could be passed to the drawer
-                //     drawerRight: {
-                //         onScreen: true
-                //     }
-                // },
+                passProps: {
+                    drawerRight: {
+                        onScreen: true,
+                        style: {marginTop: 38},
+                    }
+                },
                 drawer: { // optional, add this if you want a side menu drawer in your app
                     left: { // optional, define if you want a drawer from the left
                         // screen: 'goodsh.FriendsScreen',
@@ -286,6 +286,7 @@ export default class App {
                         screen: 'goodsh.CommunityScreen', // unique ID registered with Navigation.registerScreen
                         // enabled: false,
                         passProps: {
+                            style: {marginTop: 38},
                             onScreen: true //with current RNN version there are no way to detect if drawer is opened yet
                         } // simple serializable object that will pass as props to all top screens (optional)
                     },

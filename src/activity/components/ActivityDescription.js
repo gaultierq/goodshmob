@@ -6,6 +6,7 @@ import i18n from '../../i18n/i18n'
 import * as UI from "../../screens/UIStyles";
 import type {Activity, i18Key, List, User} from "../../types";
 import UserActivity from "./UserActivity";
+import {fullName} from "../../utils/StringUtils";
 
 type Props = {
     activity: Activity,
@@ -109,6 +110,7 @@ export default class ActivityDescription extends React.Component<Props, State> {
     seeUser(user: User) {
         this.props.navigator.push({
             screen: 'goodsh.UserScreen', // unique ID registered with Navigation.registerScreen
+            title: fullName(user),
             passProps: {
                 userId: user.id,
             },

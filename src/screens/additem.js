@@ -105,16 +105,14 @@ export default class AddItemScreen extends Screen<Props, State> {
                 containerStyle={{ backgroundColor: "transparent", borderWidth: 0, width: "100%"}}
             />
 
-            <Text>Toutes vos listes</Text>
-
-            <AddLineupComponent/>
-
+            <Text>#Toutes vos listes</Text>
         </View>;
         return (
             <LineupListScreen
                 userId={currentUserId()}
                 navigator={this.props.navigator}
                 ListHeaderComponent={xml}
+                ListFooterComponent={<AddLineupComponent/>}
                 renderItem={(item)=>this.renderListItem(item)}
             />
         );

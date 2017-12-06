@@ -21,6 +21,7 @@ const communityScreen = {
         //     title: "test_title",
         //     url: "test_url"
         // },
+
         userId: "662a61d0-5473-4d09-9410-c63aadc12e6c"
     }
 };

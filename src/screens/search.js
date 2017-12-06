@@ -16,6 +16,7 @@ import * as UI from "./UIStyles";
 import {Navigation} from 'react-native-navigation';
 import {logger} from "../utils/StringUtils";
 import update from "immutability-helper";
+import {NavStyles} from "./UIStyles";
 
 export type SearchCategoryType = string;
 
@@ -66,15 +67,15 @@ export type State = {
 @connect()
 export default class SearchScreen extends Component<Props, State> {
 
-    static navigatorButtons = {
-        rightButtons: [
-            {
-                //icon: require('../img/drawer_line_up.png'), // for icon button, provide the local image asset name
-                id: 'cancel_search', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
-                title: "Cancel"
-            }
-        ],
-    };
+    // static navigatorButtons = {
+    //     rightButtons: [
+    //         {
+    //             //icon: require('../img/drawer_line_up.png'), // for icon button, provide the local image asset name
+    //             id: 'cancel_search', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
+    //             title: "Cancel"
+    //         }
+    //     ],
+    // };
 
     state : State;
 
@@ -90,6 +91,7 @@ export default class SearchScreen extends Component<Props, State> {
         };
 
         props.navigator.setStyle({
+            navBarBackgroundColor: UI.NavStyles.navBarBackgroundColor,
             navBarCustomView: 'goodsh.SearchNavBar',
 
         });
@@ -370,6 +372,23 @@ export class SearchNavBar extends Component<NavProps, NavState> {
 
     state = {input: null};
 
+
+
+    static _styles = StyleSheet.create({
+        container: {
+            flex: 1,
+        },
+        //copied: rm useless
+        searchContainer: {
+            backgroundColor: NavStyles.navBarBackgroundColor,
+            borderTopColor: 'transparent',
+        },
+        searchInput: {
+            backgroundColor: NavStyles.navBarBackgroundColor,
+        },
+    });
+
+
     render() {
 
         return (
@@ -380,8 +399,8 @@ export class SearchNavBar extends Component<NavProps, NavState> {
                 onClearText={this.onClearText.bind(this)}
                 placeholder={i18n.t('search')}
                 clearIcon={{color: '#86939e'}}
-                containerStyle={styles.searchContainer}
-                inputStyle={styles.searchInput}
+                containerStyle={SearchNavBar._styles.searchContainer}
+                inputStyle={SearchNavBar._styles.searchInput}
                 autoCapitalize='none'
                 autoCorrect={false}
             />

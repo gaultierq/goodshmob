@@ -161,10 +161,10 @@ export class Call {
                         error => {
                             let errMsg = error.message || `${error.status}! [${apiAction}]: ${JSON.stringify(error)}`;
 
-                            let errorAction = dispatch({ type: API_DATA_FAILURE, error: errMsg });
+                            let errorAction = dispatch({ type: API_DATA_FAILURE, error: errMsg, origin: call});
 
                             Snackbar.show({
-                                title: "request failure",
+                                title: "#request failure",
                             });
 
                             if (error.status === 401) {

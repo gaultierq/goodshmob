@@ -17,9 +17,12 @@ import Immutable from 'seamless-immutable';
 import {buildData} from "../utils/DataUtils";
 import {InteractionScreen} from "./interactions";
 import Screen from "./components/Screen";
+import * as Nav from "./Nav";
+import {fullName} from "../utils/StringUtils";
 
 type Props = {
-    navigator:any
+    navigator:any,
+    style?: ant
 };
 
 type State = {
@@ -41,14 +44,20 @@ export class CommunityScreen extends Screen<Props, State> {
         ],
     };
 
-    constructor(props: Props) {
-        super(props);
-    }
+    // constructor(props: Props) {
+    //     super(props);
+    // }
 
     render() {
         return (
+
             <TabViewAnimated
-                style={styles.container}
+                style={
+                    [
+                        styles.container,
+                        //bug: drawer passProps not working [https://github.com/wix/react-native-navigation/issues/663]
+                        this.props.style || {marginTop: 38}]
+                }
                 navigationState={{...this.state, visible: this.isVisible()}}
                 renderScene={this.renderScene.bind(this)}
                 renderHeader={this.renderHeader.bind(this)}
@@ -66,7 +75,9 @@ export class CommunityScreen extends Screen<Props, State> {
                 renderItem={(item) => this.renderItem(item)}
                 ListFooterComponent={this.renderFriendsSuggestion.bind(this)}
                 style={{backgroundColor: 'white'}}
-                onScreen={this.isVisible()}
+                //bug: drawer passProps not working [https://github.com/wix/react-native-navigation/issues/663]
+                // onScreen={this.isVisible()}
+                onScreen={true}
             />
         )
     }
@@ -76,7 +87,9 @@ export class CommunityScreen extends Screen<Props, State> {
         return (
             <InteractionScreen
                 navigator={navigator}
-                onScreen={this.isVisible()}
+                onScreen={true}
+                //bug: drawer passProps not working [https://github.com/wix/react-native-navigation/issues/663]
+                // onScreen={this.isVisible()}
             />
         )
     }
@@ -131,9 +144,26 @@ export class CommunityScreen extends Screen<Props, State> {
     renderItem(item: Item) : Node {
         let user = buildData(this.props.data, "users", item.id);
         return (
-            <FriendCell
-                friend={user}
-            />
+            <TouchableOpacity onPress={()=> {
+
+                this.props.navigator.showModal({
+                    screen: 'goodsh.UserScreen', // unique ID registered with Navigation.registerScreen
+                    title: fullName(user),
+                    passProps: {
+                        userId: user.id,
+                    },
+                    navigatorButtons: {
+                        leftButtons: [
+                            {
+                                id: Nav.CLOSE_MODAL,
+                                title: "#Cancel"
+                            }
+                        ],
+                    },
+                });
+            }}>
+                <FriendCell friend={user}/>
+            </TouchableOpacity>
         )
     }
 }

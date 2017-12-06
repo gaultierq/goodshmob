@@ -27,3 +27,8 @@ export function logger(target, name, descriptor) {
     descriptor.value = newFn;
     return descriptor;
 }
+
+
+export function fullName(user: User) {
+    return user ? `${user.firstName} ${user.lastName}` : "";
+}

@@ -106,7 +106,7 @@ class HomeScreen extends Screen<Props, State> {
                             onClickClose: () => navigator.dismissModal({animationType: 'none'}),
                         },
                         navigatorButtons: {
-                            leftButtons: [
+                            rightButtons: [
                                 {
                                     id: Nav.CLOSE_MODAL,
                                     title: "#Cancel"

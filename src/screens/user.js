@@ -7,6 +7,7 @@ import {connect} from "react-redux";
 import Feed from "./components/feed";
 import {FETCH_ACTIVITIES, fetchUserNetwork} from "./networkActions";
 import ActivityCell from "../activity/components/ActivityCell";
+import Screen from "./components/Screen";
 
 type Props = {
     userId: Id,
@@ -22,7 +23,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 @connect(mapStateToProps)
-export default class UserScreen extends Component<Props, State> {
+export default class UserScreen extends Screen<Props, State> {
 
     render() {
 
