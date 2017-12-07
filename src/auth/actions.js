@@ -29,11 +29,11 @@ export function login(token: string) {
         .disptachForAction2(actionTypes.USER_LOGIN);
 }
 
-export function saveDevice({fcmToken}: Device) {
+export function saveDevice(device: Device) {
     return new Api.Call()
         .withMethod('POST')
         .withRoute(`devices`)
-        .withBody({device: {token: fcmToken}})
+        .withBody({...device})
         .disptachForAction2(actionTypes.SAVE_DEVICE);
 }
 

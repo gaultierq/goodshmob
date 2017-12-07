@@ -2,6 +2,7 @@
 
 import Immutable from 'seamless-immutable';
 import * as types from "./actionTypes";
+import {camelize} from 'camelize-object-key'
 
 export function createWithReducers(appReducers) {
     return (state, action) => {
@@ -45,6 +46,7 @@ export function deviceReducer(state = Immutable({}), action) {
             let attr = action.payload.data.attributes;
             let {fcmToken, ...attr2} = attr;
             let device = {currentDeviceId, fcmToken, ...attr2};
+            device = camelize(device);
             state = state.merge(device);
             break;
     }

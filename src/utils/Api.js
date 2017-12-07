@@ -60,7 +60,7 @@ class Api {
             headers: this.headers()
         }, body ? {body: JSON.stringify(body)} : null);
 
-        console.debug(`%c sending request url=${url}, options: ${JSON.stringify(options)}`, 'background: #FCFCFC; color: #26547C');
+        console.debug(`%c sending request url=${url}, options: ${JSON.stringify(options)}`, 'background: #FCFCFC; color: #E36995');
         return fetch(url, options);
     }
 }
