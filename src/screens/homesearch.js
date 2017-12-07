@@ -44,7 +44,7 @@ export default class HomeSearchScreen extends Screen<Props, State> {
                 let lineup: List = item;
                 return (
                     <TouchableWithoutFeedback
-                        onPress={this.onLineupPressed}
+                        onPress={() => this.onLineupPressed(lineup)}
                     >
                         <View>
                             <LineupCell lineup={lineup}/>
@@ -69,19 +69,6 @@ export default class HomeSearchScreen extends Screen<Props, State> {
             }
         };
 
-
-        // let client = algoliasearch("8UTETUZKD3", "c80385095ff870f5ddf9ba25310a9d5a");
-        //
-        // let index = client.initIndex('Saving_staging');
-        // index.setSettings({
-        //         searchableAttributes: [
-        //             'item_title',
-        //             'list_name'
-        //         ],
-        //         attributesForFaceting: ['user_id'],
-        //     }
-        // );
-        //
 
         let index = new Promise(resolve => {
             AlgoliaClient.createAlgoliaIndex('Saving_staging').then(index => {
