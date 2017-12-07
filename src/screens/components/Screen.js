@@ -68,7 +68,7 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  S> {
 
         if (!this.isVisible()) {
             // this.askRenderOnVisible = true;
-            superLog("shouldComponentUpdate skipped");
+            superLog("screen: shouldComponentUpdate skipped");
             this.setState({dirty: true});
             return false;
         }

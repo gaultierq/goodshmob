@@ -2,4 +2,4 @@
 
 import App from './src/app'
 
-new App();
+global.__APP__ = new App();

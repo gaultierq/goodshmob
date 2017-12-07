@@ -31,7 +31,7 @@ import {AlgoliaClient} from "./utils/AlgoliaUtils";
 
 const USE_CACHE_LOCAL =
     true;
-    // false;
+// false;
 
 console.log(`staring app with env=${JSON.stringify(Config)}`);
 
@@ -59,111 +59,125 @@ const appReducer = (state = initialState(), action) => {
 console.disableYellowBox = true;
 //}
 
-let allReducers = combineReducers({...reducers, app: appReducer});
-const reducer = createWithReducers(allReducers);
-const store = createStore(
-    reducer,
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-    compose(
-        applyMiddleware(thunk, logger),
-        autoRehydrate()
-    )
-);
 
-
-let configureApp = function () {
-//store.dispatch(appActions.onAppReady());
-
-    globalProps.setCustomText({
-        style: {
-            fontFamily: 'Thonburi',
-            color: 'black',
-        }
-    });
-
-    globalProps.setCustomView({
-        style: {
-            backgroundColor: 'transparent'
-        }
-    });
-
-    // setCustomTouchableWithoutFeedback({
-    //     underlayColor: "red"
-    // });
-    // const DEFAULT_PROPS = {
-    //     activeOpacity: 0.85,
-    //     underlayColor: 'red',
-    // };
-    //
-    // TouchableWithoutFeedback.prototype.getDefaultProps = function getDefaultProps() {
-    //     return DEFAULT_PROPS;
-    // };
-    // Getting rid of that ugly line on Android and adding some custom style to all TextInput components.
-    const customTextInputProps = {
-        underlineColorAndroid: 'rgba(0,0,0,0)',
-        style: {
-            paddingVertical: 5,
-            paddingHorizontal: 8,
-            backgroundColor: 'white'
-        }
-    };
-
-    globalProps.setCustomTextInput(customTextInputProps);
-
-
-    // Component.setState.prototype = function setState(imconpleteState, callback) {
-    //     console.log("coucouc");
-    //     this.setState(imconpleteState, callback);
-    // };
-
-
-    console.info("App initialized.");
-};
-// begin periodically persisting the store
-let persistConfig = {
-    storage: AsyncStorage,
-    transforms: [createTransform(immutableTransform.in, immutableTransform.out, immutableTransform.config)],
-    // whitelist: ['auth','device']
-};
-
-if (!__IS_LOCAL__ || !USE_CACHE_LOCAL) {
-    persistConfig = {...persistConfig, whitelist: ['auth','device']};
-}
-persistStore(store,
-    persistConfig,
-    () => {
-        console.log("persist store complete");
-        hydrated = true;
-        configureApp();
-    }
-);
-
-Api.init(store);
-CurrentUser.init(store);
-DeviceManager.init(store);
-AlgoliaClient.init(store);
-
-if (!__IS_LOCAL__) {
-    const bugsnag = new Client();
-}
-
-//bugsnag.notify(new Error("Test Error"));
-
-
-// screen related book keeping
-registerScreens(store, Provider);
 
 
 export default class App {
 
     logged = null;
     started;
+    store;
+    bugsnag;
+
 
     constructor() {
+
+        this.prepare();
+
+
         // since react-redux only works on components, we need to subscribe this class manually
-        store.subscribe(this.onStoreUpdate.bind(this));
+        this.store.subscribe(this.onStoreUpdate.bind(this));
 
         this.resolveLogged();
+    }
+
+
+    prepare() {
+
+
+        this.prepareRedux();
+
+        //singletons
+        Api.init(this.store);
+        CurrentUser.init(this.store);
+        DeviceManager.init(this.store);
+        AlgoliaClient.init(this.store);
+
+        if (!__IS_LOCAL__) {
+            this.bugsnag = new Client();
+        }
+
+        registerScreens(this.store, Provider);
+        this.prepareUI();
+
+        console.info("App initialized.");
+
+    }
+
+    prepareUI() {
+        globalProps.setCustomText({
+            style: {
+                fontFamily: 'Thonburi',
+                color: 'black',
+            }
+        });
+
+        globalProps.setCustomView({
+            style: {
+                backgroundColor: 'transparent'
+            }
+        });
+
+        // setCustomTouchableWithoutFeedback({
+        //     underlayColor: "red"
+        // });
+        // const DEFAULT_PROPS = {
+        //     activeOpacity: 0.85,
+        //     underlayColor: 'red',
+        // };
+        //
+        // TouchableWithoutFeedback.prototype.getDefaultProps = function getDefaultProps() {
+        //     return DEFAULT_PROPS;
+        // };
+        // Getting rid of that ugly line on Android and adding some custom style to all TextInput components.
+        const customTextInputProps = {
+            underlineColorAndroid: 'rgba(0,0,0,0)',
+            style: {
+                paddingVertical: 5,
+                paddingHorizontal: 8,
+                backgroundColor: 'white'
+            }
+        };
+
+        globalProps.setCustomTextInput(customTextInputProps);
+
+
+        // Component.setState.prototype = function setState(imconpleteState, callback) {
+        //     console.log("coucouc");
+        //     this.setState(imconpleteState, callback);
+        // };
+    }
+
+    prepareRedux() {
+        let allReducers = combineReducers({...reducers, app: appReducer});
+        const reducer = createWithReducers(allReducers);
+        this.store = createStore(
+            reducer,
+            window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+            compose(
+                applyMiddleware(thunk, logger),
+                autoRehydrate()
+            )
+        );
+
+        // begin periodically persisting the store
+        let persistConfig = {
+            storage: AsyncStorage,
+            transforms: [createTransform(immutableTransform.in, immutableTransform.out, immutableTransform.config)],
+            // whitelist: ['auth','device']
+        };
+
+        if (!__IS_LOCAL__ || !USE_CACHE_LOCAL) {
+            persistConfig = {...persistConfig, whitelist: ['auth', 'device']};
+        }
+        persistStore(this.store,
+            persistConfig,
+            () => {
+                console.log("persist store complete");
+                hydrated = true;
+                //configureApp();
+            }
+        );
     }
 
     onStoreUpdate() {
@@ -172,14 +186,14 @@ export default class App {
 
     resolveLogged() {
         //waiting rehydration before starting app
-        let rehydrated = store.getState().app.rehydrated;
+        let rehydrated = this.store.getState().app.rehydrated;
         if (!rehydrated) {
             console.debug("waiting for rehydration1");
             return;
         }
         console.debug("resolving logged");
 
-        const {currentUserId} = store.getState().auth;
+        const {currentUserId} = this.store.getState().auth;
 
         let id = CurrentUser.currentUserId();
 
