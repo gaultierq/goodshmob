@@ -107,6 +107,7 @@ class Profile extends Component<Props, State> {
                             placeholder={"profile_screen.feedback_textfield.placeholder"}
                             multiline
                             height={100}
+                            returnKeyType={'send'}
                         />
 
 

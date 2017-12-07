@@ -59,6 +59,7 @@ class Login extends Component<Props, State> {
                             execAction={this.handleFacebookLogin2}
                             style={[styles.facebookButton]}
                             textStyle={[styles.facebookButtonText]}
+                            returnKeyType={'go'}
                         />
 
                         <Text style={{fontSize: 13, textAlign: 'center', marginTop: 22}}>

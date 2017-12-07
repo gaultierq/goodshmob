@@ -95,6 +95,7 @@ class CommentsScreen extends Component<Props, State> {
                             inputContainerStyle={{borderRadius: 4, borderWidth: 0}}
                             execAction={(input: string) => this.addComment2(activity, input)}
                             placeholder={"activity_comments_screen.add_comment_placeholder"}
+                            returnKeyType={'send'}
                             // multiline
                         />
                     }

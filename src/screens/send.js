@@ -97,6 +97,7 @@ export default class SendScreen extends Component<Props, State> {
                     multiline
                     height={30}
                     canSendDefault={true}
+                    returnKeyType={'send'}
                 />
             </View>;
     }

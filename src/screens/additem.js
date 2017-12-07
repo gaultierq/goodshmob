@@ -88,7 +88,8 @@ export default class AddItemScreen extends Screen<Props, State> {
                 style={[styles.input, (editable ? {color: "black"} : {color: "grey"})]}
                 value={description}
                 onChangeText={description => this.setState({description})}
-                placeholder={/*i18n.t("create_list_controller.placeholder")*/"Ajouter une description"}
+                placeholder={/*i18n.t("create_list_controller.placeholder")*/"#Ajouter une description"}
+                returnKeyType={'done'}
             />
 
             <CheckBox

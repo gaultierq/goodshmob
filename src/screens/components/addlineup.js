@@ -79,11 +79,12 @@ export default class AddLineupComponent extends Component<Props, State> {
 
                     <View style={[UI.CARD(6), styles.header, {flexDirection: 'column'}]}>
 
-                        <Text style={{fontSize: 16, marginBottom: 12}}>Créer une nouvelle liste:</Text>
+                        <Text style={{fontSize: 16, marginBottom: 12}}>#Créer une nouvelle liste:</Text>
                         <SmartInput
                             execAction={(input: string) => this.createLineup(input)}
                             placeholder={"create_list_controller.placeholder"}
-                            button={<Text>Créer</Text>}
+                            button={<Text>#Créer</Text>}
+                            returnKeyType={'go'}
                         />
 
                         <CheckBox

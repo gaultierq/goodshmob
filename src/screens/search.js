@@ -401,6 +401,7 @@ export class SearchNavBar extends Component<NavProps, NavState> {
                 inputStyle={SearchNavBar._styles.searchInput}
                 autoCapitalize='none'
                 autoCorrect={false}
+                returnKeyType={'search'}
             />
         );
 

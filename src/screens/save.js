@@ -52,9 +52,10 @@ export default class SaveScreen extends Component<Props, State> {
                     onSubmitEditing={() => {this.state.description && onDescription(description, visibility)}}
                     value={this.state.description}
                     onChangeText={(description) => this.setState({description})}
-                    placeholder={"Ajouter une description"}
+                    placeholder={"#Ajouter une description"}
                     autoFocus
                     style={styles.input}
+                    returnKeyType={'done'}
                 />
             </View>
         );

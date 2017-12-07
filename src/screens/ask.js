@@ -51,13 +51,14 @@ export default class AskScreen extends Component<Props, State> {
                         value={askContent}
                         multiline
                         onChangeText={(askContent) => this.setState({askContent})}
-                        placeholder={"Poser une question à vos amis"}
+                        placeholder={"#Poser une question à vos amis"}
                         autoFocus
                         style={[
                             styles.input,
                             (notEditable ? {color: "grey"} : {color: "black"}),
                             {marginTop: 15}
                         ]}
+                        returnKeyType={'send'}
                     />
                     <Button
                         isLoading={this.state.isAsking}

@@ -178,7 +178,8 @@ class HomeScreen extends Screen<Props, State> {
                         execAction={(input: string) => this.requestChangeName(id, input)}
                         placeholder={"create_list_controller.placeholder"}
                         defaultValue={name}
-                        button={<Text>Changer</Text>}
+                        button={<Text>#Changer</Text>}
+                        returnKeyType={'done'}
                     />
                 </View>
             </View>
