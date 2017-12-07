@@ -6,10 +6,6 @@ import * as React from "react";
 export const NavStyles = {
     navBarButtonColor: 'black',
     navBarBackgroundColor: '#f4f4f4',
-    //screenBackgroundColor: 'transparent',
-    // screenBackgroundImageName: 'home_background@3x.png',
-    // rootBackgroundImageName: 'home_background.png'
-
 };
 
 export const Colors = Object.freeze({

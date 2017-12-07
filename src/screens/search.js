@@ -90,10 +90,8 @@ export default class SearchScreen extends Component<Props, State> {
             routes: props.categories.map((c, i) => ({key: `${i}`, title: i18n.t(c.tabName)})),
         };
 
-        props.navigator.setStyle({
-            navBarBackgroundColor: UI.NavStyles.navBarBackgroundColor,
+        props.navigator.setStyle({...UI.NavStyles,
             navBarCustomView: 'goodsh.SearchNavBar',
-
         });
     }
 
