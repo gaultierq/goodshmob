@@ -224,6 +224,17 @@ export default class ActivityActionBar extends React.Component<Props, State> {
         });
     }
 
+    execAnswer(activity: Activity) {
+        this.props.navigator.push({
+            screen: 'goodsh.CommentsScreen',
+            title: "Réponses",
+            passProps: {
+                activityId: activity.id,
+                activityType: activity.type
+            },
+        });
+    }
+
     execShare(activity: Activity) {
         const {resource} = activity;
 
