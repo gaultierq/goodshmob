@@ -11,9 +11,6 @@ import * as StringUtils from "./utils/StringUtils"
 
 let instance: DeviceManager;
 
-/*
-
- */
 class DeviceManager {
 
     store: any;
@@ -21,7 +18,6 @@ class DeviceManager {
     //waiting for user login to save the device
     init(store): DeviceManager {
         this.store = store;
-        let {auth} = store.getState();
 
         //init with logged user => check & send diff
         if (store.getState().auth.currentUserId) {
@@ -44,11 +40,7 @@ class DeviceManager {
         let oldDevice: Device= {...this.store.getState().device};
         generateCurrentDevice().then(newDevice => {
             if (!_.isEqual(oldDevice, newDevice)) {
-                console.info(`device manager: found
-                 differences in device.
-                 oldDevice=${JSON.stringify(oldDevice)}
-                 !=
-                 newDevice=${JSON.stringify(newDevice)}`);
+
                 let diff = difference(oldDevice, newDevice);
                 let diffKeys = _.keys(diff);
                 let realDiff = !arrayContainsArray(['currentDeviceId', 'uniqueId', 'isEmulator','isTablet'], diffKeys);
@@ -59,8 +51,12 @@ class DeviceManager {
                     this.store.dispatch(appActions.saveDevice(newDevice))
                         .then(()=>console.info("new device saved"), err=>console.warn(err));
                 }
-
-
+                else {
+                    console.log("device are the same 1")
+                }
+            }
+            else {
+                console.log("device are the same 0")
             }
         })
 
