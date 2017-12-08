@@ -29,6 +29,8 @@ type State = {
     requestState?: RequestState,
 };
 
+
+//depreacted: this is probably not a good idea
 export default class SmartButton extends React.Component<Props, State> {
 
     state = {};

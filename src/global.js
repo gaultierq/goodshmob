@@ -8,6 +8,7 @@ import {superLog as _superLog} from './utils/DebugUtils'
 declare var i18n: any;
 declare var _: any;
 declare var superConsole: any;
+declare var ENABLE_PERF_OPTIM: boolean;
 
 export function init() {
     global._ = __;

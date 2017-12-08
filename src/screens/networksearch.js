@@ -8,6 +8,7 @@ import {
     RefreshControl,
     StyleSheet,
     Text,
+    TouchableOpacity,
     TouchableWithoutFeedback,
     View
 } from 'react-native';
@@ -15,15 +16,13 @@ import {connect} from "react-redux";
 import type {Id, List, NavigableProps, Saving} from "../types";
 import ItemCell from "./components/ItemCell";
 import LineupCell from "./components/LineupCell";
-import * as Nav from "./Nav";
-import {createResultFromHit, createResultFromHit2, makeAlgoliaSearch} from "../utils/AlgoliaUtils";
+import {AlgoliaClient, createResultFromHit, createResultFromHit2, makeAlgoliaSearch} from "../utils/AlgoliaUtils";
 import UserConnectItem from "./userConnectItem";
 import UserRowI from "../activity/components/UserRowI";
 import {Colors} from "./UIStyles";
-import algoliasearch from 'algoliasearch/reactnative';
 import {currentUserId} from "../CurrentUser";
-import {AlgoliaClient} from '../utils/AlgoliaUtils';
 import Screen from "./components/Screen";
+import Config from 'react-native-config'
 
 type Props = NavigableProps & {
 };
@@ -85,10 +84,9 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                 if (!resource) return null;
 
                 return (
-                    <ItemCell
-                        item={resource}
-                        onPressItem={()=>this.onSavingPressed(saving)}
-                    />
+                    <TouchableOpacity onPress={()=>this.onSavingPressed(saving)}>
+                        <ItemCell item={resource}/>
+                    </TouchableOpacity>
                 )
             }
         };
@@ -99,10 +97,8 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
             );
         };
 
-        // let client = algoliasearch("8UTETUZKD3", "c80385095ff870f5ddf9ba25310a9d5a");
-
         let index = new Promise(resolve => {
-            AlgoliaClient.createAlgoliaIndex('Saving_staging').then(index => {
+            AlgoliaClient.createAlgoliaIndex(Config.ALGOLIA_SAVING_INDEX).then(index => {
                 index.setSettings({
                         searchableAttributes: [
                             'item_title',

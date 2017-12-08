@@ -28,7 +28,7 @@ export const RandomColors = Object.freeze([
         '#26547C',
         '#EF476F',
         '#FFD166',
-        '#FCFCFC',
+        // '#FCFCFC',
         '#FF8360',
         '#E8E288',
         '#7DCE82',
@@ -85,8 +85,8 @@ export function renderSimpleButton(
         isLoading={loading}
         isDisabled={disabled}
         onPress={onPress}
-        style={[{marginBottom: 0}, styles.button, style]}
-        disabledStyle={styles.disabledButton}
+        style={[{marginBottom: 0}, STYLES.button, style]}
+        disabledStyle={STYLES.disabledButton}
     >
         <Text style={[{color, fontWeight: "bold", fontSize: 18, fontFamily: "Chivo"}, textStyle]}>{text}</Text>
     </Button>);
@@ -124,12 +124,16 @@ export function renderLink(
     return renderSimpleLink(text, handler, options);
 }
 
-const styles = StyleSheet.create({
+export const STYLES = StyleSheet.create({
     button: {
         padding: 0,
         borderColor: "transparent",
     },
     disabledButton: {
         borderColor: "transparent"
+    },
+    lightBorder: {
+        borderWidth: StyleSheet.hairlineWidth,
+        borderColor: Colors.grey2,
     }
 });

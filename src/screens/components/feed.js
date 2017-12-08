@@ -128,6 +128,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             hasMore,
             empty,
             ListHeaderComponent,
+            ListFooterComponent,
             feedId,
             ...attributes
         } = this.props;
@@ -136,7 +137,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         let nothingInterestingToDisplay = empt && this.state.isFetchingFirst === 'ok';
 
         let firstEmptyLoader = this.state.firstLoad !== 'ok' && empt;
-        // firstEmptyLoader = true;
+        //firstEmptyLoader = true;
 
         if (feedId) {
             console.log(`feed '${feedId}' render: empt=${empt} nitd=${nothingInterestingToDisplay} fil=${firstEmptyLoader} data.len=${data ? data.length : -1}`);
@@ -157,7 +158,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                 refreshControl={this.renderRefreshControl()}
                 onEndReached={ this.onEndReached.bind(this) }
                 onEndReachedThreshold={0.1}
-                ListFooterComponent={!firstEmptyLoader && this.renderFetchMoreLoader()}
+                ListFooterComponent={!firstEmptyLoader && this.renderFetchMoreLoader(ListFooterComponent)}
                 style={{...this.props.style,  minHeight: 100}}
                 ListHeaderComponent={!firstEmptyLoader && ListHeaderComponent}
                 onScroll={this._handleScroll}
@@ -339,9 +340,9 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         />);
     }
 
-    renderFetchMoreLoader() {
+    renderFetchMoreLoader(ListFooterComponent: Node) {
         return (<View>
-                {this.props.ListFooterComponent}
+                {ListFooterComponent}
                 {
                     this.state.isFetchingMore === 'sending' && (
 

@@ -80,21 +80,20 @@ export default class LineupCell extends React.Component<Props, State> {
         return <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>{result}</View>;
     }
 
-    shouldComponentUpdate(nextProps: Props, nextState: State) {
-        if (!ENABLE_PERF_OPTIM) return true;
-        let act = this.readLineup(nextProps);
+    // shouldComponentUpdate(nextProps: Props, nextState: State) {
+    //     if (!ENABLE_PERF_OPTIM) return true;
+    //     let act = this.readLineup(nextProps);
+    //
+    //     if (act === this.lastRenderedActivity) {
+    //         superLog('ActivityCell render saved');
+    //         return false;
+    //     }
+    //     return true;
+    // }
 
-        if (act === this.lastRenderedActivity) {
-            superLog('ActivityCell render saved');
-            return false;
-        }
-        return true;
-    }
-
-    readLineup(nextProps) {
-        return _.get(nextProps, `data.${nextProps.activityType}.${nextProps.activityId}`);
-    }
-
+    // readLineup(nextProps) {
+    //     return _.get(nextProps, `data.${nextProps.activityType}.${nextProps.activityId}`);
+    // }
 
     renderItem({item, index}: {item: Saving}) {
 

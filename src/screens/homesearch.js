@@ -1,6 +1,6 @@
 // @flow
 
-import React, {Component} from 'react';
+import React from 'react';
 import {
     ActivityIndicator,
     FlatList,
@@ -8,6 +8,7 @@ import {
     RefreshControl,
     StyleSheet,
     Text,
+    TouchableOpacity,
     TouchableWithoutFeedback,
     View
 } from 'react-native';
@@ -61,10 +62,10 @@ export default class HomeSearchScreen extends Screen<Props, State> {
                 if (!resource) return null;
 
                 return (
-                    <ItemCell
-                        item={resource}
-                        onPressItem={()=>this.onSavingPressed(saving)}
-                    />
+                    <TouchableOpacity onPress={()=>this.onSavingPressed(saving)}>
+                        <ItemCell item={resource}/>
+                    </TouchableOpacity>
+
                 )
             }
         };

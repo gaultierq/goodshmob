@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native';
+import {ActivityIndicator, FlatList, StyleSheet, View, TouchableOpacity} from 'react-native';
 import {connect} from "react-redux";
 import * as Api from "../utils/Api";
 import {combineReducers} from "redux";
@@ -23,16 +23,14 @@ class SearchItem extends Component<*,*> {
 
     render() {
 
-        let categories = SEARCH_CATEGORIES.map(c=>{
+        let categories = SEARCH_CATEGORIES.map(categ=>{
             return {
-                type: c,
-                tabName: "search_item_screen.tabs." + c,
-                placeholder: "search_item_screen.placeholder." + c,
-                renderItem: ({item})=> <ItemCell
-                    onPressItem={() => this.props.onItemSelected(item)}
-                    item={item}
-                    navigator={this.props.navigator}
-                />
+                type: categ,
+                tabName: "search_item_screen.tabs." + categ,
+                placeholder: "search_item_screen.placeholder." + categ,
+                renderItem: ({item})=> <TouchableOpacity onPress={() => this.props.onItemSelected(item)}>
+                    <ItemCell item={item}/>
+                </TouchableOpacity>
 
             }
         });

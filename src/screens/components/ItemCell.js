@@ -1,17 +1,22 @@
 // @flow
-
+import type {Node} from 'react';
 import React from 'react';
-import {Button, FlatList, Image, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, View} from 'react-native';
+import {Button, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import * as UI from "../UIStyles";
+import type {Item} from "../../types";
 
 
-export default class ItemCell extends React.Component {
+type Props = {
+    item: Item,
+    displayDetails?: boolean,
+    children?: Node
+};
 
+type State = {
+};
 
-    props: {
-        onPressItem: Function;
-        displayDetails?: boolean
-    };
+export default class ItemCell extends React.Component<Props, State> {
+
 
     render() {
         let item = this.props.item;
@@ -21,23 +26,26 @@ export default class ItemCell extends React.Component {
         let image = resource ? resource.image : undefined;
 
         return (
-            <TouchableWithoutFeedback
-                onPress={this.props.onPressItem}>
+            <View style={
+                { ...UI.CARD(8), ...UI.TP_MARGINS(8), padding: 8,
+                    flex: 1,
+                }}>
                 <View style={
-                    { ...UI.CARD(8), ...UI.TP_MARGINS(8), padding: 8,
+                    {
                         flex: 1,
                         flexDirection: 'row',
                         justifyContent: "flex-start"
                     }}>
 
+
                     { image && <Image
                         source={{uri: image}}
                         resizeMode='contain'
-                        style={{
+                        style={[{
                             alignSelf: 'center',
                             height: 80,
                             width: 80,
-                        }}
+                        }, UI.STYLES.lightBorder]}
                     />
                     }
                     <View style={{flex:1, padding: 15}}>
@@ -47,15 +55,9 @@ export default class ItemCell extends React.Component {
                         >{resource.title}</Text>
                         <Text style={styles.subtitle}>{resource.subtitle}</Text>
                     </View>
-                    <Image source={require('../../img/mini-g-number.png')} resizeMode="contain"
-                           style={{
-                               alignSelf: 'center',
-                               width: 20,
-                               height: 20,
-                           }}
-                    />
                 </View>
-            </TouchableWithoutFeedback>
+                {this.props.children}
+            </View>
         )
     }
 

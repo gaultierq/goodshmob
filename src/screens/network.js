@@ -221,7 +221,6 @@ class NetworkScreen extends Screen<Props, State> {
                 return (
                     <ItemCell
                         item={resource}
-                        //onPressItem={()=>this.props.onSavingPressed(saving)}
                     />
                 )
             }

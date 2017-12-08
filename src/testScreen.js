@@ -96,6 +96,18 @@ const addItemScreen = {
         defaultLineupId: null
     }
 };
+
+// const addItemScreen2 = {
+//     screen: {
+//         label: 'test',
+//         screen: 'goodsh.AddItemScreen',
+//     },
+//     passProps: {
+//         itemId: 'ca2a01a0-6431-4704-aef2-0c6b493b6957',
+//         itemType: 'CreativeWork',
+//         defaultLineupId: '37e67b05-c86c-4aeb-b3af-bf1c34862cd0'
+//     }
+// };
 const lineupScreen = {
     screen: {
         label: 'test',
@@ -160,6 +172,7 @@ let testScreen = null;
 //  testScreen = interactionsScreen;
 //  testScreen = userScreen;
 //  testScreen = addItemScreen;
+ // testScreen = addItemScreen2;
 //  testScreen = networkSearchScreen;
 //  testScreen = searchItemsScreen;
 //  testScreen = homeSearchItemsScreen;

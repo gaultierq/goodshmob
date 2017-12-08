@@ -74,7 +74,7 @@ export function startAddItem(navigator: *, defaultLineupId: Id) {
                         itemId: item.id,
                         itemType: item.type,
                         item,
-                        defaultLineupId: defaultLineupId,
+                        defaultLineupId,
                         onCancel: () => doublePop(),
                         onAdded: () => doublePop(),
                     },

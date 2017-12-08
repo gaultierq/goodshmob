@@ -1,8 +1,9 @@
 // @flow
-import React, {Component} from 'react';
-import {ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, ActivityIndicator} from 'react-native';
+import React from 'react';
+import {ActivityIndicator, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {CheckBox, SearchBar} from "react-native-elements";
 import * as UI from "./UIStyles";
+import {renderSimpleLink} from "./UIStyles";
 
 import LineupCell from "./components/LineupCell";
 import type {Id, Item, ItemType} from "../types";
@@ -10,12 +11,15 @@ import {FETCH_ITEM, fetchItemCall, saveItem} from "./actions";
 import {currentUserId} from "../CurrentUser";
 import Snackbar from "react-native-snackbar"
 import {connect} from "react-redux";
-import {buildData} from "../utils/DataUtils";
+import {buildData, buildNonNullData} from "../utils/DataUtils";
 import ItemCell from "./components/ItemCell";
 import Screen from "./components/Screen";
 import {safeDispatchAction} from "./../utils/Api";
 import {LineupListScreen} from "./lineuplist";
 import AddLineupComponent from "./components/addlineup";
+import {MainBackground} from "./UIComponents";
+import SmartButton from "./components/SmartButton";
+import {renderSimpleButton} from "./UIStyles";
 
 type Props = {
     defaultLineupId: Id,
@@ -35,7 +39,8 @@ type State = {
     visibility?: Visibility,
     reqAdd?: number,
     reqFetch?: number,
-    selectedLineup?: Id
+    selectedLineupId?: Id,
+    showLineupList: boolean
 };
 
 
@@ -46,9 +51,11 @@ export default class AddItemScreen extends Screen<Props, State> {
 
     constructor(props: Props) {
         super(props);
+
         this.state = {
-            lineupId: props.defaultLineupId,
-            visibility: 0
+            visibility: 0,
+            selectedLineupId: props.defaultLineupId,
+            showLineupList: !props.defaultLineupId
         };
     }
 
@@ -74,79 +81,84 @@ export default class AddItemScreen extends Screen<Props, State> {
         let item = this.getItem();
         if (!item) return null;
 
-        const {description, visibility} = this.state;
+        const {description, visibility, selectedLineupId, showLineupList} = this.state;
 
         let grey = UI.Colors.grey1;
         let req = this.state.reqAdd;
         let editable = req !== 1;
-        let xml = <View style={[styles.container]}>
-
-            <ItemCell item={item}/>
-
-            <TextInput
-                editable={editable}
-                style={[styles.input, (editable ? {color: "black"} : {color: "grey"})]}
-                value={description}
-                onChangeText={description => this.setState({description})}
-                placeholder={/*i18n.t("create_list_controller.placeholder")*/"#Ajouter une description"}
-                returnKeyType={'done'}
-            />
-
-            <CheckBox
-                right
-                title='Visible par mes amis'
-                iconRight
-                size={16}
-                checkedColor={grey}
-                uncheckedColor={grey}
-                onPress={(newValue)=> this.setState({visibility: visibility === 1 ? 0 : 1})}
-                checked={!visibility}
-                style={{backgroundColor: 'transparent'}}
-                textStyle={{color: grey, fontSize: 12, }}
-                containerStyle={{ backgroundColor: "transparent", borderWidth: 0, width: "100%"}}
-            />
-
+        let xml = (<View style={[styles.container]}>
             <Text>#Toutes vos listes</Text>
-        </View>;
+        </View>);
         return (
-            <LineupListScreen
-                userId={currentUserId()}
-                navigator={this.props.navigator}
-                ListHeaderComponent={xml}
-                ListFooterComponent={<AddLineupComponent/>}
-                renderItem={(item)=>this.renderListItem(item)}
-            />
+            <MainBackground>
+                <ScrollView>
+                    <View>
+                        <ItemCell item={item}>
+                            <TextInput
+                                editable={editable}
+                                style={[styles.input, (editable ? {color: "black"} : {color: "grey"})]}
+                                value={description}
+                                onChangeText={description => this.setState({description})}
+                                placeholder={/*i18n.t("create_list_controller.placeholder")*/"#Ajouter une description"}
+                                returnKeyType={selectedLineupId ? 'go' : 'next'}
+                                onSubmitEditing={() => {selectedLineupId && this._doAdd(selectedLineupId)}}
+                            />
+
+                            <CheckBox
+                                right
+                                title="#Visible par mes amis"
+                                iconRight
+                                size={16}
+                                checkedColor={grey}
+                                uncheckedColor={grey}
+                                onPress={(newValue)=> this.setState({visibility: visibility === 1 ? 0 : 1})}
+                                checked={!visibility}
+                                style={{backgroundColor: 'transparent'}}
+                                textStyle={{color: grey, fontSize: 12, }}
+                                containerStyle={{ backgroundColor: "transparent", borderWidth: 0, width: "100%"}}
+                            />
+                        </ItemCell>
+
+
+                    </View>
+
+
+                    {selectedLineupId && <LineupCell lineup={buildNonNullData(this.props.data, 'lists', selectedLineupId)}/>}
+
+                    {showLineupList && <LineupListScreen
+                        userId={currentUserId()}
+                        navigator={this.props.navigator}
+                        ListHeaderComponent={xml}
+                        ListFooterComponent={<AddLineupComponent/>}
+                        renderItem={(item) => (
+                            <TouchableOpacity onPress={() => this.setState({selectedLineupId: item.id, showLineupList: false})}>
+                                <LineupCell lineup={item}/>
+                            </TouchableOpacity>
+                        )}
+                    />
+                    }
+
+                    {selectedLineupId && !showLineupList && (
+                        <View style={{flex: 1}}>
+                            {
+                                <View style={{flex: 1, alignItem:'flex-end', margin: 8}}>
+                                    {renderSimpleLink(
+                                    '#Choisir une autre liste',
+                                    () => this.setState({showLineupList: true}),
+                                    )}
+                                </View>
+                            }
+                            {renderSimpleButton(i18n.t('shared.add'), ()=>this._doAdd(selectedLineupId), )}
+                        </View>
+                    )
+                    }
+                </ScrollView>
+            </MainBackground>
         );
-    }
-
-    renderListItem(item) {
-        let s = this.state.selectedLineup;
-        let addingIn = s === item.id;
-        let opacity = !s || addingIn ? 1 : .5;
-
-        return (
-            <TouchableOpacity
-                disabled={s}
-                onPress={() => this._doAdd(item.id)}
-
-            >
-                <View style={{opacity, }}>
-                    <LineupCell lineup={item}/>
-                    {addingIn && <ActivityIndicator
-                        animating={true}
-                        size="small"
-                        style={{position: 'absolute', alignSelf: 'center', top: "50%"}}
-                    />}
-                </View>
-
-            </TouchableOpacity>
-        )
     }
 
     _doAdd = (lineupId: Id) => {
         let {description, visibility} = this.state;
-
-        this.setState({selectedLineup: lineupId});
 
         safeDispatchAction.call(
             this,
@@ -160,7 +172,7 @@ export default class AddItemScreen extends Screen<Props, State> {
                 let onAdded = this.props.onAdded;
                 onAdded && onAdded();
             }
-        ).then(() => this.setState({selectedLineup: null}))
+        ).then(() => this.setState({selectedLineupId: null}))
     }
 }
 
