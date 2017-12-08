@@ -4,9 +4,11 @@ import * as Api from "../utils/Api";
 import * as actionTypes from "./actionTypes"
 import {LoginManager as FacebookLoginManager} from "react-native-fbsdk";
 import type {Device} from "../types";
+import {SET_USER_NULL} from "./actionTypes";
 
-export function logoutOffline() {
+export function logoutOffline(dispatch) {
     FacebookLoginManager.logOut();
+    dispatch({type: SET_USER_NULL});
 }
 
 //if user lost auth, then offline logout
@@ -17,7 +19,7 @@ export function logout(dispatch) {
             .withRoute(`logout`)
             .disptachForAction2(actionTypes.USER_LOGOUT)
     ).then(()=> {
-        logoutOffline();
+        logoutOffline(dispatch);
     }, err => {console.error(err)});
 }
 

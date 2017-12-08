@@ -7,7 +7,7 @@ import {camelize} from 'camelize-object-key'
 export function createWithReducers(appReducers) {
     return (state, action) => {
         switch (action.type) {
-            case types.USER_LOGOUT.success():
+            case types.SET_USER_NULL:
                 state = undefined;
                 break;
         }
@@ -33,6 +33,9 @@ export function authReducer(state = Immutable({}), action) {
         case types.FETCH_ME.success():
             let algoliaToken = _.get(action.payload, "meta.key", null);
             state = state.merge({algoliaToken});
+            break;
+        case types.USER_LOGOUT.success():
+            state = undefined;
             break;
     }
     return state;
