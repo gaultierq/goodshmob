@@ -35,34 +35,44 @@ class DeviceManager {
         return this;
     }
 
+    obtainDeviceDiff(): Promise<*> {
+        return new Promise((resolve, reject) => {
+            generateCurrentDevice().then(newDevice => {
+                let oldDevice: Device= {...this.store.getState().device};
+                let diff = flatDiff(oldDevice, newDevice);
+                ['currentDeviceId', 'uniqueId', 'deviceId'].forEach(k=>_.unset(diff, k));
+                resolve({newDevice, diff});
+            })
+        });
+
+    }
+
+
+
     checkAndSendDiff() {
         console.debug("device manager: checkAndSendDiff");
-        let oldDevice: Device= {...this.store.getState().device};
-        generateCurrentDevice().then(newDevice => {
-            if (!_.isEqual(oldDevice, newDevice)) {
-                let diff = flatDiff(oldDevice, newDevice);
 
-                console.info(`device manager: found differences in device. diff=${JSON.stringify(diff)}`);
-                console.info(`oldDevice=${JSON.stringify(oldDevice)}`);
-                console.info(`newDevice=${JSON.stringify(newDevice)}`);
-
-                let diffKeys = _.keys(diff);
-                let realDiff = !arrayContainsArray(['currentDeviceId', 'uniqueId', 'isEmulator','isTablet'], diffKeys);
-
-                if (realDiff) {
-
+        this.obtainDeviceDiff()
+            .then(({newDevice, diff}) => {
+                if (!_.isEmpty(diff)) {
+                    console.info(`device manager: found differences in device. diff=${JSON.stringify(diff)}`);
 
                     this.store.dispatch(appActions.saveDevice(newDevice))
-                        .then(()=>console.info("new device saved"), err=>console.warn(err));
+                        .then((device)=>{
+                            console.info("new device saved");
+
+                            this.obtainDeviceDiff().then(({diff}) => {
+                                if (!_.isEmpty(diff)) {
+                                    console.warn("Device not properly saved: remaining diff=" + JSON.stringify(diff));
+                                    console.warn(device);
+                                }
+                            });
+                        }, err=>console.warn(err));
                 }
                 else {
                     console.log("device are the same 1")
                 }
-            }
-            else {
-                console.log("device are the same 0")
-            }
-        })
+            })
 
     }
 }
@@ -138,9 +148,9 @@ export function generateCurrentDevice(): Promise<Device> {
         result.fcmToken = fcmToken;
 
         //temp, so backend is has the token
-        result.token = fcmToken;
+        // result.token = fcmToken;
 
-        console.info(`device manager: generated device:${JSON.stringify(result)}`);
+        //console.info(`device manager: generated device:${JSON.stringify(result)}`);
         return result
     });
 }
