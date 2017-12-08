@@ -7,7 +7,8 @@ import dotprop from "dot-prop-immutable"
 
 //ask backend to sanitize types
 export let sanitizeActivityType = activityType => {
-    switch (activityType.toLowerCase()) {
+
+    switch ((activityType||"").toLowerCase()) {
         case "post":
         case "posts":
             return "posts";

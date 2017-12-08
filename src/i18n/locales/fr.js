@@ -258,7 +258,7 @@ export default {
             },
         }
     },
-    loadmore: "Chargement de plus de kif...",
+    loadmore: "Chargement...",
     send_message: "J'ai quelquechose à te recommender:\n%{what}\n\nJe l'ai trouvé grace a Goodsh: %{url}",
     goodsh_url: "https:\/\/goodsh.it\/",
     friends: {

@@ -1,11 +1,21 @@
 // @flow
 
 import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
+import {
+    ActivityIndicator,
+    FlatList,
+    Linking,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableWithoutFeedback,
+    View,
+    TouchableOpacity
+} from 'react-native';
 import * as actions from './actions'
 import {connect} from "react-redux";
 import ActivityBody from "./components/ActivityBody";
-import {buildData, buildNonNullData} from "../utils/DataUtils";
+import {buildData} from "../utils/DataUtils";
 import {MainBackground} from "../screens/UIComponents";
 import ActivityDescription from "./components/ActivityDescription";
 import type {Activity, ActivityType, Id} from "../types";
@@ -20,8 +30,6 @@ type Props = {
     activityId: Id,
     activityType: ActivityType,
     navigator: any,
-    onPressItem?: () => void,
-    navigator: *
 };
 
 type State = {
@@ -69,16 +77,21 @@ class ActivityDetailScreen extends Screen<Props, State> {
                         { activity &&
                         <View>
                             <View style={[UI.CARD(), {marginBottom: 40}]}>
-                                <ActivityBody
-                                    activity={activity}
-                                    navigator={this.props.navigator}
-                                    onPressItem={this.props.onPressItem}
-                                />
+                                <TouchableOpacity
+                                    onPress={() => this.goBuy(activity)}
+                                >
+                                    <ActivityBody
+                                        activity={activity}
+                                        navigator={this.props.navigator}
+                                        onPressItem={() => this.goBuy(activity)}
+                                    />
+                                </TouchableOpacity>
 
                                 <FeedSeparator/>
 
                                 <ActivityActionBar
-                                    activity={activity}
+                                    activityId={activity.id}
+                                    activityType={activity.type}
                                     navigator={this.props.navigator}
                                     actions={['answer', 'share', 'save', 'buy']}
                                 />
@@ -88,7 +101,8 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
                             <ActivityDescription activity={activity} navigator={this.props.navigator}/>
 
-                            {this.renderStuff(activity)}
+
+                            {this.renderComments(activity)}
 
                             <FlatList
                                 data={activity.relatedActivities}
@@ -103,7 +117,20 @@ class ActivityDetailScreen extends Screen<Props, State> {
         );
     }
 
-    renderStuff(activity) {
+    goBuy(activity: Activity) {
+
+        let url = _.get(activity, 'resource.location') || _.get(activity, 'resource.url');
+        Linking.canOpenURL(url).then(supported => {
+            if (supported) {
+                Linking.openURL(url);
+            } else {
+                console.log("Don't know how to open URI: " + url);
+            }
+        });
+
+    }
+
+    renderComments(activity) {
         return (
             <TouchableWithoutFeedback
                 onPress={()=> this.displayActivityComments(activity)}>
@@ -158,7 +185,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
                 </TouchableWithoutFeedback>
 
-                {this.renderStuff(item)}
+                {this.renderComments(item)}
             </View>
         );
     }

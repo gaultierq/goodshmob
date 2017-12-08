@@ -366,7 +366,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         return (
             <View style={{padding: 12}}>
                 <Text style={{alignSelf: "center"}}>Le chargement a échoué...</Text>
-                {renderSimpleButton("Réessayer", fetch)}
+                {renderSimpleButton("#Réessayer", fetch)}
             </View>
         );
     }

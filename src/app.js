@@ -30,8 +30,8 @@ import {AlgoliaClient} from "./utils/AlgoliaUtils";
 
 
 const USE_CACHE_LOCAL =
-    true;
-// false;
+    // true;
+false;
 
 console.log(`staring app with env=${JSON.stringify(Config)}`);
 

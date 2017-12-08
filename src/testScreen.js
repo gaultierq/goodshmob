@@ -26,6 +26,16 @@ const communityScreen = {
     }
 };
 
+const activityDetailScreen = {
+    screen: {
+        screen: 'goodsh.ActivityDetailScreen',
+    },
+    passProps: {
+        activityId: "8ade128e-68b1-4674-8da5-309b579b5e1a",
+        activityType: "savings"
+    }
+};
+
 const commentsScreen = {
     screen: {
         label: 'test',
@@ -155,6 +165,6 @@ let testScreen = null;
 //  testScreen = homeSearchItemsScreen;
 //  testScreen = networkScreen;
 //  testScreen = lineupScreen;
-
+//  testScreen = activityDetailScreen;
 
 export default testScreen;

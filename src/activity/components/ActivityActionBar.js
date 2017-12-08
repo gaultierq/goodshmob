@@ -15,20 +15,22 @@ import {
     Alert
 } from 'react-native';
 import * as UI from "../../screens/UIStyles";
-import type {Activity, Saving, Url} from "../../types";
+import type {Activity, ActivityType, Id, Saving, Url} from "../../types";
 import i18n from '../../i18n/i18n'
 import {connect} from "react-redux";
 import {currentGoodshboxId, currentUserId} from "../../CurrentUser";
 import {unsave} from "../actions";
 import Snackbar from "react-native-snackbar"
 import {toUppercase} from "../../utils/StringUtils";
+import {buildNonNullData, sanitizeActivityType} from "../../utils/DataUtils";
 
 export type ActivityActionType = 'comment'| 'share'| 'save'| 'unsave'| 'see'| 'buy'| 'answer';
 const ACTIONS = ['comment', 'share', 'save', 'unsave', 'see', 'buy', 'answer'];
 
 
 type Props = {
-    activity: Activity,
+    activityId: Id,
+    activityType: ActivityType,
     navigator: any,
     actions?: Array<ActivityActionType>
 };
@@ -36,20 +38,21 @@ type Props = {
 type State = {
 };
 
-@connect()
+//TODO: perfs
+@connect(state => ({data: state.data}))
 export default class ActivityActionBar extends React.Component<Props, State> {
 
 
     render() {
 
-        let activity = this.props.activity;
+        let activity = buildNonNullData(this.props.data, this.props.activityType, this.props.activityId);
 
         //let activity: Model.Activity = this.props.activity;
 
         //let goodshed = resource && resource.meta ? savedIn : false;
 
         let buttons = ACTIONS.reduce((res, a) => {
-            if (this.canExec(a)) {
+            if (this.canExec(a, activity)) {
                 res.push(
                     this.renderButton(
                         this.renderImageButton(a),
@@ -110,15 +113,15 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
 
 
-    canExec(action: ActivityActionType) {
-        let {actions, activity} = this.props;
+    canExec(action: ActivityActionType, activity: Activity) {
+        let {actions} = this.props;
         if ((actions || ACTIONS).indexOf(action) < 0) {
             return false;
         }
 
         let canCheck = this['can' + toUppercase(action)];
 
-        if (canCheck) return canCheck.call(this, this.props.activity);
+        if (canCheck) return canCheck.call(this, activity);
 
         let type = activity.type;
 
@@ -145,12 +148,18 @@ export default class ActivityActionBar extends React.Component<Props, State> {
         return !this.isGoodshed2(activity) && this.byMe(activity);
     }
 
+    canBuy(activity: Activity) {
+        let resource = activity.resource;
+        return resource && sanitizeActivityType(resource.type) === 'creativeWorks';
+        //return _.get(activity, 'resource.type') === 'creativeWorks';
+    }
 
-    byMe(activity) {
+
+    byMe(activity: Activity) {
         return activity.user.id === currentUserId();
     }
 
-    isGoodshed2(activity) {
+    isGoodshed2(activity: Activity) {
         let resource = activity.resource;
         let savedIn = _.get(resource, 'meta.saved-in', []);
         let target = activity.target;
@@ -216,7 +225,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     execComment(activity: Activity) {
         this.props.navigator.push({
             screen: 'goodsh.CommentsScreen', // unique ID registered with Navigation.registerScreen
-            title: "Commentaires", // navigation bar title of the pushed screen (optional)
+            title: "#Commentaires", // navigation bar title of the pushed screen (optional)
             passProps: {
                 activityId: activity.id,
                 activityType: activity.type
@@ -227,7 +236,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     execAnswer(activity: Activity) {
         this.props.navigator.push({
             screen: 'goodsh.CommentsScreen',
-            title: "Réponses",
+            title: "#Réponses",
             passProps: {
                 activityId: activity.id,
                 activityType: activity.type
@@ -262,7 +271,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     }
 
     execBuy(activity: Activity) {
-        let url = activity.resource.url;
+        let url = _.get(activity, 'resource.url');
         Linking.canOpenURL(url).then(supported => {
             if (supported) {
                 Linking.openURL(url);

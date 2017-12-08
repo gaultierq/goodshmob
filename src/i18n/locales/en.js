@@ -264,7 +264,7 @@ export default {
             },
         }
     },
-    loadmore: "Loading more awesomeness...",
+    loadmore: "Loading...",
     send_message: "I found something for you:\n%{what}\n\nSpotted on Goodsh: %{url}",
     goodsh_url: "https:\/\/goodsh.it\/",
     friends: {

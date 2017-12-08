@@ -64,7 +64,11 @@ export default class ActivityCell extends React.Component<Props, State> {
 
                     <FeedSeparator/>
 
-                    <ActivityActionBar activity={activity} navigator={this.props.navigator}/>
+                    <ActivityActionBar
+                        activityId={activity.id}
+                        activityType={activity.type}
+                        navigator={this.props.navigator}
+                    />
 
                 </View>
             </View>
