@@ -163,11 +163,12 @@ const test = {
 let testScreen = null;
 
 //change this line
+ testScreen = test;
+
 // testScreen = profileScreen;
 // testScreen = commentsScreen;
 // testScreen = communityScreen;
 //  testScreen = sendScreen;
-//  testScreen = test;
 //  testScreen = homeScreen;
 //  testScreen = interactionsScreen;
 //  testScreen = userScreen;

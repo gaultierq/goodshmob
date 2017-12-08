@@ -40,13 +40,17 @@ class DeviceManager {
         let oldDevice: Device= {...this.store.getState().device};
         generateCurrentDevice().then(newDevice => {
             if (!_.isEqual(oldDevice, newDevice)) {
+                let diff = flatDiff(oldDevice, newDevice);
 
-                let diff = difference(oldDevice, newDevice);
+                console.info(`device manager: found differences in device. diff=${JSON.stringify(diff)}`);
+                console.info(`oldDevice=${JSON.stringify(oldDevice)}`);
+                console.info(`newDevice=${JSON.stringify(newDevice)}`);
+
                 let diffKeys = _.keys(diff);
                 let realDiff = !arrayContainsArray(['currentDeviceId', 'uniqueId', 'isEmulator','isTablet'], diffKeys);
 
                 if (realDiff) {
-                    console.info(`device manager: found differences in device. diff=${JSON.stringify(diff)}`);
+
 
                     this.store.dispatch(appActions.saveDevice(newDevice))
                         .then(()=>console.info("new device saved"), err=>console.warn(err));
@@ -70,15 +74,18 @@ function arrayContainsArray(superset, subset) {
 }
 
 
-function difference(object, base) {
-    function changes(object, base) {
-        return _.transform(object, function(result, value, key) {
-            if (!_.isEqual(value, base[key])) {
-                result[key] = (_.isObject(value) && _.isObject(base[key])) ? changes(value, base[key]) : value;
-            }
-        });
-    }
-    return changes(object, base);
+function flatDiff(left, right) {
+
+    let allKeys = _.union(_.keys(left), _.keys(right));
+
+    return _.transform(allKeys, (diff, key) => {
+        let leftValue = left[key];
+        let rightValue = right[key];
+
+        if (leftValue !== rightValue) {
+            diff[key] = {leftValue, rightValue}
+        }
+    }, {});
 }
 
 export function init(store) {
