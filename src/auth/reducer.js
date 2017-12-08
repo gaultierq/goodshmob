@@ -35,7 +35,7 @@ export function authReducer(state = Immutable({}), action) {
             state = state.merge({algoliaToken});
             break;
         case types.USER_LOGOUT.success():
-            state = undefined;
+            state = Immutable({});
             break;
     }
     return state;
