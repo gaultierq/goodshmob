@@ -140,12 +140,16 @@ export default class ActivityActionBar extends React.Component<Props, State> {
         return false;
     }
 
+    isAsk(activity: Activity) {
+        return activity.type === 'asks';
+    }
+
     canUnsave(activity: Activity) {
-        return this.isGoodshed2(activity) && this.byMe(activity);
+        return !this.isAsk(activity) && this.isGoodshed2(activity) && this.byMe(activity);
     }
 
     canSave(activity: Activity) {
-        return !this.isGoodshed2(activity) && this.byMe(activity);
+        return !this.isAsk(activity) && !this.isGoodshed2(activity) && this.byMe(activity);
     }
 
     canBuy(activity: Activity) {
@@ -188,7 +192,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
         this.props.navigator.push({
             screen: 'goodsh.AddItemScreen', // unique ID registered with Navigation.registerScreen
-            title: "Ajouter",
+            title: "#Ajouter",
             passProps: {
                 itemId: item.id,
                 itemType: item.type,
