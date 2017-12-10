@@ -15,6 +15,7 @@ export const API_DATA_SUCCESS = 'API_DATA_SUCCESS';
 export const API_DATA_FAILURE = 'API_DATA_FAILURE';
 
 import Config from 'react-native-config'
+import {STAT_API_REQUEST_TIME} from "./StatisticUtils";
 
 
 
@@ -120,12 +121,19 @@ export class Call {
     disptachForAction2(apiAction: ApiAction, options?: any = {}) {
         const call = this;
         return (dispatch) => {
+            let tic = Date.now();
             //let {meta} = options;
             return new Promise((resolve, reject) => {
                 call.run()
                     .then(resp => {
-                            let response = resp.json;
+                            let requestTime = Date.now() - tic;
+                            console.debug(`request time ms [${apiAction}] = ${requestTime}` );
 
+                            let url2 = call.url.toString();
+                            url2 = apiAction.name();
+                            dispatch({type: STAT_API_REQUEST_TIME, url: url2, value: requestTime});
+
+                            let response = resp.json;
 
                             let data = normalize(response);
 
