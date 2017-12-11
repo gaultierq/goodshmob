@@ -10,7 +10,8 @@ import {
     TextInput,
     TouchableOpacity,
     TouchableWithoutFeedback,
-    View
+    View,
+    Dimensions
 } from 'react-native';
 
 import {connect} from "react-redux";
@@ -35,6 +36,7 @@ import * as Nav from "./Nav";
 import {MainBackground} from "./UIComponents";
 import SmartInput from "./components/SmartInput";
 import Screen from "./components/Screen";
+import {stylePadding} from "./UIStyles";
 
 
 type Props = {
@@ -119,7 +121,27 @@ class HomeScreen extends Screen<Props, State> {
         }
     }
 
+
+    getPadding() {
+        const {width} = Dimensions.get('window');
+
+        let w = 60;
+        let n = Math.floor(width / w) + 1;
+
+        let spaceLeft;
+        let padding;
+
+        do {
+            n--;
+            spaceLeft = width - n * w;
+            padding = spaceLeft / (n + 2);
+        } while (padding < w / 5);
+        return {n, padding};
+    }
+
     render() {
+
+        let {n, padding} = this.getPadding();
 
         return (
             <MenuContext>
@@ -132,7 +154,7 @@ class HomeScreen extends Screen<Props, State> {
                             onSavingPressed={(saving) => this.onSavingPressed(saving)}
                             navigator={this.props.navigator}
                             ListHeaderComponent={this.renderHeader()}
-                            renderItem={(item)=>this.renderListItem(item)}
+                            renderItem={(item)=>this.renderListItem(item, n, padding)}
                             scrollUpOnBack={super.isVisible() ? ()=>false : null}
                             cannotFetch={!super.isVisible()}
                             visibility={super.getVisibility()}
@@ -193,12 +215,12 @@ class HomeScreen extends Screen<Props, State> {
             .then(()=> {
                 this.setState({changeLinupTitleId: null})
             })
-            .then(()=> Snackbar.show({title: "Liste modifiée"}))
+            .then(()=> Snackbar.show({title: "#Liste modifiée"}))
             ;
 
     }
 
-    renderListItem(item) {
+    renderListItem(item, n, padding) {
         return (<TouchableOpacity
             onPress={() => {
                 this.props.navigator.push({
@@ -208,29 +230,39 @@ class HomeScreen extends Screen<Props, State> {
                     },
                 });
             }}>
-            <LineupCell
-                lineup={item}
-                titleChildren={
-                    <View
-                        style={{position: "absolute", right: 0}}
-                        // hitSlop={{top: 50, bottom: 50, left: 50, right: 50}}
-                    >
-                        <Menu>
-                            <MenuTrigger>
-                                <Icon name="md-more" size={25} style={{padding: 8, paddingRight: 0, paddingLeft: 25}} color={UI.Colors.blue} />
-                            </MenuTrigger>
-                            <MenuOptions>
-                                <MenuOption onSelect={() => this.deleteLineup(item)} text='#Delete' />
-                                <MenuOption onSelect={() => this.changeTitle(item)} text='#Changer le titre' />
-                            </MenuOptions>
-                        </Menu>
-                    </View>
+            <View>
+                <LineupCell
+                    lineup={item}
+                    itemCount={n}
+                    padding={padding}
+                />
+                {
+                    this.renderMenuButton(item, padding)
                 }
-            />
+            </View>
 
         </TouchableOpacity>)
     }
 
+
+    renderMenuButton(item, padding) {
+        if (item.id === currentGoodshboxId()) return null;
+
+        // console.log("paddings:" + stylePadding(padding, 12));
+
+        return <View style={{position: "absolute", right: 0, margin: 0}}>
+            <Menu>
+                <MenuTrigger>
+                    <Icon name="md-more" size={25} style={{...stylePadding(padding, 12)}}
+                          color={UI.Colors.blue}/>
+                </MenuTrigger>
+                <MenuOptions>
+                    <MenuOption onSelect={() => this.deleteLineup(item)} text='#Delete'/>
+                    <MenuOption onSelect={() => this.changeTitle(item)} text='#Changer le titre'/>
+                </MenuOptions>
+            </Menu>
+        </View>;
+    }
 
     deleteLineup(lineup: List) {
         this.props

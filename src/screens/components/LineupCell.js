@@ -7,6 +7,7 @@ import * as UI from "../UIStyles";
 import {assertUnique, buildData} from "../../utils/DataUtils";
 import {isEmpty} from "lodash";
 import type {List, Saving} from "../../types";
+import {stylePadding} from "../UIStyles";
 //;
 
 type Props = {
@@ -14,6 +15,8 @@ type Props = {
     style?: *,
     titleChildren?: Node,
     titleChildrenBelow?: boolean,
+    itemCount?: number,
+    padding?: number,
 };
 
 type State = {
@@ -35,19 +38,12 @@ export default class LineupCell extends React.Component<Props, State> {
 
         assertUnique(savings);
 
-        const {width} = Dimensions.get('window');
-
-        let w = 60;
-        let n = Math.floor(width / w) + 1;
-
-        let spaceLeft;
-        let padding;
-
-        do {
-            n--;
-            spaceLeft = width - n * w;
-            padding = spaceLeft / (n + 2);
-        } while (padding<w/5);
+        let {itemCount, padding} = this.props;
+        if (!itemCount) {
+            let pd = this.getPadding();
+            itemCount = pd.n;
+            padding = pd.padding;
+        }
 
         //console.log(`DEBUG: render LineupCell w=${w} n=${n} spaceLeft=${spaceLeft} padding=${padding}`);
 
@@ -61,15 +57,32 @@ export default class LineupCell extends React.Component<Props, State> {
             title += ` id=(#${lineup.id.substr(0, 5)})`;
         }
         return (
-            <View style={[styles.container, {paddingLeft: padding, paddingRight: padding, paddingBottom: padding}]}>
+            <View style={[styles.container, {...stylePadding(padding, null, padding, padding)}]}>
                 <View style={{flexDirection: titleChildrenBelow ? 'column' : 'row'}}>
                     <Text style={[styles.lineupTitle]}>{title}</Text>
 
                     {titleChildren}
                 </View>
-                {this.renderList(n, padding, savings)}
+                {this.renderList(itemCount, padding, savings)}
             </View>
         )
+    }
+
+    getPadding() {
+        const {width} = Dimensions.get('window');
+
+        let w = 60;
+        let n = Math.floor(width / w) + 1;
+
+        let spaceLeft;
+        let padding;
+
+        do {
+            n--;
+            spaceLeft = width - n * w;
+            padding = spaceLeft / (n + 2);
+        } while (padding < w / 5);
+        return {n, padding};
     }
 
     renderList(n:number, padding:  number, savings: List<Saving>) {

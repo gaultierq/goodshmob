@@ -2,6 +2,7 @@
 import {Linking, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Button from 'apsl-react-native-button'
 import * as React from "react";
+import {toUppercase} from "../utils/StringUtils";
 
 export const NavStyles = {
     navBarButtonColor: 'black',
@@ -64,6 +65,32 @@ export const TP_MARGINS = (margin) => {
         marginBottom: margin,
     }
 };
+
+//stylePadding(12, null) => left = righ = 12
+//stylePadding(12, 14) => left = righ = 12
+export function stylePadding(left?: number, top?: number, right?: number, bottom?: number) {
+
+    const method = "padding";
+    const args = arguments;
+
+    let styleLTRB = function () {
+
+
+        if (args[0] != null && args[2] == null) args[2] = args[0];
+        if (args[1] != null && args[3] == null) args[3] = args[1];
+
+
+        return ['left', 'top', 'right', 'bottom'].reduce((res, p, i) => {
+            let arg = args[i];
+            if (arg != null) {
+                Object.assign(res, {[method + toUppercase(p)]: arg});
+            }
+            return res;
+        }, {});
+    };
+    return styleLTRB();
+}
+
 
 
 //TODO: convert to stylesheet
