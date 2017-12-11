@@ -174,10 +174,10 @@ let testScreen = null;
 //  testScreen = userScreen;
 //  testScreen = addItemScreen;
  // testScreen = addItemScreen2;
-//  testScreen = networkSearchScreen;
+// testScreen = networkSearchScreen;
 //  testScreen = searchItemsScreen;
 //  testScreen = homeSearchItemsScreen;
-//  testScreen = networkScreen;
+ testScreen = networkScreen;
 //  testScreen = lineupScreen;
 //  testScreen = activityDetailScreen;
 

@@ -80,13 +80,15 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     }
 
     renderTextButton(action: ActivityActionType, activity: Activity) {
-        let commentsCount = activity.comments ? activity.comments.length : 0;
+
 
         switch(action) {
             case 'comment':
+                let commentsCount = activity.comments ? activity.comments.length : 0;
                 return i18n.t(`activity_item.buttons.${action}`,{count: commentsCount});
             case 'answer':
-                return i18n.t(`activity_item.buttons.${action}`, {count: commentsCount});
+                let answersCount = activity.answersCount || 0;
+                return i18n.t(`activity_item.buttons.${action}`, {count: answersCount});
         }
         return i18n.t(`activity_item.buttons.${action}`);
     }

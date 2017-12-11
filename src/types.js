@@ -132,6 +132,7 @@ export type Device = {
 export type Ask = Activity &  {
     content: string,
     answers: Array<Answer>,
+    answersCount: number,
     answerers: Array<User>,
 }
 
