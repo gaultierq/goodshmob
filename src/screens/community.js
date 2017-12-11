@@ -56,7 +56,7 @@ export class CommunityScreen extends Screen<Props, State> {
                     [
                         styles.container,
                         //bug: drawer passProps not working [https://github.com/wix/react-native-navigation/issues/663]
-                        this.props.style || {marginTop: 38}]
+                        this.props.style || Platform.OS === 'ios'? {marginTop: 38} : {}]
                 }
                 navigationState={{...this.state, visible: this.isVisible()}}
                 renderScene={this.renderScene.bind(this)}
