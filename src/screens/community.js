@@ -22,7 +22,7 @@ import {fullName} from "../utils/StringUtils";
 
 type Props = {
     navigator:any,
-    style?: ant
+    style?: any
 };
 
 type State = {
@@ -44,9 +44,10 @@ export class CommunityScreen extends Screen<Props, State> {
         ],
     };
 
-    // constructor(props: Props) {
-    //     super(props);
-    // }
+    //FIXME: when in displayed within a drawer, everything is fucked up
+    isVisible() {
+        return true;
+    }
 
     render() {
         return (
