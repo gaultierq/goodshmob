@@ -39,14 +39,14 @@ class NetworkScreen extends Screen<Props, State> {
                 //icon: require('../img/drawer_line_up.png'), // for icon button, provide the local image asset name
                 id: 'ask', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
                 icon: require('../img/bottom_bar_ask.png'),
-                title: "Ask"
+                title: "#Ask"
             },
         ],
         rightButtons: [
             {
                 id: 'community', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
                 icon: require('../img/drawer_community.png'),
-                title: "Community"
+                title: "#Community"
             }
         ],
     };
@@ -83,10 +83,29 @@ class NetworkScreen extends Screen<Props, State> {
         if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
             if (event.id === 'community') { // this is the same id field from the static navigatorButtons definition
 
-                navigator.toggleDrawer({
-                    side: 'right',
-                    animated: true
-                })
+                // navigator.toggleDrawer({
+                //     side: 'right',
+                //     animated: true
+                // })
+
+
+                navigator.showModal({
+                    screen: 'goodsh.CommunityScreen', // unique ID registered with Navigation.registerScreen
+                    title: "#Communauté",
+                    passProps:{
+                        style: {marginTop: 38},
+                    },
+                    navigatorButtons: {
+                        leftButtons: [
+                            {
+                                id: Nav.CLOSE_MODAL,
+                                title: "#Cancel"
+                            }
+                        ],
+                    },
+                });
+
+
             }
             if (event.id === 'ask') {
                 //TODO: rm platform specific rules when [1] is solved.
