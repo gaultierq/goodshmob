@@ -92,7 +92,7 @@ function flatDiff(left, right) {
         let leftValue = left[key];
         let rightValue = right[key];
 
-        if (leftValue !== rightValue) {
+        if (leftValue != rightValue) {
             diff[key] = {leftValue, rightValue}
         }
     }, {});

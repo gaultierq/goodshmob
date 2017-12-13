@@ -38,6 +38,12 @@ export default class SendScreen extends Component<Props, State> {
         sent: {},
     };
 
+
+    constructor(props: Props) {
+        super(props);
+        ensureNotNull(props.itemId);
+    }
+
     render() {
         const {navigator} = this.props;
 

@@ -167,7 +167,7 @@ let testScreen = null;
 //  testScreen = test;
 // testScreen = profileScreen;
 // testScreen = commentsScreen;
-// testScreen = communityScreen;
+testScreen = communityScreen;
 //  testScreen = sendScreen;
 //  testScreen = homeScreen;
 //  testScreen = interactionsScreen;
@@ -177,7 +177,7 @@ let testScreen = null;
 // testScreen = networkSearchScreen;
 //  testScreen = searchItemsScreen;
 //  testScreen = homeSearchItemsScreen;
- testScreen = networkScreen;
+//  testScreen = networkScreen;
 //  testScreen = lineupScreen;
 //  testScreen = activityDetailScreen;
 

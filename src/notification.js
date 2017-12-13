@@ -7,9 +7,8 @@ import URL from "url-parse"
 import {Navigation} from 'react-native-navigation';
 
 let handleNotif = function (notif) {
-    if (!notif) return;
-
     console.log("app opened from notification:" + JSON.stringify(notif));
+    if (!notif) return;
 
     let deeplink = notif.deeplink;
     //test
@@ -31,6 +30,8 @@ export function load() {
     messaging.getInitialNotification().then((notif) => {
         handleNotif(notif);
     });
+
+    messaging.requestPermissions();
 
     //test
     // setTimeout(()=> {
