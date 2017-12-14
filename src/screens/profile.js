@@ -11,12 +11,13 @@ import {
     Linking,
     StyleSheet,
     Text,
-    TextInput, TouchableWithoutFeedback,
+    TextInput,
+    TouchableWithoutFeedback,
     View
 } from 'react-native';
 import {connect} from 'react-redux';
 import type {Id, RequestState} from "../types";
-import {buildData, dataStateToProps} from "../utils/DataUtils";
+import {buildData} from "../utils/DataUtils";
 import ApiAction from "../utils/ApiAction";
 import * as Api from "../utils/Api";
 import * as authActions from '../auth/actions'
@@ -25,8 +26,7 @@ import {currentUserId} from "../CurrentUser";
 import * as UI from "./UIStyles";
 import {renderLink, renderSimpleButton} from "./UIStyles";
 import SmartInput from "./components/SmartInput";
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import Snackbar from "react-native-snackbar"
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import Toast from 'react-native-root-toast';
 import {CONFIG_SET} from "../reducers/dataReducer";
 import * as Nav from "./Nav";
