@@ -1,15 +1,12 @@
 // @flow
 
-import type {Node} from 'react';
-import React, {Component} from 'react';
+import React from 'react';
 import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
-import {connect} from "react-redux";
-import {combineReducers} from "redux";
 import {TabBar, TabViewAnimated} from 'react-native-tab-view';
 import {SearchBar} from 'react-native-elements'
+import type {SearchCategoryType} from "../screens/search";
 import SearchScreen from "../screens/search";
 import type {SearchToken} from "../types";
-import type {SearchCategoryType} from "../screens/search";
 import algoliasearch from 'algoliasearch/reactnative';
 import * as appActions from "../auth/actions";
 

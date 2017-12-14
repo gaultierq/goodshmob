@@ -36,8 +36,7 @@ type State = {
 @connect()
 export default class AddLineupComponent extends Component<Props, State> {
 
-    state = {
-    };
+    state = {};
 
     _closeModal = ()=> {this.setState({isCreatingLineup: false})};
 
@@ -48,7 +47,7 @@ export default class AddLineupComponent extends Component<Props, State> {
 
         return (
             <View style={{flex: 1}}>
-                <TouchableWithoutFeedback onPress={this._openModal}>
+                <TouchableOpacity onPress={this._openModal}>
                     <View style={
                         [UI.CARD(), styles.header]
                     }>
@@ -68,7 +67,7 @@ export default class AddLineupComponent extends Component<Props, State> {
                             ]}
                         >{i18n.t('create_list_controller.title')}</Text>
                     </View>
-                </TouchableWithoutFeedback>
+                </TouchableOpacity>
 
                 <Modal
                     isVisible={!!this.state.isCreatingLineup}

@@ -27,6 +27,7 @@ import * as UI from "./screens/UIStyles";
 import {init as initGlobal} from "./global";
 import Config from 'react-native-config'
 import {AlgoliaClient} from "./utils/AlgoliaUtils";
+import {Statistics} from "./utils/Statistics";
 
 
 console.log(`staring app with env=${JSON.stringify(Config)}`);
@@ -90,6 +91,7 @@ export default class App {
         CurrentUser.init(this.store);
         DeviceManager.init(this.store);
         AlgoliaClient.init(this.store);
+        Statistics.init(this.store);
 
         if (!__IS_LOCAL__) {
             this.bugsnag = new Client();

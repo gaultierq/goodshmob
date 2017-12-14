@@ -1,9 +1,9 @@
 // @flow
 import build from '../../vendors/redux-object'
 import type {Id, MergeOpts} from "../types";
-;
 import {mergeLists} from "./ModelUtils";
 import dotprop from "dot-prop-immutable"
+import {Statistics} from "./Statistics"
 
 //ask backend to sanitize types
 export let sanitizeActivityType = activityType => {
@@ -44,6 +44,7 @@ export function buildData(store, type, id: Id) {
 
 
 export function buildNonNullData(store, type, id: Id, assertNonNull?: boolean = true) {
+    let start = Date.now();
     let result = build(store, type, id, {includeType: true});
 
 
@@ -56,6 +57,8 @@ export function buildNonNullData(store, type, id: Id, assertNonNull?: boolean = 
     }
 
     if (assertNonNull && !result) throw new Error(`resource not found for type=${type} id=${id}`);
+    //Statistics.record('build', Date.now()-start);
+    Statistics.recordTime(`buildData`, Date.now()-start);
     return result;
 }
 

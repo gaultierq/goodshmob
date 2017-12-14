@@ -7,7 +7,7 @@ import {reducer as lineups} from '../screens/lineuplist';
 import {reducer as lineups2} from '../screens/actions';
 import {reducer as peopleYouMayKnow} from '../screens/community';
 import {reducer as interaction} from '../screens/interactions';
-import {statReducer as stat} from '../utils/StatisticUtils';
+import {statReducer as stat} from '../utils/Statistics';
 import {authReducer as auth, deviceReducer as device} from '../auth/reducer';
 import {config} from './dataReducer';
 

@@ -151,3 +151,5 @@ export type i18Key = string;
 export type RequestState = 'idle' | 'sending' | 'ok' | 'ko';
 
 export type Deeplink = string;
+
+export type ms = number;
