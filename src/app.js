@@ -29,13 +29,11 @@ import Config from 'react-native-config'
 import {AlgoliaClient} from "./utils/AlgoliaUtils";
 
 
-const USE_CACHE_LOCAL =
-    true;
-// false;
-
 console.log(`staring app with env=${JSON.stringify(Config)}`);
 
 initGlobal();
+
+
 
 let hydrated = false;
 
@@ -170,7 +168,7 @@ export default class App {
         // if (!__IS_LOCAL__ || !USE_CACHE_LOCAL) {
         // persistConfig = {...persistConfig, whitelist: ['auth', 'device', 'stat', 'config']};
         // }
-        
+
         persistStore(this.store,
             persistConfig,
             () => {
