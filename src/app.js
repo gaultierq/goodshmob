@@ -168,7 +168,7 @@ export default class App {
         };
 
         if (!__IS_LOCAL__ || !USE_CACHE_LOCAL) {
-            persistConfig = {...persistConfig, whitelist: ['auth', 'device', 'stat']};
+            persistConfig = {...persistConfig, whitelist: ['auth', 'device', 'stat', 'config']};
         }
         persistStore(this.store,
             persistConfig,

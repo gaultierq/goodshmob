@@ -14,7 +14,7 @@ import {screen as HomeScreen} from './home';
 import {screen as CommentsScreen} from './comments';
 import {screen as SaveScreen} from './save';
 import {screen as ShareScreen} from './share';
-import {screen as ProfileScreen} from './profile';
+import ProfileScreen from './profile';
 import FriendScreen from './friends';
 import {CommunityScreen} from './community';
 import SendScreen from './send';

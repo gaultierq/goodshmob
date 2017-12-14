@@ -1,25 +1,54 @@
-import React, {Component} from 'react';
-import {StyleSheet, View, Button, Text, ScrollView} from 'react-native';
-import  * as appActions from '../auth/actions'
+// @flow
+
+import React from 'react';
+import {AsyncStorage, Button, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {connect} from "react-redux";
-import {AsyncStorage} from "react-native";
+import {CheckBox} from "react-native-elements";
+import {CONFIG_SET} from "../reducers/dataReducer";
+import Screen from "./components/Screen";
 
-@connect()
-export default class DebugScreen extends Component {
+type Props = {
 
-    constructor(){
-        super();
-        this.state = {text: ""};
-    }
+}
+
+type State = {
+
+}
+
+@connect((state)=>({
+    config: state.config
+}))
+export default class DebugScreen extends Screen<Props, State> {
+
+
+    _setConfig = (option, value) => this.props.dispatch({
+        type: CONFIG_SET,
+        option,
+        value
+    });
+
+    renderConfig = (config) => _.keys(config).map(k=> {
+        let value = config[k];
+        if (typeof value === 'boolean') {
+
+            return <CheckBox
+                title={k}
+                onPress={(newValue)=> this._setConfig(k, !value)}
+                checked={value}
+            />
+        }
+    });
+
 
     render() {
+
         return (
             <ScrollView>
                 <View style={styles.container}>
-                    <Button
-                        title="logout"
-                        onPress={this.logout.bind(this)}
-                    />
+
+                    {
+                        this.renderConfig(this.props.config)
+                    }
                     <Button
                         title="print storage"
                         onPress={this.printStorage.bind(this)}
@@ -30,9 +59,6 @@ export default class DebugScreen extends Component {
         );
     }
 
-    logout() {
-        appActions.logout(this.props.dispatch);
-    }
 
     printStorage() {
         AsyncStorage.getAllKeys((err, keys) => {

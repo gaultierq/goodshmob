@@ -11,7 +11,7 @@ import {
     Linking,
     StyleSheet,
     Text,
-    TextInput,
+    TextInput, TouchableWithoutFeedback,
     View
 } from 'react-native';
 import {connect} from 'react-redux';
@@ -26,6 +26,11 @@ import * as UI from "./UIStyles";
 import {renderLink, renderSimpleButton} from "./UIStyles";
 import SmartInput from "./components/SmartInput";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import Snackbar from "react-native-snackbar"
+import Toast from 'react-native-root-toast';
+import {CONFIG_SET} from "../reducers/dataReducer";
+import * as Nav from "./Nav";
+
 
 type Props = {
     // userId: Id,
@@ -35,18 +40,19 @@ type Props = {
 type State = {
     //user?: User
     feedback?: string,
-    reqLogout?: RequestState
+    reqLogout?: RequestState,
+    devMenu?: boolean
 };
 
-class Profile extends Component<Props, State> {
+
+@connect(state => ({
+    data: state.data,
+    config: state.config,
+}))
+export default class Profile extends Component<Props, State> {
 
     state = {user: null};
 
-
-    constructor(props) {
-        super(props);
-
-    }
 
     componentWillMount() {
         // let {userId} = this.props;
@@ -61,6 +67,51 @@ class Profile extends Component<Props, State> {
             });
         }
     }
+
+
+    renderVersion() {
+        let handler = () => {
+
+            if (!this.clicksMs) this.clicksMs = [];
+
+            let now = Date.now();
+
+
+            this.clicksMs.push(now);
+            let neededClicks = 5;
+            if (this.clicksMs.length > neededClicks) {
+                _.remove(this.clicksMs, i=>i===0);
+            }
+            let oldest = this.clicksMs[0];
+
+            let n = this.clicksMs.length;
+            if (now - oldest < n * 1000) {
+                //that was quick enough !
+                let devMenu = this.props.config.devMenu;
+                if (n === neededClicks) {
+                    //toggle dev menu
+                    //this.setState({devMenu: !this.state.devMenu});
+
+                    this.props.dispatch({
+                        type: CONFIG_SET,
+                        option: 'devMenu',
+                        value: !devMenu
+                    });
+                    this.clicksMs = null;
+                }
+                else if (n >= neededClicks /2 ) {
+                    let message = `${neededClicks - n} more clicks to ${devMenu ? "deactivate" : "activate"}dev menu`;
+                    Toast.show(message);
+                }
+            }
+            else {
+                this.clicksMs = null;
+            }
+
+        };
+        return <TouchableWithoutFeedback onPress={handler}><Text>v1.0</Text></TouchableWithoutFeedback>
+    }
+
 
     render() {
         let user = this.getUser(currentUserId());
@@ -112,9 +163,34 @@ class Profile extends Component<Props, State> {
 
 
 
-                        {renderSimpleButton("logout", this.logout.bind(this), {loading: this.state.reqLogout === 'sending'})}
+                        {renderSimpleButton("#logout", this.logout.bind(this), {loading: this.state.reqLogout === 'sending'})}
 
-                        {renderLink("Terms", "https://goodsh.it/terms")}
+                        {
+                            this.props.config.devMenu &&
+                            renderSimpleButton("#dev mode", () => this.props.navigator.showModal({
+                                    screen: 'goodsh.DebugScreen', // unique ID registered with Navigation.registerScreen
+                                    title: "#DevMenu", // navigation bar title of the pushed screen (optional)
+                                    navigatorButtons: {
+                                        leftButtons: [
+                                            {
+                                                id: Nav.CLOSE_MODAL,
+                                                title: "#Cancel"
+                                            }
+                                        ],
+                                    },
+                                }
+                            ))
+                        }
+
+
+                        {renderLink("#Terms", "https://goodsh.it/terms")}
+
+
+                        <View style={{position: 'absolute', bottom: 15}}>
+                            {this.renderVersion()}
+                        </View>
+
+
 
                     </View>
                 </KeyboardAwareScrollView>
@@ -122,6 +198,10 @@ class Profile extends Component<Props, State> {
 
         );
     }
+
+
+    clicksMs;
+
 
     renderUser(user) {
         return <View style={{
@@ -214,7 +294,3 @@ const styles = StyleSheet.create({
 });
 
 
-
-let screen = connect(dataStateToProps)(Profile);
-
-export {screen};
