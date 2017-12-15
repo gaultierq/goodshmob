@@ -8,6 +8,7 @@ import {assertUnique, buildData} from "../../utils/DataUtils";
 import {isEmpty} from "lodash";
 import type {List, Saving} from "../../types";
 import {stylePadding} from "../UIStyles";
+import {Colors} from "../UIStyles";
 //;
 
 type Props = {
@@ -57,7 +58,10 @@ export default class LineupCell extends React.Component<Props, State> {
             title += ` id=(#${lineup.id.substr(0, 5)})`;
         }
         return (
-            <View style={[styles.container, {...stylePadding(padding, null, padding, padding)}]}>
+            <View style={[
+                styles.container,
+                {...stylePadding(padding, null, padding, padding)},
+                {backgroundColor: lineup.id.startsWith('pending') ? Colors.dirtyWhite : Colors.white}]}>
                 <View style={{flexDirection: titleChildrenBelow ? 'column' : 'row'}}>
                     <Text style={[styles.lineupTitle]}>{title}</Text>
 

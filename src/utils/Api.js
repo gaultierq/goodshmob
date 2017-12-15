@@ -16,6 +16,8 @@ export const API_DATA_FAILURE = 'API_DATA_FAILURE';
 
 import Config from 'react-native-config'
 import {Statistics} from "./Statistics";
+import {CREATE_LINEUP} from "../screens/actions";
+import {REMOVE_PENDING_ACTION} from "../reducers/dataReducer";
 
 
 
@@ -29,6 +31,73 @@ class Api {
 
     constructor(store) {
         this.store = store;
+        this.store.subscribe(this.onStoreUpdate.bind(this));
+    }
+
+
+    onStoreUpdate() {
+        this.execPendings();
+    }
+
+    pendingAction;
+
+    execPendings() {
+        console.debug('Api: exec pendings');
+        let pending = this.store.getState().pending;
+        if (!pending) return;
+        if (this.pendingAction) {
+            console.debug('already executing pending action');
+            return;
+        }
+        let pendings = _.flatten(_.values(pending));
+        pendings = _.filter(pendings, p=>p.state === 'pending');
+        pendings = _.sortBy(pendings, [(p) => p['insertedAt']]);
+        this.pendingAction = _.head(pendings);
+
+        if (this.pendingAction) {
+            let call;
+            console.info(`execPendings: found pending action:${JSON.stringify(this.pendingAction)}`);
+            let type = this.pendingAction.pendingActionType;
+            switch (type) {
+                //TODO: remove this dependency
+                case CREATE_LINEUP.name():
+                    call = new Call()
+                        .withMethod('POST')
+                        .withRoute("lists")
+                        .withBody({
+                            "list": {
+                                "name": this.pendingAction.payload.listName
+                            }
+                        });
+                    break;
+            }
+
+            let finish = () => {
+                let id = this.pendingAction.id;
+                this.pendingAction = null;
+
+                //will trigger
+                this.store.dispatch({
+                    type: REMOVE_PENDING_ACTION,
+                    pendingActionType: type,
+                    id: id
+                });
+            };
+
+            if (call && type) {
+                this.store.dispatch(call.disptachForAction2(new ApiAction(type))).then(() => finish(), err => {
+                    console.warn(err);
+                    finish();
+                });
+            }
+            else {
+                console.warn("impossible to process pending action");
+                finish();
+            }
+        }
+        else {
+            console.info("no pending action found");
+        }
     }
 
     headers() {

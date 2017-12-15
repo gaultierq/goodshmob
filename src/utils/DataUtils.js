@@ -4,6 +4,7 @@ import type {Id, MergeOpts} from "../types";
 import {mergeLists} from "./ModelUtils";
 import dotprop from "dot-prop-immutable"
 import {Statistics} from "./Statistics"
+import update from "immutability-helper";
 
 //ask backend to sanitize types
 export let sanitizeActivityType = activityType => {
@@ -91,3 +92,11 @@ export function doDataMergeInState(state, path, newList, options?: MergeOpts) {
 export const dataStateToProps = (state, ownProps) => ({
     data: state.data,
 });
+
+export function updateDelete(state, path, predicate) {
+    let data = _.get(state, path, []);
+    let indexToRemove = data.findIndex(predicate);
+    let obj = _.set({}, path, {$splice: [[indexToRemove, 1]]});
+    state = update(state, obj);
+    return state;
+}

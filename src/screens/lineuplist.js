@@ -22,13 +22,13 @@ import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
 import * as UI from "../screens/UIStyles";
 import {SearchBar} from 'react-native-elements'
-import type types, {Id, List, User} from "../types";
+import type {Id, List, User} from "../types";
 import type {FeedProps} from "./components/feed";
 import Feed from "./components/feed";
 import {currentUserId} from "../CurrentUser"
 import ApiAction from "../utils/ApiAction";
 import {buildData, doDataMergeInState} from "../utils/DataUtils";
-import * as Nav from "./Nav";
+import {CREATE_LINEUP} from "./actions";
 
 export const DELETE_LINEUP = new ApiAction("delete_lineup");
 export const EDIT_LINEUP = new ApiAction("edit_lineup");
@@ -54,6 +54,7 @@ type State = {
 
 @connect((state, ownProps) => ({
     data: state.data,
+    pending: state.pending
 }))
 export class LineupListScreen extends Component<Props, State> {
 
@@ -93,8 +94,34 @@ export class LineupListScreen extends Component<Props, State> {
                 action: GET_USER_W_LISTS
             };
         }
+        let items: Array<List> = [];
 
-        let items: Array<types.List|types.Item> = lists;
+        //reconciliate pendings
+        let pendingCreate = this.props.pending[CREATE_LINEUP];
+        let pendingDelete = this.props.pending[DELETE_LINEUP];
+
+        for (let i = 0; i < lists.length; i++) {
+            let l = lists[i];
+
+            //do not display list with pending deletion
+            if (_.findIndex(pendingDelete, (o) => o.id === l.id) >= 0) continue;
+
+            items.push(l);
+
+            if (i === 0) {
+                _.forEach(pendingCreate, pending => {
+                    if (pending.state === 'pending' || pending.state === 'processing') {
+                        items.push({
+                            id: pending.id,
+                            name: pending.payload.listName,
+                            savings: [],
+                            type: 'lists' //here ? or reducer ?
+                        });
+                    }
+                })
+            }
+        }
+
 
         return (
             <Feed
@@ -108,7 +135,7 @@ export class LineupListScreen extends Component<Props, State> {
 
     renderItem({item}) {
 
-        if (!(item.type === 'lists')) throw "unexpected";
+        if (!(item.type === 'lists')) throw "unexpected type";
 
         item = buildData(this.props.data, item.type, item.id) || item;
 

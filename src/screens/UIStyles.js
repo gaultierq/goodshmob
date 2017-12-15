@@ -17,7 +17,8 @@ export const Colors = Object.freeze({
     grey3: '#CCCCCC',
     grey4: '#eeeeee',
     green: '#1ec',
-    white: '#fff'
+    white: '#fff',
+    dirtyWhite: '#FFF2F1'
 });
 
 //http://colormind.io/

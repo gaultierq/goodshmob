@@ -1,6 +1,5 @@
 // @flow
 
-import {Component} from 'react';
 import {applyMiddleware, combineReducers, compose, createStore} from "redux";
 import {Provider} from "react-redux";
 import {Navigation} from 'react-native-navigation';
@@ -15,7 +14,6 @@ import {autoRehydrate, createTransform, persistStore} from 'redux-persist'
 import {AsyncStorage, TouchableWithoutFeedback} from 'react-native'
 import immutableTransform from './immutableTransform'
 import {REHYDRATE} from 'redux-persist/constants'
-import Immutable from 'seamless-immutable';
 import i18n from './i18n/i18n'
 import * as CurrentUser from './CurrentUser'
 import testScreen from "./testScreen"
@@ -25,28 +23,29 @@ import * as notification from './notification';
 import * as DeviceManager from "./DeviceManager";
 import * as UI from "./screens/UIStyles";
 import {init as initGlobal} from "./global";
-import Config from 'react-native-config'
 import {AlgoliaClient} from "./utils/AlgoliaUtils";
 import {Statistics} from "./utils/Statistics";
-
+import {UPGRADE_CACHE} from "./auth/actionTypes";
+import Config from 'react-native-config'
 
 console.log(`staring app with env=${JSON.stringify(Config)}`);
 
 initGlobal();
 
-
+const CACHE_VERSION = 1;
 
 let hydrated = false;
 
 //this is shit
-const initialState = () => Immutable({
-    rehydrated: hydrated,
-});
+// const initialState = () => Immutable({
+//     rehydrated: hydrated,
+// });
 
-const appReducer = (state = initialState(), action) => {
+const appReducer = (state = {}, action) => {
     switch (action.type) {
         case REHYDRATE:
-            return state.merge({rehydrated: true})
+            return {...state, rehydrated: true};
+            //return state.merge({rehydrated: true})
     }
     return state;
 };
@@ -58,13 +57,11 @@ const appReducer = (state = initialState(), action) => {
 console.disableYellowBox = true;
 //}
 
-
-
-
 export default class App {
 
     logged = null;
-    started;
+    initialized: boolean; //is app prepared
+
     store;
     bugsnag;
 
@@ -77,31 +74,12 @@ export default class App {
         // since react-redux only works on components, we need to subscribe this class manually
         this.store.subscribe(this.onStoreUpdate.bind(this));
 
-        this.resolveLogged();
+        this.start();
     }
 
 
     prepare() {
-
-
         this.prepareRedux();
-
-        //singletons
-        Api.init(this.store);
-        CurrentUser.init(this.store);
-        DeviceManager.init(this.store);
-        AlgoliaClient.init(this.store);
-        Statistics.init(this.store);
-
-        if (!__IS_LOCAL__) {
-            this.bugsnag = new Client();
-        }
-
-        registerScreens(this.store, Provider);
-        this.prepareUI();
-
-        console.info("App initialized.");
-
     }
 
     prepareUI() {
@@ -181,17 +159,55 @@ export default class App {
         );
     }
 
+
+
     onStoreUpdate() {
+        if (!this.initialized) {
+            this.start();
+        }
+
         this.resolveLogged();
     }
 
-    resolveLogged() {
+    start() {
         //waiting rehydration before starting app
         let rehydrated = this.store.getState().app.rehydrated;
         if (!rehydrated) {
             console.debug("waiting for rehydration1");
             return;
         }
+
+        //finish app prepatation
+        //singletons
+        Api.init(this.store);
+        CurrentUser.init(this.store);
+        DeviceManager.init(this.store);
+        AlgoliaClient.init(this.store);
+        Statistics.init(this.store);
+
+        if (!__IS_LOCAL__) {
+            this.bugsnag = new Client();
+        }
+        notification.load();
+
+        registerScreens(this.store, Provider);
+        this.prepareUI();
+
+        //invalidate cache if needed
+        let cacheVersion = this.store.getState().config.cacheVersion;
+        if (cacheVersion != Config.CACHE_VERSION) {
+
+            console.info(`cache is outdated. Upgrading ${cacheVersion}->${Config.CACHE_VERSION}`);
+            //invalidate and set cache
+            this.store.dispatch({type: UPGRADE_CACHE, newCacheVersion: Config.CACHE_VERSION});
+        }
+
+        this.initialized = true;
+        console.info("App initialized.");
+    }
+
+    resolveLogged() {
+
         console.debug("resolving logged");
 
         const {currentUserId} = this.store.getState().auth;
@@ -209,11 +225,6 @@ export default class App {
         if (this.logged !== logged) {
             this.logged = logged;
             this.startApp(logged);
-        }
-        if (!this.started) {
-            this.started = true;
-            notification.load();
-
         }
     }
 

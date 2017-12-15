@@ -6,6 +6,7 @@ import dotprop from "dot-prop-immutable"
 import {doDataMergeInState} from "../utils/DataUtils";
 import {currentUserId} from "../CurrentUser";
 import type {Id, Item} from "../types";
+import {CREATE_PENDING_ACTION} from "../reducers/dataReducer";
 
 export const FETCH_ITEM = new ApiAction("fetch_item");
 export const SAVE_ITEM = new ApiAction("save_item");
@@ -40,18 +41,35 @@ export function fetchItemCall(itemId: Id) {
         .addQuery({'include': '*.*'});
 }
 
+
 export function createLineup(listName: string) {
 
-    let call = new Api.Call()
-        .withMethod('POST')
-        .withRoute("lists")
-        .withBody({
-            "list": {
-                "name": listName
-            }
-        });
+    // let call = new Api.Call()
+    //     .withMethod('POST')
+    //     .withRoute("lists")
+    //     .withBody({
+    //         "list": {
+    //             "name": listName
+    //         }
+    //     });
 
-    return call.disptachForAction2(CREATE_LINEUP);
+    // return call.disptachForAction2(CREATE_LINEUP);
+
+
+    return (dispatch) => new Promise((resolve, reject)=> {
+            dispatch({
+                type: CREATE_PENDING_ACTION,
+                pendingActionType: CREATE_LINEUP,
+                payload: {
+                    id: `pendingList-${Math.random()}`,
+                    listName,
+                }
+            });
+            resolve();
+        }
+    )
+
+
 }
 
 
@@ -95,7 +113,11 @@ export const reducer = (state = {}, action = {}) => {
             let userId = currentUserId();
             let {id, type} = action.payload.data;
             let path = `users.${userId}.relationships.lists.data`;
-            let goodshboxId = _.get(state, `users.${userId}.relationships.goodshbox.data.id`, null);
+
+            //let goodshboxId = _.get(state, `users.${userId}.relationships.goodshbox.data.id`, null);
+
+            //temp hack
+            let goodshboxId = _.get(state, `users.${userId}.relationships.lists.data.0.id`, null);
             state = doDataMergeInState(state, path, [{id, type}], {afterId: goodshboxId});
             break;
         }

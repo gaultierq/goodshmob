@@ -88,7 +88,7 @@ export default class AddLineupComponent extends Component<Props, State> {
 
                         <CheckBox
                             right
-                            title='Visible par mes amis'
+                            title="#Visible par mes amis"
                             size={16}
                             checkedColor={UI.Colors.grey1}
                             uncheckedColor={UI.Colors.grey1}
@@ -108,7 +108,7 @@ export default class AddLineupComponent extends Component<Props, State> {
     createLineup(name: string) {
         return this.props.dispatch(createLineup(name))
             .then(this._closeModal)
-            .then(()=> Snackbar.show({title: "Liste créée"}));
+            .then(()=> Snackbar.show({title: "#Liste créée"}));
     }
 }
 

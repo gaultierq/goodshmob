@@ -9,7 +9,7 @@ import {reducer as peopleYouMayKnow} from '../screens/community';
 import {reducer as interaction} from '../screens/interactions';
 import {statReducer as stat} from '../utils/Statistics';
 import {authReducer as auth, deviceReducer as device} from '../auth/reducer';
-import {config} from './dataReducer';
+import {config, pending} from './dataReducer';
 
 function reduceReducers(...reducers) {
     return (previous, current) =>
@@ -37,6 +37,7 @@ export {
     stat,
     device,
     interaction,
-    config
+    config,
+    pending,
     // search,
 };

@@ -3,12 +3,30 @@
 import Immutable from 'seamless-immutable';
 import * as types from "./actionTypes";
 import {camelize} from 'camelize-object-key'
+import {INVALIDATE_CACHE} from "./actionTypes";
+import {SET_USER_NULL} from "./actionTypes";
+import {UPGRADE_CACHE} from "./actionTypes";
 
 export function createWithReducers(appReducers) {
     return (state, action) => {
+        let emptyCache = (state, version) => {
+            // let result = _.set({}, "app.cacheVersion", version);
+            let result = {};
+            result.auth = {...state.auth};
+            result.app = {...state.app};
+            result.config = {cacheVersion: version};
+            return result;
+        };
+
         switch (action.type) {
-            case types.SET_USER_NULL:
+            case SET_USER_NULL:
                 state = undefined;
+                break;
+            case INVALIDATE_CACHE:
+                state = emptyCache(state, state.config.cacheVersion);
+                break;
+            case UPGRADE_CACHE:
+                state = emptyCache(state, action.newCacheVersion);
                 break;
         }
 
@@ -16,7 +34,7 @@ export function createWithReducers(appReducers) {
     }
 }
 
-export function authReducer(state = Immutable({}), action) {
+export function authReducer(state = {}, action) {
 
     switch (action.type) {
         case types.USER_LOGIN.success():
@@ -28,14 +46,14 @@ export function authReducer(state = Immutable({}), action) {
             let uid = resp.headers.get('Uid');
             let accessToken = resp.headers.get('Access-Token');
 
-            state = state.merge({client, uid, accessToken, currentUserId});
+            state = {...state, client, uid, accessToken, currentUserId};
             break;
         case types.FETCH_ME.success():
             let algoliaToken = _.get(action.payload, "meta.key", null);
-            state = state.merge({algoliaToken});
+            state = {...state, algoliaToken};
             break;
         case types.USER_LOGOUT.success():
-            state = Immutable({});
+            state = {};
             break;
     }
     return state;
