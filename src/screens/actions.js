@@ -6,7 +6,7 @@ import dotprop from "dot-prop-immutable"
 import {doDataMergeInState} from "../utils/DataUtils";
 import {currentUserId} from "../CurrentUser";
 import type {Id, Item} from "../types";
-import {CREATE_PENDING_ACTION} from "../reducers/dataReducer";
+import {CREATE_PENDING_ACTION, REMOVE_PENDING_ACTION} from "../reducers/dataReducer";
 
 export const FETCH_ITEM = new ApiAction("fetch_item");
 export const SAVE_ITEM = new ApiAction("save_item");
@@ -42,34 +42,31 @@ export function fetchItemCall(itemId: Id) {
 }
 
 
-export function createLineup(listName: string) {
-
-    // let call = new Api.Call()
-    //     .withMethod('POST')
-    //     .withRoute("lists")
-    //     .withBody({
-    //         "list": {
-    //             "name": listName
-    //         }
-    //     });
-
-    // return call.disptachForAction2(CREATE_LINEUP);
-
+export function createLineup(listName: string, delayMs) {
 
     return (dispatch) => new Promise((resolve, reject)=> {
-            dispatch({
+        let payload = {
+            id: `pendingList-${Math.random()}`,
+            listName,
+        };
+        dispatch({
                 type: CREATE_PENDING_ACTION,
                 pendingActionType: CREATE_LINEUP,
-                payload: {
-                    id: `pendingList-${Math.random()}`,
-                    listName,
-                }
+                payload,
+                delayMs
             });
-            resolve();
+            resolve(payload);
         }
     )
+}
 
+export function deletePendingLineup(lineupId: Id) {
 
+    return {
+        type: REMOVE_PENDING_ACTION,
+        pendingActionType: CREATE_LINEUP,
+        id: lineupId
+    };
 }
 
 

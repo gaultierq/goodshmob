@@ -267,7 +267,9 @@ class HomeScreen extends Screen<Props, State> {
     deleteLineup(lineup: List) {
         this.props
             .dispatch(actions.deleteLineup(lineup))
-            .then(()=> Snackbar.show({title: "Liste effacée"}));
+            .then(()=> Snackbar.show({
+                title: "#Liste effacée"
+            }));
     }
 
     changeTitle(lineup: List) {

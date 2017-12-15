@@ -4,21 +4,20 @@ import URL from "url-parse"
 import * as Util from "./ModelUtils";
 import normalize from 'json-api-normalizer';
 //hack for tests. FIXME: remove circular dep
-import {logout, logoutOffline} from "../auth/actions";
+import {logoutOffline} from "../auth/actions";
 import ApiAction from "./ApiAction";
 import fetch from 'react-native-fetch-polyfill';
 import Snackbar from "react-native-snackbar"
 import type {RequestState} from "../types";
-
-export const API_DATA_REQUEST = 'API_DATA_REQUEST';
-export const API_DATA_SUCCESS = 'API_DATA_SUCCESS';
-export const API_DATA_FAILURE = 'API_DATA_FAILURE';
-
 import Config from 'react-native-config'
 import {Statistics} from "./Statistics";
 import {CREATE_LINEUP} from "../screens/actions";
 import {REMOVE_PENDING_ACTION} from "../reducers/dataReducer";
+import {NetInfo} from "react-native";
 
+export const API_DATA_REQUEST = 'API_DATA_REQUEST';
+export const API_DATA_SUCCESS = 'API_DATA_SUCCESS';
+export const API_DATA_FAILURE = 'API_DATA_FAILURE';
 
 
 const CURRENT_API_VERSION = 'v2.0.0';
@@ -29,11 +28,26 @@ let instance : Api = null;
 
 class Api {
 
+    isConnected: boolean;
+
     constructor(store) {
         this.store = store;
         this.store.subscribe(this.onStoreUpdate.bind(this));
+
+        this.listenConnectivity();
     }
 
+
+    listenConnectivity() {
+        let handleConnection = isConnected => {
+            console.log('Api: ' + (isConnected ? 'online' : 'offline'));
+            this.isConnected = isConnected;
+            this.execPendings();
+        };
+
+        NetInfo.isConnected.fetch().then(handleConnection);
+        NetInfo.isConnected.addEventListener('connectionChange', handleConnection);
+    }
 
     onStoreUpdate() {
         this.execPendings();
@@ -43,6 +57,11 @@ class Api {
 
     execPendings() {
         console.debug('Api: exec pendings');
+        if (!this.isConnected) {
+            console.debug('Api: exec pendings: no connection');
+            return;
+        }
+
         let pending = this.store.getState().pending;
         if (!pending) return;
         if (this.pendingAction) {
@@ -51,10 +70,18 @@ class Api {
         }
         let pendings = _.flatten(_.values(pending));
         pendings = _.filter(pendings, p=>p.state === 'pending');
-        pendings = _.sortBy(pendings, [(p) => p['insertedAt']]);
-        this.pendingAction = _.head(pendings);
+        pendings = _.sortBy(pendings, [(p) => p['dueAt']]);
 
-        if (this.pendingAction) {
+        let pend = _.head(pendings);
+
+        if (pend) {
+            let delay = pend.dueAt - Date.now();
+            if (delay > 0) {
+                console.info(`execPendings: pending action found but not dued yet (schedueuled in ${delay} ms)`);
+                setTimeout(()=>this.execPendings(), delay);
+                return;
+            }
+            this.pendingAction = pend;
             let call;
             console.info(`execPendings: found pending action:${JSON.stringify(this.pendingAction)}`);
             let type = this.pendingAction.pendingActionType;
@@ -76,7 +103,7 @@ class Api {
                 let id = this.pendingAction.id;
                 this.pendingAction = null;
 
-                //will trigger
+                //will trigger store update
                 this.store.dispatch({
                     type: REMOVE_PENDING_ACTION,
                     pendingActionType: type,
