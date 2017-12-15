@@ -64,7 +64,9 @@ class _Statistics {
 
     recordTime(category: StatisticCategory, duration: ms) {
         this.time.push({category, duration});
-        if (this.timeout) return;
+        if (this.timeout) {
+            clearTimeout(this.timeout);
+        }
         this.timeout = setTimeout(()=> {
             //this.store.dispatch({type: STAT_DURATION, path: `time.${category}`, value: duration});
             this.store.dispatch({type: STAT_DURATION, stats: this.time});

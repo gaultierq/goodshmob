@@ -45,16 +45,10 @@ export function buildData(store, type, id: Id) {
 
 export function buildNonNullData(store, type, id: Id, assertNonNull?: boolean = true) {
     let start = Date.now();
-    let result = build(store, type, id, {includeType: true});
+    // let result = build(store, type, id, {includeType: true});
+    let sanitized = sanitizeActivityType(type);
+    let result = build(store, sanitized, id, {includeType: true});
 
-
-    if (!result) {
-        let sanitized = sanitizeActivityType(type);
-        result = build(store, sanitized, id, {includeType: true});
-        if (result) {
-            console.warn(`data sanitize success:${type} -> ${sanitized}`)
-        }
-    }
 
     if (assertNonNull && !result) throw new Error(`resource not found for type=${type} id=${id}`);
     //Statistics.record('build', Date.now()-start);
