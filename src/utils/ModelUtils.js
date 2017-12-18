@@ -1,6 +1,9 @@
 // @flow
 
-import * as StringUtils from "./StringUtils"
+import ApiAction from "./ApiAction";
+import {Call} from "./Api";
+import type {Id, ms} from "../types";
+import {CREATE_PENDING_ACTION, REMOVE_PENDING_ACTION} from "../reducers/dataReducer";
 /*
 
 export function parse(data: any) {
@@ -322,5 +325,33 @@ export class Merge<T, K> {
     mergeItem(old: T, newItem: T): T {
         return newItem;
     }
+}
+
+export function pendingActionWrapper<Payload>(
+    action: ApiAction,
+    callFactory: (payload: Payload) => Call) {
+
+    return {
+        pending: (payload: Payload, options: any) => (dispatch: any) => new Promise((resolve, reject) => {
+
+                //let payload = payloadFactory();
+                let pendingId = `pendingAction-${Math.random()}`;
+                dispatch({
+                    type: CREATE_PENDING_ACTION,
+                    pendingActionType: action,
+                    payload,
+                    options,
+                    pendingId
+                });
+                resolve(pendingId);
+            }
+        ),
+        call: callFactory,
+        undo: (pendingId: Id) => ({
+            type: REMOVE_PENDING_ACTION,
+            pendingActionType: action,
+            id: pendingId
+        })
+    };
 }
 

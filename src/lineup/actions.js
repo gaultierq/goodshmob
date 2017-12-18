@@ -3,9 +3,8 @@
 import * as Api from "../utils/Api";
 import {Call} from "../utils/Api";
 import type {Id, List, ms} from "../types";
-import {CREATE_PENDING_ACTION, REMOVE_PENDING_ACTION} from "../reducers/dataReducer";
 import {CREATE_LINEUP, DELETE_LINEUP, EDIT_LINEUP, SAVE_ITEM} from "./actionTypes";
-import ApiAction from "../utils/ApiAction";
+import {pendingActionWrapper} from "../utils/ModelUtils";
 
 
 //defining lineup creation cycle
@@ -23,75 +22,34 @@ const LINEUP_CREATION = pendingActionWrapper(
 );
 
 
-//     {
-//
-//     pending: (listName: string, delayMs: ms) => (dispatch) => new Promise((resolve, reject)=> {
-//
-//             let payload: LINEUP_CREATION_PAYLOAD = {
-//                 listName,
-//             };
-//             dispatch({
-//                 type: CREATE_PENDING_ACTION,
-//                 pendingActionType: CREATE_LINEUP,
-//                 payload,
-//                 delayMs
-//             });
-//             resolve(payload);
-//         }
-//     ),
-//     call: (payload) => new Call()
-//         .withMethod('POST')
-//         .withRoute("lists")
-//         .withBody({
-//             "list": {
-//                 "name": payload.listName
-//             }
-//         }),
-//     undo: (lineupId: Id) => ({
-//         type: REMOVE_PENDING_ACTION,
-//         pendingActionType: CREATE_LINEUP,
-//         id: lineupId
-//     })
-// };
-
-
-function pendingActionWrapper<Payload>(
-    action: ApiAction,
-    callFactory: (payload: Payload) => Call
-) {
-
-    return {
-        pending: (payload: Payload, delayMs: ms) => (dispatch:any) => new Promise((resolve, reject)=> {
-                //let payload = payloadFactory();
-                dispatch({
-                    type: CREATE_PENDING_ACTION,
-                    pendingActionType: action,
-                    payload,
-                    delayMs
-                });
-                resolve(payload);
-            }
-        ),
-        call: callFactory,
-        undo: (pendingId: Id) => ({
-            type: REMOVE_PENDING_ACTION,
-            pendingActionType: action,
-            id: pendingId
-        })
-    };
-}
-
-Api.registerCallFactory(
-    CREATE_LINEUP, LINEUP_CREATION.call
+type LINEUP_DELETION_PAYLOAD = {lineupId: Id}
+const LINEUP_DELETION = pendingActionWrapper(
+    DELETE_LINEUP,
+    (payload: LINEUP_DELETION_PAYLOAD) => new Call()
+        .withMethod('DELETE')
+        .withRoute(`lists/${payload.lineupId}`)
 );
 
 
+Api.registerCallFactory(CREATE_LINEUP, LINEUP_CREATION.call);
+Api.registerCallFactory(DELETE_LINEUP, LINEUP_DELETION.call);
+
+//list creation
 export function createLineup(listName: string, delayMs: ms) {
-    return LINEUP_CREATION.pending({listName}, delayMs);
+    return LINEUP_CREATION.pending({listName}, {delayMs});
 }
 
 export function undoCreateLineup(lineupId: Id) {
     return LINEUP_CREATION.undo(lineupId);
+}
+
+//list deletion
+export function deleteLineup(lineupId: string, delayMs: ms) {
+    return LINEUP_DELETION.pending({lineupId}, {delayMs, lineupId});
+}
+
+export function undoDeleteLineup(pendingItemId: Id) {
+    return LINEUP_DELETION.undo(pendingItemId);
 }
 
 export function saveItem(itemId: Id, lineupId: Id, privacy = 0, description = '') {
@@ -121,14 +79,13 @@ export function fetchItemCall(itemId: Id) {
         .addQuery({'include': '*.*'});
 }
 
-
-export function deleteLineup (lineupId: Id) {
-    let call = new Api.Call()
-        .withMethod('DELETE')
-        .withRoute(`lists/${lineupId}`);
-
-    return call.disptachForAction2(DELETE_LINEUP, {lineupId});
-}
+// export function deleteLineup (lineupId: Id) {
+//     let call = new Api.Call()
+//         .withMethod('DELETE')
+//         .withRoute(`lists/${lineupId}`);
+//
+//     return call.disptachForAction2(DELETE_LINEUP, {lineupId});
+// }
 
 export function patchLineup(editedLineup: List) {
     let call = new Api.Call()

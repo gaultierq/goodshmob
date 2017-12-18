@@ -54,15 +54,23 @@ export function pending(state = {}, action) {
             break;
         }
         case CREATE_PENDING_ACTION: {
-            let {payload, pendingActionType, delayMs = 0} = action;
-            let now = Date.now();
-            let item = {
-                id: `pendingAction-${Math.random()}`,
+            const {
+                pendingId,
+                payload,
+                pendingActionType,
+                options = {}
+            } = action;
+
+
+            const now = Date.now();
+            const item = {
+                id: pendingId,
                 insertedAt: now,
-                dueAt: now + delayMs,
+                dueAt: now + (options.delayMs || 0),
                 state: 'pending',
                 payload,
-                pendingActionType: pendingActionType.name()
+                pendingActionType: pendingActionType.name(),
+                options
             };
             if (!state[pendingActionType]) {
                 state = update(state, {[pendingActionType]: {$set: [item]}});

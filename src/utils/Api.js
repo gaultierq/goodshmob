@@ -130,10 +130,12 @@ class Api {
             };
 
             if (call && name) {
-                this.store.dispatch(call.disptachForAction2(ApiAction.create(name))).then(() => finish(), err => {
-                    console.warn(err);
-                    finish();
-                });
+                let options =  this.pendingAction.options;
+                this.store.dispatch(call.disptachForAction2(ApiAction.create(name), options))
+                    .then(() => finish(), err => {
+                        console.warn(err);
+                        finish();
+                    });
             }
             else {
                 console.warn("impossible to process pending action");

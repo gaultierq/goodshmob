@@ -31,7 +31,7 @@ import {Menu, MenuContext, MenuOption, MenuOptions, MenuTrigger} from 'react-nat
 import Modal from 'react-native-modal'
 import type {Visibility} from "./additem";
 import AddLineupComponent from "./components/addlineup";
-import {deleteLineup, patchLineup} from "../lineup/actions";
+import {deleteLineup, patchLineup, undoDeleteLineup} from "../lineup/actions";
 import * as Nav from "./Nav";
 import {MainBackground} from "./UIComponents";
 import SmartInput from "./components/SmartInput";
@@ -265,11 +265,22 @@ class HomeScreen extends Screen<Props, State> {
     }
 
     deleteLineup(lineup: List) {
-        this.props
-            .dispatch(deleteLineup(lineup.id))
-            .then(()=> Snackbar.show({
-                title: "#Liste effacée"
-            }));
+        let delayMs = 3000;
+        return this.props.dispatch(deleteLineup(lineup.id, delayMs))
+            .then(pendingId => {
+                Snackbar.show({
+                        title: "#Liste effacée",
+                        duration: Snackbar.LENGTH_LONG,
+                        action: {
+                            title: '#UNDO',
+                            color: 'green',
+                            onPress: () => {
+                                this.props.dispatch(undoDeleteLineup(pendingId))
+                            },
+                        },
+                    }
+                );
+            });
     }
 
     changeTitle(lineup: List) {

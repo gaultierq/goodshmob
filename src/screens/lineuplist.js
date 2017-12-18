@@ -106,7 +106,7 @@ export class LineupListScreen extends Component<Props, State> {
             let l = lists[i];
 
             //do not display list with pending deletion
-            if (_.findIndex(pendingDelete, (o) => o.id === l.id) >= 0) continue;
+            if (_.findIndex(pendingDelete, (o) => o.payload.lineupId === l.id) >= 0) continue;
 
             items.push(l);
 

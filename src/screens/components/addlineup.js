@@ -106,9 +106,9 @@ export default class AddLineupComponent extends Component<Props, State> {
     }
 
     createLineup(name: string) {
-        let delayMs = 13000;
+        let delayMs = 3000;
         return this.props.dispatch(createLineup(name, delayMs))
-            .then((pendingList)=> {
+            .then((pendingId)=> {
                 this._closeModal();
                 Snackbar.show({
                         title: "#Liste créée",
@@ -117,7 +117,7 @@ export default class AddLineupComponent extends Component<Props, State> {
                             title: '#UNDO',
                             color: 'green',
                             onPress: () => {
-                                this.props.dispatch(undoCreateLineup(pendingList.id))
+                                this.props.dispatch(undoCreateLineup(pendingId))
                             },
                         },
 
