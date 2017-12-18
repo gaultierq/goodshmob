@@ -35,7 +35,7 @@ export default (state = {}, action = {}) => {
             let savings = _.get(state, path, null);
             if (savings) {
                 savings = savings.slice();
-                savings.splice(0, 0, {id, type})
+                savings.splice(0, 0, {id, type});
                 state = dotprop.set(state, path, savings);
             }
             break;

@@ -7,15 +7,43 @@ import {CREATE_PENDING_ACTION, REMOVE_PENDING_ACTION} from "../reducers/dataRedu
 import {CREATE_LINEUP, DELETE_LINEUP, EDIT_LINEUP, SAVE_ITEM} from "./actionTypes";
 
 
-Api.registerCallFactory(
-    CREATE_LINEUP, (payload) => new Call()
+//defining lineup creation cycle
+type LINEUP_CREATION_PAYLOAD = {id: Id, listName: string}
+const LINEUP_CREATION = {
+
+    pending: (listName: string, delayMs: ms) => (dispatch) => new Promise((resolve, reject)=> {
+
+            let payload: LINEUP_CREATION_PAYLOAD = {
+                id: `pendingList-${Math.random()}`,
+                listName,
+            };
+            dispatch({
+                type: CREATE_PENDING_ACTION,
+                pendingActionType: CREATE_LINEUP,
+                payload,
+                delayMs
+            });
+            resolve(payload);
+        }
+    ),
+    call: (payload) => new Call()
         .withMethod('POST')
         .withRoute("lists")
         .withBody({
             "list": {
                 "name": payload.listName
             }
-        })
+        }),
+    undo: (lineupId: Id) => ({
+        type: REMOVE_PENDING_ACTION,
+        pendingActionType: CREATE_LINEUP,
+        id: lineupId
+    })
+};
+
+
+Api.registerCallFactory(
+    CREATE_LINEUP, LINEUP_CREATION.call
 );
 
 
@@ -46,30 +74,14 @@ export function fetchItemCall(itemId: Id) {
         .addQuery({'include': '*.*'});
 }
 
+
+
 export function createLineup(listName: string, delayMs: ms) {
-
-    return (dispatch) => new Promise((resolve, reject)=> {
-
-            let payload = {
-                id: `pendingList-${Math.random()}`,
-                listName,
-            };
-            dispatch({
-                type: CREATE_PENDING_ACTION,
-                pendingActionType: CREATE_LINEUP,
-                payload,
-                delayMs
-            });
-            resolve(payload);
-        }
-    )
+    return LINEUP_CREATION.pending(listName, delayMs);
 }
+
 export function undoCreateLineup(lineupId: Id) {
-    return {
-        type: REMOVE_PENDING_ACTION,
-        pendingActionType: CREATE_LINEUP,
-        id: lineupId
-    };
+    LINEUP_CREATION.undo(lineupId);
 }
 
 
