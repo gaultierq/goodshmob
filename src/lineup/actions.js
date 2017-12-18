@@ -1,9 +1,9 @@
 // @flow
 
-import * as Api from "../../utils/Api";
-import {Call} from "../../utils/Api";
-import type {Id, List, ms} from "../../types";
-import {CREATE_PENDING_ACTION, REMOVE_PENDING_ACTION} from "../../reducers/dataReducer";
+import * as Api from "../utils/Api";
+import {Call} from "../utils/Api";
+import type {Id, List, ms} from "../types";
+import {CREATE_PENDING_ACTION, REMOVE_PENDING_ACTION} from "../reducers/dataReducer";
 import {CREATE_LINEUP, DELETE_LINEUP, EDIT_LINEUP, SAVE_ITEM} from "./actionTypes";
 
 

@@ -28,8 +28,8 @@ import Feed from "./components/feed";
 import {currentUserId} from "../CurrentUser"
 import ApiAction from "../utils/ApiAction";
 import {buildData, doDataMergeInState} from "../utils/DataUtils";
-import {DELETE_LINEUP} from "./lineup/actionTypes";
-import {CREATE_LINEUP} from "./lineup/actionTypes";
+import {DELETE_LINEUP} from "../lineup/actionTypes";
+import {CREATE_LINEUP} from "../lineup/actionTypes";
 
 //TODO: clean
 // export const DELETE_LINEUP = lineup_actions.DELETE_LINEUP;
