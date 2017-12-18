@@ -43,12 +43,9 @@ export function data(state = initialState, action) {
     }
 }
 
-/*
-pending: {
-    create_list: [{name: "test"}]],
-    status: pending/processing/done
-}
-*/
+
+
+// [pending reducers]
 export function pending(state = {}, action) {
     switch (action.type) {
         case REMOVE_PENDING_ACTION :{
