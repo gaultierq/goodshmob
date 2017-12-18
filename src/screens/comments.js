@@ -5,6 +5,7 @@ import {connect} from "react-redux";
 import {MainBackground} from "./UIComponents";
 import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
+import {Call} from "../utils/Api";
 import Feed from "./components/feed";
 import type {Activity, ActivityType, Comment, Id} from "../types";
 import ApiAction from "../utils/ApiAction";
@@ -14,12 +15,19 @@ import FeedSeparator from "../activity/components/FeedSeparator";
 import * as UI from "./UIStyles";
 import {fetchActivity} from "../activity/actions";
 import SmartInput from "./components/SmartInput";
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
+import type {PendingAction} from "../utils/ModelUtils";
+import {mergeItemsAndPendings, pendingActionWrapper} from "../utils/ModelUtils";
+import {currentUser} from "../CurrentUser";
 
+
+const LOAD_COMMENTS = ApiAction.create("load_comments");
+const CREATE_COMMENT = ApiAction.create("create_comment");
 
 type Props = {
     activityId: Id,
     activityType: ActivityType,
+    pending: any
 };
 
 type State = {
@@ -30,6 +38,7 @@ type State = {
 
 @connect((state, ownProps) => ({
     data: state.data,
+    pending: state.pending
 }))
 class CommentsScreen extends Component<Props, State> {
 
@@ -51,6 +60,21 @@ class CommentsScreen extends Component<Props, State> {
     render() {
         let activity = this.getActivity();
         let comments = activity ? activity.comments : [];
+
+        let items = mergeItemsAndPendings(
+            comments,
+            this.props.pending[CREATE_COMMENT],
+            [],
+            (pending) => ({
+                id: pending.id,
+                name: pending.payload.listName,
+                content: pending.payload.content,
+                createdAt: pending.insertedAt,
+                user: currentUser(),
+                type: 'comments',
+                pending: true
+            })
+        );
 
         return (
             <MainBackground>
@@ -75,14 +99,12 @@ class CommentsScreen extends Component<Props, State> {
                     </View>}
                     {activity &&
                     <Feed
-                        style={[{marginBottom: 50, }]}
-                        //ListHeaderComponent={<View style={{height: 50}}/>}
                         inverted
-                        data={comments}
+                        data={items}
                         renderItem={this.renderItem.bind(this)}
                         fetchSrc={{
                             callFactory:()=>actions.loadComments(activity),
-                            action:actionTypes.LOAD_COMMENTS,
+                            action: LOAD_COMMENTS,
                             options: {activityId: activity.id, activityType: activity.type}
                         }}
                         //hasMore={false}
@@ -93,7 +115,7 @@ class CommentsScreen extends Component<Props, State> {
                         activity && <SmartInput
                             containerStyle={{padding: 6, backgroundColor: UI.Colors.grey4}}
                             inputContainerStyle={{borderRadius: 4, borderWidth: 0}}
-                            execAction={(input: string) => this.addComment2(activity, input)}
+                            execAction={(input: string) => this.addComment3(activity, input)}
                             placeholder={"activity_comments_screen.add_comment_placeholder"}
                             returnKeyType={'send'}
                             // multiline
@@ -119,15 +141,30 @@ class CommentsScreen extends Component<Props, State> {
     //
     // }
 
-    addComment2(activity: Activity, newComment: string) {
-        return this.props.dispatch(actions.addComment(activity, newComment))
-            .then(()=> {
+    // addComment2(activity: Activity, newComment: string) {
+    //     return this.props.dispatch(actions.addComment(activity, newComment))
+    //         .then(()=> {
+    //
+    //         },(e)=> {throw e});
+    // }
 
-            },(e)=> {throw e});
+
+    addComment3(activity: Activity, newComment: string) {
+        let delayMs = 3000;
+        let activityId = activity.id;
+        let activityType = sanitizeActivityType(activity.type);
+        let content = newComment;
+
+        let payload = {activityId, activityType, content};
+        let options = {delayMs, activityId, activityType};
+
+        return this.props.dispatch(COMMENT_CREATION.pending(payload, options))
     }
 
     renderItem({item}) {
-        let comment : Comment = buildData(this.props.data, "comments", item.id);
+
+        let comment : Comment = item.pending ? item : buildData(this.props.data, "comments", item.id);
+
         if (!comment) return null;
 
         return (
@@ -146,15 +183,6 @@ class CommentsScreen extends Component<Props, State> {
 
 
 
-const actionTypes = (() => {
-
-    const LOAD_COMMENTS = ApiAction.create("load_comments");
-    const ADD_COMMENT = ApiAction.create("add_comment");
-
-    return {LOAD_COMMENTS, ADD_COMMENT};
-})();
-
-
 const actions = (() => {
     return {
 
@@ -169,12 +197,14 @@ const actions = (() => {
 
         addComment: (activity: Activity, content: string) => {
             let activityType = sanitizeActivityType(activity.type);
-            return new Api.Call()
+            let activityId = activity.id;
+
+            return new Call()
                 .withMethod('POST')
-                .withRoute(`${activityType}/${activity.id}/comments`)
+                .withRoute(`${activityType}/${activityId}/comments`)
                 .addQuery({include: "user"})
                 .withBody({comment: {content: content}})
-                .disptachForAction2(actionTypes.ADD_COMMENT, {activityId: activity.id, activityType: activity.type})
+                .disptachForAction2(CREATE_COMMENT, {activityId, activityType})
                 ;
         }
     };
@@ -182,13 +212,25 @@ const actions = (() => {
 
 
 
+
+type COMMENT_CREATION_PAYLOAD = {activityType: ActivityType, activityId: Id, content: string}
+
+export const COMMENT_CREATION: PendingAction<COMMENT_CREATION_PAYLOAD>  = pendingActionWrapper(
+    CREATE_COMMENT,
+    ({activityType, activityId, content}: COMMENT_CREATION_PAYLOAD) => new Call()
+        .withMethod('POST')
+        .withRoute(`${activityType}/${activityId}/comments`)
+        .addQuery({include: "user"})
+        .withBody({comment: {content}})
+);
+
 const reducer = (() => {
     const initialState = Immutable(Api.initialListState());
 
     return (state = initialState, action = {}) => {
 
         switch (action.type) {
-            case actionTypes.LOAD_COMMENTS.success(): {
+            case LOAD_COMMENTS.success(): {
                 let {activityId, activityType} = action.options;
                 activityType = sanitizeActivityType(activityType);
                 let path = `${activityType}.${activityId}.relationships.comments.data`;
@@ -196,7 +238,7 @@ const reducer = (() => {
                 state = doDataMergeInState(state, path, action.payload.data);
                 break;
             }
-            case actionTypes.ADD_COMMENT.success(): {
+            case CREATE_COMMENT.success(): {
 
                 let {id, type} = action.payload.data;
                 let {activityId, activityType} = action.options;
@@ -207,7 +249,7 @@ const reducer = (() => {
             }
 
         }
-        //let desc = {fetchFirst: actionTypes.LOAD_COMMENTS};
+        //let desc = {fetchFirst: LOAD_COMMENTS};
         //return Api.reduceList(state, action, desc);
         return state;
     }

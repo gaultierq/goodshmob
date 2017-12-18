@@ -23,22 +23,27 @@ const CURRENT_API_VERSION = 'v2.0.0';
 export const API_END_POINT = Config.SERVER_URL;
 
 
-let instance : Api = null;
+
+const TIMEOUT = 20 * 1000;
 
 type CallFactory = (payload: any) => Call;
 
 class Api {
 
     isConnected: boolean;
+    initialized: boolean;
     callFactory: Map<ApiAction, CallFactory> = new Map();
 
-    constructor(store) {
+
+    init(store) {
         this.store = store;
         this.store.subscribe(this.onStoreUpdate.bind(this));
 
         this.listenConnectivity();
-    }
 
+
+        this.initialized = true;
+    }
 
     listenConnectivity() {
         let handleConnection = isConnected => {
@@ -170,7 +175,11 @@ class Api {
 
 
     submit(url, method, body) {
-        let timeout = 20 * 1000;
+        if (!this.initialized) throw "Api must be initialized before being used";
+
+
+
+        let timeout = TIMEOUT;
         let options = Object.assign({
             method,
             timeout,
@@ -182,7 +191,7 @@ class Api {
     }
 }
 
-
+//move
 export class Call {
 
     url: URL = new URL(API_END_POINT);
@@ -312,9 +321,12 @@ export class Call {
         return instance.submit(this.url.toString(), this.method, this.body);
     }
 }
+const instance : Api = new Api();
+
 
 export function init(store) {
-    instance = new Api(store);
+    instance.init(store);
+    console.info("Api initialized");
 }
 
 //enable the api to create call by itself
@@ -322,6 +334,7 @@ export function registerCallFactory(action: ApiAction, factory: CallFactory) {
     instance.callFactory.set(action, factory);
 }
 
+//move
 export function initialListState() {
     return {
         list: [],
@@ -330,10 +343,12 @@ export function initialListState() {
     };
 }
 
+//move
 export function safeDispatchAction(dispatch, action, stateName: string) {
     return safeExecBlock.call(this, function(){return dispatch(action)}, stateName);
 }
 
+//move
 export function safeExecBlock(block, stateName: string) {
 
     let setRequestState: (reqFetch: RequestState) => Promise<*> = (reqFetch: RequestState) => {
@@ -362,6 +377,7 @@ export function safeExecBlock(block, stateName: string) {
     }
 }
 
+//move
 export const reduceList = (state, action, desc) => {
     switch (action.type) {
         case desc.fetchFirst.success():

@@ -30,6 +30,7 @@ import ApiAction from "../utils/ApiAction";
 import {buildData, doDataMergeInState} from "../utils/DataUtils";
 import {DELETE_LINEUP} from "../lineup/actionTypes";
 import {CREATE_LINEUP} from "../lineup/actionTypes";
+import {mergeItemsAndPendings} from "../utils/ModelUtils";
 
 //TODO: clean
 // export const DELETE_LINEUP = lineup_actions.DELETE_LINEUP;
@@ -96,33 +97,21 @@ export class LineupListScreen extends Component<Props, State> {
                 action: GET_USER_W_LISTS
             };
         }
-        let items: Array<List> = [];
+
 
         //reconciliate pendings
-        let pendingCreate = this.props.pending[CREATE_LINEUP];
-        let pendingDelete = this.props.pending[DELETE_LINEUP];
-
-        for (let i = 0; i < lists.length; i++) {
-            let l = lists[i];
-
-            //do not display list with pending deletion
-            if (_.findIndex(pendingDelete, (o) => o.payload.lineupId === l.id) >= 0) continue;
-
-            items.push(l);
-
-            if (i === 0) {
-                _.forEach(pendingCreate, pending => {
-                    if (pending.state === 'pending' || pending.state === 'processing') {
-                        items.push({
-                            id: pending.id,
-                            name: pending.payload.listName,
-                            savings: [],
-                            type: 'lists' //here ? or reducer ?
-                        });
-                    }
-                })
-            }
-        }
+        let items = mergeItemsAndPendings(
+            lists,
+            this.props.pending[CREATE_LINEUP],
+            this.props.pending[DELETE_LINEUP],
+            (pending) => ({
+                id: pending.id,
+                name: pending.payload.listName,
+                savings: [],
+                type: 'lists' //here ? or reducer ?
+            }),
+            {afterI: 0}
+        );
 
 
         return (
@@ -134,6 +123,8 @@ export class LineupListScreen extends Component<Props, State> {
             />
         );
     }
+
+
 
     renderItem({item}) {
 

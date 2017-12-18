@@ -4,6 +4,7 @@ import merge from 'deepmerge'
 import {Statistics} from "../utils/Statistics";
 import update from "immutability-helper";
 import {updateDelete} from "../utils/DataUtils";
+import type {ApiActionName} from "../utils/ApiAction";
 
 const initialState = Immutable({
     meta: {},
@@ -44,6 +45,17 @@ export function data(state = initialState, action) {
 }
 
 
+type PendingItemState = 'pending' | 'tg';
+export type PendingItem = {
+    id: Id,
+    insertedAt: ms,
+    dueAt: ms,
+    state: PendingItemState,
+    payload: any, //type
+    pendingActionType: ApiActionName,
+    options: any
+}
+
 
 // [pending reducers]
 export function pending(state = {}, action) {
@@ -63,7 +75,8 @@ export function pending(state = {}, action) {
 
 
             const now = Date.now();
-            const item = {
+
+            const item : PendingItem = {
                 id: pendingId,
                 insertedAt: now,
                 dueAt: now + (options.delayMs || 0),

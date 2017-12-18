@@ -10,20 +10,12 @@ class CurrentUser {
 
     store: Store<*,*>;
 
-    // constructor() {
-    //     Object.defineProperty(
-    //         this,
-    //         'id',
-    //         {
-    //             get: () => {
-    //                 return this.store ? this.store.getState().auth.currentUserId : null;
-    //             },
-    //         },
-    //     );
-    // }
-    //
     id() {
         return this.store ? this.store.getState().auth.currentUserId : null;
+    }
+
+    user() {
+        return buildNonNullData(this.store.getState().data, "users", this.id());
     }
 
     currentGoodshboxId() {
@@ -48,6 +40,10 @@ export function init(store:Store<*,*>) {
 
 export function currentUserId() : Id {
     return instance.id();
+}
+
+export function currentUser() : Id {
+    return instance.user();
 }
 
 export function currentGoodshboxId() {

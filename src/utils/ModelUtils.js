@@ -5,6 +5,7 @@ import {Call} from "./Api";
 import type {Id, ms} from "../types";
 import {CREATE_PENDING_ACTION, REMOVE_PENDING_ACTION} from "../reducers/dataReducer";
 import * as Api from "./Api";
+import type {PendingItem} from "../reducers/dataReducer";
 /*
 
 export function parse(data: any) {
@@ -367,5 +368,40 @@ export interface PendingAction<T> {
 
     undo: (pendingId: Id) => any;
 
+}
+
+export function mergeItemsAndPendings<T>(
+    syncedItems: Array<T>,
+    pendingCreate: [],
+    pendingDelete: [],
+    pendingToItem: (pending: PendingItem) => T,
+    options: any = {}
+) {
+
+    let {afterI} = options;
+
+    let items: Array<T> = [];
+
+    let addCreate = () => {
+        _.forEach(pendingCreate, pending => {
+            if (pending.state === 'pending' || pending.state === 'processing') {
+
+                items.push(pendingToItem(pending));
+            }
+        })
+    };
+
+    for (let i = 0; i < syncedItems.length; i++) {
+        if (afterI == null) addCreate();
+        let l = syncedItems[i];
+
+        //do not display list with pending deletion
+        if (_.findIndex(pendingDelete, (o) => o.payload.lineupId === l.id) >= 0) continue;
+
+        items.push(l);
+
+        if (i === afterI) addCreate();
+    }
+    return items;
 }
 

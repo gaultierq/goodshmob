@@ -4,8 +4,8 @@ import * as Api from "../utils/Api";
 import {Call} from "../utils/Api";
 import type {Id, List, ms} from "../types";
 import {CREATE_LINEUP, DELETE_LINEUP, EDIT_LINEUP, SAVE_ITEM} from "./actionTypes";
-import {pendingActionWrapper} from "../utils/ModelUtils";
 import type {PendingAction} from "../utils/ModelUtils";
+import {pendingActionWrapper} from "../utils/ModelUtils";
 
 
 //defining lineup creation cycle
@@ -31,15 +31,6 @@ export const LINEUP_DELETION: PendingAction<LINEUP_DELETION_PAYLOAD>  = pendingA
         .withMethod('DELETE')
         .withRoute(`lists/${payload.lineupId}`)
 );
-
-//list creation
-export function createLineup(listName: string, delayMs: ms) {
-    return LINEUP_CREATION.pending({listName}, {delayMs});
-}
-
-export function undoCreateLineup(lineupId: Id) {
-    return LINEUP_CREATION.undo(lineupId);
-}
 
 export function saveItem(itemId: Id, lineupId: Id, privacy = 0, description = '') {
 

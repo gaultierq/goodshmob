@@ -54,7 +54,7 @@ export default class ApiAction {
         return ApiAction.byName[actionName];
     }
 
-    static create(actionName: ApiActionName):? ApiAction {
+    static create(actionName: ApiActionName): ApiAction {
         return ApiAction.byName[actionName] || new ApiAction(actionName);
     }
 }

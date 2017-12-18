@@ -15,7 +15,6 @@ import immutableTransform from './immutableTransform'
 import {REHYDRATE} from 'redux-persist/constants'
 import i18n from './i18n/i18n'
 import * as CurrentUser from './CurrentUser'
-import testScreen from "./testScreen"
 import {Client} from 'bugsnag-react-native';
 import * as globalProps from 'react-native-global-props';
 import * as notification from './notification';
@@ -235,6 +234,7 @@ export default class App {
     }
 
     startApp(logged: boolean) {
+        const testScreen = require("./testScreen").default;
         console.debug(`starting app logged=${logged}, test=${(!!testScreen)}`);
 
         /*if (__IS_LOCAL__ && testScreen) {
