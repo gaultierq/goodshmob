@@ -13,7 +13,7 @@ import ApiAction from "../utils/ApiAction";
 import ActivityCell from "../activity/components/ActivityCell";
 import {currentUserId} from "../CurrentUser";
 import ActionButton from 'react-native-action-button';
-import {startAddItem} from "./actions";
+import {startAddItem} from "./Nav";
 import * as UI from "./UIStyles";
 
 type Props = {
@@ -26,9 +26,9 @@ type State = {
     titleSet: boolean
 };
 
-const FETCH_LINEUP = new ApiAction("fetch_lineup");
-const FETCH_SAVINGS = new ApiAction("fetch_savings");
-const DELETE_SAVING = new ApiAction("delete_saving");
+const FETCH_LINEUP = ApiAction.create("fetch_lineup");
+const FETCH_SAVINGS = ApiAction.create("fetch_savings");
+const DELETE_SAVING = ApiAction.create("delete_saving");
 
 @connect((state, ownProps) => ({
     data: state.data,

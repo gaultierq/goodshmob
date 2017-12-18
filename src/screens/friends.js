@@ -97,8 +97,8 @@ export default class FriendsScreen extends Screen<Props, State> {
 
 const actionTypes = (() => {
 
-    const LOAD_FRIENDS = new ApiAction("load_friends");
-    const GET_USER_W_FRIENDS = new ApiAction("get_user_w_friends");
+    const LOAD_FRIENDS = ApiAction.create("load_friends");
+    const GET_USER_W_FRIENDS = ApiAction.create("get_user_w_friends");
 
     return {LOAD_FRIENDS, GET_USER: GET_USER_W_FRIENDS};
 })();

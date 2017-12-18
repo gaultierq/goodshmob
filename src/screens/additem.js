@@ -7,7 +7,7 @@ import {renderSimpleLink} from "./UIStyles";
 
 import LineupCell from "./components/LineupCell";
 import type {Id, Item, ItemType} from "../types";
-import {FETCH_ITEM, fetchItemCall, saveItem} from "./actions";
+import {fetchItemCall, saveItem} from "./lineup/actions";
 import {currentUserId} from "../CurrentUser";
 import Snackbar from "react-native-snackbar"
 import {connect} from "react-redux";
@@ -20,6 +20,7 @@ import AddLineupComponent from "./components/addlineup";
 import {MainBackground} from "./UIComponents";
 import SmartButton from "./components/SmartButton";
 import {renderSimpleButton} from "./UIStyles";
+import {FETCH_ITEM} from "./lineup/actionTypes";
 
 type Props = {
     defaultLineupId: Id,

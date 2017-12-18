@@ -1,9 +1,8 @@
 // @flow
 
 import {applyMiddleware, combineReducers, compose, createStore} from "redux";
-import {Provider} from "react-redux";
 import {Navigation} from 'react-native-navigation';
-import {registerScreens} from './screens/allScreens';
+//import {registerScreens} from './screens/allScreens';
 import * as reducers from "./reducers/allReducers";
 import {createWithReducers} from "./auth/reducer";
 import thunk from "redux-thunk";
@@ -27,6 +26,7 @@ import {AlgoliaClient} from "./utils/AlgoliaUtils";
 import {Statistics} from "./utils/Statistics";
 import {UPGRADE_CACHE} from "./auth/actionTypes";
 import Config from 'react-native-config'
+import {Provider} from "react-redux";
 
 console.log(`staring app with env=${JSON.stringify(Config)}`);
 
@@ -190,7 +190,13 @@ export default class App {
         }
         notification.load();
 
+
+
+        //delayed import
+        let registerScreens = require('./screens/allScreens').default;
         registerScreens(this.store, Provider);
+
+
         this.prepareUI();
 
         //invalidate cache if needed
@@ -249,6 +255,7 @@ export default class App {
             Navigation.startSingleScreenApp(testScreen);
         }
         else {
+            //return;
             let userId = CurrentUser.currentUserId();
             if (!userId) throw "wtf";
 

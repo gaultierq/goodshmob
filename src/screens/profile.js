@@ -253,7 +253,7 @@ export default class Profile extends Component<Props, State> {
     }
 }
 
-const GET_USER = new ApiAction("get_user(profile)");
+const GET_USER = ApiAction.create("get_user(profile)");
 
 const actions = (() => {
 

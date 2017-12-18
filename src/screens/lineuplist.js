@@ -23,17 +23,19 @@ import * as Api from "../utils/Api";
 import * as UI from "../screens/UIStyles";
 import {SearchBar} from 'react-native-elements'
 import type {Id, List, User} from "../types";
-import type {FeedProps} from "./components/feed";
+import type {Props as FeedProps} from "./components/feed";
 import Feed from "./components/feed";
 import {currentUserId} from "../CurrentUser"
 import ApiAction from "../utils/ApiAction";
 import {buildData, doDataMergeInState} from "../utils/DataUtils";
-import {CREATE_LINEUP} from "./actions";
+import {DELETE_LINEUP} from "./lineup/actionTypes";
+import {CREATE_LINEUP} from "./lineup/actionTypes";
 
-export const DELETE_LINEUP = new ApiAction("delete_lineup");
-export const EDIT_LINEUP = new ApiAction("edit_lineup");
+//TODO: clean
+// export const DELETE_LINEUP = lineup_actions.DELETE_LINEUP;
+// export const EDIT_LINEUP = lineup_actions.EDIT_LINEUP;
 
-export type Props = FeedProps & {
+export type Props = FeedProps<List> & {
     userId: Id,
     onSavingPressed: Function,
     canFilterOverItems: boolean | ()=>boolean,
@@ -147,8 +149,8 @@ export class LineupListScreen extends Component<Props, State> {
 }
 
 
-const GET_USER_W_LISTS = new ApiAction("get_user_w_lists");
-const FETCH_LINEUPS = new ApiAction("fetch_lineups");
+const GET_USER_W_LISTS = ApiAction.create("get_user_w_lists");
+const FETCH_LINEUPS = ApiAction.create("fetch_lineups");
 
 const actions = (() => {
 
@@ -156,8 +158,7 @@ const actions = (() => {
         fetchLineups: () => new Api.Call()
             .withMethod('GET')
             .withRoute("lists")
-            .addQuery({include: "savings,savings.resource"})
-        ,
+            .addQuery({include: "savings,savings.resource"}),
 
         getUser: (userId): Api.Call => new Api.Call()
             .withMethod('GET')

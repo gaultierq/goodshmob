@@ -1,11 +1,20 @@
 // @flow
 
+
+export type ApiActionName = string;
+
 export default class ApiAction {
 
-    actionName: string;
+    actionName: ApiActionName;
 
-    constructor(actionName) {
+    static byName = {};
+
+    //deprecated, use create
+    constructor(actionName:ApiActionName) {
         this.actionName = actionName;
+        if (ApiAction.byName[actionName]) throw actionName + " is already defined";
+
+        ApiAction.byName[actionName] = this;
     }
 
     success() {
@@ -38,5 +47,14 @@ export default class ApiAction {
 
     static composeName(actionName: string, apiType: string): string {
         return `${actionName}_${apiType}`;
+    }
+
+
+    static getByName(actionName: ApiActionName):? ApiAction {
+        return ApiAction.byName[actionName];
+    }
+
+    static create(actionName: ApiActionName):? ApiAction {
+        return ApiAction.byName[actionName] || new ApiAction(actionName);
     }
 }

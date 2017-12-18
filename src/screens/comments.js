@@ -148,8 +148,8 @@ class CommentsScreen extends Component<Props, State> {
 
 const actionTypes = (() => {
 
-    const LOAD_COMMENTS = new ApiAction("load_comments");
-    const ADD_COMMENT = new ApiAction("add_comment");
+    const LOAD_COMMENTS = ApiAction.create("load_comments");
+    const ADD_COMMENT = ApiAction.create("add_comment");
 
     return {LOAD_COMMENTS, ADD_COMMENT};
 })();

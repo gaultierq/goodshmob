@@ -16,7 +16,7 @@ import {connect} from "react-redux";
 import Snackbar from "react-native-snackbar"
 import i18n from '../../i18n/i18n'
 import * as UI from "../UIStyles";
-import {createLineup, deletePendingLineup} from "../actions";
+import {createLineup, undoCreateLineup} from "../lineup/actions";
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import {Menu, MenuContext, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
@@ -114,10 +114,10 @@ export default class AddLineupComponent extends Component<Props, State> {
                         title: "#Liste créée",
                         duration: Snackbar.LENGTH_LONG,
                         action: {
-                            title: 'UNDO',
+                            title: '#UNDO',
                             color: 'green',
                             onPress: () => {
-                                this.props.dispatch(deletePendingLineup(pendingList.id))
+                                this.props.dispatch(undoCreateLineup(pendingList.id))
                             },
                         },
 

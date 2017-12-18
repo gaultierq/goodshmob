@@ -58,7 +58,7 @@ function wrap(screenName,screenCreator,store,provider) {
 }
 
 // register all screens of the app (including internal ones)
-export function registerScreens(store, Provider) {
+export default function registerScreens(store, Provider) {
     wrap('goodsh.LoginScreen', () => LoginScreen, store, Provider);
     wrap('goodsh.NetworkScreen', () => NetworkScreen, store, Provider);
     wrap('goodsh.SearchItemsScreen', () => SearchItemScreen, store, Provider);

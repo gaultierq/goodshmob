@@ -88,8 +88,8 @@ const styles = StyleSheet.create({
     }
 });
 
-export const CONNECT = new ApiAction("connect");
-export const DISCONNECT = new ApiAction("disconnect");
+export const CONNECT = ApiAction.create("connect");
+export const DISCONNECT = ApiAction.create("disconnect");
 
 const actions = {
     createFriendship: (userId: string) => {

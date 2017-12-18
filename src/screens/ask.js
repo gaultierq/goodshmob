@@ -96,7 +96,7 @@ export default class AskScreen extends Component<Props, State> {
 
 }
 
-const CREATE_ASK = new ApiAction("create_ask");
+const CREATE_ASK = ApiAction.create("create_ask");
 
 const actions = {
     createAsk: (ask: Ask): Api.Call => {

@@ -1,8 +1,9 @@
 // @flow
 
-import React, {Component} from 'react';
+import React from 'react';
 import {
     BackHandler,
+    Dimensions,
     Image,
     Platform,
     StyleSheet,
@@ -10,33 +11,32 @@ import {
     TextInput,
     TouchableOpacity,
     TouchableWithoutFeedback,
-    View,
-    Dimensions
+    View
 } from 'react-native';
 
 import {connect} from "react-redux";
 import ActionButton from 'react-native-action-button';
-import {DELETE_LINEUP, EDIT_LINEUP, LineupListScreen} from './lineuplist'
+import {LineupListScreen} from './lineuplist'
 import type {Id, Saving} from "../types";
 import {List} from "../types"
 import Snackbar from "react-native-snackbar"
 import * as UI from "./UIStyles";
+import {stylePadding} from "./UIStyles";
 import {currentGoodshboxId, currentUserId} from "../CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import LineupCell from "./components/LineupCell";
 import Icon from 'react-native-vector-icons/Ionicons';
-import * as Api from "../utils/Api";
 import {Menu, MenuContext, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
 import Modal from 'react-native-modal'
 import type {Visibility} from "./additem";
 import AddLineupComponent from "./components/addlineup";
-import {startAddItem} from "./actions";
+import {deleteLineup, patchLineup} from "./lineup/actions";
 import * as Nav from "./Nav";
 import {MainBackground} from "./UIComponents";
 import SmartInput from "./components/SmartInput";
 import Screen from "./components/Screen";
-import {stylePadding} from "./UIStyles";
+import {startAddItem} from "./Nav";
 
 
 type Props = {
@@ -211,7 +211,7 @@ class HomeScreen extends Screen<Props, State> {
     requestChangeName(lineupId: Id, name: string) {
         let editedLineup = {id: lineupId, name};
 
-        return this.props.dispatch(actions.patchLineup(editedLineup))
+        return this.props.dispatch(patchLineup(editedLineup))
             .then(()=> {
                 this.setState({changeLinupTitleId: null})
             })
@@ -266,7 +266,7 @@ class HomeScreen extends Screen<Props, State> {
 
     deleteLineup(lineup: List) {
         this.props
-            .dispatch(actions.deleteLineup(lineup))
+            .dispatch(deleteLineup(lineup.id))
             .then(()=> Snackbar.show({
                 title: "#Liste effacée"
             }));
@@ -324,21 +324,7 @@ const screen = HomeScreen;
 
 
 const actions = {
-    deleteLineup: (lineup) => {
-        let call = new Api.Call()
-            .withMethod('DELETE')
-            .withRoute(`lists/${lineup.id}`);
 
-        return call.disptachForAction2(DELETE_LINEUP, {lineupId: lineup.id});
-    },
-    patchLineup: (editedLineup) => {
-        let call = new Api.Call()
-            .withMethod('PATCH')
-            .withRoute(`lists/${editedLineup.id}`)
-            .withBody(editedLineup)
-        ;
-        return call.disptachForAction2(EDIT_LINEUP, {lineupId: editedLineup.id});
-    },
 };
 
 

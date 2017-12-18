@@ -119,7 +119,7 @@ export default class SendScreen extends Component<Props, State> {
 
 }
 
-const SEND_ITEM = new ApiAction("send_item");
+const SEND_ITEM = ApiAction.create("send_item");
 
 
 const actions = (() => {

@@ -28,7 +28,7 @@ type Props = {
 type State = {
 };
 
-const FETCH_PEOPLE_YOU_MAY_KNOW = new ApiAction("people_you_may_know");
+const FETCH_PEOPLE_YOU_MAY_KNOW = ApiAction.create("people_you_may_know");
 
 @connect((state, ownProps) => ({
     peopleYouMayKnow: state.peopleYouMayKnow,

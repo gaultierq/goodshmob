@@ -11,7 +11,6 @@ import Snackbar from "react-native-snackbar"
 import type {RequestState} from "../types";
 import Config from 'react-native-config'
 import {Statistics} from "./Statistics";
-import {CREATE_LINEUP} from "../screens/actions";
 import {REMOVE_PENDING_ACTION} from "../reducers/dataReducer";
 import {NetInfo} from "react-native";
 
@@ -26,9 +25,12 @@ export const API_END_POINT = Config.SERVER_URL;
 
 let instance : Api = null;
 
+type CallFactory = (payload: any) => Call;
+
 class Api {
 
     isConnected: boolean;
+    callFactory: Map<ApiAction, CallFactory> = new Map();
 
     constructor(store) {
         this.store = store;
@@ -84,20 +86,36 @@ class Api {
             this.pendingAction = pend;
             let call;
             console.info(`execPendings: found pending action:${JSON.stringify(this.pendingAction)}`);
-            let type = this.pendingAction.pendingActionType;
-            switch (type) {
-                //TODO: remove this dependency
-                case CREATE_LINEUP.name():
-                    call = new Call()
-                        .withMethod('POST')
-                        .withRoute("lists")
-                        .withBody({
-                            "list": {
-                                "name": this.pendingAction.payload.listName
-                            }
-                        });
-                    break;
+
+            let name = this.pendingAction.pendingActionType;
+
+            let action = ApiAction.getByName(name);
+            if (action) {
+                let factory = this.callFactory.get(action);
+                if (factory) {
+                    call = factory(this.pendingAction.payload);
+                }
+                else {
+                    console.warn(`factory not found for ${action}`);
+                }
             }
+            else {
+                console.warn(`action not found for ${name}`);
+            }
+
+            // switch (name) {
+            //     //TODO: remove this dependency
+            //     case CREATE_LINEUP.name():
+            //         call = new Call()
+            //             .withMethod('POST')
+            //             .withRoute("lists")
+            //             .withBody({
+            //                 "list": {
+            //                     "name": this.pendingAction.payload.listName
+            //                 }
+            //             });
+            //         break;
+            // }
 
             let finish = () => {
                 let id = this.pendingAction.id;
@@ -106,13 +124,13 @@ class Api {
                 //will trigger store update
                 this.store.dispatch({
                     type: REMOVE_PENDING_ACTION,
-                    pendingActionType: type,
+                    pendingActionType: name,
                     id: id
                 });
             };
 
-            if (call && type) {
-                this.store.dispatch(call.disptachForAction2(new ApiAction(type))).then(() => finish(), err => {
+            if (call && name) {
+                this.store.dispatch(call.disptachForAction2(ApiAction.create(name))).then(() => finish(), err => {
                     console.warn(err);
                     finish();
                 });
@@ -295,6 +313,11 @@ export class Call {
 
 export function init(store) {
     instance = new Api(store);
+}
+
+//enable the api to create call by itself
+export function registerCallFactory(action: ApiAction, factory: CallFactory) {
+    instance.callFactory.set(action, factory);
 }
 
 export function initialListState() {

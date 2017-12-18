@@ -5,7 +5,7 @@ import * as Api from "../utils/Api";
 import Immutable from 'seamless-immutable';
 import type {Id} from "../types";
 
-export const FETCH_ACTIVITIES = new ApiAction("network/fetch_activities");
+export const FETCH_ACTIVITIES = ApiAction.create("network/fetch_activities");
 
 export function fetchMyNetwork() {
     return new Api.Call()
