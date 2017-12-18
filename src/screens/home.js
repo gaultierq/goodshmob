@@ -31,12 +31,13 @@ import {Menu, MenuContext, MenuOption, MenuOptions, MenuTrigger} from 'react-nat
 import Modal from 'react-native-modal'
 import type {Visibility} from "./additem";
 import AddLineupComponent from "./components/addlineup";
-import {deleteLineup, patchLineup, undoDeleteLineup} from "../lineup/actions";
+import {patchLineup} from "../lineup/actions";
 import * as Nav from "./Nav";
+import {startAddItem} from "./Nav";
 import {MainBackground} from "./UIComponents";
 import SmartInput from "./components/SmartInput";
 import Screen from "./components/Screen";
-import {startAddItem} from "./Nav";
+import {LINEUP_DELETION} from './../lineup/actions'
 
 
 type Props = {
@@ -266,7 +267,9 @@ class HomeScreen extends Screen<Props, State> {
 
     deleteLineup(lineup: List) {
         let delayMs = 3000;
-        return this.props.dispatch(deleteLineup(lineup.id, delayMs))
+        //deleteLineup(lineup.id, delayMs)
+        const lineupId = lineup.id;
+        return this.props.dispatch(LINEUP_DELETION.pending({lineupId}, {delayMs, lineupId}))
             .then(pendingId => {
                 Snackbar.show({
                         title: "#Liste effacée",
@@ -275,7 +278,7 @@ class HomeScreen extends Screen<Props, State> {
                             title: '#UNDO',
                             color: 'green',
                             onPress: () => {
-                                this.props.dispatch(undoDeleteLineup(pendingId))
+                                this.props.dispatch(LINEUP_DELETION.undo(pendingId))
                             },
                         },
                     }

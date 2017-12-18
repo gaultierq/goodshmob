@@ -5,11 +5,12 @@ import {Call} from "../utils/Api";
 import type {Id, List, ms} from "../types";
 import {CREATE_LINEUP, DELETE_LINEUP, EDIT_LINEUP, SAVE_ITEM} from "./actionTypes";
 import {pendingActionWrapper} from "../utils/ModelUtils";
+import type {PendingAction} from "../utils/ModelUtils";
 
 
 //defining lineup creation cycle
 type LINEUP_CREATION_PAYLOAD = {listName: string}
-const LINEUP_CREATION = pendingActionWrapper(
+export const LINEUP_CREATION : PendingAction<LINEUP_CREATION_PAYLOAD> = pendingActionWrapper(
     CREATE_LINEUP,
     (payload: LINEUP_CREATION_PAYLOAD) => new Call()
         .withMethod('POST')
@@ -23,16 +24,13 @@ const LINEUP_CREATION = pendingActionWrapper(
 
 
 type LINEUP_DELETION_PAYLOAD = {lineupId: Id}
-const LINEUP_DELETION = pendingActionWrapper(
+
+export const LINEUP_DELETION: PendingAction<LINEUP_DELETION_PAYLOAD>  = pendingActionWrapper(
     DELETE_LINEUP,
     (payload: LINEUP_DELETION_PAYLOAD) => new Call()
         .withMethod('DELETE')
         .withRoute(`lists/${payload.lineupId}`)
 );
-
-
-Api.registerCallFactory(CREATE_LINEUP, LINEUP_CREATION.call);
-Api.registerCallFactory(DELETE_LINEUP, LINEUP_DELETION.call);
 
 //list creation
 export function createLineup(listName: string, delayMs: ms) {
@@ -41,15 +39,6 @@ export function createLineup(listName: string, delayMs: ms) {
 
 export function undoCreateLineup(lineupId: Id) {
     return LINEUP_CREATION.undo(lineupId);
-}
-
-//list deletion
-export function deleteLineup(lineupId: string, delayMs: ms) {
-    return LINEUP_DELETION.pending({lineupId}, {delayMs, lineupId});
-}
-
-export function undoDeleteLineup(pendingItemId: Id) {
-    return LINEUP_DELETION.undo(pendingItemId);
 }
 
 export function saveItem(itemId: Id, lineupId: Id, privacy = 0, description = '') {

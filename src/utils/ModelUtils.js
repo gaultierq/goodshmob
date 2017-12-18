@@ -4,6 +4,7 @@ import ApiAction from "./ApiAction";
 import {Call} from "./Api";
 import type {Id, ms} from "../types";
 import {CREATE_PENDING_ACTION, REMOVE_PENDING_ACTION} from "../reducers/dataReducer";
+import * as Api from "./Api";
 /*
 
 export function parse(data: any) {
@@ -329,9 +330,12 @@ export class Merge<T, K> {
 
 export function pendingActionWrapper<Payload>(
     action: ApiAction,
-    callFactory: (payload: Payload) => Call) {
+    callFactory: (payload: Payload) => Call): PendingAction<Payload>  {
+
+    Api.registerCallFactory(action, callFactory);
 
     return {
+
         pending: (payload: Payload, options: any) => (dispatch: any) => new Promise((resolve, reject) => {
 
                 //let payload = payloadFactory();
@@ -353,5 +357,15 @@ export function pendingActionWrapper<Payload>(
             id: pendingId
         })
     };
+}
+
+export interface PendingAction<T> {
+
+    pending: (payload: T, options: any) => (dispatch: any) => Promise<T>;
+
+    call: (payload: T) => Call;
+
+    undo: (pendingId: Id) => any;
+
 }
 

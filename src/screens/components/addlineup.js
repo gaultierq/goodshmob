@@ -16,14 +16,13 @@ import {connect} from "react-redux";
 import Snackbar from "react-native-snackbar"
 import i18n from '../../i18n/i18n'
 import * as UI from "../UIStyles";
-import {createLineup, undoCreateLineup} from "../../lineup/actions";
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import {Menu, MenuContext, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
 import type {Visibility} from "../additem";
 import Modal from 'react-native-modal'
 import SmartInput from "./SmartInput";
-
+import {LINEUP_CREATION} from './../../lineup/actions'
 
 type Props = {
 };
@@ -107,7 +106,7 @@ export default class AddLineupComponent extends Component<Props, State> {
 
     createLineup(name: string) {
         let delayMs = 3000;
-        return this.props.dispatch(createLineup(name, delayMs))
+        return this.props.dispatch(LINEUP_CREATION.pending({listName: name}, {delayMs}))
             .then((pendingId)=> {
                 this._closeModal();
                 Snackbar.show({
@@ -117,11 +116,9 @@ export default class AddLineupComponent extends Component<Props, State> {
                             title: '#UNDO',
                             color: 'green',
                             onPress: () => {
-                                this.props.dispatch(undoCreateLineup(pendingId))
+                                this.props.dispatch(LINEUP_CREATION.undo(pendingId))
                             },
                         },
-
-
                     }
                 );
             });
