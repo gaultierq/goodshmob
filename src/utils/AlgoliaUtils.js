@@ -136,12 +136,7 @@ export function makeAlgoliaSearch(categories, navigator) {
 
         });
     };
-
-    return <SearchScreen
-        searchEngine={{search}}
-        categories={categories}
-        navigator={navigator}
-    />;
+    return search;
 }
 
 

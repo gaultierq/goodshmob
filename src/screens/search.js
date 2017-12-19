@@ -4,7 +4,6 @@ import type {Node} from 'react';
 import React, {Component} from 'react';
 import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
 import {connect} from "react-redux";
-import {combineReducers} from "redux";
 import {TabBar, TabViewAnimated} from 'react-native-tab-view';
 
 import {SearchBar} from 'react-native-elements'
@@ -13,17 +12,16 @@ import * as UIStyles from "../screens/UIStyles"
 import type {i18Key, Item, List, Saving, SearchToken} from "../types";
 import Button from 'apsl-react-native-button'
 import * as UI from "./UIStyles";
-import {Navigation} from 'react-native-navigation';
-import {logger} from "../utils/StringUtils";
-import update from "immutability-helper";
 import {NavStyles} from "./UIStyles";
+import {Navigation} from 'react-native-navigation';
+import update from "immutability-helper";
 
 export type SearchCategoryType = string;
 
 export type SearchCategory = {
     type: SearchCategoryType,
     query: *,
-    parseResponse: (hits) => *,
+    parseResponse: (hits: []) => *,
     renderItem: (item: *) => Node,
     tabName: i18Key,
     placeholder: i18Key,
@@ -76,6 +74,7 @@ export default class SearchScreen extends Component<Props, State> {
     //         }
     //     ],
     // };
+
 
     state : State;
 
@@ -170,13 +169,15 @@ export default class SearchScreen extends Component<Props, State> {
 
     render() {
 
-        let l = this.props.categories.length;
+        let nCat = this.props.categories.length;
+        let hasSearched = !_.isEmpty(this.state.searches);
 
+        const showTabs = nCat > 1 && hasSearched;
         return (
-            <View style={{width:"100%", height: "100%", backgroundColor: "white"}}>
+            <View style={{width:"100%", height: "100%", backgroundColor: "transparent"}}>
 
 
-                { l>1 && <TabViewAnimated
+                { showTabs && <TabViewAnimated
                     style={styles.container}
                     navigationState={this.state}
                     renderScene={this.renderScene.bind(this)}
@@ -185,7 +186,7 @@ export default class SearchScreen extends Component<Props, State> {
                 />}
 
                 {
-                    l === 1 && this.renderSearchPage(this.props.categories[0])
+                    nCat === 1 && this.renderSearchPage(this.props.categories[0])
                 }
 
             </View>
@@ -327,7 +328,7 @@ class SearchPage extends Component<PageProps, PageState> {
         let loadingFirst = isSearchRequesting && search.page === 0;
 
         return (
-            <View style={{flex: 1, width:"100%", height: "100%"}}>
+            <View style={{flex: 1, width:"100%", height: "100%", backgroundColor: 'white'}}>
                 {
                     loadingFirst && <ActivityIndicator
                         animating={loadingFirst}
@@ -457,13 +458,6 @@ const styles = StyleSheet.create({
         borderColor: "transparent",
     },
 
-    //copied: rm useless
-    searchContainer: {
-        backgroundColor: 'white',
-        borderColor: 'red',
-        borderTopColor: 'transparent',
-        //borderBottomColor: '#e1e1e1',
-    },
     searchInput: {
         backgroundColor: 'white',
     },

@@ -19,6 +19,8 @@ import LineupCell from "./components/LineupCell";
 import {AlgoliaClient, createResultFromHit, makeAlgoliaSearch} from "../utils/AlgoliaUtils";
 import {currentUserId} from "../CurrentUser";
 import Screen from "./components/Screen";
+import SearchScreen from "./search";
+import type {SearchCategory} from "./search";
 
 type Props = NavigableProps & {
 };
@@ -31,6 +33,11 @@ type State = {
 export default class HomeSearchScreen extends Screen<Props, State> {
 
     state :State = {connect: {}};
+
+    static navigatorStyle = {
+        screenBackgroundColor: 'transparent',
+        modalPresentationStyle: 'overCurrentContext',
+    };
 
     render() {
         let renderItem = ({item})=> {
@@ -90,7 +97,7 @@ export default class HomeSearchScreen extends Screen<Props, State> {
             filters: `user_id:${currentUserId()}`,
         };
 
-        let categories = [
+        let categories : Array<SearchCategory> = [
             {
                 type: "savings",
                 index,
@@ -114,7 +121,15 @@ export default class HomeSearchScreen extends Screen<Props, State> {
         //         navigator={navigator}
         //     />
         // );
-        return makeAlgoliaSearch(categories, navigator);
+        let search = makeAlgoliaSearch(categories, navigator);
+
+        return (
+            <SearchScreen
+                searchEngine={{search}}
+                categories={categories}
+                navigator={navigator}
+            />
+        );
     }
 
     onSavingPressed(saving: Saving) {

@@ -115,6 +115,7 @@ class HomeScreen extends Screen<Props, State> {
                                     title: "#Cancel"
                                 }
                             ],
+                            leftButtons: []
                         },
                     });
                     break;

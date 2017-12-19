@@ -23,6 +23,7 @@ import {Colors} from "./UIStyles";
 import {currentUserId} from "../CurrentUser";
 import Screen from "./components/Screen";
 import Config from 'react-native-config'
+import SearchScreen from "./search";
 
 type Props = NavigableProps & {
 };
@@ -34,8 +35,13 @@ type State = {
 @connect()
 export default class NetworkSearchScreen extends Screen<Props, State> {
 
-    state: State = {connect: {}};
 
+    static navigatorStyle = {
+        screenBackgroundColor: 'transparent',
+        modalPresentationStyle: 'overCurrentContext',
+    };
+
+    state: State = {connect: {}};
 
     render() {
 
@@ -151,7 +157,13 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
         //     />
         // );
 
-        return makeAlgoliaSearch(categories, navigator);
+        let search = makeAlgoliaSearch(categories, navigator);
+
+        return <SearchScreen
+            searchEngine={{search}}
+            categories={categories}
+            navigator={navigator}
+        />;
     }
 
 

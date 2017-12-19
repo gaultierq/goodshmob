@@ -43,7 +43,7 @@ export default class DebugScreen extends Screen<Props, State> {
     render() {
 
         return (
-            <ScrollView>
+            <ScrollView style={styles.container}>
                 <View style={styles.container}>
 
                     {
@@ -79,6 +79,6 @@ export default class DebugScreen extends Screen<Props, State> {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F5FCFF',
+        backgroundColor: 'transparent',
     }
 });

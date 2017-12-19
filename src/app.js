@@ -89,11 +89,11 @@ export default class App {
             }
         });
 
-        globalProps.setCustomView({
-            style: {
-                backgroundColor: 'transparent'
-            }
-        });
+        // globalProps.setCustomView({
+        //     style: {
+        //         backgroundColor: 'transparent'
+        //     }
+        // });
 
         // setCustomTouchableWithoutFeedback({
         //     underlayColor: "red"
@@ -293,18 +293,18 @@ export default class App {
                 tabsStyle,
                 appStyle: {
                     orientation: 'portrait', // Sets a specific orientation to the entire app. Default: 'auto'. Supported values: 'auto', 'landscape', 'portrait'
-                    bottomTabBadgeTextColor: 'red', // Optional, change badge text color. Android only
-                    bottomTabBadgeBackgroundColor: 'green', // Optional, change badge background color. Android only
+                    // bottomTabBadgeTextColor: 'red', // Optional, change badge text color. Android only
+                    // bottomTabBadgeBackgroundColor: 'green', // Optional, change badge background color. Android only
                     backButtonImage: require('./img/back.png'),
                     hideBackButtonTitle: true,
                     ...tabsStyle,
                 },
-                passProps: {
-                    drawerRight: {
-                        onScreen: true,
-                        style: {marginTop: 38},
-                    }
-                },
+                // passProps: {
+                //     drawerRight: {
+                //         onScreen: true,
+                //         style: {marginTop: 38},
+                //     }
+                // },
                 drawer: { // optional, add this if you want a side menu drawer in your app
                     left: { // optional, define if you want a drawer from the left
                         // screen: 'goodsh.FriendsScreen',
