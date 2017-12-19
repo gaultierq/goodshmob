@@ -1,6 +1,3 @@
-
-
-
 export function timeSince(lower, upper?) {
 
     upper = upper ? upper : new Date();

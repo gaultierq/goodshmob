@@ -1,4 +1,4 @@
-import * as Api from "../src/utils/Api";
+//import * as Api from "../src/utils/Api";
 
 const I18nMock = jest.mock('react-native-i18n', () => {
     const i18njs = require('i18n-js');
@@ -12,7 +12,7 @@ const I18nMock = jest.mock('react-native-i18n', () => {
     };
 });
 
-Api.init(null);
+//Api.init(null);
 
 global.I18n = I18nMock;
 

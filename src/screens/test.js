@@ -2,7 +2,6 @@
 import React, {Component} from 'react';
 import {Clipboard, Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpacity, User, View} from 'react-native';
 import {CheckBox} from "react-native-elements";
-import {connect} from "react-redux";
 import Modal from 'react-native-modal'
 
 type Props = {
@@ -21,6 +20,8 @@ export default class TestScreen extends Component<Props, State> {
 
     _hideModal = () => this.setState({ isModalVisible: false })
     render() {
+        console.log("hello:" + require('../Messenger'));
+        console.log("hello:" + require('../Messenger'));
         return (
 
             <View style={{ flex: 1 }}>

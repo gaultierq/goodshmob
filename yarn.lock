@@ -2020,6 +2020,10 @@ event-target-shim@^1.0.5:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/event-target-shim/-/event-target-shim-1.1.1.tgz#a86e5ee6bdaa16054475da797ccddf0c55698491"
 
+eventbusjs@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/eventbusjs/-/eventbusjs-0.2.0.tgz#9ceb3d174fb1e56ebe02aee7dd5dd953bb637a93"
+
 events@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/events/-/events-1.1.1.tgz#9ebdb7635ad099c70dcc4c2a1f5004288e8bd924"
@@ -6065,12 +6069,20 @@ ws@^2.0.3:
     safe-buffer "~5.0.1"
     ultron "~1.1.0"
 
-xcode@0.9.2, xcode@^0.9.1, xcode@^0.9.3:
+xcode@0.9.2, xcode@^0.9.1:
   version "0.9.2"
   resolved "https://registry.yarnpkg.com/xcode/-/xcode-0.9.2.tgz#b8969a2d7bf8b5feafbad162bd97de39f16e2907"
   dependencies:
     pegjs "0.9.0"
     simple-plist "0.1.4"
+    uuid "3.0.1"
+
+xcode@^0.9.3:
+  version "0.9.3"
+  resolved "https://registry.yarnpkg.com/xcode/-/xcode-0.9.3.tgz#910a89c16aee6cc0b42ca805a6d0b4cf87211cf3"
+  dependencies:
+    pegjs "^0.10.0"
+    simple-plist "^0.2.1"
     uuid "3.0.1"
 
 xml-name-validator@^2.0.1:

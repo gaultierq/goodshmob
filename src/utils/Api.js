@@ -7,12 +7,13 @@ import normalize from 'json-api-normalizer';
 import {logoutOffline} from "../auth/actions";
 import ApiAction from "./ApiAction";
 import fetch from 'react-native-fetch-polyfill';
-import Snackbar from "react-native-snackbar"
 import type {RequestState} from "../types";
 import Config from 'react-native-config'
 import {Statistics} from "./Statistics";
 import {REMOVE_PENDING_ACTION} from "../reducers/dataReducer";
 import {NetInfo} from "react-native";
+import {EVENT_MESSAGE} from "../events";
+import EventBus from 'eventbusjs'
 
 export const API_DATA_REQUEST = 'API_DATA_REQUEST';
 export const API_DATA_SUCCESS = 'API_DATA_SUCCESS';
@@ -277,9 +278,11 @@ export class Call {
 
                             let errorAction = dispatch({ type: API_DATA_FAILURE, error: errMsg, origin: apiAction});
 
-                            Snackbar.show({
-                                title: "#request failure",
-                            });
+                            // Snackbar.show({
+                            //     title: "#request failure",
+                            // });
+
+                            EventBus.dispatch(EVENT_MESSAGE, {content: "#request failure", type: 'snack'});
 
                             if (error.status === 401) {
                                 dispatch(errorAction);
