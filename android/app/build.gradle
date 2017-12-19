@@ -258,9 +258,9 @@ dependencies {
     compile project(':react-native-device-info')
 
     // Firebase dependencies
-    compile "com.google.android.gms:play-services-base:11.6.2"
-    compile "com.google.firebase:firebase-core:11.6.2"
-    compile "com.google.firebase:firebase-messaging:11.6.2"
+    compile "com.google.android.gms:play-services-base:11.8.0"
+    compile "com.google.firebase:firebase-core:11.8.0"
+    compile "com.google.firebase:firebase-messaging:11.8.0"
 
 
     //FIXME:
