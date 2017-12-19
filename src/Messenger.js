@@ -4,17 +4,20 @@ import {EVENT_MESSAGE} from "./events";
 import type {Message} from "./events";
 import Snackbar from "react-native-snackbar"
 
-class Messenger {
+class _Messenger implements Messenger {
     id = Math.random();
 
     constructor() {
+    }
+
+    init() {
         EventBus.addEventListener(EVENT_MESSAGE, this.onMessage.bind(this));
     }
 
-    onMessage(event: any, message: Message) {
+    onMessage(event: any) {
         console.debug("Messenger: on message");
 
-        const {content, type, ...others} = message;
+        const {content, type, ...others} = event.target;
         switch (type) {
             case 'snack':
                 Snackbar.show({title: content});
@@ -28,5 +31,9 @@ class Messenger {
         return "Messenger-" + this.id;
     }
 }
+export interface Messenger {
 
-module.exports = new Messenger();
+    init(): void;
+}
+
+module.exports = new _Messenger();

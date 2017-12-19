@@ -26,6 +26,7 @@ import {Statistics} from "./utils/Statistics";
 import {UPGRADE_CACHE} from "./auth/actionTypes";
 import Config from 'react-native-config'
 import {Provider} from "react-redux";
+import Messenger from "./Messenger"
 
 console.log(`staring app with env=${JSON.stringify(Config)}`);
 
@@ -89,11 +90,11 @@ export default class App {
             }
         });
 
-        // globalProps.setCustomView({
-        //     style: {
-        //         backgroundColor: 'transparent'
-        //     }
-        // });
+        globalProps.setCustomView({
+            style: {
+                backgroundColor: 'transparent'
+            }
+        });
 
         // setCustomTouchableWithoutFeedback({
         //     underlayColor: "red"
@@ -172,7 +173,7 @@ export default class App {
         //waiting rehydration before starting app
         let rehydrated = this.store.getState().app.rehydrated;
         if (!rehydrated) {
-            console.debug("waiting for rehydration1");
+            console.debug("waiting for rehydration");
             return;
         }
 
@@ -183,6 +184,8 @@ export default class App {
         DeviceManager.init(this.store);
         AlgoliaClient.init(this.store);
         Statistics.init(this.store);
+        Messenger.init();
+
 
         if (!__IS_LOCAL__) {
             this.bugsnag = new Client();
