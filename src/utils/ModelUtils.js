@@ -391,9 +391,11 @@ export function mergeItemsAndPendings<T>(
         })
     };
 
-    for (let i = 0; i < syncedItems.length; i++) {
+    for (let i = 0;; i++) {
         if (afterI == null) addCreate();
-        let l = syncedItems[i];
+
+        let l = _.get(syncedItems, i);
+        if (!l) break;
 
         //do not display list with pending deletion
         if (_.findIndex(pendingDelete, (o) => o.payload.lineupId === l.id) >= 0) continue;

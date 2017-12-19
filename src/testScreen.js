@@ -164,9 +164,10 @@ let testScreen = null;
 
 //change this line
 
+
 //  testScreen = test;
 // testScreen = profileScreen;
-testScreen = commentsScreen;
+// testScreen = commentsScreen;
 // testScreen = communityScreen;
 //  testScreen = sendScreen;
 //  testScreen = homeScreen;
