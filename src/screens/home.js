@@ -259,8 +259,8 @@ class HomeScreen extends Screen<Props, State> {
                           color={UI.Colors.blue}/>
                 </MenuTrigger>
                 <MenuOptions>
-                    <MenuOption onSelect={() => this.deleteLineup(item)} text='#Delete'/>
-                    <MenuOption onSelect={() => this.changeTitle(item)} text='#Changer le titre'/>
+                    <MenuOption onSelect={() => setTimeout(()=>this.deleteLineup(item))} text='#Delete'/>
+                    <MenuOption onSelect={() => setTimeout(() => this.changeTitle(item))} text='#Changer le titre'/>
                 </MenuOptions>
             </Menu>
         </View>;
