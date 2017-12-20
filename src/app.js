@@ -190,9 +190,6 @@ export default class App {
         if (!__IS_LOCAL__) {
             this.bugsnag = new Client();
         }
-        notification.load();
-
-
 
         //delayed import
         let registerScreens = require('./screens/allScreens').default;
@@ -229,6 +226,14 @@ export default class App {
 
         let logged = !!currentUserId;
 
+
+        if (logged) {
+            notification.load();
+        }
+        else {
+            //TODO: stop listening
+        }
+
         //TODO: use navigation to resolve the current screen
         if (this.logged !== logged) {
             this.logged = logged;
@@ -240,10 +245,7 @@ export default class App {
         const testScreen = require("./testScreen").default;
         console.debug(`starting app logged=${logged}, test=${(!!testScreen)}`);
 
-        /*if (__IS_LOCAL__ && testScreen) {
-            Navigation.startSingleScreenApp(testScreen);
-        }
-        else */if (!logged) {
+        if (!logged) {
             Navigation.startSingleScreenApp({
                 screen: {
                     label: 'Login',

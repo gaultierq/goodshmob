@@ -37,7 +37,7 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
 
 
     static navigatorStyle = {
-        screenBackgroundColor: 'transparent',
+        screenBackgroundColor: 'rgba(0,0,0,0.3)',
         modalPresentationStyle: 'overCurrentContext',
     };
 

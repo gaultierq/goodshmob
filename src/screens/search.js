@@ -397,7 +397,7 @@ export class SearchNavBar extends Component<NavProps, NavState> {
                 onChangeText={this.onChangeText.bind(this)}
                 onClearText={this.onClearText.bind(this)}
                 placeholder={i18n.t('search')}
-                clearIcon={{color: '#86939e'}}
+                clearIcon={!!this.state.input && {color: '#86939e'}}
                 containerStyle={SearchNavBar._styles.searchContainer}
                 inputStyle={SearchNavBar._styles.searchInput}
                 autoCapitalize='none'

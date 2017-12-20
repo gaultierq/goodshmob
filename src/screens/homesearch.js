@@ -35,7 +35,7 @@ export default class HomeSearchScreen extends Screen<Props, State> {
     state :State = {connect: {}};
 
     static navigatorStyle = {
-        screenBackgroundColor: 'transparent',
+        screenBackgroundColor: 'rgba(0,0,0,0.3)',
         modalPresentationStyle: 'overCurrentContext',
     };
 
