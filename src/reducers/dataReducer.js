@@ -1,4 +1,4 @@
-import { API_DATA_SUCCESS } from '../utils/Api';
+import {API_DATA_SUCCESS} from '../utils/Api';
 import Immutable from 'seamless-immutable';
 import merge from 'deepmerge'
 import {Statistics} from "../utils/Statistics";

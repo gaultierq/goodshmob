@@ -1,14 +1,13 @@
 // @flow
 
-import React from 'react';
 import type {Node} from 'react';
-import {Dimensions, FlatList, Image, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, View} from 'react-native';
+import React from 'react';
+import {Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import * as UI from "../UIStyles";
-import {assertUnique, buildData} from "../../utils/DataUtils";
+import {Colors, stylePadding} from "../UIStyles";
+import {assertUnique} from "../../utils/DataUtils";
 import {isEmpty} from "lodash";
 import type {List, Saving} from "../../types";
-import {stylePadding} from "../UIStyles";
-import {Colors} from "../UIStyles";
 //;
 
 type Props = {

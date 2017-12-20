@@ -2,7 +2,7 @@
 
 import type {Node} from 'react';
 import React from 'react';
-import {StyleSheet, TextInput, View, Image} from 'react-native';
+import {Image, StyleSheet, TextInput, View} from 'react-native';
 import {isEmpty} from "lodash";
 import type {i18Key, RequestState} from "../../types";
 import i18n from '../../i18n/i18n'

@@ -1,7 +1,6 @@
 // @flow
 
-import type {Store} from 'redux'
-;
+import type {Store} from 'redux';
 import {buildNonNullData} from "./utils/DataUtils";
 import type {Id} from "./types";
 

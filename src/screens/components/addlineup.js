@@ -1,16 +1,7 @@
 // @flow
 
 import React, {Component} from 'react';
-import {
-    Image,
-    Platform,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    TouchableWithoutFeedback,
-    View,
-} from 'react-native';
+import {Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View,} from 'react-native';
 
 import {connect} from "react-redux";
 import Snackbar from "react-native-snackbar"

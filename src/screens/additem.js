@@ -3,7 +3,7 @@ import React from 'react';
 import {ActivityIndicator, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {CheckBox, SearchBar} from "react-native-elements";
 import * as UI from "./UIStyles";
-import {renderSimpleLink} from "./UIStyles";
+import {renderSimpleButton, renderSimpleLink} from "./UIStyles";
 
 import LineupCell from "./components/LineupCell";
 import type {Id, Item, ItemType} from "../types";
@@ -18,8 +18,6 @@ import {safeDispatchAction} from "./../utils/Api";
 import {LineupListScreen} from "./lineuplist";
 import AddLineupComponent from "./components/addlineup";
 import {MainBackground} from "./UIComponents";
-import SmartButton from "./components/SmartButton";
-import {renderSimpleButton} from "./UIStyles";
 import {FETCH_ITEM} from "../lineup/actionTypes";
 
 type Props = {

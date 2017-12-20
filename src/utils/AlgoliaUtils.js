@@ -1,11 +1,10 @@
 // @flow
 
 import React from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
+import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {TabBar, TabViewAnimated} from 'react-native-tab-view';
 import {SearchBar} from 'react-native-elements'
 import type {SearchCategoryType} from "../screens/search";
-import SearchScreen from "../screens/search";
 import type {SearchToken} from "../types";
 import algoliasearch from 'algoliasearch/reactnative';
 import * as appActions from "../auth/actions";

@@ -1,11 +1,11 @@
 // @flow
 
 import ApiAction from "./ApiAction";
-import {Call} from "./Api";
-import type {Id, ms} from "../types";
-import {CREATE_PENDING_ACTION, REMOVE_PENDING_ACTION} from "../reducers/dataReducer";
 import * as Api from "./Api";
+import {Call} from "./Api";
+import type {Id} from "../types";
 import type {PendingItem} from "../reducers/dataReducer";
+import {CREATE_PENDING_ACTION, REMOVE_PENDING_ACTION} from "../reducers/dataReducer";
 /*
 
 export function parse(data: any) {

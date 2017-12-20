@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {ImageBackground} from 'react-native';
 
 export const MainBackground = (props) => <ImageBackground

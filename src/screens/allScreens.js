@@ -1,4 +1,4 @@
-import { Navigation } from 'react-native-navigation';
+import {Navigation} from 'react-native-navigation';
 
 import {screen as LoginScreen} from './login';
 import {screen as NetworkScreen} from './network';

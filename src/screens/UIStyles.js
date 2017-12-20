@@ -1,5 +1,5 @@
 //@flow
-import {Linking, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {Linking, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import Button from 'apsl-react-native-button'
 import * as React from "react";
 import {toUppercase} from "../utils/StringUtils";

@@ -2,8 +2,7 @@
 
 import RNFirebase from 'react-native-firebase'
 import type {Deeplink} from "./types";
-import URL from "url-parse"
-;
+import URL from "url-parse";
 import {Navigation} from 'react-native-navigation';
 
 let handleNotif = function (notif) {

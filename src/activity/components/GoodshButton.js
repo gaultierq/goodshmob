@@ -8,7 +8,6 @@ import type {Activity} from "../../types"
 import {connect} from "react-redux";
 
 
-
 type Props = {
     activity: Activity
 };

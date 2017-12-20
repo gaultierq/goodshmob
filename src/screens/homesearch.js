@@ -9,7 +9,6 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
-    TouchableWithoutFeedback,
     View
 } from 'react-native';
 import {connect} from "react-redux";
@@ -19,8 +18,8 @@ import LineupCell from "./components/LineupCell";
 import {AlgoliaClient, createResultFromHit, makeAlgoliaSearch} from "../utils/AlgoliaUtils";
 import {currentUserId} from "../CurrentUser";
 import Screen from "./components/Screen";
-import SearchScreen from "./search";
 import type {SearchCategory} from "./search";
+import SearchScreen from "./search";
 import {SearchStyles} from "./UIStyles";
 
 type Props = NavigableProps & {
@@ -49,13 +48,13 @@ export default class HomeSearchScreen extends Screen<Props, State> {
             if (isLineup) {
                 let lineup: List = item;
                 return (
-                    <TouchableWithoutFeedback
+                    <TouchableOpacity
                         onPress={() => this.onLineupPressed(lineup)}
                     >
                         <View>
                             <LineupCell lineup={lineup}/>
                         </View>
-                    </TouchableWithoutFeedback>
+                    </TouchableOpacity>
                 )
             }
             else {

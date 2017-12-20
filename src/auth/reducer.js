@@ -2,10 +2,8 @@
 
 import Immutable from 'seamless-immutable';
 import * as types from "./actionTypes";
+import {INVALIDATE_CACHE, SET_USER_NULL, UPGRADE_CACHE} from "./actionTypes";
 import {camelize} from 'camelize-object-key'
-import {INVALIDATE_CACHE} from "./actionTypes";
-import {SET_USER_NULL} from "./actionTypes";
-import {UPGRADE_CACHE} from "./actionTypes";
 
 export function createWithReducers(appReducers) {
     return (state, action) => {

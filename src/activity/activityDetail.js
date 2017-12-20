@@ -1,17 +1,7 @@
 // @flow
 
-import React, {Component} from 'react';
-import {
-    ActivityIndicator,
-    FlatList,
-    Linking,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableWithoutFeedback,
-    View,
-    TouchableOpacity
-} from 'react-native';
+import React from 'react';
+import {ActivityIndicator, FlatList, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import * as actions from './actions'
 import {connect} from "react-redux";
 import ActivityBody from "./components/ActivityBody";
@@ -135,7 +125,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
     renderComments(activity) {
         return (
-            <TouchableWithoutFeedback
+            <TouchableOpacity
                 onPress={()=> this.displayActivityComments(activity)}>
                 <View style={[UI.CARD(0), {padding: 8, paddingLeft: 12, backgroundColor: "#fefefe"}]}>
 
@@ -147,7 +137,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                         alignItems: 'center',
                     }
                     }>
-                        <Text style={[UI.TEXT_LEAST_IMPORTANT, {marginLeft: 18}]}>No one commented yet</Text>
+                        <Text style={[UI.TEXT_LEAST_IMPORTANT, {marginLeft: 18}]}>#No one commented yet</Text>
                         <Icon name="chevron-small-right" size={20} color={UI.Colors.grey1} />
                     </View>
                     }
@@ -173,12 +163,12 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
 
                 </View>
-            </TouchableWithoutFeedback>);
+            </TouchableOpacity>);
     }
 
     renderRelatedActivities({item}) {
         return (<View>
-                <TouchableWithoutFeedback
+                <TouchableOpacity
                     // underlayColor={"red"}
                     onPress={()=> this.displayActivityComments(item)}
                 >
@@ -186,7 +176,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                         <ActivityDescription activity={item} navigator={this.props.navigator}/>
                     </View>
 
-                </TouchableWithoutFeedback>
+                </TouchableOpacity>
 
                 {this.renderComments(item)}
             </View>

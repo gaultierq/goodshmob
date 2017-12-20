@@ -1,13 +1,13 @@
 // @flow
 
-import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, Platform, RefreshControl, TouchableWithoutFeedback, View} from 'react-native';
+import React from 'react';
+import {ActivityIndicator, FlatList, Platform, RefreshControl, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
 import ActivityCell from "../activity/components/ActivityCell";
 import * as UIStyles from "./UIStyles"
 import {MainBackground} from "./UIComponents"
 import Feed from "./components/feed"
-import type {Ask, List, NavigableProps} from "../types";
+import type {List, NavigableProps} from "../types";
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {currentUserId} from "../CurrentUser";
@@ -217,7 +217,7 @@ class NetworkScreen extends Screen<Props, State> {
                 let lineup: List = item;
                 //let handler = this.props.onLineupPressed ? () => this.props.onLineupPressed(item) : null;
                 return (
-                    <TouchableWithoutFeedback
+                    <TouchableOpacity
                         //onPress={handler}
                     >
                         <View>
@@ -226,7 +226,7 @@ class NetworkScreen extends Screen<Props, State> {
                                 //onAddInLineupPressed={this.props.onAddInLineupPressed}
                             />
                         </View>
-                    </TouchableWithoutFeedback>
+                    </TouchableOpacity>
                 )
             }
             else {

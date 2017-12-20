@@ -12,7 +12,7 @@ import {
     StyleSheet,
     Text,
     TextInput,
-    TouchableWithoutFeedback,
+    TouchableOpacity,
     View
 } from 'react-native';
 import {connect} from 'react-redux';
@@ -109,7 +109,7 @@ export default class Profile extends Component<Props, State> {
             }
 
         };
-        return <TouchableWithoutFeedback onPress={handler}><Text>v1.0</Text></TouchableWithoutFeedback>
+        return <TouchableOpacity onPress={handler}><Text>v1.0</Text></TouchableOpacity>
     }
 
 

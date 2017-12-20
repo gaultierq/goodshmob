@@ -1,7 +1,7 @@
 // @flow
 
 import type {Node} from 'react';
-import React, {Component} from 'react';
+import React from 'react';
 import {Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
 import type {Id, Item} from "../types";

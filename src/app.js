@@ -10,7 +10,7 @@ import logger from 'redux-logger'
 
 import * as Api from './utils/Api';
 import {autoRehydrate, createTransform, persistStore} from 'redux-persist'
-import {AsyncStorage, TouchableWithoutFeedback} from 'react-native'
+import {AsyncStorage, TouchableOpacity} from 'react-native'
 import immutableTransform from './immutableTransform'
 import {REHYDRATE} from 'redux-persist/constants'
 import i18n from './i18n/i18n'
@@ -96,7 +96,7 @@ export default class App {
             }
         });
 
-        // setCustomTouchableWithoutFeedback({
+        // setCustomTouchableOpacity({
         //     underlayColor: "red"
         // });
         // const DEFAULT_PROPS = {
@@ -104,7 +104,7 @@ export default class App {
         //     underlayColor: 'red',
         // };
         //
-        // TouchableWithoutFeedback.prototype.getDefaultProps = function getDefaultProps() {
+        // TouchableOpacity.prototype.getDefaultProps = function getDefaultProps() {
         //     return DEFAULT_PROPS;
         // };
         // Getting rid of that ugly line on Android and adding some custom style to all TextInput components.

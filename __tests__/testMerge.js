@@ -1,6 +1,4 @@
-import * as ModelUtils from "../src/utils/ModelUtils"
-import type {MergeOptions} from "../src/utils/ModelUtils";
-import {mergeLists} from "../src/utils/ModelUtils";
+import {mergeLists} from "../src/utils/ModelUtils"
 
 test('testing merge 1', () => {
     expect(

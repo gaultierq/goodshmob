@@ -1,4 +1,3 @@
-
 import type {MergeOptions} from "./utils/ModelUtils";
 
 export type Url = string;

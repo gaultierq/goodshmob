@@ -12,7 +12,6 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    TouchableWithoutFeedback,
     View
 } from 'react-native';
 
@@ -28,8 +27,7 @@ import Feed from "./components/feed";
 import {currentUserId} from "../CurrentUser"
 import ApiAction from "../utils/ApiAction";
 import {buildData, doDataMergeInState} from "../utils/DataUtils";
-import {DELETE_LINEUP} from "../lineup/actionTypes";
-import {CREATE_LINEUP} from "../lineup/actionTypes";
+import {CREATE_LINEUP, DELETE_LINEUP} from "../lineup/actionTypes";
 import {mergeItemsAndPendings} from "../utils/ModelUtils";
 
 //TODO: clean
@@ -205,7 +203,7 @@ export {reducer};
 
 export function renderSimpleListItem(navigator: *) {
 
-    return (item: List) => (<TouchableWithoutFeedback
+    return (item: List) => (<TouchableOpacity
         onPress={() => {
             navigator.push({
                 screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
@@ -215,5 +213,5 @@ export function renderSimpleListItem(navigator: *) {
             });
         }}>
         <LineupCell lineup={item}/>
-    </TouchableWithoutFeedback>)
+    </TouchableOpacity>)
 }

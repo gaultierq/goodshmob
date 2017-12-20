@@ -1,10 +1,8 @@
 // @flow
 
 import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, View, TouchableOpacity} from 'react-native';
-import {connect} from "react-redux";
+import {ActivityIndicator, FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import * as Api from "../utils/Api";
-import {combineReducers} from "redux";
 import {TabBar, TabViewAnimated} from 'react-native-tab-view';
 import ItemCell from "./components/ItemCell";
 import {buildData} from "../utils/DataUtils";

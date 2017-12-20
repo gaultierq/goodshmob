@@ -4,7 +4,7 @@ import type {Node} from 'react';
 import React from 'react';
 
 
-import {Image, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import * as UI from "../../screens/UIStyles";
 import type {User} from "../../types";
 import {fullName} from "../../utils/StringUtils";

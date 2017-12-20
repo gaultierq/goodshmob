@@ -13,7 +13,7 @@ import * as Api from "../utils/Api";
 import * as UI from "./UIStyles";
 import SmartInput from "./components/SmartInput";
 import {currentUserId} from "../CurrentUser";
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import {MainBackground} from "./UIComponents";
 
 type Props = {

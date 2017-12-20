@@ -3,7 +3,6 @@ import {Component} from 'react';
 import type {NavigableProps} from "../../types";
 import {toUppercase} from "../../utils/StringUtils";
 import * as Nav from "../Nav";
-import {superConsole} from "../../global";
 
 
 export type ScreenVisibility = 'unknown' | 'visible' | 'hidden';

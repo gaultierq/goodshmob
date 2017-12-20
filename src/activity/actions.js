@@ -5,7 +5,6 @@ import {sanitizeActivityType} from "../utils/DataUtils";
 import type {ActivityType, Id} from "../types";
 
 
-
 export function fetchActivity(activityId: Id, activityType: ActivityType, options?:any = {}) {
     let type = sanitizeActivityType(activityType);
 

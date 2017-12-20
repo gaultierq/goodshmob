@@ -3,7 +3,6 @@ import type {Node} from 'react';
 import React, {Component} from 'react';
 import {Clipboard, Dimensions, Image, Share, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {CheckBox} from "react-native-elements";
-import {connect} from "react-redux";
 
 type Props = {
     containerStyle:? any,

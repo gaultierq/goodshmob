@@ -1,6 +1,6 @@
 // @flow
 
-import React, {Component} from 'react';
+import React from 'react';
 import {
     ActivityIndicator,
     FlatList,
@@ -9,7 +9,6 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
-    TouchableWithoutFeedback,
     View
 } from 'react-native';
 import {connect} from "react-redux";
@@ -66,7 +65,7 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                 );
 
                 return (
-                    <TouchableWithoutFeedback
+                    <TouchableOpacity
                         onPress={() => this.onLineupPressed(item)}>
                         <View>
                             <LineupCell
@@ -75,7 +74,7 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                                 titleChildrenBelow={true}
                             />
                         </View>
-                    </TouchableWithoutFeedback>
+                    </TouchableOpacity>
                 )
             }
             else {

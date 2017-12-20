@@ -1,7 +1,7 @@
 // @flow
 
-import React, {Component} from 'react';
-import {ScrollView, StyleSheet, Text, View,TouchableOpacity} from 'react-native';
+import React from 'react';
+import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
 import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";

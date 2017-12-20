@@ -1,4 +1,4 @@
-import {data as data1} from './dataReducer'
+import {config, data as data1, pending} from './dataReducer'
 import activity from '../activity/reducer';
 import {reducer as network} from '../screens/networkActions';
 import {reducer as savings} from '../screens/lineup';
@@ -9,7 +9,6 @@ import {reducer as peopleYouMayKnow} from '../screens/community';
 import {reducer as interaction} from '../screens/interactions';
 import {statReducer as stat} from '../utils/Statistics';
 import {authReducer as auth, deviceReducer as device} from '../auth/reducer';
-import {config, pending} from './dataReducer';
 
 function reduceReducers(...reducers) {
     return (previous, current) =>
