@@ -249,6 +249,7 @@ class NetworkScreen extends Screen<Props, State> {
             screen: 'goodsh.NetworkSearchScreen',
             title: "#Rechercher",
             animationType: 'none',
+            backButtonHidden: true,
             passProps:{
                 queries,
                 renderItem

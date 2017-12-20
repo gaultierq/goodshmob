@@ -21,6 +21,7 @@ import {currentUserId} from "../CurrentUser";
 import Screen from "./components/Screen";
 import SearchScreen from "./search";
 import type {SearchCategory} from "./search";
+import {SearchStyles} from "./UIStyles";
 
 type Props = NavigableProps & {
 };
@@ -34,10 +35,7 @@ export default class HomeSearchScreen extends Screen<Props, State> {
 
     state :State = {connect: {}};
 
-    static navigatorStyle = {
-        screenBackgroundColor: 'rgba(0,0,0,0.3)',
-        modalPresentationStyle: 'overCurrentContext',
-    };
+    static navigatorStyle = SearchStyles;
 
     render() {
         let renderItem = ({item})=> {

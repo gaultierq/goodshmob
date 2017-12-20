@@ -19,7 +19,7 @@ import LineupCell from "./components/LineupCell";
 import {AlgoliaClient, createResultFromHit, createResultFromHit2, makeAlgoliaSearch} from "../utils/AlgoliaUtils";
 import UserConnectItem from "./userConnectItem";
 import UserRowI from "../activity/components/UserRowI";
-import {Colors} from "./UIStyles";
+import {Colors, SearchStyles} from "./UIStyles";
 import {currentUserId} from "../CurrentUser";
 import Screen from "./components/Screen";
 import Config from 'react-native-config'
@@ -36,10 +36,7 @@ type State = {
 export default class NetworkSearchScreen extends Screen<Props, State> {
 
 
-    static navigatorStyle = {
-        screenBackgroundColor: 'rgba(0,0,0,0.3)',
-        modalPresentationStyle: 'overCurrentContext',
-    };
+    static navigatorStyle = SearchStyles;
 
     state: State = {connect: {}};
 

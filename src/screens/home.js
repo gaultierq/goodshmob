@@ -103,8 +103,9 @@ class HomeScreen extends Screen<Props, State> {
 
                     navigator.showModal({
                         screen: 'goodsh.HomeSearchScreen', // unique ID registered with Navigation.registerScreen
-                        title: "#Rechercher", // navigation bar title of the pushed screen (optional)
+                        //title: "#Rechercher", // navigation bar title of the pushed screen (optional)
                         animationType: 'none',
+                        backButtonHidden: true,
                         passProps:{
                             onClickClose: () => navigator.dismissModal({animationType: 'none'}),
                         },

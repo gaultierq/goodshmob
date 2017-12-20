@@ -9,6 +9,13 @@ export const NavStyles = {
     navBarBackgroundColor: '#f4f4f4',
 };
 
+export const SearchStyles = {
+    screenBackgroundColor: 'rgba(0,0,0,0.3)',
+    modalPresentationStyle: 'overCurrentContext',
+    topBarElevationShadowEnabled: false
+};
+
+
 export const Colors = Object.freeze({
     black: '#000000',
     blue: '#408be7',
