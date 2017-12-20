@@ -6,6 +6,8 @@ import {connect} from "react-redux";
 import {CheckBox} from "react-native-elements";
 import {CONFIG_SET} from "../reducers/dataReducer";
 import Screen from "./components/Screen";
+import codePush from "react-native-code-push";
+
 
 type Props = {
 
@@ -53,9 +55,24 @@ export default class DebugScreen extends Screen<Props, State> {
                         title="print storage"
                         onPress={this.printStorage.bind(this)}
                     />
+                    <Button
+                        title="sync codepush"
+                        onPress={this.syncCodepush.bind(this)}
+                    />
                     <Text>{this.state.text}</Text>
                 </View>
             </ScrollView>
+        );
+    }
+
+    syncCodepush() {
+        codePush.sync({
+                updateDialog: true,
+                installMode: codePush.InstallMode.IMMEDIATE
+            },
+            (status) => {
+                this.setState({text: `Codepush:status=${status}`});
+            }
         );
     }
 
@@ -79,6 +96,6 @@ export default class DebugScreen extends Screen<Props, State> {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'transparent',
+        backgroundColor: 'green',
     }
 });

@@ -34,7 +34,7 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>CodePushDeploymentKey</key>
-	<string>deployment-key-here</string>
+	<string>xP0OsZQ_JXRRVWG1AFt7fH2c9zxI4cc6d0ae-bf43-4a45-ac18-52fde4b1b1b2</string>
 	<key>FacebookAppID</key>
 	<string>857429951037660</string>
 	<key>FacebookDisplayName</key>
@@ -60,7 +60,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
