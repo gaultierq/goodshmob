@@ -32,7 +32,7 @@ export default class ActivityBody extends React.Component<Props, State> {
                 <View style={[{alignItems: 'center',width: "100%"}, bgc]}>
                     {this.body()}
 
-                    {!noGoodshButton && activity.type !== 'asks' && <GoodshButton activity={activity}/>}
+                    {/*{!noGoodshButton && activity.type !== 'asks' && <GoodshButton activity={activity}/>}*/}
 
                 </View>
 

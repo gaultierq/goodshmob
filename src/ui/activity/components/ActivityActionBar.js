@@ -12,9 +12,10 @@ import {toUppercase} from "../../../helpers/StringUtils";
 import {buildNonNullData} from "../../../helpers/DataUtils";
 import {Colors} from "../../colors";
 import ActionRights from "../../rights";
+import * as activityAction from "../actions";
 
-export type ActivityActionType = 'comment'| 'share'| 'save'| 'unsave'| 'see'| 'buy'| 'answer';
-const ACTIONS = ['comment', 'share', 'save', 'unsave', 'see', 'buy', 'answer'];
+export type ActivityActionType = 'comment'| 'like'| 'unlike'| 'share'| 'save'| 'unsave'| 'see'| 'buy'| 'answer';
+const ACTIONS = ['comment', 'like', 'unlike','share', 'save', 'unsave', 'see', 'buy', 'answer'];
 
 
 type Props = {
@@ -40,7 +41,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
         //let goodshed = resource && resource.meta ? savedIn : false;
 
-        const possibleActions = ['comment', 'share', 'save', 'unsave', 'see', 'answer'];
+        const possibleActions = ['comment', 'like', 'unlike', 'share', 'save', 'unsave', 'see', 'answer'];
 
         let buttons = possibleActions.reduce((res, a) => {
             if (this.canExec(a, activity)) {
@@ -49,7 +50,8 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                         this.renderImageButton(a),
                         this.renderTextButton(a, activity),
                         //$FlowFixMe
-                        ()=>this['exec' + toUppercase(a)](activity)
+                        ()=>this['exec' + toUppercase(a)](activity),
+                        a === 'unlike' || a === 'unsave'
                     )
                 );
             }
@@ -78,9 +80,14 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                 let commentsCount = activity.comments ? activity.comments.length : 0;
                 return commentsCount + '';
                 // return i18n.t(`activity_item.buttons.${action}`,{count: commentsCount});
+            case 'like':
+            case 'unlike':
+                let likesCount = activity.meta ? activity.meta["likes-count"] : 0;
+                return likesCount > 0 ? likesCount +'' : '';
             case 'answer':
                 let answersCount = activity.answersCount || 0;
                 return answersCount + '';//i18n.t(`activity_item.buttons.${action}`, {count: answersCount});
+
         }
         return '';//i18n.t(`activity_item.buttons.${action}`);
     }
@@ -88,19 +95,23 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     renderImageButton(action: ActivityActionType) {
         switch(action) {
             case 'comment':
-                return require('../../../img2/commentIcon.png')
+                return require('../../../img2/commentIcon.png');
+            case 'like':
+                return require('../../../img2/yeaahIcon.png');
+            case 'unlike':
+                return require('../../../img2/yeaahIcon.png');
             case 'share':
-                return require('../../../img2/sendIcon.png')
+                return require('../../../img2/sendIcon.png');
             case 'save':
-                return require('../../../img2/lineUpIcon.png')
+                return require('../../../img2/lineUpIcon.png');
             case 'unsave':
-                return require('../../../img/save-icon.png')
+                return require('../../../img/save-icon.png');
             case 'see':
-                return require('../../../img/save-icon.png')
+                return require('../../../img/save-icon.png');
             case 'buy':
-                return require('../../../img/buy-icon.png')
+                return require('../../../img/buy-icon.png');
             case 'answer':
-                return require('../../../img2/commentIcon.png')
+                return require('../../../img2/commentIcon.png');
         }
         throw "Unknown action: " +action
     }
@@ -144,6 +155,14 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
     canSave(activity: Activity) {
         return !this.isAsk(activity) && !this.isGoodshed2(activity) && this.byMe(activity);
+    }
+
+    canLike(activity: Activity) {
+        return new ActionRights(activity).canLike();
+    }
+
+    canUnlike(activity: Activity) {
+        return new ActionRights(activity).canUnlike();
     }
 
     canBuy(activity: Activity) {
@@ -278,6 +297,16 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                 console.log("Don't know how to open URI: " + url);
             }
         });
+    }
+
+    execLike(activity: Activity) {
+        let {id, type} = activity;
+        this.props.dispatch(activityAction.like(id, type));
+    }
+
+    execUnlike(activity: Activity) {
+        let {id, type} = activity;
+        this.props.dispatch(activityAction.unlike(id, type));
     }
 
 
