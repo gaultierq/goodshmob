@@ -37,7 +37,7 @@ export default class SmartInput extends React.Component<Props, State> {
 
     static defaultProps = {
         defaultValue: '',
-        button: <Image source={require('../../img/send.png')} resizeMode="contain"/>
+        button: <Image source={require('../../img2/sendIcon.png')} resizeMode="contain"/>
     };
 
 

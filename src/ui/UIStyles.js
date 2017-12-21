@@ -38,20 +38,38 @@ export const RandomColors = Object.freeze([
 
 
 export const CARD = (sideMargin: number = 12) => {
+    return CARD2();
+    // return {
+    //     backgroundColor: "white",
+    //     marginLeft: sideMargin,
+    //     marginRight: sideMargin,
+    //     shadowColor: "#000",
+    //     shadowOpacity: 0.3,
+    //     shadowOffset: {width: 2, height: 2},
+    //     borderRadius: 4,
+    //     shadowRadius: 2,
+    //     elevation: 2,
+    //     marginTop: 5,
+    //     marginBottom: 5
+    // }
+};
+
+export const CARD2 = (sideMargin: number = 0) => {
     return {
         backgroundColor: "white",
         marginLeft: sideMargin,
         marginRight: sideMargin,
-        shadowColor: "#000",
-        shadowOpacity: 0.3,
-        shadowOffset: {width: 2, height: 2},
-        borderRadius: 4,
-        shadowRadius: 2,
-        elevation: 2,
+        // shadowColor: "#000",
+        // shadowOpacity: 0.3,
+        // shadowOffset: {width: 2, height: 2},
+        // borderRadius: 4,
+        // shadowRadius: 2,
+        // elevation: 2,
         marginTop: 5,
         marginBottom: 5
     }
 };
+
 export const SIDE_MARGINS = (margin) => {
     return {
         marginLeft: margin,

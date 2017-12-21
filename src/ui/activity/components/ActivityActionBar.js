@@ -4,14 +4,14 @@ import React from 'react';
 
 import {Alert, Image, Linking, Platform, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import type {Activity, ActivityType, Id, Saving, Url} from "../../../types";
-import i18n from '../../../i18n/i18n'
 import {connect} from "react-redux";
 import {currentGoodshboxId, currentUserId} from "../../../managers/CurrentUser";
 import {unsave} from "../actions";
 import Snackbar from "react-native-snackbar"
 import {toUppercase} from "../../../helpers/StringUtils";
-import {buildNonNullData, sanitizeActivityType} from "../../../helpers/DataUtils";
+import {buildNonNullData} from "../../../helpers/DataUtils";
 import {Colors} from "../../colors";
+import ActionRights from "../../rights";
 
 export type ActivityActionType = 'comment'| 'share'| 'save'| 'unsave'| 'see'| 'buy'| 'answer';
 const ACTIONS = ['comment', 'share', 'save', 'unsave', 'see', 'buy', 'answer'];
@@ -40,7 +40,9 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
         //let goodshed = resource && resource.meta ? savedIn : false;
 
-        let buttons = ACTIONS.reduce((res, a) => {
+        const possibleActions = ['comment', 'share', 'save', 'unsave', 'see', 'answer'];
+
+        let buttons = possibleActions.reduce((res, a) => {
             if (this.canExec(a, activity)) {
                 res.push(
                     this.renderButton(
@@ -74,22 +76,23 @@ export default class ActivityActionBar extends React.Component<Props, State> {
         switch(action) {
             case 'comment':
                 let commentsCount = activity.comments ? activity.comments.length : 0;
-                return i18n.t(`activity_item.buttons.${action}`,{count: commentsCount});
+                return commentsCount + '';
+                // return i18n.t(`activity_item.buttons.${action}`,{count: commentsCount});
             case 'answer':
                 let answersCount = activity.answersCount || 0;
-                return i18n.t(`activity_item.buttons.${action}`, {count: answersCount});
+                return answersCount + '';//i18n.t(`activity_item.buttons.${action}`, {count: answersCount});
         }
-        return i18n.t(`activity_item.buttons.${action}`);
+        return '';//i18n.t(`activity_item.buttons.${action}`);
     }
 
     renderImageButton(action: ActivityActionType) {
         switch(action) {
             case 'comment':
-                return require('../../../img/comment.png')
+                return require('../../../img2/commentIcon.png')
             case 'share':
-                return require('../../../img/send.png')
+                return require('../../../img2/sendIcon.png')
             case 'save':
-                return require('../../../img/save-icon.png')
+                return require('../../../img2/lineUpIcon.png')
             case 'unsave':
                 return require('../../../img/save-icon.png')
             case 'see':
@@ -97,7 +100,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
             case 'buy':
                 return require('../../../img/buy-icon.png')
             case 'answer':
-                return require('../../../img/comment.png')
+                return require('../../../img2/commentIcon.png')
         }
         throw "Unknown action: " +action
     }
@@ -144,8 +147,9 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     }
 
     canBuy(activity: Activity) {
-        let resource = activity.resource;
-        return resource && sanitizeActivityType(resource.type) === 'creativeWorks';
+        return new ActionRights(activity).canBuy();
+        // let resource = activity.resource;
+        // return resource && sanitizeActivityType(resource.type) === 'creativeWorks';
         //return _.get(activity, 'resource.type') === 'creativeWorks';
     }
 
@@ -168,9 +172,9 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     renderButton(img: Url, text: string, handler: ()=>void, active:boolean = false) {
         let color = active ? Colors.green: Colors.black;
         return (<TouchableOpacity onPress={handler}>
-                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', padding: 6}}>
+                <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 6}}>
 
-                    <Image source={img} style={{width: 16, height: 16, margin: 8, resizeMode: 'contain', tintColor: color}}/>
+                    <Image source={img} style={{width: 20, height: 20, margin: 8, resizeMode: 'contain', tintColor: color}}/>
                     <Text style={{fontFamily: 'Chivo', textAlign: 'center', fontSize: 10, color: color}}>{text}</Text>
                 </View>
             </TouchableOpacity>
