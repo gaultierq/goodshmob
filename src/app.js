@@ -282,7 +282,7 @@ export default class App {
                         label: i18n.t('tabs.home.label'),
                         screen: 'goodsh.HomeScreen',
                         icon: require('./img/drawer_line_up.png'),
-                        titleImage: require('./img/screen_title_home.png'),
+                        titleImage: require('./img2/headerLogoBlack.png'),
                         title: i18n.t('tabs.home.title'),
                         navigatorStyle
 
@@ -292,7 +292,7 @@ export default class App {
                         screen: 'goodsh.NetworkScreen', // unique ID registered with Navigation.registerScreen
                         icon: require('./img/bottom_bar_search.png'), // local image asset for the tab icon unselected state (optional on iOS)
                         title: '#Mon réseau', // title of the screen as appears in the nav bar (optional)
-                        titleImage: require('./img/screen_title_home.png'),
+                        titleImage: require('./img2/headerLogoBlack.png'),
                         navigatorStyle
                     },
                 ],

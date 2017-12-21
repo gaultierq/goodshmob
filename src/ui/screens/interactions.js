@@ -81,7 +81,7 @@ export class InteractionScreen extends Screen<Props, State> {
                     this.props.navigator.showModal({
                         screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
                         title: "#Details", // navigation bar title of the pushed screen (optional)
-                        titleImage: require('../../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
+                        titleImage: require('../../img2/headerLogoBlack.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
                         passProps: {
                             activityId: activity.id,
                             activityType: activity.type

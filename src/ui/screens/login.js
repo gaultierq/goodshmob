@@ -46,7 +46,7 @@ class Login extends Component<Props, State> {
                         <Text style={{fontSize: 20, textAlign: 'center'}}>{i18n.t('login_screen.value_proposal')}</Text>
                         {/*<Text>{i18n.t('login_screen.definition.example')}</Text>*/}
                         <Image
-                            source={require('../../img/screen_title_home.png')}
+                            source={require('../../img2/headerLogoBlack.png')}
                             resizeMode="contain"
 
                         />
