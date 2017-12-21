@@ -61,7 +61,7 @@ class HomeScreen extends Screen<Props, State> {
         ],
         rightButtons: [
             {
-                icon: require('../../img/bottom_bar_search.png'),
+                icon: require('../../img2/searchHeaderIcon.png'),
                 id: 'search'
             }
         ],
