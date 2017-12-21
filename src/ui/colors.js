@@ -9,5 +9,5 @@ export const Colors = Object.freeze({
     grey4: '#D5D5D5',
     green: '#01DEB1',
     white: '#FFFFFF',
-    dirtyWhite: '#D5D5D5'
+    dirtyWhite: 'rgb(247,247,247)'
 });

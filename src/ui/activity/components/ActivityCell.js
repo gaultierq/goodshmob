@@ -45,14 +45,14 @@ export default class ActivityCell extends React.Component<Props, State> {
                 marginTop: 10,
                 marginBottom: 10
             }}>
-                {
-                    !skipDescription &&
-                    <ActivityDescription
-                        activity={activity}
-                        navigator={this.props.navigator}
-                        skipLineup={!!skipLineup}
-                    />
-                }
+                {/*{*/}
+                    {/*!skipDescription &&*/}
+                    {/*<ActivityDescription*/}
+                        {/*activity={activity}*/}
+                        {/*navigator={this.props.navigator}*/}
+                        {/*skipLineup={!!skipLineup}*/}
+                    {/*/>*/}
+                {/*}*/}
 
                 <View style={UI.CARD()}>
                     <TouchableOpacity onPress={this.props.onPressItem}>
@@ -62,7 +62,7 @@ export default class ActivityCell extends React.Component<Props, State> {
                         />
                     </TouchableOpacity>
 
-                    <FeedSeparator/>
+                    {/*<FeedSeparator/>*/}
 
                     <ActivityActionBar
                         activityId={activity.id}

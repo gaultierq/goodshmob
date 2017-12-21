@@ -4,10 +4,10 @@ import {Image, Linking, Share, StyleSheet, Text, TouchableHighlight, TouchableOp
 import * as UI from "../../UIStyles";
 import {connect} from "react-redux";
 import type {Activity} from "../../../types"
-import GoodshButton from "./GoodshButton";
-import Button from 'apsl-react-native-button'
 import {Colors} from "../../colors";
 import ActionRights from "../../rights";
+import Button from 'apsl-react-native-button';
+import {fullName} from "../../../helpers/StringUtils";
 
 type Props = {
     activity: Activity,
@@ -29,29 +29,107 @@ export default class ActivityBody extends React.Component<Props, State> {
         return (
             <View>
                 {/*Image And Button*/}
-                <View style={[{alignItems: 'center',width: "100%"}, bgc]}>
+                <View style={[{alignItems: 'center', }, bgc]}>
                     {this.body()}
 
                     {/*{!noGoodshButton && activity.type !== 'asks' && <GoodshButton activity={activity}/>}*/}
 
                 </View>
 
-                {resource &&
-                <View style={{flex:1, padding: 15, flexDirection: 'row'}}>
-                    <View style={{flex:1}}>
-                        <Text style={{fontSize: 18, fontFamily: 'Chivo-Light',}}>{resource.title}</Text>
-                        <Text style={UI.TEXT_LESS_IMPORTANT}>{resource.subtitle}</Text>
+                {resource && (
+                    <View style={{padding: 15, }}>
+                        <View style={{flexDirection: 'row'}}>
+                            <View style={{flex:1}}>
+                                <Text style={{fontSize: 20, fontFamily: 'Chivo',}}>{resource.title}</Text>
+                                <Text style={UI.TEXT_LESS_IMPORTANT}>{resource.subtitle}</Text>
 
 
-                        {__IS_LOCAL__ &&
-                        <Text style={UI.TEXT_LESS_IMPORTANT}>{activity.type + " " + activity.id}</Text>}
+                                {__IS_LOCAL__ &&
+                                <Text style={UI.TEXT_LESS_IMPORTANT}>{activity.type + " " + activity.id}</Text>}
+                            </View>
+                            {this.renderBuyButton(activity)}
+                        </View>
+                        {!!activity.description && <Text style={{fontSize: 16, color: Colors.grey1}}>{activity.description}</Text>}
+
+                        {this.renderTags()}
                     </View>
-                    {this.renderBuyButton(activity)}
-                </View>
+                )
+
                 }
 
             </View>
         )
+    }
+
+
+    renderTags() {
+        let activity, target, targetName: string, key: i18Key, press: () => void;
+        if (!(activity = this.props.activity)) return null;
+        if (activity.type === 'asks') throw 'no ask';
+
+        // const {skipLineup, withFollowButton} = this.props;
+        // if (skipLineup) return null;
+
+
+        if (!(target = activity.target)) return null;
+
+        if (target.type === 'lists') {
+            let count = target.meta ? target.meta["savings-count"] : 0;
+            targetName = target.name;
+            if (count) targetName += " (" + count + ")";
+
+            key = "activity_item.header.in";
+            press = () => this.seeList(target);
+        }
+        else if (target.type === 'users') {
+            targetName = target.firstName + " " + target.lastName;
+            key = "activity_item.header.to";
+            press = () => this.seeUser(target);
+        }
+
+        const color = Colors.grey2;
+
+        const pa = 16;
+        return <View style={{flexDirection:'row', marginTop: 10}}>
+            <TouchableOpacity onPress={press}>
+                <Text
+                    style={[{paddingLeft: pa, paddingRight: pa,
+                        color,
+                        alignSelf: 'stretch',
+                        borderRadius: 13,
+                        height: 26,
+                        lineHeight: 26,
+                        // padding: 2,
+                        borderWidth: StyleSheet.hairlineWidth,
+                        borderColor: color,
+
+                    }]}>
+                    {i18n.t(key) + ' ' + targetName}
+                </Text>
+            </TouchableOpacity>
+        </View>
+
+    }
+
+
+
+    seeList(lineup: List) {
+        this.props.navigator.push({
+            screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
+            passProps: {
+                lineupId: lineup.id,
+            },
+        });
+    }
+
+    seeUser(user: User) {
+        this.props.navigator.push({
+            screen: 'goodsh.UserScreen', // unique ID registered with Navigation.registerScreen
+            title: fullName(user),
+            passProps: {
+                userId: user.id,
+            },
+        });
     }
 
     renderBuyButton(activity:Activity) {
