@@ -1,14 +1,14 @@
 // @flow
 import React from 'react';
 import {Clipboard, Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpacity, User, View} from 'react-native';
-import type {Id} from "../types";
+import type {Id} from "../../types";
 import {CheckBox} from "react-native-elements";
 import {connect} from "react-redux";
-import Feed from "./components/feed";
-import {FETCH_ACTIVITIES, fetchUserNetwork} from "./networkActions";
-import ActivityCell from "../activity/components/ActivityCell";
-import Screen from "./components/Screen";
-import {MainBackground} from "./UIComponents";
+import Feed from "../components/feed";
+import {FETCH_ACTIVITIES, fetchUserNetwork} from "../networkActions";
+import ActivityCell from "../../activity/components/ActivityCell";
+import Screen from "../components/Screen";
+import {MainBackground} from "../UIComponents";
 
 type Props = {
     userId: Id,

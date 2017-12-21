@@ -1,17 +1,17 @@
 // @flow
 import React, {Component} from 'react';
 import {Clipboard, Dimensions, Image, Share, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import type {Id, Item, ItemType} from "../types";
+import type {Id, Item, ItemType} from "../../types";
 import {CheckBox} from "react-native-elements";
 import Snackbar from "react-native-snackbar"
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import * as UI from "./UIStyles";
-import {currentUserId} from "../CurrentUser"
+import {currentUserId} from "../../CurrentUser"
 import {connect} from "react-redux";
-import {buildNonNullData} from "../utils/DataUtils";
-import * as Nav from "./Nav";
+import {buildNonNullData} from "../../utils/DataUtils";
+import * as Nav from "../Nav";
 import Closable from "./closable";
+import {Colors} from "../colors";
 
 type Props = {
     itemId: Id,
@@ -43,7 +43,7 @@ class ShareScreen extends Component<Props, State> {
             >
 
                 <View style={{margin: 16}}>
-                    <Image source={require('../img/rounded_send_icon.png')}
+                    <Image source={require('../../img/rounded_send_icon.png')}
                            resizeMode="contain"
                            style={{alignSelf: 'center',
                                width: 60,
@@ -53,7 +53,7 @@ class ShareScreen extends Component<Props, State> {
                     <TouchableOpacity
                         style={styles.button}
                         onPress={()=>this.copyToClipboard(item)}>
-                        <Image source={require('../img/link_icon.png')}
+                        <Image source={require('../../img/link_icon.png')}
                                resizeMode="contain"
                                style={styles.image}/>
                         <Text style={styles.buttonText}>COPIER LE LIEN</Text>
@@ -61,7 +61,7 @@ class ShareScreen extends Component<Props, State> {
                     <TouchableOpacity
                         style={styles.button}
                         onPress={()=>this.send(item)}>
-                        <Image source={require('../img/network.png')}
+                        <Image source={require('../../img/network.png')}
                                resizeMode="contain"
                                style={styles.image}/>
                         <Text style={styles.buttonText}>ENVOYER À UN {"\n"}AUTRE {"\n"}GOODSHER</Text>
@@ -69,7 +69,7 @@ class ShareScreen extends Component<Props, State> {
                     <TouchableOpacity
                         style={styles.button}
                         onPress={()=>this.share(item)}>
-                        <Image source={require('../img/share_icon.png')}
+                        <Image source={require('../../img/share_icon.png')}
                                resizeMode="contain"
                                style={styles.image}/>
                         <View>
@@ -88,7 +88,7 @@ class ShareScreen extends Component<Props, State> {
         );
     }
     renderIcon(iconName: string) {
-        return <Icon key={iconName} name={iconName} color={UI.Colors.green} size={16} style={styles.community} />;
+        return <Icon key={iconName} name={iconName} color={Colors.green} size={16} style={styles.community} />;
     }
 
     copyToClipboard(item:Item) {

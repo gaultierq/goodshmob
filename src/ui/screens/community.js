@@ -4,21 +4,21 @@ import type {Node} from 'react';
 import React from 'react';
 import {Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
-import type {Id, Item} from "../types";
+import type {Id, Item} from "../../types";
 import FriendsScreen from "./friends";
-import FriendCell from "./components/FriendCell";
-import {currentUserId} from "../CurrentUser";
+import FriendCell from "../components/FriendCell";
+import {currentUserId} from "../../CurrentUser";
 import {TabBar, TabViewAnimated} from 'react-native-tab-view';
-import * as UIStyles from "./UIStyles";
 
-import ApiAction from "../utils/ApiAction";
-import * as Api from "../utils/Api";
+import ApiAction from "../../utils/ApiAction";
+import * as Api from "../../utils/Api";
 import Immutable from 'seamless-immutable';
-import {buildData} from "../utils/DataUtils";
+import {buildData} from "../../utils/DataUtils";
 import {InteractionScreen} from "./interactions";
-import Screen from "./components/Screen";
-import * as Nav from "./Nav";
-import {fullName} from "../utils/StringUtils";
+import Screen from "../components/Screen";
+import * as Nav from "../Nav";
+import {fullName} from "../../utils/StringUtils";
+import {Colors} from "../colors";
 
 type Props = {
     navigator:any,
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     indicator: {
-        backgroundColor: UIStyles.Colors.green,
+        backgroundColor: Colors.green,
     },
     tab: {
         opacity: 1,
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     indicator: {
-        backgroundColor: UIStyles.Colors.green,
+        backgroundColor: Colors.green,
     },
     tab: {
         opacity: 1,

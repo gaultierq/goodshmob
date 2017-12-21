@@ -1,16 +1,16 @@
 // @flow
 import React, {Component} from 'react';
 import {Clipboard, Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import type {Ask, Id, ItemType} from "../types";
+import type {Ask, Id, ItemType} from "../../types";
 import {CheckBox} from "react-native-elements";
 import {connect} from "react-redux";
 import Closable from "./closable";
-import * as Api from "../utils/Api";
-import ApiAction from "../utils/ApiAction";
+import * as Api from "../../utils/Api";
+import ApiAction from "../../utils/ApiAction";
 
 import Snackbar from "react-native-snackbar"
-import * as UI from "./UIStyles";
 import Button from 'apsl-react-native-button'
+import {Colors} from "../colors";
 
 type Props = {
     itemId: Id,
@@ -67,7 +67,7 @@ export default class AskScreen extends Component<Props, State> {
                         style={[styles.button, {marginTop: 15}]}
                         disabledStyle={styles.disabledButton}
                     >
-                        <Text style={{color: buttonDisabled ? UI.Colors.grey1 : UI.Colors.white}}>Envoyer</Text>
+                        <Text style={{color: buttonDisabled ? Colors.grey1 : Colors.white}}>Envoyer</Text>
                     </Button>
                 </View>
             </Closable>
@@ -116,23 +116,23 @@ const styles = StyleSheet.create({
         fontFamily: 'Chivo',
         fontSize: 18,
         // borderWidth: StyleSheet.hairlineWidth,
-        borderColor: UI.Colors.grey1,
+        borderColor: Colors.grey1,
         borderRadius: 5
 
     },
     header:{
         fontSize: 16,
         fontFamily: 'Chivo',
-        color: UI.Colors.white
+        color: Colors.white
     },
     button: {
         padding: 8,
         height: 30,
-        color: UI.Colors.white,
-        borderColor: UI.Colors.white,
+        color: Colors.white,
+        borderColor: Colors.white,
     },
     disabledButton: {
-        borderColor: UI.Colors.grey1,
+        borderColor: Colors.grey1,
     }
 });
 

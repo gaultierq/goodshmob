@@ -3,19 +3,19 @@
 import React from 'react';
 import {ActivityIndicator, FlatList, Platform, RefreshControl, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
-import ActivityCell from "../activity/components/ActivityCell";
-import * as UIStyles from "./UIStyles"
-import {MainBackground} from "./UIComponents"
-import Feed from "./components/feed"
-import type {List, NavigableProps} from "../types";
+import ActivityCell from "../../activity/components/ActivityCell";
+import {MainBackground} from "../UIComponents"
+import Feed from "../components/feed"
+import type {List, NavigableProps} from "../../types";
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {currentUserId} from "../CurrentUser";
-import ItemCell from "./components/ItemCell";
-import LineupCell from "./components/LineupCell";
-import {FETCH_ACTIVITIES, fetchMyNetwork} from "./networkActions";
-import * as Nav from "./Nav";
-import Screen from "./components/Screen";
+import {currentUserId} from "../../CurrentUser";
+import ItemCell from "../components/ItemCell";
+import LineupCell from "../components/LineupCell";
+import {FETCH_ACTIVITIES, fetchMyNetwork} from "../networkActions";
+import * as Nav from "../Nav";
+import Screen from "../components/Screen";
+import {Colors} from "../colors";
 
 type Props = NavigableProps;
 
@@ -36,16 +36,16 @@ class NetworkScreen extends Screen<Props, State> {
     static navigatorButtons = {
         leftButtons: [
             {
-                //icon: require('../img/drawer_line_up.png'), // for icon button, provide the local image asset name
+                //icon: require('../../img/drawer_line_up.png'), // for icon button, provide the local image asset name
                 id: 'ask', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
-                icon: require('../img/bottom_bar_ask.png'),
+                icon: require('../../img/bottom_bar_ask.png'),
                 title: "#Ask"
             },
         ],
         rightButtons: [
             {
                 id: 'community', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
-                icon: require('../img/drawer_community.png'),
+                icon: require('../../img/drawer_community.png'),
                 title: "#Community"
             }
         ],
@@ -166,8 +166,8 @@ class NetworkScreen extends Screen<Props, State> {
                 </View>
 
                 <ActionButton
-                    icon={<Icon name="search" size={30} color={UIStyles.Colors.white} />}
-                    buttonColor={UIStyles.Colors.green}
+                    icon={<Icon name="search" size={30} color={Colors.white} />}
+                    buttonColor={Colors.green}
                     onPress={() => { this.onFloatingButtonPressed() }}
                 />
 
@@ -179,7 +179,7 @@ class NetworkScreen extends Screen<Props, State> {
         this.props.navigator.push({
             screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
             title: "#Details", // navigation bar title of the pushed screen (optional)
-            titleImage: require('../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
+            titleImage: require('../../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
             passProps: {activityId: activity.id, activityType: activity.type}, // Object that will be passed as props to the pushed screen (optional)
             animated: true, // does the push have transition animation or does it happen immediately (optional)
             animationType: 'slide-up', // 'fade' (for both) / 'slide-horizontal' (for android) does the push have different transition animation (optional)

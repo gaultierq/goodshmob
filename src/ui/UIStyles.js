@@ -3,6 +3,7 @@ import {Linking, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import Button from 'apsl-react-native-button'
 import * as React from "react";
 import {toUppercase} from "../utils/StringUtils";
+import {Colors} from "./colors";
 
 export const NavStyles = {
     navBarButtonColor: 'black',
@@ -16,17 +17,7 @@ export const SearchStyles = {
 };
 
 
-export const Colors = Object.freeze({
-    black: '#000000',
-    blue: '#408be7',
-    grey1: '#767676',
-    grey2: '#AAAAAA',
-    grey3: '#CCCCCC',
-    grey4: '#eeeeee',
-    green: '#1ec',
-    white: '#fff',
-    dirtyWhite: '#FFF2F1'
-});
+
 
 //http://colormind.io/
 export const RandomColors = Object.freeze([

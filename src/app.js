@@ -27,6 +27,7 @@ import {UPGRADE_CACHE} from "./auth/actionTypes";
 import Config from 'react-native-config'
 import {Provider} from "react-redux";
 import Messenger from "./Messenger"
+import {Colors} from "./ui/colors";
 
 console.log(`staring app with env=${JSON.stringify(Config)}`);
 
@@ -266,7 +267,7 @@ export default class App {
 
             let tabsStyle = { // optional, add this if you want to style the tab bar beyond the defaults
                 tabBarButtonColor: '#000', // optional, change the color of the tab icons and text (also unselected)
-                tabBarSelectedButtonColor: UI.Colors.green, // optional, change the color of the selected tab icon and text (only selected)
+                tabBarSelectedButtonColor: Colors.green, // optional, change the color of the selected tab icon and text (only selected)
                 tabBarBackgroundColor: 'white',
                 forceTitlesDisplay: false,
                 tabBarShowLabels: 'hidden',

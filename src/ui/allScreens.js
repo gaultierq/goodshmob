@@ -1,31 +1,31 @@
 import {Navigation} from 'react-native-navigation';
 
-import {screen as LoginScreen} from './login';
-import {screen as NetworkScreen} from './network';
-import {screen as SearchItemScreen} from './searchitems';
-import {SearchNavBar} from './search';
-import DebugScreen from './DebugScreen';
+import {screen as LoginScreen} from './screens/login';
+import {screen as NetworkScreen} from './screens/network';
+import {screen as SearchItemScreen} from './screens/searchitems';
+import {SearchNavBar} from './screens/search';
+import DebugScreen from './screens/debug';
 
 import {screen as ActivityDetailScreen} from '../activity/activityDetail';
-import {LineupListScreen} from './lineuplist';
-import {screen as AddInScreen} from './addinscreen';
-import {screen as LineupScreen} from './lineup';
-import {screen as HomeScreen} from './home';
-import {screen as CommentsScreen} from './comments';
-import {screen as SaveScreen} from './save';
-import {screen as ShareScreen} from './share';
-import ProfileScreen from './profile';
-import FriendScreen from './friends';
-import {CommunityScreen} from './community';
-import SendScreen from './send';
-import AskScreen from './ask';
-import AlgoliaSearchScreen from './algoliasearch';
-import UserScreen from './user';
-import NetworkSearchScreen from './networksearch';
-import HomeSearchScreen from './homesearch';
-import AddItemScreen from './additem';
-import TestScreen from './test';
-import {InteractionScreen} from './interactions';
+import {LineupListScreen} from './screens/lineuplist';
+import {screen as AddInScreen} from './screens/addinscreen';
+import {screen as LineupScreen} from './screens/lineup';
+import {screen as HomeScreen} from './screens/home';
+import {screen as CommentsScreen} from './screens/comments';
+import {screen as SaveScreen} from './screens/save';
+import {screen as ShareScreen} from './screens/share';
+import ProfileScreen from './screens/profile';
+import FriendScreen from './screens/friends';
+import {CommunityScreen} from './screens/community';
+import SendScreen from './screens/send';
+import AskScreen from './screens/ask';
+import AlgoliaSearchScreen from './screens/algoliasearch';
+import UserScreen from './screens/user';
+import NetworkSearchScreen from './screens/networksearch';
+import HomeSearchScreen from './screens/homesearch';
+import AddItemScreen from './screens/additem';
+import TestScreen from './screens/test';
+import {InteractionScreen} from './screens/interactions';
 
 
 import RnRenderPerfs from 'rn-render-perfs';

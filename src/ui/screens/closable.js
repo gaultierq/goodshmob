@@ -33,7 +33,7 @@ export default class Closable extends Component<Props, State> {
                         marginTop: 30,
                     }}
                 >
-                    <Image source={require('../img/close_circle.png')}
+                    <Image source={require('../../img/close_circle.png')}
                            resizeMode="contain"
                            style={{
                                width: 30,

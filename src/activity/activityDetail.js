@@ -15,6 +15,7 @@ import ActivityActionBar from "./components/ActivityActionBar";
 import Icon from 'react-native-vector-icons/Entypo';
 import UserRow from "./components/UserRow";
 import Screen from "../ui/components/Screen";
+import {Colors} from "../ui/colors";
 
 type Props = {
     activityId: Id,
@@ -138,7 +139,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                     }
                     }>
                         <Text style={[UI.TEXT_LEAST_IMPORTANT, {marginLeft: 18}]}>#No one commented yet</Text>
-                        <Icon name="chevron-small-right" size={20} color={UI.Colors.grey1} />
+                        <Icon name="chevron-small-right" size={20} color={Colors.grey1} />
                     </View>
                     }
 
@@ -156,7 +157,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                             small={true}
                             navigator={this.props.navigator}
                         />
-                        <Icon name="chevron-small-right" size={20} color={UI.Colors.grey1} />
+                        <Icon name="chevron-small-right" size={20} color={Colors.grey1} />
                     </View>
                     }
 

@@ -4,10 +4,11 @@ import type {Node} from 'react';
 import React from 'react';
 import {Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import * as UI from "../UIStyles";
-import {Colors, stylePadding} from "../UIStyles";
+import {stylePadding} from "../UIStyles";
 import {assertUnique} from "../../utils/DataUtils";
 import {isEmpty} from "lodash";
 import type {List, Saving} from "../../types";
+import {Colors} from "../colors";
 //;
 
 type Props = {
@@ -119,7 +120,7 @@ export default class LineupCell extends React.Component<Props, State> {
                 height: 60,
                 width: 60,
                 borderWidth: StyleSheet.hairlineWidth,
-                borderColor: UI.Colors.grey2,
+                borderColor: Colors.grey2,
             }, !image && {opacity: 0.3, backgroundColor: this.state.colors[index]}]}>
                 {
                     image && <Image
@@ -128,7 +129,7 @@ export default class LineupCell extends React.Component<Props, State> {
                             height: 60,
                             width: 60,
                             borderWidth: StyleSheet.hairlineWidth,
-                            borderColor: UI.Colors.grey1,
+                            borderColor: Colors.grey1,
 
                         }]}
                     />

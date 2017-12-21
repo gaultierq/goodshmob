@@ -16,20 +16,20 @@ import {
     View
 } from 'react-native';
 import {connect} from 'react-redux';
-import type {Id, RequestState} from "../types";
-import {buildData} from "../utils/DataUtils";
-import ApiAction from "../utils/ApiAction";
-import * as Api from "../utils/Api";
-import * as authActions from '../auth/actions'
-import {currentUserId} from "../CurrentUser";
+import type {Id, RequestState} from "../../types";
+import {buildData} from "../../utils/DataUtils";
+import ApiAction from "../../utils/ApiAction";
+import * as Api from "../../utils/Api";
+import * as authActions from '../../auth/actions'
+import {currentUserId} from "../../CurrentUser";
 
-import * as UI from "./UIStyles";
-import {renderLink, renderSimpleButton} from "./UIStyles";
-import SmartInput from "./components/SmartInput";
+import {renderLink, renderSimpleButton} from "../UIStyles";
+import SmartInput from "../components/SmartInput";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import Toast from 'react-native-root-toast';
-import {CONFIG_SET} from "../reducers/dataReducer";
-import * as Nav from "./Nav";
+import {CONFIG_SET} from "../../reducers/dataReducer";
+import * as Nav from "../Nav";
+import {Colors} from "../colors";
 
 
 type Props = {
@@ -119,7 +119,7 @@ export default class Profile extends Component<Props, State> {
         return (
 
             <ImageBackground
-                source={require('../img/welcome_screen.jpg')}
+                source={require('../../img/welcome_screen.jpg')}
                 style={{
                     flex: 1,
                     alignItems: 'center',
@@ -135,7 +135,7 @@ export default class Profile extends Component<Props, State> {
                         justifyContent: 'center',
                     }}>
 
-                        <Image style={{width: 200, marginBottom: 25}} source={require('../img/logo_goodsh.png')}
+                        <Image style={{width: 200, marginBottom: 25}} source={require('../../img/logo_goodsh.png')}
                                resizeMode="contain"/>
 
                         {this.renderUser(user)}
@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         borderWidth: StyleSheet.hairlineWidth,
         borderRadius: 5,
-        borderColor: UI.Colors.grey1,
+        borderColor: Colors.grey1,
 
     },
     userName: {

@@ -2,10 +2,10 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
 import {CheckBox, SearchBar} from "react-native-elements";
-import * as UI from "./UIStyles";
 import type {Props as LineupProps} from "./lineuplist";
 import {LineupListScreen} from './lineuplist';
-import AddLineupComponent from "./components/addlineup";
+import AddLineupComponent from "../components/addlineup";
+import {Colors} from "../colors";
 
 type Props = LineupProps & {
 };
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     searchInput: {
         backgroundColor: 'white',
         borderWidth: StyleSheet.hairlineWidth,
-        borderColor: UI.Colors.grey1
+        borderColor: Colors.grey1
     },
 });
 

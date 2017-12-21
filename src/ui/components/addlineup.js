@@ -10,10 +10,11 @@ import * as UI from "../UIStyles";
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import {Menu, MenuContext, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
-import type {Visibility} from "../additem";
+import type {Visibility} from "../screens/additem";
 import Modal from 'react-native-modal'
 import SmartInput from "./SmartInput";
 import {LINEUP_CREATION} from './../../lineup/actions'
+import {Colors} from "../colors";
 
 type Props = {
 };
@@ -52,7 +53,7 @@ export default class AddLineupComponent extends Component<Props, State> {
                         <Text
                             style={[
                                 styles.headerText,
-                                {color: UI.Colors.grey2},
+                                {color: Colors.grey2},
                                 Platform.OS === 'ios'? {lineHeight: 40} : {height: 40}
                             ]}
                         >{i18n.t('create_list_controller.title')}</Text>
@@ -80,11 +81,11 @@ export default class AddLineupComponent extends Component<Props, State> {
                             right
                             title="#Visible par mes amis"
                             size={16}
-                            checkedColor={UI.Colors.grey1}
-                            uncheckedColor={UI.Colors.grey1}
+                            checkedColor={Colors.grey1}
+                            uncheckedColor={Colors.grey1}
                             onPress={(newValue)=> this.setState({newLineupPrivacy: !!this.state.newLineupPrivacy ? 0 : 1})}
                             checked={!this.state.newLineupPrivacy}
-                            textStyle={{color: UI.Colors.grey1, fontSize: 12, }}
+                            textStyle={{color: Colors.grey1, fontSize: 12, }}
                             containerStyle={{ backgroundColor: "transparent", borderWidth: 0, width: "100%"}}
                         />
 

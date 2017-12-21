@@ -3,6 +3,7 @@
 import React from 'react';
 import {Image, Linking, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import * as UI from "../../ui/UIStyles";
+import {Colors} from "../../ui/colors";
 
 type Props = {
     vMargin?: number
@@ -18,6 +19,6 @@ export default class FeedSeparator extends React.Component<Props, State> {
 
 const styles = StyleSheet.create({
     sep: {
-        width: "100%", height: StyleSheet.hairlineWidth, backgroundColor: UI.Colors.grey2
+        width: "100%", height: StyleSheet.hairlineWidth, backgroundColor: Colors.grey2
     }
 });

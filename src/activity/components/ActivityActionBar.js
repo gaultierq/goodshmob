@@ -3,7 +3,6 @@
 import React from 'react';
 
 import {Alert, Image, Linking, Platform, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import * as UI from "../../ui/UIStyles";
 import type {Activity, ActivityType, Id, Saving, Url} from "../../types";
 import i18n from '../../i18n/i18n'
 import {connect} from "react-redux";
@@ -12,6 +11,7 @@ import {unsave} from "../actions";
 import Snackbar from "react-native-snackbar"
 import {toUppercase} from "../../utils/StringUtils";
 import {buildNonNullData, sanitizeActivityType} from "../../utils/DataUtils";
+import {Colors} from "../../ui/colors";
 
 export type ActivityActionType = 'comment'| 'share'| 'save'| 'unsave'| 'see'| 'buy'| 'answer';
 const ACTIONS = ['comment', 'share', 'save', 'unsave', 'see', 'buy', 'answer'];
@@ -166,7 +166,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     }
 
     renderButton(img: Url, text: string, handler: ()=>void, active:boolean = false) {
-        let color = active ? UI.Colors.green: UI.Colors.black;
+        let color = active ? Colors.green: Colors.black;
         return (<TouchableOpacity onPress={handler}>
                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', padding: 6}}>
 

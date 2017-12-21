@@ -7,7 +7,7 @@ import {isEmpty} from "lodash";
 import type {i18Key, RequestState} from "../../types";
 import i18n from '../../i18n/i18n'
 import Button from 'apsl-react-native-button'
-import * as UI from "../UIStyles";
+import {Colors} from "../colors";
 
 type Props = {
     placeholder: i18Key,
@@ -71,7 +71,7 @@ export default class SmartInput extends React.Component<Props, State> {
                 <View style={[styles.inputContainer, inputContainerStyle, {minHeight: height}]}>
                     <TextInput
                         editable={!this.isSending()}
-                        style={[styles.input, inputStyle, {color: this.isSending() ? UI.Colors.grey1 : 'black'}]}
+                        style={[styles.input, inputStyle, {color: this.isSending() ? Colors.grey1 : 'black'}]}
                         onSubmitEditing={this.exec.bind(this)}
                         value={input}
                         onFocus={()=>this.setState({focus:true})}
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
         flex:1,
         justifyContent: "center",
         // minHeight: HEIGHT,
-        borderColor: UI.Colors.grey1,
+        borderColor: Colors.grey1,
         borderWidth: StyleSheet.hairlineWidth,
         borderRadius: 6,
         backgroundColor: 'white',

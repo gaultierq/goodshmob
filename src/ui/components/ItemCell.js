@@ -4,6 +4,7 @@ import React from 'react';
 import {Button, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import * as UI from "../UIStyles";
 import type {Item} from "../../types";
+import {Colors} from "../colors";
 
 
 type Props = {
@@ -70,6 +71,6 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     title: {fontSize: 18, fontFamily: 'Chivo-Light', },
-    subtitle: {fontSize: 12, color: UI.Colors.grey2}
+    subtitle: {fontSize: 12, color: Colors.grey2}
 
 });

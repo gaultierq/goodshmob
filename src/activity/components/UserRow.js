@@ -5,9 +5,9 @@ import React from 'react';
 
 
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import * as UI from "../../ui/UIStyles";
 import type {User} from "../../types";
 import UserRowI from "./UserRowI";
+import {Colors} from "../../ui/colors";
 
 type Props = {
     user: User,
@@ -29,7 +29,7 @@ export default class UserRow extends React.Component<Props, State> {
             rightComponent={!!this.props.text &&
             <Text style={{
                 fontSize: 9,
-                color: UI.Colors.grey1,
+                color: Colors.grey1,
                 marginLeft: 4
             }}>{this.props.text}
             </Text>

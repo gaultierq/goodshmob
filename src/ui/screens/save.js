@@ -1,10 +1,10 @@
 // @flow
 import React, {Component} from 'react';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
-import type {Activity, Save} from "../types";
-import ActivityBody from "../activity/components/ActivityBody";
+import type {Activity, Save} from "../../types";
+import ActivityBody from "../../activity/components/ActivityBody";
 import {CheckBox} from "react-native-elements";
-import * as UI from "./UIStyles";
+import {Colors} from "../colors";
 
 
 export type Description = string;
@@ -30,7 +30,7 @@ export default class SaveScreen extends Component<Props, State> {
         const {activity, onDescription, containerStyle} = this.props;
         const {description, visibility} = this.state;
 
-        let grey = UI.Colors.grey1;
+        let grey = Colors.grey1;
         return (
             <View style={[styles.container, containerStyle]}>
                 <ActivityBody activity={activity} noGoodshButton />
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     input: {
         marginTop: 20,
         fontSize: 16,
-        borderColor: UI.Colors.grey1,
+        borderColor: Colors.grey1,
         borderWidth: 0.5,
         padding: 5,
         minHeight: 100

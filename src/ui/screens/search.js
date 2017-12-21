@@ -7,14 +7,14 @@ import {connect} from "react-redux";
 import {TabBar, TabViewAnimated} from 'react-native-tab-view';
 
 import {SearchBar} from 'react-native-elements'
-import * as UIStyles from ".//UIStyles"
 
-import type {i18Key, Item, List, Saving, SearchToken} from "../types";
+import type {i18Key, Item, List, Saving, SearchToken} from "../../types";
 import Button from 'apsl-react-native-button'
-import * as UI from "./UIStyles";
-import {NavStyles} from "./UIStyles";
+import * as UI from "../UIStyles";
+import {NavStyles} from "../UIStyles";
 import {Navigation} from 'react-native-navigation';
 import update from "immutability-helper";
+import {Colors} from "../colors";
 
 export type SearchCategoryType = string;
 
@@ -68,7 +68,7 @@ export default class SearchScreen extends Component<Props, State> {
     // static navigatorButtons = {
     //     rightButtons: [
     //         {
-    //             //icon: require('../img/drawer_line_up.png'), // for icon button, provide the local image asset name
+    //             //icon: require('../../img/drawer_line_up.png'), // for icon button, provide the local image asset name
     //             id: 'cancel_search', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
     //             title: "Cancel"
     //         }
@@ -145,7 +145,7 @@ export default class SearchScreen extends Component<Props, State> {
             style={[styles.button, {marginTop: 15}]}
             disabledStyle={styles.button}
         >
-            <Text style={{color: isLoadingMore ? UI.Colors.grey1 : UI.Colors.black}}>load more</Text>
+            <Text style={{color: isLoadingMore ? Colors.grey1 : Colors.black}}>load more</Text>
         </Button>);
     }
 
@@ -438,7 +438,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     indicator: {
-        backgroundColor: UIStyles.Colors.green,
+        backgroundColor: Colors.green,
     },
     activityIndicator: {
         position: "absolute",
@@ -465,7 +465,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     indicator: {
-        backgroundColor: UIStyles.Colors.green,
+        backgroundColor: Colors.green,
     },
     activityIndicator: {
         position: "absolute",

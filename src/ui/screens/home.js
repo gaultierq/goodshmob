@@ -16,27 +16,26 @@ import {
 import {connect} from "react-redux";
 import ActionButton from 'react-native-action-button';
 import {LineupListScreen} from './lineuplist'
-import type {Id, Saving} from "../types";
-import {List} from "../types"
+import type {Id, Saving} from "../../types";
+import {List} from "../../types"
 import Snackbar from "react-native-snackbar"
-import * as UI from "./UIStyles";
-import {stylePadding} from "./UIStyles";
-import {currentGoodshboxId, currentUserId} from "../CurrentUser"
+import {stylePadding} from "../UIStyles";
+import {currentGoodshboxId, currentUserId} from "../../CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
-import LineupCell from "./components/LineupCell";
+import LineupCell from "../components/LineupCell";
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Menu, MenuContext, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
 import Modal from 'react-native-modal'
 import type {Visibility} from "./additem";
-import AddLineupComponent from "./components/addlineup";
-import {patchLineup} from "../lineup/actions";
-import * as Nav from "./Nav";
-import {startAddItem} from "./Nav";
-import {MainBackground} from "./UIComponents";
-import SmartInput from "./components/SmartInput";
-import Screen from "./components/Screen";
-import {LINEUP_DELETION} from './../lineup/actions'
+import AddLineupComponent from "../components/addlineup";
+import {LINEUP_DELETION, patchLineup} from "../../lineup/actions";
+import * as Nav from "../Nav";
+import {startAddItem} from "../Nav";
+import {MainBackground} from "../UIComponents";
+import SmartInput from "../components/SmartInput";
+import Screen from "../components/Screen";
+import {Colors} from "../colors";
 
 
 type Props = {
@@ -56,13 +55,13 @@ class HomeScreen extends Screen<Props, State> {
     static navigatorButtons = {
         leftButtons: [
             {
-                icon: require('../img/profil.png'),
+                icon: require('../../img/profil.png'),
                 id: 'profile'
             }
         ],
         rightButtons: [
             {
-                icon: require('../img/bottom_bar_search.png'),
+                icon: require('../../img/bottom_bar_search.png'),
                 id: 'search'
             }
         ],
@@ -167,7 +166,7 @@ class HomeScreen extends Screen<Props, State> {
 
                     {this.displayFloatingButton() &&
                     <ActionButton
-                        buttonColor={UI.Colors.green}
+                        buttonColor={Colors.green}
                         onPress={() => { this.onFloatingButtonPressed() }}
                     />
                     }
@@ -256,7 +255,7 @@ class HomeScreen extends Screen<Props, State> {
             <Menu>
                 <MenuTrigger>
                     <Icon name="md-more" size={25} style={{...stylePadding(padding, 12)}}
-                          color={UI.Colors.blue}/>
+                          color={Colors.blue}/>
                 </MenuTrigger>
                 <MenuOptions>
                     <MenuOption onSelect={() => setTimeout(()=>this.deleteLineup(item))} text='#Delete'/>
@@ -311,7 +310,7 @@ class HomeScreen extends Screen<Props, State> {
         this.props.navigator.push({
             screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
             title: "#Details", // navigation bar title of the pushed screen (optional)
-            titleImage: require('../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
+            titleImage: require('../../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
             passProps: {activityId: saving.id, activityType: saving.type}, // Object that will be passed as props to the pushed screen (optional)
             animated: true, // does the push have transition animation or does it happen immediately (optional)
             animationType: 'slide-up', // 'fade' (for both) / 'slide-horizontal' (for android) does the push have different transition animation (optional)

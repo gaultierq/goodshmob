@@ -5,9 +5,9 @@ import React from 'react';
 
 
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import * as UI from "../../ui/UIStyles";
 import type {User} from "../../types";
 import {fullName} from "../../utils/StringUtils";
+import {Colors} from "../../ui/colors";
 
 type Props = {
     user: User,
@@ -50,7 +50,7 @@ export default class UserRowI extends React.Component<Props, State> {
                     >
                         <Text style={{
                             fontSize: 11,
-                            color: UI.Colors.blue
+                            color: Colors.blue
                         }}>{fullName(user)}</Text>
                     </TouchableOpacity>
                     {this.props.rightComponent}

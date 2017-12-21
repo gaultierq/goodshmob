@@ -6,8 +6,7 @@ import {Image, StyleSheet, Text, TextInput, View} from 'react-native';
 import {isEmpty} from "lodash";
 import type {i18Key, RequestState} from "../../types";
 import Button from 'apsl-react-native-button'
-import * as UI from "../UIStyles";
-import {Colors} from "../UIStyles";
+import {Colors} from "../colors";
 import i18n from '../../i18n/i18n'
 
 type Props = {
@@ -104,7 +103,7 @@ const styles = StyleSheet.create({
         flex:1,
         justifyContent: "center",
         // minHeight: HEIGHT,
-        borderColor: UI.Colors.grey1,
+        borderColor: Colors.grey1,
         borderWidth: StyleSheet.hairlineWidth,
         borderRadius: 6,
         backgroundColor: 'white',

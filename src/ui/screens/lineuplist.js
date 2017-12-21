@@ -16,19 +16,20 @@ import {
 } from 'react-native';
 
 import {connect} from "react-redux";
-import LineupCell from "./components/LineupCell";
+import LineupCell from "../components/LineupCell";
 import Immutable from 'seamless-immutable';
-import * as Api from "../utils/Api";
-import * as UI from ".//UIStyles";
+import * as Api from "../../utils/Api";
+import * as UI from "../UIStyles";
 import {SearchBar} from 'react-native-elements'
-import type {Id, List, User} from "../types";
-import type {Props as FeedProps} from "./components/feed";
-import Feed from "./components/feed";
-import {currentUserId} from "../CurrentUser"
-import ApiAction from "../utils/ApiAction";
-import {buildData, doDataMergeInState} from "../utils/DataUtils";
-import {CREATE_LINEUP, DELETE_LINEUP} from "../lineup/actionTypes";
-import {mergeItemsAndPendings} from "../utils/ModelUtils";
+import type {Id, List, User} from "../../types";
+import type {Props as FeedProps} from "../components/feed";
+import Feed from "../components/feed";
+import {currentUserId} from "../../CurrentUser"
+import ApiAction from "../../utils/ApiAction";
+import {buildData, doDataMergeInState} from "../../utils/DataUtils";
+import {CREATE_LINEUP, DELETE_LINEUP} from "../../lineup/actionTypes";
+import {mergeItemsAndPendings} from "../../utils/ModelUtils";
+import {Colors} from "../colors";
 
 //TODO: clean
 // export const DELETE_LINEUP = lineup_actions.DELETE_LINEUP;
@@ -194,7 +195,7 @@ const styles = StyleSheet.create({
         borderWidth: StyleSheet.hairlineWidth,
         // borderRadius: 30,
         // padding: 20,
-        borderColor: UI.Colors.grey1
+        borderColor: Colors.grey1
     },
 
 });

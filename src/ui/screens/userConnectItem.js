@@ -12,13 +12,13 @@ import {
     View
 } from 'react-native';
 import {connect} from "react-redux";
-import type {NavigableProps, RequestState, User} from "../types";
-import {currentUserId} from "../CurrentUser";
-import * as Api from "../utils/Api";
-import ApiAction from "../utils/ApiAction";
-import * as UI from "./UIStyles";
-import {renderSimpleButton} from "./UIStyles";
-import UserRowI from "../activity/components/UserRowI";
+import type {NavigableProps, RequestState, User} from "../../types";
+import {currentUserId} from "../../CurrentUser";
+import * as Api from "../../utils/Api";
+import ApiAction from "../../utils/ApiAction";
+import {renderSimpleButton} from "../UIStyles";
+import UserRowI from "../../activity/components/UserRowI";
+import {Colors} from "../colors";
 
 
 type Props = NavigableProps & {
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
         height: 30,
     },
     disabledButton: {
-        borderColor: UI.Colors.grey1,
+        borderColor: Colors.grey1,
     },
     userRow: {
         margin: 12

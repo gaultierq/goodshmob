@@ -12,17 +12,18 @@ import {
     View
 } from 'react-native';
 import {connect} from "react-redux";
-import type {Id, List, NavigableProps, Saving} from "../types";
-import ItemCell from "./components/ItemCell";
-import LineupCell from "./components/LineupCell";
-import {AlgoliaClient, createResultFromHit, createResultFromHit2, makeAlgoliaSearch} from "../utils/AlgoliaUtils";
+import type {Id, List, NavigableProps, Saving} from "../../types";
+import ItemCell from "../components/ItemCell";
+import LineupCell from "../components/LineupCell";
+import {AlgoliaClient, createResultFromHit, createResultFromHit2, makeAlgoliaSearch} from "../../utils/AlgoliaUtils";
 import UserConnectItem from "./userConnectItem";
-import UserRowI from "../activity/components/UserRowI";
-import {Colors, SearchStyles} from "./UIStyles";
-import {currentUserId} from "../CurrentUser";
-import Screen from "./components/Screen";
+import UserRowI from "../../activity/components/UserRowI";
+import {SearchStyles} from "../UIStyles";
+import {currentUserId} from "../../CurrentUser";
+import Screen from "../components/Screen";
 import Config from 'react-native-config'
 import SearchScreen from "./search";
+import {Colors} from "../colors";
 
 type Props = NavigableProps & {
 };
@@ -167,7 +168,7 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
         this.props.navigator.push({
             screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
             title: "#Details", // navigation bar title of the pushed screen (optional)
-            titleImage: require('../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
+            titleImage: require('../../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
             passProps: {activityId: saving.id, activityType: saving.type}, // Object that will be passed as props to the pushed screen (optional)
         });
     }

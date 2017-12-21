@@ -2,23 +2,23 @@
 import React, {Component} from 'react';
 import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
 import {connect} from "react-redux";
-import {MainBackground} from "./UIComponents";
+import {MainBackground} from "../UIComponents";
 import Immutable from 'seamless-immutable';
-import * as Api from "../utils/Api";
-import {Call} from "../utils/Api";
-import Feed from "./components/feed";
-import type {Activity, ActivityType, Comment, Id} from "../types";
-import ApiAction from "../utils/ApiAction";
-import {buildData, doDataMergeInState, sanitizeActivityType} from "../utils/DataUtils";
-import UserActivity from "../activity/components/UserActivity";
-import FeedSeparator from "../activity/components/FeedSeparator";
-import * as UI from "./UIStyles";
-import {fetchActivity} from "../activity/actions";
-import SmartInput from "./components/SmartInput";
+import * as Api from "../../utils/Api";
+import {Call} from "../../utils/Api";
+import Feed from "../components/feed";
+import type {Activity, ActivityType, Comment, Id} from "../../types";
+import ApiAction from "../../utils/ApiAction";
+import {buildData, doDataMergeInState, sanitizeActivityType} from "../../utils/DataUtils";
+import UserActivity from "../../activity/components/UserActivity";
+import FeedSeparator from "../../activity/components/FeedSeparator";
+import {fetchActivity} from "../../activity/actions";
+import SmartInput from "../components/SmartInput";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-import type {PendingAction} from "../utils/ModelUtils";
-import {mergeItemsAndPendings, pendingActionWrapper} from "../utils/ModelUtils";
-import {currentUser} from "../CurrentUser";
+import type {PendingAction} from "../../utils/ModelUtils";
+import {mergeItemsAndPendings, pendingActionWrapper} from "../../utils/ModelUtils";
+import {currentUser} from "../../CurrentUser";
+import {Colors} from "../colors";
 
 
 const LOAD_COMMENTS = ApiAction.create("load_comments");
@@ -113,7 +113,7 @@ class CommentsScreen extends Component<Props, State> {
 
                     {
                         activity && <SmartInput
-                            containerStyle={{padding: 6, backgroundColor: UI.Colors.grey4}}
+                            containerStyle={{padding: 6, backgroundColor: Colors.grey4}}
                             inputContainerStyle={{borderRadius: 4, borderWidth: 0}}
                             execAction={(input: string) => this.addComment3(activity, input)}
                             placeholder={"activity_comments_screen.add_comment_placeholder"}
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
     },
     inputContainer:{
         // height: 40,
-        borderColor: UI.Colors.grey1,
+        borderColor: Colors.grey1,
         borderWidth: StyleSheet.hairlineWidth,
         borderRadius: 20,
         paddingLeft: 14,

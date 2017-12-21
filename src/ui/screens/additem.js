@@ -2,23 +2,23 @@
 import React from 'react';
 import {ActivityIndicator, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {CheckBox, SearchBar} from "react-native-elements";
-import * as UI from "./UIStyles";
-import {renderSimpleButton, renderSimpleLink} from "./UIStyles";
+import {renderSimpleButton, renderSimpleLink} from "../UIStyles";
 
-import LineupCell from "./components/LineupCell";
-import type {Id, Item, ItemType} from "../types";
-import {fetchItemCall, saveItem} from "../lineup/actions";
-import {currentUserId} from "../CurrentUser";
+import LineupCell from "../components/LineupCell";
+import type {Id, Item, ItemType} from "../../types";
+import {fetchItemCall, saveItem} from "../../lineup/actions";
+import {currentUserId} from "../../CurrentUser";
 import Snackbar from "react-native-snackbar"
 import {connect} from "react-redux";
-import {buildData, buildNonNullData} from "../utils/DataUtils";
-import ItemCell from "./components/ItemCell";
-import Screen from "./components/Screen";
-import {safeDispatchAction} from "./../utils/Api";
+import {buildData, buildNonNullData} from "../../utils/DataUtils";
+import ItemCell from "../components/ItemCell";
+import Screen from "../components/Screen";
+import {safeDispatchAction} from "../../utils/Api";
 import {LineupListScreen} from "./lineuplist";
-import AddLineupComponent from "./components/addlineup";
-import {MainBackground} from "./UIComponents";
-import {FETCH_ITEM} from "../lineup/actionTypes";
+import AddLineupComponent from "../components/addlineup";
+import {MainBackground} from "../UIComponents";
+import {FETCH_ITEM} from "../../lineup/actionTypes";
+import {Colors} from "../colors";
 
 type Props = {
     defaultLineupId: Id,
@@ -82,7 +82,7 @@ export default class AddItemScreen extends Screen<Props, State> {
 
         const {description, visibility, selectedLineupId, showLineupList} = this.state;
 
-        let grey = UI.Colors.grey1;
+        let grey = Colors.grey1;
         let req = this.state.reqAdd;
         let editable = req !== 1;
         let xml = (<View style={[styles.container]}>
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     input: {
         marginTop: 20,
         fontSize: 16,
-        borderColor: UI.Colors.grey1,
+        borderColor: Colors.grey1,
         borderWidth: StyleSheet.hairlineWidth,
     }
 });

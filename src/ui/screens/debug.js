@@ -4,8 +4,8 @@ import React from 'react';
 import {AsyncStorage, Button, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {connect} from "react-redux";
 import {CheckBox} from "react-native-elements";
-import {CONFIG_SET} from "../reducers/dataReducer";
-import Screen from "./components/Screen";
+import {CONFIG_SET} from "../../reducers/dataReducer";
+import Screen from "../components/Screen";
 import codePush from "react-native-code-push";
 
 

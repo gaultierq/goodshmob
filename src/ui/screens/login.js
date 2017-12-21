@@ -3,12 +3,12 @@
 import React, {Component} from 'react';
 
 import {ActivityIndicator, Button, Image, ImageBackground, StyleSheet, Text, View} from 'react-native';
-import * as appActions from "../auth/actions"
+import * as appActions from "../../auth/actions"
 import {connect} from 'react-redux';
 import {AccessToken, LoginManager} from 'react-native-fbsdk';
 
-import SmartButton from "./components/SmartButton";
-import {Colors} from "./UIStyles";
+import SmartButton from "../components/SmartButton";
+import {Colors} from "../colors";
 
 type Props = {
 };
@@ -24,7 +24,7 @@ class Login extends Component<Props, State> {
     render() {
         return (
             <ImageBackground
-                source={require('../img/welcome_screen.jpg')}
+                source={require('../../img/welcome_screen.jpg')}
                 style={{
                     flex: 1,
                     position: 'absolute',
@@ -46,7 +46,7 @@ class Login extends Component<Props, State> {
                         <Text style={{fontSize: 20, textAlign: 'center'}}>{i18n.t('login_screen.value_proposal')}</Text>
                         {/*<Text>{i18n.t('login_screen.definition.example')}</Text>*/}
                         <Image
-                            source={require('../img/screen_title_home.png')}
+                            source={require('../../img/screen_title_home.png')}
                             resizeMode="contain"
 
                         />

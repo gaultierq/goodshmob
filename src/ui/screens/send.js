@@ -4,17 +4,18 @@ import type {Node} from 'react';
 import React, {Component} from 'react';
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
-import type {Id, Item, User} from "../types";
+import type {Id, Item, User} from "../../types";
 import FriendsFeed from "./friends";
-import FriendCell from "./components/FriendCell";
-import ApiAction from "../utils/ApiAction";
+import FriendCell from "../components/FriendCell";
+import ApiAction from "../../utils/ApiAction";
 import type {Description, Visibility} from "./save";
-import * as Api from "../utils/Api";
-import * as UI from "./UIStyles";
-import SmartInput from "./components/SmartInput";
-import {currentUserId} from "../CurrentUser";
+import * as Api from "../../utils/Api";
+import * as UI from "../UIStyles";
+import SmartInput from "../components/SmartInput";
+import {currentUserId} from "../../CurrentUser";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-import {MainBackground} from "./UIComponents";
+import {MainBackground} from "../UIComponents";
+import {Colors} from "../colors";
 
 type Props = {
     itemId: Id,
@@ -152,7 +153,7 @@ const styles = StyleSheet.create({
     },
     input:{
         borderWidth: StyleSheet.hairlineWidth,
-        borderColor: UI.Colors.grey1,
+        borderColor: Colors.grey1,
         borderRadius: 20
     },
     disabledButton: {

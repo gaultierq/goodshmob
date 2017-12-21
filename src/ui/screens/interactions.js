@@ -4,16 +4,16 @@ import React from 'react';
 import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
 import Immutable from 'seamless-immutable';
-import * as Api from "../utils/Api";
-import Feed from "./components/feed";
-import ApiAction from "../utils/ApiAction";
-import UserActivity from "../activity/components/UserActivity";
-import {buildNonNullData} from "../utils/DataUtils";
-import type {Activity} from "../types";
+import * as Api from "../../utils/Api";
+import Feed from "../components/feed";
+import ApiAction from "../../utils/ApiAction";
+import UserActivity from "../../activity/components/UserActivity";
+import {buildNonNullData} from "../../utils/DataUtils";
+import type {Activity} from "../../types";
 
-import FeedSeparator from "../activity/components/FeedSeparator";
-import Screen from "./components/Screen";
-import * as Nav from "./Nav";
+import FeedSeparator from "../../activity/components/FeedSeparator";
+import Screen from "../components/Screen";
+import * as Nav from "../Nav";
 
 type Props = {
     navigator: *,
@@ -81,7 +81,7 @@ export class InteractionScreen extends Screen<Props, State> {
                     this.props.navigator.showModal({
                         screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
                         title: "#Details", // navigation bar title of the pushed screen (optional)
-                        titleImage: require('../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
+                        titleImage: require('../../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
                         passProps: {
                             activityId: activity.id,
                             activityType: activity.type

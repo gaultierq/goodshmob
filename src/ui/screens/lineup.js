@@ -3,18 +3,18 @@
 import React, {Component} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {connect} from "react-redux";
-import {MainBackground} from "./UIComponents";
+import {MainBackground} from "../UIComponents";
 import Immutable from 'seamless-immutable';
-import * as Api from "../utils/Api";
-import Feed from "./components/feed";
-import type {List, Saving} from "../types";
-import {buildData, doDataMergeInState} from "../utils/DataUtils";
-import ApiAction from "../utils/ApiAction";
-import ActivityCell from "../activity/components/ActivityCell";
-import {currentUserId} from "../CurrentUser";
+import * as Api from "../../utils/Api";
+import Feed from "../components/feed";
+import type {List, Saving} from "../../types";
+import {buildData, doDataMergeInState} from "../../utils/DataUtils";
+import ApiAction from "../../utils/ApiAction";
+import ActivityCell from "../../activity/components/ActivityCell";
+import {currentUserId} from "../../CurrentUser";
 import ActionButton from 'react-native-action-button';
-import {startAddItem} from "./Nav";
-import * as UI from "./UIStyles";
+import {startAddItem} from "../Nav";
+import {Colors} from "../colors";
 
 type Props = {
     lineupId: string,
@@ -50,7 +50,7 @@ class LineupScreen extends Component<Props, State> {
             else if (lineup) {
                 //let user:User = lineup.user;
                 let title = lineup.name;
-                let titleImage = /*user.goodshbox.id === lineup.id ? require('../img/goodshbox.png') : */null;
+                let titleImage = /*user.goodshbox.id === lineup.id ? require('../../img/goodshbox.png') : */null;
                 this.props.navigator.setTitle({title, titleImage});
                 this.setState({title: {title, titleImage}});
                 let user = lineup.user;
@@ -94,7 +94,7 @@ class LineupScreen extends Component<Props, State> {
                     {
                         this.displayFloatingButton() &&
                         <ActionButton
-                            buttonColor={UI.Colors.green}
+                            buttonColor={Colors.green}
                             onPress={() => { this.onFloatingButtonPressed() }}
                         />
                     }
@@ -148,7 +148,7 @@ class LineupScreen extends Component<Props, State> {
         this.props.navigator.push({
             screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
             title: "#Details", // navigation bar title of the pushed screen (optional)
-            titleImage: require('../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
+            titleImage: require('../../img/screen_title_home.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
             passProps: {activityId: activity.id, activityType: activity.type}, // Object that will be passed as props to the pushed screen (optional)
             animated: true, // does the push have transition animation or does it happen immediately (optional)
             animationType: 'slide-up', // 'fade' (for both) / 'slide-horizontal' (for android) does the push have different transition animation (optional)

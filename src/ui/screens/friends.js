@@ -4,13 +4,13 @@ import type {Node} from 'react';
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
-import FriendCell from "./components/FriendCell";
-import * as Api from "../utils/Api";
-import Feed from "./components/feed"
-import ApiAction from "../utils/ApiAction";
-import type {Id, Item, User} from "../types";
-import {buildData} from "../utils/DataUtils";
-import Screen from "./components/Screen";
+import FriendCell from "../components/FriendCell";
+import * as Api from "../../utils/Api";
+import Feed from "../components/feed"
+import ApiAction from "../../utils/ApiAction";
+import type {Id, Item, User} from "../../types";
+import {buildData} from "../../utils/DataUtils";
+import Screen from "../components/Screen";
 
 type Props = {
     userId: Id,

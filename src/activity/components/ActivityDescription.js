@@ -7,6 +7,7 @@ import * as UI from "../../ui/UIStyles";
 import type {Activity, i18Key, List, User} from "../../types";
 import UserActivity from "./UserActivity";
 import {fullName} from "../../utils/StringUtils";
+import {Colors} from "../../ui/colors";
 
 type Props = {
     activity: Activity,
@@ -80,7 +81,7 @@ export default class ActivityDescription extends React.Component<Props, State> {
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                 <Text style={{
                     fontSize: 9,
-                    color: UI.Colors.grey1,
+                    color: Colors.grey1,
                     marginRight: 4
                 }}>{i18n.t(key)}</Text>
                 <TouchableOpacity onPress={press}>
@@ -123,11 +124,11 @@ export default class ActivityDescription extends React.Component<Props, State> {
                 <Text style={{
                     fontSize: 9,
                     fontFamily: 'Chivo',
-                    color: UI.Colors.grey1,
+                    color: Colors.grey1,
                     padding: 5,
                     borderRadius: 5,
                     borderWidth: StyleSheet.hairlineWidth,
-                    borderColor: UI.Colors.grey1
+                    borderColor: Colors.grey1
                 }}>{i18n.t("activity_item.buttons.unfollow_list")}</Text>
             </TouchableOpacity>
             :
@@ -136,7 +137,7 @@ export default class ActivityDescription extends React.Component<Props, State> {
                 <Text style={{
                     fontSize: 9,
                     fontFamily: 'Chivo',
-                    color: UI.Colors.blue
+                    color: Colors.blue
                 }}>{i18n.t("activity_item.buttons.follow_list")}</Text>
             </TouchableOpacity>;
     }
