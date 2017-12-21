@@ -5,7 +5,7 @@ import React from 'react';
 
 
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import * as UI from "../../screens/UIStyles";
+import * as UI from "../../ui/UIStyles";
 import type {User} from "../../types";
 import UserRowI from "./UserRowI";
 

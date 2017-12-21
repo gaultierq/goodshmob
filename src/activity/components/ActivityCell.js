@@ -7,7 +7,7 @@ import {buildNonNullData, sanitizeActivityType} from "../../utils/DataUtils";
 import ActivityDescription from "./ActivityDescription";
 import type {Activity, ActivityType, Id} from "../../types"
 import ActivityBody from "./ActivityBody";
-import * as UI from "../../screens/UIStyles";
+import * as UI from "../../ui/UIStyles";
 import FeedSeparator from "./FeedSeparator";
 import ActivityActionBar from "./ActivityActionBar";
 

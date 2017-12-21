@@ -19,7 +19,7 @@ import {connect} from "react-redux";
 import LineupCell from "./components/LineupCell";
 import Immutable from 'seamless-immutable';
 import * as Api from "../utils/Api";
-import * as UI from "../screens/UIStyles";
+import * as UI from ".//UIStyles";
 import {SearchBar} from 'react-native-elements'
 import type {Id, List, User} from "../types";
 import type {Props as FeedProps} from "./components/feed";

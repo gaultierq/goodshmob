@@ -1,12 +1,12 @@
 import {config, data as data1, pending} from './dataReducer'
 import activity from '../activity/reducer';
-import {reducer as network} from '../screens/networkActions';
-import {reducer as savings} from '../screens/lineup';
-import {reducer as comments} from '../screens/comments';
-import {reducer as lineups} from '../screens/lineuplist';
+import {reducer as network} from '../ui/networkActions';
+import {reducer as savings} from '../ui/lineup';
+import {reducer as comments} from '../ui/comments';
+import {reducer as lineups} from '../ui/lineuplist';
 import lineups2 from '../lineup/reducer';
-import {reducer as peopleYouMayKnow} from '../screens/community';
-import {reducer as interaction} from '../screens/interactions';
+import {reducer as peopleYouMayKnow} from '../ui/community';
+import {reducer as interaction} from '../ui/interactions';
 import {statReducer as stat} from '../utils/Statistics';
 import {authReducer as auth, deviceReducer as device} from '../auth/reducer';
 

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {Image, Linking, Share, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
-import * as UI from "../../screens/UIStyles";
+import * as UI from "../../ui/UIStyles";
 import {connect} from "react-redux";
 import type {Activity} from "../../types"
 import GoodshButton from "./GoodshButton";

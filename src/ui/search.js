@@ -7,7 +7,7 @@ import {connect} from "react-redux";
 import {TabBar, TabViewAnimated} from 'react-native-tab-view';
 
 import {SearchBar} from 'react-native-elements'
-import * as UIStyles from "../screens/UIStyles"
+import * as UIStyles from ".//UIStyles"
 
 import type {i18Key, Item, List, Saving, SearchToken} from "../types";
 import Button from 'apsl-react-native-button'

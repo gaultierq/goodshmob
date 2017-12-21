@@ -19,7 +19,7 @@ import {Client} from 'bugsnag-react-native';
 import * as globalProps from 'react-native-global-props';
 import * as notification from './notification';
 import * as DeviceManager from "./DeviceManager";
-import * as UI from "./screens/UIStyles";
+import * as UI from "./ui/UIStyles";
 import {init as initGlobal} from "./global";
 import {AlgoliaClient} from "./utils/AlgoliaUtils";
 import {Statistics} from "./utils/Statistics";
@@ -192,7 +192,7 @@ export default class App {
         }
 
         //delayed import
-        let registerScreens = require('./screens/allScreens').default;
+        let registerScreens = require('./ui/allScreens').default;
         registerScreens(this.store, Provider);
 
 

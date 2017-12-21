@@ -6,15 +6,15 @@ import * as actions from './actions'
 import {connect} from "react-redux";
 import ActivityBody from "./components/ActivityBody";
 import {buildData} from "../utils/DataUtils";
-import {MainBackground} from "../screens/UIComponents";
+import {MainBackground} from "../ui/UIComponents";
 import ActivityDescription from "./components/ActivityDescription";
 import type {Activity, ActivityType, Id} from "../types";
-import * as UI from "../screens/UIStyles";
+import * as UI from "../ui/UIStyles";
 import FeedSeparator from "./components/FeedSeparator";
 import ActivityActionBar from "./components/ActivityActionBar";
 import Icon from 'react-native-vector-icons/Entypo';
 import UserRow from "./components/UserRow";
-import Screen from "../screens/components/Screen";
+import Screen from "../ui/components/Screen";
 
 type Props = {
     activityId: Id,

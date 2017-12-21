@@ -3,7 +3,7 @@
 import React from 'react';
 
 import {Alert, Image, Linking, Platform, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import * as UI from "../../screens/UIStyles";
+import * as UI from "../../ui/UIStyles";
 import type {Activity, ActivityType, Id, Saving, Url} from "../../types";
 import i18n from '../../i18n/i18n'
 import {connect} from "react-redux";

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import {Image, Linking, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import * as UI from "../../screens/UIStyles";
+import * as UI from "../../ui/UIStyles";
 
 type Props = {
     vMargin?: number

@@ -3,7 +3,7 @@
 import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import i18n from '../../i18n/i18n'
-import * as UI from "../../screens/UIStyles";
+import * as UI from "../../ui/UIStyles";
 import type {Activity, i18Key, List, User} from "../../types";
 import UserActivity from "./UserActivity";
 import {fullName} from "../../utils/StringUtils";
