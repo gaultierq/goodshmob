@@ -13,9 +13,9 @@ import {
 } from 'react-native';
 import {connect} from "react-redux";
 import type {NavigableProps, RequestState, User} from "../../types";
-import {currentUserId} from "../../CurrentUser";
-import * as Api from "../../utils/Api";
-import ApiAction from "../../utils/ApiAction";
+import {currentUserId} from "../../managers/CurrentUser";
+import * as Api from "../../managers/Api";
+import ApiAction from "../../helpers/ApiAction";
 import {renderSimpleButton} from "../UIStyles";
 import UserRowI from "../activity/components/UserRowI";
 import {Colors} from "../colors";

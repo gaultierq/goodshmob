@@ -4,11 +4,11 @@ import React from 'react';
 import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
 import Immutable from 'seamless-immutable';
-import * as Api from "../../utils/Api";
+import * as Api from "../../managers/Api";
 import Feed from "../components/feed";
-import ApiAction from "../../utils/ApiAction";
+import ApiAction from "../../helpers/ApiAction";
 import UserActivity from "../activity/components/UserActivity";
-import {buildNonNullData} from "../../utils/DataUtils";
+import {buildNonNullData} from "../../helpers/DataUtils";
 import type {Activity} from "../../types";
 
 import FeedSeparator from "../activity/components/FeedSeparator";

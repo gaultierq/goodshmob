@@ -1,7 +1,7 @@
 // @flow
 import {Component} from 'react';
 import type {NavigableProps} from "../../types";
-import {toUppercase} from "../../utils/StringUtils";
+import {toUppercase} from "../../helpers/StringUtils";
 import * as Nav from "../Nav";
 
 

@@ -3,7 +3,7 @@ import build from '../../vendors/redux-object'
 import type {Id, MergeOpts} from "../types";
 import {mergeLists} from "./ModelUtils";
 import dotprop from "dot-prop-immutable"
-import {Statistics} from "./Statistics"
+import {Statistics} from "../managers/Statistics"
 import update from "immutability-helper";
 
 //ask backend to sanitize types

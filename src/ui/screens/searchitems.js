@@ -2,10 +2,10 @@
 
 import React, {Component} from 'react';
 import {ActivityIndicator, FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
-import * as Api from "../../utils/Api";
+import * as Api from "../../managers/Api";
 import {TabBar, TabViewAnimated} from 'react-native-tab-view';
 import ItemCell from "../components/ItemCell";
-import {buildData} from "../../utils/DataUtils";
+import {buildData} from "../../helpers/DataUtils";
 import {SearchBar} from 'react-native-elements'
 import type {SearchCategoryType} from "./search";
 import SearchScreen from "./search";

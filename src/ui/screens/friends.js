@@ -5,11 +5,11 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
 import FriendCell from "../components/FriendCell";
-import * as Api from "../../utils/Api";
+import * as Api from "../../managers/Api";
 import Feed from "../components/feed"
-import ApiAction from "../../utils/ApiAction";
+import ApiAction from "../../helpers/ApiAction";
 import type {Id, Item, User} from "../../types";
-import {buildData} from "../../utils/DataUtils";
+import {buildData} from "../../helpers/DataUtils";
 import Screen from "../components/Screen";
 
 type Props = {

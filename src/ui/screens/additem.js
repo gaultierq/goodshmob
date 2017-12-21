@@ -7,13 +7,13 @@ import {renderSimpleButton, renderSimpleLink} from "../UIStyles";
 import LineupCell from "../components/LineupCell";
 import type {Id, Item, ItemType} from "../../types";
 import {fetchItemCall, saveItem} from "../lineup/actions";
-import {currentUserId} from "../../CurrentUser";
+import {currentUserId} from "../../managers/CurrentUser";
 import Snackbar from "react-native-snackbar"
 import {connect} from "react-redux";
-import {buildData, buildNonNullData} from "../../utils/DataUtils";
+import {buildData, buildNonNullData} from "../../helpers/DataUtils";
 import ItemCell from "../components/ItemCell";
 import Screen from "../components/Screen";
-import {safeDispatchAction} from "../../utils/Api";
+import {safeDispatchAction} from "../../managers/Api";
 import {LineupListScreen} from "./lineuplist";
 import AddLineupComponent from "../components/addlineup";
 import {MainBackground} from "../UIComponents";

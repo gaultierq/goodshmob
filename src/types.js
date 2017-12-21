@@ -1,4 +1,4 @@
-import type {MergeOptions} from "./utils/ModelUtils";
+import type {MergeOptions} from "./helpers/ModelUtils";
 
 export type Url = string;
 

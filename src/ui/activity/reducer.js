@@ -2,7 +2,7 @@
 
 import Immutable from 'seamless-immutable';
 import * as types from './actionTypes';
-import {sanitizeActivityType, updateDelete} from "../../utils/DataUtils";
+import {sanitizeActivityType, updateDelete} from "../../helpers/DataUtils";
 import update from "immutability-helper";
 
 const initialState = Immutable();

@@ -5,8 +5,8 @@ import type {Ask, Id, ItemType} from "../../types";
 import {CheckBox} from "react-native-elements";
 import {connect} from "react-redux";
 import Closable from "./closable";
-import * as Api from "../../utils/Api";
-import ApiAction from "../../utils/ApiAction";
+import * as Api from "../../managers/Api";
+import ApiAction from "../../helpers/ApiAction";
 
 import Snackbar from "react-native-snackbar"
 import Button from 'apsl-react-native-button'

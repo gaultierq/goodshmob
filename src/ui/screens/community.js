@@ -7,17 +7,17 @@ import {connect} from "react-redux";
 import type {Id, Item} from "../../types";
 import FriendsScreen from "./friends";
 import FriendCell from "../components/FriendCell";
-import {currentUserId} from "../../CurrentUser";
+import {currentUserId} from "../../managers/CurrentUser";
 import {TabBar, TabViewAnimated} from 'react-native-tab-view';
 
-import ApiAction from "../../utils/ApiAction";
-import * as Api from "../../utils/Api";
+import ApiAction from "../../helpers/ApiAction";
+import * as Api from "../../managers/Api";
 import Immutable from 'seamless-immutable';
-import {buildData} from "../../utils/DataUtils";
+import {buildData} from "../../helpers/DataUtils";
 import {InteractionScreen} from "./interactions";
 import Screen from "../components/Screen";
 import * as Nav from "../Nav";
-import {fullName} from "../../utils/StringUtils";
+import {fullName} from "../../helpers/StringUtils";
 import {Colors} from "../colors";
 
 type Props = {

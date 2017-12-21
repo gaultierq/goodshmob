@@ -1,7 +1,7 @@
 // @flow
 
-import ApiAction from "../utils/ApiAction";
-import * as Api from "../utils/Api";
+import ApiAction from "../helpers/ApiAction";
+import * as Api from "../managers/Api";
 import Immutable from 'seamless-immutable';
 import type {Id} from "../types";
 

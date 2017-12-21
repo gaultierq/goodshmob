@@ -1,10 +1,10 @@
-import {API_DATA_SUCCESS} from '../utils/Api';
+import {API_DATA_SUCCESS} from '../managers/Api';
 import Immutable from 'seamless-immutable';
 import merge from 'deepmerge'
-import {Statistics} from "../utils/Statistics";
+import {Statistics} from "../managers/Statistics";
 import update from "immutability-helper";
-import {updateDelete} from "../utils/DataUtils";
-import type {ApiActionName} from "../utils/ApiAction";
+import {updateDelete} from "../helpers/DataUtils";
+import type {ApiActionName} from "../helpers/ApiAction";
 
 const initialState = Immutable({
     meta: {},

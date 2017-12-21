@@ -20,8 +20,8 @@ export default class TestScreen extends Component<Props, State> {
 
     _hideModal = () => this.setState({ isModalVisible: false })
     render() {
-        console.log("hello:" + require('../../Messenger'));
-        console.log("hello:" + require('../../Messenger'));
+        console.log("hello:" + require('../../managers/Messenger'));
+        console.log("hello:" + require('../../managers/Messenger'));
         return (
 
             <View style={{ flex: 1 }}>

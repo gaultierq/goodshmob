@@ -1,4 +1,4 @@
-import {mergeLists} from "../src/utils/ModelUtils"
+import {mergeLists} from "../src/helpers/ModelUtils"
 
 test('testing merge 1', () => {
     expect(

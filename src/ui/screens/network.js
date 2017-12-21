@@ -9,7 +9,7 @@ import Feed from "../components/feed"
 import type {List, NavigableProps} from "../../types";
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {currentUserId} from "../../CurrentUser";
+import {currentUserId} from "../../managers/CurrentUser";
 import ItemCell from "../components/ItemCell";
 import LineupCell from "../components/LineupCell";
 import {FETCH_ACTIVITIES, fetchMyNetwork} from "../networkActions";

@@ -6,7 +6,7 @@ import i18n from '../../../i18n/i18n'
 import * as UI from "../../UIStyles";
 import type {Activity, i18Key, List, User} from "../../../types";
 import UserActivity from "./UserActivity";
-import {fullName} from "../../../utils/StringUtils";
+import {fullName} from "../../../helpers/StringUtils";
 import {Colors} from "../../colors";
 
 type Props = {

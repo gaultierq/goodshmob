@@ -2,7 +2,7 @@
 import {Linking, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import Button from 'apsl-react-native-button'
 import * as React from "react";
-import {toUppercase} from "../utils/StringUtils";
+import {toUppercase} from "../helpers/StringUtils";
 import {Colors} from "./colors";
 
 export const NavStyles = {

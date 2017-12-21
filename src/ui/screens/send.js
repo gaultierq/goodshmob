@@ -7,12 +7,12 @@ import {connect} from "react-redux";
 import type {Id, Item, User} from "../../types";
 import FriendsFeed from "./friends";
 import FriendCell from "../components/FriendCell";
-import ApiAction from "../../utils/ApiAction";
+import ApiAction from "../../helpers/ApiAction";
 import type {Description, Visibility} from "./save";
-import * as Api from "../../utils/Api";
+import * as Api from "../../managers/Api";
 import * as UI from "../UIStyles";
 import SmartInput from "../components/SmartInput";
-import {currentUserId} from "../../CurrentUser";
+import {currentUserId} from "../../managers/CurrentUser";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import {MainBackground} from "../UIComponents";
 import {Colors} from "../colors";

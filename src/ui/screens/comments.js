@@ -4,20 +4,20 @@ import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
 import {connect} from "react-redux";
 import {MainBackground} from "../UIComponents";
 import Immutable from 'seamless-immutable';
-import * as Api from "../../utils/Api";
-import {Call} from "../../utils/Api";
+import * as Api from "../../managers/Api";
+import {Call} from "../../managers/Api";
 import Feed from "../components/feed";
 import type {Activity, ActivityType, Comment, Id} from "../../types";
-import ApiAction from "../../utils/ApiAction";
-import {buildData, doDataMergeInState, sanitizeActivityType} from "../../utils/DataUtils";
+import ApiAction from "../../helpers/ApiAction";
+import {buildData, doDataMergeInState, sanitizeActivityType} from "../../helpers/DataUtils";
 import UserActivity from "../activity/components/UserActivity";
 import FeedSeparator from "../activity/components/FeedSeparator";
 import {fetchActivity} from "../activity/actions";
 import SmartInput from "../components/SmartInput";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-import type {PendingAction} from "../../utils/ModelUtils";
-import {mergeItemsAndPendings, pendingActionWrapper} from "../../utils/ModelUtils";
-import {currentUser} from "../../CurrentUser";
+import type {PendingAction} from "../../helpers/ModelUtils";
+import {mergeItemsAndPendings, pendingActionWrapper} from "../../helpers/ModelUtils";
+import {currentUser} from "../../managers/CurrentUser";
 import {Colors} from "../colors";
 
 

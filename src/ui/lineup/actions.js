@@ -1,11 +1,11 @@
 // @flow
 
-import * as Api from "../../utils/Api";
-import {Call} from "../../utils/Api";
+import * as Api from "../../managers/Api";
+import {Call} from "../../managers/Api";
 import type {Id, List} from "../../types";
 import {CREATE_LINEUP, DELETE_LINEUP, EDIT_LINEUP, SAVE_ITEM} from "./actionTypes";
-import type {PendingAction} from "../../utils/ModelUtils";
-import {pendingActionWrapper} from "../../utils/ModelUtils";
+import type {PendingAction} from "../../helpers/ModelUtils";
+import {pendingActionWrapper} from "../../helpers/ModelUtils";
 
 
 //defining lineup creation cycle

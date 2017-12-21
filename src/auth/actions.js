@@ -1,6 +1,6 @@
 // @flow
 
-import * as Api from "../utils/Api";
+import * as Api from "../managers/Api";
 import * as actionTypes from "./actionTypes"
 import {SET_USER_NULL} from "./actionTypes"
 import {LoginManager as FacebookLoginManager} from "react-native-fbsdk";

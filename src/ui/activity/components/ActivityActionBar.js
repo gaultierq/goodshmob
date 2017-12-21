@@ -6,11 +6,11 @@ import {Alert, Image, Linking, Platform, Share, StyleSheet, Text, TouchableOpaci
 import type {Activity, ActivityType, Id, Saving, Url} from "../../../types";
 import i18n from '../../../i18n/i18n'
 import {connect} from "react-redux";
-import {currentGoodshboxId, currentUserId} from "../../../CurrentUser";
+import {currentGoodshboxId, currentUserId} from "../../../managers/CurrentUser";
 import {unsave} from "../actions";
 import Snackbar from "react-native-snackbar"
-import {toUppercase} from "../../../utils/StringUtils";
-import {buildNonNullData, sanitizeActivityType} from "../../../utils/DataUtils";
+import {toUppercase} from "../../../helpers/StringUtils";
+import {buildNonNullData, sanitizeActivityType} from "../../../helpers/DataUtils";
 import {Colors} from "../../colors";
 
 export type ActivityActionType = 'comment'| 'share'| 'save'| 'unsave'| 'see'| 'buy'| 'answer';

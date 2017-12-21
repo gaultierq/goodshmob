@@ -8,25 +8,25 @@ import {createWithReducers} from "./auth/reducer";
 import thunk from "redux-thunk";
 import logger from 'redux-logger'
 
-import * as Api from './utils/Api';
+import * as Api from './managers/Api';
 import {autoRehydrate, createTransform, persistStore} from 'redux-persist'
 import {AsyncStorage, TouchableOpacity} from 'react-native'
 import immutableTransform from './immutableTransform'
 import {REHYDRATE} from 'redux-persist/constants'
 import i18n from './i18n/i18n'
-import * as CurrentUser from './CurrentUser'
+import * as CurrentUser from './managers/CurrentUser'
 import {Client} from 'bugsnag-react-native';
 import * as globalProps from 'react-native-global-props';
-import * as notification from './notification';
-import * as DeviceManager from "./DeviceManager";
+import * as notification from './managers/notification';
+import * as DeviceManager from "./managers/DeviceManager";
 import * as UI from "./ui/UIStyles";
 import {init as initGlobal} from "./global";
-import {AlgoliaClient} from "./utils/AlgoliaUtils";
-import {Statistics} from "./utils/Statistics";
+import {AlgoliaClient} from "./helpers/AlgoliaUtils";
+import {Statistics} from "./managers/Statistics";
 import {UPGRADE_CACHE} from "./auth/actionTypes";
 import Config from 'react-native-config'
 import {Provider} from "react-redux";
-import Messenger from "./Messenger"
+import Messenger from "./managers/Messenger"
 import {Colors} from "./ui/colors";
 
 console.log(`staring app with env=${JSON.stringify(Config)}`);

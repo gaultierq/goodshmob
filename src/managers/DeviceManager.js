@@ -1,11 +1,11 @@
 // @flow
 
 import RNFirebase from 'react-native-firebase'
-import type {Device} from "./types";
-import * as appActions from "./auth/actions";
+import type {Device} from "../types";
+import * as appActions from "../auth/actions";
 import * as DeviceInfo from 'react-native-device-info'
 //import {toUppercase} from "./utils/StringUtils";
-import * as StringUtils from "./utils/StringUtils";
+import * as StringUtils from "../helpers/StringUtils";
 
 
 let instance: DeviceManager;

@@ -1,8 +1,8 @@
 // @flow
 
 import type {Store} from 'redux';
-import {buildNonNullData} from "./utils/DataUtils";
-import type {Id} from "./types";
+import {buildNonNullData} from "../helpers/DataUtils";
+import type {Id} from "../types";
 
 
 class CurrentUser {

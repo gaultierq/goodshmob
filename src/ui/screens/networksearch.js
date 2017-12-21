@@ -15,11 +15,11 @@ import {connect} from "react-redux";
 import type {Id, List, NavigableProps, Saving} from "../../types";
 import ItemCell from "../components/ItemCell";
 import LineupCell from "../components/LineupCell";
-import {AlgoliaClient, createResultFromHit, createResultFromHit2, makeAlgoliaSearch} from "../../utils/AlgoliaUtils";
+import {AlgoliaClient, createResultFromHit, createResultFromHit2, makeAlgoliaSearch} from "../../helpers/AlgoliaUtils";
 import UserConnectItem from "./userConnectItem";
 import UserRowI from "../activity/components/UserRowI";
 import {SearchStyles} from "../UIStyles";
-import {currentUserId} from "../../CurrentUser";
+import {currentUserId} from "../../managers/CurrentUser";
 import Screen from "../components/Screen";
 import Config from 'react-native-config'
 import SearchScreen from "./search";

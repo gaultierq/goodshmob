@@ -3,7 +3,7 @@
 import React from 'react';
 import {Image, Linking, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
-import {buildNonNullData, sanitizeActivityType} from "../../../utils/DataUtils";
+import {buildNonNullData, sanitizeActivityType} from "../../../helpers/DataUtils";
 import ActivityDescription from "./ActivityDescription";
 import type {Activity, ActivityType, Id} from "../../../types"
 import ActivityBody from "./ActivityBody";

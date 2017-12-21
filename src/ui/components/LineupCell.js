@@ -5,7 +5,7 @@ import React from 'react';
 import {Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import * as UI from "../UIStyles";
 import {stylePadding} from "../UIStyles";
-import {assertUnique} from "../../utils/DataUtils";
+import {assertUnique} from "../../helpers/DataUtils";
 import {isEmpty} from "lodash";
 import type {List, Saving} from "../../types";
 import {Colors} from "../colors";

@@ -20,7 +20,7 @@ import type {Id, Saving} from "../../types";
 import {List} from "../../types"
 import Snackbar from "react-native-snackbar"
 import {stylePadding} from "../UIStyles";
-import {currentGoodshboxId, currentUserId} from "../../CurrentUser"
+import {currentGoodshboxId, currentUserId} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import LineupCell from "../components/LineupCell";

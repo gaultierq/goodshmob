@@ -17,11 +17,11 @@ import {
 } from 'react-native';
 import {connect} from 'react-redux';
 import type {Id, RequestState} from "../../types";
-import {buildData} from "../../utils/DataUtils";
-import ApiAction from "../../utils/ApiAction";
-import * as Api from "../../utils/Api";
+import {buildData} from "../../helpers/DataUtils";
+import ApiAction from "../../helpers/ApiAction";
+import * as Api from "../../managers/Api";
 import * as authActions from '../../auth/actions'
-import {currentUserId} from "../../CurrentUser";
+import {currentUserId} from "../../managers/CurrentUser";
 
 import {renderLink, renderSimpleButton} from "../UIStyles";
 import SmartInput from "../components/SmartInput";

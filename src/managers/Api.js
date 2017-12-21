@@ -1,11 +1,11 @@
 // @flow
 
 import URL from "url-parse"
-import * as Util from "./ModelUtils";
+import * as Util from "../helpers/ModelUtils";
 import normalize from 'json-api-normalizer';
 //hack for tests. FIXME: remove circular dep
 import {logoutOffline} from "../auth/actions";
-import ApiAction from "./ApiAction";
+import ApiAction from "../helpers/ApiAction";
 import fetch from 'react-native-fetch-polyfill';
 import type {RequestState} from "../types";
 import Config from 'react-native-config'

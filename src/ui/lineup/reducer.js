@@ -1,8 +1,8 @@
 // @flow
 
 import {CREATE_LINEUP, DELETE_LINEUP, SAVE_ITEM} from "./actionTypes";
-import {currentUserId} from "../../CurrentUser";
-import {doDataMergeInState} from "../../utils/DataUtils";
+import {currentUserId} from "../../managers/CurrentUser";
+import {doDataMergeInState} from "../../helpers/DataUtils";
 import dotprop from "dot-prop-immutable"
 
 export default (state = {}, action = {}) => {

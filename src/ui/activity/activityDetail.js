@@ -5,7 +5,7 @@ import {ActivityIndicator, FlatList, Linking, ScrollView, StyleSheet, Text, Touc
 import * as actions from './actions'
 import {connect} from "react-redux";
 import ActivityBody from "./components/ActivityBody";
-import {buildData} from "../../utils/DataUtils";
+import {buildData} from "../../helpers/DataUtils";
 import {MainBackground} from "../UIComponents";
 import ActivityDescription from "./components/ActivityDescription";
 import type {Activity, ActivityType, Id} from "../../types";

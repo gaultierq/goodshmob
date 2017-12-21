@@ -1,7 +1,7 @@
 // @flow
 import * as types from "./actionTypes"
-import * as Api from "../../utils/Api";
-import {sanitizeActivityType} from "../../utils/DataUtils";
+import * as Api from "../../managers/Api";
+import {sanitizeActivityType} from "../../helpers/DataUtils";
 import type {ActivityType, Id} from "../../types";
 
 
