@@ -4,7 +4,7 @@ import {reducer as network} from '../ui/networkActions';
 import {reducer as savings} from '../ui/screens/lineup';
 import {reducer as comments} from '../ui/screens/comments';
 import {reducer as lineups} from '../ui/screens/lineuplist';
-import lineups2 from '../lineup/reducer';
+import lineups2 from '../ui/lineup/reducer';
 import {reducer as peopleYouMayKnow} from '../ui/screens/community';
 import {reducer as interaction} from '../ui/screens/interactions';
 import {statReducer as stat} from '../utils/Statistics';

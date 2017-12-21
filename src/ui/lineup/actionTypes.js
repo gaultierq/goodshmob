@@ -1,4 +1,4 @@
-import ApiAction from "../utils/ApiAction";
+import ApiAction from "../../utils/ApiAction";
 
 export const FETCH_ITEM = ApiAction.create("fetch_item");
 export const SAVE_ITEM = ApiAction.create("save_item");

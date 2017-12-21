@@ -13,7 +13,7 @@ import {Menu, MenuContext, MenuOption, MenuOptions, MenuTrigger} from 'react-nat
 import type {Visibility} from "../screens/additem";
 import Modal from 'react-native-modal'
 import SmartInput from "./SmartInput";
-import {LINEUP_CREATION} from './../../lineup/actions'
+import {LINEUP_CREATION} from '../lineup/actions'
 import {Colors} from "../colors";
 
 type Props = {

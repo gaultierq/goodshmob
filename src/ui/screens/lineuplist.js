@@ -27,7 +27,7 @@ import Feed from "../components/feed";
 import {currentUserId} from "../../CurrentUser"
 import ApiAction from "../../utils/ApiAction";
 import {buildData, doDataMergeInState} from "../../utils/DataUtils";
-import {CREATE_LINEUP, DELETE_LINEUP} from "../../lineup/actionTypes";
+import {CREATE_LINEUP, DELETE_LINEUP} from "../lineup/actionTypes";
 import {mergeItemsAndPendings} from "../../utils/ModelUtils";
 import {Colors} from "../colors";
 

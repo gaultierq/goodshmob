@@ -29,7 +29,7 @@ import {Menu, MenuContext, MenuOption, MenuOptions, MenuTrigger} from 'react-nat
 import Modal from 'react-native-modal'
 import type {Visibility} from "./additem";
 import AddLineupComponent from "../components/addlineup";
-import {LINEUP_DELETION, patchLineup} from "../../lineup/actions";
+import {LINEUP_DELETION, patchLineup} from "../lineup/actions";
 import * as Nav from "../Nav";
 import {startAddItem} from "../Nav";
 import {MainBackground} from "../UIComponents";
