@@ -189,11 +189,11 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     }
 
     renderButton(img: Url, text: string, handler: ()=>void, active:boolean = false) {
-        let color = active ? Colors.green: Colors.black;
+        let color = active ? Colors.green: Colors.grey1;
         return (<TouchableOpacity onPress={handler}>
                 <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 6}}>
 
-                    <Image source={img} style={{width: 20, height: 20, margin: 8, resizeMode: 'contain', tintColor: color}}/>
+                    <Image source={img} style={{width: 24, height: 24, margin: 8, resizeMode: 'contain', tintColor: color}}/>
                     <Text style={{fontFamily: 'Chivo', textAlign: 'center', fontSize: 10, color: color}}>{text}</Text>
                 </View>
             </TouchableOpacity>
