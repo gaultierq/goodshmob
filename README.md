@@ -8,3 +8,6 @@ java.io.IOException: Duplicate zip entry [classes.jar:com/google/android/gms/int
 update app/build.gradle with latest google service version
 
 ./gradlew :app:dependencies | grep google | grep '>'
+
+
+./node_modules/flow-bin/flow-osx-v0.57.3/flow check --show-all-errors | grep 'Error: src'
