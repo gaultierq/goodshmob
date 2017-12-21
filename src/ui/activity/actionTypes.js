@@ -1,4 +1,4 @@
-import ApiAction from "../utils/ApiAction";
+import ApiAction from "../../utils/ApiAction";
 
 export const FETCH_ACTIVITY = ApiAction.create("fetch_activity");
 export const LIKE = ApiAction.create("like");

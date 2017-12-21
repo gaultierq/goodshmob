@@ -6,7 +6,7 @@ import {CheckBox} from "react-native-elements";
 import {connect} from "react-redux";
 import Feed from "../components/feed";
 import {FETCH_ACTIVITIES, fetchUserNetwork} from "../networkActions";
-import ActivityCell from "../../activity/components/ActivityCell";
+import ActivityCell from "../activity/components/ActivityCell";
 import Screen from "../components/Screen";
 import {MainBackground} from "../UIComponents";
 

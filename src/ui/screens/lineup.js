@@ -10,7 +10,7 @@ import Feed from "../components/feed";
 import type {List, Saving} from "../../types";
 import {buildData, doDataMergeInState} from "../../utils/DataUtils";
 import ApiAction from "../../utils/ApiAction";
-import ActivityCell from "../../activity/components/ActivityCell";
+import ActivityCell from "../activity/components/ActivityCell";
 import {currentUserId} from "../../CurrentUser";
 import ActionButton from 'react-native-action-button';
 import {startAddItem} from "../Nav";

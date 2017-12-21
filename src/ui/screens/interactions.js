@@ -7,11 +7,11 @@ import Immutable from 'seamless-immutable';
 import * as Api from "../../utils/Api";
 import Feed from "../components/feed";
 import ApiAction from "../../utils/ApiAction";
-import UserActivity from "../../activity/components/UserActivity";
+import UserActivity from "../activity/components/UserActivity";
 import {buildNonNullData} from "../../utils/DataUtils";
 import type {Activity} from "../../types";
 
-import FeedSeparator from "../../activity/components/FeedSeparator";
+import FeedSeparator from "../activity/components/FeedSeparator";
 import Screen from "../components/Screen";
 import * as Nav from "../Nav";
 

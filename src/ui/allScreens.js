@@ -6,7 +6,7 @@ import {screen as SearchItemScreen} from './screens/searchitems';
 import {SearchNavBar} from './screens/search';
 import DebugScreen from './screens/debug';
 
-import {screen as ActivityDetailScreen} from '../activity/activityDetail';
+import {screen as ActivityDetailScreen} from './activity/activityDetail';
 import {LineupListScreen} from './screens/lineuplist';
 import {screen as AddInScreen} from './screens/addinscreen';
 import {screen as LineupScreen} from './screens/lineup';

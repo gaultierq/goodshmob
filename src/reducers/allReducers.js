@@ -1,5 +1,5 @@
 import {config, data as data1, pending} from './dataReducer'
-import activity from '../activity/reducer';
+import activity from '../ui/activity/reducer';
 import {reducer as network} from '../ui/networkActions';
 import {reducer as savings} from '../ui/screens/lineup';
 import {reducer as comments} from '../ui/screens/comments';

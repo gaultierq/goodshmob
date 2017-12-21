@@ -2,12 +2,12 @@
 
 import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import i18n from '../../i18n/i18n'
-import * as UI from "../../ui/UIStyles";
-import type {Activity, i18Key, List, User} from "../../types";
+import i18n from '../../../i18n/i18n'
+import * as UI from "../../UIStyles";
+import type {Activity, i18Key, List, User} from "../../../types";
 import UserActivity from "./UserActivity";
-import {fullName} from "../../utils/StringUtils";
-import {Colors} from "../../ui/colors";
+import {fullName} from "../../../utils/StringUtils";
+import {Colors} from "../../colors";
 
 type Props = {
     activity: Activity,

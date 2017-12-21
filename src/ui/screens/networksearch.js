@@ -17,7 +17,7 @@ import ItemCell from "../components/ItemCell";
 import LineupCell from "../components/LineupCell";
 import {AlgoliaClient, createResultFromHit, createResultFromHit2, makeAlgoliaSearch} from "../../utils/AlgoliaUtils";
 import UserConnectItem from "./userConnectItem";
-import UserRowI from "../../activity/components/UserRowI";
+import UserRowI from "../activity/components/UserRowI";
 import {SearchStyles} from "../UIStyles";
 import {currentUserId} from "../../CurrentUser";
 import Screen from "../components/Screen";

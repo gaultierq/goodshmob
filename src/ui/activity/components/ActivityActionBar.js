@@ -3,15 +3,15 @@
 import React from 'react';
 
 import {Alert, Image, Linking, Platform, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import type {Activity, ActivityType, Id, Saving, Url} from "../../types";
-import i18n from '../../i18n/i18n'
+import type {Activity, ActivityType, Id, Saving, Url} from "../../../types";
+import i18n from '../../../i18n/i18n'
 import {connect} from "react-redux";
-import {currentGoodshboxId, currentUserId} from "../../CurrentUser";
+import {currentGoodshboxId, currentUserId} from "../../../CurrentUser";
 import {unsave} from "../actions";
 import Snackbar from "react-native-snackbar"
-import {toUppercase} from "../../utils/StringUtils";
-import {buildNonNullData, sanitizeActivityType} from "../../utils/DataUtils";
-import {Colors} from "../../ui/colors";
+import {toUppercase} from "../../../utils/StringUtils";
+import {buildNonNullData, sanitizeActivityType} from "../../../utils/DataUtils";
+import {Colors} from "../../colors";
 
 export type ActivityActionType = 'comment'| 'share'| 'save'| 'unsave'| 'see'| 'buy'| 'answer';
 const ACTIONS = ['comment', 'share', 'save', 'unsave', 'see', 'buy', 'answer'];
@@ -85,19 +85,19 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     renderImageButton(action: ActivityActionType) {
         switch(action) {
             case 'comment':
-                return require('../../img/comment.png')
+                return require('../../../img/comment.png')
             case 'share':
-                return require('../../img/send.png')
+                return require('../../../img/send.png')
             case 'save':
-                return require('../../img/save-icon.png')
+                return require('../../../img/save-icon.png')
             case 'unsave':
-                return require('../../img/save-icon.png')
+                return require('../../../img/save-icon.png')
             case 'see':
-                return require('../../img/save-icon.png')
+                return require('../../../img/save-icon.png')
             case 'buy':
-                return require('../../img/buy-icon.png')
+                return require('../../../img/buy-icon.png')
             case 'answer':
-                return require('../../img/comment.png')
+                return require('../../../img/comment.png')
         }
         throw "Unknown action: " +action
     }

@@ -2,8 +2,8 @@
 
 import React from 'react';
 import {Image, Linking, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import * as UI from "../../ui/UIStyles";
-import {Colors} from "../../ui/colors";
+import * as UI from "../../UIStyles";
+import {Colors} from "../../colors";
 
 type Props = {
     vMargin?: number

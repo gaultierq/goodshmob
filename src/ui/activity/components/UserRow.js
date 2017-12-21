@@ -5,9 +5,9 @@ import React from 'react';
 
 
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import type {User} from "../../types";
+import type {User} from "../../../types";
 import UserRowI from "./UserRowI";
-import {Colors} from "../../ui/colors";
+import {Colors} from "../../colors";
 
 type Props = {
     user: User,

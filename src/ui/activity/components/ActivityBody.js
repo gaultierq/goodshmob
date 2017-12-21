@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
 import {Image, Linking, Share, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
-import * as UI from "../../ui/UIStyles";
+import * as UI from "../../UIStyles";
 import {connect} from "react-redux";
-import type {Activity} from "../../types"
+import type {Activity} from "../../../types"
 import GoodshButton from "./GoodshButton";
 
 type Props = {
@@ -66,7 +66,7 @@ export default class ActivityBody extends React.Component<Props, State> {
             width: "100%",
         }}>
             <Image
-                source={image ? {uri: image} : require('../../img/goodsh_placeholder.png')}
+                source={image ? {uri: image} : require('../../../img/goodsh_placeholder.png')}
                 resizeMode={image ? 'contain' : 'cover'}
                 style={{
                     alignSelf: 'center',

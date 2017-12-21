@@ -3,8 +3,8 @@
 import type {Node} from 'react';
 import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import * as TimeUtils from '../../utils/TimeUtils'
-import type {User} from "../../types";
+import * as TimeUtils from '../../../utils/TimeUtils'
+import type {User} from "../../../types";
 import UserRow from "./UserRow";
 
 type Props = {

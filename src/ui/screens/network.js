@@ -3,7 +3,7 @@
 import React from 'react';
 import {ActivityIndicator, FlatList, Platform, RefreshControl, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
-import ActivityCell from "../../activity/components/ActivityCell";
+import ActivityCell from "../activity/components/ActivityCell";
 import {MainBackground} from "../UIComponents"
 import Feed from "../components/feed"
 import type {List, NavigableProps} from "../../types";

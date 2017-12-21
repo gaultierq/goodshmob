@@ -2,7 +2,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
 import type {Activity, Save} from "../../types";
-import ActivityBody from "../../activity/components/ActivityBody";
+import ActivityBody from "../activity/components/ActivityBody";
 import {CheckBox} from "react-native-elements";
 import {Colors} from "../colors";
 

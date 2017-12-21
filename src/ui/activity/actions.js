@@ -1,8 +1,8 @@
 // @flow
 import * as types from "./actionTypes"
-import * as Api from "../utils/Api";
-import {sanitizeActivityType} from "../utils/DataUtils";
-import type {ActivityType, Id} from "../types";
+import * as Api from "../../utils/Api";
+import {sanitizeActivityType} from "../../utils/DataUtils";
+import type {ActivityType, Id} from "../../types";
 
 
 export function fetchActivity(activityId: Id, activityType: ActivityType, options?:any = {}) {

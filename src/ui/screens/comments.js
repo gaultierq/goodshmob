@@ -10,9 +10,9 @@ import Feed from "../components/feed";
 import type {Activity, ActivityType, Comment, Id} from "../../types";
 import ApiAction from "../../utils/ApiAction";
 import {buildData, doDataMergeInState, sanitizeActivityType} from "../../utils/DataUtils";
-import UserActivity from "../../activity/components/UserActivity";
-import FeedSeparator from "../../activity/components/FeedSeparator";
-import {fetchActivity} from "../../activity/actions";
+import UserActivity from "../activity/components/UserActivity";
+import FeedSeparator from "../activity/components/FeedSeparator";
+import {fetchActivity} from "../activity/actions";
 import SmartInput from "../components/SmartInput";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import type {PendingAction} from "../../utils/ModelUtils";

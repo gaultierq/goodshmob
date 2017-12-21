@@ -3,9 +3,9 @@
 import React from 'react';
 import {Image, Linking, Share, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
 import * as activityAction from "../actions"
-import type {Activity} from "../../types"
+import type {Activity} from "../../../types"
 import {connect} from "react-redux";
-import {Colors} from "../../ui/colors";
+import {Colors} from "../../colors";
 
 
 type Props = {
@@ -44,7 +44,7 @@ export default class GoodshButton extends React.Component<Props, State>  {
 
 
                 >
-                    <Image source={liked ? require('../../img/yeah_on.png') : require('../../img/yeah_off.png')} resizeMode="contain"
+                    <Image source={liked ? require('../../../img/yeah_on.png') : require('../../../img/yeah_off.png')} resizeMode="contain"
 
                            style={{
                                // width: 20,

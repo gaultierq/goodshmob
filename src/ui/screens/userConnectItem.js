@@ -17,7 +17,7 @@ import {currentUserId} from "../../CurrentUser";
 import * as Api from "../../utils/Api";
 import ApiAction from "../../utils/ApiAction";
 import {renderSimpleButton} from "../UIStyles";
-import UserRowI from "../../activity/components/UserRowI";
+import UserRowI from "../activity/components/UserRowI";
 import {Colors} from "../colors";
 
 
