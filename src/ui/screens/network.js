@@ -34,15 +34,15 @@ class NetworkScreen extends Screen<Props, State> {
 
 
     static navigatorButtons = {
-        leftButtons: [
+        rightButtons: [
             {
                 //icon: require('../../img/drawer_line_up.png'), // for icon button, provide the local image asset name
-                id: 'ask', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
-                icon: require('../../img/bottom_bar_ask.png'),
-                title: "#Ask"
+                id: 'search', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
+                icon: require('../../img2/searchHeaderIcon.png'),
+                //title: "#Ask"
             },
         ],
-        rightButtons: [
+        leftButtons: [
             {
                 id: 'community', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
                 icon: require('../../img2/goodshersHeaderIcon.png'),
@@ -107,30 +107,38 @@ class NetworkScreen extends Screen<Props, State> {
 
 
             }
-            if (event.id === 'ask') {
-                //TODO: rm platform specific rules when [1] is solved.
-                //1: https://github.com/wix/react-native-navigation/issues/1502
-                let ios = Platform.OS === 'ios';
-                let show = ios ? navigator.showLightBox : navigator.showModal;
-                let hide = ios ? navigator.dismissLightBox : navigator.dismissModal;
-                show({
-                    screen: 'goodsh.AskScreen', // unique ID registered with Navigation.registerScreen
-                    style: {
-                        backgroundBlur: "dark", // 'dark' / 'light' / 'xlight' / 'none' - the type of blur on the background
-                        tapBackgroundToDismiss: true // dismisses LightBox on background taps (optional)
-                    },
-                    passProps:{
-                        containerStyle: {backgroundColor: ios ? 'transparent' : 'white'},
-                        onClickClose: hide
-                    },
-                    navigatorStyle: {navBarHidden: true},
-                });
+            // if (event.id === 'ask') {
+            //     this.showAsk(navigator);
+            // }
+            if (event.id === 'search') {
+                this.showSearch();
             }
 
         }
     }
 
 
+    showAsk() {
+        let {navigator} = this.props;
+
+//TODO: rm platform specific rules when [1] is solved.
+        //1: https://github.com/wix/react-native-navigation/issues/1502
+        let ios = Platform.OS === 'ios';
+        let show = ios ? navigator.showLightBox : navigator.showModal;
+        let hide = ios ? navigator.dismissLightBox : navigator.dismissModal;
+        show({
+            screen: 'goodsh.AskScreen', // unique ID registered with Navigation.registerScreen
+            style: {
+                backgroundBlur: "dark", // 'dark' / 'light' / 'xlight' / 'none' - the type of blur on the background
+                tapBackgroundToDismiss: true // dismisses LightBox on background taps (optional)
+            },
+            passProps: {
+                containerStyle: {backgroundColor: ios ? 'transparent' : 'white'},
+                onClickClose: hide
+            },
+            navigatorStyle: {navBarHidden: true},
+        });
+    }
 
     render() {
         let userId = currentUserId();
@@ -166,7 +174,7 @@ class NetworkScreen extends Screen<Props, State> {
                 </View>
 
                 <ActionButton
-                    icon={<Icon name="search" size={30} color={Colors.white} />}
+                    // icon={<Icon name="search" size={30} color={Colors.white} />}
                     buttonColor={Colors.green}
                     onPress={() => { this.onFloatingButtonPressed() }}
                 />
@@ -191,6 +199,11 @@ class NetworkScreen extends Screen<Props, State> {
     }
 
     onFloatingButtonPressed() {
+        this.showAsk();
+    }
+
+
+    showSearch() {
         let navigator = this.props.navigator;
 
 
@@ -247,12 +260,11 @@ class NetworkScreen extends Screen<Props, State> {
 
         navigator.showModal({
             screen: 'goodsh.NetworkSearchScreen',
-            title: "#Rechercher",
+            // title: "#Rechercher",
             animationType: 'none',
             backButtonHidden: true,
             passProps:{
-                queries,
-                renderItem
+                onClickClose: () => navigator.dismissModal({animationType: 'none'}),
             },
             navigatorButtons: {
                 leftButtons: [],
