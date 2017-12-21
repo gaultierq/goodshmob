@@ -1,11 +1,13 @@
 export const Colors = Object.freeze({
     black: '#000000',
-    blue: '#408be7',
-    grey1: '#767676',
-    grey2: '#AAAAAA',
-    grey3: '#CCCCCC',
-    grey4: '#eeeeee',
-    green: '#1ec',
-    white: '#fff',
-    dirtyWhite: '#FFF2F1'
+    blue: '#54A4E9',
+    grey0: '#282828',
+    grey1: '#424242',
+    grey11: '#5C5C5C',
+    grey2: '#B1B1B1',
+    grey3: '#D5D5D5',
+    grey4: '#D5D5D5',
+    green: '#01DEB1',
+    white: '#FFFFFF',
+    dirtyWhite: '#D5D5D5'
 });
