@@ -10,3 +10,6 @@ export const Colors = Object.freeze({
     white: '#FFFFFF',
     dirtyWhite: 'rgb(247,247,247)'
 });
+
+
+export const ACTIVITY_CELL_BACKGROUND = Colors.white;

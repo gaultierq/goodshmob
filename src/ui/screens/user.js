@@ -8,7 +8,7 @@ import Feed from "../components/feed";
 import {FETCH_ACTIVITIES, fetchUserNetwork} from "../networkActions";
 import ActivityCell from "../activity/components/ActivityCell";
 import Screen from "../components/Screen";
-import {MainBackground} from "../UIComponents";
+import {activityFeedProps, MainBackground, TRANSPARENT_SPACER} from "../UIComponents";
 
 type Props = {
     userId: Id,
@@ -46,6 +46,7 @@ export default class UserScreen extends Screen<Props, State> {
                             options: {userId}
                         }}
                         hasMore={!network.hasNoMore}
+                        {...activityFeedProps()}
                     />
                 </View>
             </MainBackground>

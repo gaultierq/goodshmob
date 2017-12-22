@@ -4,6 +4,7 @@ import React, {Component} from 'react';
 import {View, Image} from 'react-native';
 import {Colors} from "./colors";
 import User from "react-native-firebase/lib/modules/auth/user";
+import Feed from "./components/feed";
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
@@ -46,4 +47,16 @@ export class Avatar extends Component<Props, State> {
             }]}
         />
     }
+}
+
+export const TRANSPARENT_SPACER = (height: number) => ()=><View style={{height, backgroundColor: 'transparent'}}/>;
+
+
+export function activityFeedProps() {
+    return {
+        ItemSeparatorComponent: TRANSPARENT_SPACER(50),
+        ListHeaderComponent: TRANSPARENT_SPACER(40)(),
+        style: {backgroundColor: Colors.dirtyWhite}
+    };
+
 }

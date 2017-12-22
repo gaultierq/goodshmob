@@ -10,7 +10,7 @@ import {unsave} from "../actions";
 import Snackbar from "react-native-snackbar"
 import {toUppercase} from "../../../helpers/StringUtils";
 import {buildNonNullData} from "../../../helpers/DataUtils";
-import {Colors} from "../../colors";
+import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
 import ActionRights from "../../rights";
 import * as activityAction from "../actions";
 
@@ -64,7 +64,8 @@ export default class ActivityActionBar extends React.Component<Props, State> {
             flexDirection: 'row',
             justifyContent: 'space-between',
             paddingLeft: 10,
-            paddingRight: 10
+            paddingRight: 10,
+            backgroundColor: ACTIVITY_CELL_BACKGROUND,
         }}>
 
             {buttons}

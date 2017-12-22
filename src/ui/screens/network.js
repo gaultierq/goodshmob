@@ -4,7 +4,7 @@ import React from 'react';
 import {ActivityIndicator, FlatList, Platform, RefreshControl, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
 import ActivityCell from "../activity/components/ActivityCell";
-import {MainBackground} from "../UIComponents"
+import {activityFeedProps, MainBackground, TRANSPARENT_SPACER} from "../UIComponents"
 import Feed from "../components/feed"
 import type {List, NavigableProps} from "../../types";
 import ActionButton from 'react-native-action-button';
@@ -152,9 +152,8 @@ class NetworkScreen extends Screen<Props, State> {
             return true;
         } : null;
 
-        const factory = (height) => ()=><View style={{height, backgroundColor: 'transparent'}}/>;
         return (
-            <MainBackground>
+            <View>
                 <Feed
                     data={activities}
                     renderItem={this.renderItem.bind(this)}
@@ -168,8 +167,10 @@ class NetworkScreen extends Screen<Props, State> {
                     scrollUpOnBack={scrollUpOnBack}
                     cannotFetch={!super.isVisible()}
                     visibility={super.getVisibility()}
-                    ItemSeparatorComponent={factory(50)}
-                    ListHeaderComponent={factory(40)()}
+                    // ItemSeparatorComponent={TRANSPARENT_SPACER(50)}
+                    // ListHeaderComponent={TRANSPARENT_SPACER(40)()}
+                    // style={{backgroundColor: Colors.dirtyWhite}}
+                    {...activityFeedProps()}
                 />
 
 
@@ -179,7 +180,7 @@ class NetworkScreen extends Screen<Props, State> {
                     onPress={() => { this.onFloatingButtonPressed() }}
                 />
 
-            </MainBackground>
+            </View>
         );
     }
 
@@ -285,7 +286,6 @@ class NetworkScreen extends Screen<Props, State> {
         if (empty.length > 0) throw new Error(`empty activities found`);
     }
 
-
     renderItem({item}) {
 
         return (
@@ -298,7 +298,6 @@ class NetworkScreen extends Screen<Props, State> {
         )
     }
 }
-
 
 let screen = NetworkScreen;
 

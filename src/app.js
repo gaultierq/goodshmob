@@ -312,7 +312,7 @@ export default class App {
                     orientation: 'portrait', // Sets a specific orientation to the entire app. Default: 'auto'. Supported values: 'auto', 'landscape', 'portrait'
                     // bottomTabBadgeTextColor: 'red', // Optional, change badge text color. Android only
                     // bottomTabBadgeBackgroundColor: 'green', // Optional, change badge background color. Android only
-                    backButtonImage: require('./img/back.png'),
+                    backButtonImage: require('./img2/leftBackArrowGrey.png'),
                     hideBackButtonTitle: true,
                     ...tabsStyle,
                 },

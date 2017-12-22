@@ -1,4 +1,5 @@
 import type {Id, Item} from "../types";
+import {fullName} from "../helpers/StringUtils";
 
 export const CLOSE_MODAL = 'close_modal';
 
@@ -33,5 +34,26 @@ export function startAddItem(navigator: *, defaultLineupId: Id) {
             }
 
         }, // Object that will be passed as props to the pushed screen (optional)
+    });
+}
+
+
+
+export function seeList(navigator, lineup: List) {
+    navigator.push({
+        screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
+        passProps: {
+            lineupId: lineup.id,
+        },
+    });
+}
+
+export function seeUser(navigator, user: User) {
+    navigator.push({
+        screen: 'goodsh.UserScreen', // unique ID registered with Navigation.registerScreen
+        title: fullName(user),
+        passProps: {
+            userId: user.id,
+        },
     });
 }

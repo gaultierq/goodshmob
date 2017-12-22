@@ -4,12 +4,13 @@ import {Image, Linking, Share, StyleSheet, Text, TouchableHighlight, TouchableOp
 import * as UI from "../../UIStyles";
 import {connect} from "react-redux";
 import type {Activity, i18Key, User} from "../../../types"
-import {Colors} from "../../colors";
+import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
 import ActionRights from "../../rights";
 import Button from 'apsl-react-native-button';
 import {fullName} from "../../../helpers/StringUtils";
 import {SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "../../fonts";
 import {Avatar} from "../../UIComponents";
+import {seeList, seeUser} from "../../Nav";
 
 type Props = {
     activity: Activity,
@@ -24,7 +25,7 @@ type State = {
 export default class ActivityBody extends React.Component<Props, State> {
 
     render() {
-        const {activity, noGoodshButton} = this.props;
+        const {activity} = this.props;
         let resource = activity.resource;
 
         return (
@@ -35,7 +36,7 @@ export default class ActivityBody extends React.Component<Props, State> {
 
 
                 {resource && (
-                    <View style={{padding: 15, }}>
+                    <View style={{padding: 15, backgroundColor: ACTIVITY_CELL_BACKGROUND,}}>
                         <View style={{flexDirection: 'row'}}>
                             <View style={{flex:1}}>
                                 <Text style={[styles.title]}>{resource.title}</Text>
@@ -77,12 +78,12 @@ export default class ActivityBody extends React.Component<Props, State> {
             if (count) targetName += " (" + count + ")";
 
             key = "activity_item.header.in";
-            press = () => this.seeList(target);
+            press = () => seeList(this.props.navigator, target);
         }
         else if (target.type === 'users') {
             targetName = target.firstName + " " + target.lastName;
             key = "activity_item.header.to";
-            press = () => this.seeUser(target);
+            press = () => seeUser(this.props.navigator, target);
 
             //new spec. todo clean
             return null;
@@ -111,29 +112,8 @@ export default class ActivityBody extends React.Component<Props, State> {
                 </Text>
             </TouchableOpacity>
         </View>
-
     }
 
-
-
-    seeList(lineup: List) {
-        this.props.navigator.push({
-            screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
-            passProps: {
-                lineupId: lineup.id,
-            },
-        });
-    }
-
-    seeUser(user: User) {
-        this.props.navigator.push({
-            screen: 'goodsh.UserScreen', // unique ID registered with Navigation.registerScreen
-            title: fullName(user),
-            passProps: {
-                userId: user.id,
-            },
-        });
-    }
 
     renderBuyButton(activity:Activity) {
         return new ActionRights(activity).canBuy() && <Button
@@ -174,21 +154,13 @@ export default class ActivityBody extends React.Component<Props, State> {
         }
 
 
-        let target = activity.target;
-        let postedToUser = target && target.type === 'users' && target;
-        // const {skipLineup, withFollowButton} = this.props;
-        // if (skipLineup) return null;
-
-
-
-
-        // image = null;
-        const dim = 16;
         return <View style={{
             flex:1,
             alignSelf: 'center',
             height: imageHeight,
             width: "100%",
+            backgroundColor: 'transparent',
+
         }}>
 
             <Image
@@ -197,24 +169,15 @@ export default class ActivityBody extends React.Component<Props, State> {
                 style={{
                     alignSelf: 'center',
                     height: imageHeight,
+                    //position: 'absolute',
+                    // borderWidth: 2,
+                    backgroundColor: ACTIVITY_CELL_BACKGROUND,
                     width: "100%",
                 }}
                 defaultSource={{}}
             />
 
-            <View style={{position: 'absolute', top: -17, left: 10, flexDirection: 'row', }}>
-                <TouchableOpacity onPress={()=>this.seeUser(activity.user)}>
-                    <Avatar user={activity.user} style={{dim: 34}}/>
-                </TouchableOpacity>
-                {postedToUser && <Image style={[UI.SIDE_MARGINS(8), {width: dim, height: dim, transform: [{translateY: -10}, { rotate: '20deg'}]}]} source={require('../../../img2/sendIcon.png')}/>}
-            </View>
-            {postedToUser && <View style={{position: 'absolute', top: -17, right: 10, flexDirection: 'row'}}>
 
-                <Image style={[UI.SIDE_MARGINS(8), {width: dim, height: dim, transform: [{translateY: -10}, { rotate: '70deg'}]}]} source={require('../../../img2/sendIcon.png')}/>
-                <TouchableOpacity onPress={()=>this.seeUser(postedToUser)}>
-                    <Avatar user={postedToUser} style={{dim: 34}}/>
-                </TouchableOpacity>
-            </View>}
 
 
         </View>

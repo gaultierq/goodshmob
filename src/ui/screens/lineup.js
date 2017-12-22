@@ -3,7 +3,7 @@
 import React, {Component} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {connect} from "react-redux";
-import {MainBackground} from "../UIComponents";
+import {activityFeedProps, MainBackground, TRANSPARENT_SPACER} from "../UIComponents";
 import Immutable from 'seamless-immutable';
 import * as Api from "../../managers/Api";
 import Feed from "../components/feed";
@@ -89,6 +89,7 @@ class LineupScreen extends Component<Props, State> {
                     fetchSrc={fetchSrc}
                     hasMore={true}
                     empty={"empty.lineup"}
+                    {...activityFeedProps()}
                 />
                 {
                     this.displayFloatingButton() &&
