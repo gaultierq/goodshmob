@@ -20,8 +20,6 @@ export default class MyAvatar extends Component<Props, State> {
 
         const user = currentUser();
 
-        let uri = user.image;
-
         return (
             <TouchableOpacity onPress={()=>{
                 //this is bad
@@ -36,18 +34,14 @@ export default class MyAvatar extends Component<Props, State> {
                 });
 
             }}>
-                <View style={[{alignItems: 'center', flexDirection: 'row'}]}>
-                    {
-                        <Image
-                            source={{uri}}
-                            style={{
-                                height: imageDim,
-                                width: imageDim,
-                                borderRadius: imageDim / 2,
-                            }}
-                        />
-                    }
-                </View>
+                <Image
+                    source={{uri: user.image}}
+                    style={{
+                        height: imageDim,
+                        width: imageDim,
+                        borderRadius: imageDim / 2,
+                    }}
+                />
             </TouchableOpacity>
         )
 

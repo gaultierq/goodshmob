@@ -123,7 +123,7 @@ class NetworkScreen extends Screen<Props, State> {
 
 //TODO: rm platform specific rules when [1] is solved.
         //1: https://github.com/wix/react-native-navigation/issues/1502
-        let ios = Platform.OS === 'ios';
+        let ios = __IS_IOS__;
         let show = ios ? navigator.showLightBox : navigator.showModal;
         let hide = ios ? navigator.dismissLightBox : navigator.dismissModal;
         show({

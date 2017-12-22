@@ -50,7 +50,7 @@ export default class AddLineupComponent extends Component<Props, State> {
                                     flex:0,
                                     color: Colors.black
                                 },
-                                //Platform.OS === 'ios' ? {lineHeight: 40} : {height: 40}
+                                //__IS_IOS__ ? {lineHeight: 40} : {height: 40}
                             ]}
                         >{i18n.t('create_list_controller.title')}</Text>
                     </View>

@@ -3,12 +3,13 @@ import React from 'react';
 import {Image, Linking, Share, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
 import * as UI from "../../UIStyles";
 import {connect} from "react-redux";
-import type {Activity} from "../../../types"
+import type {Activity, i18Key, User} from "../../../types"
 import {Colors} from "../../colors";
 import ActionRights from "../../rights";
 import Button from 'apsl-react-native-button';
 import {fullName} from "../../../helpers/StringUtils";
 import {SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "../../fonts";
+import {Avatar} from "../../UIComponents";
 
 type Props = {
     activity: Activity,
@@ -26,16 +27,12 @@ export default class ActivityBody extends React.Component<Props, State> {
         const {activity, noGoodshButton} = this.props;
         let resource = activity.resource;
 
-        let bgc = null;//{backgroundColor: activity.type === 'asks' ?  'red' : 'transparent'}
         return (
             <View>
                 {/*Image And Button*/}
-                <View style={[{alignItems: 'center', }, bgc]}>
-                    {this.body()}
+                {this.renderImage()}
 
-                    {/*{!noGoodshButton && activity.type !== 'asks' && <GoodshButton activity={activity}/>}*/}
 
-                </View>
 
                 {resource && (
                     <View style={{padding: 15, }}>
@@ -86,6 +83,9 @@ export default class ActivityBody extends React.Component<Props, State> {
             targetName = target.firstName + " " + target.lastName;
             key = "activity_item.header.to";
             press = () => this.seeUser(target);
+
+            //new spec. todo clean
+            return null;
         }
 
         const color = Colors.greyish;
@@ -160,7 +160,7 @@ export default class ActivityBody extends React.Component<Props, State> {
         });
     }
 
-    body() {
+    renderImage() {
 
         const {activity} = this.props;
         let resource = activity.resource;
@@ -172,13 +172,25 @@ export default class ActivityBody extends React.Component<Props, State> {
             if (__IS_LOCAL__) content += ` (id=${activity.id.substr(0, 5)})`;
             return <Text style={[{margin: 12, fontSize: 30}]}>{content}</Text>;
         }
+
+
+        let target = activity.target;
+        let postedToUser = target && target.type === 'users' && target;
+        // const {skipLineup, withFollowButton} = this.props;
+        // if (skipLineup) return null;
+
+
+
+
         // image = null;
+        const dim = 16;
         return <View style={{
             flex:1,
             alignSelf: 'center',
-            height: imageHeight + 15,
+            height: imageHeight,
             width: "100%",
         }}>
+
             <Image
                 source={image ? {uri: image} : require('../../../img/goodsh_placeholder.png')}
                 resizeMode={image ? 'contain' : 'cover'}
@@ -189,6 +201,22 @@ export default class ActivityBody extends React.Component<Props, State> {
                 }}
                 defaultSource={{}}
             />
+
+            <View style={{position: 'absolute', top: 10, left: 10, flexDirection: 'row', alignItems: 'center'}}>
+                <TouchableOpacity onPress={()=>this.seeUser(activity.user)}>
+                    <Avatar user={activity.user} style={{dim: 34}}/>
+                </TouchableOpacity>
+
+                {postedToUser && <Image style={[UI.SIDE_MARGINS(8), {width: dim, height: dim}]} source={require('../../../img2/sendIcon.png')}/>}
+                {
+                    postedToUser && (
+                        <TouchableOpacity onPress={()=>this.seeUser(postedToUser)}>
+                            <Avatar user={postedToUser} style={{dim: 34}}/>
+                        </TouchableOpacity>)
+                }
+            </View>
+
+
         </View>
     }
 }
