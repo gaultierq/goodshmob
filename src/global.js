@@ -5,6 +5,10 @@ import _i18n from './i18n/i18n'
 import Config from 'react-native-config'
 import {superLog as _superLog} from './helpers/DebugUtils'
 
+import {
+    Platform,
+} from 'react-native';
+
 declare var i18n: any;
 declare var _: any;
 declare var superConsole: any;
@@ -22,6 +26,8 @@ export function init() {
     global.__IS_LOCAL__= Config.ENV === 'LOCAL';
     global.__IS_PROD__= Config.ENV === 'PROD';
     global.__IS_DEV__= Config.ENV === 'DEV';
+
+    global.__IS_IOS__ = Platform.os === 'ios';
 
 
     global.ensureNotNull = (object) => {

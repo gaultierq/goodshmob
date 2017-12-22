@@ -24,7 +24,6 @@ import {currentGoodshboxId, currentUserId} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import LineupCell from "../components/LineupCell";
-import Icon from 'react-native-vector-icons/Ionicons';
 import {Menu, MenuContext, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
 import Modal from 'react-native-modal'
 import type {Visibility} from "./additem";
@@ -32,7 +31,6 @@ import AddLineupComponent from "../components/addlineup";
 import {LINEUP_DELETION, patchLineup} from "../lineup/actions";
 import * as Nav from "../Nav";
 import {startAddItem} from "../Nav";
-import {MainBackground} from "../UIComponents";
 import SmartInput from "../components/SmartInput";
 import Screen from "../components/Screen";
 import {Colors} from "../colors";
@@ -53,13 +51,20 @@ type State = {
 @connect()
 class HomeScreen extends Screen<Props, State> {
 
+
     static navigatorButtons = {
+
+        //'component' doesnt work on android :/
         leftButtons: [
-            {
-                // icon: require('../../img/profil.png'),
-                id: 'profile',
-                component: 'goodsh.MyAvatar'
-            }
+            __IS_IOS__ ?
+                {
+                    id: 'profile',
+                    component: 'goodsh.MyAvatar'
+                }:
+                {
+                    icon: require('../../img/profil.png'),
+                    id: 'profile',
+                }
         ],
         rightButtons: [
             {
