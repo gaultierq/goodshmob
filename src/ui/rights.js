@@ -18,7 +18,8 @@ export default class ActionRights {
     }
 
     canLike() {
-        return !this.liked();
+
+        return !this.isAsk() && !this.liked();
     }
 
     liked() {
@@ -27,5 +28,9 @@ export default class ActionRights {
 
     canUnlike() {
         return this.liked();
+    }
+
+    isAsk() {
+        return this.activity.type === 'asks';
     }
 }

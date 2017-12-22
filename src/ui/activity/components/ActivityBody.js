@@ -202,19 +202,19 @@ export default class ActivityBody extends React.Component<Props, State> {
                 defaultSource={{}}
             />
 
-            <View style={{position: 'absolute', top: 10, left: 10, flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{position: 'absolute', top: 10, left: 10, flexDirection: 'row', }}>
                 <TouchableOpacity onPress={()=>this.seeUser(activity.user)}>
                     <Avatar user={activity.user} style={{dim: 34}}/>
                 </TouchableOpacity>
-
-                {postedToUser && <Image style={[UI.SIDE_MARGINS(8), {width: dim, height: dim}]} source={require('../../../img2/sendIcon.png')}/>}
-                {
-                    postedToUser && (
-                        <TouchableOpacity onPress={()=>this.seeUser(postedToUser)}>
-                            <Avatar user={postedToUser} style={{dim: 34}}/>
-                        </TouchableOpacity>)
-                }
+                {postedToUser && <Image style={[UI.SIDE_MARGINS(8), {width: dim, height: dim, transform: [{ rotate: '20deg'}]}]} source={require('../../../img2/sendIcon.png')}/>}
             </View>
+            {postedToUser && <View style={{position: 'absolute', top: 10, right: 10, flexDirection: 'row'}}>
+
+                <Image style={[UI.SIDE_MARGINS(8), {width: dim, height: dim, transform: [{ rotate: '70deg'}]}]} source={require('../../../img2/sendIcon.png')}/>
+                <TouchableOpacity onPress={()=>this.seeUser(postedToUser)}>
+                    <Avatar user={postedToUser} style={{dim: 34}}/>
+                </TouchableOpacity>
+            </View>}
 
 
         </View>
