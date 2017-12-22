@@ -8,7 +8,6 @@ import {MainBackground} from "../UIComponents"
 import Feed from "../components/feed"
 import type {List, NavigableProps} from "../../types";
 import ActionButton from 'react-native-action-button';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import {currentUserId} from "../../managers/CurrentUser";
 import ItemCell from "../components/ItemCell";
 import LineupCell from "../components/LineupCell";
@@ -153,25 +152,26 @@ class NetworkScreen extends Screen<Props, State> {
             return true;
         } : null;
 
+        const factory = (height) => ()=><View style={{height, backgroundColor: 'transparent'}}/>;
         return (
             <MainBackground>
-                <View>
-                    <Feed
-                        data={activities}
-                        renderItem={this.renderItem.bind(this)}
-                        fetchSrc={{
-                            callFactory: fetchMyNetwork,
-                            useLinks: true,
-                            action: FETCH_ACTIVITIES,
-                            options: {userId}
-                        }}
-                        hasMore={!network.hasNoMore}
-                        scrollUpOnBack={scrollUpOnBack}
-                        cannotFetch={!super.isVisible()}
-                        visibility={super.getVisibility()}
-                    />
+                <Feed
+                    data={activities}
+                    renderItem={this.renderItem.bind(this)}
+                    fetchSrc={{
+                        callFactory: fetchMyNetwork,
+                        useLinks: true,
+                        action: FETCH_ACTIVITIES,
+                        options: {userId}
+                    }}
+                    hasMore={!network.hasNoMore}
+                    scrollUpOnBack={scrollUpOnBack}
+                    cannotFetch={!super.isVisible()}
+                    visibility={super.getVisibility()}
+                    ItemSeparatorComponent={factory(50)}
+                    ListHeaderComponent={factory(40)()}
+                />
 
-                </View>
 
                 <ActionButton
                     // icon={<Icon name="search" size={30} color={Colors.white} />}

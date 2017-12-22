@@ -165,7 +165,7 @@ export default class ActivityBody extends React.Component<Props, State> {
         const {activity} = this.props;
         let resource = activity.resource;
         let image = resource ? resource.image : undefined;
-        let imageHeight = 250;
+        let imageHeight = 288;
         if (activity.type === 'asks'){
 
             let content = activity.content;
@@ -202,15 +202,15 @@ export default class ActivityBody extends React.Component<Props, State> {
                 defaultSource={{}}
             />
 
-            <View style={{position: 'absolute', top: 10, left: 10, flexDirection: 'row', }}>
+            <View style={{position: 'absolute', top: -17, left: 10, flexDirection: 'row', }}>
                 <TouchableOpacity onPress={()=>this.seeUser(activity.user)}>
                     <Avatar user={activity.user} style={{dim: 34}}/>
                 </TouchableOpacity>
-                {postedToUser && <Image style={[UI.SIDE_MARGINS(8), {width: dim, height: dim, transform: [{ rotate: '20deg'}]}]} source={require('../../../img2/sendIcon.png')}/>}
+                {postedToUser && <Image style={[UI.SIDE_MARGINS(8), {width: dim, height: dim, transform: [{translateY: -10}, { rotate: '20deg'}]}]} source={require('../../../img2/sendIcon.png')}/>}
             </View>
-            {postedToUser && <View style={{position: 'absolute', top: 10, right: 10, flexDirection: 'row'}}>
+            {postedToUser && <View style={{position: 'absolute', top: -17, right: 10, flexDirection: 'row'}}>
 
-                <Image style={[UI.SIDE_MARGINS(8), {width: dim, height: dim, transform: [{ rotate: '70deg'}]}]} source={require('../../../img2/sendIcon.png')}/>
+                <Image style={[UI.SIDE_MARGINS(8), {width: dim, height: dim, transform: [{translateY: -10}, { rotate: '70deg'}]}]} source={require('../../../img2/sendIcon.png')}/>
                 <TouchableOpacity onPress={()=>this.seeUser(postedToUser)}>
                     <Avatar user={postedToUser} style={{dim: 34}}/>
                 </TouchableOpacity>

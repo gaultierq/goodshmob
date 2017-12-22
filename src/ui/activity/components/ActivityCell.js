@@ -35,42 +35,27 @@ export default class ActivityCell extends React.Component<Props, State> {
     refKeys: any;
 
     render() {
-        const {skipLineup, skipDescription} = this.props;
 
         let activity = this.getActivity();
         this.refKeys = this.makeRefObject(this.props);
         return (
-            <View style={{
-                backgroundColor: "transparent",
-                marginTop: 10,
-                marginBottom: 10
-            }}>
-                {/*{*/}
-                    {/*!skipDescription &&*/}
-                    {/*<ActivityDescription*/}
-                        {/*activity={activity}*/}
-                        {/*navigator={this.props.navigator}*/}
-                        {/*skipLineup={!!skipLineup}*/}
-                    {/*/>*/}
-                {/*}*/}
 
-                <View style={UI.CARD()}>
-                    <TouchableOpacity onPress={this.props.onPressItem}>
-                        <ActivityBody
-                            activity={activity}
-                            navigator={this.props.navigator}
-                        />
-                    </TouchableOpacity>
-
-                    {/*<FeedSeparator/>*/}
-
-                    <ActivityActionBar
-                        activityId={activity.id}
-                        activityType={activity.type}
+            <View style={UI.CARD()}>
+                <TouchableOpacity onPress={this.props.onPressItem}>
+                    <ActivityBody
+                        activity={activity}
                         navigator={this.props.navigator}
                     />
+                </TouchableOpacity>
 
-                </View>
+                {/*<FeedSeparator/>*/}
+
+                <ActivityActionBar
+                    activityId={activity.id}
+                    activityType={activity.type}
+                    navigator={this.props.navigator}
+                />
+
             </View>
         )
     }

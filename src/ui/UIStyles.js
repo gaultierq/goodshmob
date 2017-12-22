@@ -69,8 +69,8 @@ export const CARD2 = (sideMargin: number = 0) => {
         // borderRadius: 4,
         // shadowRadius: 2,
         // elevation: 2,
-        marginTop: 5,
-        marginBottom: 5
+        // marginTop: 5,
+        // marginBottom: 5
     }
 };
 
