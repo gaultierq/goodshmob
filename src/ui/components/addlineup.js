@@ -137,6 +137,6 @@ const styles = StyleSheet.create({
         flex: 1,
         textAlignVertical: 'center',
 
-        fontSize: 18,
+        fontSize: 16,
     },
 });

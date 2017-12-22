@@ -35,6 +35,7 @@ import SmartInput from "../components/SmartInput";
 import Screen from "../components/Screen";
 import {Colors} from "../colors";
 import {PROFILE_CLICKED} from "../components/MyAvatar";
+import {SFP_TEXT_MEDIUM} from "../fonts";
 
 
 type Props = {
@@ -356,7 +357,10 @@ class HomeScreen extends Screen<Props, State> {
 
         return (
             <View style={{flexDirection: 'row', justifyContent: 'space-between', margin: padding}}>
-                <Text style={{fontSize: 20, fontWeight: 'bold'}}>#My lists</Text>
+                <Text style={{
+                    fontSize: 20,
+                    fontFamily: SFP_TEXT_MEDIUM
+                }}>#My lists</Text>
                 <AddLineupComponent/>
             </View>
         );

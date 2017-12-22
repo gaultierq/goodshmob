@@ -9,6 +9,7 @@ import {assertUnique} from "../../helpers/DataUtils";
 import {isEmpty} from "lodash";
 import type {List, Saving} from "../../types";
 import {Colors} from "../colors";
+import {SFP_TEXT_MEDIUM} from "../fonts";
 //;
 
 type Props = {
@@ -162,10 +163,7 @@ const styles = StyleSheet.create({
     container: {
     },
     lineupTitle: {
-        // backgroundColor: 'transparent',
-        // ...UI.TEXT_LIST,
         fontSize: 16,
-
         marginTop: 4,
         marginBottom: 6,
     }
