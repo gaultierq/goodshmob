@@ -27,7 +27,7 @@ export function init() {
     global.__IS_PROD__= Config.ENV === 'PROD';
     global.__IS_DEV__= Config.ENV === 'DEV';
 
-    global.__IS_IOS__ = Platform.os === 'ios';
+    global.__IS_IOS__ = Platform.OS === 'ios';
 
 
     global.ensureNotNull = (object) => {

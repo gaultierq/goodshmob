@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    title: {fontSize: 18, fontFamily: 'Chivo-Light', },
+    title: {fontSize: 18, },
     subtitle: {fontSize: 12, color: Colors.greyish}
 
 });
