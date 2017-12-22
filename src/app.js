@@ -86,7 +86,7 @@ export default class App {
     prepareUI() {
         globalProps.setCustomText({
             style: {
-                fontFamily: 'Thonburi',
+                fontFamily: 'SFProText-Regular',
                 color: 'black',
             }
         });

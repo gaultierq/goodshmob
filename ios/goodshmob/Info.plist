@@ -60,7 +60,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
@@ -81,6 +81,16 @@
 		<string>Thonburi-Light.ttf</string>
 		<string>Thonburi.ttf</string>
 		<string>Feather.ttf</string>
+		<string>SFProDisplay-Light.otf</string>
+		<string>SFProDisplay-LightItalic.otf</string>
+		<string>SFProDisplay-Regular.otf</string>
+		<string>SFProDisplay-RegularItalic.otf</string>
+		<string>SFProText-Bold.otf</string>
+		<string>SFProText-Light.otf</string>
+		<string>SFProText-LightItalic.otf</string>
+		<string>SFProText-Medium.otf</string>
+		<string>SFProText-Regular.otf</string>
+		<string>SFProText-RegularItalic.otf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

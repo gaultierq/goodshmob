@@ -51,7 +51,6 @@ type State = {
 @connect()
 class HomeScreen extends Screen<Props, State> {
 
-
     static navigatorButtons = {
 
         //'component' doesnt work on android :/
