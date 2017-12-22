@@ -147,7 +147,7 @@ class ShareScreen extends Component<Props, State> {
 
 const styles = StyleSheet.create({
     buttonText: {
-        fontFamily: 'Chivo',
+
         color: 'black',
         fontSize: 15,
 

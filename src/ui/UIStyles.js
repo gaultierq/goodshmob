@@ -4,10 +4,14 @@ import Button from 'apsl-react-native-button'
 import * as React from "react";
 import {toUppercase} from "../helpers/StringUtils";
 import {Colors} from "./colors";
+import {SFP_TEXT_MEDIUM} from "./fonts";
 
 export const NavStyles = {
-    navBarButtonColor: 'black',
-    navBarBackgroundColor: '#f4f4f4',
+    navBarButtonColor: Colors.greyishBrown,
+    navBarBackgroundColor: 'rgba(248,248,248,0.82)',
+    navBarTextFontSize: 20,
+    navBarTextFontFamily: SFP_TEXT_MEDIUM,
+
 };
 
 export const SearchStyles = {

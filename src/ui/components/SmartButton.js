@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     },
     input:{
         fontSize: 18,
-        fontFamily: 'Chivo',
+
     },
     button: {
         // height: HEIGHT,

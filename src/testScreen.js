@@ -178,7 +178,7 @@ let testScreen = null;
 // testScreen = networkSearchScreen;
 //  testScreen = searchItemsScreen;
 //  testScreen = homeSearchItemsScreen;
- testScreen = networkScreen;
+//  testScreen = networkScreen;
 //  testScreen = lineupScreen;
 //  testScreen = activityDetailScreen;
 

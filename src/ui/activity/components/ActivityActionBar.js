@@ -194,7 +194,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                 <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 6}}>
 
                     <Image source={img} style={{width: 24, height: 24, margin: 8, resizeMode: 'contain', tintColor: color}}/>
-                    <Text style={{fontFamily: 'Chivo', textAlign: 'center', fontSize: 10, color: color}}>{text}</Text>
+                    <Text style={{ textAlign: 'center', fontSize: 10, color: color}}>{text}</Text>
                 </View>
             </TouchableOpacity>
         );

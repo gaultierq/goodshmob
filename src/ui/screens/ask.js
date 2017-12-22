@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
         height: 140,
         height: 140,
         width: "100%",
-        fontFamily: 'Chivo',
+
         fontSize: 18,
         // borderWidth: StyleSheet.hairlineWidth,
         borderColor: Colors.greyishBrown,
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     },
     header:{
         fontSize: 16,
-        fontFamily: 'Chivo',
+
         color: Colors.white
     },
     button: {

@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     headerText:{
         flex: 1,
         textAlignVertical: 'center',
-        fontFamily: 'Chivo',
+
         fontSize: 18,
     },
 });

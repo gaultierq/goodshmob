@@ -141,7 +141,7 @@ export default class Profile extends Component<Props, State> {
                         {this.renderUser(user)}
 
                         <Text style={{
-                            fontFamily: 'Chivo',
+
                             marginBottom: 20,
                             fontSize: 17,
                             marginTop: 18
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
     input:{
         height: 100,
         width: "80%",
-        fontFamily: 'Chivo',
+
         fontSize: 14,
         borderWidth: StyleSheet.hairlineWidth,
         borderRadius: 5,
@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
     },
     userName: {
         fontSize: 20,
-        fontFamily: 'Chivo',
+
         //color: UI.Colors.grey1,
         padding: 10,
     },

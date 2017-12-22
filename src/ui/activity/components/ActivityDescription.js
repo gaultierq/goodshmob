@@ -123,7 +123,7 @@ export default class ActivityDescription extends React.Component<Props, State> {
             <TouchableOpacity>
                 <Text style={{
                     fontSize: 9,
-                    fontFamily: 'Chivo',
+
                     color: Colors.greyishBrown,
                     padding: 5,
                     borderRadius: 5,
@@ -136,7 +136,7 @@ export default class ActivityDescription extends React.Component<Props, State> {
                 style={{backgroundColor: "white", padding: 5, borderRadius: 5}}>
                 <Text style={{
                     fontSize: 9,
-                    fontFamily: 'Chivo',
+
                     color: Colors.blue
                 }}>{i18n.t("activity_item.buttons.follow_list")}</Text>
             </TouchableOpacity>;

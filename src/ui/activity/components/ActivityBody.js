@@ -8,6 +8,7 @@ import {Colors} from "../../colors";
 import ActionRights from "../../rights";
 import Button from 'apsl-react-native-button';
 import {fullName} from "../../../helpers/StringUtils";
+import {SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "../../fonts";
 
 type Props = {
     activity: Activity,
@@ -40,8 +41,8 @@ export default class ActivityBody extends React.Component<Props, State> {
                     <View style={{padding: 15, }}>
                         <View style={{flexDirection: 'row'}}>
                             <View style={{flex:1}}>
-                                <Text style={{fontSize: 20, fontFamily: 'Chivo',}}>{resource.title}</Text>
-                                <Text style={UI.TEXT_LESS_IMPORTANT}>{resource.subtitle}</Text>
+                                <Text style={[styles.title]}>{resource.title}</Text>
+                                <Text style={[styles.subtitle]}>{resource.subtitle}</Text>
 
 
                                 {__IS_LOCAL__ &&
@@ -49,7 +50,7 @@ export default class ActivityBody extends React.Component<Props, State> {
                             </View>
                             {this.renderBuyButton(activity)}
                         </View>
-                        {!!activity.description && <Text style={{fontSize: 16, color: Colors.greyishBrown}}>{activity.description}</Text>}
+                        {!!activity.description && <Text style={[styles.description]}>{activity.description}</Text>}
 
                         {this.renderTags()}
                     </View>
@@ -102,6 +103,8 @@ export default class ActivityBody extends React.Component<Props, State> {
                         // padding: 2,
                         borderWidth: StyleSheet.hairlineWidth,
                         borderColor: color,
+                        fontFamily: SFP_TEXT_ITALIC,
+                        fontSize: 13
 
                     }]}>
                     {i18n.t(key) + ' ' + targetName}
@@ -139,7 +142,7 @@ export default class ActivityBody extends React.Component<Props, State> {
             }}
             style={[{height: 33, borderRadius: 4, backgroundColor: Colors.blue, borderWidth: 0}]}
         >
-            <Text style={[UI.SIDE_MARGINS(10), {color: Colors.white, fontFamily: "Chivo", fontSize: 16}]}>
+            <Text style={[UI.SIDE_MARGINS(10), {color: Colors.white, fontFamily: SFP_TEXT_MEDIUM, fontSize: 14}]}>
                 #Buy
             </Text>
         </Button>;
@@ -190,6 +193,13 @@ export default class ActivityBody extends React.Component<Props, State> {
     }
 }
 
+
+const styles = StyleSheet.create({
+    title: {fontSize: 20, color: Colors.black},
+    subtitle: {fontSize: 14, color: Colors.greyish},
+    description: {fontSize: 14, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey},
+
+});
 
 
 

@@ -10,7 +10,7 @@ import logger from 'redux-logger'
 
 import * as Api from './managers/Api';
 import {autoRehydrate, createTransform, persistStore} from 'redux-persist'
-import {AsyncStorage, TouchableOpacity} from 'react-native'
+import {AsyncStorage, TouchableOpacity, StyleSheet} from 'react-native'
 import immutableTransform from './immutableTransform'
 import {REHYDRATE} from 'redux-persist/constants'
 import i18n from './i18n/i18n'
@@ -28,6 +28,7 @@ import Config from 'react-native-config'
 import {Provider} from "react-redux";
 import Messenger from "./managers/Messenger"
 import {Colors} from "./ui/colors";
+import {SFP_TEXT_REGULAR} from "./ui/fonts";
 
 console.log(`staring app with env=${JSON.stringify(Config)}`);
 
@@ -46,7 +47,7 @@ const appReducer = (state = {}, action) => {
     switch (action.type) {
         case REHYDRATE:
             return {...state, rehydrated: true};
-            //return state.merge({rehydrated: true})
+        //return state.merge({rehydrated: true})
     }
     return state;
 };
@@ -57,6 +58,12 @@ const appReducer = (state = {}, action) => {
 //if (!__IS_LOCAL__) {
 console.disableYellowBox = true;
 //}
+const APP_STYLES = StyleSheet.create({
+    TEXT_DEFAULT: {
+        fontFamily: SFP_TEXT_REGULAR,
+        color: Colors.black,
+    }
+});
 
 export default class App {
 
@@ -84,11 +91,9 @@ export default class App {
     }
 
     prepareUI() {
+
         globalProps.setCustomText({
-            style: {
-                fontFamily: 'SFProText-Regular',
-                color: 'black',
-            }
+            style: APP_STYLES.TEXT_DEFAULT
         });
 
         globalProps.setCustomView({
@@ -246,18 +251,22 @@ export default class App {
         const testScreen = require("./testScreen").default;
         console.debug(`starting app logged=${logged}, test=${(!!testScreen)}`);
 
+        let navigatorStyle = {...UI.NavStyles};
+
         if (!logged) {
             Navigation.startSingleScreenApp({
                 screen: {
                     label: 'Login',
                     screen: 'goodsh.LoginScreen',
                     navigatorStyle: {
+                        ...navigatorStyle,
                         navBarHidden: true,
                     }
                 }
             });
         }
         else if (__IS_LOCAL__ && testScreen) {
+            Object.assign(testScreen.screen, {navigatorStyle});
             Navigation.startSingleScreenApp(testScreen);
         }
         else {
@@ -274,7 +283,7 @@ export default class App {
                 initialTabIndex: 0,
             };
 
-            let navigatorStyle = {...UI.NavStyles};
+
 
             Navigation.startTabBasedApp({
                 tabs: [

@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
         // backgroundColor: 'transparent',
         // ...UI.TEXT_LIST,
         fontSize: 16,
-        fontFamily: 'Chivo',
+
         marginTop: 4,
         marginBottom: 6,
     }
