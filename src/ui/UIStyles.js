@@ -112,8 +112,8 @@ export function stylePadding(left?: number, top?: number, right?: number, bottom
 
 //TODO: convert to stylesheet
 export const TEXT_LIST = {fontSize: 14, color: Colors.blue};
-export const TEXT_LESS_IMPORTANT = {fontSize: 12, color: Colors.grey2};
-export const TEXT_LEAST_IMPORTANT = {fontSize: 9, color: Colors.grey2};
+export const TEXT_LESS_IMPORTANT = {fontSize: 12, color: Colors.greyish};
+export const TEXT_LEAST_IMPORTANT = {fontSize: 9, color: Colors.greyish};
 
 
 type ButtonOptions = {disabled?: boolean, loading?: boolean, style?: *};
@@ -123,7 +123,7 @@ export function renderSimpleButton(
     onPress: ()=> void ,
     {disabled = false, loading = false, style = {}, textStyle = {}} : ButtonOptions = {}) {
 
-    let color = disabled ? Colors.grey1 : Colors.black;
+    let color = disabled ? Colors.greyishBrown : Colors.black;
 
     return (<Button
         isLoading={loading}
@@ -142,7 +142,7 @@ export function renderSimpleLink(
     options :? ButtonOptions) {
     let {disabled = false, loading = false, style = {}} = options || {};
 
-    let color = disabled ? Colors.grey1 : Colors.blue;
+    let color = disabled ? Colors.greyishBrown : Colors.blue;
 
     return (
         <TouchableOpacity onPress={disabled ? null : onPress}>
@@ -178,6 +178,6 @@ export const STYLES = StyleSheet.create({
     },
     lightBorder: {
         borderWidth: StyleSheet.hairlineWidth,
-        borderColor: Colors.grey2,
+        borderColor: Colors.greyish,
     }
 });

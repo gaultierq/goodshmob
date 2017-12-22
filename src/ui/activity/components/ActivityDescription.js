@@ -81,7 +81,7 @@ export default class ActivityDescription extends React.Component<Props, State> {
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                 <Text style={{
                     fontSize: 9,
-                    color: Colors.grey1,
+                    color: Colors.greyishBrown,
                     marginRight: 4
                 }}>{i18n.t(key)}</Text>
                 <TouchableOpacity onPress={press}>
@@ -124,11 +124,11 @@ export default class ActivityDescription extends React.Component<Props, State> {
                 <Text style={{
                     fontSize: 9,
                     fontFamily: 'Chivo',
-                    color: Colors.grey1,
+                    color: Colors.greyishBrown,
                     padding: 5,
                     borderRadius: 5,
                     borderWidth: StyleSheet.hairlineWidth,
-                    borderColor: Colors.grey1
+                    borderColor: Colors.greyishBrown
                 }}>{i18n.t("activity_item.buttons.unfollow_list")}</Text>
             </TouchableOpacity>
             :

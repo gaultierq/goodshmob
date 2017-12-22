@@ -71,6 +71,6 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     title: {fontSize: 18, fontFamily: 'Chivo-Light', },
-    subtitle: {fontSize: 12, color: Colors.grey2}
+    subtitle: {fontSize: 12, color: Colors.greyish}
 
 });

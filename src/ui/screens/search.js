@@ -145,7 +145,7 @@ export default class SearchScreen extends Component<Props, State> {
             style={[styles.button, {marginTop: 15}]}
             disabledStyle={styles.button}
         >
-            <Text style={{color: isLoadingMore ? Colors.grey1 : Colors.black}}>load more</Text>
+            <Text style={{color: isLoadingMore ? Colors.greyishBrown : Colors.black}}>load more</Text>
         </Button>);
     }
 

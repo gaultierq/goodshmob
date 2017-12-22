@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
         borderWidth: StyleSheet.hairlineWidth,
         // borderRadius: 30,
         // padding: 20,
-        borderColor: Colors.grey1
+        borderColor: Colors.greyishBrown
     },
 
 });

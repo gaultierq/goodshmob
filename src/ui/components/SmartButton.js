@@ -49,7 +49,7 @@ export default class SmartButton extends React.Component<Props, State> {
             ...attributes
         } = this.props;
 
-        let color = disabled ? Colors.grey1 : Colors.black;
+        let color = disabled ? Colors.greyishBrown : Colors.black;
         let text = i18n.t(textKey);
         let sending = this.isSending();
         return (<Button
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
         flex:1,
         justifyContent: "center",
         // minHeight: HEIGHT,
-        borderColor: Colors.grey1,
+        borderColor: Colors.greyishBrown,
         borderWidth: StyleSheet.hairlineWidth,
         borderRadius: 6,
         backgroundColor: 'white',

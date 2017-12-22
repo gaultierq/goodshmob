@@ -124,7 +124,7 @@ export default {
         }
     },
     "create_list_controller":{
-        "title":"Créer une nouvelle liste",
+        "title":"Nouvelle liste",
         "subtitle":"Pour y ranger plein de trucs top et les partager si je veux",
         "placeholder":"Titre de la Line up"
     },

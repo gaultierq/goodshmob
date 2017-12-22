@@ -49,7 +49,7 @@ export default class ActivityBody extends React.Component<Props, State> {
                             </View>
                             {this.renderBuyButton(activity)}
                         </View>
-                        {!!activity.description && <Text style={{fontSize: 16, color: Colors.grey1}}>{activity.description}</Text>}
+                        {!!activity.description && <Text style={{fontSize: 16, color: Colors.greyishBrown}}>{activity.description}</Text>}
 
                         {this.renderTags()}
                     </View>
@@ -87,7 +87,7 @@ export default class ActivityBody extends React.Component<Props, State> {
             press = () => this.seeUser(target);
         }
 
-        const color = Colors.grey2;
+        const color = Colors.greyish;
 
         const pa = 16;
         return <View style={{flexDirection:'row', marginTop: 10}}>

@@ -24,6 +24,9 @@ type State = {
     colors: Array<string>
 };
 
+
+const DIM = 60;
+
 export default class LineupCell extends React.Component<Props, State> {
 
     static displayName = "LineupCell";
@@ -53,17 +56,29 @@ export default class LineupCell extends React.Component<Props, State> {
         let {titleChildren, titleChildrenBelow} = this.props;
         let countString = savingCount  !== null ? ' (' + savingCount + ')' : '';
 
-        let title = lineup.name + countString;
-        if (__IS_LOCAL__) {
-            title += ` id=(#${lineup.id.substr(0, 5)})`;
-        }
+        let title = lineup.name;
+        // if (__IS_LOCAL__) {
+            // title += ` id=(#${lineup.id.substr(0, 5)})`;
+        // }
         return (
             <View style={[
                 styles.container,
                 {...stylePadding(padding, null, padding, padding)},
                 {backgroundColor: lineup.id.startsWith('pending') ? Colors.dirtyWhite : Colors.white}]}>
+
                 <View style={{flexDirection: titleChildrenBelow ? 'column' : 'row'}}>
-                    <Text style={[styles.lineupTitle]}>{title}</Text>
+                    <Text style={[styles.lineupTitle, {}]}>
+                        {title}
+                        <Text
+                            style={{color: Colors.greyish}}
+                        >
+                            {countString}
+                            {__IS_LOCAL__ && <Text
+                                style={{color: Colors.grey3}}
+                            >{` id=(#${lineup.id.substr(0, 5)})`}</Text>}
+                        </Text>
+
+                    </Text>
 
                     {titleChildren}
                 </View>
@@ -75,7 +90,9 @@ export default class LineupCell extends React.Component<Props, State> {
     getPadding() {
         const {width} = Dimensions.get('window');
 
-        let w = 60;
+
+
+        let w = DIM;
         let n = Math.floor(width / w) + 1;
 
         let spaceLeft;
@@ -115,21 +132,23 @@ export default class LineupCell extends React.Component<Props, State> {
     renderItem({item, index}: {item: Saving}) {
 
         let image = item && item.resource && item.resource.image;
+        const dim = DIM;
         return (
             <View style={[{
-                height: 60,
-                width: 60,
+                height: dim,
+                width: dim,
                 borderWidth: StyleSheet.hairlineWidth,
-                borderColor: Colors.grey2,
+                borderColor: Colors.greyish,
+                borderRadius: 4,
             }, !image && {opacity: 0.3, backgroundColor: this.state.colors[index]}]}>
                 {
                     image && <Image
                         source={{uri: image}}
                         style={[{
-                            height: 60,
-                            width: 60,
+                            height: dim,
+                            width: dim,
                             borderWidth: StyleSheet.hairlineWidth,
-                            borderColor: Colors.grey1,
+                            borderColor: Colors.greyishBrown,
 
                         }]}
                     />
@@ -141,16 +160,13 @@ export default class LineupCell extends React.Component<Props, State> {
 
 const styles = StyleSheet.create({
     container: {
-        paddingBottom: 5,
-        backgroundColor: "white",
-        ...UI.CARD(0)
     },
     lineupTitle: {
-        backgroundColor: 'transparent',
-        ...UI.TEXT_LIST,
-        fontSize: 18,
+        // backgroundColor: 'transparent',
+        // ...UI.TEXT_LIST,
+        fontSize: 16,
         fontFamily: 'Chivo',
-        marginTop: 8,
-        marginBottom: 8,
+        marginTop: 4,
+        marginBottom: 6,
     }
 });

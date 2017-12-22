@@ -129,7 +129,7 @@ export default {
         }
     },
     "create_list_controller":{
-        "title":"Add a new Line up",
+        "title":"Add new",
         "subtitle":"Be creative ;)",
         "placeholder":"Line up name"
     },

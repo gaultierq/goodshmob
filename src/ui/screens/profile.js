@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         borderWidth: StyleSheet.hairlineWidth,
         borderRadius: 5,
-        borderColor: Colors.grey1,
+        borderColor: Colors.greyishBrown,
 
     },
     userName: {

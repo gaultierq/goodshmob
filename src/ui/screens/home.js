@@ -146,35 +146,33 @@ class HomeScreen extends Screen<Props, State> {
 
         return (
             <MenuContext>
-                <MainBackground>
 
-                    <View>
-                        <LineupListScreen
-                            userId={currentUserId()}
-                            onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
-                            onSavingPressed={(saving) => this.onSavingPressed(saving)}
-                            navigator={this.props.navigator}
-                            ListHeaderComponent={this.renderHeader()}
-                            renderItem={(item)=>this.renderListItem(item, n, padding)}
-                            scrollUpOnBack={super.isVisible() ? ()=>false : null}
-                            cannotFetch={!super.isVisible()}
-                            visibility={super.getVisibility()}
-                            feedId={"home list"}
-                        />
-
-                    </View>
-
-                    {this.displayFloatingButton() &&
-                    <ActionButton
-                        buttonColor={Colors.green}
-                        onPress={() => { this.onFloatingButtonPressed() }}
+                <View>
+                    <LineupListScreen
+                        userId={currentUserId()}
+                        onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
+                        onSavingPressed={(saving) => this.onSavingPressed(saving)}
+                        navigator={this.props.navigator}
+                        ListHeaderComponent={this.renderHeader(padding)}
+                        renderItem={(item)=>this.renderListItem(item, n, padding)}
+                        scrollUpOnBack={super.isVisible() ? ()=>false : null}
+                        cannotFetch={!super.isVisible()}
+                        visibility={super.getVisibility()}
+                        feedId={"home list"}
                     />
-                    }
 
-                    <View >
-                        {this.renderChangeTitleModal()}
-                    </View>
-                </MainBackground>
+                </View>
+
+                {this.displayFloatingButton() &&
+                <ActionButton
+                    buttonColor={Colors.green}
+                    onPress={() => { this.onFloatingButtonPressed() }}
+                />
+                }
+
+                <View >
+                    {this.renderChangeTitleModal()}
+                </View>
             </MenuContext>
         );
     }
@@ -254,8 +252,13 @@ class HomeScreen extends Screen<Props, State> {
         return <View style={{position: "absolute", right: 0, margin: 0}}>
             <Menu>
                 <MenuTrigger>
-                    <Icon name="md-more" size={25} style={{...stylePadding(padding, 12)}}
-                          color={Colors.blue}/>
+                    {/*<Icon name="md-more" size={25} style={{...stylePadding(padding, 12)}}*/}
+                    {/*color={Colors.blue}/>*/}
+                    <View style={{...stylePadding(padding, 14)}}>
+                        <Image
+                            source={require('../../img2/moreDotsGrey.png')} resizeMode="contain"/>
+                    </View>
+
                 </MenuTrigger>
                 <MenuOptions>
                     <MenuOption onSelect={() => setTimeout(()=>this.deleteLineup(item))} text='#Delete'/>
@@ -328,20 +331,19 @@ class HomeScreen extends Screen<Props, State> {
 
 
 //TODO: extract lineup card style
-    renderHeader() {
-        return <AddLineupComponent/>;
+    renderHeader(padding: number) {
+
+        return (
+            <View style={{flexDirection: 'row', justifyContent: 'space-between', margin: padding}}>
+                <Text style={{fontSize: 20, fontWeight: 'bold'}}>#My lists</Text>
+                <AddLineupComponent/>
+            </View>
+        );
     }
 }
 
 
 const screen = HomeScreen;
 
-
-const actions = {
-
-};
-
-
-const styles = StyleSheet.create({});
 
 export {screen};

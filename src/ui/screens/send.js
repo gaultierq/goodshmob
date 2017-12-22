@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     },
     input:{
         borderWidth: StyleSheet.hairlineWidth,
-        borderColor: Colors.grey1,
+        borderColor: Colors.greyishBrown,
         borderRadius: 20
     },
     disabledButton: {

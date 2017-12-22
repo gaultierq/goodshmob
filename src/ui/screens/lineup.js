@@ -81,26 +81,24 @@ class LineupScreen extends Component<Props, State> {
         }
 
         return (
-            <MainBackground>
-                <View style={styles.container}>
-                    {lineup && lineup.description && <Text style={[styles.description]}>{lineup.description}</Text>}
-                    <Feed
-                        data={savings}
-                        renderItem={item => this.renderItem(item, lineup)}
-                        fetchSrc={fetchSrc}
-                        hasMore={true}
-                        empty={"empty.lineup"}
+            <View style={styles.container}>
+                {lineup && lineup.description && <Text style={[styles.description]}>{lineup.description}</Text>}
+                <Feed
+                    data={savings}
+                    renderItem={item => this.renderItem(item, lineup)}
+                    fetchSrc={fetchSrc}
+                    hasMore={true}
+                    empty={"empty.lineup"}
+                />
+                {
+                    this.displayFloatingButton() &&
+                    <ActionButton
+                        buttonColor={Colors.green}
+                        onPress={() => { this.onFloatingButtonPressed() }}
                     />
-                    {
-                        this.displayFloatingButton() &&
-                        <ActionButton
-                            buttonColor={Colors.green}
-                            onPress={() => { this.onFloatingButtonPressed() }}
-                        />
-                    }
+                }
 
-                </View>
-            </MainBackground>
+            </View>
         );
     }
 
@@ -164,30 +162,30 @@ class LineupScreen extends Component<Props, State> {
 
 const actions = {
 
-        fetchLineup: (lineupId: string) => {
-            return new Api.Call().withMethod('GET')
-                .withRoute(`lists/${lineupId}`)
-                .addQuery({
-                    include: "savings,savings.user"
-                });
-        },
-        fetchSavings: (lineupId: string) => {
-            return new Api.Call().withMethod('GET')
-                .withRoute(`lists/${lineupId}/savings`)
-                .addQuery({
-                    page: 1,
-                    per_page: 10,
-                    include: "*.*"
-                });
-        },
+    fetchLineup: (lineupId: string) => {
+        return new Api.Call().withMethod('GET')
+            .withRoute(`lists/${lineupId}`)
+            .addQuery({
+                include: "savings,savings.user"
+            });
+    },
+    fetchSavings: (lineupId: string) => {
+        return new Api.Call().withMethod('GET')
+            .withRoute(`lists/${lineupId}/savings`)
+            .addQuery({
+                page: 1,
+                per_page: 10,
+                include: "*.*"
+            });
+    },
 
-        deleteSaving: (saving:Saving) => {
-            let call = new Api.Call()
-                .withMethod('DELETE')
-                .withRoute(`savings/${saving.id}`);
+    deleteSaving: (saving:Saving) => {
+        let call = new Api.Call()
+            .withMethod('DELETE')
+            .withRoute(`savings/${saving.id}`);
 
-            return call.disptachForAction2(DELETE_SAVING);
-        }
+        return call.disptachForAction2(DELETE_SAVING);
+    }
 };
 
 
@@ -217,6 +215,7 @@ export {reducer, screen, actions};
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        //marginTop: 100
     },
     description: {
         backgroundColor: 'transparent',

@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
         height: 30,
     },
     disabledButton: {
-        borderColor: Colors.grey1,
+        borderColor: Colors.greyishBrown,
     },
     userRow: {
         margin: 12

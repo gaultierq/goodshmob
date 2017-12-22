@@ -82,7 +82,7 @@ export default class AddItemScreen extends Screen<Props, State> {
 
         const {description, visibility, selectedLineupId, showLineupList} = this.state;
 
-        let grey = Colors.grey1;
+        let grey = Colors.greyishBrown;
         let req = this.state.reqAdd;
         let editable = req !== 1;
         let xml = (<View style={[styles.container]}>
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     input: {
         marginTop: 20,
         fontSize: 16,
-        borderColor: Colors.grey1,
+        borderColor: Colors.greyishBrown,
         borderWidth: StyleSheet.hairlineWidth,
     }
 });

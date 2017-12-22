@@ -30,7 +30,7 @@ export default class SaveScreen extends Component<Props, State> {
         const {activity, onDescription, containerStyle} = this.props;
         const {description, visibility} = this.state;
 
-        let grey = Colors.grey1;
+        let grey = Colors.greyishBrown;
         return (
             <View style={[styles.container, containerStyle]}>
                 <ActivityBody activity={activity} noGoodshButton />
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     input: {
         marginTop: 20,
         fontSize: 16,
-        borderColor: Colors.grey1,
+        borderColor: Colors.greyishBrown,
         borderWidth: 0.5,
         padding: 5,
         minHeight: 100

@@ -71,7 +71,7 @@ export default class SmartInput extends React.Component<Props, State> {
                 <View style={[styles.inputContainer, inputContainerStyle, {minHeight: height}]}>
                     <TextInput
                         editable={!this.isSending()}
-                        style={[styles.input, inputStyle, {color: this.isSending() ? Colors.grey1 : 'black'}]}
+                        style={[styles.input, inputStyle, {color: this.isSending() ? Colors.greyishBrown : 'black'}]}
                         onSubmitEditing={this.exec.bind(this)}
                         value={input}
                         onFocus={()=>this.setState({focus:true})}
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
         flex:1,
         justifyContent: "center",
         // minHeight: HEIGHT,
-        borderColor: Colors.grey1,
+        borderColor: Colors.greyishBrown,
         borderWidth: StyleSheet.hairlineWidth,
         borderRadius: 6,
         backgroundColor: 'white',

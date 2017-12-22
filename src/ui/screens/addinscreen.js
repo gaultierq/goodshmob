@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     searchInput: {
         backgroundColor: 'white',
         borderWidth: StyleSheet.hairlineWidth,
-        borderColor: Colors.grey1
+        borderColor: Colors.greyishBrown
     },
 });
 

@@ -22,7 +22,7 @@ export default class GoodshButton extends React.Component<Props, State>  {
         let activity = this.getActivity();
         let likesCount = activity.meta ? activity.meta["likes-count"] : 0;
         let liked = activity.meta && activity.meta["liked"];
-        let goodshButtonColor = (this.isLiking() || this.isUnliking()) ? Colors.grey1 : liked ? Colors.green : Colors.white;
+        let goodshButtonColor = (this.isLiking() || this.isUnliking()) ? Colors.greyishBrown : liked ? Colors.green : Colors.white;
 
         return (
             <TouchableHighlight

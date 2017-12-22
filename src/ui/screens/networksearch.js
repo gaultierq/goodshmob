@@ -55,7 +55,7 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                 let userXml = (
                     <View  style={{flex:1}}>
                         <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', marginBottom: 8}}>
-                            <Text style={{fontSize: 12, color: Colors.grey1, marginLeft: 8, marginRight: 3}}>by</Text>
+                            <Text style={{fontSize: 12, color: Colors.greyishBrown, marginLeft: 8, marginRight: 3}}>by</Text>
                             <UserRowI
                                 user={item.user}
                                 navigator={this.props.navigator}

@@ -67,7 +67,7 @@ export default class AskScreen extends Component<Props, State> {
                         style={[styles.button, {marginTop: 15}]}
                         disabledStyle={styles.disabledButton}
                     >
-                        <Text style={{color: buttonDisabled ? Colors.grey1 : Colors.white}}>Envoyer</Text>
+                        <Text style={{color: buttonDisabled ? Colors.greyishBrown : Colors.white}}>Envoyer</Text>
                     </Button>
                 </View>
             </Closable>
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Chivo',
         fontSize: 18,
         // borderWidth: StyleSheet.hairlineWidth,
-        borderColor: Colors.grey1,
+        borderColor: Colors.greyishBrown,
         borderRadius: 5
 
     },
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
         borderColor: Colors.white,
     },
     disabledButton: {
-        borderColor: Colors.grey1,
+        borderColor: Colors.greyishBrown,
     }
 });
 
