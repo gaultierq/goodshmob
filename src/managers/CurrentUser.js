@@ -2,7 +2,7 @@
 
 import type {Store} from 'redux';
 import {buildNonNullData} from "../helpers/DataUtils";
-import type {Id} from "../types";
+import type {Id, User} from "../types";
 
 
 class CurrentUser {
@@ -41,7 +41,7 @@ export function currentUserId() : Id {
     return instance.id();
 }
 
-export function currentUser() : Id {
+export function currentUser() : User {
     return instance.user();
 }
 

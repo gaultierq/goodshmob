@@ -36,6 +36,7 @@ import {MainBackground} from "../UIComponents";
 import SmartInput from "../components/SmartInput";
 import Screen from "../components/Screen";
 import {Colors} from "../colors";
+import {PROFILE_CLICKED} from "../components/MyAvatar";
 
 
 type Props = {
@@ -55,8 +56,9 @@ class HomeScreen extends Screen<Props, State> {
     static navigatorButtons = {
         leftButtons: [
             {
-                icon: require('../../img/profil.png'),
-                id: 'profile'
+                // icon: require('../../img/profil.png'),
+                id: 'profile',
+                component: 'goodsh.MyAvatar'
             }
         ],
         rightButtons: [
@@ -88,6 +90,21 @@ class HomeScreen extends Screen<Props, State> {
 
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
         //console.debug("home:onNavigatorEvent" + JSON.stringify(event));
+
+
+        //HACK
+        if (event.type === 'DeepLink') {
+            switch (event.link) {
+                case PROFILE_CLICKED:
+                    this.props.navigator.toggleDrawer({
+                        side: 'left',
+                        animated: true
+                    });
+                    break;
+            }
+        }
+
+
         if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
             switch (event.id) {
                 case 'profile':
