@@ -134,28 +134,26 @@ export default class LineupCell extends React.Component<Props, State> {
 
         let image = item && item.resource && item.resource.image;
         const dim = DIM;
-        return (
-            <View style={[{
-                height: dim,
-                width: dim,
-                borderWidth: StyleSheet.hairlineWidth,
-                borderColor: Colors.greyish,
-                borderRadius: 4,
-            }, !image && {opacity: 0.3, backgroundColor: this.state.colors[index]}]}>
-                {
-                    image && <Image
-                        source={{uri: image}}
-                        style={[{
-                            height: dim,
-                            width: dim,
-                            borderWidth: StyleSheet.hairlineWidth,
-                            borderColor: Colors.greyishBrown,
+        const style = {
+            height: dim,
+            width: dim,
+            borderColor: Colors.greyish,
+            borderRadius: 4,
+        };
 
-                        }]}
-                    />
-                }
-            </View>
-        )
+        if (image) {
+            return <Image
+                source={{uri: image}}
+                resizeMode="contain"
+                style={[style, {borderWidth: StyleSheet.hairlineWidth}]}
+            />
+        }
+        else {
+            return (
+                <View style={[style, {opacity: 0.3, backgroundColor: Colors.grey3/*this.state.colors[index]*/}]}/>
+            )
+        }
+
     }
 }
 
