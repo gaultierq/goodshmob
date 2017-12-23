@@ -10,18 +10,107 @@ import {AccessToken, LoginManager} from 'react-native-fbsdk';
 import SmartButton from "../components/SmartButton";
 import {Colors} from "../colors";
 
+import Swiper from 'react-native-swiper';
+import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts";
+
+
+
+
 type Props = {
+    initialIndex: number
 };
 
 type State = {
+    currentIndex: number
 };
 
 @connect()
 class Login extends Component<Props, State> {
 
-    state = {};
+    constructor(props: Props) {
+        super(props);
+        this.state = {currentIndex: props.initialIndex || 0};
+    }
 
     render() {
+        let marg = 40;
+        let transformBase = 100;
+        return <Swiper style={styles.wrapper} loop={false} index={this.props.initialIndex}>
+            <View style={[styles.slide, {backgroundColor: Colors.green}]}>
+                <View style={[styles.desc, {}]}>
+                    <Text style={[styles.text, {marginBottom: marg,color: "#ffffff"}]}>
+                        #I was told it was great.{"\n"}
+                        To not forget it{"\n"}
+                        I have it goodshé.</Text>
+                    <Image style={[styles.image]} source={require("../../img2/logoWhite.png")}/>
+                    {/*todo: find a better way to obtain
+                    1. goodsh centered
+                    2. goodsh and text never overlapping
+                    */}
+                    <Text style={[styles.text, {marginTop: marg,opacity: 0}]}>
+                        #I was told it was great.{"\n"}
+                        To not forget it{"\n"}
+                        I have it goodshé.</Text>
+                </View>
+
+
+                <Image style={[styles.path,  {right: 0, transform: [{translateY: transformBase}]}]} source={require("../../img2/path1.png")}/>
+            </View>
+            <View style={[styles.slide, {backgroundColor: "#ffffff"}]}>
+                <View style={[styles.desc]}>
+                    <Image style={[styles.image, {marginBottom: marg}]} source={require("../../img2/paperPlane.png")}/>
+                    <Text style={[styles.text, {color: Colors.green}]}>
+                        #And it's so good I share it with my relatives.
+                    </Text>
+                    <Image style={[styles.image, {opacity:0, marginTop: marg}]} source={require("../../img2/paperPlane.png")}/>
+                </View>
+                <Image style={[styles.path, {width: '100%', transform: [{translateY: transformBase + 45}]}]} source={require("../../img2/Path2.png")}/>
+            </View>
+            <View style={[styles.slide, {backgroundColor: "#000000"}]}>
+                <View style={[styles.desc]}>
+                    <Image style={[styles.image, {marginBottom: marg}]} source={require("../../img2/askIcon.png")}/>
+                    <Text style={[styles.text, {color: "#ffffff"}]}>
+                        #I ask questions, I with advice and suggestions.
+                    </Text>
+                    <Image style={[styles.image, {opacity:0, marginTop: marg}]} source={require("../../img2/askIcon.png")}/>
+                </View>
+                <Image style={[styles.path, {width: '100%', transform: [{translateY: transformBase+ 107}]}]} source={require("../../img2/Path3.png")}/>
+            </View>
+            <View style={[styles.slide, {backgroundColor: Colors.green}]}>
+                <View style={[styles.desc]}>
+                    <Image style={[styles.image, {marginBottom: marg}]} source={require("../../img2/discoverIcon.png")}/>
+                    <Text style={[styles.text, {color: "#ffffff"}]}>
+                        #I discover books, movies, music, restaurants, gift ideas, stuff to do, to visit ...
+                    </Text>
+                    <Image style={[styles.image, {opacity:0, marginTop: marg}]} source={require("../../img2/discoverIcon.png")}/>
+                </View>
+                <Image style={[styles.path, {left: 0, transform: [{translateY: transformBase + 117}]}]} source={require("../../img2/Path4.png")}/>
+            </View>
+            {/*slide 5*/}
+            <View style={[styles.slide, {backgroundColor: Colors.green}]}>
+                <View style={[styles.desc]}>
+                    <Image style={[styles.image, {marginBottom: marg}]} source={require("../../img2/logoWhite.png")}/>
+                </View>
+                <View style={{
+                }}>
+
+                    <SmartButton
+                        textKey={'login_screen.facebook_signin'}
+                        execAction={this.handleFacebookLogin2}
+                        style={[styles.facebookButton]}
+                        textStyle={[styles.facebookButtonText]}
+                        returnKeyType={'go'}
+                    />
+
+                    <Text style={{fontSize: 10, color: '#ffffff', letterSpacing:1.2, textAlign: 'center', marginTop: 22, fontFamily: SFP_TEXT_BOLD}}>
+                        {i18n.t('login_screen.no_publication')}
+                    </Text>
+
+                </View>
+            </View>
+        </Swiper>
+    }
+    render1() {
         return (
             <ImageBackground
                 source={require('../../img/welcome_screen.jpg')}
@@ -124,4 +213,26 @@ const styles = StyleSheet.create({
         color: Colors.green,
         fontSize: 15
     },
+    wrapper: {
+    },
+    slide: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    text: {
+        fontSize: 23,
+        fontFamily: SFP_TEXT_MEDIUM,
+        textAlign: "center"
+    },
+    path: {
+        position:'absolute',
+    },
+    image: {
+        alignSelf: 'center'
+    },
+    desc: {
+        padding: "10%"
+    }
+
 });

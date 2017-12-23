@@ -148,6 +148,15 @@ const networkScreen = {
     },
 };
 
+const loginScreen = {
+    screen: {
+        screen: 'goodsh.LoginScreen',
+    },
+    passProps: {
+        initialIndex: 0,
+    }
+};
+
 
 const test = {
     screen: {
@@ -181,5 +190,6 @@ let testScreen = null;
 //  testScreen = networkScreen;
 //  testScreen = lineupScreen;
 //  testScreen = activityDetailScreen;
+ testScreen = loginScreen;
 
 export default testScreen;
