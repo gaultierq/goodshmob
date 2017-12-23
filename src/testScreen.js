@@ -190,6 +190,6 @@ let testScreen = null;
 //  testScreen = networkScreen;
 //  testScreen = lineupScreen;
 //  testScreen = activityDetailScreen;
- testScreen = loginScreen;
+//  testScreen = loginScreen;
 
 export default testScreen;

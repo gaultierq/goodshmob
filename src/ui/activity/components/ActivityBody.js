@@ -154,6 +154,7 @@ export default class ActivityBody extends React.Component<Props, State> {
         }
 
 
+        const resize = image && resource.type === 'CreativeWork' ? 'contain' : 'cover';
         return <View style={{
             flex:1,
             alignSelf: 'center',
@@ -165,7 +166,7 @@ export default class ActivityBody extends React.Component<Props, State> {
 
             <Image
                 source={image ? {uri: image} : require('../../../img/goodsh_placeholder.png')}
-                resizeMode={image ? 'contain' : 'cover'}
+                resizeMode={resize}
                 style={{
                     alignSelf: 'center',
                     height: imageHeight,
