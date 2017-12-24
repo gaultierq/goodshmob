@@ -154,7 +154,11 @@ export default class ActivityBody extends React.Component<Props, State> {
         }
 
 
-        const resize = image && resource.type === 'CreativeWork' ? 'contain' : 'cover';
+        const resize = image && (
+            resource.type === 'CreativeWork'
+            || resource.type === 'TvShow'
+            || resource.type === 'Movie'
+        )? 'contain' : 'cover';
         return <View style={{
             flex:1,
             alignSelf: 'center',
