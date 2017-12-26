@@ -291,7 +291,10 @@ class HomeScreen extends Screen<Props, State> {
     renderList(savings) {
         return <Feed
             data={savings}
-            renderItem={({item}) => <LineupCellSaving saving={item} style={{marginRight: 10}}/>}
+            renderItem={({item}) => <TouchableOpacity onPress={()=>{
+                this.onSavingPressed(item)
+            }
+            }><LineupCellSaving saving={item} style={{marginRight: 10}}/></TouchableOpacity>}
             // fetchSrc={{
             //     callFactory: this.fetchInteractions.bind(this),
             //     useLinks: true,
