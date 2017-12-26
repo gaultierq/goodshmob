@@ -32,6 +32,9 @@ export let sanitizeActivityType = activityType => {
         case "comments":
         case "comment":
             return "comments";
+        case "movies":
+        case "movie":
+            return "movies";
         case "places":
         case "place":
             return "places";
