@@ -36,6 +36,9 @@ import Screen from "../components/Screen";
 import {Colors} from "../colors";
 import {PROFILE_CLICKED} from "../components/MyAvatar";
 import {SFP_TEXT_MEDIUM} from "../fonts";
+import LineupTitle from "../components/LineupTitle";
+import Feed from "../components/feed";
+import LineupCellSaving from "../components/LineupCellSaving";
 
 
 type Props = {
@@ -144,42 +147,39 @@ class HomeScreen extends Screen<Props, State> {
         }
     }
 
-
-    getPadding() {
-        const {width} = Dimensions.get('window');
-
-        let w = 60;
-        let n = Math.floor(width / w) + 1;
-
-        let spaceLeft;
-        let padding;
-
-        do {
-            n--;
-            spaceLeft = width - n * w;
-            padding = spaceLeft / (n + 2);
-        } while (padding < w / 5);
-        return {n, padding};
-    }
-
     render() {
-
-        let {n, padding} = this.getPadding();
 
         return (
             <MenuContext>
-
                 <View>
                     <LineupListScreen
                         userId={currentUserId()}
                         onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
                         onSavingPressed={(saving) => this.onSavingPressed(saving)}
                         navigator={this.props.navigator}
-                        ListHeaderComponent={this.renderHeader(padding)}
-                        renderItem={(item)=>this.renderListItem(item, n, padding)}
+                        //renderItem={(item)=>this.renderListItem(item, n, padding)}
                         scrollUpOnBack={super.isVisible() ? ()=>false : null}
                         cannotFetch={!super.isVisible()}
                         visibility={super.getVisibility()}
+                        sectionMaker={(lineups)=> {
+                            const goodshbox = _.head(lineups);
+                            let savingCount = _.get(goodshbox, `meta.savings-count`, null);
+                            return [
+                                {
+                                    data: [goodshbox],
+                                    title: "#All my goodsh",
+                                    subtitle: ` (${savingCount})`,
+                                    renderItem: ({item})=>this.renderListItem(item)
+                                },
+                                {
+                                    data: _.slice(lineups, 1),
+                                    title: "#My lineups",
+                                    renderItem: ({item})=>this.renderListItem(item, {withMenuButton: true, withLineupTitle: true})
+                                },
+                            ];
+                        }}
+                        renderSectionHeader={({section}) => this.renderSectionHeader(section)}
+                        ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
                         feedId={"home list"}
                     />
 
@@ -197,6 +197,28 @@ class HomeScreen extends Screen<Props, State> {
                 </View>
             </MenuContext>
         );
+    }
+
+
+    renderSectionHeader({title, subtitle}) {
+        return <View style={{
+            backgroundColor: Colors.white,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingLeft: 15,
+            paddingRight: 15,
+            paddingTop: 15,
+            paddingBottom: 15,
+        }}>
+            <Text style={{
+                fontSize: 20,
+                fontFamily: SFP_TEXT_MEDIUM
+            }}>
+                {title}
+                {subtitle && <Text style={{fontSize: 16, color: Colors.greyish}}>{subtitle}</Text>}
+            </Text>
+            {/*{rightChildren}*/}
+        </View>
     }
 
     _closeChangeNameModal = ()=> this.setState({changeLinupTitleId: null});
@@ -241,31 +263,47 @@ class HomeScreen extends Screen<Props, State> {
 
     }
 
-    renderListItem(item, n, padding) {
-        return (<TouchableOpacity
-            onPress={() => {
-                this.props.navigator.push({
-                    screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
-                    passProps: {
-                        lineupId: item.id,
-                    },
-                });
-            }}>
+    renderListItem(item: List, options = {}) {
+        const {withMenuButton, withLineupTitle} = options;
+        return (
             <View>
-                <LineupCell
-                    lineup={item}
-                    itemCount={n}
-                    padding={padding}
-                />
-                {
-                    this.renderMenuButton(item, padding)
-                }
+                {withLineupTitle && <TouchableOpacity
+                    onPress={() => {
+                        this.props.navigator.push({
+                            screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
+                            passProps: {
+                                lineupId: item.id,
+                            },
+                        });
+                    }}>
+
+                    <View style={{flexDirection:'row', paddingLeft: 15, paddingRight: 15}}>
+                        <LineupTitle lineup={item}/>
+                        {withMenuButton && this.renderMenuButton(item, 15)}
+                    </View>
+                </TouchableOpacity>}
+                {this.renderList(item.savings)}
             </View>
 
-        </TouchableOpacity>)
+        )
     }
 
-
+    renderList(savings) {
+        return <Feed
+            data={savings}
+            renderItem={({item}) => <LineupCellSaving saving={item} style={{marginRight: 10}}/>}
+            // fetchSrc={{
+            //     callFactory: this.fetchInteractions.bind(this),
+            //     useLinks: true,
+            //     action: FETCH_INTERACTIONS,
+            // }}
+            hasMore={false}
+            horizontal={true}
+            // ItemSeparatorComponent={()=> <View style={{margin: 20}} />}
+            contentContainerStyle={{paddingLeft: 15}}
+            // cannotFetch={!super.isVisible()}
+        />
+    }
     renderMenuButton(item, padding) {
         if (item.id === currentGoodshboxId()) return null;
 
@@ -351,20 +389,6 @@ class HomeScreen extends Screen<Props, State> {
         startAddItem(this.props.navigator, currentGoodshboxId());
     }
 
-
-//TODO: extract lineup card style
-    renderHeader(padding: number) {
-
-        return (
-            <View style={{flexDirection: 'row', justifyContent: 'space-between', margin: padding}}>
-                <Text style={{
-                    fontSize: 20,
-                    fontFamily: SFP_TEXT_MEDIUM
-                }}>#My lists</Text>
-                <AddLineupComponent/>
-            </View>
-        );
-    }
 }
 
 

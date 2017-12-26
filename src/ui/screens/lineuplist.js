@@ -19,7 +19,6 @@ import {connect} from "react-redux";
 import LineupCell from "../components/LineupCell";
 import Immutable from 'seamless-immutable';
 import * as Api from "../../managers/Api";
-import * as UI from "../UIStyles";
 import {SearchBar} from 'react-native-elements'
 import type {Id, List, User} from "../../types";
 import type {Props as FeedProps} from "../components/feed";
@@ -42,6 +41,7 @@ export type Props = FeedProps<List> & {
     // filter:? string,
     data?: any,
     onCancel?: ()=>void,
+    sectionMaker?: (lineups: List<List>) => Array<*>,
     ListHeaderComponent?: Node,
     renderItem: (item: *)=>Node,
     navigator: *
@@ -74,13 +74,14 @@ export class LineupListScreen extends Component<Props, State> {
             onCancel,
             renderItem,
             navigator,
+            sectionMaker,
             //ListHeaderComponent,
             ...attributes
         } = this.props;
 
         let user: User = buildData(this.props.data, "users", userId);
         console.log("Feed attributes: scrollUpOnBack="+attributes.scrollUpOnBack);
-        let lists, fetchSrc;
+        let lists, sections, fetchSrc;
         if (user && user.lists) {
             lists = user.lists;
             fetchSrc = userId === currentUserId() ? {
@@ -112,10 +113,13 @@ export class LineupListScreen extends Component<Props, State> {
             {afterI: 0}
         );
 
+        if (sectionMaker) sections = sectionMaker(items);
+
 
         return (
             <Feed
                 data={items}
+                sections={sections}
                 renderItem={this.renderItem.bind(this)}
                 fetchSrc={fetchSrc}
                 {...attributes}

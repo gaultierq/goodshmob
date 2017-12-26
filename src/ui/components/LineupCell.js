@@ -10,6 +10,8 @@ import {isEmpty} from "lodash";
 import type {List, Saving} from "../../types";
 import {Colors} from "../colors";
 import {SFP_TEXT_MEDIUM} from "../fonts";
+import LineupTitle from "./LineupTitle";
+import LineupCellSaving from "./LineupCellSaving";
 //;
 
 type Props = {
@@ -50,36 +52,15 @@ export default class LineupCell extends React.Component<Props, State> {
             padding = pd.padding;
         }
 
-        //console.log(`DEBUG: render LineupCell w=${w} n=${n} spaceLeft=${spaceLeft} padding=${padding}`);
-
-        let savingCount = _.get(lineup, `meta.savings-count`, null);
-
         let {titleChildren, titleChildrenBelow} = this.props;
-        let countString = savingCount  !== null ? ' (' + savingCount + ')' : '';
 
-        let title = lineup.name;
-        // if (__IS_LOCAL__) {
-            // title += ` id=(#${lineup.id.substr(0, 5)})`;
-        // }
         return (
             <View style={[
-                styles.container,
                 {...stylePadding(padding, null, padding, padding)},
                 {backgroundColor: lineup.id.startsWith('pending') ? Colors.dirtyWhite : Colors.white}]}>
 
                 <View style={{flexDirection: titleChildrenBelow ? 'column' : 'row'}}>
-                    <Text style={[styles.lineupTitle, {}]}>
-                        {title}
-                        <Text
-                            style={{color: Colors.greyish}}
-                        >
-                            {countString}
-                            {__IS_LOCAL__ && <Text
-                                style={{color: Colors.grey3}}
-                            >{` id=(#${lineup.id.substr(0, 5)})`}</Text>}
-                        </Text>
-
-                    </Text>
+                    {<LineupTitle lineup={lineup}/>}
 
                     {titleChildren}
                 </View>
@@ -115,51 +96,33 @@ export default class LineupCell extends React.Component<Props, State> {
         return <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>{result}</View>;
     }
 
-    // shouldComponentUpdate(nextProps: Props, nextState: State) {
-    //     if (!ENABLE_PERF_OPTIM) return true;
-    //     let act = this.readLineup(nextProps);
-    //
-    //     if (act === this.lastRenderedActivity) {
-    //         superLog('ActivityCell render saved');
-    //         return false;
-    //     }
-    //     return true;
-    // }
-
-    // readLineup(nextProps) {
-    //     return _.get(nextProps, `data.${nextProps.activityType}.${nextProps.activityId}`);
-    // }
-
     renderItem({item, index}: {item: Saving}) {
-
-        let image = item && item.resource && item.resource.image;
-        const dim = DIM;
-        const style = {
-            height: dim,
-            width: dim,
-            borderColor: Colors.greyish,
-            borderRadius: 4,
-        };
-
-        if (image) {
-            return <Image
-                source={{uri: image}}
-                resizeMode="contain"
-                style={[style, {borderWidth: StyleSheet.hairlineWidth}]}
-            />
-        }
-        else {
-            return (
-                <View style={[style, {opacity: 0.3, backgroundColor: Colors.grey3/*this.state.colors[index]*/}]}/>
-            )
-        }
-
+        return <LineupCellSaving saving={item}/>;
+        // let image = item && item.resource && item.resource.image;
+        // const dim = DIM;
+        // const style = {
+        //     height: dim,
+        //     width: dim,
+        //     borderColor: Colors.greyish,
+        //     borderRadius: 4,
+        // };
+        //
+        // if (image) {
+        //     return <Image
+        //         source={{uri: image}}
+        //         resizeMode="contain"
+        //         style={[style, {borderWidth: StyleSheet.hairlineWidth}]}
+        //     />
+        // }
+        // else {
+        //     return (
+        //         <View style={[style, {opacity: 0.3, backgroundColor: Colors.grey3/*this.state.colors[index]*/}]}/>
+        //     )
+        // }
     }
 }
 
 const styles = StyleSheet.create({
-    container: {
-    },
     lineupTitle: {
         fontSize: 16,
         marginTop: 4,

@@ -10,7 +10,7 @@ import logger from 'redux-logger'
 
 import * as Api from './managers/Api';
 import {autoRehydrate, createTransform, persistStore} from 'redux-persist'
-import {AsyncStorage, TouchableOpacity, StyleSheet} from 'react-native'
+import {AsyncStorage, TouchableOpacity, StyleSheet, Dimensions} from 'react-native'
 import immutableTransform from './immutableTransform'
 import {REHYDRATE} from 'redux-persist/constants'
 import i18n from './i18n/i18n'
@@ -91,6 +91,10 @@ export default class App {
     }
 
     prepareUI() {
+
+
+        const {height, width} = Dimensions.get('window');
+        console.info(`window dimensions=${width}x${height}`);
 
         globalProps.setCustomText({
             style: APP_STYLES.TEXT_DEFAULT

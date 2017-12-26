@@ -2,7 +2,7 @@
 
 import type {Node} from 'react';
 import React, {Component} from 'react';
-import {ActivityIndicator, BackHandler, FlatList, RefreshControl, Text, View} from 'react-native';
+import {ActivityIndicator, BackHandler, FlatList, RefreshControl, SectionList, Text, View} from 'react-native';
 import {connect} from "react-redux";
 import {assertUnique} from "../../helpers/DataUtils";
 import ApiAction from "../../helpers/ApiAction";
@@ -122,6 +122,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         assertUnique(this.props.data);
 
         const {
+            sections,
             data,
             renderItem,
             fetchSrc,
@@ -130,6 +131,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             ListHeaderComponent,
             ListFooterComponent,
             feedId,
+
             ...attributes
         } = this.props;
 
@@ -149,22 +151,43 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             }
             if (empty) return this.renderEmpty();
         }
-        return (
-            <FlatList
-                data={data}
-                ref="feed"
-                renderItem={renderItem}
-                keyExtractor={this.keyExtractor}
-                refreshControl={this.renderRefreshControl()}
-                onEndReached={ this.onEndReached.bind(this) }
-                onEndReachedThreshold={0.1}
-                ListFooterComponent={!firstEmptyLoader && this.renderFetchMoreLoader(ListFooterComponent)}
-                style={{...this.props.style,  minHeight: 100}}
-                ListHeaderComponent={!firstEmptyLoader && ListHeaderComponent}
-                onScroll={this._handleScroll}
-                {...attributes}
-            />
-        );
+
+        let params =  {
+            // data,
+            ref: "feed",
+            renderItem,
+            keyExtractor: this.keyExtractor,
+            refreshControl: this.renderRefreshControl(),
+            onEndReached: this.onEndReached.bind(this),
+            onEndReachedThreshold: 0.1,
+            ListFooterComponent: !firstEmptyLoader && this.renderFetchMoreLoader(ListFooterComponent),
+            style: {...this.props.style},
+            ListHeaderComponent: !firstEmptyLoader && ListHeaderComponent,
+            onScroll: this._handleScroll,
+            ...attributes
+        };
+
+        if (sections) {
+            return React.createElement(SectionList, {sections, ...params});
+        }
+        return React.createElement(FlatList, {data, ...params});
+        //
+        // return (
+        //     <SectionList
+        //         sections={[{data, title: 'test'}]}
+        //         ref="feed"
+        //         renderItem={renderItem}
+        //         keyExtractor={this.keyExtractor}
+        //         refreshControl={this.renderRefreshControl()}
+        //         onEndReached={ this.onEndReached.bind(this) }
+        //         onEndReachedThreshold={0.1}
+        //         ListFooterComponent={!firstEmptyLoader && this.renderFetchMoreLoader(ListFooterComponent)}
+        //         style={{...this.props.style,  minHeight: 100}}
+        //         ListHeaderComponent={!firstEmptyLoader && ListHeaderComponent}
+        //         onScroll={this._handleScroll}
+        //         {...attributes}
+        //     />
+        // );
     }
 
     renderEmpty() {
