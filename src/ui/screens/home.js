@@ -166,7 +166,7 @@ class HomeScreen extends Screen<Props, State> {
                             let savingCount = _.get(goodshbox, `meta.savings-count`, null);
                             return [
                                 {
-                                    data: [goodshbox],
+                                    data: goodshbox ? [goodshbox] : [],
                                     title: "#All my goodsh",
                                     subtitle: ` (${savingCount})`,
                                     renderItem: ({item})=>this.renderListItem(item)

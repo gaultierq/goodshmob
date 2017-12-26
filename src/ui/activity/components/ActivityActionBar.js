@@ -14,6 +14,7 @@ import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
 import ActionRights from "../../rights";
 import * as activityAction from "../actions";
 import {CREATE_COMMENT} from "../../screens/comments";
+import {CREATE_LIKE, DELETE_LIKE} from "../actionTypes";
 
 export type ActivityActionType = 'comment'| 'like'| 'unlike'| 'share'| 'save'| 'unsave'| 'see'| 'buy'| 'answer';
 const ACTIONS = ['comment', 'like', 'unlike','share', 'save', 'unsave', 'see', 'buy', 'answer'];
@@ -91,7 +92,13 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                 // return i18n.t(`activity_item.buttons.${action}`,{count: commentsCount});
             case 'like':
             case 'unlike':
+                let pendingLike = this.getPendingLikeStatus(activity);
+
+
+                //TODO: use instedAt and improve sequence
                 let likesCount = activity.meta ? activity.meta["likes-count"] : 0;
+                likesCount += pendingLike;
+
                 return likesCount > 0 ? likesCount +'' : '';
             case 'answer':
                 let answersCount = activity.answersCount || 0;
@@ -99,6 +106,18 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
         }
         return '';//i18n.t(`activity_item.buttons.${action}`);
+    }
+
+    getPendingLikeStatus(activity) {
+        let pendingLikes = _.filter(this.props.pending[CREATE_LIKE], (o) => o.payload.activityId === activity.id);
+        let pendingUnlikes = _.filter(this.props.pending[DELETE_LIKE], (o) => o.payload.activityId === activity.id);
+
+        let both = _.concat(pendingLikes, pendingUnlikes);
+        both = _.orderBy(both, 'insertedAt');
+        let last = _.last(both);
+
+        let pendingLike = last ? (last.pendingActionType === 'like' ? 1 : -1) : 0;
+        return pendingLike;
     }
 
     renderImageButton(action: ActivityActionType) {
@@ -167,11 +186,13 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     }
 
     canLike(activity: Activity) {
-        return new ActionRights(activity).canLike();
+        let pendingLike = this.getPendingLikeStatus(activity);
+        return pendingLike ? pendingLike === -1 : new ActionRights(activity).canLike();
     }
 
     canUnlike(activity: Activity) {
-        return new ActionRights(activity).canUnlike();
+        let pendingLike = this.getPendingLikeStatus(activity);
+        return pendingLike ? pendingLike === 1 : new ActionRights(activity).canUnlike();
     }
 
     canBuy(activity: Activity) {
@@ -319,6 +340,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
 
 }
+
 
 const styles = StyleSheet.create({
 });

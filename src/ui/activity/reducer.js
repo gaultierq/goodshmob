@@ -10,9 +10,9 @@ const initialState = Immutable();
 
 export default function reduce(state:any = initialState, action: any) {
     switch (action.type) {
-        case types.LIKE.success():
+        case types.CREATE_LIKE.success():
             break;
-        case types.UNLIKE.success():{
+        case types.DELETE_LIKE.success():{
             let {type, id} = action.options;
             type = sanitizeActivityType(type);
 

@@ -3,6 +3,9 @@ import * as types from "./actionTypes"
 import * as Api from "../../managers/Api";
 import {sanitizeActivityType} from "../../helpers/DataUtils";
 import type {ActivityType, Id} from "../../types";
+import type {PendingAction} from "../../helpers/ModelUtils";
+import {pendingActionWrapper} from "../../helpers/ModelUtils";
+import {Call} from "../../managers/Api";
 
 
 export function fetchActivity(activityId: Id, activityType: ActivityType, options?:any = {}) {
@@ -20,26 +23,32 @@ export function fetchActivity(activityId: Id, activityType: ActivityType, option
 }
 
 
-export function like(activityId: string, activityType: string) {
-    let type = sanitizeActivityType(activityType);
 
-    return new Api.Call()
+//defining lineup creation cycle
+type LIKE_CREATION_PAYLOAD = {activityId:Id, activityType: ActivityType}
+export const LIKE_CREATION : PendingAction<LIKE_CREATION_PAYLOAD> = pendingActionWrapper(
+    types.CREATE_LIKE,
+    ({activityId, activityType}: LIKE_CREATION_PAYLOAD) =>  new Api.Call()
         .withMethod('POST')
-        .withRoute(`${type}/${activityId}/likes`)
-        .disptachForAction2(types.LIKE,
-            {id: activityId, type: activityType}
-        );
+        .withRoute(`${sanitizeActivityType(activityType)}/${activityId}/likes`)
+);
+
+//defining lineup creation cycle
+type LIKE_DELETION_PAYLOAD = {activityId:Id, activityType: ActivityType}
+export const LIKE_DELETION : PendingAction<LIKE_DELETION_PAYLOAD> = pendingActionWrapper(
+    types.DELETE_LIKE,
+    ({activityId, activityType}: LIKE_DELETION_PAYLOAD) =>  new Api.Call()
+        .withMethod('DELETE')
+        .withRoute(`${sanitizeActivityType(activityType)}/${activityId}/likes`)
+);
+
+
+export function like(activityId: string, activityType: string) {
+    return LIKE_CREATION.pending({activityId, activityType}, {id: activityId, type: activityType});
 }
 
 export function unlike(activityId: string, activityType: string) {
-    let type = sanitizeActivityType(activityType);
-
-    return new Api.Call()
-        .withMethod('DELETE')
-        .withRoute(`${type}/${activityId}/likes`)
-        .disptachForAction2(types.UNLIKE,
-            {id: activityId, type: activityType}
-        );
+    return LIKE_DELETION.pending({activityId, activityType}, {id: activityId, type: activityType});
 }
 
 export function unsave(savingId: Id, lineupId: Id) {
