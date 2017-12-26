@@ -13,6 +13,7 @@ import {buildNonNullData} from "../../../helpers/DataUtils";
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
 import ActionRights from "../../rights";
 import * as activityAction from "../actions";
+import {CREATE_COMMENT} from "../../screens/comments";
 
 export type ActivityActionType = 'comment'| 'like'| 'unlike'| 'share'| 'save'| 'unsave'| 'see'| 'buy'| 'answer';
 const ACTIONS = ['comment', 'like', 'unlike','share', 'save', 'unsave', 'see', 'buy', 'answer'];
@@ -29,7 +30,10 @@ type State = {
 };
 
 //TODO: perfs
-@connect(state => ({data: state.data}))
+@connect(state => ({
+    data: state.data,
+    pending: state.pending
+}))
 export default class ActivityActionBar extends React.Component<Props, State> {
 
 
@@ -79,6 +83,10 @@ export default class ActivityActionBar extends React.Component<Props, State> {
         switch(action) {
             case 'comment':
                 let commentsCount = activity.comments ? activity.comments.length : 0;
+                let pendingCount = _.filter(this.props.pending[CREATE_COMMENT], (o) => o.payload.activityId === activity.id).length;
+
+                commentsCount += pendingCount;
+
                 return commentsCount + '';
                 // return i18n.t(`activity_item.buttons.${action}`,{count: commentsCount});
             case 'like':

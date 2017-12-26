@@ -22,7 +22,7 @@ import {Colors} from "../colors";
 
 
 const LOAD_COMMENTS = ApiAction.create("load_comments");
-const CREATE_COMMENT = ApiAction.create("create_comment");
+export const CREATE_COMMENT = ApiAction.create("create_comment");
 
 type Props = {
     activityId: Id,
