@@ -23,11 +23,9 @@ import {stylePadding} from "../UIStyles";
 import {currentGoodshboxId, currentUserId} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
-import LineupCell from "../components/LineupCell";
 import {Menu, MenuContext, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
 import Modal from 'react-native-modal'
 import type {Visibility} from "./additem";
-import AddLineupComponent from "../components/addlineup";
 import {LINEUP_DELETION, patchLineup} from "../lineup/actions";
 import * as Nav from "../Nav";
 import {startAddItem} from "../Nav";
@@ -39,11 +37,21 @@ import {SFP_TEXT_MEDIUM} from "../fonts";
 import LineupTitle from "../components/LineupTitle";
 import Feed from "../components/feed";
 import LineupCellSaving from "../components/LineupCellSaving";
-import {
-    AppTour,
-    AppTourSequence,
-    AppTourView
-} from "react-native-material-showcase-ios";
+
+
+// let AppTour;
+// let AppTourSequence;
+// let AppTourView;
+//
+// if (__IS_IOS__) {
+//     let showCase = require("react-native-material-showcase-ios");
+//
+//     AppTour = showCase.AppTour;
+//     AppTourSequence = showCase.AppTourSequence;
+//     AppTourView = showCase.AppTourView;
+// }
+
+
 
 
 type Props = {
@@ -158,12 +166,12 @@ class HomeScreen extends Screen<Props, State> {
     componentDidMount() {
         setTimeout(() => {
             if (this.appTourTargets.length > 0) {
-                let appTourSequence = new AppTourSequence();
-                this.appTourTargets.forEach(appTourTarget => {
-                    appTourSequence.add(appTourTarget);
-                });
-
-                AppTour.ShowSequence(appTourSequence);
+                // let appTourSequence = new AppTourSequence();
+                // this.appTourTargets.forEach(appTourTarget => {
+                //     appTourSequence.add(appTourTarget);
+                // });
+                //
+                // AppTour.ShowSequence(appTourSequence);
             }
 
         }, 5000);
@@ -225,10 +233,10 @@ class HomeScreen extends Screen<Props, State> {
                 this.onFloatingButtonPressed()
             }}
             ref={ref=>{
-                let appTourTarget = AppTourView.for(ref, {
-                    primaryText: 'This is a target button 1',
-                    secondaryText: 'We have the best targets, believe me'
-                });
+                // let appTourTarget = AppTourView.for(ref, {
+                //     primaryText: 'This is a target button 1',
+                //     secondaryText: 'We have the best targets, believe me'
+                // });
 
                 //this.appTourTargets.push(appTourTarget);
             }}
