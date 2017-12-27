@@ -4707,6 +4707,10 @@ react-native-keyboard-aware-scroll-view@^0.4.1:
     prop-types "^15.6.0"
     react-native-iphone-x-helper "^1.0.1"
 
+react-native-material-showcase-ios@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-material-showcase-ios/-/react-native-material-showcase-ios-0.0.2.tgz#3537ff4386ac03e4b9a186b7496103b92f8b19ce"
+
 react-native-modal@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-4.1.1.tgz#4c1055dc045106542a8e3bb3fd656a6d3bc319d9"

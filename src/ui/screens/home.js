@@ -39,6 +39,11 @@ import {SFP_TEXT_MEDIUM} from "../fonts";
 import LineupTitle from "../components/LineupTitle";
 import Feed from "../components/feed";
 import LineupCellSaving from "../components/LineupCellSaving";
+import {
+    AppTour,
+    AppTourSequence,
+    AppTourView
+} from "react-native-material-showcase-ios";
 
 
 type Props = {
@@ -78,6 +83,8 @@ class HomeScreen extends Screen<Props, State> {
     };
 
     state : State = {};
+
+    appTourTargets= [];
 
 
     constructor(props: Props){
@@ -147,6 +154,21 @@ class HomeScreen extends Screen<Props, State> {
         }
     }
 
+
+    componentDidMount() {
+        setTimeout(() => {
+            if (this.appTourTargets.length > 0) {
+                let appTourSequence = new AppTourSequence();
+                this.appTourTargets.forEach(appTourTarget => {
+                    appTourSequence.add(appTourTarget);
+                });
+
+                AppTour.ShowSequence(appTourSequence);
+            }
+
+        }, 5000);
+    }
+
     render() {
 
         return (
@@ -185,11 +207,7 @@ class HomeScreen extends Screen<Props, State> {
 
                 </View>
 
-                {this.displayFloatingButton() &&
-                <ActionButton
-                    buttonColor={Colors.green}
-                    onPress={() => { this.onFloatingButtonPressed() }}
-                />
+                {this.displayFloatingButton() && this.renderFloatingButton()
                 }
 
                 <View >
@@ -199,6 +217,27 @@ class HomeScreen extends Screen<Props, State> {
         );
     }
 
+
+    renderFloatingButton() {
+        let floating = <ActionButton
+            buttonColor={Colors.green}
+            onPress={() => {
+                this.onFloatingButtonPressed()
+            }}
+            ref={ref=>{
+                let appTourTarget = AppTourView.for(ref, {
+                    primaryText: 'This is a target button 1',
+                    secondaryText: 'We have the best targets, believe me'
+                });
+
+                //this.appTourTargets.push(appTourTarget);
+            }}
+        />;
+
+
+        return floating;
+        //return appTourTarget;
+    }
 
     renderSectionHeader({title, subtitle}) {
         return <View style={{
