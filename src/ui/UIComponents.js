@@ -3,8 +3,8 @@
 import React, {Component} from 'react';
 import {View, Image} from 'react-native';
 import {Colors} from "./colors";
-import User from "react-native-firebase/lib/modules/auth/user";
 import Feed from "./components/feed";
+import type {User} from "../types";
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}

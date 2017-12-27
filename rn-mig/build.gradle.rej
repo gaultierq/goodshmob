@@ -1,0 +1,12 @@
+diff a/android/app/build.gradle b/android/app/build.gradle	(rejected hunks)
+@@ -72,6 +72,10 @@ import com.android.build.OutputFile
+  * ]
+  */
+ 
++project.ext.react = [
++    entryFile: "index.js"
++]
++
+ apply from: "../../node_modules/react-native/react.gradle"
+ 
+ /**
