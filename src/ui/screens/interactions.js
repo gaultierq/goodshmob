@@ -8,12 +8,12 @@ import * as Api from "../../managers/Api";
 import Feed from "../components/feed";
 import ApiAction from "../../helpers/ApiAction";
 import UserActivity from "../activity/components/UserActivity";
-import {buildNonNullData} from "../../helpers/DataUtils";
-import type {Activity} from "../../types";
+import {buildNonNullData, sanitizeActivityType} from "../../helpers/DataUtils";
+import type {Activity, Deeplink} from "../../types";
 
 import FeedSeparator from "../activity/components/FeedSeparator";
 import Screen from "../components/Screen";
-import * as Nav from "../Nav";
+import NavManager from "../../managers/NavManager";
 
 type Props = {
     navigator: *,
@@ -75,26 +75,13 @@ export class InteractionScreen extends Screen<Props, State> {
         let createdAt = activity.createdAt;
         let content = this.renderContentByType(activity);
 
+
+
+
         return (
             <TouchableOpacity
                 onPress={() => {
-                    this.props.navigator.showModal({
-                        screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
-                        title: "#Details", // navigation bar title of the pushed screen (optional)
-                        titleImage: require('../../img2/headerLogoBlack.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
-                        passProps: {
-                            activityId: activity.id,
-                            activityType: activity.type
-                        },
-                        navigatorButtons: {
-                            leftButtons: [
-                                {
-                                    id: Nav.CLOSE_MODAL,
-                                    title: "#Cancel"
-                                }
-                            ],
-                        },
-                    });
+                    NavManager.goToDeeplink(this.localDeeplink(activity));
                 }}>
                 <UserActivity
                     activityTime={createdAt}
@@ -106,6 +93,23 @@ export class InteractionScreen extends Screen<Props, State> {
                 </UserActivity>
             </TouchableOpacity>
         )
+    }
+
+    //temporary: should be provided by the backend
+    localDeeplink(activity: Activity): Deeplink {
+        let deeplink;
+        switch (sanitizeActivityType(activity.type)) {
+            case 'comments': {
+                let resource = activity.resource;
+                if (resource) {
+                    let {id, type} = resource;
+
+                    deeplink = `https://goodsh.it/${sanitizeActivityType(type)}/${id}/comments`
+                }
+                break;
+            }
+        }
+        return deeplink;
     }
 
     renderContentByType(activity:Activity) {

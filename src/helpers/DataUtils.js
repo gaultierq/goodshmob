@@ -42,6 +42,12 @@ export let sanitizeActivityType = activityType => {
     return activityType;
 };
 
+const ACTIVITY_TYPES = ['savings', 'sendings', 'posts' ];
+export const isActivityType = (candidate: string) => {
+    return ACTIVITY_TYPES.indexOf(candidate) >= 0;
+
+};
+
 export function buildData(store, type, id: Id) {
     return buildNonNullData(store, type, id, false);
 }

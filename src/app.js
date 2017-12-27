@@ -29,6 +29,7 @@ import {Provider} from "react-redux";
 import Messenger from "./managers/Messenger"
 import {Colors} from "./ui/colors";
 import {SFP_TEXT_REGULAR} from "./ui/fonts";
+import NavManager from "./managers/NavManager";
 
 console.log(`staring app with env=${JSON.stringify(Config)}`);
 
@@ -195,6 +196,7 @@ export default class App {
         AlgoliaClient.init(this.store);
         Statistics.init(this.store);
         Messenger.init();
+        NavManager.init();
 
 
         if (!__IS_LOCAL__) {

@@ -2,8 +2,8 @@
 
 import RNFirebase from 'react-native-firebase'
 import type {Deeplink} from "../types";
-import URL from "url-parse";
 import {Navigation} from 'react-native-navigation';
+import NavManager from "./NavManager";
 
 let handleNotif = function (notif) {
     console.log("app opened from notification:" + JSON.stringify(notif));
@@ -11,7 +11,7 @@ let handleNotif = function (notif) {
 
     let deeplink = notif.deeplink;
     //test
-    resolveDeeplink(deeplink);
+    NavManager.goToDeeplink(deeplink);
 };
 
 export function load() {
@@ -39,39 +39,3 @@ export function load() {
     // }, 2000);
 }
 
-function resolveDeeplink(deeplink: Deeplink) {
-    if (!deeplink) return false;
-
-    let url = new URL(deeplink);
-    //gds://goodsh.io/lineup/15
-    let pathname = url.pathname;
-    if (!pathname) return false;
-    let parts = pathname.split('/');
-    //let main = parts[0];
-    let main = _.nth(parts, 1);
-
-    if (main === 'lists') {
-        let id = _.nth(parts, 2);
-        if (isId(id)) {
-            Navigation.showModal({
-                screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
-                passProps: {
-                    lineupId: id,
-                },
-            });
-            return true;
-        }
-    }
-
-}
-
-function isId(id: string) {
-    return /^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/g.test(id)
-
-}
-
-function isHex(hex: string) {
-    if (typeof hex !== 'string') return false;
-
-
-}

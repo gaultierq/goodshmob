@@ -19,6 +19,7 @@ import type {PendingAction} from "../../helpers/ModelUtils";
 import {mergeItemsAndPendings, pendingActionWrapper} from "../../helpers/ModelUtils";
 import {currentUser} from "../../managers/CurrentUser";
 import {Colors} from "../colors";
+import Screen from "../components/Screen";
 
 
 const LOAD_COMMENTS = ApiAction.create("load_comments");
@@ -40,7 +41,7 @@ type State = {
     data: state.data,
     pending: state.pending
 }))
-class CommentsScreen extends Component<Props, State> {
+class CommentsScreen extends Screen<Props, State> {
 
     state = {};
 
