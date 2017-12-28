@@ -21,6 +21,12 @@ export function init() {
     global.superLog = _superLog;
     global.ENABLE_PERF_OPTIM = true;
     // global.ENABLE_PERF_OPTIM = false;
+
+    global.__ENABLE_BACK_HANDLER__ = false;
+
+    //retry after react-native update !
+    // global.__ENABLE_BACK_HANDLER__ = true;
+
     global.__DEBUG_PERFS__ = false;
     // global.__DEBUG_PERFS__ = true;
     global.__IS_LOCAL__= Config.ENV === 'LOCAL';

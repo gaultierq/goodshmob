@@ -68,7 +68,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     componentWillReceiveProps(nextProps: Props<*>) {
-        if (this.props.scrollUpOnBack !== nextProps.scrollUpOnBack) {
+        if (__ENABLE_BACK_HANDLER__ && this.props.scrollUpOnBack !== nextProps.scrollUpOnBack) {
             let scrollUpOnBack = nextProps.scrollUpOnBack;
             if (scrollUpOnBack) {
                 console.info("Feed listening to back navigation");
@@ -83,7 +83,6 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                     return scrollUpOnBack();
                 };
 
-                BackHandler.addEventListener('hardwareBackPress', this._listener);
             }
             else {
                 BackHandler.removeEventListener('hardwareBackPress', this._listener);
