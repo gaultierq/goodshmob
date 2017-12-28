@@ -84,7 +84,7 @@ export default class ActivityCell extends React.Component<Props, State> {
                 </View>
 
                 <View style={{top: - (avatarDim + padding)}}>
-                    <GTouchable onPress={this.props.onPressItem}>
+                    <GTouchable onPress={this.props.onPressItem} onDoublePress={() => alert("hello toi")}>
                         <ActivityBody
                             activity={activity}
                             navigator={this.props.navigator}
