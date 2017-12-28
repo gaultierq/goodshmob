@@ -178,11 +178,11 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     }
 
     canUnsave(activity: Activity) {
-        return !this.isAsk(activity) && this.isGoodshed2(activity) && this.byMe(activity);
+        return new ActionRights(activity).canUnsave();
     }
 
     canSave(activity: Activity) {
-        return !this.isAsk(activity);// && !this.isGoodshed2(activity) && this.byMe(activity);
+        return new ActionRights(activity).canSave();
     }
 
     canLike(activity: Activity) {
