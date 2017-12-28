@@ -15,7 +15,7 @@ import Screen from "../components/Screen";
 type Props = {
     userId: Id,
     navigator:any,
-    renderItem:(item:Item)=>Node,
+    renderItem:?(item:Item)=>Node,
 
     onPressItem:? (item: User)=>void,
     data?: any,
@@ -31,20 +31,6 @@ const mapStateToProps = (state, ownProps) => ({
 @connect(mapStateToProps)
 export default class FriendsScreen extends Screen<Props, State> {
 
-
-    // constructor(props: Props){
-    //     super(props);
-    //     props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-    // }
-    //
-    // onNavigatorEvent(event) {
-    //     if (event.type === 'NavBarButtonPress') {
-    //         if (event.id === Nav.CANCEL) {
-    //             this.props.navigator.dismissModal();
-    //         }
-    //     }
-    // }
-
     render() {
 
         const {
@@ -52,6 +38,7 @@ export default class FriendsScreen extends Screen<Props, State> {
             renderItem,
             ...attributes
         } = this.props;
+
 
         let user: User = buildData(this.props.data, "users", userId);
 
@@ -70,7 +57,7 @@ export default class FriendsScreen extends Screen<Props, State> {
         return (<Feed
             {...attributes}
             data={friends}
-            renderItem={({item}) => renderItem(item)}
+            renderItem={({item}) => (renderItem||this.renderItem.bind(this))(item)}
             fetchSrc={{
                 callFactory,
                 action
@@ -80,15 +67,38 @@ export default class FriendsScreen extends Screen<Props, State> {
     }
 
 
-    renderItem({item} : {item: Item}) {
-        const {onPressItem} = this.props;
+
+    renderItem(item: Item) : Node {
+        let user = buildData(this.props.data, "users", item.id);
         return (
-            <TouchableOpacity
-                onPress={onPressItem}>
-                <FriendCell
-                    friend={item}
-                    onPressItem={this.props.onPressItem}
-                />
+            <TouchableOpacity onPress={()=> {
+
+                this.props.navigator.showModal({
+                    screen: 'goodsh.UserSheetScreen', // unique ID registered with Navigation.registerScreen
+                    animationType: 'none',
+                    passProps: {
+                        userId: user.id,
+                    },
+                });
+                // this.props.navigator.showModal({
+                //     screen: 'goodsh.UserScreen', // unique ID registered with Navigation.registerScreen
+                //     title: fullName(user),
+                //     passProps: {
+                //         userId: user.id,
+                //     },
+                //     navigatorButtons: {
+                //         leftButtons: [
+                //             {
+                //                 id: Nav.CLOSE_MODAL,
+                //                 title: "#Cancel"
+                //             }
+                //         ],
+                //     },
+                // });
+
+
+            }}>
+                <FriendCell friend={user}/>
             </TouchableOpacity>
         )
     }

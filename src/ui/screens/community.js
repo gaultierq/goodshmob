@@ -142,32 +142,6 @@ export class CommunityScreen extends Screen<Props, State> {
         }
         throw "unexpected"
     };
-
-    renderItem(item: Item) : Node {
-        let user = buildData(this.props.data, "users", item.id);
-        return (
-            <TouchableOpacity onPress={()=> {
-
-                this.props.navigator.showModal({
-                    screen: 'goodsh.UserScreen', // unique ID registered with Navigation.registerScreen
-                    title: fullName(user),
-                    passProps: {
-                        userId: user.id,
-                    },
-                    navigatorButtons: {
-                        leftButtons: [
-                            {
-                                id: Nav.CLOSE_MODAL,
-                                title: "#Cancel"
-                            }
-                        ],
-                    },
-                });
-            }}>
-                <FriendCell friend={user}/>
-            </TouchableOpacity>
-        )
-    }
 }
 
 const styles = StyleSheet.create({

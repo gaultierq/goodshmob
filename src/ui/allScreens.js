@@ -25,6 +25,7 @@ import NetworkSearchScreen from './screens/networksearch';
 import HomeSearchScreen from './screens/homesearch';
 import AddItemScreen from './screens/additem';
 import TestScreen from './screens/test';
+import UserSheetScreen from './screens/userSheet';
 import MyAvatar from './components/MyAvatar';
 import {InteractionScreen} from './screens/interactions';
 
@@ -86,4 +87,5 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.TestScreen', () => TestScreen, store, Provider);
     wrap('goodsh.InteractionScreen', () => InteractionScreen, store, Provider);
     wrap('goodsh.MyAvatar', () => MyAvatar, store, Provider);
+    wrap('goodsh.UserSheetScreen', () => UserSheetScreen, store, Provider);
 }

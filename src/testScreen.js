@@ -1,4 +1,6 @@
 
+import {currentUserId} from "./managers/CurrentUser";
+
 const homeScreen = {
     screen: {
         label: 'test',
@@ -156,6 +158,14 @@ const loginScreen = {
         initialIndex: 0,
     }
 };
+const friendScreen = {
+    screen: {
+        screen: 'goodsh.FriendsScreen',
+    },
+    passProps: {
+        userId: currentUserId()
+    }
+};
 
 
 const test = {
@@ -191,5 +201,6 @@ let testScreen = null;
 //  testScreen = lineupScreen;
 //  testScreen = activityDetailScreen;
 //  testScreen = loginScreen;
+ testScreen = friendScreen;
 
 export default testScreen;

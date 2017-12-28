@@ -6,7 +6,7 @@ import Config from 'react-native-config'
 import {superLog as _superLog} from './helpers/DebugUtils'
 
 import {
-    Platform,
+    Platform, Dimensions
 } from 'react-native';
 
 declare var i18n: any;
@@ -28,6 +28,9 @@ export function init() {
     global.__IS_DEV__= Config.ENV === 'DEV';
 
     global.__IS_IOS__ = Platform.OS === 'ios';
+    let {width, height} = Dimensions.get('window');
+    global.__DEVICE_WIDTH__ = width;
+    global.__DEVICE_HEIGHT__ = height;
 
 
     global.ensureNotNull = (object) => {
