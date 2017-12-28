@@ -203,20 +203,20 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     }
 
 
-    byMe(activity: Activity) {
-        return activity.user.id === currentUserId();
-    }
-
-    isGoodshed2(activity: Activity) {
-        let resource = activity.resource;
-        let savedIn = _.get(resource, 'meta.saved-in', []);
-        let target = activity.target;
-        let goodshed;
-        if (target && target.type === 'lists') {
-            goodshed = _.indexOf(savedIn, target.id) > -1;
-        }
-        return goodshed;
-    }
+    // byMe(activity: Activity) {
+    //     return activity.user.id === currentUserId();
+    // }
+    //
+    // isGoodshed2(activity: Activity) {
+    //     let resource = activity.resource;
+    //     let savedIn = _.get(resource, 'meta.saved-in', []);
+    //     let target = activity.target;
+    //     let goodshed;
+    //     if (target && target.type === 'lists') {
+    //         goodshed = _.indexOf(savedIn, target.id) > -1;
+    //     }
+    //     return goodshed;
+    // }
 
     renderButton(img: Url, text: string, handler: ()=>void, active:boolean = false) {
         let color = active ? Colors.green: Colors.greyishBrown;

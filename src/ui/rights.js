@@ -52,7 +52,7 @@ export default class ActionRights {
 
     isGoodshed2() {
         let resource = this.activity.resource;
-        let savedIn = _.get(resource, 'meta.saved-in', []);
+        let savedIn = _.get(resource, 'meta.savedIn', []);
         let target = this.activity.target;
         let goodshed;
         if (target && target.type === 'lists') {

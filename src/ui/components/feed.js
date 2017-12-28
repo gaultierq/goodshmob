@@ -54,7 +54,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     state = {firstLoad: 'idle'};
 
     static defaultProps = {
-        visiblility: 'unknown'
+        visibility: 'unknown'
     };
 
     _listener: ()=>boolean;
@@ -99,7 +99,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
     shouldComponentUpdate(nextProps, nextState) {
         if (!ENABLE_PERF_OPTIM) return true;
-        if (this.props.visibility === 'hidden') {
+        if (nextProps.visibility === 'hidden') {
             console.debug('feed component update saved');
             return false;
         }

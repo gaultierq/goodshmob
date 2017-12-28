@@ -65,6 +65,10 @@ export class LineupListScreen extends Component<Props, State> {
         isLoadingMore: false,
     };
 
+    componentWillReceiveProps(nextProps: Props) {
+        console.log("receiving new props");
+    }
+
     render() {
         const {
             userId,
