@@ -9,7 +9,6 @@ import {assertUnique} from "../../helpers/DataUtils";
 import {isEmpty} from "lodash";
 import type {List, Saving} from "../../types";
 import {Colors} from "../colors";
-import {SFP_TEXT_MEDIUM} from "../fonts";
 import LineupTitle from "./LineupTitle";
 import LineupCellSaving from "./LineupCellSaving";
 //;
