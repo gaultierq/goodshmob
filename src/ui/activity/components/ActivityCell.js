@@ -10,6 +10,7 @@ import ActivityActionBar from "./ActivityActionBar";
 import {Avatar} from "../../UIComponents";
 import {seeUser} from "../../Nav";
 import GTouchable from "../../GTouchable";
+import * as activityAction from "../actions";
 
 export type ActivityDisplayContext = {
     
@@ -84,7 +85,11 @@ export default class ActivityCell extends React.Component<Props, State> {
                 </View>
 
                 <View style={{top: - (avatarDim + padding)}}>
-                    <GTouchable onPress={this.props.onPressItem} onDoublePress={() => alert("hello toi")}>
+                    <GTouchable onPress={this.props.onPressItem}  onDoublePress={() => {
+                        let liked = activity.meta && activity.meta["liked"];
+                        const toggleLike = liked?  activityAction.unlike : activityAction.like;
+                        this.props.dispatch(toggleLike(activity.id, activity.type));
+                    }}>
                         <ActivityBody
                             activity={activity}
                             navigator={this.props.navigator}
