@@ -44,11 +44,4 @@ export function init() {
             throw "unexpected null object"
         }
     }
-
-
-    if (!__IS_LOCAL__) {
-        let _void = function(){};
-        console.log = console.debug = console.info = console.warn = console.error = _void;
-    }
-
 }

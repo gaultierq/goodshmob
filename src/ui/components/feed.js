@@ -82,7 +82,6 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
                     return scrollUpOnBack();
                 };
-
             }
             else {
                 BackHandler.removeEventListener('hardwareBackPress', this._listener);

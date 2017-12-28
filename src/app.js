@@ -2,7 +2,6 @@
 
 import {applyMiddleware, combineReducers, compose, createStore} from "redux";
 import {Navigation} from 'react-native-navigation';
-//import {registerScreens} from './screens/allScreens';
 import * as reducers from "./reducers/allReducers";
 import {createWithReducers} from "./auth/reducer";
 import thunk from "redux-thunk";
@@ -10,11 +9,12 @@ import logger from 'redux-logger'
 
 import * as Api from './managers/Api';
 import {autoRehydrate, createTransform, persistStore} from 'redux-persist'
-import {AsyncStorage, TouchableOpacity, StyleSheet, Dimensions} from 'react-native'
+import {AsyncStorage, Dimensions, StyleSheet, TouchableOpacity} from 'react-native'
 import immutableTransform from './immutableTransform'
 import {REHYDRATE} from 'redux-persist/constants'
 import i18n from './i18n/i18n'
 import * as CurrentUser from './managers/CurrentUser'
+import {currentUser} from './managers/CurrentUser'
 import {Client} from 'bugsnag-react-native';
 import * as globalProps from 'react-native-global-props';
 import * as notification from './managers/notification';
@@ -38,6 +38,11 @@ initGlobal();
 const CACHE_VERSION = 1;
 
 let hydrated = false;
+
+if (!__IS_LOCAL__) {
+    let _void = function(){};
+    console.log = console.debug = console.info = console.warn = console.error = _void;
+}
 
 //this is shit
 // const initialState = () => Immutable({
@@ -201,6 +206,10 @@ export default class App {
 
         if (!__IS_LOCAL__) {
             this.bugsnag = new Client();
+
+            console.error = (err) => {
+                this.bugsnag.notify(err);
+            }
         }
 
         //delayed import
@@ -241,10 +250,22 @@ export default class App {
 
         if (logged) {
             notification.load();
+
+            if (this.bugsnag) {
+                //let {id, email, firstName, lastName} = currentUser();
+                // this.bugsnag.setUser(id, firstName + " " + lastName, email);
+                this.bugsnag.setUser(id, '', '');
+            }
+
         }
         else {
-            //TODO: stop listening
+            //TODO: notification => stop listening
+            if (this.bugsnag) {
+                this.bugsnag.clearUser();
+            }
+
         }
+
 
         //TODO: use navigation to resolve the current screen
         if (this.logged !== logged) {
