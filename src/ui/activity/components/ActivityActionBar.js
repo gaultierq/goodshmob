@@ -12,7 +12,7 @@ import Snackbar from "react-native-snackbar"
 import {toUppercase} from "../../../helpers/StringUtils";
 import {buildNonNullData} from "../../../helpers/DataUtils";
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
-import ActionRights from "../../rights";
+import ActionRights, {getPendingLikeStatus} from "../../rights";
 import {CREATE_COMMENT} from "../../screens/comments";
 import {CREATE_LIKE, DELETE_LIKE} from "../actionTypes";
 import GTouchable from "../../GTouchable";
@@ -110,16 +110,10 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     }
 
     getPendingLikeStatus(activity) {
-        let pendingLikes = _.filter(this.props.pending[CREATE_LIKE], (o) => o.payload.activityId === activity.id);
-        let pendingUnlikes = _.filter(this.props.pending[DELETE_LIKE], (o) => o.payload.activityId === activity.id);
-
-        let both = _.concat(pendingLikes, pendingUnlikes);
-        both = _.orderBy(both, 'insertedAt');
-        let last = _.last(both);
-
-        let pendingLike = last ? (last.pendingActionType === 'like' ? 1 : -1) : 0;
-        return pendingLike;
+        return getPendingLikeStatus(this.props.pending, activity);
     }
+
+
 
     renderImageButton(action: ActivityActionType) {
         switch(action) {

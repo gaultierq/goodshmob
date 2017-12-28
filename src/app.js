@@ -111,6 +111,10 @@ export default class App {
             }
         });
 
+        globalProps.setCustomTouchableOpacity({
+            activeOpacity: 0.8
+        });
+
         // setCustomTouchableOpacity({
         //     underlayColor: "red"
         // });

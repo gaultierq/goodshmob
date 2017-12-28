@@ -11,9 +11,10 @@ import {Avatar} from "../../UIComponents";
 import {seeUser} from "../../Nav";
 import GTouchable from "../../GTouchable";
 import * as activityAction from "../actions";
+import {getPendingLikeStatus} from "../../rights";
 
 export type ActivityDisplayContext = {
-    
+
 }
 
 type Props = {
@@ -33,6 +34,7 @@ type State = {
 
 @connect((state, ownProps) => ({
     data: state.data,
+    pending: state.pending
 }))
 export default class ActivityCell extends React.Component<Props, State> {
 
@@ -85,13 +87,14 @@ export default class ActivityCell extends React.Component<Props, State> {
                 </View>
 
                 <View style={{top: - (avatarDim + padding)}}>
-                    <GTouchable onPress={this.props.onPressItem}  onDoublePress={() => {
-                        let liked = activity.meta && activity.meta["liked"];
+                    <GTouchable activeOpacity={0.9} onPress={this.props.onPressItem}  onDoublePress={() => {
+                        let liked = this.isLiked(activity);
                         const toggleLike = liked?  activityAction.unlike : activityAction.like;
                         this.props.dispatch(toggleLike(activity.id, activity.type));
                     }}>
                         <ActivityBody
                             activity={activity}
+                            liked={this.isLiked(activity)}
                             navigator={this.props.navigator}
                         />
                     </GTouchable>
@@ -108,6 +111,13 @@ export default class ActivityCell extends React.Component<Props, State> {
                 </View>
             </View>
         )
+    }
+
+    isLiked(activity) {
+        const pendingLikeStatus = getPendingLikeStatus(this.props.pending, activity);
+        return pendingLikeStatus ?
+            pendingLikeStatus > 0
+            : activity.meta && activity.meta["liked"];
     }
 
     shouldComponentUpdate(nextProps: Props, nextState: State) {
@@ -151,7 +161,7 @@ export default class ActivityCell extends React.Component<Props, State> {
     getRefKeys(nextProps: Props) {
         let activityType = sanitizeActivityType(nextProps.activityType);
         let base = `data.${activityType}.${nextProps.activityId}`;
-        return [base, `${base}.meta`];
+        return [base, `${base}.meta`, 'pending'];
     }
 
     getActivity() {

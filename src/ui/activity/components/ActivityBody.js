@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {Image, Linking, Share, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
+import {Animated, Easing, Image, Linking, Share, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
 import * as UI from "../../UIStyles";
 import {connect} from "react-redux";
 import type {Activity, i18Key} from "../../../types"
@@ -14,7 +14,8 @@ import GTouchable from "../../GTouchable";
 type Props = {
     activity: Activity,
     onPressItem: (any) => void,
-    noGoodshButton?: boolean
+    noGoodshButton?: boolean,
+    liked: boolean
 };
 
 type State = {
@@ -22,6 +23,12 @@ type State = {
 
 @connect()
 export default class ActivityBody extends React.Component<Props, State> {
+
+    componentWillReceiveProps(nextProps: Props) {
+        if (nextProps.liked && !this.props.liked) {
+            this.showYeah();
+        }
+    }
 
     render() {
         const {activity} = this.props;
@@ -158,6 +165,13 @@ export default class ActivityBody extends React.Component<Props, State> {
             || resource.type === 'TvShow'
             || resource.type === 'Movie'
         )? 'contain' : 'cover';
+
+        const opacity = this.animatedValue.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0, 1]
+        });
+
+
         return <View style={{
             flex:1,
             alignSelf: 'center',
@@ -182,9 +196,38 @@ export default class ActivityBody extends React.Component<Props, State> {
             />
 
 
+            {
+                <Animated.View style={{
+                    position: 'absolute', width: "100%", height: "100%",
+                    backgroundColor: 'rgba(0,0,0,0.3)',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    opacity
+                }}>
+
+                    <Image resizeMode={'cover'} style={{}} source={require('../../../img2/yeaahAction.png')}/>
+                </Animated.View>
+            }
 
 
         </View>
+
+    }
+
+    animatedValue = new Animated.Value(0);
+
+    showYeah() {
+        this.animatedValue.setValue(1);
+        Animated.timing(
+            this.animatedValue,
+            {
+                toValue: 0,
+                duration: 400,
+                delay: 600,
+                easing: Easing.ease
+            }
+        ).start(() => {
+        })
     }
 }
 

@@ -4,6 +4,7 @@
 import type {Activity} from "../types";
 import {sanitizeActivityType} from "../helpers/DataUtils";
 import {currentUserId} from "../managers/CurrentUser";
+import {CREATE_LIKE, DELETE_LIKE} from "./activity/actionTypes";
 
 export default class ActionRights {
 
@@ -60,4 +61,15 @@ export default class ActionRights {
         }
         return goodshed;
     }
+}
+
+export function getPendingLikeStatus(pending, activity) {
+    let pendingLikes = _.filter(pending[CREATE_LIKE], (o) => o.payload.activityId === activity.id);
+    let pendingUnlikes = _.filter(pending[DELETE_LIKE], (o) => o.payload.activityId === activity.id);
+
+    let both = _.concat(pendingLikes, pendingUnlikes);
+    both = _.orderBy(both, 'insertedAt');
+    let last = _.last(both);
+
+    return last ? (last.pendingActionType === 'like' ? 1 : -1) : 0;
 }
