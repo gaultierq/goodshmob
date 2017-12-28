@@ -1,6 +1,6 @@
+import type {Node} from 'react';
 // @flow
 import React from 'react';
-import type {Node} from 'react';
 import {
     Animated,
     Dimensions,

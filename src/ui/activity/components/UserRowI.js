@@ -8,6 +8,7 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import type {User} from "../../../types";
 import {fullName} from "../../../helpers/StringUtils";
 import {Colors} from "../../colors";
+import GTouchable from "../../GTouchable";
 
 type Props = {
     user: User,
@@ -45,14 +46,14 @@ export default class UserRowI extends React.Component<Props, State> {
 
             <View style={{flex: 1, width: '100%', height: 60}}>
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                    <TouchableOpacity
+                    <GTouchable
                         onPress={()=>this.navigateToUser(user)}
                     >
                         <Text style={{
                             fontSize: 11,
                             color: Colors.blue
                         }}>{fullName(user)}</Text>
-                    </TouchableOpacity>
+                    </GTouchable>
                     {this.props.rightComponent}
 
 

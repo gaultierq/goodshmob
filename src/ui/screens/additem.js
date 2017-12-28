@@ -19,6 +19,7 @@ import AddLineupComponent from "../components/addlineup";
 import {MainBackground} from "../UIComponents";
 import {FETCH_ITEM} from "../lineup/actionTypes";
 import {Colors} from "../colors";
+import GTouchable from "../GTouchable";
 
 type Props = {
     defaultLineupId: Id,
@@ -130,9 +131,9 @@ export default class AddItemScreen extends Screen<Props, State> {
                         ListHeaderComponent={xml}
                         ListFooterComponent={<AddLineupComponent/>}
                         renderItem={(item) => (
-                            <TouchableOpacity onPress={() => this.setState({selectedLineupId: item.id, showLineupList: false})}>
+                            <GTouchable onPress={() => this.setState({selectedLineupId: item.id, showLineupList: false})}>
                                 <LineupCell lineup={item}/>
-                            </TouchableOpacity>
+                            </GTouchable>
                         )}
                     />
                     }

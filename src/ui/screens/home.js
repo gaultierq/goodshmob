@@ -37,7 +37,7 @@ import {SFP_TEXT_MEDIUM} from "../fonts";
 import LineupTitle from "../components/LineupTitle";
 import Feed from "../components/feed";
 import LineupCellSaving from "../components/LineupCellSaving";
-
+import GTouchable from "../GTouchable";
 
 // let AppTour;
 // let AppTourSequence;
@@ -314,7 +314,7 @@ class HomeScreen extends Screen<Props, State> {
         const {withMenuButton, withLineupTitle} = options;
         return (
             <View>
-                {withLineupTitle && <TouchableOpacity
+                {withLineupTitle && <GTouchable
                     onPress={() => {
                         this.props.navigator.push({
                             screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
@@ -328,7 +328,7 @@ class HomeScreen extends Screen<Props, State> {
                         <LineupTitle lineup={item}/>
                         {withMenuButton && this.renderMenuButton(item, 15)}
                     </View>
-                </TouchableOpacity>}
+                </GTouchable>}
                 {this.renderList(item.savings)}
             </View>
 
@@ -338,10 +338,10 @@ class HomeScreen extends Screen<Props, State> {
     renderList(savings) {
         return <Feed
             data={savings}
-            renderItem={({item}) => <TouchableOpacity onPress={()=>{
+            renderItem={({item}) => <GTouchable onPress={()=>{
                 this.onSavingPressed(item)
             }
-            }><LineupCellSaving saving={item} style={{marginRight: 10}}/></TouchableOpacity>}
+            }><LineupCellSaving saving={item} style={{marginRight: 10}}/></GTouchable>}
             // fetchSrc={{
             //     callFactory: this.fetchInteractions.bind(this),
             //     useLinks: true,

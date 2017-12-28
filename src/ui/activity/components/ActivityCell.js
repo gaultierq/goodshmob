@@ -9,6 +9,7 @@ import ActivityBody from "./ActivityBody";
 import ActivityActionBar from "./ActivityActionBar";
 import {Avatar} from "../../UIComponents";
 import {seeUser} from "../../Nav";
+import GTouchable from "../../GTouchable";
 
 export type ActivityDisplayContext = {
     
@@ -68,27 +69,27 @@ export default class ActivityCell extends React.Component<Props, State> {
             <View>
                 <View style={{zIndex: 2}}>
                     <View style={{left: padding, flexDirection: 'row', }}>
-                        <TouchableOpacity onPress={()=> seeUser(navigator, activity.user)}>
+                        <GTouchable onPress={()=> seeUser(navigator, activity.user)}>
                             <Avatar user={activity.user} style={{dim: avatarDim}}/>
-                        </TouchableOpacity>
+                        </GTouchable>
                         {postedToUser && <Image style={[{width: dim, height: dim, transform: [{translateY: -20}, {translateX: 15}, { rotate: '20deg'}]}]} source={require('../../../img2/sendIcon.png')}/>}
                     </View>
                     {postedToUser && <View style={{position: 'absolute', right: padding, flexDirection: 'row'}}>
 
                         <Image style={[{width: dim, height: dim, transform: [{translateY}, {translateX: -translateX}, { rotate: '70deg'}]}]} source={require('../../../img2/sendIcon.png')}/>
-                        <TouchableOpacity onPress={()=> seeUser(navigator, postedToUser)}>
+                        <GTouchable onPress={()=> seeUser(navigator, postedToUser)}>
                             <Avatar user={postedToUser} style={{dim: avatarDim}}/>
-                        </TouchableOpacity>
+                        </GTouchable>
                     </View>}
                 </View>
 
                 <View style={{top: - (avatarDim + padding)}}>
-                    <TouchableOpacity onPress={this.props.onPressItem}>
+                    <GTouchable onPress={this.props.onPressItem}>
                         <ActivityBody
                             activity={activity}
                             navigator={this.props.navigator}
                         />
-                    </TouchableOpacity>
+                    </GTouchable>
 
                     {/*<FeedSeparator/>*/}
 

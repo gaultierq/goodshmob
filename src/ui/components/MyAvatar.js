@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import {ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {currentUser} from "../../managers/CurrentUser";
 import {Navigation} from 'react-native-navigation';
+import GTouchable from "../GTouchable";
 
 type Props = {
 };
@@ -21,7 +22,7 @@ export default class MyAvatar extends Component<Props, State> {
         const user = currentUser();
 
         return (
-            <TouchableOpacity onPress={()=>{
+            <GTouchable onPress={()=>{
                 //this is bad
                 // this.props.navigator.toggleDrawer({
                 //     side: 'left',
@@ -42,7 +43,7 @@ export default class MyAvatar extends Component<Props, State> {
                         borderRadius: imageDim / 2,
                     }}
                 />
-            </TouchableOpacity>
+            </GTouchable>
         )
 
     }

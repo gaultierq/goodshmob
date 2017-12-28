@@ -15,6 +15,7 @@ import SmartInput from "./SmartInput";
 import {LINEUP_CREATION} from '../lineup/actions'
 import {Colors} from "../colors";
 import * as UI from "../UIStyles";
+import GTouchable from "../GTouchable";
 
 type Props = {
 };
@@ -38,7 +39,7 @@ export default class AddLineupComponent extends Component<Props, State> {
 
         return (
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}>
-                <TouchableOpacity onPress={this._openModal}>
+                <GTouchable onPress={this._openModal}>
                     <View style={
                         [styles.header]
                     }>
@@ -54,7 +55,7 @@ export default class AddLineupComponent extends Component<Props, State> {
                             ]}
                         >{i18n.t('create_list_controller.title')}</Text>
                     </View>
-                </TouchableOpacity>
+                </GTouchable>
 
                 {this.createModal()}
             </View>

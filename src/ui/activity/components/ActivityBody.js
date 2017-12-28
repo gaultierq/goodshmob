@@ -3,14 +3,13 @@ import React from 'react';
 import {Image, Linking, Share, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
 import * as UI from "../../UIStyles";
 import {connect} from "react-redux";
-import type {Activity, i18Key, User} from "../../../types"
+import type {Activity, i18Key} from "../../../types"
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
 import ActionRights from "../../rights";
 import Button from 'apsl-react-native-button';
-import {fullName} from "../../../helpers/StringUtils";
 import {SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "../../fonts";
-import {Avatar} from "../../UIComponents";
 import {seeList, seeUser} from "../../Nav";
+import GTouchable from "../../GTouchable";
 
 type Props = {
     activity: Activity,
@@ -93,7 +92,7 @@ export default class ActivityBody extends React.Component<Props, State> {
 
         const pa = 16;
         return <View style={{flexDirection:'row', marginTop: 10}}>
-            <TouchableOpacity onPress={press}>
+            <GTouchable onPress={press}>
                 <Text
                     style={[{paddingLeft: pa, paddingRight: pa,
                         color,
@@ -110,7 +109,7 @@ export default class ActivityBody extends React.Component<Props, State> {
                     }]}>
                     {i18n.t(key) + ' ' + targetName}
                 </Text>
-            </TouchableOpacity>
+            </GTouchable>
         </View>
     }
 

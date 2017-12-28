@@ -1,13 +1,6 @@
 // @flow
 import React from 'react';
-import {
-    Animated,
-    Dimensions,
-    Easing,
-    StyleSheet,
-    TouchableWithoutFeedback,
-    View
-} from 'react-native';
+import {Animated, Dimensions, Easing, StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
 import Screen from "../components/Screen";
 import Sheet from "../components/sheet";
 

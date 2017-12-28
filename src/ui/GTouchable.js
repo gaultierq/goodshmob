@@ -1,10 +1,7 @@
 //@flow
 
 import React, {Component} from 'react';
-import {
-    TouchableNativeFeedback,
-    TouchableOpacity,
-} from 'react-native';
+import {TouchableNativeFeedback, TouchableOpacity,} from 'react-native';
 
 export type Props = {
     protect?: boolean

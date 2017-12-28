@@ -16,6 +16,7 @@ import Icon from 'react-native-vector-icons/Entypo';
 import UserRow from "./components/UserRow";
 import Screen from "../components/Screen";
 import {Colors} from "../colors";
+import GTouchable from "../GTouchable";
 
 type Props = {
     activityId: Id,
@@ -68,7 +69,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                         { activity &&
                         <View>
                             <View style={[UI.CARD(), {marginBottom: 40}]}>
-                                <TouchableOpacity
+                                <GTouchable
                                     onPress={() => this.goBuy(activity)}
                                 >
                                     <ActivityBody
@@ -76,7 +77,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                         navigator={this.props.navigator}
                                         onPressItem={() => this.goBuy(activity)}
                                     />
-                                </TouchableOpacity>
+                                </GTouchable>
 
                                 <FeedSeparator/>
 
@@ -126,7 +127,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
     renderComments(activity) {
         return (
-            <TouchableOpacity
+            <GTouchable
                 onPress={()=> this.displayActivityComments(activity)}>
                 <View style={[UI.CARD(0), {padding: 8, paddingLeft: 12, backgroundColor: "#fefefe"}]}>
 
@@ -164,12 +165,12 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
 
                 </View>
-            </TouchableOpacity>);
+            </GTouchable>);
     }
 
     renderRelatedActivities({item}) {
         return (<View>
-                <TouchableOpacity
+                <GTouchable
                     // underlayColor={"red"}
                     onPress={()=> this.displayActivityComments(item)}
                 >
@@ -177,7 +178,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                         <ActivityDescription activity={item} navigator={this.props.navigator}/>
                     </View>
 
-                </TouchableOpacity>
+                </GTouchable>
 
                 {this.renderComments(item)}
             </View>

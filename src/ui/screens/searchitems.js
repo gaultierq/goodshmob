@@ -10,6 +10,7 @@ import {SearchBar} from 'react-native-elements'
 import type {SearchCategoryType} from "./search";
 import SearchScreen from "./search";
 import normalize from 'json-api-normalizer';
+import GTouchable from "../GTouchable";
 
 type SearchCategory = "consumer_goods" | "places" | "musics" | "movies";
 type SearchToken = string;
@@ -26,9 +27,9 @@ class SearchItem extends Component<*,*> {
                 type: categ,
                 tabName: "search_item_screen.tabs." + categ,
                 placeholder: "search_item_screen.placeholder." + categ,
-                renderItem: ({item})=> <TouchableOpacity onPress={() => this.props.onItemSelected(item)}>
+                renderItem: ({item})=> <GTouchable onPress={() => this.props.onItemSelected(item)}>
                     <ItemCell item={item}/>
-                </TouchableOpacity>
+                </GTouchable>
 
             }
         });

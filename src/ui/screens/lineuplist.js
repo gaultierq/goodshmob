@@ -29,7 +29,7 @@ import {buildData, doDataMergeInState} from "../../helpers/DataUtils";
 import {CREATE_LINEUP, DELETE_LINEUP} from "../lineup/actionTypes";
 import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
 import {Colors} from "../colors";
-
+import GTouchable from "../GTouchable";
 //TODO: clean
 // export const DELETE_LINEUP = lineup_actions.DELETE_LINEUP;
 // export const EDIT_LINEUP = lineup_actions.EDIT_LINEUP;
@@ -212,7 +212,7 @@ export {reducer};
 
 export function renderSimpleListItem(navigator: *) {
 
-    return (item: List) => (<TouchableOpacity
+    return (item: List) => (<GTouchable
         onPress={() => {
             navigator.push({
                 screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
@@ -222,5 +222,5 @@ export function renderSimpleListItem(navigator: *) {
             });
         }}>
         <LineupCell lineup={item}/>
-    </TouchableOpacity>)
+    </GTouchable>)
 }

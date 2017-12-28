@@ -16,6 +16,7 @@ import {currentUserId} from "../../managers/CurrentUser";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import {MainBackground} from "../UIComponents";
 import {Colors} from "../colors";
+import GTouchable from "../GTouchable";
 
 type Props = {
     itemId: Id,
@@ -75,7 +76,7 @@ export default class SendScreen extends Component<Props, State> {
         let isSelected = id === this.state.selected;
         return (
             <View>
-                <TouchableOpacity
+                <GTouchable
                     disabled={sent}
                     onPress={()=>this.setState({selected: isSelected ? null : id})}>
                     <FriendCell
@@ -86,7 +87,7 @@ export default class SendScreen extends Component<Props, State> {
                             this.renderChildren(isSelected, sent, friend)
                         }
                     </FriendCell>
-                </TouchableOpacity>
+                </GTouchable>
             </View>
         )
     }

@@ -24,6 +24,7 @@ import Screen from "../components/Screen";
 import Config from 'react-native-config'
 import SearchScreen from "./search";
 import {Colors} from "../colors";
+import GTouchable from "../GTouchable";
 
 type Props = NavigableProps & {
 };
@@ -66,7 +67,7 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                 );
 
                 return (
-                    <TouchableOpacity
+                    <GTouchable
                         onPress={() => this.onLineupPressed(item)}>
                         <View>
                             <LineupCell
@@ -75,7 +76,7 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                                 titleChildrenBelow={true}
                             />
                         </View>
-                    </TouchableOpacity>
+                    </GTouchable>
                 )
             }
             else {
@@ -87,9 +88,9 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                 if (!resource) return null;
 
                 return (
-                    <TouchableOpacity onPress={()=>this.onSavingPressed(saving)}>
+                    <GTouchable onPress={()=>this.onSavingPressed(saving)}>
                         <ItemCell item={resource}/>
-                    </TouchableOpacity>
+                    </GTouchable>
                 )
             }
         };

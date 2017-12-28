@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import {Clipboard, Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpacity, User, View} from 'react-native';
 import {CheckBox} from "react-native-elements";
 import Modal from 'react-native-modal'
+import GTouchable from "../GTouchable";
 
 type Props = {
 };
@@ -25,9 +26,9 @@ export default class TestScreen extends Component<Props, State> {
         return (
 
             <View style={{ flex: 1 }}>
-                <TouchableOpacity onPress={this._showModal}>
+                <GTouchable onPress={this._showModal}>
                     <Text>Show Modal</Text>
-                </TouchableOpacity>
+                </GTouchable>
                 <Modal
                     isVisible={this.state.isModalVisible}
                     onBackdropPress={this._hideModal}

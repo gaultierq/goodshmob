@@ -14,8 +14,6 @@ import Swiper from 'react-native-swiper';
 import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts";
 
 
-
-
 type Props = {
     initialIndex: number
 };

@@ -14,6 +14,7 @@ import type {Activity, Deeplink} from "../../types";
 import FeedSeparator from "../activity/components/FeedSeparator";
 import Screen from "../components/Screen";
 import NavManager from "../../managers/NavManager";
+import GTouchable from "../GTouchable";
 
 type Props = {
     navigator: *,
@@ -79,7 +80,7 @@ export class InteractionScreen extends Screen<Props, State> {
 
 
         return (
-            <TouchableOpacity
+            <GTouchable
                 onPress={() => {
                     NavManager.goToDeeplink(this.localDeeplink(activity));
                 }}>
@@ -91,7 +92,7 @@ export class InteractionScreen extends Screen<Props, State> {
                 >
                     {content}
                 </UserActivity>
-            </TouchableOpacity>
+            </GTouchable>
         )
     }
 

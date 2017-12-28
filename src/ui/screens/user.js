@@ -8,7 +8,7 @@ import Feed from "../components/feed";
 import {FETCH_ACTIVITIES, fetchUserNetwork} from "../networkActions";
 import ActivityCell from "../activity/components/ActivityCell";
 import Screen from "../components/Screen";
-import {activityFeedProps, MainBackground, TRANSPARENT_SPACER} from "../UIComponents";
+import {activityFeedProps, MainBackground} from "../UIComponents";
 
 type Props = {
     userId: Id,

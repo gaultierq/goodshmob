@@ -1,23 +1,18 @@
 // @flow
 
-import type {Node} from 'react';
 import React from 'react';
 import {Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
-import type {Id, Item} from "../../types";
+import type {Id} from "../../types";
 import FriendsScreen from "./friends";
-import FriendCell from "../components/FriendCell";
 import {currentUserId} from "../../managers/CurrentUser";
 import {TabBar, TabViewAnimated} from 'react-native-tab-view';
 
 import ApiAction from "../../helpers/ApiAction";
 import * as Api from "../../managers/Api";
 import Immutable from 'seamless-immutable';
-import {buildData} from "../../helpers/DataUtils";
 import {InteractionScreen} from "./interactions";
 import Screen from "../components/Screen";
-import * as Nav from "../Nav";
-import {fullName} from "../../helpers/StringUtils";
 import {Colors} from "../colors";
 
 type Props = {

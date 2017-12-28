@@ -3,7 +3,7 @@
 import React, {Component} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {connect} from "react-redux";
-import {activityFeedProps, MainBackground, TRANSPARENT_SPACER} from "../UIComponents";
+import {activityFeedProps} from "../UIComponents";
 import Immutable from 'seamless-immutable';
 import * as Api from "../../managers/Api";
 import Feed from "../components/feed";

@@ -1,10 +1,9 @@
 // @flow
 
 import React, {Component} from 'react';
-import {View, Image} from 'react-native';
+import {Image, View} from 'react-native';
 import {Colors} from "./colors";
 import User from "react-native-firebase/lib/modules/auth/user";
-import Feed from "./components/feed";
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}

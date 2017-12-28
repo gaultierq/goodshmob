@@ -12,6 +12,7 @@ import {buildNonNullData} from "../../helpers/DataUtils";
 import * as Nav from "../Nav";
 import Closable from "./closable";
 import {Colors} from "../colors";
+import GTouchable from "../GTouchable";
 
 type Props = {
     itemId: Id,
@@ -50,23 +51,23 @@ class ShareScreen extends Component<Props, State> {
                                height: 60,}}/>
                 </View>
                 <View style={{height: 300, margin: 16}}>
-                    <TouchableOpacity
+                    <GTouchable
                         style={styles.button}
                         onPress={()=>this.copyToClipboard(item)}>
                         <Image source={require('../../img/link_icon.png')}
                                resizeMode="contain"
                                style={styles.image}/>
                         <Text style={styles.buttonText}>COPIER LE LIEN</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
+                    </GTouchable>
+                    <GTouchable
                         style={styles.button}
                         onPress={()=>this.send(item)}>
                         <Image source={require('../../img/network.png')}
                                resizeMode="contain"
                                style={styles.image}/>
                         <Text style={styles.buttonText}>ENVOYER À UN {"\n"}AUTRE {"\n"}GOODSHER</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
+                    </GTouchable>
+                    <GTouchable
                         style={styles.button}
                         onPress={()=>this.share(item)}>
                         <Image source={require('../../img/share_icon.png')}
@@ -82,7 +83,7 @@ class ShareScreen extends Component<Props, State> {
                             </View>
                         </View>
 
-                    </TouchableOpacity>
+                    </GTouchable>
                 </View>
             </Closable>
         );

@@ -8,6 +8,7 @@ import type {Activity, i18Key, List, User} from "../../../types";
 import UserActivity from "./UserActivity";
 import {fullName} from "../../../helpers/StringUtils";
 import {Colors} from "../../colors";
+import GTouchable from "../../GTouchable";
 
 type Props = {
     activity: Activity,
@@ -84,12 +85,12 @@ export default class ActivityDescription extends React.Component<Props, State> {
                     color: Colors.greyishBrown,
                     marginRight: 4
                 }}>{i18n.t(key)}</Text>
-                <TouchableOpacity onPress={press}>
+                <GTouchable onPress={press}>
                     <Text
                         style={UI.TEXT_LIST}>
                         {targetName}
                     </Text>
-                </TouchableOpacity>
+                </GTouchable>
             </View>
 
             {
@@ -120,7 +121,7 @@ export default class ActivityDescription extends React.Component<Props, State> {
 
     renderFollowButton(target) {
         return target.primary ?
-            <TouchableOpacity>
+            <GTouchable>
                 <Text style={{
                     fontSize: 9,
 
@@ -130,15 +131,15 @@ export default class ActivityDescription extends React.Component<Props, State> {
                     borderWidth: StyleSheet.hairlineWidth,
                     borderColor: Colors.greyishBrown
                 }}>{i18n.t("activity_item.buttons.unfollow_list")}</Text>
-            </TouchableOpacity>
+            </GTouchable>
             :
-            <TouchableOpacity
+            <GTouchable
                 style={{backgroundColor: "white", padding: 5, borderRadius: 5}}>
                 <Text style={{
                     fontSize: 9,
 
                     color: Colors.blue
                 }}>{i18n.t("activity_item.buttons.follow_list")}</Text>
-            </TouchableOpacity>;
+            </GTouchable>;
     }
 }

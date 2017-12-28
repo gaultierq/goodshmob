@@ -5,7 +5,6 @@ import {sanitizeActivityType} from "../../helpers/DataUtils";
 import type {ActivityType, Id} from "../../types";
 import type {PendingAction} from "../../helpers/ModelUtils";
 import {pendingActionWrapper} from "../../helpers/ModelUtils";
-import {Call} from "../../managers/Api";
 
 
 export function fetchActivity(activityId: Id, activityType: ActivityType, options?:any = {}) {

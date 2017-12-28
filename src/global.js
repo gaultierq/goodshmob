@@ -5,9 +5,7 @@ import _i18n from './i18n/i18n'
 import Config from 'react-native-config'
 import {superLog as _superLog} from './helpers/DebugUtils'
 
-import {
-    Platform, Dimensions
-} from 'react-native';
+import {Dimensions, Platform} from 'react-native';
 
 declare var i18n: any;
 declare var _: any;

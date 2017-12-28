@@ -21,6 +21,7 @@ import Screen from "../components/Screen";
 import type {SearchCategory} from "./search";
 import SearchScreen from "./search";
 import {SearchStyles} from "../UIStyles";
+import GTouchable from "../GTouchable";
 
 type Props = NavigableProps & {
 };
@@ -48,13 +49,13 @@ export default class HomeSearchScreen extends Screen<Props, State> {
             if (isLineup) {
                 let lineup: List = item;
                 return (
-                    <TouchableOpacity
+                    <GTouchable
                         onPress={() => this.onLineupPressed(lineup)}
                     >
                         <View>
                             <LineupCell lineup={lineup}/>
                         </View>
-                    </TouchableOpacity>
+                    </GTouchable>
                 )
             }
             else {
@@ -66,9 +67,9 @@ export default class HomeSearchScreen extends Screen<Props, State> {
                 if (!resource) return null;
 
                 return (
-                    <TouchableOpacity onPress={()=>this.onSavingPressed(saving)}>
+                    <GTouchable onPress={()=>this.onSavingPressed(saving)}>
                         <ItemCell item={resource}/>
-                    </TouchableOpacity>
+                    </GTouchable>
 
                 )
             }

@@ -5,16 +5,17 @@ import React from 'react';
 import {Alert, Image, Linking, Platform, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import type {Activity, ActivityType, Id, Saving, Url} from "../../../types";
 import {connect} from "react-redux";
-import {currentGoodshboxId, currentUserId} from "../../../managers/CurrentUser";
+import {currentGoodshboxId} from "../../../managers/CurrentUser";
+import * as activityAction from "../actions";
 import {unsave} from "../actions";
 import Snackbar from "react-native-snackbar"
 import {toUppercase} from "../../../helpers/StringUtils";
 import {buildNonNullData} from "../../../helpers/DataUtils";
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
 import ActionRights from "../../rights";
-import * as activityAction from "../actions";
 import {CREATE_COMMENT} from "../../screens/comments";
 import {CREATE_LIKE, DELETE_LIKE} from "../actionTypes";
+import GTouchable from "../../GTouchable";
 
 export type ActivityActionType = 'comment'| 'like'| 'unlike'| 'share'| 'save'| 'unsave'| 'see'| 'buy'| 'answer';
 const ACTIONS = ['comment', 'like', 'unlike','share', 'save', 'unsave', 'see', 'buy', 'answer'];
@@ -220,13 +221,13 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
     renderButton(img: Url, text: string, handler: ()=>void, active:boolean = false) {
         let color = active ? Colors.green: Colors.greyishBrown;
-        return (<TouchableOpacity onPress={handler}>
+        return (<GTouchable onPress={handler}>
                 <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 6}}>
 
                     <Image source={img} style={{width: 24, height: 24, margin: 8, resizeMode: 'contain', tintColor: color}}/>
                     <Text style={{ textAlign: 'center', fontSize: 10, color: color}}>{text}</Text>
                 </View>
-            </TouchableOpacity>
+            </GTouchable>
         );
     }
 

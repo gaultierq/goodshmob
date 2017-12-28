@@ -1,4 +1,3 @@
-
 import {currentUserId} from "./managers/CurrentUser";
 
 const homeScreen = {

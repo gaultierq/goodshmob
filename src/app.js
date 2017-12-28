@@ -14,7 +14,6 @@ import immutableTransform from './immutableTransform'
 import {REHYDRATE} from 'redux-persist/constants'
 import i18n from './i18n/i18n'
 import * as CurrentUser from './managers/CurrentUser'
-import {currentUser} from './managers/CurrentUser'
 import {Client} from 'bugsnag-react-native';
 import * as globalProps from 'react-native-global-props';
 import * as notification from './managers/notification';

@@ -11,6 +11,7 @@ import ApiAction from "../../helpers/ApiAction";
 import type {Id, Item, User} from "../../types";
 import {buildData} from "../../helpers/DataUtils";
 import Screen from "../components/Screen";
+import GTouchable from "../GTouchable";
 
 type Props = {
     userId: Id,
@@ -71,7 +72,7 @@ export default class FriendsScreen extends Screen<Props, State> {
     renderItem(item: Item) : Node {
         let user = buildData(this.props.data, "users", item.id);
         return (
-            <TouchableOpacity onPress={()=> {
+            <GTouchable onPress={()=> {
 
                 this.props.navigator.showModal({
                     screen: 'goodsh.UserSheetScreen', // unique ID registered with Navigation.registerScreen
@@ -99,7 +100,7 @@ export default class FriendsScreen extends Screen<Props, State> {
 
             }}>
                 <FriendCell friend={user}/>
-            </TouchableOpacity>
+            </GTouchable>
         )
     }
 }

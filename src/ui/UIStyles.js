@@ -5,6 +5,7 @@ import * as React from "react";
 import {toUppercase} from "../helpers/StringUtils";
 import {Colors} from "./colors";
 import {SFP_TEXT_MEDIUM} from "./fonts";
+import GTouchable from "./GTouchable";
 
 export const NavStyles = {
     navBarButtonColor: Colors.greyishBrown,
@@ -149,9 +150,9 @@ export function renderSimpleLink(
     let color = disabled ? Colors.greyishBrown : Colors.blue;
 
     return (
-        <TouchableOpacity onPress={disabled ? null : onPress}>
+        <GTouchable onPress={disabled ? null : onPress}>
             <Text style={[{color}, style]}>{text}</Text>
-        </TouchableOpacity>
+        </GTouchable>
     );
 }
 

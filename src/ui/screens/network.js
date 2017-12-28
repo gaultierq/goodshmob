@@ -4,7 +4,7 @@ import React from 'react';
 import {ActivityIndicator, FlatList, Platform, RefreshControl, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
 import ActivityCell from "../activity/components/ActivityCell";
-import {activityFeedProps, MainBackground, TRANSPARENT_SPACER} from "../UIComponents"
+import {activityFeedProps} from "../UIComponents"
 import Feed from "../components/feed"
 import type {List, NavigableProps} from "../../types";
 import ActionButton from 'react-native-action-button';
@@ -15,6 +15,7 @@ import {FETCH_ACTIVITIES, fetchMyNetwork} from "../networkActions";
 import * as Nav from "../Nav";
 import Screen from "../components/Screen";
 import {Colors} from "../colors";
+import GTouchable from "../GTouchable";
 
 type Props = NavigableProps;
 
@@ -231,7 +232,7 @@ class NetworkScreen extends Screen<Props, State> {
                 let lineup: List = item;
                 //let handler = this.props.onLineupPressed ? () => this.props.onLineupPressed(item) : null;
                 return (
-                    <TouchableOpacity
+                    <GTouchable
                         //onPress={handler}
                     >
                         <View>
@@ -240,7 +241,7 @@ class NetworkScreen extends Screen<Props, State> {
                                 //onAddInLineupPressed={this.props.onAddInLineupPressed}
                             />
                         </View>
-                    </TouchableOpacity>
+                    </GTouchable>
                 )
             }
             else {

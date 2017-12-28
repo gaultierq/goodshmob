@@ -1,7 +1,6 @@
 // @flow
 
 import RNFirebase from 'react-native-firebase'
-import type {Deeplink} from "../types";
 import {Navigation} from 'react-native-navigation';
 import NavManager from "./NavManager";
 

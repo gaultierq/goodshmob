@@ -3,6 +3,7 @@ import type {Node} from 'react';
 import React, {Component} from 'react';
 import {Clipboard, Dimensions, Image, Share, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {CheckBox} from "react-native-elements";
+import GTouchable from "../GTouchable";
 
 type Props = {
     containerStyle:? any,
@@ -23,7 +24,7 @@ export default class Closable extends Component<Props, State> {
             <View style={[styles.container, containerStyle,
                 {height, width}]}
             >
-                <TouchableOpacity
+                <GTouchable
                     onPress={()=>this.props.onClickClose()}
                     style={{
                         position: 'absolute',
@@ -39,7 +40,7 @@ export default class Closable extends Component<Props, State> {
                                width: 30,
                                height: 30,}}
                     />
-                </TouchableOpacity>
+                </GTouchable>
 
                 {children}
             </View>

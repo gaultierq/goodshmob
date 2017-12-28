@@ -30,7 +30,7 @@ import Toast from 'react-native-root-toast';
 import {CONFIG_SET} from "../../reducers/dataReducer";
 import * as Nav from "../Nav";
 import {Colors} from "../colors";
-
+import GTouchable from "../GTouchable";
 
 type Props = {
     // userId: Id,
@@ -109,7 +109,7 @@ export default class Profile extends Component<Props, State> {
             }
 
         };
-        return <TouchableOpacity onPress={handler}><Text>v1.0</Text></TouchableOpacity>
+        return <GTouchable onPress={handler}><Text>v1.0</Text></GTouchable>
     }
 
 
