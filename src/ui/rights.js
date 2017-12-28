@@ -24,11 +24,13 @@ export default class ActionRights {
     }
 
     canSave() {
-        return !this.isAsk() && this.isGoodshed2() && this.byMe();
+        if (!this.activity.resource) return false;
+        return !this.canUnsave();
     }
 
     canUnsave() {
-        return !this.isAsk() && this.isGoodshed2() && this.byMe();
+        if (!this.activity.resource) return false;
+        return this.isGoodshed2() && this.byMe();
     }
 
     liked() {
