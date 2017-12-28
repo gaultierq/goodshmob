@@ -38,6 +38,11 @@ import LineupTitle from "../components/LineupTitle";
 import Feed from "../components/feed";
 import LineupCellSaving from "../components/LineupCellSaving";
 
+import {
+    AppTour,
+    AppTourSequence,
+    AppTourView
+} from "react-native-material-showcase-ios";
 
 // let AppTour;
 // let AppTourSequence;
