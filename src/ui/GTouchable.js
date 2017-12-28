@@ -62,7 +62,8 @@ export default class GTouchable extends Component<Props, State>  {
             _onPress = onPress;
         }
 
-        return React.createElement(__IS_IOS__ ? TouchableOpacity : TouchableNativeFeedback, {onPress: _onPress, ...attributes});
+        // return React.createElement(__IS_IOS__ ? TouchableOpacity : TouchableNativeFeedback, {onPress: _onPress, ...attributes});
+        return React.createElement(TouchableOpacity, {onPress: _onPress, ...attributes});
     }
 
     execProtectedPress(now: ms, exec: ()=>void) {
