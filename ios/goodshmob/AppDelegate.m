@@ -1,6 +1,8 @@
 #import "AppDelegate.h"
 #import <CodePush/CodePush.h>
 #import <React/RCTBundleURLProvider.h>
+#import <Fabric/Fabric.h>
+#import <Answers/Answers.h>
 
 #import <Firebase.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
@@ -68,7 +70,8 @@
   
   [BugsnagReactNative start];
   [FIRApp configure];
-  
+  [Fabric with:@[[Answers class]]];
+
   return YES;
 }
 

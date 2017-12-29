@@ -4670,6 +4670,10 @@ react-native-elements@^0.18.4:
     opencollective "^1.0.3"
     prop-types "^15.5.8"
 
+react-native-fabric@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/react-native-fabric/-/react-native-fabric-0.5.1.tgz#e5eb65c56196355b41f230c14adcc9c4bcf60dda"
+
 "react-native-fbsdk@github:facebook/react-native-fbsdk#065507a":
   version "0.6.1"
   resolved "https://codeload.github.com/facebook/react-native-fbsdk/tar.gz/065507aa1d2b8b0b6cb50d13117694123f8303fa"

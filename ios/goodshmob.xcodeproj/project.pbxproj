@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -62,6 +61,8 @@
 		D087DD321FF363A20052651C /* MaterialShowcase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D087DD311FF363740052651C /* MaterialShowcase.framework */; };
 		D087DD331FF363A20052651C /* MaterialShowcase.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D087DD311FF363740052651C /* MaterialShowcase.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D08F4DF21F5E900C0018E2DD /* libReactNativeNavigation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D9D9891F5E8FAF003772C8 /* libReactNativeNavigation.a */; };
+		D0DBBF581FF5F4F700ABBCAB /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0DBBF2A1FF5F4F700ABBCAB /* Fabric.framework */; };
+		D0DBBF591FF5F4F700ABBCAB /* Answers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0DBBF571FF5F4F700ABBCAB /* Answers.framework */; };
 		D0DF636F1FB6C9050000AD5E /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0DF636E1FB6C9050000AD5E /* GameKit.framework */; };
 		D0E93E9A1FB55C5B003DB2BA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D0E93E991FB55C5B003DB2BA /* GoogleService-Info.plist */; };
 		D261BB129BE145FBBE97F010 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 61E1F585D8914B64BA2ED4CE /* Octicons.ttf */; };
@@ -493,6 +494,8 @@
 		CB77874F92F7495C904FBF9C /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
 		D087DD2C1FF363740052651C /* MaterialShowcase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MaterialShowcase.xcodeproj; path = "../node_modules/react-native-material-showcase-ios/ios/material-showcase-ios/MaterialShowcase.xcodeproj"; sourceTree = "<group>"; };
 		D0D9D95F1F5E8FAF003772C8 /* ReactNativeNavigation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeNavigation.xcodeproj; path = "../node_modules/react-native-navigation/ios/ReactNativeNavigation.xcodeproj"; sourceTree = "<group>"; };
+		D0DBBF2A1FF5F4F700ABBCAB /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		D0DBBF571FF5F4F700ABBCAB /* Answers.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Answers.framework; sourceTree = "<group>"; };
 		D0DF62B21FB58C0A0000AD5E /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		D0DF636E1FB6C9050000AD5E /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		D0E93E991FB55C5B003DB2BA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "goodshmob/GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -534,9 +537,11 @@
 				00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */,
 				139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */,
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
+				D0DBBF581FF5F4F700ABBCAB /* Fabric.framework in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				129FF040F3DF43CCADCB3C91 /* FBSDKCoreKit.framework in Frameworks */,
+				D0DBBF591FF5F4F700ABBCAB /* Answers.framework in Frameworks */,
 				2404ACFCBC2548068D09BA29 /* FBSDKShareKit.framework in Frameworks */,
 				E3378056004E45EDAE2E6BB8 /* FBSDKLoginKit.framework in Frameworks */,
 				2054F13072464CE0B7BFC292 /* libRNI18n.a in Frameworks */,
@@ -729,6 +734,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				D0DBBF571FF5F4F700ABBCAB /* Answers.framework */,
+				D0DBBF2A1FF5F4F700ABBCAB /* Fabric.framework */,
 				D087DD2C1FF363740052651C /* MaterialShowcase.xcodeproj */,
 				13B07FAE1A68108700A75B9A /* goodshmob */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -803,6 +810,7 @@
 				0172E0B5EAEF42B19DF6273D /* libRNFirebase.a */,
 				0709F72F103D467887885332 /* libRNDeviceInfo.a */,
 				BACB85B5C915456898EE135D /* libRNMaterialShowcase.a */,
+				47F386B5DEF0471E8A001BBD /* libSMXCrashlytics.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -965,6 +973,7 @@
 				7C18B1A907446F3764AE66C1 /* [CP] Embed Pods Frameworks */,
 				6C3FEE3CEEEA2E495DADA8B9 /* [CP] Copy Pods Resources */,
 				D087DD361FF363A20052651C /* Embed Frameworks */,
+				D0DBBED91FF5F3ED00ABBCAB /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1596,6 +1605,19 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-goodshmob/Pods-goodshmob-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		D0DBBED91FF5F3ED00ABBCAB /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Fabric.framework/run f32b1bdd9c41d0afb6bba08dd6085586ac9fee12 924dad942e36591bf66eef7a2252bb942137a6519250af4ac2de1c05190803e6";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1672,7 +1694,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1710,7 +1731,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1735,7 +1755,10 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 656VNMF77V;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../node_modules/react-native-navigation/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-i18n/ios",
@@ -1784,7 +1807,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 656VNMF77V;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../node_modules/react-native-navigation/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-i18n/ios",
