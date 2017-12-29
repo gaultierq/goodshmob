@@ -29,6 +29,7 @@ import Messenger from "./managers/Messenger"
 import {Colors} from "./ui/colors";
 import {SFP_TEXT_REGULAR} from "./ui/fonts";
 import NavManager from "./managers/NavManager";
+import Analytics from "./managers/Analytics";
 
 console.log(`staring app with env=${JSON.stringify(Config)}`);
 
@@ -205,6 +206,7 @@ export default class App {
         Statistics.init(this.store);
         Messenger.init();
         NavManager.init();
+        Analytics.init();
 
 
         if (!__IS_LOCAL__) {

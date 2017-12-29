@@ -1,7 +1,6 @@
 // @flow
 import {ScreenVisibilityListener as RNNScreenVisibilityListener} from 'react-native-navigation';
-var Fabric = require('react-native-fabric');
-var { Answers } = Fabric;
+import { Answers } from 'react-native-fabric';
 
 import Config from 'react-native-config'
 
@@ -32,13 +31,11 @@ class _Analytics implements Analytics {
         this.fabricInitialized = true;
     }
 
-    screen(screenName: string, param: any) {
+    screen(screen: string, param: any) {
+        console.log("Analytics:screen" + screen);
         if (this.fabricInitialized) {
-            // RNSegmentIOAnalytics.screen(screenName, param);
-            console.log("DEBUGGGG");
-            Answers.logCustom('Performed a custom event', { bigData: true });
+            Answers.logCustom('display screen', { screen });
         }
-
     }
 
     toString() {
