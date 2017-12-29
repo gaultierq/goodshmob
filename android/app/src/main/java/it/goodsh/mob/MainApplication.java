@@ -1,5 +1,6 @@
 package it.goodsh.mob;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 import com.facebook.CallbackManager;
 import com.facebook.appevents.AppEventsLogger;
@@ -12,6 +13,7 @@ import com.facebook.react.ReactApplication;
 import com.smixx.fabric.FabricPackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
+import io.fabric.sdk.android.Fabric;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import com.bugsnag.BugsnagReactNative;
@@ -75,6 +77,7 @@ public class MainApplication extends NavigationApplication implements ReactAppli
   @Override
   public void onCreate() {
     super.onCreate();
+    Fabric.with(this, new Crashlytics());
 
 
     // add this
