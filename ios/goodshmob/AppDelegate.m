@@ -8,6 +8,7 @@
 #import <Firebase.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <BugsnagReactNative/BugsnagReactNative.h>
+#import "ReactNativeConfig.h"
 
 // **********************************************
 // *** DON'T MISS: THE NEXT LINE IS IMPORTANT ***
@@ -69,10 +70,13 @@
   [[FBSDKApplicationDelegate sharedInstance] application:application
                            didFinishLaunchingWithOptions:launchOptions];
   
-  [BugsnagReactNative start];
+  
   [FIRApp configure];
-  [Fabric with:@[[Answers class], [Crashlytics class]]];
-
+  [BugsnagReactNative start];
+  
+  if ([ReactNativeConfig envFor:@"WITH_FABRIC"]) {
+    [Fabric with:@[[Answers class], [Crashlytics class]]];
+  }
 
   return YES;
 }

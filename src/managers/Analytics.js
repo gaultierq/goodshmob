@@ -1,7 +1,6 @@
 // @flow
 import {ScreenVisibilityListener as RNNScreenVisibilityListener} from 'react-native-navigation';
 import { Answers } from 'react-native-fabric';
-
 import Config from 'react-native-config'
 
 class _Analytics implements Analytics {
@@ -28,12 +27,15 @@ class _Analytics implements Analytics {
         //     // RNSegmentIOAnalytics.setup(segmentIOWriteKey, flushEverySecondsCount);
         //     // this.segmentInitialized = true;
         // }
-        this.fabricInitialized = true;
+        if (Config.WITH_FABRIC) {
+            //initialized in  native code
+            this.fabricInitialized = true;
+        }
     }
 
     screen(screen: string, param: any) {
-        console.log("Analytics:screen" + screen);
         if (this.fabricInitialized) {
+            console.log("Analytics:screen" + screen);
             Answers.logCustom('display screen', { screen });
         }
     }
