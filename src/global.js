@@ -24,6 +24,9 @@ export function init() {
 
     //retry after react-native update !
     // global.__ENABLE_BACK_HANDLER__ = true;
+    global.__IS_IOS__ = Platform.OS === 'ios';
+
+    if (!Config.ENV) throw `No .env file found. Try to run 'cp env.local .env && react-native run-${Platform.OS}'`;
 
     global.__DEBUG_PERFS__ = false;
     // global.__DEBUG_PERFS__ = true;
@@ -31,7 +34,7 @@ export function init() {
     global.__IS_PROD__= Config.ENV === 'PROD';
     global.__IS_DEV__= Config.ENV === 'DEV';
 
-    global.__IS_IOS__ = Platform.OS === 'ios';
+
     let {width, height} = Dimensions.get('window');
     global.__DEVICE_WIDTH__ = width;
     global.__DEVICE_HEIGHT__ = height;
