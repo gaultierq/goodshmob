@@ -38,11 +38,7 @@ import LineupTitle from "../components/LineupTitle";
 import Feed from "../components/feed";
 import LineupCellSaving from "../components/LineupCellSaving";
 
-import {
-    AppTour,
-    AppTourSequence,
-    AppTourView
-} from "react-native-material-showcase-ios";
+import {AppTour, AppTourSequence, AppTourView} from "react-native-material-showcase-ios";
 
 // let AppTour;
 // let AppTourSequence;
@@ -171,16 +167,31 @@ class HomeScreen extends Screen<Props, State> {
     componentDidMount() {
         setTimeout(() => {
             if (this.appTourTargets.length > 0) {
-                // let appTourSequence = new AppTourSequence();
-                // this.appTourTargets.forEach(appTourTarget => {
-                //     appTourSequence.add(appTourTarget);
-                // });
-                //
-                // AppTour.ShowSequence(appTourSequence);
+                let appTourSequence = new AppTourSequence();
+                this.appTourTargets.forEach(appTourTarget => {
+                    appTourSequence.add(appTourTarget);
+                });
+
+                AppTour.ShowSequence(appTourSequence);
             }
 
-        }, 5000);
+        });
     }
+
+    // render() {
+    //     return (
+    //         <View style={{ flex: 1, backgroundColor: 'blue' }}>
+    //             <View ref={ref=>{
+    //                 let appTourTarget = AppTourView.for(ref, {
+    //                     primaryText: 'This is a target button 1',
+    //                     secondaryText: 'We have the best targets, believe me'
+    //                 });
+    //                 this.appTourTargets.push(appTourTarget);
+    //             }}
+    //                   style={{ width: 100, height: 100,backgroundColor: 'red' }}/>
+    //         </View>
+    //     );
+    // }
 
     render() {
 
@@ -232,23 +243,26 @@ class HomeScreen extends Screen<Props, State> {
 
 
     renderFloatingButton() {
-        let floating = <ActionButton
-            buttonColor={Colors.green}
-            onPress={() => {
-                this.onFloatingButtonPressed()
-            }}
-            ref={ref=>{
-                // let appTourTarget = AppTourView.for(ref, {
-                //     primaryText: 'This is a target button 1',
-                //     secondaryText: 'We have the best targets, believe me'
-                // });
+        const newVar = ref=>{
+            let appTourTarget = AppTourView.for(ref, {
+                primaryText: 'This is a target button 1',
+                secondaryText: 'We have the best targets, believe me'
+            });
+            this.appTourTargets.push(appTourTarget);
+        };
+        // let floating = <ActionButton
+        //     buttonColor={Colors.green}
+        //     onPress={() => {
+        //         this.onFloatingButtonPressed()
+        //     }}
+        //     // ref={newVar}
+        // />;
 
-                //this.appTourTargets.push(appTourTarget);
-            }}
-        />;
+        return <View
+            ref={newVar}
+            style={{width: 100, height: 100, backgroundColor: 'red'}}/>;
 
-
-        return floating;
+        // return floating;
         //return appTourTarget;
     }
 
