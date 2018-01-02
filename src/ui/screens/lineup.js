@@ -15,6 +15,8 @@ import {currentUserId} from "../../managers/CurrentUser";
 import ActionButton from 'react-native-action-button';
 import {startAddItem} from "../Nav";
 import {Colors} from "../colors";
+import Screen from "./../components/Screen";
+
 
 type Props = {
     lineupId: string,
@@ -33,7 +35,7 @@ const DELETE_SAVING = ApiAction.create("delete_saving");
 @connect((state, ownProps) => ({
     data: state.data,
 }))
-class LineupScreen extends Component<Props, State> {
+class LineupScreen extends Screen<Props, State> {
 
 
     //titleSet because when navigating back, a render may change the nav bar title. this is a flaw in wix nav

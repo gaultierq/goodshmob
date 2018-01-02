@@ -16,6 +16,7 @@ import ActionRights, {getPendingLikeStatus} from "../../rights";
 import {CREATE_COMMENT} from "../../screens/comments";
 import {CREATE_LIKE, DELETE_LIKE} from "../actionTypes";
 import GTouchable from "../../GTouchable";
+import * as Nav from "../../Nav";
 
 export type ActivityActionType = 'comment'| 'like'| 'unlike'| 'share'| 'save'| 'unsave'| 'see'| 'buy'| 'answer';
 const ACTIONS = ['comment', 'like', 'unlike','share', 'save', 'unsave', 'see', 'buy', 'answer'];
@@ -266,12 +267,20 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     }
 
     execComment(activity: Activity) {
-        this.props.navigator.push({
+        this.props.navigator.showModal({
             screen: 'goodsh.CommentsScreen', // unique ID registered with Navigation.registerScreen
             title: "#Commentaires", // navigation bar title of the pushed screen (optional)
             passProps: {
                 activityId: activity.id,
                 activityType: activity.type
+            },
+            navigatorButtons: {
+                leftButtons: [
+                    {
+                        id: Nav.CLOSE_MODAL,
+                        title: "#Cancel"
+                    }
+                ],
             },
         });
     }

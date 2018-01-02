@@ -52,8 +52,6 @@ import GTouchable from "../GTouchable";
 // }
 
 
-
-
 type Props = {
     userId: Id,
     navigator: any
@@ -316,10 +314,18 @@ class HomeScreen extends Screen<Props, State> {
             <View>
                 {withLineupTitle && <GTouchable
                     onPress={() => {
-                        this.props.navigator.push({
+                        this.props.navigator.showModal({
                             screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
                             passProps: {
                                 lineupId: item.id,
+                            },
+                            navigatorButtons: {
+                                leftButtons: [
+                                    {
+                                        id: Nav.CLOSE_MODAL,
+                                        title: "#Cancel"
+                                    }
+                                ],
                             },
                         });
                     }}>
@@ -411,26 +417,34 @@ class HomeScreen extends Screen<Props, State> {
 
     onLineupPressed(lineup: List) {
         console.info("on linup pressed: " + JSON.stringify(lineup));
-        this.props.navigator.push({
+        this.props.navigator.showModal({
             screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
             passProps: {
                 lineupId: lineup.id,
+            },
+            navigatorButtons: {
+                leftButtons: [
+                    {
+                        id: Nav.CLOSE_MODAL,
+                        title: "#Cancel"
+                    }
+                ],
             },
         });
     }
 
     onSavingPressed(saving: Saving) {
-        this.props.navigator.push({
-            screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
-            title: "#Details", // navigation bar title of the pushed screen (optional)
-            titleImage: require('../../img2/headerLogoBlack.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
-            passProps: {activityId: saving.id, activityType: saving.type}, // Object that will be passed as props to the pushed screen (optional)
-            animated: true, // does the push have transition animation or does it happen immediately (optional)
-            animationType: 'slide-up', // 'fade' (for both) / 'slide-horizontal' (for android) does the push have different transition animation (optional)
-            backButtonTitle: undefined, // override the back button title (optional)
-            backButtonHidden: false, // hide the back button altogether (optional)
-            navigatorStyle: {}, // override the navigator style for the pushed screen (optional)
-            navigatorButtons: {} // override the nav buttons for the pushed screen (optional)
+        this.props.navigator.showModal({
+            screen: 'goodsh.ActivityDetailScreen',
+            passProps: {activityId: saving.id, activityType: saving.type},
+            navigatorButtons: {
+                leftButtons: [
+                    {
+                        id: Nav.CLOSE_MODAL,
+                        title: "#Cancel"
+                    }
+                ],
+            },
         });
         // }
     }

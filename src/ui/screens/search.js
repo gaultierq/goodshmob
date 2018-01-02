@@ -160,6 +160,9 @@ export default class SearchScreen extends Component<Props, State> {
                 case DEEPLINK_SEARCH_TEXT_CHANGED:
                     this.onSearchInputChange(payload);
                     break;
+                case DEEPLINK_SEARCH_SUBMITED:
+                    this.performSearch(this.state.input, 0);
+                    break;
                 case DEEPLINK_SEARCH_CLOSE:
                     // this.setState({isSearching: false});
                     break;
@@ -195,7 +198,8 @@ export default class SearchScreen extends Component<Props, State> {
     }
 
     onSearchInputChange(input: string) {
-        this.setState({input}, () => this.performSearch(input, 0));
+        this.setState({input});
+        // this.setState({input}, () => this.performSearch(input, 0));
     }
 
 
@@ -208,6 +212,7 @@ export default class SearchScreen extends Component<Props, State> {
     //     data: Array<List|Saving>,
     //     token: string
     // };
+
     performSearch(token: SearchToken, page: number) {
 
         let catType = this.getCurrentCategory().type;
@@ -364,6 +369,7 @@ type NavState = {
 };
 
 const DEEPLINK_SEARCH_TEXT_CHANGED = 'DEEPLINK_SEARCH_TEXT_CHANGED';
+const DEEPLINK_SEARCH_SUBMITED = 'DEEPLINK_SEARCH_SUBMITED';
 const DEEPLINK_SEARCH_CLOSE = 'DEEPLINK_SEARCH_CLOSE';
 
 //connect -> redux
@@ -395,6 +401,7 @@ export class SearchNavBar extends Component<NavProps, NavState> {
                 autoFocus
                 lightTheme
                 onChangeText={this.onChangeText.bind(this)}
+                onSubmitEditing={this.submit.bind(this)}
                 onClearText={this.onClearText.bind(this)}
                 placeholder={i18n.t('search')}
                 clearIcon={!!this.state.input && {color: '#86939e'}}
@@ -406,6 +413,12 @@ export class SearchNavBar extends Component<NavProps, NavState> {
             />
         );
 
+    }
+
+    submit() {
+        Navigation.handleDeepLink({
+            link: DEEPLINK_SEARCH_SUBMITED,
+        });
     }
 
     onChangeText(input: string) {

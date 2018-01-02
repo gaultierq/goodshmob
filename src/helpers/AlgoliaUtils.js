@@ -34,7 +34,8 @@ class AlgoliaClient {
                 if (!auth) {
                     reject("waiting for auth state");
                 }
-                else if (auth.algoliaToken) {
+                //TODO: use algolia token
+                else if (auth.algoliaToken || true) {
                     let algoliaToken = auth.algoliaToken;
 
                     algoliaToken = 'c80385095ff870f5ddf9ba25310a9d5a';
