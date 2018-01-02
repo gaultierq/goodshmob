@@ -12,12 +12,14 @@ import {
     TouchableWithoutFeedback,
     View
 } from 'react-native';
+import Closable from "../screens/closable";
 
 type Props = {
     children: Node
 };
 
 type State = {
+    height: number
 };
 
 export default class Sheet extends React.Component<Props, State> {
@@ -28,6 +30,7 @@ export default class Sheet extends React.Component<Props, State> {
         super(props);
         let h = _.get(props, 'children.props.style.height');
         if (!_.isNumber(h)) throw "Sheet need its direct children to have a fixed height";
+        this.state = {height: h};
     }
 
     componentDidMount () {
@@ -49,7 +52,7 @@ export default class Sheet extends React.Component<Props, State> {
     render() {
         const translateY = this.animatedValue.interpolate({
             inputRange: [0, 1],
-            outputRange: [0, 270]
+            outputRange: [0, this.state.height]
         });
         const backgroundColor = this.animatedValue.interpolate({
             inputRange: [0, 1],

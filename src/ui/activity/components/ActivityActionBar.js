@@ -294,10 +294,9 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
         //TODO: rm platform specific rules when [1] is solved.
         //1: https://github.com/wix/react-native-navigation/issues/1502
-        let show = __IS_IOS__ ? navigator.showLightBox : navigator.showModal;
-        let hide = __IS_IOS__ ? navigator.dismissLightBox : navigator.dismissModal;
-        show({
+        navigator.showModal({
             screen: 'goodsh.ShareScreen', // unique ID registered with Navigation.registerScreen
+            animationType: 'none',
             style: {
                 backgroundBlur: "light", // 'dark' / 'light' / 'xlight' / 'none' - the type of blur on the background
                 tapBackgroundToDismiss: true // dismisses LightBox on background taps (optional)
@@ -306,7 +305,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                 itemId: resource.id,
                 itemType: resource.type,
                 containerStyle: {backgroundColor: __IS_IOS__ ? 'transparent' : 'white'},
-                onClickClose: hide
+                onClickClose: () => navigator.dismissModal({animationType: 'none',})
             },
             navigatorStyle: {navBarHidden: true},
         });

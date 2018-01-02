@@ -13,6 +13,8 @@ import * as Nav from "../Nav";
 import Closable from "./closable";
 import {Colors} from "../colors";
 import GTouchable from "../GTouchable";
+import Sheet from "../components/sheet";
+import ItemCell from "../components/ItemCell";
 
 type Props = {
     itemId: Id,
@@ -33,63 +35,71 @@ const mapStateToProps = (state, ownProps) => ({
 @connect(mapStateToProps)
 class ShareScreen extends Component<Props, State> {
 
+    static navigatorStyle = {
+        navBarHidden: true,
+        screenBackgroundColor: 'transparent',
+        modalPresentationStyle: 'overFullScreen',
+        tapBackgroundToDismiss: true
+    };
+
+
     render() {
         const {containerStyle, itemType, itemId, onClickClose} = this.props;
         const item = buildNonNullData(this.props.data, itemType, itemId);
 
         return (
-            <Closable
-                onClickClose={onClickClose}
-                containerStyle={containerStyle}
-            >
+            <Sheet navigator={this.props.navigator}>
+                <View style={{
+                    justifyContent: 'space-around',
+                    height: 375,
+                    backgroundColor: 'rgba(255,255,255,1)',
+                }}>
+                    <View>
+                        <ItemCell item={item}/>
+                    </View>
 
-                <View style={{margin: 16}}>
-                    <Image source={require('../../img/rounded_send_icon.png')}
-                           resizeMode="contain"
-                           style={{alignSelf: 'center',
-                               width: 60,
-                               height: 60,}}/>
-                </View>
-                <View style={{height: 300, margin: 16}}>
-                    <GTouchable
-                        style={styles.button}
-                        onPress={()=>this.copyToClipboard(item)}>
-                        <Image source={require('../../img/link_icon.png')}
-                               resizeMode="contain"
-                               style={styles.image}/>
-                        <Text style={styles.buttonText}>COPIER LE LIEN</Text>
-                    </GTouchable>
-                    <GTouchable
-                        style={styles.button}
-                        onPress={()=>this.send(item)}>
-                        <Image source={require('../../img/network.png')}
-                               resizeMode="contain"
-                               style={styles.image}/>
-                        <Text style={styles.buttonText}>ENVOYER À UN {"\n"}AUTRE {"\n"}GOODSHER</Text>
-                    </GTouchable>
-                    <GTouchable
-                        style={styles.button}
-                        onPress={()=>this.share(item)}>
-                        <Image source={require('../../img/share_icon.png')}
-                               resizeMode="contain"
-                               style={styles.image}/>
-                        <View>
-                            <Text style={styles.buttonText}>ENVOYER SUR</Text>
-                            <View style={{flexDirection: 'row'}}>
-                                {["message", "facebook-messenger", "email", "whatsapp", "dots-horizontal"]
-                                    .map((s)=>this.renderIcon(s))
-                                }
+                    <View style={{margin: 16, flexDirection: 'row', justifyContent: 'space-around'}}>
+                        <GTouchable
+                            style={styles.button}
+                            onPress={()=>this.copyToClipboard(item)}>
+                            <Image source={require('../../img2/copyLink.png')}
+                                   resizeMode="contain"
+                                   style={styles.image}/>
+                            <Text style={styles.buttonText}>#Copier le lien</Text>
+                        </GTouchable>
+                        <GTouchable
+                            style={styles.button}
+                            onPress={()=>this.send(item)}>
+                            <Image source={require('../../img2/sendToOther.png')}
+                                   resizeMode="contain"
+                                   style={styles.image}/>
+                            <Text style={styles.buttonText}>#Envoyer à un autre {"\n"}Goodsher</Text>
+                        </GTouchable>
+                        <GTouchable
+                            style={styles.button}
+                            onPress={()=>this.share(item)}>
+                            <Image source={require('../../img2/share.png')}
+                                   resizeMode="contain"
+                                   style={styles.image}/>
+                            <View>
+                                {/*<Text style={styles.buttonText}>#ENVOYER SUR</Text>*/}
+                                <View style={{flexDirection: 'row', justifyContent: 'center', width: 70}}>
+                                    {[/*"message", */"facebook-messenger", "email", "whatsapp"/*, "dots-horizontal"*/]
+                                        .map((s)=>this.renderIcon(s))
+                                    }
 
+                                </View>
                             </View>
-                        </View>
 
-                    </GTouchable>
+                        </GTouchable>
+                    </View>
+                    {/*</Closable>*/}
                 </View>
-            </Closable>
+            </Sheet>
         );
     }
     renderIcon(iconName: string) {
-        return <Icon key={iconName} name={iconName} color={Colors.green} size={16} style={styles.community} />;
+        return <Icon key={iconName} name={iconName} color={Colors.black} size={16} style={styles.community} />;
     }
 
     copyToClipboard(item:Item) {
@@ -148,22 +158,21 @@ class ShareScreen extends Component<Props, State> {
 
 const styles = StyleSheet.create({
     buttonText: {
-
-        color: 'black',
-        fontSize: 15,
-
+        color: Colors.black,
+        textAlign: 'center',
+        width: 70,
+        fontSize: 10,
     },
     image: {
         alignSelf: 'center',
-        width: 40,
-        height: 40,
-        marginRight: 14,
+        width: 68,
+        height: 68,
     },
     button: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        height: 50,
+        // flex: 1,
+        // flexDirection: 'row',
+        // alignItems: 'center',
+        // height: 50,
     },
     community: {
         margin: 3,

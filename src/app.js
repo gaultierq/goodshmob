@@ -116,6 +116,11 @@ export default class App {
             activeOpacity: 0.8
         });
 
+        // globalProps.setCustomView({
+            // backgroundColor: `rgba(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255}, 0.3)`,
+            // borderWidth: 1
+        // });
+
         // setCustomTouchableOpacity({
         //     underlayColor: "red"
         // });

@@ -28,20 +28,18 @@ export default class ItemCell extends React.Component<Props, State> {
 
         return (
             <View style={
-                { ...UI.CARD(8), ...UI.TP_MARGINS(8), padding: 8,
-                    flex: 1,
-                }}>
+                {padding: 8, flex: 1,}}>
                 <View style={
                     {
-                        flex: 1,
                         flexDirection: 'row',
-                        justifyContent: "flex-start"
+                        justifyContent: "flex-start",
+                        alignItems: 'center'
                     }}>
 
 
                     { image && <Image
                         source={{uri: image}}
-                        resizeMode='contain'
+                        resizeMode='cover'
                         style={[{
                             alignSelf: 'center',
                             height: 80,
