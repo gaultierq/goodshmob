@@ -357,6 +357,7 @@ class HomeScreen extends Screen<Props, State> {
             horizontal={true}
             // ItemSeparatorComponent={()=> <View style={{margin: 20}} />}
             contentContainerStyle={{paddingLeft: 15}}
+            showsHorizontalScrollIndicator={false}
             // cannotFetch={!super.isVisible()}
         />
     }
