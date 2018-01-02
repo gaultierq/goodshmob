@@ -5,6 +5,7 @@ import Snackbar from "react-native-snackbar"
 
 class _Messenger implements Messenger {
     id = Math.random();
+    snackDismissTimeout: number;
 
     constructor() {
     }
@@ -14,12 +15,30 @@ class _Messenger implements Messenger {
     }
 
     onMessage(event: any) {
-        console.debug("Messenger: on message");
+        console.debug(`${this.toString()}: on message: ${event}`);
 
         const {content, type, ...others} = event.target;
         switch (type) {
             case 'snack':
-                Snackbar.show({title: content});
+                //TODO: something with priority
+                let {priority} = others;
+
+                if (!this.snackDismissTimeout) {
+                    this.snackDismissTimeout = setTimeout(()=> {
+                        this.snackDismissTimeout = 0;
+                        console.info(`${this.toString()}: dismissing snack`);
+                        Snackbar.dismiss();
+                    }, 2000);
+
+                    console.info('Messenger: showing snack');
+                    Snackbar.show({
+                        title: content,
+                        duration: Snackbar.LENGTH_INDEFINITE,
+                    });
+
+
+                }
+
                 break;
             default:
                 throw `unsupported message type: ${type}`

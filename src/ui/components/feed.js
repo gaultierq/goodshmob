@@ -8,7 +8,7 @@ import {assertUnique} from "../../helpers/DataUtils";
 import ApiAction from "../../helpers/ApiAction";
 import * as Api from "../../managers/Api";
 import {isEmpty} from "lodash";
-import type {i18Key, Id, RequestState, Url} from "../../types";
+import type {i18Key, Id, ms, RequestState, Url} from "../../types";
 import {renderSimpleButton} from "../UIStyles";
 import i18n from '../../i18n/i18n'
 import type {ScreenVisibility} from "./Screen";
@@ -53,6 +53,8 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
     state = {firstLoad: 'idle'};
 
+    createdAt: ms;
+
     static defaultProps = {
         visibility: 'unknown'
     };
@@ -63,6 +65,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
     constructor(props: Props<T>) {
         super(props);
+        this.createdAt = Date.now();
         this.postFetchFirst();
         props.feedId && console.log(`constructing feed '${props.feedId}'`);
     }
@@ -219,6 +222,8 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         this.prefetch(lastEvent);
     };
 
+
+    //fetching next elements if only 5 rows remaining
     prefetch(lastEvent) {
 //
         let scrollY = lastEvent.contentOffset.y;
@@ -362,10 +367,13 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     renderFetchMoreLoader(ListFooterComponent: Node) {
+        //this is a hack: do not display load more loader right away
+        let recentlyCreated = Date.now() - this.createdAt < 2000;
+
         return (<View>
                 {ListFooterComponent}
                 {
-                    this.state.isFetchingMore === 'sending' && (
+                    this.state.isFetchingMore === 'sending' && !recentlyCreated && (
 
                         <View style={{flex:1, margin:12, justifyContent:'center'}}>
                             <Text style={{fontSize: 10, alignSelf: "center", marginRight: 8}}>{i18n.t('loadmore')}</Text>
