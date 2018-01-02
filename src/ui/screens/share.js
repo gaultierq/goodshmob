@@ -50,11 +50,11 @@ class ShareScreen extends Component<Props, State> {
         return (
             <Sheet navigator={this.props.navigator}>
                 <View style={{
-                    justifyContent: 'space-around',
+                    justifyContent: 'center',
                     height: 375,
                     backgroundColor: 'rgba(255,255,255,1)',
                 }}>
-                    <View>
+                    <View style={{height: 100, }}>
                         <ItemCell item={item}/>
                     </View>
 
