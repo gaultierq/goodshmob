@@ -31,6 +31,7 @@ import {SFP_TEXT_REGULAR} from "./ui/fonts";
 import NavManager from "./managers/NavManager";
 import Analytics from "./managers/Analytics";
 import * as appActions from "./auth/actions";
+import {currentUserId} from "./managers/CurrentUser";
 
 console.log(`staring app with env=${JSON.stringify(Config)}`);
 
@@ -258,8 +259,6 @@ export default class App {
             mode = currentUserId ? 'logged' : 'unlogged';
         }
 
-
-
         //TODO: use navigation to resolve the current screen
         if (this.mode !== mode) {
             let oldMode = this.mode;
@@ -291,7 +290,7 @@ export default class App {
                     if (this.bugsnag) {
                         //let {id, email, firstName, lastName} = currentUser();
                         // this.bugsnag.setUser(id, firstName + " " + lastName, email);
-                        this.bugsnag.setUser(id, '', '');
+                        this.bugsnag.setUser(currentUserId(), '', '');
                     }
                     this.startLogged(navigatorStyle);
                 }
