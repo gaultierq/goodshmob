@@ -4,13 +4,15 @@ import {fullName} from "../helpers/StringUtils";
 export const CLOSE_MODAL = 'close_modal';
 
 export const CANCELABLE_MODAL = {
-    leftButtons: [
+    rightButtons: [
         {
             id: CLOSE_MODAL,
-            title: "#Cancel"
+            icon: require('../img2/closeXGrey.png')
+            //title: "#Cancel"
+
         }
     ],
-    rightButtons: []
+    leftButtons: []
 };
 
 export function startAddItem(navigator: *, defaultLineupId: Id) {
