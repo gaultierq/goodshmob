@@ -188,8 +188,6 @@ export default class App {
         );
     }
 
-
-
     onStoreUpdate() {
         if (!this.initialized) {
             this.start();
@@ -316,7 +314,7 @@ export default class App {
             if (!userId) throw "wtf";
 
             let tabsStyle = { // optional, add this if you want to style the tab bar beyond the defaults
-                tabBarButtonColor: '#000', // optional, change the color of the tab icons and text (also unselected)
+                tabBarButtonColor: Colors.black, // optional, change the color of the tab icons and text (also unselected)
                 tabBarSelectedButtonColor: Colors.green, // optional, change the color of the selected tab icon and text (only selected)
                 tabBarBackgroundColor: 'white',
                 forceTitlesDisplay: false,

@@ -76,9 +76,6 @@ export class InteractionScreen extends Screen<Props, State> {
         let createdAt = activity.createdAt;
         let content = this.renderContentByType(activity);
 
-
-
-
         return (
             <GTouchable
                 onPress={() => {
