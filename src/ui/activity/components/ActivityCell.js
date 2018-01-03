@@ -96,6 +96,7 @@ export default class ActivityCell extends React.Component<Props, State> {
                             activity={activity}
                             liked={this.isLiked(activity)}
                             navigator={this.props.navigator}
+                            skipLineup={this.props.skipLineup}
                         />
                     </GTouchable>
 

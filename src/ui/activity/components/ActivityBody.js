@@ -14,8 +14,8 @@ import GTouchable from "../../GTouchable";
 type Props = {
     activity: Activity,
     onPressItem: (any) => void,
-    noGoodshButton?: boolean,
-    liked: boolean
+    skipLineup?: boolean,
+    liked: boolean,
 };
 
 type State = {
@@ -98,7 +98,13 @@ export default class ActivityBody extends React.Component<Props, State> {
         const color = Colors.greyish;
 
         const pa = 16;
-        return <View style={{flexDirection:'row', marginTop: 10}}>
+        const inLineup = i18n.t(key) + ' ' + targetName;
+        const tags = [];
+        if (!this.props.skipLineup) {
+            tags.push(inLineup);
+        }
+
+        return tags.map(tag=><View style={{flexDirection:'row', marginTop: 10}}>
             <GTouchable onPress={press}>
                 <Text
                     style={[{paddingLeft: pa, paddingRight: pa,
@@ -114,10 +120,10 @@ export default class ActivityBody extends React.Component<Props, State> {
                         fontSize: 13
 
                     }]}>
-                    {i18n.t(key) + ' ' + targetName}
+                    {tag}
                 </Text>
             </GTouchable>
-        </View>
+        </View>)
     }
 
 

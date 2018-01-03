@@ -37,7 +37,7 @@ export default class SaveScreen extends Component<Props, State> {
 
                 <CheckBox
                     right
-                    title='Visible par mes amis'
+                    title="#Visible par mes amis"
                     iconRight
                     size={16}
                     checkedColor={grey}

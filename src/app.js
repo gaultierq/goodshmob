@@ -73,7 +73,7 @@ const APP_STYLES = StyleSheet.create({
 });
 
 //dont know it doesnt work
-const __USE_CACHE_LOCAL__ = false;
+//const __USE_CACHE_LOCAL__ = false;
 
 export default class App {
 
