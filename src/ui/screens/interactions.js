@@ -133,7 +133,7 @@ export class InteractionScreen extends Screen<Props, State> {
             else {
                 let innerResource = resource.resource;
                 if (!innerResource) throw "No resource for " + JSON.stringify(activity);
-                let item_title = innerResource.title.toUpperCase();
+                let item_title = _.toUpper(innerResource.title);
 
                 return <Text style={{fontSize: 12}}>
                     {i18n.t(key, {username, what: item_title})}
