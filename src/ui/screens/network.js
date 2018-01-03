@@ -95,14 +95,7 @@ class NetworkScreen extends Screen<Props, State> {
                     passProps:{
                         style: {marginTop: 38},
                     },
-                    navigatorButtons: {
-                        leftButtons: [
-                            {
-                                id: Nav.CLOSE_MODAL,
-                                title: "#Cancel"
-                            }
-                        ],
-                    },
+                    navigatorButtons: Nav.CANCELABLE_MODAL,
                 });
 
 

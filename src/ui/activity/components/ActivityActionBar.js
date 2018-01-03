@@ -274,14 +274,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                 activityId: activity.id,
                 activityType: activity.type
             },
-            navigatorButtons: {
-                leftButtons: [
-                    {
-                        id: Nav.CLOSE_MODAL,
-                        title: "#Cancel"
-                    }
-                ],
-            },
+            navigatorButtons: Nav.CANCELABLE_MODAL,
         });
     }
 

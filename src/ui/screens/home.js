@@ -320,14 +320,7 @@ class HomeScreen extends Screen<Props, State> {
             passProps: {
                 lineupId: id,
             },
-            navigatorButtons: {
-                leftButtons: [
-                    {
-                        id: Nav.CLOSE_MODAL,
-                        title: "#Cancel"
-                    }
-                ],
-            },
+            navigatorButtons: Nav.CANCELABLE_MODAL,
         });
     }
 
@@ -431,14 +424,7 @@ class HomeScreen extends Screen<Props, State> {
             passProps: {
                 lineupId: lineup.id,
             },
-            navigatorButtons: {
-                leftButtons: [
-                    {
-                        id: Nav.CLOSE_MODAL,
-                        title: "#Cancel"
-                    }
-                ],
-            },
+            navigatorButtons: Nav.CANCELABLE_MODAL,
         });
     }
 
@@ -446,14 +432,7 @@ class HomeScreen extends Screen<Props, State> {
         this.props.navigator.showModal({
             screen: 'goodsh.ActivityDetailScreen',
             passProps: {activityId: saving.id, activityType: saving.type},
-            navigatorButtons: {
-                leftButtons: [
-                    {
-                        id: Nav.CLOSE_MODAL,
-                        title: "#Cancel"
-                    }
-                ],
-            },
+            navigatorButtons: Nav.CANCELABLE_MODAL,
         });
         // }
     }

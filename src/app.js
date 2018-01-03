@@ -355,6 +355,7 @@ export default class App {
                     // bottomTabBadgeBackgroundColor: 'green', // Optional, change badge background color. Android only
                     backButtonImage: require('./img2/leftBackArrowGrey.png'),
                     hideBackButtonTitle: true,
+                    ...navigatorStyle, //added when showing modals, on ios
                     ...tabsStyle,
                 },
                 // passProps: {

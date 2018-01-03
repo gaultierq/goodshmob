@@ -84,14 +84,7 @@ class _NavManager implements NavManager {
 
     showModal(modal: any) {
         Navigation.showModal({
-            navigatorButtons: {
-                leftButtons: [
-                    {
-                        id: Nav.CLOSE_MODAL,
-                        title: "#Cancel"
-                    }
-                ],
-            },
+            navigatorButtons: Nav.CANCELABLE_MODAL,
             ...modal,
         })
     }

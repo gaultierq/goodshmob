@@ -170,14 +170,7 @@ export default class Profile extends Component<Props, State> {
                             renderSimpleButton("#dev mode", () => this.props.navigator.showModal({
                                     screen: 'goodsh.DebugScreen', // unique ID registered with Navigation.registerScreen
                                     title: "#DevMenu", // navigation bar title of the pushed screen (optional)
-                                    navigatorButtons: {
-                                        leftButtons: [
-                                            {
-                                                id: Nav.CLOSE_MODAL,
-                                                title: "#Cancel"
-                                            }
-                                        ],
-                                    },
+                                    navigatorButtons: Nav.CANCELABLE_MODAL,
                                 }
                             ))
                         }
