@@ -23,11 +23,11 @@ export function logout(dispatch) {
     }, err => {console.error(err)});
 }
 
-export function login(token: string) {
+export function login(facebookAccessToken: string) {
     return new Api.Call()
         .withMethod('POST')
         .withRoute(`auth/facebook/generate_token`)
-        .withBody({auth: {access_token: token}})
+        .withBody({auth: {access_token: facebookAccessToken}})
         .disptachForAction2(actionTypes.USER_LOGIN);
 }
 

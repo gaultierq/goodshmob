@@ -9,7 +9,7 @@ import logger from 'redux-logger'
 
 import * as Api from './managers/Api';
 import {autoRehydrate, createTransform, persistStore} from 'redux-persist'
-import {AsyncStorage, Dimensions, StyleSheet, TouchableOpacity} from 'react-native'
+import {AsyncStorage, Dimensions, StyleSheet, TouchableOpacity, Alert} from 'react-native'
 import immutableTransform from './immutableTransform'
 import {REHYDRATE} from 'redux-persist/constants'
 import i18n from './i18n/i18n'
@@ -22,7 +22,7 @@ import * as UI from "./ui/UIStyles";
 import {init as initGlobal} from "./global";
 import {AlgoliaClient} from "./helpers/AlgoliaUtils";
 import {Statistics} from "./managers/Statistics";
-import {UPGRADE_CACHE} from "./auth/actionTypes";
+import {INIT_CACHE, UPGRADE_CACHE} from "./auth/actionTypes";
 import Config from 'react-native-config'
 import {Provider} from "react-redux";
 import Messenger from "./managers/Messenger"
@@ -30,6 +30,7 @@ import {Colors} from "./ui/colors";
 import {SFP_TEXT_REGULAR} from "./ui/fonts";
 import NavManager from "./managers/NavManager";
 import Analytics from "./managers/Analytics";
+import * as appActions from "./auth/actions";
 
 console.log(`staring app with env=${JSON.stringify(Config)}`);
 
@@ -75,13 +76,18 @@ const APP_STYLES = StyleSheet.create({
 //dont know it doesnt work
 //const __USE_CACHE_LOCAL__ = false;
 
+type AppMode = 'idle' | 'init_cache' | 'logged' | 'unlogged' | 'upgrading_cache' | 'unknown'
+
 export default class App {
 
-    logged = null;
+    mode: AppMode = 'idle';
+
     initialized: boolean; //is app prepared
 
     store;
     bugsnag;
+
+    upgradingCache: boolean = false;
 
 
     constructor() {
@@ -193,7 +199,7 @@ export default class App {
             this.start();
         }
 
-        this.resolveLogged();
+        this.resolveMode();
     }
 
     start() {
@@ -230,170 +236,190 @@ export default class App {
 
 
         this.prepareUI();
-
-        //invalidate cache if needed
-        let cacheVersion = this.store.getState().config.cacheVersion;
-        if (cacheVersion != Config.CACHE_VERSION) {
-
-            console.info(`cache is outdated. Upgrading ${cacheVersion}->${Config.CACHE_VERSION}`);
-            //invalidate and set cache
-            this.store.dispatch({type: UPGRADE_CACHE, newCacheVersion: Config.CACHE_VERSION});
-        }
-
         this.initialized = true;
         console.info("App initialized.");
     }
 
-    resolveLogged() {
+    resolveMode() {
+        let mode: AppMode = 'unknown';
 
-        console.debug("resolving logged");
 
-        const {currentUserId} = this.store.getState().auth;
+        //invalidate cache if needed
+        let cacheVersion = this.store.getState().config.cacheVersion;
 
-        let id = CurrentUser.currentUserId();
-
-        if (id !== currentUserId) {
-            console.warn(`inconsistent current_user_id: ${id}!=${currentUserId}`);
-            return;
+        if (!cacheVersion) {
+            mode = 'init_cache';
         }
-
-        let logged = !!currentUserId;
-
-
-        if (logged) {
-            notification.load();
-
-            if (this.bugsnag) {
-                //let {id, email, firstName, lastName} = currentUser();
-                // this.bugsnag.setUser(id, firstName + " " + lastName, email);
-                this.bugsnag.setUser(id, '', '');
-            }
-
+        else if (this.upgradingCache  || cacheVersion < Config.CACHE_VERSION) {
+            mode = 'upgrading_cache';
         }
         else {
-            //TODO: notification => stop listening
-            if (this.bugsnag) {
-                this.bugsnag.clearUser();
-            }
-
+            const {currentUserId} = this.store.getState().auth;
+            mode = currentUserId ? 'logged' : 'unlogged';
         }
+
 
 
         //TODO: use navigation to resolve the current screen
-        if (this.logged !== logged) {
-            this.logged = logged;
-            this.startApp(logged);
+        if (this.mode !== mode) {
+            let oldMode = this.mode;
+            this.mode = mode;
+
+            this.onAppModeChanged(oldMode);
         }
     }
 
-    startApp(logged: boolean) {
-        const testScreen = require("./testScreen").default;
-        console.debug(`starting app logged=${logged}, test=${(!!testScreen)}`);
+    //type AppMode = 'idle' | 'logged' | 'unlogged' | 'upgrading_cache'
 
+    onAppModeChanged(oldMode: AppMode) {
+
+        console.debug(`mode changed: new mode=${this.mode} (old mode=${oldMode})`);
+
+        const testScreen = require("./testScreen").default;
         let navigatorStyle = {...UI.NavStyles};
 
-        if (!logged) {
-            Navigation.startSingleScreenApp({
-                screen: {
-                    label: 'Login',
-                    screen: 'goodsh.LoginScreen',
-                    navigatorStyle: {
-                        ...navigatorStyle,
-                        navBarHidden: true,
-                    }
+        switch (this.mode) {
+            case 'idle':
+                break;
+            case 'logged':
+                if (__IS_LOCAL__ && testScreen) {
+                    Object.assign(testScreen.screen, {navigatorStyle});
+                    Navigation.startSingleScreenApp(testScreen);
                 }
-            });
+                else {
+                    notification.load();
+                    if (this.bugsnag) {
+                        //let {id, email, firstName, lastName} = currentUser();
+                        // this.bugsnag.setUser(id, firstName + " " + lastName, email);
+                        this.bugsnag.setUser(id, '', '');
+                    }
+                    this.startLogged(navigatorStyle);
+                }
+                break;
+            case 'unlogged':
+                //TODO: notification => stop listening
+                if (this.bugsnag) {
+                    this.bugsnag.clearUser();
+                }
+                this.startUnlogged(navigatorStyle);
+                break;
+            case 'init_cache':
+                this.store.dispatch({type: INIT_CACHE, newCacheVersion: Config.CACHE_VERSION});
+                break;
+            case 'upgrading_cache':
+                this.upgradingCache = true;
+                this.store.dispatch({type: UPGRADE_CACHE, newCacheVersion: Config.CACHE_VERSION});
+                this.store.dispatch(appActions.me()).then(() => {
+                    this.upgradingCache = false;
+                    this.resolveMode()
+                });
+
+                //TODO: move to messenger
+                Alert.alert(
+                    '#Mise à jour',
+                    'Mise à jour de votre app, un instant svp...',
+                    [],
+                    { cancelable: false }
+                );
+                break;
         }
-        else if (__IS_LOCAL__ && testScreen) {
-            Object.assign(testScreen.screen, {navigatorStyle});
-            Navigation.startSingleScreenApp(testScreen);
-        }
-        else {
-            //return;
-            let userId = CurrentUser.currentUserId();
-            if (!userId) throw "wtf";
+    }
 
-            let tabsStyle = { // optional, add this if you want to style the tab bar beyond the defaults
-                tabBarButtonColor: Colors.black, // optional, change the color of the tab icons and text (also unselected)
-                tabBarSelectedButtonColor: Colors.green, // optional, change the color of the selected tab icon and text (only selected)
-                tabBarBackgroundColor: 'white',
-                forceTitlesDisplay: false,
-                tabBarShowLabels: 'hidden',
-                initialTabIndex: 0,
-            };
+    startLogged(navigatorStyle) {
+        let userId = CurrentUser.currentUserId();
+        if (!userId) throw "wtf";
+
+        let tabsStyle = { // optional, add this if you want to style the tab bar beyond the defaults
+            tabBarButtonColor: Colors.black, // optional, change the color of the tab icons and text (also unselected)
+            tabBarSelectedButtonColor: Colors.green, // optional, change the color of the selected tab icon and text (only selected)
+            tabBarBackgroundColor: 'white',
+            forceTitlesDisplay: false,
+            tabBarShowLabels: 'hidden',
+            initialTabIndex: 0,
+        };
 
 
+        Navigation.startTabBasedApp({
+            tabs: [
+                {
+                    label: i18n.t('tabs.home.label'),
+                    screen: 'goodsh.HomeScreen',
+                    icon: require('./img2/mystuff_Glyph.png'),
+                    selectedIcon: require('./img2/mystuff_Glyph_Active.png'),
+                    titleImage: require('./img2/headerLogoBlack.png'),
+                    title: i18n.t('tabs.home.title'),
+                    navigatorStyle
 
-            Navigation.startTabBasedApp({
-                tabs: [
-                    {
-                        label: i18n.t('tabs.home.label'),
-                        screen: 'goodsh.HomeScreen',
-                        icon: require('./img2/mystuff_Glyph.png'),
-                        selectedIcon: require('./img2/mystuff_Glyph_Active.png'),
-                        titleImage: require('./img2/headerLogoBlack.png'),
-                        title: i18n.t('tabs.home.title'),
-                        navigatorStyle
-
-                    },
-                    {
-                        label: '#Network', // tab label as appears under the icon in iOS (optional)
-                        screen: 'goodsh.NetworkScreen', // unique ID registered with Navigation.registerScreen
-                        icon: require('./img2/feed_Glyph.png'),
-                        selectedIcon: require('./img2/feed_Glyph_Pressed.png'),
-                        titleImage: require('./img2/headerLogoBlack.png'),
-                        title: '#Mon réseau', // title of the screen as appears in the nav bar (optional)
-                        navigatorStyle
-                    },
-                ],
-                tabsStyle,
-                appStyle: {
-                    orientation: 'portrait', // Sets a specific orientation to the entire app. Default: 'auto'. Supported values: 'auto', 'landscape', 'portrait'
-                    // bottomTabBadgeTextColor: 'red', // Optional, change badge text color. Android only
-                    // bottomTabBadgeBackgroundColor: 'green', // Optional, change badge background color. Android only
-                    backButtonImage: require('./img2/leftBackArrowGrey.png'),
-                    hideBackButtonTitle: true,
-                    ...navigatorStyle, //added when showing modals, on ios
-                    ...tabsStyle,
                 },
-                // passProps: {
-                //     drawerRight: {
-                //         onScreen: true,
+                {
+                    label: '#Network', // tab label as appears under the icon in iOS (optional)
+                    screen: 'goodsh.NetworkScreen', // unique ID registered with Navigation.registerScreen
+                    icon: require('./img2/feed_Glyph.png'),
+                    selectedIcon: require('./img2/feed_Glyph_Pressed.png'),
+                    titleImage: require('./img2/headerLogoBlack.png'),
+                    title: '#Mon réseau', // title of the screen as appears in the nav bar (optional)
+                    navigatorStyle
+                },
+            ],
+            tabsStyle,
+            appStyle: {
+                orientation: 'portrait', // Sets a specific orientation to the entire app. Default: 'auto'. Supported values: 'auto', 'landscape', 'portrait'
+                // bottomTabBadgeTextColor: 'red', // Optional, change badge text color. Android only
+                // bottomTabBadgeBackgroundColor: 'green', // Optional, change badge background color. Android only
+                backButtonImage: require('./img2/leftBackArrowGrey.png'),
+                hideBackButtonTitle: true,
+                ...navigatorStyle, //added when showing modals, on ios
+                ...tabsStyle,
+            },
+            // passProps: {
+            //     drawerRight: {
+            //         onScreen: true,
+            //         style: {marginTop: 38},
+            //     }
+            // },
+            drawer: { // optional, add this if you want a side menu drawer in your app
+                left: { // optional, define if you want a drawer from the left
+                    // screen: 'goodsh.FriendsScreen',
+                    screen: 'goodsh.ProfileScreen', // unique ID registered with Navigation.registerScreen
+                    enabled: false,
+                    passProps: {
+                        userId
+                    } // simple serializable object that will pass as props to all top screens (optional)
+                },
+                // right: { // optional, define if you want a drawer from the right
+                //     screen: 'goodsh.CommunityScreen', // unique ID registered with Navigation.registerScreen
+                //     // enabled: false,
+                //     passProps: {
                 //         style: {marginTop: 38},
-                //     }
+                //         onScreen: true //with current RNN version there are no way to detect if drawer is opened yet
+                //     } // simple serializable object that will pass as props to all top screens (optional)
                 // },
-                drawer: { // optional, add this if you want a side menu drawer in your app
-                    left: { // optional, define if you want a drawer from the left
-                        // screen: 'goodsh.FriendsScreen',
-                        screen: 'goodsh.ProfileScreen', // unique ID registered with Navigation.registerScreen
-                        enabled: false,
-                        passProps: {
-                            userId
-                        } // simple serializable object that will pass as props to all top screens (optional)
-                    },
-                    // right: { // optional, define if you want a drawer from the right
-                    //     screen: 'goodsh.CommunityScreen', // unique ID registered with Navigation.registerScreen
-                    //     // enabled: false,
-                    //     passProps: {
-                    //         style: {marginTop: 38},
-                    //         onScreen: true //with current RNN version there are no way to detect if drawer is opened yet
-                    //     } // simple serializable object that will pass as props to all top screens (optional)
-                    // },
-                    style: { // ( iOS only )
-                        drawerShadow: true, // optional, add this if you want a side menu drawer shadow
-                        contentOverlayColor: 'rgba(0,0,0,0.25)', // optional, add this if you want a overlay color when drawer is open
-                        leftDrawerWidth: 80, // optional, add this if you want a define left drawer width (50=percent)
-                        rightDrawerWidth: 80 // optional, add this if you want a define right drawer width (50=percent)
-                    },
-                    type: 'TheSideBar', // optional, iOS only, types: 'TheSideBar', 'MMDrawer' default: 'MMDrawer'
-                    animationType: 'slide-and-scale', //optional, iOS only, for MMDrawer: 'door', 'parallax', 'slide', 'slide-and-scale'
-                    // for TheSideBar: 'airbnb', 'facebook', 'luvocracy','wunder-list'
-                    // disableOpenGesture: true// optional, can the drawer be opened with a swipe instead of button
+                style: { // ( iOS only )
+                    drawerShadow: true, // optional, add this if you want a side menu drawer shadow
+                    contentOverlayColor: 'rgba(0,0,0,0.25)', // optional, add this if you want a overlay color when drawer is open
+                    leftDrawerWidth: 80, // optional, add this if you want a define left drawer width (50=percent)
+                    rightDrawerWidth: 80 // optional, add this if you want a define right drawer width (50=percent)
                 },
-                passProps: {}, // simple serializable object that will pass as props to all top screens (optional)
-                //animationType: 'slide-down' // optional, add transition animation to root change: 'none', 'slide-down', 'fade'
-            });
+                type: 'TheSideBar', // optional, iOS only, types: 'TheSideBar', 'MMDrawer' default: 'MMDrawer'
+                animationType: 'slide-and-scale', //optional, iOS only, for MMDrawer: 'door', 'parallax', 'slide', 'slide-and-scale'
+                // for TheSideBar: 'airbnb', 'facebook', 'luvocracy','wunder-list'
+                // disableOpenGesture: true// optional, can the drawer be opened with a swipe instead of button
+            },
+            passProps: {}, // simple serializable object that will pass as props to all top screens (optional)
+            //animationType: 'slide-down' // optional, add transition animation to root change: 'none', 'slide-down', 'fade'
+        });
+    }
 
-        }
+    startUnlogged(navigatorStyle) {
+        Navigation.startSingleScreenApp({
+            screen: {
+                label: 'Login',
+                screen: 'goodsh.LoginScreen',
+                navigatorStyle: {
+                    ...navigatorStyle,
+                    navBarHidden: true,
+                }
+            }
+        });
     }
 }

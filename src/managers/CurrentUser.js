@@ -13,8 +13,8 @@ class CurrentUser {
         return this.store ? this.store.getState().auth.currentUserId : null;
     }
 
-    user() {
-        return buildNonNullData(this.store.getState().data, "users", this.id());
+    user(assertNotNull: boolean = true) {
+        return buildNonNullData(this.store.getState().data, "users", this.id(), assertNotNull);
     }
 
     currentGoodshboxId() {
@@ -41,8 +41,8 @@ export function currentUserId() : Id {
     return instance.id();
 }
 
-export function currentUser() : User {
-    return instance.user();
+export function currentUser(assertNotNull: boolean = true) : User {
+    return instance.user(assertNotNull);
 }
 
 export function currentGoodshboxId() {
