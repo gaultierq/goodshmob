@@ -49,6 +49,7 @@ if (!__IS_LOCAL__) {
 //     rehydrated: hydrated,
 // });
 
+
 const appReducer = (state = {}, action) => {
     switch (action.type) {
         case REHYDRATE:
@@ -70,6 +71,9 @@ const APP_STYLES = StyleSheet.create({
         color: Colors.black,
     }
 });
+
+//dont know it doesnt work
+const __USE_CACHE_LOCAL__ = false;
 
 export default class App {
 
@@ -98,7 +102,6 @@ export default class App {
 
     prepareUI() {
 
-
         const {height, width} = Dimensions.get('window');
         console.info(`window dimensions=${width}x${height}`);
 
@@ -117,8 +120,8 @@ export default class App {
         });
 
         // globalProps.setCustomView({
-            // backgroundColor: `rgba(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255}, 0.3)`,
-            // borderWidth: 1
+        // backgroundColor: `rgba(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255}, 0.3)`,
+        // borderWidth: 1
         // });
 
         // setCustomTouchableOpacity({
@@ -170,9 +173,10 @@ export default class App {
             // whitelist: ['auth','device']
         };
 
-        // if (!__IS_LOCAL__ || !USE_CACHE_LOCAL) {
-        // persistConfig = {...persistConfig, whitelist: ['auth', 'device', 'stat', 'config']};
-        // }
+        if (!__IS_LOCAL__ || !__USE_CACHE_LOCAL__) {
+            console.log(`staring app with env3`);
+            persistConfig = {...persistConfig, whitelist: ['auth', 'device', 'stat', 'config']};
+        }
 
         persistStore(this.store,
             persistConfig,

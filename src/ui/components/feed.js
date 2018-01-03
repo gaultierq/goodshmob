@@ -125,6 +125,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         const {
             sections,
             data,
+            style,
             renderItem,
             fetchSrc,
             hasMore,
@@ -132,7 +133,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             ListHeaderComponent,
             ListFooterComponent,
             feedId,
-
+            renderSectionHeader,
             ...attributes
         } = this.props;
 
@@ -162,8 +163,9 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             onEndReached: this.onEndReached.bind(this),
             onEndReachedThreshold: 0.1,
             ListFooterComponent: !firstEmptyLoader && this.renderFetchMoreLoader(ListFooterComponent),
-            style: {...this.props.style},
+            style: [{...style}, firstEmptyLoader ? {minHeight: 150} : {}],
             ListHeaderComponent: !firstEmptyLoader && ListHeaderComponent,
+            renderSectionHeader: !firstEmptyLoader && renderSectionHeader,
             onScroll: this._handleScroll,
             ...attributes
         };

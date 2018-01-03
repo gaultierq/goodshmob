@@ -35,6 +35,8 @@ export function init() {
     global.__IS_DEV__= Config.ENV === 'DEV';
 
 
+    global.__USE_CACHE_LOCAL__= !!Config.USE_CACHE_LOCAL;
+
     let {width, height} = Dimensions.get('window');
     global.__DEVICE_WIDTH__ = width;
     global.__DEVICE_HEIGHT__ = height;
