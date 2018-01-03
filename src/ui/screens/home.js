@@ -247,21 +247,13 @@ class HomeScreen extends Screen<Props, State> {
     renderFloatingButton() {
 
         return (
-            <View style={{position: "absolute", width: "100%", height: "100%",}}>
-                <View
-                    style={{position: "absolute", bottom: 30, right: 30, width: 56, height: 56, zIndex: -1}}
-                    //ref={newVar}
-                />
-                <ActionButton
-                    buttonColor={Colors.green}
-                    onPress={() => {
-                        this.onFloatingButtonPressed()
-                    }}
-                    mainRef={this._targetRef("#Save your goodsh", "#Click here to add your first goodsh!")}
-
-                />
-
-            </View>
+            <ActionButton
+                buttonColor={Colors.green}
+                onPress={() => {
+                    this.onFloatingButtonPressed()
+                }}
+                mainRef={this._targetRef("#Save your goodsh", "#Click here to add your first goodsh!")}
+            />
         );
     }
 
