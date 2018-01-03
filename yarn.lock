@@ -56,8 +56,8 @@
     to-fast-properties "^2.0.0"
 
 "@types/react@^16.0.20":
-  version "16.0.31"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.0.31.tgz#5285da62f3ac62b797f6d0729a1d6181f3180c3e"
+  version "16.0.32"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.0.32.tgz#9f23e534d1c1b7ce8cb4f034b449cfc220375888"
 
 abab@^1.0.3:
   version "1.0.4"
@@ -2698,8 +2698,8 @@ https-proxy-agent@1, https-proxy-agent@^1.0.0:
     extend "3"
 
 i18n-js@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/i18n-js/-/i18n-js-3.0.2.tgz#d14cff2562758e7d30d34ddd58dd12d53fd07b5f"
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/i18n-js/-/i18n-js-3.0.3.tgz#f537b2bd1e2801eee4f4728a17189ef0991c0270"
 
 iconv-lite@0.4.11:
   version "0.4.11"
@@ -5008,8 +5008,8 @@ redux-logger@^3.0.6:
     deep-diff "^0.3.5"
 
 redux-object@^0.5.3:
-  version "0.5.4"
-  resolved "https://registry.yarnpkg.com/redux-object/-/redux-object-0.5.4.tgz#907af02ca83fc713ab645a165c75ed208d387b57"
+  version "0.5.5"
+  resolved "https://registry.yarnpkg.com/redux-object/-/redux-object-0.5.5.tgz#25c1e5aabea0ab77cfcc6ece5a5137e08dc0b918"
 
 redux-persist@^4.10.2:
   version "4.10.2"

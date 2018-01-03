@@ -38,6 +38,7 @@ import LineupTitle from "../components/LineupTitle";
 import Feed from "../components/feed";
 import LineupCellSaving from "../components/LineupCellSaving";
 import GTouchable from "../GTouchable";
+import AddLineupComponent from "../components/addlineup";
 
 // let AppTour;
 // let AppTourSequence;
@@ -191,17 +192,19 @@ class HomeScreen extends Screen<Props, State> {
                         visibility={super.getVisibility()}
                         sectionMaker={(lineups)=> {
                             const goodshbox = _.head(lineups);
-                            let savingCount = _.get(goodshbox, `meta.savings-count`, null);
+                            let savingCount = _.get(goodshbox, `meta.savingsCount`, null) || 0;
                             return [
                                 {
                                     data: goodshbox ? [goodshbox] : [],
                                     title: "#All my goodsh",
                                     subtitle: ` (${savingCount})`,
+                                    onPress: () => this.seeLineup(goodshbox.id),
                                     renderItem: ({item})=>this.renderListItem(item)
                                 },
                                 {
                                     data: _.slice(lineups, 1),
                                     title: "#My lineups",
+                                    renderSectionHeaderChildren:() => <AddLineupComponent/>,
                                     renderItem: ({item})=>this.renderListItem(item, {withMenuButton: true, withLineupTitle: true})
                                 },
                             ];
@@ -245,25 +248,29 @@ class HomeScreen extends Screen<Props, State> {
         //return appTourTarget;
     }
 
-    renderSectionHeader({title, subtitle}) {
-        return <View style={{
-            backgroundColor: Colors.white,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            paddingLeft: 15,
-            paddingRight: 15,
-            paddingTop: 15,
-            paddingBottom: 15,
-        }}>
-            <Text style={{
-                fontSize: 20,
-                fontFamily: SFP_TEXT_MEDIUM
+    renderSectionHeader({title, subtitle, onPress, renderSectionHeaderChildren}) {
+        return (<GTouchable
+            disabled={!onPress}
+            onPress={onPress}>
+            <View style={{
+                backgroundColor: Colors.white,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                paddingLeft: 15,
+                paddingRight: 15,
+                paddingTop: 15,
+                paddingBottom: 15,
             }}>
-                {title}
-                {subtitle && <Text style={{fontSize: 16, color: Colors.greyish}}>{subtitle}</Text>}
-            </Text>
-            {/*{rightChildren}*/}
-        </View>
+                <Text style={{
+                    fontSize: 20,
+                    fontFamily: SFP_TEXT_MEDIUM
+                }}>
+                    {title}
+                    {subtitle && <Text style={{fontSize: 16, color: Colors.greyish}}>{subtitle}</Text>}
+                </Text>
+                {renderSectionHeaderChildren && renderSectionHeaderChildren()}
+            </View>
+        </GTouchable>);
     }
 
     _closeChangeNameModal = ()=> this.setState({changeLinupTitleId: null});
@@ -305,7 +312,23 @@ class HomeScreen extends Screen<Props, State> {
             })
             .then(()=> Snackbar.show({title: "#Liste modifiée"}))
             ;
+    }
 
+    seeLineup(id: Id) {
+        this.props.navigator.showModal({
+            screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
+            passProps: {
+                lineupId: id,
+            },
+            navigatorButtons: {
+                leftButtons: [
+                    {
+                        id: Nav.CLOSE_MODAL,
+                        title: "#Cancel"
+                    }
+                ],
+            },
+        });
     }
 
     renderListItem(item: List, options = {}) {
@@ -313,22 +336,7 @@ class HomeScreen extends Screen<Props, State> {
         return (
             <View>
                 {withLineupTitle && <GTouchable
-                    onPress={() => {
-                        this.props.navigator.showModal({
-                            screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
-                            passProps: {
-                                lineupId: item.id,
-                            },
-                            navigatorButtons: {
-                                leftButtons: [
-                                    {
-                                        id: Nav.CLOSE_MODAL,
-                                        title: "#Cancel"
-                                    }
-                                ],
-                            },
-                        });
-                    }}>
+                    onPress={() => this.seeLineup(item.id)}>
 
                     <View style={{flexDirection:'row', paddingLeft: 15, paddingRight: 15}}>
                         <LineupTitle lineup={item}/>
