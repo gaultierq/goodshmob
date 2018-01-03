@@ -37,22 +37,9 @@ import {SFP_TEXT_MEDIUM} from "../fonts";
 import LineupTitle from "../components/LineupTitle";
 import Feed from "../components/feed";
 import LineupCellSaving from "../components/LineupCellSaving";
+import util from 'util'
 
 import {AppTour, AppTourSequence, AppTourView} from "react-native-material-showcase-ios";
-
-// let AppTour;
-// let AppTourSequence;
-// let AppTourView;
-//
-// if (__IS_IOS__) {
-//     let showCase = require("react-native-material-showcase-ios");
-//
-//     AppTour = showCase.AppTour;
-//     AppTourSequence = showCase.AppTourSequence;
-//     AppTourView = showCase.AppTourView;
-// }
-
-
 
 
 type Props = {
@@ -93,7 +80,7 @@ class HomeScreen extends Screen<Props, State> {
 
     state : State = {};
 
-    appTourTargets= [];
+    appTourTargets = new Map();
 
 
     constructor(props: Props){
@@ -166,15 +153,13 @@ class HomeScreen extends Screen<Props, State> {
 
     componentDidMount() {
         setTimeout(() => {
-            if (this.appTourTargets.length > 0) {
+            if (this.appTourTargets.size > 0) {
                 let appTourSequence = new AppTourSequence();
-                this.appTourTargets.forEach(appTourTarget => {
+                this.appTourTargets.forEach((appTourTarget, view) => {
                     appTourSequence.add(appTourTarget);
                 });
-
                 AppTour.ShowSequence(appTourSequence);
             }
-
         });
     }
 
@@ -242,28 +227,42 @@ class HomeScreen extends Screen<Props, State> {
     }
 
 
-    renderFloatingButton() {
-        const newVar = ref=>{
+    _targetRef = (primaryText, secondaryText) => ref => {
+        if (!ref) return;
+
+        console.log(`this is my floating ref:`);
+        //logObject(ref);
+        if (!this.appTourTargets.has(ref)) {
             let appTourTarget = AppTourView.for(ref, {
-                primaryText: 'This is a target button 1',
-                secondaryText: 'We have the best targets, believe me'
+                primaryText,
+                secondaryText,
+                targetHolderColor: Colors.blue,
+                targetTintColor: Colors.white,
+                primaryTextColor: Colors.white,
             });
-            this.appTourTargets.push(appTourTarget);
-        };
-        // let floating = <ActionButton
-        //     buttonColor={Colors.green}
-        //     onPress={() => {
-        //         this.onFloatingButtonPressed()
-        //     }}
-        //     // ref={newVar}
-        // />;
+            this.appTourTargets.set(ref, appTourTarget);
+        }
+    };
 
-        return <View
-            ref={newVar}
-            style={{width: 100, height: 100, backgroundColor: 'red'}}/>;
+    renderFloatingButton() {
 
-        // return floating;
-        //return appTourTarget;
+        return (
+            <View style={{position: "absolute", width: "100%", height: "100%",}}>
+                <View
+                    style={{position: "absolute", bottom: 30, right: 30, width: 56, height: 56, zIndex: -1}}
+                    //ref={newVar}
+                />
+                <ActionButton
+                    buttonColor={Colors.green}
+                    onPress={() => {
+                        this.onFloatingButtonPressed()
+                    }}
+                    mainRef={this._targetRef("#Save your goodsh", "#Click here to add your first goodsh!")}
+
+                />
+
+            </View>
+        );
     }
 
     renderSectionHeader({title, subtitle}) {
