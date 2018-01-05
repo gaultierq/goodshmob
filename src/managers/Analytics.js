@@ -1,7 +1,6 @@
 // @flow
 import {ScreenVisibilityListener as RNNScreenVisibilityListener} from 'react-native-navigation';
-import { Answers } from 'react-native-fabric';
-import Config from 'react-native-config'
+import {Answers} from 'react-native-fabric';
 
 class _Analytics implements Analytics {
     id = Math.random();

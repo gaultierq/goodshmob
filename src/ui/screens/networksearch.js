@@ -12,6 +12,7 @@ import {
     View
 } from 'react-native';
 import {connect} from "react-redux";
+import {currentUserId, logged} from "../../managers/CurrentUser"
 import type {Id, List, NavigableProps, Saving} from "../../types";
 import ItemCell from "../components/ItemCell";
 import LineupCell from "../components/LineupCell";
@@ -19,7 +20,6 @@ import {AlgoliaClient, createResultFromHit, createResultFromHit2, makeAlgoliaSea
 import UserConnectItem from "./userConnectItem";
 import UserRowI from "../activity/components/UserRowI";
 import {SearchStyles} from "../UIStyles";
-import {currentUserId} from "../../managers/CurrentUser";
 import Screen from "../components/Screen";
 import Config from 'react-native-config'
 import SearchScreen from "./search";
@@ -34,6 +34,7 @@ type State = {
 };
 
 @connect()
+@logged
 export default class NetworkSearchScreen extends Screen<Props, State> {
 
 

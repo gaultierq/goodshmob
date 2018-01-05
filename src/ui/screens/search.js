@@ -4,6 +4,7 @@ import type {Node} from 'react';
 import React, {Component} from 'react';
 import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
+import {logged} from "../../managers/CurrentUser"
 import {TabBar, TabViewAnimated} from 'react-native-tab-view';
 
 import {SearchBar} from 'react-native-elements'
@@ -63,6 +64,7 @@ export type State = {
 
 
 @connect()
+@logged
 export default class SearchScreen extends Component<Props, State> {
 
     // static navigatorButtons = {

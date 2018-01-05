@@ -22,6 +22,7 @@
 		"es6-symbol": "^3.1.1",
 		"eventbusjs": "^0.2.0",
 		"fuse.js": "^3.2.0",
+		"hoist-non-react-statics": "^2.3.1",
 		"immutability-helper": "^2.5.1",
 		"json-api-normalizer": "^0.4.5",
 		"lodash": "^4.17.4",

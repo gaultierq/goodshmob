@@ -5,7 +5,7 @@ import React from 'react';
 import {Alert, Image, Linking, Platform, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import type {Activity, ActivityType, Id, Saving, Url} from "../../../types";
 import {connect} from "react-redux";
-import {currentGoodshboxId} from "../../../managers/CurrentUser";
+import {currentGoodshboxId, logged} from "../../../managers/CurrentUser"
 import * as activityAction from "../actions";
 import {unsave} from "../actions";
 import Snackbar from "react-native-snackbar"
@@ -14,7 +14,6 @@ import {buildNonNullData} from "../../../helpers/DataUtils";
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
 import ActionRights, {getPendingLikeStatus} from "../../rights";
 import {CREATE_COMMENT} from "../../screens/comments";
-import {CREATE_LIKE, DELETE_LIKE} from "../actionTypes";
 import GTouchable from "../../GTouchable";
 import * as Nav from "../../Nav";
 
@@ -33,6 +32,7 @@ type State = {
 };
 
 //TODO: perfs
+@logged
 @connect(state => ({
     data: state.data,
     pending: state.pending

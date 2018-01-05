@@ -13,6 +13,7 @@ type State = {
 
 export const PROFILE_CLICKED = 'PROFILE_NAV_CLICKED';
 
+
 export default class MyAvatar extends Component<Props, State> {
 
     render() {

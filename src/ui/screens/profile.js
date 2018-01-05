@@ -16,12 +16,12 @@ import {
     View
 } from 'react-native';
 import {connect} from 'react-redux';
+import {currentUserId, logged} from "../../managers/CurrentUser"
 import type {Id, RequestState} from "../../types";
 import {buildData} from "../../helpers/DataUtils";
 import ApiAction from "../../helpers/ApiAction";
 import * as Api from "../../managers/Api";
 import * as authActions from '../../auth/actions'
-import {currentUserId} from "../../managers/CurrentUser";
 
 import {renderLink, renderSimpleButton} from "../UIStyles";
 import SmartInput from "../components/SmartInput";
@@ -45,6 +45,7 @@ type State = {
 };
 
 
+@logged
 @connect(state => ({
     data: state.data,
     config: state.config,

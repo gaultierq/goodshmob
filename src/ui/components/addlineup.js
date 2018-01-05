@@ -4,6 +4,7 @@ import React, {Component} from 'react';
 import {Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View,} from 'react-native';
 
 import {connect} from "react-redux";
+import {logged} from "../../managers/CurrentUser"
 import Snackbar from "react-native-snackbar"
 import i18n from '../../i18n/i18n'
 import {CheckBox, SearchBar} from 'react-native-elements'
@@ -26,6 +27,7 @@ type State = {
 };
 
 @connect()
+@logged
 export default class AddLineupComponent extends Component<Props, State> {
 
     state = {};

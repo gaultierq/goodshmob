@@ -6,11 +6,10 @@ import {CheckBox} from "react-native-elements";
 import Snackbar from "react-native-snackbar"
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {currentUserId} from "../../managers/CurrentUser"
+import {currentUserId, logged} from "../../managers/CurrentUser"
 import {connect} from "react-redux";
 import {buildNonNullData} from "../../helpers/DataUtils";
 import * as Nav from "../Nav";
-import Closable from "./closable";
 import {Colors} from "../colors";
 import GTouchable from "../GTouchable";
 import Sheet from "../components/sheet";
@@ -32,6 +31,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 
+@logged
 @connect(mapStateToProps)
 class ShareScreen extends Component<Props, State> {
 

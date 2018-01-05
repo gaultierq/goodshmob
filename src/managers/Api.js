@@ -7,7 +7,7 @@ import normalize from 'json-api-normalizer';
 import {logoutOffline} from "../auth/actions";
 import ApiAction from "../helpers/ApiAction";
 import fetch from 'react-native-fetch-polyfill';
-import type {RequestState} from "../types";
+import type {ms, RequestState} from "../types";
 import Config from 'react-native-config'
 import {Statistics} from "./Statistics";
 import {REMOVE_PENDING_ACTION} from "../reducers/dataReducer";
@@ -176,10 +176,9 @@ class Api {
     }
 
 
-    submit(url, method, body) {
+
+    submit(url, method, body, delay) {
         if (!this.initialized) throw "Api must be initialized before being used";
-
-
 
         let timeout = TIMEOUT;
         let options = Object.assign({
@@ -189,17 +188,19 @@ class Api {
         }, body ? {body: JSON.stringify(body)} : null);
 
         console.debug(`%c sending request url=${url}, options: ${JSON.stringify(options)}`, 'background: #FCFCFC; color: #E36995');
-
+        let auth = instance.auth();
 
         return new Promise((resolve, reject) => {
-            let auth = instance.auth();
+
             fetch(url, options).then(resp=> {
-                if (instance.auth() === auth) {
-                    resolve(resp);
-                }
-                else {
-                    reject(new Error("User auth has changed. This response should not be saved or processed."));
-                }
+                setTimeout(()=> {
+                    if (instance.auth() === auth) {
+                        resolve(resp);
+                    }
+                    else {
+                        reject(new Error("User auth has changed. This response should not be saved or processed."));
+                    }
+                }, _.isNumber(delay) ? delay : 0);
 
             })
         });
@@ -214,6 +215,8 @@ export class Call {
     url: URL = new URL(API_END_POINT);
     body: any;
     method: string;
+    delay: ms;
+
     //headers = instance.headers();
 
     withRoute(pathname:string): Call {
@@ -243,6 +246,11 @@ export class Call {
 
     withMethod(method:string): Call {
         this.method = method;
+        return this;
+    }
+
+    delay(delay:ms): Call {
+        this.delay = delay;
         return this;
     }
 
@@ -319,8 +327,9 @@ export class Call {
 
     run() {
         if (!this.method) throw new Error("call need a method");
-        return instance.submit(this.url.toString(), this.method, this.body)
+        return instance.submit(this.url.toString(), this.method, this.body, this.delay)
             .then(resp => {
+
                 console.debug("api: response");
                 if (resp.ok) {
                     let contentType = resp.headers.get("content-type");

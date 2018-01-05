@@ -4,6 +4,7 @@ import {Clipboard, Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpac
 import type {Id} from "../../types";
 import {CheckBox} from "react-native-elements";
 import {connect} from "react-redux";
+import {logged} from "../../managers/CurrentUser"
 import Feed from "../components/feed";
 import {FETCH_ACTIVITIES, fetchUserNetwork} from "../networkActions";
 import ActivityCell from "../activity/components/ActivityCell";
@@ -23,6 +24,7 @@ const mapStateToProps = (state, ownProps) => ({
     network: state.network,
 });
 
+@logged
 @connect(mapStateToProps)
 export default class UserScreen extends Screen<Props, State> {
 

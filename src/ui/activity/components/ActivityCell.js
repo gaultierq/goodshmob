@@ -3,6 +3,7 @@
 import React from 'react';
 import {Image, Linking, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
+import {logged} from "../../../managers/CurrentUser"
 import {buildNonNullData, sanitizeActivityType} from "../../../helpers/DataUtils";
 import type {Activity, ActivityType, Id} from "../../../types"
 import ActivityBody from "./ActivityBody";
@@ -32,6 +33,7 @@ type State = {
 };
 
 
+@logged
 @connect((state, ownProps) => ({
     data: state.data,
     pending: state.pending

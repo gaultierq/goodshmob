@@ -4,6 +4,7 @@ import type {Node} from 'react';
 import React, {Component} from 'react';
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
+import {currentUserId, logged} from "../../managers/CurrentUser"
 import type {Id, Item, User} from "../../types";
 import FriendsFeed from "./friends";
 import FriendCell from "../components/FriendCell";
@@ -12,7 +13,6 @@ import type {Description, Visibility} from "./save";
 import * as Api from "../../managers/Api";
 import * as UI from "../UIStyles";
 import SmartInput from "../components/SmartInput";
-import {currentUserId} from "../../managers/CurrentUser";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import {MainBackground} from "../UIComponents";
 import {Colors} from "../colors";
@@ -33,6 +33,7 @@ const mapStateToProps = (state, ownProps) => ({
     data: state.data,
 });
 
+@logged
 @connect(mapStateToProps)
 export default class SendScreen extends Component<Props, State> {
 

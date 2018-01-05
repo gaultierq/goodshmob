@@ -9,11 +9,12 @@ import logger from 'redux-logger'
 
 import * as Api from './managers/Api';
 import {autoRehydrate, createTransform, persistStore} from 'redux-persist'
-import {AsyncStorage, Dimensions, StyleSheet, TouchableOpacity, Alert} from 'react-native'
+import {Alert, AsyncStorage, Dimensions, StyleSheet, TouchableOpacity} from 'react-native'
 import immutableTransform from './immutableTransform'
 import {REHYDRATE} from 'redux-persist/constants'
 import i18n from './i18n/i18n'
 import * as CurrentUser from './managers/CurrentUser'
+import {currentUserId} from './managers/CurrentUser'
 import {Client} from 'bugsnag-react-native';
 import * as globalProps from 'react-native-global-props';
 import * as notification from './managers/notification';
@@ -31,7 +32,6 @@ import {SFP_TEXT_REGULAR} from "./ui/fonts";
 import NavManager from "./managers/NavManager";
 import Analytics from "./managers/Analytics";
 import * as appActions from "./auth/actions";
-import {currentUserId} from "./managers/CurrentUser";
 
 console.log(`staring app with env=${JSON.stringify(Config)}`);
 

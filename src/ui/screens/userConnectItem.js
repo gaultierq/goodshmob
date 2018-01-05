@@ -12,8 +12,8 @@ import {
     View
 } from 'react-native';
 import {connect} from "react-redux";
+import {currentUserId, logged} from "../../managers/CurrentUser"
 import type {NavigableProps, RequestState, User} from "../../types";
-import {currentUserId} from "../../managers/CurrentUser";
 import * as Api from "../../managers/Api";
 import ApiAction from "../../helpers/ApiAction";
 import {renderSimpleButton} from "../UIStyles";
@@ -31,6 +31,7 @@ type State = {
 };
 
 @connect()
+@logged
 export default class UserConnectItem extends Component<Props, State> {
 
     state : State = {};

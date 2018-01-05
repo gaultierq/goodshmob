@@ -7,7 +7,7 @@ import {renderSimpleButton, renderSimpleLink} from "../UIStyles";
 import LineupCell from "../components/LineupCell";
 import type {Id, Item, ItemType} from "../../types";
 import {fetchItemCall, saveItem} from "../lineup/actions";
-import {currentUserId} from "../../managers/CurrentUser";
+import {currentUserId, logged} from "../../managers/CurrentUser";
 import Snackbar from "react-native-snackbar"
 import {connect} from "react-redux";
 import {buildData, buildNonNullData} from "../../helpers/DataUtils";
@@ -44,6 +44,7 @@ type State = {
 };
 
 
+@logged
 @connect((state, ownProps) => ({
     data: state.data,
 }))

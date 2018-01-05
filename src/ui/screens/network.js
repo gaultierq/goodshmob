@@ -3,12 +3,12 @@
 import React from 'react';
 import {ActivityIndicator, FlatList, Platform, RefreshControl, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
+import {currentUserId, logged} from "../../managers/CurrentUser"
 import ActivityCell from "../activity/components/ActivityCell";
 import {activityFeedProps} from "../UIComponents"
 import Feed from "../components/feed"
 import type {List, NavigableProps} from "../../types";
 import ActionButton from 'react-native-action-button';
-import {currentUserId} from "../../managers/CurrentUser";
 import ItemCell from "../components/ItemCell";
 import LineupCell from "../components/LineupCell";
 import {FETCH_ACTIVITIES, fetchMyNetwork} from "../networkActions";
@@ -25,6 +25,7 @@ type State = {
     isPulling?: boolean
 };
 
+@logged
 @connect((state, ownProps) => ({
     network: state.network,
     data: state.data,

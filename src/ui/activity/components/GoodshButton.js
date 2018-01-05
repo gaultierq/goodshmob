@@ -5,6 +5,7 @@ import {Image, Linking, Share, StyleSheet, Text, TouchableHighlight, TouchableOp
 import * as activityAction from "../actions"
 import type {Activity} from "../../../types"
 import {connect} from "react-redux";
+import {logged} from "../../../managers/CurrentUser"
 import {Colors} from "../../colors";
 
 
@@ -16,6 +17,7 @@ type State = {
 };
 
 @connect()
+@logged
 export default class GoodshButton extends React.Component<Props, State>  {
 
     render() {
