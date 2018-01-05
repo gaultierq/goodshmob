@@ -12,6 +12,8 @@ import type {Id, Item, User} from "../../types";
 import {buildData} from "../../helpers/DataUtils";
 import Screen from "../components/Screen";
 import GTouchable from "../GTouchable";
+import {fullName} from "../../helpers/StringUtils";
+import * as Nav from "../Nav";
 
 type Props = {
     userId: Id,
@@ -74,28 +76,29 @@ export default class FriendsScreen extends Screen<Props, State> {
         return (
             <GTouchable onPress={()=> {
 
-                this.props.navigator.showModal({
-                    screen: 'goodsh.UserSheetScreen', // unique ID registered with Navigation.registerScreen
-                    animationType: 'none',
-                    passProps: {
-                        userId: user.id,
-                    },
-                });
                 // this.props.navigator.showModal({
-                //     screen: 'goodsh.UserScreen', // unique ID registered with Navigation.registerScreen
-                //     title: fullName(user),
+                //     screen: 'goodsh.UserSheetScreen', // unique ID registered with Navigation.registerScreen
+                //     animationType: 'none',
                 //     passProps: {
                 //         userId: user.id,
                 //     },
-                //     navigatorButtons: {
-                //         leftButtons: [
-                //             {
-                //                 id: Nav.CLOSE_MODAL,
-                //                 title: "#Cancel"
-                //             }
-                //         ],
-                //     },
                 // });
+
+                this.props.navigator.showModal({
+                    screen: 'goodsh.UserScreen', // unique ID registered with Navigation.registerScreen
+                    title: fullName(user),
+                    passProps: {
+                        userId: user.id,
+                    },
+                    navigatorButtons: {
+                        leftButtons: [
+                            {
+                                id: Nav.CLOSE_MODAL,
+                                title: "#Cancel"
+                            }
+                        ],
+                    },
+                });
 
 
             }}>
