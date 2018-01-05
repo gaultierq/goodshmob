@@ -87,7 +87,7 @@ export default class AddItemScreen extends Screen<Props, State> {
         let req = this.state.reqAdd;
         let editable = req !== 1;
         let xml = (<View style={[styles.container]}>
-            <Text>#Toutes vos listes</Text>
+            <Text>{i18n.t('create_list_controller.all_list')}</Text>
         </View>);
         return (
             <MainBackground>
@@ -99,14 +99,14 @@ export default class AddItemScreen extends Screen<Props, State> {
                                 style={[styles.input, (editable ? {color: "black"} : {color: "grey"})]}
                                 value={description}
                                 onChangeText={description => this.setState({description})}
-                                placeholder={/*i18n.t("create_list_controller.placeholder")*/"#Ajouter une description"}
+                                placeholder={i18n.t("create_list_controller.add_description")}
                                 returnKeyType={selectedLineupId ? 'go' : 'next'}
                                 onSubmitEditing={() => {selectedLineupId && this._doAdd(selectedLineupId)}}
                             />
 
                             <CheckBox
                                 right
-                                title="#Visible par mes amis"
+                                title={i18n.t("create_list_controller.visible")}
                                 iconRight
                                 size={16}
                                 checkedColor={grey}
@@ -143,7 +143,7 @@ export default class AddItemScreen extends Screen<Props, State> {
                             {
                                 <View style={{flex: 1, alignItem:'flex-end', margin: 8}}>
                                     {renderSimpleLink(
-                                    '#Choisir une autre liste',
+                                    i18n.t('create_list_controller.choose_list'),
                                     () => this.setState({showLineupList: true}),
                                     )}
                                 </View>

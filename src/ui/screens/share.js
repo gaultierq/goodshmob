@@ -65,7 +65,7 @@ class ShareScreen extends Component<Props, State> {
                             <Image source={require('../../img2/copyLink.png')}
                                    resizeMode="contain"
                                    style={styles.image}/>
-                            <Text style={styles.buttonText}>#Copier le lien</Text>
+                            <Text style={styles.buttonText}>{i18n.t("actions.copy_link")}</Text>
                         </GTouchable>
                         <GTouchable
                             style={styles.button}
@@ -73,7 +73,7 @@ class ShareScreen extends Component<Props, State> {
                             <Image source={require('../../img2/sendToOther.png')}
                                    resizeMode="contain"
                                    style={styles.image}/>
-                            <Text style={styles.buttonText}>#Envoyer à un autre {"\n"}Goodsher</Text>
+                            <Text style={styles.buttonText}>{i18n.t("actions.send_to_goodsher")}</Text>
                         </GTouchable>
                         <GTouchable
                             style={styles.button}
@@ -136,12 +136,12 @@ class ShareScreen extends Component<Props, State> {
         let navigator = this.props.navigator;
         navigator.showModal({
             screen: 'goodsh.SendScreen', // unique ID registered with Navigation.registerScreen
-            title: `#Envoyer '${item.title}'`,
+            title: i18n.t("actions.send") + '${item.title}',
             navigatorButtons: {
                 leftButtons: [
                     {
                         id: Nav.CLOSE_MODAL,
-                        title: "Cancel"
+                        title: i18n.t("actions.cancel")
                     }
                 ],
             },

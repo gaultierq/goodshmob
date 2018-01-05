@@ -315,8 +315,8 @@ export default class App {
 
                 //TODO: move to messenger
                 Alert.alert(
-                    '#Mise à jour',
-                    'Mise à jour de votre app, un instant svp...',
+                    i18n.t("app.update.title"),
+                    i18n.t("app.update.label"),
                     [],
                     { cancelable: false }
                 );
@@ -351,12 +351,12 @@ export default class App {
 
                 },
                 {
-                    label: '#Network', // tab label as appears under the icon in iOS (optional)
+                    label: i18n.t('tabs.network.label'), // tab label as appears under the icon in iOS (optional)
                     screen: 'goodsh.NetworkScreen', // unique ID registered with Navigation.registerScreen
                     icon: require('./img2/feed_Glyph.png'),
                     selectedIcon: require('./img2/feed_Glyph_Pressed.png'),
                     titleImage: require('./img2/headerLogoBlack.png'),
-                    title: '#Mon réseau', // title of the screen as appears in the nav bar (optional)
+                    title: i18n.t('tabs.network.title'), // title of the screen as appears in the nav bar (optional)
                     navigatorStyle
                 },
             ],

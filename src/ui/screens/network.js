@@ -46,7 +46,7 @@ class NetworkScreen extends Screen<Props, State> {
             {
                 id: 'community', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
                 icon: require('../../img2/goodshersHeaderIcon.png'),
-                title: "#Community"
+                title: i18n.t("home_search_screen.community.title")
             }
         ],
     };
@@ -91,7 +91,7 @@ class NetworkScreen extends Screen<Props, State> {
 
                 navigator.showModal({
                     screen: 'goodsh.CommunityScreen', // unique ID registered with Navigation.registerScreen
-                    title: "#Communauté",
+                    title: i18n.t("home_search_screen.community.title"),
                     passProps:{
                         style: {marginTop: 38},
                     },
@@ -181,7 +181,7 @@ class NetworkScreen extends Screen<Props, State> {
     navToActivity(activity) {
         this.props.navigator.push({
             screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
-            title: "#Details", // navigation bar title of the pushed screen (optional)
+            title: i18n.t("home_search_screen.saving.title"), // navigation bar title of the pushed screen (optional)
             titleImage: require('../../img2/headerLogoBlack.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
             passProps: {activityId: activity.id, activityType: activity.type}, // Object that will be passed as props to the pushed screen (optional)
             animated: true, // does the push have transition animation or does it happen immediately (optional)
@@ -266,7 +266,7 @@ class NetworkScreen extends Screen<Props, State> {
                 rightButtons: [
                     {
                         id: Nav.CLOSE_MODAL,
-                        title: "#Cancel"
+                        title: i18n.t("actions.cancel")
                     }
                 ],
             },

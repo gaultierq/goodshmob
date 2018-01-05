@@ -1,8 +1,18 @@
 export default {
+    app : {
+      update: {
+        title: "Mise à jour",
+        label : "Mise à jour de votre app, un instant svp..."
+      }
+    },
     "tabs": {
         home: {
             title: "Mes listes",
-            label: "Mes listes"
+            label: "Mes goodsh"
+        },
+        network: {
+            title: "Réseau",
+            label: "Mon Réseau"
         },
         search: {
             title: "Ajouter quelquechose",
@@ -12,6 +22,12 @@ export default {
     lineups: {
         search: {
             placeholder: "Rechercher dans mes listes"
+        },
+        goodsh : {
+          title: "GoodshBox"
+        },
+        mine : {
+          title: "Mes listes"
         }
     },
     search: "Rechercher",
@@ -62,6 +78,8 @@ export default {
             },
             "follow_list": "SUIVRE LA LISTE",
             "unfollow_list": "NE PLUS SUIVRE",
+            "modified_list": "Liste modifiée",
+            "deleted_list": "Liste effacée"
         }
     },
     "activity":{
@@ -82,7 +100,14 @@ export default {
         "definition":{
             "example":"Bouquin, restaurant, film, série, artiste,\nlieu, musique, gadget, fringue, vin, …"
         },
-        "value_proposal":"Marre d’oublier les recommandations\nqu’on te fait ?"
+        "value_proposal":"Marre d’oublier les recommandations\nqu’on te fait ?",
+        "slider_intro_1": "I was told it was great.\n" +
+        "To not forget it\n" +
+        "I have it goodshé.",
+        "slider_intro_2": "And it's so good I share it with my relatives.",
+        "slider_intro_3": "I ask questions, I with advice and suggestions.",
+        "slider_intro_4": "I discover books, movies, music, restaurants, gift ideas, stuff to do, to visit...",
+        "credentials": "Fait avec amour à Paris",
     },
     "profile_screen":{
         "love":" AMOUR ",
@@ -126,7 +151,13 @@ export default {
     "create_list_controller":{
         "title":"Nouvelle liste",
         "subtitle":"Pour y ranger plein de trucs top et les partager si je veux",
-        "placeholder":"Titre de la Line up"
+        "placeholder":"Titre de la Line up",
+        "action":"Créer une nouvelle liste",
+        "created":"Liste créée",
+        "visible":"Visible par mes amis",
+        "add_description":"Ajouter une description",
+        "choose_list":"Choisir une autre liste",
+        "all_list" : "Toutes vos listes"
     },
     "list_selection_screen":{
         "description":"Enregistrer sous, comme dirait l'autre :"
@@ -273,6 +304,56 @@ export default {
     },
     empty: {
         lineup: "Cette liste est vide"
+    },
+    activity_action_bar: {
+      goodsh_deleted: "Goodsh effacé",
+      comment: {
+        title: "Commentaires"
+      },
+      response: {
+        title: "Réponses"
+      }
+    },
+    add_item_screen: {
+      title: "Choisissez une liste"
+    },
+    home_search_screen: {
+      saving: {
+        title: "Details",
+      },
+      community: {
+        title: "Communauté",
+      }
+    },
+    actions: {
+      ok: "Ok",
+      add: "Ajouter",
+      delete: "Supprimer",
+      change: "Changer",
+      change_title: "Changer titre",
+      undo: "Annuler",
+      cancel: "Annuler",
+      buy: "Acheter",
+      send: "Envoyer",
+      create: "Créer",
+      try_again: "Réessayer",
+      ask_friend: "Poser une question à vos amis",
+      logout: "Déconnexion",
+      terms: "Mentions légales",
+      copy_link: "Copier le lien",
+      send_to_goodsher: "Envoyer à un autre\nGoodsher"
+    },
+    loading: {
+      error: "Le chargement a échoué..."
+    },
+    alert: {
+      delete: {
+        title: "Suppression",
+        label: "Êtes-vous sûr de vouloir effacer cet élément ?"
+      }
+    },
+    dev: {
+      label: "Dev mode",
+      title: "DevMenu"
     }
-
 };

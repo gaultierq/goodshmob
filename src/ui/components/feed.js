@@ -397,8 +397,8 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
         return (
             <View style={{padding: 12}}>
-                <Text style={{alignSelf: "center"}}>Le chargement a échoué...</Text>
-                {renderSimpleButton("#Réessayer", fetch)}
+                <Text style={{alignSelf: "center"}}>i18n.t('loading.error')</Text>
+                {renderSimpleButton(i18n.t('actions.try_again'), fetch)}
             </View>
         );
     }
@@ -415,5 +415,3 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
 
 }
-
-

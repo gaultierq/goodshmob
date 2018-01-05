@@ -119,9 +119,9 @@ class ActivityDetailScreen extends Screen<Props, State> {
                 } else {
                     console.log("Don't know how to open URI: " + url);
                 }
-            });    
+            });
         }
-        
+
 
     }
 
@@ -139,7 +139,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                         alignItems: 'center',
                     }
                     }>
-                        <Text style={[UI.TEXT_LEAST_IMPORTANT, {marginLeft: 18}]}>#No one commented yet</Text>
+                        <Text style={[UI.TEXT_LEAST_IMPORTANT, {marginLeft: 18}]}>i18n.t("activity_screen.comments.no_comments")</Text>
                         <Icon name="chevron-small-right" size={20} color={Colors.greyishBrown} />
                     </View>
                     }

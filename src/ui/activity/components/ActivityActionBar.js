@@ -232,7 +232,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
         this.props.navigator.push({
             screen: 'goodsh.AddItemScreen', // unique ID registered with Navigation.registerScreen
-            title: "#Ajouter",
+            title: i18n.t("actions.add"),
             passProps: {
                 itemId: item.id,
                 itemType: item.type,
@@ -247,15 +247,15 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     execUnsave(saving: Saving) {
 
         Alert.alert(
-            '#Suppression',
-            '#Êtes-vous sûr de vouloir effacer cet élément',
+            i18n.t("alert.delete.title"),
+            i18n.t("alert.delete.label"),
             [
-                {text: '#Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-                {text: '#OK', onPress: () => {
+                {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                {text: i18n.t("actions.ok"), onPress: () => {
                     console.log('OK Pressed');
                     this.props.dispatch(unsave(saving.id, saving.target.id)).then(() => {
                         console.info(`saving ${saving.id} unsaved`)
-                        Snackbar.show({title: "#Goodsh effacé"});
+                        Snackbar.show({title: i18n.t("activity_action_bar.goodsh_deleted")});
                     });
                 }
                 },
@@ -269,7 +269,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     execComment(activity: Activity) {
         this.props.navigator.showModal({
             screen: 'goodsh.CommentsScreen', // unique ID registered with Navigation.registerScreen
-            title: "#Commentaires", // navigation bar title of the pushed screen (optional)
+            title: i18n.t("activity_action_bar.comment.title"), // navigation bar title of the pushed screen (optional)
             passProps: {
                 activityId: activity.id,
                 activityType: activity.type
@@ -281,7 +281,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     execAnswer(activity: Activity) {
         this.props.navigator.push({
             screen: 'goodsh.CommentsScreen',
-            title: "#Réponses",
+            title: i18n.t("activity_action_bar.reponse.title"),
             passProps: {
                 activityId: activity.id,
                 activityType: activity.type

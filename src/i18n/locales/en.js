@@ -1,8 +1,18 @@
 export default {
+    app : {
+      update: {
+        title: "Update",
+        label : "Updating your app, please wait..."
+      }
+    },
     "tabs": {
         home: {
             title: "My lists",
             label: "My lists"
+        },
+        network: {
+            title: "Network",
+            label: "My Network"
         },
         search: {
             title: "Add something",
@@ -12,6 +22,12 @@ export default {
     lineups: {
         search: {
             placeholder: "Search into my lists"
+        },
+        goodsh : {
+          title: "GoodshBox"
+        },
+        mine : {
+          title: "My lineups"
         }
     },
     search: "Search",
@@ -63,6 +79,8 @@ export default {
             },
             "follow_list": "FOLLOW LIST",
             "unfollow_list": "UNFOLLOW LIST",
+            "modified_list": "List modified",
+            "deleted_list": "List deleted"
         }
     },
     "activity":{
@@ -87,7 +105,14 @@ export default {
         "very good.\n" +
         "Not to forget it\n" +
         "I stored it\n" +
-        "in"
+        "in",
+        "slider_intro_1": "I was told it was great.\n" +
+        "To not forget it\n" +
+        "I have it goodshé.",
+        "slider_intro_2": "And it's so good I share it with my relatives.",
+        "slider_intro_3": "I ask questions, I with advice and suggestions.",
+        "slider_intro_4": "I discover books, movies, music, restaurants, gift ideas, stuff to do, to visit...",
+        "credentials": "Made with love in Paris",
     },
     "profile_screen":{
         "love":" LOOOVE ",
@@ -131,7 +156,13 @@ export default {
     "create_list_controller":{
         "title":"Add new",
         "subtitle":"Be creative ;)",
-        "placeholder":"Line up name"
+        "placeholder":"Line up name",
+        "action":"Add new list",
+        "created":"List created",
+        "visible":"Visible by friends",
+        "add_description":"Add description",
+        "choose_list":"Choose another list",
+        "all_list" : "All your lists"
     },
     "list_selection_screen":{
         "description":"Select existing line up below or create a new one:"
@@ -279,5 +310,56 @@ export default {
     },
     empty: {
         lineup: "This list is empty"
+    },
+    activity_action_bar: {
+      goodsh_deleted: "Goodsh deleted",
+      comment: {
+        title: "Comments"
+      },
+      response: {
+        title: "Responses"
+      }
+    },
+    add_item_screen: {
+      title: "Choose liste"
+    },
+    home_search_screen: {
+      saving: {
+        title: "Details",
+      },
+      community: {
+        title: "Community",
+      }
+    },
+    loading: {
+      error: "Loading Error..."
+    },
+    actions: {
+      ok: "Ok",
+      add: "Add",
+      delete: "Delete",
+      change: "Change",
+      change_title: "Change title",
+      undo: "Undo",
+      cancel: "Cancel",
+      buy: "Buy",
+      send: "Send",
+      create: "Create",
+      try_again: "Try Again",
+      ask_friend: "Ask question to friends",
+      logout: "Logout",
+      terms: "Terms",
+      copy_link: "Copy link",
+      send_to_goodsher: "Send to another\nGoodsher"
+    },
+    alert: {
+      delete: {
+        title: "Deletion",
+        label: "Are you sure ?"
+      }
+    },
+    dev: {
+      label: "Dev mode",
+      title: "DevMenu"
     }
 };

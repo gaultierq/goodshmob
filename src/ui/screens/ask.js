@@ -51,7 +51,7 @@ export default class AskScreen extends Component<Props, State> {
                         value={askContent}
                         multiline
                         onChangeText={(askContent) => this.setState({askContent})}
-                        placeholder={"#Poser une question à vos amis"}
+                        placeholder={i18n.t("actions.ask_friend")}
                         autoFocus
                         style={[
                             styles.input,
@@ -135,4 +135,3 @@ const styles = StyleSheet.create({
         borderColor: Colors.greyishBrown,
     }
 });
-
