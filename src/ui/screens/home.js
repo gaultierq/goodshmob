@@ -191,14 +191,14 @@ class HomeScreen extends Screen<Props, State> {
                             return [
                                 {
                                     data: goodshbox ? [goodshbox] : [],
-                                    title: "#All my goodsh",
+                                    title: i18n.t("lineups.goodsh.title"),
                                     subtitle: ` (${savingCount})`,
                                     onPress: () => this.seeLineup(goodshbox.id),
                                     renderItem: ({item})=>this.renderListItem(item)
                                 },
                                 {
                                     data: _.slice(lineups, 1),
-                                    title: "#My lineups",
+                                    title: i18n.t("lineups.mine.title"),
                                     renderSectionHeaderChildren:() => <AddLineupComponent/>,
                                     renderItem: ({item})=>this.renderListItem(item, {withMenuButton: true, withLineupTitle: true})
                                 },
@@ -290,7 +290,7 @@ class HomeScreen extends Screen<Props, State> {
                         execAction={(input: string) => this.requestChangeName(id, input)}
                         placeholder={"create_list_controller.placeholder"}
                         defaultValue={name}
-                        button={<Text>#Changer</Text>}
+                        button={<Text>{i18n.t("actions.change")}</Text>}
                         returnKeyType={'done'}
                     />
                 </View>
@@ -305,7 +305,7 @@ class HomeScreen extends Screen<Props, State> {
             .then(()=> {
                 this.setState({changeLinupTitleId: null})
             })
-            .then(()=> Snackbar.show({title: "#Liste modifiée"}))
+            .then(()=> Snackbar.show({title: i18n.t("activity_item.button.modified_list")}))
             ;
     }
 
@@ -374,8 +374,8 @@ class HomeScreen extends Screen<Props, State> {
 
                 </MenuTrigger>
                 <MenuOptions>
-                    <MenuOption onSelect={() => setTimeout(()=>this.deleteLineup(item))} text='#Delete'/>
-                    <MenuOption onSelect={() => setTimeout(() => this.changeTitle(item))} text='#Changer le titre'/>
+                    <MenuOption onSelect={() => setTimeout(()=>this.deleteLineup(item))} text={i18n.t("actions.change")}/>
+                    <MenuOption onSelect={() => setTimeout(() => this.changeTitle(item))} text={i18n.t("actions.change_title")}/>
                 </MenuOptions>
             </Menu>
         </View>;
@@ -388,10 +388,10 @@ class HomeScreen extends Screen<Props, State> {
         return this.props.dispatch(LINEUP_DELETION.pending({lineupId}, {delayMs, lineupId}))
             .then(pendingId => {
                 Snackbar.show({
-                        title: "#Liste effacée",
+                        title: i18n.t("activity_item.button.deleted_list"),
                         duration: Snackbar.LENGTH_LONG,
                         action: {
-                            title: '#UNDO',
+                            title: i18n.t("actions.undo"),
                             color: 'green',
                             onPress: () => {
                                 this.props.dispatch(LINEUP_DELETION.undo(pendingId))

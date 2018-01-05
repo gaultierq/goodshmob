@@ -37,7 +37,7 @@ export default class SaveScreen extends Component<Props, State> {
 
                 <CheckBox
                     right
-                    title="#Visible par mes amis"
+                    title={i18n.t("create_list_controller.visible")}
                     iconRight
                     size={16}
                     checkedColor={grey}
@@ -52,7 +52,7 @@ export default class SaveScreen extends Component<Props, State> {
                     onSubmitEditing={() => {this.state.description && onDescription(description, visibility)}}
                     value={this.state.description}
                     onChangeText={(description) => this.setState({description})}
-                    placeholder={"#Ajouter une description"}
+                    placeholder={i18n.t("create_list_controller.add_description")}
                     autoFocus
                     style={styles.input}
                     returnKeyType={'done'}
@@ -77,6 +77,3 @@ const styles = StyleSheet.create({
         minHeight: 100
     }
 });
-
-
-

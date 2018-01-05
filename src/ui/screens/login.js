@@ -48,18 +48,14 @@ class Login extends Component<Props, State> {
                 <View style={[styles.slide, {backgroundColor: Colors.green}]}>
                     <View style={[styles.desc, {}]}>
                         <Text style={[styles.text, {marginBottom: marg,color: "#ffffff"}]}>
-                            #I was told it was great.{"\n"}
-                            To not forget it{"\n"}
-                            I have it goodshé.</Text>
+                            {i18n.t("login_screen.slider_intro_1")}</Text>
                         <Image style={[styles.image]} source={require("../../img2/logoWhite.png")}/>
                         {/*todo: find a better way to obtain
                     1. goodsh centered
                     2. goodsh and text never overlapping
                     */}
                         <Text style={[styles.text, {marginTop: marg,opacity: 0}]}>
-                            #I was told it was great.{"\n"}
-                            To not forget it{"\n"}
-                            I have it goodshé.</Text>
+                            {i18n.t("login_screen.slider_intro_1")}</Text>
                     </View>
 
 
@@ -69,7 +65,7 @@ class Login extends Component<Props, State> {
                     <View style={[styles.desc]}>
                         <Image style={[styles.image, {marginBottom: marg}]} source={require("../../img2/paperPlane.png")}/>
                         <Text style={[styles.text, {color: Colors.green}]}>
-                            #And it's so good I share it with my relatives.
+                            {i18n.t("login_screen.slider_intro_2")}
                         </Text>
                         <Image style={[styles.image, {opacity:0, marginTop: marg}]} source={require("../../img2/paperPlane.png")}/>
                     </View>
@@ -79,7 +75,7 @@ class Login extends Component<Props, State> {
                     <View style={[styles.desc]}>
                         <Image style={[styles.image, {marginBottom: marg}]} source={require("../../img2/askIcon.png")}/>
                         <Text style={[styles.text, {color: "#ffffff"}]}>
-                            #I ask questions, I with advice and suggestions.
+                            {i18n.t("login_screen.slider_intro_3")}
                         </Text>
                         <Image style={[styles.image, {opacity:0, marginTop: marg}]} source={require("../../img2/askIcon.png")}/>
                     </View>
@@ -89,7 +85,7 @@ class Login extends Component<Props, State> {
                     <View style={[styles.desc]}>
                         <Image style={[styles.image, {marginBottom: marg}]} source={require("../../img2/discoverIcon.png")}/>
                         <Text style={[styles.text, {color: "#ffffff"}]}>
-                            #I discover books, movies, music, restaurants, gift ideas, stuff to do, to visit ...
+                            {i18n.t("login_screen.slider_intro_4")}
                         </Text>
                         <Image style={[styles.image, {opacity:0, marginTop: marg}]} source={require("../../img2/discoverIcon.png")}/>
                     </View>
@@ -235,7 +231,7 @@ class Login extends Component<Props, State> {
 
                 <View style={[{flexDirection: 'row'}]}>
                     <Image style={{marginRight: 10}} source={eiffel}/>
-                    <Text style={[{color: loveColor, fontFamily: SFP_TEXT_BOLD}]}>#Fait avec amour à Paris</Text>
+                    <Text style={[{color: loveColor, fontFamily: SFP_TEXT_BOLD}]}>{i18n.t("login_screen.credentials")}</Text>
                 </View>
 
             </View>

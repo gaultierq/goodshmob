@@ -77,17 +77,17 @@ export default class AddLineupComponent extends Component<Props, State> {
 
             <View style={[UI.CARD(12), styles.header, {flexDirection: 'column'}]}>
 
-                <Text style={{fontSize: 16, marginBottom: 12}}>#Créer une nouvelle liste:</Text>
+                <Text style={{fontSize: 16, marginBottom: 12}}>{i18n.t('create_list_controller.action')}</Text>
                 <SmartInput
                     execAction={(input: string) => this.createLineup(input)}
                     placeholder={"create_list_controller.placeholder"}
-                    button={<Text>#Créer</Text>}
+                    button={<Text>{i18n.t('actions.create')}</Text>}
                     returnKeyType={'go'}
                 />
 
                 <CheckBox
                     right
-                    title="#Visible par mes amis"
+                    title={i18n.t('create_list_controller.visible')}
                     size={16}
                     checkedColor={Colors.greyishBrown}
                     uncheckedColor={Colors.greyishBrown}
@@ -108,10 +108,10 @@ export default class AddLineupComponent extends Component<Props, State> {
             .then((pendingId)=> {
                 this._closeModal();
                 Snackbar.show({
-                        title: "#Liste créée",
+                        title: i18n.t('create_list_controller.created'),
                         duration: Snackbar.LENGTH_LONG,
                         action: {
-                            title: '#UNDO',
+                            title: i18n.t('actions.undo'),
                             color: 'green',
                             onPress: () => {
                                 this.props.dispatch(LINEUP_CREATION.undo(pendingId))

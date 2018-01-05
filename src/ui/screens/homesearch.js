@@ -134,7 +134,7 @@ export default class HomeSearchScreen extends Screen<Props, State> {
     onSavingPressed(saving: Saving) {
         this.props.navigator.push({
             screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
-            title: "#Details", // navigation bar title of the pushed screen (optional)
+            title: i18n.t("home_search_screen.saving.title"), // navigation bar title of the pushed screen (optional)
             titleImage: require('../../img2/headerLogoBlack.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
             passProps: {activityId: saving.id, activityType: saving.type}, // Object that will be passed as props to the pushed screen (optional)
         });
@@ -149,4 +149,3 @@ export default class HomeSearchScreen extends Screen<Props, State> {
         });
     }
 }
-

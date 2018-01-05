@@ -148,7 +148,7 @@ export default class ActivityBody extends React.Component<Props, State> {
             style={[{height: 33, borderRadius: 4, backgroundColor: Colors.blue, borderWidth: 0}]}
         >
             <Text style={[UI.SIDE_MARGINS(10), {color: Colors.white, fontFamily: SFP_TEXT_MEDIUM, fontSize: 14}]}>
-                #Buy
+                {i18n.t("actions.buy")}
             </Text>
         </Button>;
     }
@@ -257,6 +257,3 @@ const styles = StyleSheet.create({
     description: {fontSize: 14, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey},
 
 });
-
-
-

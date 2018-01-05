@@ -164,20 +164,20 @@ export default class Profile extends Component<Props, State> {
 
 
 
-                        {renderSimpleButton("#logout", this.logout.bind(this), {loading: this.state.reqLogout === 'sending'})}
+                        {renderSimpleButton(i18n.t("actions.logout"), this.logout.bind(this), {loading: this.state.reqLogout === 'sending'})}
 
                         {
                             this.props.config.devMenu &&
-                            renderSimpleButton("#dev mode", () => this.props.navigator.showModal({
+                            renderSimpleButton(i18n.t("dev.label"), () => this.props.navigator.showModal({
                                     screen: 'goodsh.DebugScreen', // unique ID registered with Navigation.registerScreen
-                                    title: "#DevMenu", // navigation bar title of the pushed screen (optional)
+                                    title: i18n.t("dev.title"), // navigation bar title of the pushed screen (optional)
                                     navigatorButtons: Nav.CANCELABLE_MODAL,
                                 }
                             ))
                         }
 
 
-                        {renderLink("#Terms", "https://goodsh.it/terms")}
+                        {renderLink(i18n.t("actions.terms"), "https://goodsh.it/terms")}
 
 
                         <View style={{position: 'absolute', bottom: 15}}>
@@ -286,5 +286,3 @@ const styles = StyleSheet.create({
         borderRadius: 15
     },
 });
-
-
