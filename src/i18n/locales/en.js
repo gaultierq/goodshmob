@@ -350,7 +350,8 @@ export default {
       logout: "Logout",
       terms: "Terms",
       copy_link: "Copy link",
-      send_to_goodsher: "Send to another\nGoodsher"
+      send_to_goodsher: "Send to another\nGoodsher",
+      skip: "Skip"
     },
     alert: {
       delete: {

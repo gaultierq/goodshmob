@@ -341,7 +341,8 @@ export default {
       logout: "Déconnexion",
       terms: "Mentions légales",
       copy_link: "Copier le lien",
-      send_to_goodsher: "Envoyer à un autre\nGoodsher"
+      send_to_goodsher: "Envoyer à un autre\nGoodsher",
+      skip: "Passer"
     },
     loading: {
       error: "Le chargement a échoué..."
