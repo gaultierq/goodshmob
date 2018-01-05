@@ -31,44 +31,47 @@ PODS:
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
   - Protobuf (3.4.0)
-  - React (0.47.1):
-    - React/Core (= 0.47.1)
+  - React (0.48.0):
+    - React/Core (= 0.48.0)
   - react-native-config (0.9.1):
     - React
-  - React/ART (0.47.1):
+  - React/ART (0.48.0):
     - React/Core
-  - React/BatchedBridge (0.47.1):
+  - React/BatchedBridge (0.48.0):
     - React/Core
     - React/cxxreact_legacy
-  - React/Core (0.47.1):
-    - Yoga (= 0.47.1.React)
-  - React/cxxreact_legacy (0.47.1):
+  - React/Core (0.48.0):
+    - Yoga (= 0.48.0.React)
+  - React/cxxreact_legacy (0.48.0):
     - React/jschelpers_legacy
-  - React/jschelpers_legacy (0.47.1)
-  - React/RCTActionSheet (0.47.1):
+  - React/jschelpers_legacy (0.48.0)
+  - React/RCTActionSheet (0.48.0):
     - React/Core
-  - React/RCTAnimation (0.47.1):
+  - React/RCTAnimation (0.48.0):
     - React/Core
-  - React/RCTGeolocation (0.47.1):
+  - React/RCTBlob (0.48.0):
     - React/Core
-  - React/RCTImage (0.47.1):
+  - React/RCTGeolocation (0.48.0):
+    - React/Core
+  - React/RCTImage (0.48.0):
     - React/Core
     - React/RCTNetwork
-  - React/RCTLinkingIOS (0.47.1):
+  - React/RCTLinkingIOS (0.48.0):
     - React/Core
-  - React/RCTNetwork (0.47.1):
+  - React/RCTNetwork (0.48.0):
     - React/Core
-  - React/RCTPushNotification (0.47.1):
+  - React/RCTPushNotification (0.48.0):
     - React/Core
-  - React/RCTSettings (0.47.1):
+  - React/RCTSettings (0.48.0):
     - React/Core
-  - React/RCTText (0.47.1):
+  - React/RCTText (0.48.0):
     - React/Core
-  - React/RCTVibration (0.47.1):
+  - React/RCTVibration (0.48.0):
     - React/Core
-  - React/RCTWebSocket (0.47.1):
+  - React/RCTWebSocket (0.48.0):
     - React/Core
-  - Yoga (0.47.1.React)
+    - React/RCTBlob
+  - Yoga (0.48.0.React)
 
 DEPENDENCIES:
   - Firebase/Core
@@ -107,9 +110,9 @@ SPEC CHECKSUMS:
   GoogleToolboxForMac: 2501e2ad72a52eb3dfe7bd9aee7dad11b858bd20
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   Protobuf: 03eef2ee0b674770735cf79d9c4d3659cf6908e8
-  React: 2fb752725a8794867fc111603099734865004bec
+  React: 59267c3a5811102116842a84a29efaca58167ee8
   react-native-config: 408003951fd9d8b1dfd7ebf535f67c315f44d823
-  Yoga: f2b1f5b59fadb774a3dd9932a7cf813c6e284d71
+  Yoga: de6cde41559145f06b816e2bab5bfa980447798b
 
 PODFILE CHECKSUM: 00cd5d8c2a93f16ac07905ac83a2a8860404fc44
 

@@ -152,3 +152,5 @@ export type RequestState = 'idle' | 'sending' | 'ok' | 'ko';
 export type Deeplink = string;
 
 export type ms = number;
+
+export type RNNNavigator = any;

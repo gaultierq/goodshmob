@@ -27,7 +27,7 @@ class _Analytics implements Analytics {
         //     // RNSegmentIOAnalytics.setup(segmentIOWriteKey, flushEverySecondsCount);
         //     // this.segmentInitialized = true;
         // }
-        if (Config.WITH_FABRIC) {
+        if (__WITH_FABRIC__) {
             //initialized in  native code
             this.fabricInitialized = true;
         }

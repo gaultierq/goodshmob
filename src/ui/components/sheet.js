@@ -59,18 +59,23 @@ export default class Sheet extends React.Component<Props, State> {
             outputRange: ['rgba(0, 0, 0, 0.3)', 'rgba(0, 0, 0, 0)']
         });
 
-        return (
-
+        return (<View style={{flex:1,}}>
             <TouchableWithoutFeedback
                 onPress={()=>this.close()}
             >
                 <Animated.View style={[styles.container, {backgroundColor}]}>
-                    <Animated.View style={[styles.content, {transform: [{translateY}]}]}>
-                        {this.props.children}
-                    </Animated.View>
                 </Animated.View>
             </TouchableWithoutFeedback>
-        );
+
+            <Animated.View style={
+                [
+                    styles.content,
+                    {transform: [{translateY}]}
+                ]
+            }>
+                {this.props.children}
+            </Animated.View>
+        </View>);
     }
 
     close() {

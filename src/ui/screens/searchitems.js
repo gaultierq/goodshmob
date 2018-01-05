@@ -1,6 +1,6 @@
 // @flow
 
-import React, {Component} from 'react';
+import React from 'react';
 import {ActivityIndicator, FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import * as Api from "../../managers/Api";
 import {TabBar, TabViewAnimated} from 'react-native-tab-view';
@@ -11,6 +11,8 @@ import type {SearchCategoryType} from "./search";
 import SearchScreen from "./search";
 import normalize from 'json-api-normalizer';
 import GTouchable from "../GTouchable";
+import Screen from "../components/Screen";
+import type {Item, RNNNavigator} from "../../types";
 
 type SearchCategory = "consumer_goods" | "places" | "musics" | "movies";
 type SearchToken = string;
@@ -18,7 +20,14 @@ type SearchToken = string;
 const SEARCH_CATEGORIES : Array<SearchCategory> = [ "consumer_goods", "places", "musics", "movies"];
 
 
-class SearchItem extends Component<*,*> {
+type Props = {
+    onItemSelected?: (item: Item, navigator: RNNNavigator) => void
+};
+
+type State = {
+};
+
+class SearchItem extends Screen<Props, State> {
 
     render() {
 
@@ -27,7 +36,7 @@ class SearchItem extends Component<*,*> {
                 type: categ,
                 tabName: "search_item_screen.tabs." + categ,
                 placeholder: "search_item_screen.placeholder." + categ,
-                renderItem: ({item})=> <GTouchable onPress={() => this.props.onItemSelected(item)}>
+                renderItem: ({item})=> <GTouchable onPress={() => this.props.onItemSelected(item, this.props.navigator)}>
                     <ItemCell item={item}/>
                 </GTouchable>
 

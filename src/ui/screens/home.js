@@ -16,7 +16,7 @@ import {
 import {connect} from "react-redux";
 import ActionButton from 'react-native-action-button';
 import {LineupListScreen} from './lineuplist'
-import type {Id, Saving} from "../../types";
+import type {Id, RNNNavigator, Saving} from "../../types";
 import {List} from "../../types"
 import Snackbar from "react-native-snackbar"
 import {stylePadding} from "../UIStyles";
@@ -55,7 +55,7 @@ import AddLineupComponent from "../components/addlineup";
 
 type Props = {
     userId: Id,
-    navigator: any
+    navigator: RNNNavigator
 };
 
 type State = {
@@ -146,15 +146,7 @@ class HomeScreen extends Screen<Props, State> {
                         passProps:{
                             onClickClose: () => navigator.dismissModal({animationType: 'none'}),
                         },
-                        navigatorButtons: {
-                            rightButtons: [
-                                {
-                                    id: Nav.CLOSE_MODAL,
-                                    title: i18n.t("actions.cancel")
-                                }
-                            ],
-                            leftButtons: []
-                        },
+                        navigatorButtons: Nav.CANCELABLE_SEARCH_MODAL,
                     });
                     break;
             }
