@@ -11,6 +11,7 @@ import type {SearchCategoryType} from "./search";
 import SearchScreen from "./search";
 import normalize from 'json-api-normalizer';
 import GTouchable from "../GTouchable";
+import Screen from "../components/Screen";
 
 type SearchCategory = "consumer_goods" | "places" | "musics" | "movies";
 type SearchToken = string;
@@ -18,7 +19,7 @@ type SearchToken = string;
 const SEARCH_CATEGORIES : Array<SearchCategory> = [ "consumer_goods", "places", "musics", "movies"];
 
 
-class SearchItem extends Component<*,*> {
+class SearchItem extends Screen<*,*> {
 
     render() {
 
