@@ -41,10 +41,17 @@ const CACHE_VERSION = 1;
 
 let hydrated = false;
 
-if (!__IS_LOCAL__) {
-    let _void = function(){};
-    console.log = console.debug = console.info = console.warn = console.error = _void;
-}
+['log', 'debug', 'info', 'warn', 'error'].forEach((level) => {
+    if (!(_.includes(Config.ENABLED_LOGS, level))) {
+        console[level] = function () {};
+    }
+
+});
+
+// if (!__IS_LOCAL__) {
+//     let _void = function(){};
+//     console.log = console.debug = console.info = console.warn = console.error = _void;
+// }
 
 //this is shit
 // const initialState = () => Immutable({
@@ -180,8 +187,10 @@ export default class App {
             // whitelist: ['auth','device']
         };
 
-        if (!__IS_LOCAL__ || !__USE_CACHE_LOCAL__) {
-            console.log(`staring app with env3`);
+        if (__USE_CACHE_LOCAL__) {
+            console.info(`local cache: enabled -> __USE_CACHE_LOCAL__=${__USE_CACHE_LOCAL__}`);
+        } else {
+            console.info(`local cache: disabled -> __USE_CACHE_LOCAL__=${__USE_CACHE_LOCAL__}`);
             persistConfig = {...persistConfig, whitelist: ['auth', 'device', 'stat', 'config']};
         }
 

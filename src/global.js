@@ -35,7 +35,8 @@ export function init() {
     global.__IS_DEV__= Config.ENV === 'DEV';
 
 
-    global.__USE_CACHE_LOCAL__= !!Config.USE_CACHE_LOCAL;
+    global.__USE_CACHE_LOCAL__= Config.USE_CACHE_LOCAL === "true";
+    global.__WITH_FABRIC__ = Config.WITH_FABRIC === 'true';
 
     let {width, height} = Dimensions.get('window');
     global.__DEVICE_WIDTH__ = width;
