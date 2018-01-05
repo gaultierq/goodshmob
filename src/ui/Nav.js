@@ -1,6 +1,6 @@
 // @flow
 
-import type {Id, Item, User} from "../types";
+import type {Id, Item, RNNNavigator, User} from "../types";
 import {fullName} from "../helpers/StringUtils";
 
 export const CLOSE_MODAL = 'close_modal';
@@ -32,7 +32,7 @@ export const CANCELABLE_SEARCH_MODAL = {
 
 export function startAddItem(navigator: *, defaultLineupId: Id) {
     let cancel = () => {
-        navigator.dismissModal({animated: false})
+        navigator.dismissModal()
     };
 
     navigator.showModal({
@@ -40,7 +40,7 @@ export function startAddItem(navigator: *, defaultLineupId: Id) {
         // title: i18n.t("tabs.search.title"),
         navigatorButtons: CANCELABLE_SEARCH_MODAL,
         passProps: {
-            onItemSelected: (item: Item) => {
+            onItemSelected: (item: Item, navigator: RNNNavigator) => {
 
                 navigator.push({
                     screen: 'goodsh.AddItemScreen', // unique ID registered with Navigation.registerScreen
