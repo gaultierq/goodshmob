@@ -3,8 +3,9 @@ import {fullName} from "../helpers/StringUtils";
 
 export const CLOSE_MODAL = 'close_modal';
 
+//if on the right, crash on android (something related to: "frozen", "enabled")
 export const CANCELABLE_MODAL = {
-    rightButtons: [
+    leftButtons: [
         {
             id: CLOSE_MODAL,
             icon: require('../img2/closeXGrey.png')
@@ -12,7 +13,7 @@ export const CANCELABLE_MODAL = {
 
         }
     ],
-    leftButtons: []
+    rightButtons: []
 };
 
 export function startAddItem(navigator: *, defaultLineupId: Id) {
