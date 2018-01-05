@@ -4,6 +4,7 @@ import {Clipboard, Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpac
 import type {Ask, Id, ItemType} from "../../types";
 import {CheckBox} from "react-native-elements";
 import {connect} from "react-redux";
+import {logged} from "../../managers/CurrentUser"
 import Closable from "./closable";
 import * as Api from "../../managers/Api";
 import ApiAction from "../../helpers/ApiAction";
@@ -27,6 +28,7 @@ type State = {
 
 
 @connect()
+@logged
 export default class AskScreen extends Component<Props, State> {
 
     state= {};

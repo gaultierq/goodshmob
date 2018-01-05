@@ -4,6 +4,7 @@ import type {Node} from 'react';
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
+import {logged} from "../../managers/CurrentUser"
 import FriendCell from "../components/FriendCell";
 import * as Api from "../../managers/Api";
 import Feed from "../components/feed"
@@ -31,6 +32,7 @@ const mapStateToProps = (state, ownProps) => ({
     data: state.data,
 });
 
+@logged
 @connect(mapStateToProps)
 export default class FriendsScreen extends Screen<Props, State> {
 

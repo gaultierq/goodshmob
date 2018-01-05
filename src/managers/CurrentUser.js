@@ -3,7 +3,8 @@
 import type {Store} from 'redux';
 import {buildNonNullData} from "../helpers/DataUtils";
 import type {Id, User} from "../types";
-
+import Scope from "./Scope";
+import {Component} from 'react';
 
 class CurrentUser {
 
@@ -27,6 +28,9 @@ class CurrentUser {
         this.store = store;
     }
 
+    isLogged() {
+        return !!this.id();
+    }
 
 }
 
@@ -47,6 +51,12 @@ export function currentUser(assertNotNull: boolean = true) : User {
 
 export function currentGoodshboxId() {
     return instance.currentGoodshboxId();
+}
+
+//FIXME! learn to create a proper HOC
+export function logged(target) {
+    // return target;
+    return Scope(target);
 }
 
 

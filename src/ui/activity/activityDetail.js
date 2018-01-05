@@ -4,6 +4,7 @@ import React from 'react';
 import {ActivityIndicator, FlatList, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import * as actions from './actions'
 import {connect} from "react-redux";
+import {logged} from "../../managers/CurrentUser"
 import ActivityBody from "./components/ActivityBody";
 import {buildData} from "../../helpers/DataUtils";
 import {MainBackground} from "../UIComponents";
@@ -29,6 +30,7 @@ type State = {
 };
 
 
+@logged
 @connect((state, ownProps) => ({
     data: state.data,
 }))

@@ -1,8 +1,9 @@
 // @flow
 
-import React, {Component} from 'react';
+import React from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {connect} from "react-redux";
+import {currentUserId, logged} from "../../managers/CurrentUser"
 import {activityFeedProps} from "../UIComponents";
 import Immutable from 'seamless-immutable';
 import * as Api from "../../managers/Api";
@@ -11,7 +12,6 @@ import type {List, Saving} from "../../types";
 import {buildData, doDataMergeInState} from "../../helpers/DataUtils";
 import ApiAction from "../../helpers/ApiAction";
 import ActivityCell from "../activity/components/ActivityCell";
-import {currentUserId} from "../../managers/CurrentUser";
 import ActionButton from 'react-native-action-button';
 import {startAddItem} from "../Nav";
 import {Colors} from "../colors";
@@ -32,6 +32,7 @@ const FETCH_LINEUP = ApiAction.create("fetch_lineup");
 const FETCH_SAVINGS = ApiAction.create("fetch_savings");
 const DELETE_SAVING = ApiAction.create("delete_saving");
 
+@logged
 @connect((state, ownProps) => ({
     data: state.data,
 }))

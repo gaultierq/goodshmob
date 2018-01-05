@@ -4,6 +4,7 @@ import type {Node} from 'react';
 import React, {Component} from 'react';
 import {ActivityIndicator, BackHandler, FlatList, RefreshControl, SectionList, Text, View} from 'react-native';
 import {connect} from "react-redux";
+import {logged} from "../../managers/CurrentUser"
 import {assertUnique} from "../../helpers/DataUtils";
 import ApiAction from "../../helpers/ApiAction";
 import * as Api from "../../managers/Api";
@@ -47,6 +48,7 @@ type State = {
 };
 
 @connect()
+//@logged
 export default class Feed<T> extends Component<Props<T>, State>  {
 
     keyExtractor = (item, index) => item.id;

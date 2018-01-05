@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 
 import {connect} from "react-redux";
+import {currentUserId, logged} from "../../managers/CurrentUser"
 import LineupCell from "../components/LineupCell";
 import Immutable from 'seamless-immutable';
 import * as Api from "../../managers/Api";
@@ -23,7 +24,6 @@ import {SearchBar} from 'react-native-elements'
 import type {Id, List, User} from "../../types";
 import type {Props as FeedProps} from "../components/feed";
 import Feed from "../components/feed";
-import {currentUserId} from "../../managers/CurrentUser"
 import ApiAction from "../../helpers/ApiAction";
 import {buildData, doDataMergeInState} from "../../helpers/DataUtils";
 import {CREATE_LINEUP, DELETE_LINEUP} from "../lineup/actionTypes";
@@ -54,6 +54,7 @@ type State = {
 
 
 
+@logged
 @connect((state, ownProps) => ({
     data: state.data,
     pending: state.pending
@@ -156,6 +157,7 @@ const actions = (() => {
         fetchLineups: () => new Api.Call()
             .withMethod('GET')
             .withRoute("lists")
+            .delay(5000)
             .addQuery({include: "savings,savings.resource"}),
 
         getUser: (userId): Api.Call => new Api.Call()

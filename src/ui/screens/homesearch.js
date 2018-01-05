@@ -12,11 +12,11 @@ import {
     View
 } from 'react-native';
 import {connect} from "react-redux";
+import {currentUserId, logged} from "../../managers/CurrentUser"
 import type {Id, List, NavigableProps, Saving} from "../../types";
 import ItemCell from "../components/ItemCell";
 import LineupCell from "../components/LineupCell";
 import {AlgoliaClient, createResultFromHit, makeAlgoliaSearch} from "../../helpers/AlgoliaUtils";
-import {currentUserId} from "../../managers/CurrentUser";
 import Screen from "../components/Screen";
 import type {SearchCategory} from "./search";
 import SearchScreen from "./search";
@@ -31,6 +31,7 @@ type State = {
 };
 
 @connect()
+@logged
 export default class HomeSearchScreen extends Screen<Props, State> {
 
     state :State = {connect: {}};

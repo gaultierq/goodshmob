@@ -2,6 +2,7 @@
 import React from 'react';
 import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
 import {connect} from "react-redux";
+import {currentUser, logged} from "../../managers/CurrentUser"
 import {MainBackground} from "../UIComponents";
 import Immutable from 'seamless-immutable';
 import * as Api from "../../managers/Api";
@@ -17,7 +18,6 @@ import SmartInput from "../components/SmartInput";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import type {PendingAction} from "../../helpers/ModelUtils";
 import {mergeItemsAndPendings, pendingActionWrapper} from "../../helpers/ModelUtils";
-import {currentUser} from "../../managers/CurrentUser";
 import {Colors} from "../colors";
 import Screen from "../components/Screen";
 
@@ -37,6 +37,7 @@ type State = {
     isFetchingActivity?: boolean
 };
 
+@logged
 @connect((state, ownProps) => ({
     data: state.data,
     pending: state.pending

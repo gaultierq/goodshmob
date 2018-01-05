@@ -1,8 +1,20 @@
 // @flow
 import React from 'react';
-import {Animated, Easing, Image, Linking, Share, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
+import {
+    Animated,
+    Easing,
+    Image,
+    Linking,
+    Share,
+    StyleSheet,
+    Text,
+    TouchableHighlight,
+    TouchableOpacity,
+    View
+} from 'react-native';
 import * as UI from "../../UIStyles";
 import {connect} from "react-redux";
+import {logged} from "../../../managers/CurrentUser"
 import type {Activity, i18Key} from "../../../types"
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
 import ActionRights from "../../rights";
@@ -22,6 +34,7 @@ type State = {
 };
 
 @connect()
+@logged
 export default class ActivityBody extends React.Component<Props, State> {
 
     componentWillReceiveProps(nextProps: Props) {

@@ -7,7 +7,7 @@ import normalize from 'json-api-normalizer';
 import {logoutOffline} from "../auth/actions";
 import ApiAction from "../helpers/ApiAction";
 import fetch from 'react-native-fetch-polyfill';
-import type {RequestState} from "../types";
+import type {ms, RequestState} from "../types";
 import Config from 'react-native-config'
 import {Statistics} from "./Statistics";
 import {REMOVE_PENDING_ACTION} from "../reducers/dataReducer";
@@ -153,6 +153,10 @@ class Api {
         }
     }
 
+    auth() {
+        return this.store.getState().auth;
+    }
+
     headers() {
         if (!this.store) return null; //tests
         let state = this.store.getState();
@@ -160,25 +164,21 @@ class Api {
         let {accessToken, client, uid} = state.auth;
         let {currentDeviceId} = state.device;
 
-        let headers = {
+        return _.pickBy({
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Api-Version': CURRENT_API_VERSION
-        };
-
-        //TODO: find nicer syntax
-        if (client) headers['Client'] = client;
-        if (uid) headers['Uid'] = uid;
-        if (accessToken) headers['Access-Token'] = accessToken;
-        if (currentDeviceId) headers['Device-ID'] = currentDeviceId;
-        return headers;
+            'Api-Version': Config.API_VERSION,
+            "Client": client,
+            "Uid": uid,
+            "Access-Token": accessToken,
+            "Device-ID": currentDeviceId
+        }, _.identity);
     }
 
 
-    submit(url, method, body) {
+
+    submit(url, method, body, delay) {
         if (!this.initialized) throw "Api must be initialized before being used";
-
-
 
         let timeout = TIMEOUT;
         let options = Object.assign({
@@ -188,7 +188,24 @@ class Api {
         }, body ? {body: JSON.stringify(body)} : null);
 
         console.debug(`%c sending request url=${url}, options: ${JSON.stringify(options)}`, 'background: #FCFCFC; color: #E36995');
-        return fetch(url, options);
+        let auth = instance.auth();
+
+        return new Promise((resolve, reject) => {
+
+            fetch(url, options).then(resp=> {
+                setTimeout(()=> {
+                    if (instance.auth() === auth) {
+                        resolve(resp);
+                    }
+                    else {
+                        reject(new Error("User auth has changed. This response should not be saved or processed."));
+                    }
+                }, _.isNumber(delay) ? delay : 0);
+
+            })
+        });
+
+
     }
 }
 
@@ -198,7 +215,9 @@ export class Call {
     url: URL = new URL(API_END_POINT);
     body: any;
     method: string;
-    headers = instance.headers();
+    delay: ms;
+
+    //headers = instance.headers();
 
     withRoute(pathname:string): Call {
         this.url = this.url.set('pathname', pathname);
@@ -230,6 +249,11 @@ export class Call {
         return this;
     }
 
+    delay(delay:ms): Call {
+        this.delay = delay;
+        return this;
+    }
+
     static parse(url): Call {
         let result = new Call();
         result.url = new URL(url);
@@ -246,6 +270,7 @@ export class Call {
 
     disptachForAction2(apiAction: ApiAction, options?: any = {}) {
         const call = this;
+
         return (dispatch) => {
             let tic = Date.now();
             //let {meta} = options;
@@ -301,8 +326,10 @@ export class Call {
     }
 
     run() {
-        return this.exec()
+        if (!this.method) throw new Error("call need a method");
+        return instance.submit(this.url.toString(), this.method, this.body, this.delay)
             .then(resp => {
+
                 console.debug("api: response");
                 if (resp.ok) {
                     let contentType = resp.headers.get("content-type");
@@ -319,10 +346,10 @@ export class Call {
             });
     }
 
-    exec() {
-        //if (!this.method) throw new Error("call need a method");
-        return instance.submit(this.url.toString(), this.method, this.body);
-    }
+    // exec() {
+    //     //if (!this.method) throw new Error("call need a method");
+    //     return instance.submit(this.url.toString(), this.method, this.body);
+    // }
 }
 const instance : Api = new Api();
 

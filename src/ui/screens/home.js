@@ -20,7 +20,7 @@ import type {Id, RNNNavigator, Saving} from "../../types";
 import {List} from "../../types"
 import Snackbar from "react-native-snackbar"
 import {stylePadding} from "../UIStyles";
-import {currentGoodshboxId, currentUserId} from "../../managers/CurrentUser"
+import {currentGoodshboxId, currentUserId, logged, logged2} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import {Menu, MenuContext, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
@@ -64,6 +64,9 @@ type State = {
     changeLinupTitleId?: {id:Id, name: string}
 };
 
+
+
+// @logged
 @connect()
 class HomeScreen extends Screen<Props, State> {
 
@@ -432,9 +435,7 @@ class HomeScreen extends Screen<Props, State> {
     onFloatingButtonPressed() {
         startAddItem(this.props.navigator, currentGoodshboxId());
     }
-
 }
-
 
 const screen = HomeScreen;
 
