@@ -73,6 +73,7 @@ export default class AskScreen extends Component<Props, State> {
                             onSubmitEditing={this.createAsk.bind(this)}
                             value={askContent}
                             multiline
+                            blurOnSubmit
                             onChangeText={(askContent) => this.setState({askContent})}
                             placeholder={i18n.t("actions.ask_friend")}
                             placeholderTextColor={"rgba(255,255,255,0.6)"}
