@@ -236,6 +236,9 @@ export default class App {
             this.bugsnag = new Client();
 
             console.error = (err) => {
+                if (typeof err === 'string') {
+                    err = new Error(`Wrapped error: '${err}'` );
+                }
                 this.bugsnag.notify(err);
             }
         }
