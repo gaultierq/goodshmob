@@ -117,20 +117,9 @@ class NetworkScreen extends Screen<Props, State> {
 
 //TODO: rm platform specific rules when [1] is solved.
         //1: https://github.com/wix/react-native-navigation/issues/1502
-        let ios = __IS_IOS__;
-        let show = ios ? navigator.showLightBox : navigator.showModal;
-        let hide = ios ? navigator.dismissLightBox : navigator.dismissModal;
-        show({
+        navigator.showModal({
             screen: 'goodsh.AskScreen', // unique ID registered with Navigation.registerScreen
-            style: {
-                backgroundBlur: "dark", // 'dark' / 'light' / 'xlight' / 'none' - the type of blur on the background
-                tapBackgroundToDismiss: true // dismisses LightBox on background taps (optional)
-            },
-            passProps: {
-                containerStyle: {backgroundColor: ios ? 'transparent' : 'white'},
-                onClickClose: hide
-            },
-            navigatorStyle: {navBarHidden: true},
+            animationType: 'none'
         });
     }
 

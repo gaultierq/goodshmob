@@ -232,7 +232,7 @@ export default class App {
         Analytics.init();
 
 
-        if (!__IS_LOCAL__) {
+        if (!__WITH_BUGSNAG__) {
             this.bugsnag = new Client();
 
             console.error = (err) => {

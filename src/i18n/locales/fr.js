@@ -1,9 +1,9 @@
 export default {
     app : {
-      update: {
-        title: "Mise à jour",
-        label : "Mise à jour de votre app, un instant svp..."
-      }
+        update: {
+            title: "Mise à jour",
+            label : "Mise à jour de votre app, un instant svp..."
+        }
     },
     "tabs": {
         home: {
@@ -24,10 +24,10 @@ export default {
             placeholder: "Rechercher dans mes listes"
         },
         goodsh : {
-          title: "GoodshBox"
+            title: "GoodshBox"
         },
         mine : {
-          title: "Mes listes"
+            title: "Mes listes"
         }
     },
     search: "Rechercher",
@@ -306,55 +306,57 @@ export default {
         lineup: "Cette liste est vide"
     },
     activity_action_bar: {
-      goodsh_deleted: "Goodsh effacé",
-      comment: {
-        title: "Commentaires"
-      },
-      response: {
-        title: "Réponses"
-      }
+        goodsh_deleted: "Goodsh effacé",
+        comment: {
+            title: "Commentaires"
+        },
+        response: {
+            title: "Réponses"
+        }
     },
     add_item_screen: {
-      title: "Choisissez une liste"
+        title: "Choisissez une liste"
     },
     home_search_screen: {
-      saving: {
-        title: "Details",
-      },
-      community: {
-        title: "Communauté",
-      }
+        saving: {
+            title: "Details",
+        },
+        community: {
+            title: "Communauté",
+        }
     },
     actions: {
-      ok: "Ok",
-      add: "Ajouter",
-      delete: "Supprimer",
-      change: "Changer",
-      change_title: "Changer titre",
-      undo: "Annuler",
-      cancel: "Annuler",
-      buy: "Acheter",
-      send: "Envoyer",
-      create: "Créer",
-      try_again: "Réessayer",
-      ask_friend: "Poser une question à vos amis",
-      logout: "Déconnexion",
-      terms: "Mentions légales",
-      copy_link: "Copier le lien",
-      send_to_goodsher: "Envoyer à un autre\nGoodsher",
-      skip: "Passer"
+        ok: "Ok",
+        add: "Ajouter",
+        delete: "Supprimer",
+        change: "Changer",
+        change_title: "Changer titre",
+        undo: "Annuler",
+        cancel: "Annuler",
+        buy: "Acheter",
+        send: "Envoyer",
+        create: "Créer",
+        try_again: "Réessayer",
+        ask_friend: "Poser une question à vos amis",
+        logout: "Déconnexion",
+        terms: "Mentions légales",
+        copy_link: "Copier le lien",
+        send_to_goodsher: "Envoyer à un autre\nGoodsher",
+        skip: "Passer",
+        ask: "Sollicitez vos amis"
+
     },
     loading: {
-      error: "Le chargement a échoué..."
+        error: "Le chargement a échoué..."
     },
     alert: {
-      delete: {
-        title: "Suppression",
-        label: "Êtes-vous sûr de vouloir effacer cet élément ?"
-      }
+        delete: {
+            title: "Suppression",
+            label: "Êtes-vous sûr de vouloir effacer cet élément ?"
+        }
     },
     dev: {
-      label: "Dev mode",
-      title: "DevMenu"
+        label: "Dev mode",
+        title: "DevMenu"
     }
 };

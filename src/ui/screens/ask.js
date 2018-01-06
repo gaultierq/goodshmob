@@ -5,13 +5,16 @@ import type {Ask, Id, ItemType} from "../../types";
 import {CheckBox} from "react-native-elements";
 import {connect} from "react-redux";
 import {logged} from "../../managers/CurrentUser"
-import Closable from "./closable";
 import * as Api from "../../managers/Api";
 import ApiAction from "../../helpers/ApiAction";
 
 import Snackbar from "react-native-snackbar"
 import Button from 'apsl-react-native-button'
 import {Colors} from "../colors";
+import Sheet from "../components/sheet";
+import {SFP_TEXT_BOLD} from "../fonts";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import GTouchable from "../GTouchable";
 
 type Props = {
     itemId: Id,
@@ -31,6 +34,15 @@ type State = {
 @logged
 export default class AskScreen extends Component<Props, State> {
 
+    static navigatorStyle = {
+        navBarHidden: true,
+        screenBackgroundColor: 'transparent',
+        modalPresentationStyle: 'overFullScreen',
+        tapBackgroundToDismiss: true
+    };
+
+    _sheet;
+
     state= {};
 
     render() {
@@ -40,39 +52,45 @@ export default class AskScreen extends Component<Props, State> {
         let buttonDisabled = this.state.isAsking || !askContent;
         let notEditable = this.state.isAsking;
         return (
-            <Closable
-                onClickClose={onClickClose}
-                containerStyle={containerStyle}
+            <KeyboardAwareScrollView
+                contentContainerStyle={{flex:1}}
+                scrollEnabled={false}
+                keyboardShouldPersistTaps={true}
+                // style={{position: 'absolute', bottom:0, top: 0}}
             >
+                <Sheet
+                    navigator={this.props.navigator}
+                    ref={ref => this._sheet = ref}
+                >
+                    <View style={{height: 300, backgroundColor: 'rgba(220,124,223,1)', padding: 20}}>
 
-                <View style={{height: 300, margin: 16}}>
-                    <Text style={styles.header}>Sollicitez vos amis</Text>
-                    <TextInput
-                        editable={!notEditable}
-                        onSubmitEditing={this.createAsk.bind(this)}
-                        value={askContent}
-                        multiline
-                        onChangeText={(askContent) => this.setState({askContent})}
-                        placeholder={i18n.t("actions.ask_friend")}
-                        autoFocus
-                        style={[
-                            styles.input,
-                            (notEditable ? {color: "grey"} : {color: "black"}),
-                            {marginTop: 15}
-                        ]}
-                        returnKeyType={'send'}
-                    />
-                    <Button
-                        isLoading={this.state.isAsking}
-                        isDisabled={buttonDisabled}
-                        onPress={()=> this.createAsk()}
-                        style={[styles.button, {marginTop: 15}]}
-                        disabledStyle={styles.disabledButton}
-                    >
-                        <Text style={{color: buttonDisabled ? Colors.greyishBrown : Colors.white}}>Envoyer</Text>
-                    </Button>
-                </View>
-            </Closable>
+                        {/*<Text style={styles.header}>{i18n.t("actions.ask")}</Text>*/}
+                        <GTouchable onPress={()=>this._sheet && this._sheet.close()}>
+                            <Image source={require('../../img2/closeXWhite.png')}/>
+                        </GTouchable>
+                        <TextInput
+                            editable={!notEditable}
+                            onSubmitEditing={this.createAsk.bind(this)}
+                            value={askContent}
+                            multiline
+                            onChangeText={(askContent) => this.setState({askContent})}
+                            placeholder={i18n.t("actions.ask_friend")}
+                            placeholderTextColor={"rgba(255,255,255,0.6)"}
+                            //autofocus fucked up the animation
+                            // autoFocus
+                            style={[
+                                {backgroundColor: 'transparent', margin: 20},
+                                styles.input,
+                                (notEditable ? {color: "grey"} : {color: Colors.white}),
+                            ]}
+                            returnKeyType={'send'}
+                        />
+                        <Text style={{color: Colors.white, fontSize: 15}}>{`${200 - (askContent || "").length}`}</Text>
+
+                    </View>
+
+                </Sheet>
+            </KeyboardAwareScrollView>
         );
     }
 
@@ -89,8 +107,8 @@ export default class AskScreen extends Component<Props, State> {
                 Snackbar.show({
                     title: i18n.t('ask.sent'),
                 });
-
-                this.props.onClickClose();
+                this._sheet.close();
+                // this.props.onClickClose();
 
             }, (err)=>console.log(err))
             .then(()=> this.setState({isAsking: false}));
@@ -112,26 +130,19 @@ const actions = {
 
 const styles = StyleSheet.create({
     input:{
-        height: 140,
-        height: 140,
-        width: "100%",
-
-        fontSize: 18,
+        // flex:1,
+        //height: 140,
+        fontSize: 30,
+        lineHeight: 35,
+        textAlign: 'center',
+        fontFamily: SFP_TEXT_BOLD,
         // borderWidth: StyleSheet.hairlineWidth,
         borderColor: Colors.greyishBrown,
-        borderRadius: 5
 
     },
     header:{
         fontSize: 16,
-
         color: Colors.white
-    },
-    button: {
-        padding: 8,
-        height: 30,
-        color: Colors.white,
-        borderColor: Colors.white,
     },
     disabledButton: {
         borderColor: Colors.greyishBrown,

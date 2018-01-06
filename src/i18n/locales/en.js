@@ -1,9 +1,9 @@
 export default {
     app : {
-      update: {
-        title: "Update",
-        label : "Updating your app, please wait..."
-      }
+        update: {
+            title: "Update",
+            label : "Updating your app, please wait..."
+        }
     },
     "tabs": {
         home: {
@@ -24,10 +24,10 @@ export default {
             placeholder: "Search into my lists"
         },
         goodsh : {
-          title: "GoodshBox"
+            title: "GoodshBox"
         },
         mine : {
-          title: "My lineups"
+            title: "My lineups"
         }
     },
     search: "Search",
@@ -312,55 +312,56 @@ export default {
         lineup: "This list is empty"
     },
     activity_action_bar: {
-      goodsh_deleted: "Goodsh deleted",
-      comment: {
-        title: "Comments"
-      },
-      response: {
-        title: "Responses"
-      }
+        goodsh_deleted: "Goodsh deleted",
+        comment: {
+            title: "Comments"
+        },
+        response: {
+            title: "Responses"
+        }
     },
     add_item_screen: {
-      title: "Choose liste"
+        title: "Choose liste"
     },
     home_search_screen: {
-      saving: {
-        title: "Details",
-      },
-      community: {
-        title: "Community",
-      }
+        saving: {
+            title: "Details",
+        },
+        community: {
+            title: "Community",
+        }
     },
     loading: {
-      error: "Loading Error..."
+        error: "Loading Error..."
     },
     actions: {
-      ok: "Ok",
-      add: "Add",
-      delete: "Delete",
-      change: "Change",
-      change_title: "Change title",
-      undo: "Undo",
-      cancel: "Cancel",
-      buy: "Buy",
-      send: "Send",
-      create: "Create",
-      try_again: "Try Again",
-      ask_friend: "Ask question to friends",
-      logout: "Logout",
-      terms: "Terms",
-      copy_link: "Copy link",
-      send_to_goodsher: "Send to another\nGoodsher",
-      skip: "Skip"
+        ok: "Ok",
+        add: "Add",
+        delete: "Delete",
+        change: "Change",
+        change_title: "Change title",
+        undo: "Undo",
+        cancel: "Cancel",
+        buy: "Buy",
+        send: "Send",
+        create: "Create",
+        try_again: "Try Again",
+        ask_friend: "Ask question to friends",
+        logout: "Logout",
+        terms: "Terms",
+        copy_link: "Copy link",
+        send_to_goodsher: "Send to another\nGoodsher",
+        skip: "Skip",
+        ask: "Ask your friends"
     },
     alert: {
-      delete: {
-        title: "Deletion",
-        label: "Are you sure ?"
-      }
+        delete: {
+            title: "Deletion",
+            label: "Are you sure ?"
+        }
     },
     dev: {
-      label: "Dev mode",
-      title: "DevMenu"
+        label: "Dev mode",
+        title: "DevMenu"
     }
 };
