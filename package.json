@@ -32,6 +32,7 @@
 		"react-instantsearch": "^4.2.0",
 		"react-native": "0.48.0",
 		"react-native-action-button": "^2.8.1",
+		"react-native-bottomsheet": "^1.8.1",
 		"react-native-code-push": "^5.1.0-beta",
 		"react-native-config": "^0.9.1",
 		"react-native-device-info": "^0.12.1",

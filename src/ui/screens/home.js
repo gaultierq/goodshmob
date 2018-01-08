@@ -20,10 +20,9 @@ import type {Id, RNNNavigator, Saving} from "../../types";
 import {List} from "../../types"
 import Snackbar from "react-native-snackbar"
 import {stylePadding} from "../UIStyles";
-import {currentGoodshboxId, currentUserId, logged, logged2} from "../../managers/CurrentUser"
+import {currentGoodshboxId, currentUserId, logged2} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
-import {Menu, MenuContext, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
 import Modal from 'react-native-modal'
 import type {Visibility} from "./additem";
 import {LINEUP_DELETION, patchLineup} from "../lineup/actions";
@@ -39,6 +38,8 @@ import Feed from "../components/feed";
 import LineupCellSaving from "../components/LineupCellSaving";
 import GTouchable from "../GTouchable";
 import AddLineupComponent from "../components/addlineup";
+import BottomSheet from 'react-native-bottomsheet';
+
 
 // let AppTour;
 // let AppTourSequence;
@@ -174,7 +175,7 @@ class HomeScreen extends Screen<Props, State> {
     render() {
 
         return (
-            <MenuContext>
+            <View>
                 <View>
                     <LineupListScreen
                         userId={currentUserId()}
@@ -217,7 +218,7 @@ class HomeScreen extends Screen<Props, State> {
                 <View >
                     {this.renderChangeTitleModal()}
                 </View>
-            </MenuContext>
+            </View>
         );
     }
 
@@ -347,7 +348,7 @@ class HomeScreen extends Screen<Props, State> {
                     marginRight: 10,
                     opacity: 1 - (0.2 * i)
                 }
-                ]}/>);
+            ]}/>);
         }
         return (<GTouchable onPress={() => this.onFloatingButtonPressed()}>
             <View style={{flexDirection: 'row', paddingLeft: 15}}>{result}</View>
@@ -380,28 +381,63 @@ class HomeScreen extends Screen<Props, State> {
             // cannotFetch={!super.isVisible()}
         />
     }
+
+    // renderMenuButton2(item, padding) {
+    //     if (item.id === currentGoodshboxId()) return null;
+    //
+    //     // console.log("paddings:" + stylePadding(padding, 12));
+    //
+    //     return <View style={{position: "absolute", right: 0, margin: 0}}>
+    //         <Menu>
+    //             <MenuTrigger>
+    //                 {/*<Icon name="md-more" size={25} style={{...stylePadding(padding, 12)}}*/}
+    //                 {/*color={Colors.blue}/>*/}
+    //                 <View style={{...stylePadding(padding, 14)}}>
+    //                     <Image
+    //                         source={require('../../img2/moreDotsGrey.png')} resizeMode="contain"/>
+    //                 </View>
+    //
+    //             </MenuTrigger>
+    //             <MenuOptions>
+    //                 <MenuOption onSelect={() => setTimeout(()=>this.deleteLineup(item))} text={i18n.t("actions.change")}/>
+    //                 <MenuOption onSelect={() => setTimeout(() => this.changeTitle(item))} text={i18n.t("actions.change_title")}/>
+    //             </MenuOptions>
+    //         </Menu>
+    //     </View>;
+    // }
+
+
+
     renderMenuButton(item, padding) {
         if (item.id === currentGoodshboxId()) return null;
 
         // console.log("paddings:" + stylePadding(padding, 12));
-
-        return <View style={{position: "absolute", right: 0, margin: 0}}>
-            <Menu>
-                <MenuTrigger>
-                    {/*<Icon name="md-more" size={25} style={{...stylePadding(padding, 12)}}*/}
-                    {/*color={Colors.blue}/>*/}
-                    <View style={{...stylePadding(padding, 14)}}>
-                        <Image
-                            source={require('../../img2/moreDotsGrey.png')} resizeMode="contain"/>
-                    </View>
-
-                </MenuTrigger>
-                <MenuOptions>
-                    <MenuOption onSelect={() => setTimeout(()=>this.deleteLineup(item))} text={i18n.t("actions.change")}/>
-                    <MenuOption onSelect={() => setTimeout(() => this.changeTitle(item))} text={i18n.t("actions.change_title")}/>
-                </MenuOptions>
-            </Menu>
-        </View>;
+        let handler = () => {
+            BottomSheet.showBottomSheetWithOptions({
+                options: [i18n.t("actions.change_title"), i18n.t("actions.delete"), i18n.t("actions.cancel")],
+                title: item.name,
+                dark: true,
+                destructiveButtonIndex: 1,
+                cancelButtonIndex: 2,
+            }, (value) => {
+                switch (value) {
+                    case 1:
+                        this.deleteLineup(item);
+                        break;
+                    case 0:
+                        this.changeTitle(item)
+                        break;
+                }
+            });
+        };
+        return (<View style={{position: "absolute", right: 0, margin: 0}}>
+            <GTouchable onPress={handler}>
+                <View style={{...stylePadding(padding, 14)}}>
+                    <Image
+                        source={require('../../img2/moreDotsGrey.png')} resizeMode="contain"/>
+                </View>
+            </GTouchable>
+        </View>);
     }
 
     deleteLineup(lineup: List) {

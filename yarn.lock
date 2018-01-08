@@ -4669,6 +4669,10 @@ react-native-animatable@^1.2.3:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-bottomsheet@^1.8.1:
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/react-native-bottomsheet/-/react-native-bottomsheet-1.8.1.tgz#cf842e867863b9a35024b461f43a6b0ba5d255bb"
+
 react-native-code-push@^5.1.0-beta:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/react-native-code-push/-/react-native-code-push-5.2.1.tgz#b96cabf4be74e0caac8d55d1126aa48dba695490"

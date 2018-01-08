@@ -10,6 +10,7 @@ import android.app.Application;
 import android.content.Intent;
 
 import com.facebook.react.ReactApplication;
+import com.clipsub.rnbottomsheet.RNBottomSheetPackage;
 import com.smixx.fabric.FabricPackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
@@ -50,6 +51,7 @@ public class MainApplication extends NavigationApplication implements ReactAppli
   protected List<ReactPackage> getPackages() {
     return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new RNBottomSheetPackage(),
             new FabricPackage(),
             new ReactNativeConfigPackage(),
             new RNDeviceInfo(),
