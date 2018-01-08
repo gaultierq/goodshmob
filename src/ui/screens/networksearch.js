@@ -98,7 +98,10 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
 
         let renderUser = ({item}) => {
             return (
-                <UserConnectItem user={item}/>
+                <UserConnectItem
+                    user={item}
+                    navigator={this.props.navigator}
+                />
             );
         };
 

@@ -144,8 +144,8 @@ export default class ActivityCell extends React.Component<Props, State> {
             borderColor: "rgba(255,255,255,0.4)",
             borderWidth: StyleSheet.hairlineWidth,
             shadowColor: Colors.white,
-            shadowOpacity: 140,
-            shadowRadius: 6,
+            shadowOpacity: 0.7,
+            shadowRadius: 3,
             shadowOffset: {width: 0, height: 0},
             elevation: 50,
             borderRadius: AVATAR_DIM * 0.5}]}>

@@ -197,15 +197,15 @@ class Api {
                     reject(err);
                 })
                 .then(resp=> {
-                setTimeout(()=> {
-                    if (instance.auth() === auth) {
-                        resolve(resp);
-                    }
-                    else {
-                        reject(new Error("User auth has changed. This response should not be saved or processed."));
-                    }
-                }, _.isNumber(delay) ? delay : 0);
-            })
+                    setTimeout(()=> {
+                        if (instance.auth() === auth) {
+                            resolve(resp);
+                        }
+                        else {
+                            reject(new Error("User auth has changed. This response should not be saved or processed."));
+                        }
+                    }, _.isNumber(delay) ? delay : 0);
+                })
         });
 
 
@@ -298,7 +298,12 @@ export class Call {
                             dispatch({ data, type: API_DATA_SUCCESS, origin: apiAction});
 
                             //let the reducer do something
-                            dispatch({type: apiAction.success(), payload: response, original: resp.original,...options});
+                            dispatch({
+                                type: apiAction.success(),
+                                payload: response,
+                                original: resp.original,
+                                options
+                            });
 
                             resolve(response);
                         },
@@ -329,7 +334,7 @@ export class Call {
     }
 
     run() {
-        if (!this.method) throw new Error("call need a method");
+        if (!this.method) throw new Error(`call need a method ${this.toString()}`);
         return instance.submit(this.url.toString(), this.method, this.body, this.delay)
             .catch(err => {throw err})
             .then(resp => {

@@ -314,7 +314,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             let call;
             //backend api is not unified yet
             if (this.state.moreLink) {
-                call = Api.Call.parse(this.state.moreLink);
+                call = Api.Call.parse(this.state.moreLink).withMethod('GET');
             }
             else {
                 call = callFactory();
