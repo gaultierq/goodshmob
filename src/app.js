@@ -26,7 +26,7 @@ import {Statistics} from "./managers/Statistics";
 import {INIT_CACHE, UPGRADE_CACHE} from "./auth/actionTypes";
 import Config from 'react-native-config'
 import {Provider} from "react-redux";
-import Messenger from "./managers/Messenger"
+import {Messenger} from "./managers/Messenger"
 import {Colors} from "./ui/colors";
 import {SFP_TEXT_REGULAR} from "./ui/fonts";
 import NavManager from "./managers/NavManager";

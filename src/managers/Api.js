@@ -12,8 +12,7 @@ import Config from 'react-native-config'
 import {Statistics} from "./Statistics";
 import {REMOVE_PENDING_ACTION} from "../reducers/dataReducer";
 import {NetInfo} from "react-native";
-import {EVENT_MESSAGE} from "../events";
-import EventBus from 'eventbusjs'
+import {sendMessage} from "./Messenger";
 
 export const API_DATA_REQUEST = 'API_DATA_REQUEST';
 export const API_DATA_SUCCESS = 'API_DATA_SUCCESS';
@@ -193,6 +192,7 @@ class Api {
             fetch(url, options)
                 .catch(err=> {
                     console.warn("http: error" + JSON.stringify(err));
+                    sendMessage("http error");
                     throw err;
                 })
                 .then(resp=> {
@@ -309,7 +309,8 @@ export class Call {
                             //     title: "#request failure",
                             // });
 
-                            EventBus.dispatch(EVENT_MESSAGE, {content: "#request failure", type: 'snack'});
+                            //EventBus.dispatch(EVENT_MESSAGE, {content: "#request failure", type: 'snack'});
+                            sendMessage("#request failure");
 
                             if (error.status === 401) {
                                 dispatch(errorAction);

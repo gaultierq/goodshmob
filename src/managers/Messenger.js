@@ -21,7 +21,7 @@ class _Messenger implements Messenger {
         switch (type) {
             case 'snack':
                 //TODO: something with priority
-                let {priority} = others;
+                let {priority, reference} = others;
 
                 if (!this.snackDismissTimeout) {
                     this.snackDismissTimeout = setTimeout(()=> {
@@ -49,9 +49,16 @@ class _Messenger implements Messenger {
         return "Messenger-" + this.id;
     }
 }
-export interface Messenger {
+interface Messenger {
 
     init(): void;
 }
 
-module.exports = new _Messenger();
+function sendMessage(message: string, options?: any) {
+    EventBus.dispatch(EVENT_MESSAGE, {content: message, type: 'snack', ...options});
+}
+
+module.exports = {
+    Messenger: new _Messenger(),
+    sendMessage
+};
