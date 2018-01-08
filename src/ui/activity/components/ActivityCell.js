@@ -101,7 +101,7 @@ export default class ActivityCell extends React.Component<Props, State> {
                             transform: [{translateY}, {translateX: -translateX}, {rotate: '70deg'}]
                         }]} source={require('../../../img2/sendIcon.png')}/>
                         <GTouchable onPress={() => seeUser(navigator, postedToUser)}>
-                            <Avatar user={postedToUser} style={{dim: AVATAR_DIM}}/>
+                            {this.renderUserAvatar(postedToUser)}
                         </GTouchable>
                     </View>}
                 </View>
@@ -140,7 +140,15 @@ export default class ActivityCell extends React.Component<Props, State> {
 
     renderUserAvatar(user: User, styles?: *) {
         let navigator: RNNNavigator = this.props.navigator;
-        return <GTouchable onPress={() => seeUser(navigator, user)} style={styles}>
+        return <GTouchable onPress={() => seeUser(navigator, user)} style={[styles, {
+            borderColor: "rgba(255,255,255,0.4)",
+            borderWidth: StyleSheet.hairlineWidth,
+            shadowColor: Colors.white,
+            shadowOpacity: 140,
+            shadowRadius: 6,
+            shadowOffset: {width: 0, height: 0},
+            elevation: 50,
+            borderRadius: AVATAR_DIM * 0.5}]}>
             <Avatar user={user} style={{dim: AVATAR_DIM}}/>
         </GTouchable>;
     }
