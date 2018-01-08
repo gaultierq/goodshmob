@@ -337,13 +337,36 @@ class HomeScreen extends Screen<Props, State> {
         )
     }
 
+    renderEmptyList() {
+        let result = [];
+        for (let i = 0; i < 5; i++) {
+            result.push(<View style={[
+                LineupCellSaving.styles.cell,
+                {
+                    backgroundColor: Colors.grey3,
+                    marginRight: 10,
+                    opacity: 1 - (0.2 * i)
+                }
+                ]}/>);
+        }
+        return (<GTouchable onPress={() => this.onFloatingButtonPressed()}>
+            <View style={{flexDirection: 'row', paddingLeft: 15}}>{result}</View>
+        </GTouchable>);
+    }
+
     renderList(savings) {
+
+        if (_.isEmpty(savings)) {
+            return this.renderEmptyList()
+        }
+
         return <Feed
             data={savings}
-            renderItem={({item}) => <GTouchable onPress={()=>{
-                this.onSavingPressed(item)
+            renderItem={({item}) => (
+                <GTouchable onPress={()=>{this.onSavingPressed(item)}}>
+                    <LineupCellSaving saving={item} style={{marginRight: 10}}/>
+                </GTouchable>)
             }
-            }><LineupCellSaving saving={item} style={{marginRight: 10}}/></GTouchable>}
             // fetchSrc={{
             //     callFactory: this.fetchInteractions.bind(this),
             //     useLinks: true,
