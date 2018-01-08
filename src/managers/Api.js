@@ -25,8 +25,6 @@ export const API_END_POINT = Config.SERVER_URL;
 
 
 
-const TIMEOUT = 20 * 1000;
-
 type CallFactory = (payload: any) => Call;
 
 class Api {
@@ -180,7 +178,7 @@ class Api {
     submit(url, method, body, delay) {
         if (!this.initialized) throw "Api must be initialized before being used";
 
-        let timeout = TIMEOUT;
+        let timeout = __HTTP_TIMEOUT__;
         let options = Object.assign({
             method,
             timeout,
@@ -192,7 +190,12 @@ class Api {
 
         return new Promise((resolve, reject) => {
 
-            fetch(url, options).then(resp=> {
+            fetch(url, options)
+                .catch(err=> {
+                    console.warn("http: error" + JSON.stringify(err));
+                    throw err;
+                })
+                .then(resp=> {
                 setTimeout(()=> {
                     if (instance.auth() === auth) {
                         resolve(resp);
@@ -201,7 +204,6 @@ class Api {
                         reject(new Error("User auth has changed. This response should not be saved or processed."));
                     }
                 }, _.isNumber(delay) ? delay : 0);
-
             })
         });
 

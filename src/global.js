@@ -39,6 +39,9 @@ export function init() {
     global.__WITH_FABRIC__ = Config.WITH_FABRIC === 'true';
     global.__WITH_BUGSNAG__ = Config.WITH_BUGSNAG === 'true';
 
+    global.__HTTP_TIMEOUT__ = Number(Config.HTTP_TIMEOUT);
+
+
     let {width, height} = Dimensions.get('window');
     global.__DEVICE_WIDTH__ = width;
     global.__DEVICE_HEIGHT__ = height;
