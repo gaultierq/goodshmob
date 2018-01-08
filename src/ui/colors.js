@@ -8,7 +8,9 @@ export const Colors = Object.freeze({
     grey4: '#D5D5D5',
     green: '#01DEB1',
     white: '#FFFFFF',
-    dirtyWhite: 'rgb(247,247,247)'
+    dirtyWhite: 'rgb(247,247,247)',
+    pink: 'rgb(220,124,223)',
+
 });
 
 

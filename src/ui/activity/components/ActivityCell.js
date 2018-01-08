@@ -5,7 +5,7 @@ import {Image, Linking, Share, StyleSheet, Text, TouchableOpacity, View} from 'r
 import {connect} from "react-redux";
 import {logged} from "../../../managers/CurrentUser"
 import {buildNonNullData, sanitizeActivityType} from "../../../helpers/DataUtils";
-import type {Activity, ActivityType, Id} from "../../../types"
+import type {Activity, ActivityType, Id, RNNNavigator} from "../../../types"
 import ActivityBody from "./ActivityBody";
 import ActivityActionBar from "./ActivityActionBar";
 import {Avatar} from "../../UIComponents";
@@ -13,6 +13,9 @@ import {seeUser} from "../../Nav";
 import GTouchable from "../../GTouchable";
 import * as activityAction from "../actions";
 import {getPendingLikeStatus} from "../../rights";
+import {SFP_TEXT_BOLD} from "../../fonts";
+import {Colors} from "../../colors";
+import User from "react-native-firebase/lib/modules/auth/user";
 
 export type ActivityDisplayContext = {
 
@@ -33,6 +36,8 @@ type State = {
 };
 
 
+const AVATAR_DIM = 34;
+
 @logged
 @connect((state, ownProps) => ({
     data: state.data,
@@ -42,21 +47,27 @@ export default class ActivityCell extends React.Component<Props, State> {
 
     refKeys: any;
 
-    render() {
 
+
+    render() {
         let activity = this.getActivity();
         this.refKeys = this.makeRefObject(this.props);
 
-
-
+        if (activity.type === 'asks') {
+            return (
+                <View style={[styles.askContent, {backgroundColor: this.getAskBackgroundColor()}]}>
+                    {this.renderUserAvatar(activity.user, {position: 'absolute', zIndex: 2, top: 15, left: 15})}
+                    <Text style={[styles.askText]}>{activity.content}</Text>
+                </View>
+            )
+        }
 
         let target = activity.target;
         let postedToUser = target && target.type === 'users' && target;
         // const {skipLineup, withFollowButton} = this.props;
         // if (skipLineup) return null;
 
-        let avatarDim = 34;
-        let halfAvatar = avatarDim / 2;
+        let halfAvatar = AVATAR_DIM / 2;
         let avatarTopMargin = halfAvatar;
 
 
@@ -70,28 +81,35 @@ export default class ActivityCell extends React.Component<Props, State> {
         const translateX = 25;
 
         const navigator = this.props.navigator;
+        const user = activity.user;
         return (
             <View>
                 <View style={{zIndex: 2}}>
-                    <View style={{left: padding, flexDirection: 'row', }}>
-                        <GTouchable onPress={()=> seeUser(navigator, activity.user)}>
-                            <Avatar user={activity.user} style={{dim: avatarDim}}/>
-                        </GTouchable>
-                        {postedToUser && <Image style={[{width: dim, height: dim, transform: [{translateY: -20}, {translateX: 15}, { rotate: '20deg'}]}]} source={require('../../../img2/sendIcon.png')}/>}
+                    <View style={{left: padding, flexDirection: 'row',}}>
+                        {this.renderUserAvatar(user)}
+                        {postedToUser && <Image style={[{
+                            width: dim,
+                            height: dim,
+                            transform: [{translateY: -20}, {translateX: 15}, {rotate: '20deg'}]
+                        }]} source={require('../../../img2/sendIcon.png')}/>}
                     </View>
                     {postedToUser && <View style={{position: 'absolute', right: padding, flexDirection: 'row'}}>
 
-                        <Image style={[{width: dim, height: dim, transform: [{translateY}, {translateX: -translateX}, { rotate: '70deg'}]}]} source={require('../../../img2/sendIcon.png')}/>
-                        <GTouchable onPress={()=> seeUser(navigator, postedToUser)}>
-                            <Avatar user={postedToUser} style={{dim: avatarDim}}/>
+                        <Image style={[{
+                            width: dim,
+                            height: dim,
+                            transform: [{translateY}, {translateX: -translateX}, {rotate: '70deg'}]
+                        }]} source={require('../../../img2/sendIcon.png')}/>
+                        <GTouchable onPress={() => seeUser(navigator, postedToUser)}>
+                            <Avatar user={postedToUser} style={{dim: AVATAR_DIM}}/>
                         </GTouchable>
                     </View>}
                 </View>
 
-                <View style={{top: - (avatarDim + padding)}}>
-                    <GTouchable activeOpacity={0.9} onPress={this.props.onPressItem}  onDoublePress={() => {
+                <View style={{top: -(AVATAR_DIM + padding)}}>
+                    <GTouchable activeOpacity={0.9} onPress={this.props.onPressItem} onDoublePress={() => {
                         let liked = this.isLiked(activity);
-                        const toggleLike = liked?  activityAction.unlike : activityAction.like;
+                        const toggleLike = liked ? activityAction.unlike : activityAction.like;
                         this.props.dispatch(toggleLike(activity.id, activity.type));
                     }}>
                         <ActivityBody
@@ -114,6 +132,17 @@ export default class ActivityCell extends React.Component<Props, State> {
                 </View>
             </View>
         )
+    }
+
+    getAskBackgroundColor(activity: Activity) {
+        return Colors.pink;
+    }
+
+    renderUserAvatar(user: User, styles?: *) {
+        let navigator: RNNNavigator = this.props.navigator;
+        return <GTouchable onPress={() => seeUser(navigator, user)} style={styles}>
+            <Avatar user={user} style={{dim: AVATAR_DIM}}/>
+        </GTouchable>;
     }
 
     isLiked(activity) {
@@ -171,3 +200,21 @@ export default class ActivityCell extends React.Component<Props, State> {
         return buildNonNullData(this.props.data, this.props.activityType, this.props.activityId);
     }
 }
+
+const styles = StyleSheet.create({
+    askText: {
+        fontSize: 30,
+        lineHeight: 35,
+        color: Colors.white,
+        textAlign: 'center',
+        fontFamily: SFP_TEXT_BOLD,
+    },
+    askContent: {
+        width: "100%",
+        minHeight: 64,
+        // backgroundColor: "pink",
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
+
+});

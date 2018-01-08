@@ -73,6 +73,7 @@ export default class AskScreen extends Component<Props, State> {
                             onSubmitEditing={this.createAsk.bind(this)}
                             value={askContent}
                             multiline
+                            maxLength={200}
                             blurOnSubmit
                             onChangeText={(askContent) => this.setState({askContent})}
                             placeholder={i18n.t("actions.ask_friend")}
