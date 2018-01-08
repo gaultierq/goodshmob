@@ -5,6 +5,7 @@ import {Button, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 
 import * as UI from "../UIStyles";
 import type {Item} from "../../types";
 import {Colors} from "../colors";
+import {CachedImage} from "react-native-img-cache";
 
 
 type Props = {
@@ -37,7 +38,7 @@ export default class ItemCell extends React.Component<Props, State> {
                     }}>
 
 
-                    { image && <Image
+                    { image && <CachedImage
                         source={{uri: image}}
                         resizeMode='cover'
                         style={[{

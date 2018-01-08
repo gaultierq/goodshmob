@@ -1,9 +1,11 @@
 // @flow
 import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {currentUser} from "../../managers/CurrentUser";
 import {Navigation} from 'react-native-navigation';
 import GTouchable from "../GTouchable";
+import {CachedImage} from "react-native-img-cache";
+
 
 type Props = {
 };
@@ -36,7 +38,7 @@ export default class MyAvatar extends Component<Props, State> {
                 });
 
             }}>
-                <Image
+                <CachedImage
                     source={{uri: user.image}}
                     style={{
                         height: imageDim,

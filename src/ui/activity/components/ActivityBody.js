@@ -22,6 +22,8 @@ import Button from 'apsl-react-native-button';
 import {SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "../../fonts";
 import {seeList, seeUser} from "../../Nav";
 import GTouchable from "../../GTouchable";
+import {CachedImage} from "react-native-img-cache";
+
 
 type Props = {
     activity: Activity,
@@ -200,7 +202,7 @@ export default class ActivityBody extends React.Component<Props, State> {
 
         }}>
 
-            <Image
+            <CachedImage
                 source={image ? {uri: image} : require('../../../img/goodsh_placeholder.png')}
                 resizeMode={resize}
                 style={{

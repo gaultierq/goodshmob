@@ -4,6 +4,7 @@ import React, {Component} from 'react';
 import {Image, View} from 'react-native';
 import {Colors} from "./colors";
 import User from "react-native-firebase/lib/modules/auth/user";
+import {CachedImage} from "react-native-img-cache";
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
@@ -37,7 +38,7 @@ export class Avatar extends Component<Props, State> {
 
         const {dim, ...otherStyles} = style;
 
-        return <Image
+        return <CachedImage
             source={{uri: user.image}}
             style={[otherStyles, {
                 height: dim,

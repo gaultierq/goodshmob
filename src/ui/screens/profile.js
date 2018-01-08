@@ -31,6 +31,7 @@ import {CONFIG_SET} from "../../reducers/dataReducer";
 import * as Nav from "../Nav";
 import {Colors} from "../colors";
 import GTouchable from "../GTouchable";
+import {CachedImage} from "react-native-img-cache";
 
 type Props = {
     // userId: Id,
@@ -203,7 +204,7 @@ export default class Profile extends Component<Props, State> {
             alignItems: 'center',
         }}
         >
-            {user && user.image && <Image source={{uri: user.image}}
+            {user && user.image && <CachedImage source={{uri: user.image}}
                                           style={styles.userAvatar}
             />}
             {user && <Text style={styles.userName}>{user.firstName + " " + user.lastName}</Text>}

@@ -3,6 +3,7 @@
 import React from 'react';
 import {Button, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import type {User} from "../../types";
+import {CachedImage} from "react-native-img-cache";
 
 
 type Props = {
@@ -41,7 +42,7 @@ export default class FriendCell extends React.Component<Props, State> {
                     //borderWidth: StyleSheet.hairlineWidth,
                     margin: 10,
                 }}>
-                    <Image
+                    <CachedImage
                         source={{uri: friend.image}}
                         style={{
                             height: 40,

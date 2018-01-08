@@ -75,6 +75,7 @@
 		E562BCD35F904331841C43E0 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7D9112FBAA7A42859CAEC569 /* SimpleLineIcons.ttf */; };
 		E9D14054512E440696F419D5 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0709F72F103D467887885332 /* libRNDeviceInfo.a */; };
 		F52F29A1D072424D85D70653 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F79D97351B445FE8CF44CB5 /* libRCTActionSheet.a */; };
+		95025F9D983C4013B67F611E /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 35C24F0535F74219B08A8897 /* libRNFetchBlob.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -527,6 +528,8 @@
 		F0E96BCC274685F5679F551E /* Pods-goodshmobTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-goodshmobTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-goodshmobTests/Pods-goodshmobTests.debug.xcconfig"; sourceTree = "<group>"; };
 		F67A393C22434FF8ADFA75F4 /* SFProText-RegularItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProText-RegularItalic.otf"; path = "../src/assets/fonts/SFProText-RegularItalic.otf"; sourceTree = "<group>"; };
 		FF95AED0484E442B85B9D1D0 /* SFProText-LightItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProText-LightItalic.otf"; path = "../src/assets/fonts/SFProText-LightItalic.otf"; sourceTree = "<group>"; };
+		EFC06FE802CC4765911E6132 /* RNFetchBlob.xcodeproj */ = {isa = PBXFileReference; name = "RNFetchBlob.xcodeproj"; path = "../node_modules/react-native-fetch-blob/ios/RNFetchBlob.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		35C24F0535F74219B08A8897 /* libRNFetchBlob.a */ = {isa = PBXFileReference; name = "libRNFetchBlob.a"; path = "libRNFetchBlob.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -575,6 +578,7 @@
 				2ADAC4575131E564B1D66B8A /* libPods-goodshmob.a in Frameworks */,
 				C0882E191CDA40ECA24BEAEF /* libRNMaterialShowcase.a in Frameworks */,
 				096CC80BCC9E4420B977C377 /* libSMXCrashlytics.a in Frameworks */,
+				95025F9D983C4013B67F611E /* libRNFetchBlob.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -737,6 +741,7 @@
 				1636B54F260E4655BA6A7D2B /* RNFirebase.xcodeproj */,
 				0FD5D01AB4964D99A9A49C7E /* RNMaterialShowcase.xcodeproj */,
 				36D22C90CE4E4C5A944FCA81 /* SMXCrashlytics.xcodeproj */,
+				EFC06FE802CC4765911E6132 /* RNFetchBlob.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1735,12 +1740,14 @@
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
 					"$(SRCROOT)/../node_modules/react-native-material-showcase-ios/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-fabric/ios/SMXCrashlytics",
+					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 				);
 				INFOPLIST_FILE = goodshmobTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1774,12 +1781,14 @@
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
 					"$(SRCROOT)/../node_modules/react-native-material-showcase-ios/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-fabric/ios/SMXCrashlytics",
+					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 				);
 				INFOPLIST_FILE = goodshmobTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1823,6 +1832,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-material-showcase-ios/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-fabric/ios/SMXCrashlytics",
+					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 				);
 				INFOPLIST_FILE = goodshmob/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1876,6 +1886,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-material-showcase-ios/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-fabric/ios/SMXCrashlytics",
+					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 				);
 				INFOPLIST_FILE = goodshmob/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
