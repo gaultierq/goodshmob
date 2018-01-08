@@ -191,9 +191,7 @@ class Api {
 
             fetch(url, options)
                 .catch(err=> {
-                    console.warn("http: error" + JSON.stringify(err));
-                    sendMessage("http error");
-                    throw err;
+                    reject(err);
                 })
                 .then(resp=> {
                 setTimeout(()=> {
@@ -305,12 +303,7 @@ export class Call {
 
                             let errorAction = dispatch({ type: API_DATA_FAILURE, error: errMsg, origin: apiAction});
 
-                            // Snackbar.show({
-                            //     title: "#request failure",
-                            // });
-
-                            //EventBus.dispatch(EVENT_MESSAGE, {content: "#request failure", type: 'snack'});
-                            sendMessage("#request failure");
+                            sendMessage(`#request failure: '${errMsg}'`);
 
                             if (error.status === 401) {
                                 dispatch(errorAction);
@@ -331,6 +324,7 @@ export class Call {
     run() {
         if (!this.method) throw new Error("call need a method");
         return instance.submit(this.url.toString(), this.method, this.body, this.delay)
+            .catch(err => {throw err})
             .then(resp => {
 
                 console.debug("api: response");

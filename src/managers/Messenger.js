@@ -15,7 +15,7 @@ class _Messenger implements Messenger {
     }
 
     onMessage(event: any) {
-        console.debug(`${this.toString()}: on message: ${event}`);
+        console.info(`${this.toString()}: on message: ${JSON.stringify(event)}`);
 
         const {content, type, ...others} = event.target;
         switch (type) {
@@ -26,11 +26,10 @@ class _Messenger implements Messenger {
                 if (!this.snackDismissTimeout) {
                     this.snackDismissTimeout = setTimeout(()=> {
                         this.snackDismissTimeout = 0;
-                        console.info(`${this.toString()}: dismissing snack`);
+                        console.debug(`${this.toString()}: dismissing snack`);
                         Snackbar.dismiss();
                     }, 2000);
 
-                    console.info('Messenger: showing snack');
                     Snackbar.show({
                         title: content,
                         duration: Snackbar.LENGTH_INDEFINITE,
