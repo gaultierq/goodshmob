@@ -13,6 +13,8 @@ import type {i18Key, Id, ms, RequestState, Url} from "../../types";
 import {renderSimpleButton} from "../UIStyles";
 import i18n from '../../i18n/i18n'
 import type {ScreenVisibility} from "./Screen";
+import {TRIGGER_USER_DIRECT_ACTION} from "../../managers/Api";
+import {TRIGGER_USER_INDIRECT_ACTION} from "../../managers/Api";
 
 
 export type FeedSource = {
@@ -112,9 +114,10 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     postFetchFirst() {
         setTimeout(() => {
             if (this.canFetch() && this.state.firstLoad === 'idle') {
+                let trigger = this.hasData() ? TRIGGER_USER_INDIRECT_ACTION : TRIGGER_USER_DIRECT_ACTION;
                 Api.safeExecBlock.call(
                     this,
-                    () => this.fetchIt(),
+                    () => this.fetchIt({trigger}),
                     'firstLoad'
                 );
             }
@@ -139,14 +142,13 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             ...attributes
         } = this.props;
 
-        let empt = isEmpty(data);
-        let nothingInterestingToDisplay = empt && this.state.isFetchingFirst === 'ok';
+        let nothingInterestingToDisplay = isEmpty(data) && this.state.isFetchingFirst === 'ok';
 
-        let firstEmptyLoader = this.state.firstLoad !== 'ok' && empt;
+        let firstEmptyLoader = this.isFirstEmptyLoader(data);
         //firstEmptyLoader = true;
 
         if (feedId) {
-            console.log(`feed '${feedId}' render: empt=${empt} nitd=${nothingInterestingToDisplay} fil=${firstEmptyLoader} data.len=${data ? data.length : -1}`);
+            console.log(`feed '${feedId}' render: empt=${isEmpty(data)} nitd=${nothingInterestingToDisplay} fil=${firstEmptyLoader} data.len=${data ? data.length : -1}`);
         }
 
         if (nothingInterestingToDisplay) {
@@ -193,6 +195,15 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         //         {...attributes}
         //     />
         // );
+    }
+
+    //displayed when no data yet, and loading for the first time
+    isFirstEmptyLoader() {
+        return (this.state.firstLoad === 'sending' || this.state.firstLoad === 'idle') && !this.hasData();
+    }
+
+    hasData() {
+        return !isEmpty(this.props.data);
     }
 
     renderEmpty() {
@@ -257,7 +268,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
     gentleFetchMore() {
         if (this.hasMore()) {
-            this.fetchMore();
+            this.fetchMore({trigger: TRIGGER_USER_INDIRECT_ACTION});
         }
         else {
             console.info("== end of feed ==")
@@ -280,15 +291,18 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         return true;
     }
 
-    tryFetchIt(afterId?: Id) {
+    tryFetchIt(options?: any = {}) {
+        let {afterId} = options;
         let requestName = afterId ? 'isFetchingMore' : 'isFetchingFirst';
         if (this.canFetch(requestName)) {
-            this.fetchIt(afterId);
+            this.fetchIt(options);
         }
     }
 
-    fetchIt(afterId?: Id) {
+    fetchIt(options?: any = {}) {
+        let {afterId, trigger} = options;
         let requestName = afterId ? 'isFetchingMore' : 'isFetchingFirst';
+
         return new Promise((resolve, reject) => {
             let {fetchSrc}= this.props;
 
@@ -308,9 +322,13 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                     call.addQuery({id_after: afterId});
                 }
             }
+            if (trigger === undefined) {
+                trigger = afterId ? TRIGGER_USER_INDIRECT_ACTION : TRIGGER_USER_DIRECT_ACTION;
+            }
+
 
             this.props
-                .dispatch(call.disptachForAction2(fetchSrc.action, fetchSrc.options))
+                .dispatch(call.disptachForAction2(fetchSrc.action, {trigger, ...fetchSrc.options}))
                 .then(({data, links})=> {
                     console.debug("disptachForAction3 " + JSON.stringify(this.props.fetchSrc.action));
                     if (!data) {
@@ -342,12 +360,12 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         });
     }
 
-    fetchMore() {
+    fetchMore(options ?: any = {}) {
         let c = this.props.data;
         if (!c) return;
         let last = c[c.length-1];
         if (!last) return;
-        this.tryFetchIt(last.id);
+        this.tryFetchIt({afterId: last.id, ...options});
     }
 
     onRefresh() {
@@ -389,7 +407,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                     )
                 }
                 {
-                    this.state.isFetchingMore === 'ko' && this.renderFail(() => this.fetchMore())
+                    this.state.isFetchingMore === 'ko' && this.renderFail(() => this.fetchMore({trigger: TRIGGER_USER_DIRECT_ACTION}))
                 }
             </View>
         )

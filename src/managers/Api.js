@@ -23,6 +23,9 @@ const CURRENT_API_VERSION = 'v2.0.0';
 export const API_END_POINT = Config.SERVER_URL;
 
 
+export const TRIGGER_USER_DIRECT_ACTION = 0;
+export const TRIGGER_USER_INDIRECT_ACTION = 3;
+export const TRIGGER_SYSTEM = 5;
 
 type CallFactory = (payload: any) => Call;
 
@@ -268,8 +271,10 @@ export class Call {
         return this.url.toString();
     }
 
+    //options.trigger = 0,1,2,3,4... 0 is an user action, 10 is from system
     disptachForAction2(apiAction: ApiAction, options?: any = {}) {
         const call = this;
+        const {trigger = TRIGGER_USER_DIRECT_ACTION} = options;
 
         return (dispatch) => {
             let tic = Date.now();
@@ -293,7 +298,7 @@ export class Call {
                             dispatch({ data, type: API_DATA_SUCCESS, origin: apiAction});
 
                             //let the reducer do something
-                            dispatch(Object.assign({}, {type: apiAction.success(), payload: response, original: resp.original}, {options}));
+                            dispatch({type: apiAction.success(), payload: response, original: resp.original,...options});
 
                             resolve(response);
                         },
@@ -301,20 +306,22 @@ export class Call {
                         error => {
                             let errMsg = error.message || `${error.status}! [${apiAction}]: ${JSON.stringify(error)}`;
 
-                            let errorAction = dispatch({ type: API_DATA_FAILURE, error: errMsg, origin: apiAction});
+                            // let errorAction = dispatch({ type: API_DATA_FAILURE, error: errMsg, origin: apiAction});
 
-                            sendMessage(`#request failure: '${errMsg}'`);
+                            if (trigger <= 2) {
+                                sendMessage(`#request failure: '${errMsg}'`);
+                            }
+
 
                             if (error.status === 401) {
-                                dispatch(errorAction);
+                                // dispatch(errorAction);
                                 //logout(dispatch);
                                 logoutOffline(dispatch);
                                 reject("user lost authentification");
                                 return;
                             }
-                            dispatch(errorAction);
-                            reject("api error:" + errMsg);
-
+                            // dispatch(errorAction);
+                            reject(error);
                         },
                     );
             });
