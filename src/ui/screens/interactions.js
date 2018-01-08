@@ -98,18 +98,25 @@ export class InteractionScreen extends Screen<Props, State> {
     //temporary: should be provided by the backend
     localDeeplink(activity: Activity): Deeplink {
         let deeplink;
-        switch (sanitizeActivityType(activity.type)) {
+        const activityType = sanitizeActivityType(activity.type);
+        if (!activityType) return null;
+        let resource = activity.resource;
+
+        switch (activityType) {
             case 'comments': {
-                let resource = activity.resource;
+
                 if (resource) {
                     let {id, type} = resource;
-
-                    deeplink = `https://goodsh.it/${sanitizeActivityType(type)}/${id}/comments`
+                    return `https://goodsh.it/${sanitizeActivityType(type)}/${id}/comments`
                 }
                 break;
             }
+            default:
+                if (resource) {
+                    let {id, type} = resource;
+                    return `https://goodsh.it/${sanitizeActivityType(type)}/${id}`
+                }
         }
-        return deeplink;
     }
 
     renderContentByType(activity:Activity) {

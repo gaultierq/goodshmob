@@ -4,6 +4,7 @@ import type {Deeplink} from "../types";
 import {isId} from "../helpers/StringUtils";
 import {isActivityType} from "../helpers/DataUtils";
 import * as Nav from "../ui/Nav";
+import URL from "url-parse"
 
 // export const DEEPLINK_OPEN_SCREEN_IN_MODAL = 'DEEPLINK_OPEN_SCREEN_IN_MODAL';
 
