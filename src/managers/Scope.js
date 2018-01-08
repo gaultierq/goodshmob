@@ -12,10 +12,10 @@ function Scope(DecoratedComponent) {
 
         render() {
             //FIXME: not working yet. The wrapped component render is still triggered
-            // if (!currentUserId()) {
-            //     console.warn("This component cannot be displayed for a unlogged user");
-            //     return null;
-            // }
+            if (!currentUserId()) {
+                console.warn("This component cannot be displayed for a unlogged user");
+                return null;
+            }
             return (
                 <DecoratedComponent
                     {...this.props}
