@@ -3,6 +3,7 @@ import activity from '../ui/activity/reducer';
 import {reducer as network} from '../ui/networkActions';
 import {reducer as savings} from '../ui/screens/lineup';
 import {reducer as comments} from '../ui/screens/comments';
+import {reducer as friends} from '../ui/screens/friends';
 import {reducer as lineups} from '../ui/screens/lineuplist';
 import lineups2 from '../ui/lineup/reducer';
 import {reducer as peopleYouMayKnow} from '../ui/screens/community';
@@ -22,6 +23,7 @@ let data = reduceReducers(
     data1,
     activity,
     comments,
+    friends,
     savings,
     lineups,
     lineups2

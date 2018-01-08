@@ -10,7 +10,7 @@ import * as Api from "../../managers/Api";
 import Feed from "../components/feed"
 import ApiAction from "../../helpers/ApiAction";
 import type {Id, Item, User} from "../../types";
-import {buildData} from "../../helpers/DataUtils";
+import {buildData, doDataMergeInState} from "../../helpers/DataUtils";
 import Screen from "../components/Screen";
 import GTouchable from "../GTouchable";
 import {fullName} from "../../helpers/StringUtils";
@@ -65,7 +65,8 @@ export default class FriendsScreen extends Screen<Props, State> {
             renderItem={({item}) => (renderItem||this.renderItem.bind(this))(item)}
             fetchSrc={{
                 callFactory,
-                action
+                action,
+                options: {userId}
             }}
             // cannotFetch={!super.isVisible()}
         />);
@@ -139,7 +140,18 @@ const actions = (() => {
     };
 })();
 
+export const reducer =  (state = {}, action = {}) => {
 
+    switch (action.type) {
+        case actionTypes.LOAD_FRIENDS.success(): {
+            let {userId} = action.options;
+            let path = `users.${userId}.relationships.friends.data`;
+            state = doDataMergeInState(state, path, action.payload.data);
+            break;
+        }
+    }
+    return state;
+};
 
 const styles = StyleSheet.create({
     container: {
