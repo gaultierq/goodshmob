@@ -16,6 +16,7 @@ import ActionRights, {getPendingLikeStatus} from "../../rights";
 import {CREATE_COMMENT} from "../../screens/comments";
 import GTouchable from "../../GTouchable";
 import * as Nav from "../../Nav";
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export type ActivityActionType = 'comment'| 'like'| 'unlike'| 'share'| 'save'| 'unsave'| 'see'| 'buy'| 'answer';
 const ACTIONS = ['comment', 'like', 'unlike','share', 'save', 'unsave', 'see', 'buy', 'answer'];
@@ -58,7 +59,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                         this.renderTextButton(a, activity),
                         //$FlowFixMe
                         ()=>this['exec' + toUppercase(a)](activity),
-                        a === 'unlike' || a === 'unsave'
+                        a === 'unlike'
                     )
                 );
             }
@@ -129,7 +130,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
             case 'save':
                 return require('../../../img2/lineUpIcon.png');
             case 'unsave':
-                return require('../../../img/save-icon.png');
+                return require('../../../img2/trashIcon.png');
             case 'see':
                 return require('../../../img/save-icon.png');
             case 'buy':

@@ -2,6 +2,7 @@
 
 import type {Id, Item, RNNNavigator, User} from "../types";
 import {fullName} from "../helpers/StringUtils";
+import i18n from '../i18n/i18n';
 
 export const CLOSE_MODAL = 'close_modal';
 
@@ -23,7 +24,7 @@ export const CANCELABLE_SEARCH_MODAL = {
         {
             id: CLOSE_MODAL,
             // icon: require('../img2/closeXGrey.png')
-            title: "#Cancel"
+            title: i18n.t("actions.cancel")
 
         }
     ],
