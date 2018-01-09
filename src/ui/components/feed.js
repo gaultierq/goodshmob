@@ -171,6 +171,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             ListHeaderComponent: !firstEmptyLoader && ListHeaderComponent,
             renderSectionHeader: !firstEmptyLoader && renderSectionHeader,
             onScroll: this._handleScroll,
+            keyboardShouldPersistTaps: 'always',
             ...attributes
         };
 
