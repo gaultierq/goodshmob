@@ -1,6 +1,7 @@
 export const Colors = Object.freeze({
     black: '#282828',
     blue: '#54A4E9',
+    darkSkyBlue: 'rgb(84,164,233)',
     greyishBrown: '#424242',
     brownishGrey: '#5C5C5C',
     greyish: '#B1B1B1',

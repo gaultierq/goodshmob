@@ -10,7 +10,7 @@ import * as activityAction from "../actions";
 import {unsave} from "../actions";
 import Snackbar from "react-native-snackbar"
 import {toUppercase} from "../../../helpers/StringUtils";
-import {buildNonNullData} from "../../../helpers/DataUtils";
+import {buildNonNullData, sanitizeActivityType} from "../../../helpers/DataUtils";
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
 import ActionRights, {getPendingLikeStatus} from "../../rights";
 import {CREATE_COMMENT} from "../../screens/comments";
@@ -158,20 +158,20 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
         switch(action) {
             case 'answer':
-                return type === 'asks';
+                return this.isAsk(activity);
             case 'buy':
                 return activity && activity.resource && activity.resource.url;
             case 'save':
             case 'comment':
             case 'share':
-                return type !== 'asks';
+                return !this.isAsk(activity);
         }
 
         return false;
     }
 
     isAsk(activity: Activity) {
-        return activity.type === 'asks';
+        return sanitizeActivityType(activity.type) === 'asks';
     }
 
     canUnsave(activity: Activity) {

@@ -55,7 +55,7 @@ export default class ActivityCell extends React.Component<Props, State> {
 
         if (sanitizeActivityType(activity.type) === 'asks') {
             return (
-                <View style={[styles.askContent, {backgroundColor: this.getAskBackgroundColor()}]}>
+                <View style={[styles.askContent, {backgroundColor: this.getAskBackgroundColor(activity)}]}>
                     {this.renderUserAvatar(activity.user, {position: 'absolute', zIndex: 2, top: 15, left: 15})}
                     <Text style={[styles.askText]}>{activity.content}</Text>
                     <View style={{width: "100%"}}>
@@ -143,7 +143,8 @@ export default class ActivityCell extends React.Component<Props, State> {
     }
 
     getAskBackgroundColor(activity: Activity) {
-        return Colors.pink;
+        const askColors = ['rgb(51,51,51)', Colors.green, Colors.pink, Colors.darkSkyBlue];
+        return askColors[new Date(activity.createdAt).getTime() % askColors.length];
     }
 
     renderUserAvatar(user: User, styles?: *) {
