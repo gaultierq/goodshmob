@@ -53,17 +53,18 @@ export default class ActivityCell extends React.Component<Props, State> {
         let activity = this.getActivity();
         this.refKeys = this.makeRefObject(this.props);
 
-        if (activity.type === 'asks') {
+        if (sanitizeActivityType(activity.type) === 'asks') {
             return (
                 <View style={[styles.askContent, {backgroundColor: this.getAskBackgroundColor()}]}>
                     {this.renderUserAvatar(activity.user, {position: 'absolute', zIndex: 2, top: 15, left: 15})}
                     <Text style={[styles.askText]}>{activity.content}</Text>
                     <View style={{width: "100%"}}>
-                        <ActivityActionBar
+                        {!activity.pending && <ActivityActionBar
                             activityId={activity.id}
                             activityType={activity.type}
                             navigator={this.props.navigator}
                         />
+                        }
                     </View>
 
                 </View>
@@ -136,7 +137,6 @@ export default class ActivityCell extends React.Component<Props, State> {
                         activityType={activity.type}
                         navigator={this.props.navigator}
                     />
-
                 </View>
             </View>
         )
@@ -213,7 +213,7 @@ export default class ActivityCell extends React.Component<Props, State> {
     }
 
     getActivity() {
-        return buildNonNullData(this.props.data, this.props.activityType, this.props.activityId);
+        return this.props.activity || buildNonNullData(this.props.data, this.props.activityType, this.props.activityId);
     }
 }
 
