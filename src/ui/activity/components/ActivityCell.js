@@ -58,6 +58,14 @@ export default class ActivityCell extends React.Component<Props, State> {
                 <View style={[styles.askContent, {backgroundColor: this.getAskBackgroundColor()}]}>
                     {this.renderUserAvatar(activity.user, {position: 'absolute', zIndex: 2, top: 15, left: 15})}
                     <Text style={[styles.askText]}>{activity.content}</Text>
+                    <View style={{width: "100%"}}>
+                        <ActivityActionBar
+                            activityId={activity.id}
+                            activityType={activity.type}
+                            navigator={this.props.navigator}
+                        />
+                    </View>
+
                 </View>
             )
         }
@@ -216,6 +224,7 @@ const styles = StyleSheet.create({
         color: Colors.white,
         textAlign: 'center',
         fontFamily: SFP_TEXT_BOLD,
+        padding: 50
     },
     askContent: {
         width: "100%",
