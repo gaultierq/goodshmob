@@ -41,6 +41,7 @@ import GTouchable from "../GTouchable";
 import AddLineupComponent from "../components/addlineup";
 import BottomSheet from 'react-native-bottomsheet';
 import {CLOSE_MODAL} from "../Nav";
+import Icon from 'react-native-vector-icons/Entypo';
 
 
 // let AppTour;
@@ -342,7 +343,21 @@ class HomeScreen extends Screen<Props, State> {
 
     renderEmptyList() {
         let result = [];
-        for (let i = 0; i < 5; i++) {
+        // first item render
+        result.push(<View style={[
+            LineupCellSaving.styles.cell,
+            {
+                backgroundColor: Colors.grey3,
+                marginRight: 10,
+                opacity: 1,
+                alignItems: 'center',
+                justifyContent:'center'
+            }
+            ]}>
+            <Icon name="plus" size={45} color={Colors.dirtyWhite}/>
+        </View>);
+        //
+        for (let i = 1; i < 5; i++) {
             result.push(<View style={[
                 LineupCellSaving.styles.cell,
                 {
