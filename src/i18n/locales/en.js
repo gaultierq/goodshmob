@@ -8,7 +8,7 @@ export default {
     "tabs": {
         home: {
             title: "My lists",
-            label: "My lists"
+            label: "My Goodsh"
         },
         network: {
             title: "Network",
