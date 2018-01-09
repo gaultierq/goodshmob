@@ -39,5 +39,6 @@ const styles = StyleSheet.create({
   header_link: {
     fontSize: 20,
     fontFamily: SFP_TEXT_MEDIUM,
+    backgroundColor: 'transparent'
   },
 });
