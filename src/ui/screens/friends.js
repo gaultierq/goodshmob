@@ -15,7 +15,7 @@ import Screen from "../components/Screen";
 import GTouchable from "../GTouchable";
 import {fullName} from "../../helpers/StringUtils";
 import * as Nav from "../Nav";
-import i18n from '../../i18n/i18n'
+import i18n from '../../i18n/i18n';
 
 type Props = {
     userId: Id,

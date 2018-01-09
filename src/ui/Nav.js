@@ -2,7 +2,7 @@
 
 import type {Id, Item, RNNNavigator, User} from "../types";
 import {fullName} from "../helpers/StringUtils";
-import i18n from '../i18n/i18n'
+import i18n from '../i18n/i18n';
 
 export const CLOSE_MODAL = 'close_modal';
 
