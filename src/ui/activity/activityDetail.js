@@ -38,6 +38,14 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
     state = {};
 
+    static navigatorStyle = {
+        drawUnderNavBar: true,
+        navBarTransparent: true,
+        navBarTranslucent: true,
+        // statusBarBlur: true
+        // navBarButtonColor: 'transparent',
+    };
+
     componentDidMount() {
         this.load();
     }
@@ -61,16 +69,16 @@ class ActivityDetailScreen extends Screen<Props, State> {
         return (
             <MainBackground>
                 <ScrollView contentContainerStyle={{flexGrow: 1}}>
-                    <ActivityIndicator
+                    {showLoader && <ActivityIndicator
                         animating = {showLoader}
                         size = "large"
                         style={styles.loader}
-                    />
+                    />}
                     <View style={styles.container}>
 
                         { activity &&
                         <View>
-                            <View style={[UI.CARD(), {marginBottom: 40}]}>
+                            <View>
                                 <GTouchable
                                     onPress={() => this.goBuy(activity)}
                                 >
