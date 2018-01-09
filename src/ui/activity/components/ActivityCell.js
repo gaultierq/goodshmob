@@ -144,7 +144,7 @@ export default class ActivityCell extends React.Component<Props, State> {
 
     getAskBackgroundColor(activity: Activity) {
         const askColors = ['rgb(51,51,51)', Colors.green, Colors.pink, Colors.darkSkyBlue];
-        return askColors[new Date(activity.createdAt).getTime() % askColors.length];
+        return askColors[Date.parse(activity.createdAt) % askColors.length];
     }
 
     renderUserAvatar(user: User, styles?: *) {

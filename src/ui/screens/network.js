@@ -125,11 +125,11 @@ class NetworkScreen extends Screen<Props, State> {
 
         myAsks = _.orderBy(myAsks, 'attributes.createdAt', 'asc');
 
-        let firstActivityOfFeed = _.get(activities, '0.attributes.createdAt');
+        let firstActivityOfFeed = Date.parse(_.get(activities, '0.attributes.createdAt'));
 
         for (let i = 0; i < myAsks.length; i++) {
             let a = myAsks[i];
-            if (a.attributes.createdAt < firstActivityOfFeed) break;
+            if (Date.parse(a.attributes.createdAt) < firstActivityOfFeed) break;
             activities.unshift({id: a.id, type: 'asks'});
         }
 
