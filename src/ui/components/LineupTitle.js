@@ -43,8 +43,8 @@ export default class LineupTitle extends React.Component<Props, State> {
 
 const styles = StyleSheet.create({
     lineupTitle: {
-        fontSize: 16,
-        marginTop: 4,
-        marginBottom: 6,
+        fontSize: 17,
+        marginTop: 6,
+        marginBottom: 7,
     }
 });
