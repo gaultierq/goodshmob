@@ -20,7 +20,7 @@ import type {Id, RNNNavigator, Saving} from "../../types";
 import {List} from "../../types"
 import Snackbar from "react-native-snackbar"
 import {stylePadding} from "../UIStyles";
-import {currentGoodshboxId, currentUserId, logged2} from "../../managers/CurrentUser"
+import {currentGoodshboxId, currentUserId, logged, logged2} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import Modal from 'react-native-modal'
@@ -39,6 +39,7 @@ import LineupCellSaving from "../components/LineupCellSaving";
 import GTouchable from "../GTouchable";
 import AddLineupComponent from "../components/addlineup";
 import BottomSheet from 'react-native-bottomsheet';
+import {CLOSE_MODAL} from "../Nav";
 
 
 // let AppTour;
@@ -67,7 +68,7 @@ type State = {
 
 
 
-// @logged
+@logged
 @connect()
 class HomeScreen extends Screen<Props, State> {
 
@@ -486,7 +487,16 @@ class HomeScreen extends Screen<Props, State> {
         this.props.navigator.showModal({
             screen: 'goodsh.ActivityDetailScreen',
             passProps: {activityId: saving.id, activityType: saving.type},
-            navigatorButtons: Nav.CANCELABLE_MODAL,
+            navigatorButtons: {
+                leftButtons: [
+                    {
+                        id: CLOSE_MODAL,
+                        icon: require('../../img2/circleBackArrow.png')
+                        //title: "#Cancel"
+
+                    }
+                ],
+                rightButtons: []},
         });
         // }
     }

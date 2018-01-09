@@ -53,11 +53,20 @@ export default class ActivityCell extends React.Component<Props, State> {
         let activity = this.getActivity();
         this.refKeys = this.makeRefObject(this.props);
 
-        if (activity.type === 'asks') {
+        if (sanitizeActivityType(activity.type) === 'asks') {
             return (
-                <View style={[styles.askContent, {backgroundColor: this.getAskBackgroundColor()}]}>
+                <View style={[styles.askContent, {backgroundColor: this.getAskBackgroundColor(activity)}]}>
                     {this.renderUserAvatar(activity.user, {position: 'absolute', zIndex: 2, top: 15, left: 15})}
                     <Text style={[styles.askText]}>{activity.content}</Text>
+                    <View style={{width: "100%"}}>
+                        {!activity.pending && <ActivityActionBar
+                            activityId={activity.id}
+                            activityType={activity.type}
+                            navigator={this.props.navigator}
+                        />
+                        }
+                    </View>
+
                 </View>
             )
         }
@@ -128,14 +137,14 @@ export default class ActivityCell extends React.Component<Props, State> {
                         activityType={activity.type}
                         navigator={this.props.navigator}
                     />
-
                 </View>
             </View>
         )
     }
 
     getAskBackgroundColor(activity: Activity) {
-        return Colors.pink;
+        const askColors = ['rgb(51,51,51)', Colors.green, Colors.pink, Colors.darkSkyBlue];
+        return askColors[Date.parse(activity.createdAt) % askColors.length];
     }
 
     renderUserAvatar(user: User, styles?: *) {
@@ -205,7 +214,7 @@ export default class ActivityCell extends React.Component<Props, State> {
     }
 
     getActivity() {
-        return buildNonNullData(this.props.data, this.props.activityType, this.props.activityId);
+        return this.props.activity || buildNonNullData(this.props.data, this.props.activityType, this.props.activityId);
     }
 }
 
@@ -216,6 +225,7 @@ const styles = StyleSheet.create({
         color: Colors.white,
         textAlign: 'center',
         fontFamily: SFP_TEXT_BOLD,
+        padding: 50
     },
     askContent: {
         width: "100%",

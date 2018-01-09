@@ -54,8 +54,6 @@ export default class ActivityBody extends React.Component<Props, State> {
                 {/*Image And Button*/}
                 {this.renderImage()}
 
-
-
                 {resource && (
                     <View style={{padding: 15, backgroundColor: ACTIVITY_CELL_BACKGROUND,}}>
                         <View style={{flexDirection: 'row'}}>

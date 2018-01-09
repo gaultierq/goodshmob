@@ -15,6 +15,9 @@ import Sheet from "../components/sheet";
 import {SFP_TEXT_BOLD} from "../fonts";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import GTouchable from "../GTouchable";
+import type {PendingAction} from "../../helpers/ModelUtils";
+import {pendingActionWrapper} from "../../helpers/ModelUtils";
+import {Call} from "../../managers/Api";
 
 type Props = {
     itemId: Id,
@@ -103,32 +106,49 @@ export default class AskScreen extends Component<Props, State> {
         if (this.state.isAsking) return;
         this.setState({isAsking: true});
 
-        this.props
-            .dispatch(actions.createAsk({content}).disptachForAction2(CREATE_ASK))
-            .then(()=> {
-                Snackbar.show({
-                    title: i18n.t('ask.sent'),
-                });
-                this._sheet.close();
-                // this.props.onClickClose();
-
-            }, (err)=>console.log(err))
-            .then(()=> this.setState({isAsking: false}));
+        this.props.dispatch(ASK_CREATION.pending({content}, undefined));
+        Snackbar.show({
+            title: i18n.t('ask.sent'),
+        });
+        this._sheet.close();
+        // this.props
+        //     .dispatch(actions.createAsk({content}).disptachForAction2(CREATE_ASK))
+        //     .then(()=> {
+        //         Snackbar.show({
+        //             title: i18n.t('ask.sent'),
+        //         });
+        //         this._sheet.close();
+        //         // this.props.onClickClose();
+        //
+        //     }, (err)=>console.log(err))
+        //     .then(()=> this.setState({isAsking: false}));
     }
 
 }
 
-const CREATE_ASK = ApiAction.create("create_ask");
+export const CREATE_ASK = ApiAction.create("create_ask");
 
-const actions = {
-    createAsk: (ask: Ask): Api.Call => {
-        return new Api.Call()
-            .withMethod('POST')
-            .withRoute("asks")
-            .withBody({ask})
-            ;
-    }
-};
+// const actions = {
+//     createAsk: (ask: Ask): Api.Call => {
+//         return new Api.Call()
+//             .withMethod('POST')
+//             .withRoute("asks")
+//             .withBody({ask})
+//             ;
+//     }
+// };
+
+
+
+type ASK_CREATION_PAYLOAD = {content: string}
+
+export const ASK_CREATION: PendingAction<ASK_CREATION_PAYLOAD>  = pendingActionWrapper(
+    CREATE_ASK,
+    ({content}: ASK_CREATION_PAYLOAD) => new Api.Call()
+        .withMethod('POST')
+        .withRoute("asks")
+        .withBody({ask: {content}})
+);
 
 const styles = StyleSheet.create({
     input:{

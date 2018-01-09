@@ -41,6 +41,9 @@ export let sanitizeActivityType = activityType => {
         case "likes":
         case "like":
             return "likes";
+        case "ask":
+        case "asks":
+            return "asks";
     }
     return activityType;
 };

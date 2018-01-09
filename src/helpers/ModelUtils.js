@@ -337,7 +337,7 @@ export function pendingActionWrapper<Payload>(
 
     return {
 
-        pending: (payload: Payload, options: any) => (dispatch: any) => new Promise((resolve, reject) => {
+        pending: (payload: Payload, options: any = {}) => (dispatch: any) => new Promise((resolve, reject) => {
 
                 //let payload = payloadFactory();
                 let pendingId = `pendingAction-${Math.random()}`;

@@ -43,7 +43,7 @@ export default class ActionRights {
     }
 
     isAsk() {
-        return this.activity.type === 'asks';
+        return sanitizeActivityType(this.activity.type) === 'asks';
     }
 
 
