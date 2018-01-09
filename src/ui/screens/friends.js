@@ -15,6 +15,7 @@ import Screen from "../components/Screen";
 import GTouchable from "../GTouchable";
 import {fullName} from "../../helpers/StringUtils";
 import * as Nav from "../Nav";
+import i18n from '../../i18n/i18n'
 
 type Props = {
     userId: Id,
@@ -97,7 +98,7 @@ export default class FriendsScreen extends Screen<Props, State> {
                         leftButtons: [
                             {
                                 id: Nav.CLOSE_MODAL,
-                                title: "#Cancel"
+                                title: i18n.t("actions.cancel")
                             }
                         ],
                     },
