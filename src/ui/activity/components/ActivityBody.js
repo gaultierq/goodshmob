@@ -67,7 +67,7 @@ export default class ActivityBody extends React.Component<Props, State> {
                             </View>
                             {this.renderBuyButton(activity)}
                         </View>
-                        {!!activity.description && <Text style={[styles.description]}>{activity.description}</Text>}
+                        {!!activity.description && <Text style={[styles.description]}>{"\"" + activity.description + "\""}</Text>}
 
                         {this.renderTags()}
                     </View>
@@ -254,6 +254,6 @@ export default class ActivityBody extends React.Component<Props, State> {
 const styles = StyleSheet.create({
     title: {fontSize: 20, color: Colors.black},
     subtitle: {fontSize: 14, color: Colors.greyish},
-    description: {fontSize: 14, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey},
+    description: {fontSize: 16, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey, marginTop: 5},
 
 });
