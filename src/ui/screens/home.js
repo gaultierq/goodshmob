@@ -10,7 +10,8 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    View
+    View,
+    Alert
 } from 'react-native';
 
 import {connect} from "react-redux";
@@ -445,21 +446,32 @@ class HomeScreen extends Screen<Props, State> {
         let delayMs = 3000;
         //deleteLineup(lineup.id, delayMs)
         const lineupId = lineup.id;
-        return this.props.dispatch(LINEUP_DELETION.pending({lineupId}, {delayMs, lineupId}))
-            .then(pendingId => {
-                Snackbar.show({
-                        title: i18n.t("activity_item.button.deleted_list"),
-                        duration: Snackbar.LENGTH_LONG,
-                        action: {
-                            title: i18n.t("actions.undo"),
-                            color: 'green',
-                            onPress: () => {
-                                this.props.dispatch(LINEUP_DELETION.undo(pendingId))
-                            },
-                        },
-                    }
-                );
-            });
+        return Alert.alert(
+            i18n.t("alert.delete.title"),
+            i18n.t("alert.delete.label"),
+            [
+                {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                {text: i18n.t("actions.ok"), onPress: () => {
+                    this.props.dispatch(LINEUP_DELETION.pending({lineupId}, {delayMs, lineupId}))
+                        .then(pendingId => {
+                            Snackbar.show({
+                                title: i18n.t("activity_item.buttons.deleted_list"),
+                                duration: Snackbar.LENGTH_LONG,
+                                action: {
+                                    title: i18n.t("actions.undo"),
+                                    color: 'green',
+                                    onPress: () => {
+                                        this.props.dispatch(LINEUP_DELETION.undo(pendingId))
+                                    },
+                                },
+                            }
+                        );
+                    });
+                }
+                },
+            ],
+            { cancelable: true }
+        );
     }
 
     changeTitle(lineup: List) {
