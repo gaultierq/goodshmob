@@ -23,6 +23,7 @@ import {SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "../../fonts";
 import {seeList, seeUser} from "../../Nav";
 import GTouchable from "../../GTouchable";
 import {CachedImage} from "react-native-img-cache";
+import Icon from 'react-native-vector-icons/Feather';
 
 
 type Props = {
@@ -145,11 +146,13 @@ export default class ActivityBody extends React.Component<Props, State> {
             onPress={() => {
                 this.execBuy(activity)
             }}
-            style={[{height: 33, borderRadius: 4, backgroundColor: Colors.blue, borderWidth: 0}]}
+            style={[{borderRadius: 10, backgroundColor: Colors.blue, borderWidth: 0}]}
         >
-            <Text style={[UI.SIDE_MARGINS(10), {color: Colors.white, fontFamily: SFP_TEXT_MEDIUM, fontSize: 14}]}>
-                {i18n.t("actions.buy")}
-            </Text>
+            <Icon name="shopping-cart" size={22} color={Colors.white} style={UI.stylePadding(10,1,10,1)}/>
+            {/*<Text style={[UI.SIDE_MARGINS(10), {color: Colors.white, fontFamily: SFP_TEXT_MEDIUM, fontSize: 14}]}>
+
+                i18n.t("actions.buy")
+            </Text>*/}
         </Button>;
     }
 
