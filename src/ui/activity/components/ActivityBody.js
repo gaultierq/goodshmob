@@ -58,7 +58,7 @@ export default class ActivityBody extends React.Component<Props, State> {
                     <View style={{padding: 15, backgroundColor: ACTIVITY_CELL_BACKGROUND,}}>
                         <View style={{flexDirection: 'row'}}>
                             <View style={{flex:1}}>
-                                <Text style={[styles.title]}>{resource.title}</Text>
+                                <Text style={[styles.title]} numberOfLines={2}>{resource.title}</Text>
                                 <Text style={[styles.subtitle]}>{resource.subtitle}</Text>
 
 
@@ -252,7 +252,7 @@ export default class ActivityBody extends React.Component<Props, State> {
 
 
 const styles = StyleSheet.create({
-    title: {fontSize: 20, color: Colors.black},
+    title: {fontSize: 19, color: Colors.black, marginBottom: 4, marginRight: 5},
     subtitle: {fontSize: 14, color: Colors.greyish},
     description: {fontSize: 16, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey, marginTop: 5},
 
