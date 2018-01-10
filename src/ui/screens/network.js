@@ -18,6 +18,7 @@ import {Colors} from "../colors";
 import GTouchable from "../GTouchable";
 import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
 import {CREATE_ASK} from "./ask";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type Props = NavigableProps;
 
@@ -53,6 +54,11 @@ class NetworkScreen extends Screen<Props, State> {
                 title: i18n.t("home_search_screen.community.title")
             }
         ],
+    };
+
+
+    static navigatorStyle = {
+        navBarBackgroundColor: Colors.blue,
     };
 
     state = {};
@@ -180,8 +186,8 @@ class NetworkScreen extends Screen<Props, State> {
 
 
                 <ActionButton
-                    // icon={<Icon name="search" size={30} color={Colors.white} />}
-                    buttonColor={Colors.green}
+                    icon={<Icon name="comment-question-outline" size={30} color={Colors.white} />}
+                    buttonColor={Colors.blue}
                     onPress={() => { this.onFloatingButtonPressed() }}
                 />
 
