@@ -32,6 +32,7 @@ import * as Nav from "../Nav";
 import {Colors} from "../colors";
 import GTouchable from "../GTouchable";
 import {CachedImage} from "react-native-img-cache";
+import Icon from "react-native-vector-icons/SimpleLineIcons";
 
 type Props = {
     // userId: Id,
@@ -111,7 +112,7 @@ export default class Profile extends Component<Props, State> {
             }
 
         };
-        return <GTouchable onPress={handler}><Text>v1.0</Text></GTouchable>
+        return <GTouchable onPress={handler}><Text style={{textAlign: 'center'}}>v1.0</Text></GTouchable>
     }
 
 
@@ -120,11 +121,12 @@ export default class Profile extends Component<Props, State> {
 
         return (
 
-            <ImageBackground
-                source={require('../../img/welcome_screen.jpg')}
+            <View
                 style={{
                     flex: 1,
                     alignItems: 'center',
+                    backgroundColor: 'white',
+                    paddingTop: 40
                 }}
             >
                 <KeyboardAwareScrollView
@@ -137,31 +139,39 @@ export default class Profile extends Component<Props, State> {
                         justifyContent: 'center',
                     }}>
 
-                        <Image style={{width: 200, marginBottom: 25}} source={require('../../img/logo_goodsh.png')}
-                               resizeMode="contain"/>
-
                         {this.renderUser(user)}
 
-                        <Text style={{
+                        <View style={{
+                                alignItems: 'center',
+                                marginTop: 30,
+                                marginBottom: 20,
+                                paddingTop: 25,
+                                paddingBottom: 25,
+                                borderTopWidth: 1,
+                                borderBottomWidth: 1,
+                                borderColor: Colors.grey4
+                            }}>
 
-                            marginBottom: 20,
-                            fontSize: 17,
-                            marginTop: 18
-                            // fontWeight: 'bold'
-                        }}>{i18n.t('profile_screen.title', {love: i18n.t('profile_screen.love')})}</Text>
-                        <Text style={{fontSize: 15, textAlign: "center"}}>{i18n.t('profile_screen.subtitle')}</Text>
+                            <Icon name="heart" size={30} color={Colors.green} style={{marginBottom: 20}}/>
 
+                            <Text style={{
+                                fontSize: 14,
+                                marginBottom: 10,
+                                color: Colors.green
+                            }}>{i18n.t('profile_screen.title', {love: i18n.t('profile_screen.love')})}</Text>
 
-                        <SmartInput
-                            containerStyle={{padding: 6}}
-                            inputStyle={{fontSize: 17}}
-                            inputContainerStyle={{padding: 4, borderRadius: 4, borderWidth: StyleSheet.hairlineWidth}}
-                            execAction={(input: string) => this.sendFeedback(input)}
-                            placeholder={"profile_screen.feedback_textfield.placeholder"}
-                            multiline
-                            height={100}
-                            returnKeyType={'send'}
-                        />
+                            <SmartInput
+                                containerStyle={{padding: 6}}
+                                inputStyle={{fontSize: 14}}
+                                inputContainerStyle={{padding: 4, borderRadius: 4, borderWidth: StyleSheet.hairlineWidth, borderColor: Colors.green}}
+                                execAction={(input: string) => this.sendFeedback(input)}
+                                placeholder={'profile_screen.subtitle'}
+                                multiline
+                                height={100}
+                                returnKeyType={'send'}
+                            />
+
+                        </View>
 
 
 
@@ -178,18 +188,18 @@ export default class Profile extends Component<Props, State> {
                         }
 
 
-                        {renderLink(i18n.t("actions.terms"), "https://goodsh.it/terms")}
-
-
-                        <View style={{position: 'absolute', bottom: 15}}>
-                            {this.renderVersion()}
+                        <View style={{position: 'absolute', bottom: 15, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                            <View style={{marginRight: 5}}><Image style={{width: 60}} source={require('../../img/logo_goodsh.png')}
+                                   resizeMode="contain"/></View>
+                            <View style={{marginRight: 5}}>{this.renderVersion()}</View>
+                            {renderLink(i18n.t("actions.terms"), "https://goodsh.it/terms")}
                         </View>
 
 
 
                     </View>
                 </KeyboardAwareScrollView>
-            </ImageBackground>
+            </View>
 
         );
     }
@@ -200,7 +210,7 @@ export default class Profile extends Component<Props, State> {
 
     renderUser(user) {
         return <View style={{
-            flexDirection: 'row',
+            flexDirection: 'column',
             alignItems: 'center',
         }}
         >
@@ -282,8 +292,8 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     userAvatar: {
-        height: 30,
-        width: 30,
-        borderRadius: 15
+        height: 85,
+        width: 85,
+        borderRadius: 42
     },
 });
