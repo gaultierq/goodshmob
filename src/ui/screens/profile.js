@@ -126,10 +126,11 @@ export default class Profile extends Component<Props, State> {
                     flex: 1,
                     alignItems: 'center',
                     backgroundColor: 'white',
-                    paddingTop: 40
+                    paddingTop: 30
                 }}
             >
                 <KeyboardAwareScrollView
+                    style={{flex: 1}}
                     scrollEnabled={false}
                     contentContainerStyle={{flex: 1}}
                 >
@@ -188,7 +189,7 @@ export default class Profile extends Component<Props, State> {
                         }
 
 
-                        <View style={{position: 'absolute', bottom: 15, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                             <View style={{marginRight: 5}}><Image style={{width: 60}} source={require('../../img/logo_goodsh.png')}
                                    resizeMode="contain"/></View>
                             <View style={{marginRight: 5}}>{this.renderVersion()}</View>

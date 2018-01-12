@@ -122,12 +122,12 @@ export default class ActivityBody extends React.Component<Props, State> {
         return tags.map(tag=><View style={{flexDirection:'row', marginTop: 10}}>
             <GTouchable onPress={press}>
                 <Text
-                    style={[{paddingLeft: pa, paddingRight: pa,
+                    style={[{paddingTop: 4, paddingLeft: pa, paddingRight: pa,
                         color,
                         alignSelf: 'stretch',
                         borderRadius: 13,
                         height: 26,
-                        lineHeight: 26,
+                        //lineHeight: 26,
                         // padding: 2,
                         borderWidth: StyleSheet.hairlineWidth,
                         borderColor: color,
