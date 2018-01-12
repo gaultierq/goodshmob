@@ -88,11 +88,15 @@ export default {
         "to_user":"%{activity}\nto %{user}"
     },
     "activity_screen":{
+        "user":{
+            "says":"says:",
+        },
         "comments":{
             "no_comments":"No one commented yet",
             "user_answered":"%{user} answered",
             "x_goodshers":"%{count} Goodshers",
-            "goodshers_answered":"%{goodshers} answered"
+            "goodshers_answered":"%{goodshers} answered",
+            "x_comments":" Comments"
         }
     },
     "login_screen":{

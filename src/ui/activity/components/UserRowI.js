@@ -51,7 +51,7 @@ export default class UserRowI extends React.Component<Props, State> {
                     >
                         <Text style={{
                             fontSize: 11,
-                            color: Colors.blue
+                            color: Colors.green
                         }}>{fullName(user)}</Text>
                     </GTouchable>
                     {this.props.rightComponent}

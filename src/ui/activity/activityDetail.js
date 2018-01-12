@@ -18,6 +18,8 @@ import UserRow from "./components/UserRow";
 import Screen from "../components/Screen";
 import {Colors} from "../colors";
 import GTouchable from "../GTouchable";
+import * as TimeUtils from '../../helpers/TimeUtils';
+import {SFP_TEXT_MEDIUM} from "../fonts";
 
 type Props = {
     activityId: Id,
@@ -42,6 +44,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
         drawUnderNavBar: true,
         navBarTransparent: true,
         navBarTranslucent: true,
+        navBarBackgroundColor: Colors.dirtyWhite,
         // statusBarBlur: true
         // navBarButtonColor: 'transparent',
     };
@@ -89,6 +92,14 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                     />
                                 </GTouchable>
 
+                                <View style={{backgroundColor: 'white', paddingLeft: 15, paddingRight: 15}}>
+                                    <UserRow
+                                        user={activity.user}
+                                        text={activity.createdAt ? TimeUtils.timeSince(Date.parse(activity.createdAt)):''}
+                                        navigator={this.props.navigator}
+                                    />
+                                </View>
+
                                 <FeedSeparator/>
 
                                 <ActivityActionBar
@@ -100,8 +111,6 @@ class ActivityDetailScreen extends Screen<Props, State> {
                             </View>
 
                             <FeedSeparator/>
-
-                            <ActivityDescription activity={activity} navigator={this.props.navigator}/>
 
 
                             {this.renderComments(activity)}
@@ -139,7 +148,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
         return (
             <GTouchable
                 onPress={()=> this.displayActivityComments(activity)}>
-                <View style={[UI.CARD(0), {padding: 8, paddingLeft: 12, backgroundColor: "#fefefe"}]}>
+                <View style={[UI.CARD(0), {marginTop: 15, padding: 10, paddingLeft: 15, backgroundColor: "#fefefe"}]}>
 
                     {/*empty*/}
                     {_.isEmpty(activity.commentators) &&
@@ -156,19 +165,22 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
                     {/*non empty*/}
                     {!_.isEmpty(activity.commentators) &&
-                    <View style={{flex: 1,
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                    }
-                    }>
-                        <UserRow
-                            user={activity.commentators[0]}
-                            text={"answered"}
-                            small={true}
-                            navigator={this.props.navigator}
-                        />
-                        <Icon name="chevron-small-right" size={20} color={Colors.greyishBrown} />
+                    <View>
+                        <View><Text style={{fontSize: 16, fontFamily: SFP_TEXT_MEDIUM, color: Colors.greyish}}>{activity.comments.length + i18n.t('activity_screen.comments.x_comments')}</Text></View>
+                        <View style={{flex: 1,
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                        }
+                        }>
+                            <UserRow
+                                user={activity.commentators[0]}
+                                text={"answered"}
+                                small={true}
+                                navigator={this.props.navigator}
+                            />
+                            <Icon name="chevron-small-right" size={20} color={Colors.greyishBrown} />
+                        </View>
                     </View>
                     }
 
