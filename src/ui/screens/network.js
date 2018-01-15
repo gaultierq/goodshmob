@@ -186,8 +186,8 @@ class NetworkScreen extends Screen<Props, State> {
 
 
                 <ActionButton
-                    icon={<Icon name="comment-question-outline" size={30} color={Colors.white} />}
-                    buttonColor={Colors.blue}
+                    icon={<Icon name="comment-question-outline" size={30} color={Colors.white} style={{paddingTop: 5}}/>}
+                    buttonColor={Colors.green}
                     onPress={() => { this.onFloatingButtonPressed() }}
                 />
 
