@@ -183,9 +183,9 @@ export default class Profile extends Component<Props, State> {
                         }
 
 
-                        <View>
+                        <View style={{alignSelf:'flex-start', alignItems: 'flex-start', justifyContent: 'flex-start'}}>
                             {renderLink(i18n.t("actions.terms"), "https://goodsh.it/terms")}
-                            <View style={{marginRight: 5, color: Colors.greyish}}>{this.renderVersion()}</View>
+                            <View style={{marginRight: 5, color: Colors.greyish, textAlign: 'left'}}>{this.renderVersion()}</View>
                         </View>
                     </View>
 
