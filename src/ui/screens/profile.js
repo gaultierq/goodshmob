@@ -120,87 +120,78 @@ export default class Profile extends Component<Props, State> {
         let user = this.getUser(currentUserId());
 
         return (
-
-            <View
-                style={{
+            <KeyboardAwareScrollView
+                style={{flex: 1}}
+                scrollEnabled={false}
+                contentContainerStyle={{
                     flex: 1,
-                    alignItems: 'center',
                     backgroundColor: 'white',
-                    paddingTop: 60
-                }}
-            >
-                <KeyboardAwareScrollView
-                    style={{flex: 1}}
-                    scrollEnabled={false}
-                    contentContainerStyle={{flex: 1}}
-                >
+                    justifyContent: 'center',
+                    paddingRight:20,
+                    paddingLeft: 20
+            }}>
+
+                <View>
+
+                    {this.renderUser(user)}
+
                     <View style={{
-                        flex: 1,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}>
+                            alignItems: 'center',
+                            marginTop: 30,
+                            marginBottom: 20,
+                            paddingTop: 25,
+                            paddingBottom: 25,
+                            borderTopWidth: 1,
+                            borderBottomWidth: 1,
+                            borderColor: Colors.grey4,
+                        }}>
 
-                        {this.renderUser(user)}
+                        <Icon name="heart" size={30} color={Colors.green} style={{marginBottom: 20}}/>
 
-                        <View style={{
-                                alignItems: 'center',
-                                marginTop: 30,
-                                marginBottom: 20,
-                                paddingTop: 25,
-                                paddingBottom: 25,
-                                borderTopWidth: 1,
-                                borderBottomWidth: 1,
-                                borderColor: Colors.grey4
-                            }}>
+                        <Text style={{
+                            fontSize: 14,
+                            marginBottom: 10,
+                            color: Colors.green
+                        }}>{i18n.t('profile_screen.title', {love: i18n.t('profile_screen.love')})}</Text>
 
-                            <Icon name="heart" size={30} color={Colors.green} style={{marginBottom: 20}}/>
-
-                            <Text style={{
-                                fontSize: 14,
-                                marginBottom: 10,
-                                color: Colors.green
-                            }}>{i18n.t('profile_screen.title', {love: i18n.t('profile_screen.love')})}</Text>
-
-                            <SmartInput
-                                containerStyle={{padding: 6}}
-                                inputStyle={{fontSize: 14}}
-                                inputContainerStyle={{padding: 4, borderRadius: 4, borderWidth: StyleSheet.hairlineWidth, borderColor: Colors.green}}
-                                execAction={(input: string) => this.sendFeedback(input)}
-                                placeholder={'profile_screen.subtitle'}
-                                multiline
-                                height={100}
-                                returnKeyType={'send'}
-                            />
-
-                        </View>
-
-
-                        <View style={{flex: 1, alignSelf:'flex-start', alignItems: 'flex-start', justifyContent: 'flex-start'}}>
-                            {renderSimpleButton(i18n.t("actions.logout"), this.logout.bind(this), {loading: this.state.reqLogout === 'sending'})}
-
-                            {
-                                this.props.config.devMenu &&
-                                renderSimpleButton(i18n.t("dev.label"), () => this.props.navigator.showModal({
-                                        screen: 'goodsh.DebugScreen', // unique ID registered with Navigation.registerScreen
-                                        title: i18n.t("dev.title"), // navigation bar title of the pushed screen (optional)
-                                        navigatorButtons: Nav.CANCELABLE_MODAL,
-                                    }
-                                ))
-                            }
-
-
-                            <View>
-                                {renderLink(i18n.t("actions.terms"), "https://goodsh.it/terms")}
-                                <View style={{marginRight: 5, color: Colors.greyish}}>{this.renderVersion()}</View>
-                            </View>
-                        </View>
-
-
+                        <SmartInput
+                            containerStyle={{padding: 6}}
+                            inputStyle={{fontSize: 14}}
+                            inputContainerStyle={{padding: 4, borderRadius: 4, borderWidth: StyleSheet.hairlineWidth, borderColor: Colors.green}}
+                            execAction={(input: string) => this.sendFeedback(input)}
+                            placeholder={'profile_screen.subtitle'}
+                            multiline
+                            height={100}
+                            returnKeyType={'send'}
+                            buttonStyle={{padding: 10}}
+                        />
 
                     </View>
-                </KeyboardAwareScrollView>
-            </View>
 
+
+                    <View style={{alignSelf:'flex-start', alignItems: 'flex-start', justifyContent: 'flex-start'}}>
+                        {renderSimpleButton(i18n.t("actions.logout"), this.logout.bind(this), {loading: this.state.reqLogout === 'sending'})}
+
+                        {
+                            this.props.config.devMenu &&
+                            renderSimpleButton(i18n.t("dev.label"), () => this.props.navigator.showModal({
+                                    screen: 'goodsh.DebugScreen', // unique ID registered with Navigation.registerScreen
+                                    title: i18n.t("dev.title"), // navigation bar title of the pushed screen (optional)
+                                    navigatorButtons: Nav.CANCELABLE_MODAL,
+                                }
+                            ))
+                        }
+
+
+                        <View>
+                            {renderLink(i18n.t("actions.terms"), "https://goodsh.it/terms")}
+                            <View style={{marginRight: 5, color: Colors.greyish}}>{this.renderVersion()}</View>
+                        </View>
+                    </View>
+
+                </View>
+
+            </KeyboardAwareScrollView>
         );
     }
 
