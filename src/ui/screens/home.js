@@ -84,7 +84,7 @@ class HomeScreen extends Screen<Props, State> {
                     component: 'goodsh.MyAvatar'
                 }:
                 {
-                    icon: require('../../img/profil.png'),
+                    icon: require('../../img/goodshersHeaderProfileIcon.png'),
                     id: 'profile',
                 }
         ],

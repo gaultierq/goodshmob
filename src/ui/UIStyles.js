@@ -12,7 +12,7 @@ export const NavStyles = {
     navBarBackgroundColor: Colors.dirtyWhite,
     navBarTextFontSize: 20,
     navBarTextFontFamily: SFP_TEXT_MEDIUM,
-
+    navBarInputBackgroundColor: Colors.greying
 };
 
 export const SearchStyles = {
