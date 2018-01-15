@@ -89,8 +89,10 @@ export class InteractionScreen extends Screen<Props, State> {
                     navigator={this.props.navigator}
                     style={{paddingLeft: 12, paddingRight: 12}}
                 >
-                    {content}
                 </UserActivity>
+                <View style={{marginLeft: 51, marginTop: -16}}>
+                    {content}
+                </View>
             </GTouchable>
         )
     }
@@ -132,7 +134,7 @@ export class InteractionScreen extends Screen<Props, State> {
             }
             else if (resource.type === 'asks') {
                 // return <Text style={{fontSize: 12}}>{username + " ask"}</Text>
-                return <Text style={{fontSize: 12}}>
+                return <Text style={{fontSize: 14}} numberOfLines={1}>
                     {i18n.t(key, {username, what: "ask"})}
                 </Text>
             }
@@ -141,7 +143,7 @@ export class InteractionScreen extends Screen<Props, State> {
                 if (!innerResource) throw "No resource for " + JSON.stringify(activity);
                 let item_title = _.toUpper(innerResource.title);
 
-                return <Text style={{fontSize: 12}}>
+                return <Text style={{fontSize: 14}} numberOfLines={1}>
                     {i18n.t(key, {username, what: item_title})}
                 </Text>
             }
