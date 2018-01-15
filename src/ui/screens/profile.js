@@ -33,6 +33,7 @@ import {Colors} from "../colors";
 import GTouchable from "../GTouchable";
 import {CachedImage} from "react-native-img-cache";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
+import {SFP_TEXT_REGULAR} from "../fonts";
 
 type Props = {
     // userId: Id,
@@ -112,7 +113,7 @@ export default class Profile extends Component<Props, State> {
             }
 
         };
-        return <GTouchable onPress={handler}><Text style={{textAlign: 'center'}}>v1.0</Text></GTouchable>
+        return <GTouchable onPress={handler}><Text style={{textAlign: 'center', color: Colors.greyish}}>v1.0</Text></GTouchable>
     }
 
 
@@ -169,8 +170,8 @@ export default class Profile extends Component<Props, State> {
                     </View>
 
 
-                    <View style={{alignSelf:'flex-start', alignItems: 'flex-start', justifyContent: 'flex-start'}}>
-                        {renderSimpleButton(i18n.t("actions.logout"), this.logout.bind(this), {loading: this.state.reqLogout === 'sending'})}
+                    <View style={{alignSelf:'center'}}>
+                        { renderSimpleButton(i18n.t("actions.logout"), this.logout.bind(this), {loading: this.state.reqLogout === 'sending', textStyle: {fontSize:15, fontWeight: 'normal', fontFamily: SFP_TEXT_REGULAR, color: Colors.greyish}}) }
 
                         {
                             this.props.config.devMenu &&
@@ -183,9 +184,9 @@ export default class Profile extends Component<Props, State> {
                         }
 
 
-                        <View style={{alignSelf:'flex-start', alignItems: 'flex-start', justifyContent: 'flex-start'}}>
+                        <View style={{alignSelf:'center'}}>
                             {renderLink(i18n.t("actions.terms"), "https://goodsh.it/terms")}
-                            <View style={{marginRight: 5, color: Colors.greyish, textAlign: 'left'}}>{this.renderVersion()}</View>
+                            {this.renderVersion()}
                         </View>
                     </View>
 
