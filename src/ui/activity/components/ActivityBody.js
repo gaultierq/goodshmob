@@ -70,7 +70,6 @@ export default class ActivityBody extends React.Component<Props, State> {
                         </View>
                         {this.renderTags()}
 
-                        {!!activity.description && <Text style={[styles.says]}>{firstName(activity.user) + ' ' + i18n.t('activity_screen.user.says')}</Text>}
                         {!!activity.description && <Text style={[styles.description]}>{"\"" + activity.description + "\""}</Text>}
                     </View>
                 )
@@ -258,6 +257,6 @@ export default class ActivityBody extends React.Component<Props, State> {
 const styles = StyleSheet.create({
     title: {fontSize: 19, color: Colors.black, marginBottom: 4, marginRight: 5},
     subtitle: {fontSize: 14, color: Colors.greyish},
-    description: {fontSize: 14, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey},
+    description: {fontSize: 14, fontFamily: SFP_TEXT_ITALIC, marginTop: 10, color: Colors.brownishGrey},
     says: {fontSize: 16, fontFamily: SFP_TEXT_MEDIUM, color: Colors.greyish, marginTop: 10},
 });

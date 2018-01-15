@@ -50,8 +50,8 @@ export default class UserRowI extends React.Component<Props, State> {
                         onPress={()=>this.navigateToUser(user)}
                     >
                         <Text style={{
-                            fontSize: 11,
-                            color: Colors.green
+                            fontSize: 14,
+                            color: Colors.greyishBrown
                         }}>{fullName(user)}</Text>
                     </GTouchable>
                     {this.props.rightComponent}

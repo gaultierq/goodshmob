@@ -126,7 +126,7 @@ export default class Profile extends Component<Props, State> {
                     flex: 1,
                     alignItems: 'center',
                     backgroundColor: 'white',
-                    paddingTop: 30
+                    paddingTop: 60
                 }}
             >
                 <KeyboardAwareScrollView
@@ -175,25 +175,24 @@ export default class Profile extends Component<Props, State> {
                         </View>
 
 
+                        <View style={{flex: 1, alignSelf:'flex-start', alignItems: 'flex-start', justifyContent: 'flex-start'}}>
+                            {renderSimpleButton(i18n.t("actions.logout"), this.logout.bind(this), {loading: this.state.reqLogout === 'sending'})}
 
-                        {renderSimpleButton(i18n.t("actions.logout"), this.logout.bind(this), {loading: this.state.reqLogout === 'sending'})}
-
-                        {
-                            this.props.config.devMenu &&
-                            renderSimpleButton(i18n.t("dev.label"), () => this.props.navigator.showModal({
-                                    screen: 'goodsh.DebugScreen', // unique ID registered with Navigation.registerScreen
-                                    title: i18n.t("dev.title"), // navigation bar title of the pushed screen (optional)
-                                    navigatorButtons: Nav.CANCELABLE_MODAL,
-                                }
-                            ))
-                        }
+                            {
+                                this.props.config.devMenu &&
+                                renderSimpleButton(i18n.t("dev.label"), () => this.props.navigator.showModal({
+                                        screen: 'goodsh.DebugScreen', // unique ID registered with Navigation.registerScreen
+                                        title: i18n.t("dev.title"), // navigation bar title of the pushed screen (optional)
+                                        navigatorButtons: Nav.CANCELABLE_MODAL,
+                                    }
+                                ))
+                            }
 
 
-                        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                            <View style={{marginRight: 5}}><Image style={{width: 60}} source={require('../../img/logo_goodsh.png')}
-                                   resizeMode="contain"/></View>
-                            <View style={{marginRight: 5}}>{this.renderVersion()}</View>
-                            {renderLink(i18n.t("actions.terms"), "https://goodsh.it/terms")}
+                            <View>
+                                {renderLink(i18n.t("actions.terms"), "https://goodsh.it/terms")}
+                                <View style={{marginRight: 5, color: Colors.greyish}}>{this.renderVersion()}</View>
+                            </View>
                         </View>
 
 
@@ -293,8 +292,8 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     userAvatar: {
-        height: 85,
-        width: 85,
-        borderRadius: 42
+        height: 45,
+        width: 45,
+        borderRadius: 22
     },
 });

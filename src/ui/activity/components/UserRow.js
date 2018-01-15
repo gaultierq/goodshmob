@@ -28,8 +28,8 @@ export default class UserRow extends React.Component<Props, State> {
             {...this.props}
             rightComponent={!!this.props.text &&
             <Text style={{
-                fontSize: 9,
-                color: Colors.greyishBrown,
+                fontSize: 14,
+                color: Colors.greyish,
                 marginLeft: 4
             }}>{this.props.text}
             </Text>
