@@ -2,17 +2,16 @@
 
 import Immutable from 'seamless-immutable';
 import * as types from "./actionTypes";
-import {INIT_CACHE, INVALIDATE_CACHE, SET_USER_NULL, UPGRADE_CACHE} from "./actionTypes";
+import {INIT_CACHE, SET_USER_NULL, UPGRADE_CACHE} from "./actionTypes";
 import {camelize} from 'camelize-object-key'
 
 export function createWithReducers(appReducers) {
     return (state, action) => {
-        let emptyCache = (state, version) => {
-            // let result = _.set({}, "app.cacheVersion", version);
+        let emptyCache = (state) => {
             let result = {};
             result.auth = {...state.auth};
             result.app = {...state.app};
-            result.config = {cacheVersion: version};
+            //result.config = {cacheVersion: version};
             return result;
         };
 
@@ -20,12 +19,12 @@ export function createWithReducers(appReducers) {
             case SET_USER_NULL:
                 state = undefined;
                 break;
-            case INVALIDATE_CACHE:
-                state = emptyCache(state, state.config.cacheVersion);
-                break;
+            // case INVALIDATE_CACHE:
+            //     state = emptyCache(state, state.config.cacheVersion);
+            //     break;
             case UPGRADE_CACHE:
             case INIT_CACHE:
-                state = emptyCache(state, action.newCacheVersion);
+                state = emptyCache(state);
                 break;
         }
 

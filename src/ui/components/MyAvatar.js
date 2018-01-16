@@ -22,7 +22,7 @@ export default class MyAvatar extends Component<Props, State> {
 
         let imageDim = 32;
 
-        const user = currentUser();
+        const user = currentUser(false);
 
         return (
             <GTouchable onPress={()=>{
@@ -39,7 +39,7 @@ export default class MyAvatar extends Component<Props, State> {
 
             }}>
                 <CachedImage
-                    source={{uri: user.image}}
+                    source={{uri: user && user.image || ""}}
                     style={{
                         height: imageDim,
                         width: imageDim,

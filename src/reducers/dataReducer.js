@@ -17,9 +17,11 @@ export const CONFIG_SET = 'CONFIG_SET';
 const initConfig = {
     devMenu: false,
     disableOfflineMode: false,
+    forceOnBoardingCycle: false
 };
 
 export  function config(state = initConfig, action) {
+
     switch (action.type) {
         case CONFIG_SET:
             return {...state, [action.option]: action.value};

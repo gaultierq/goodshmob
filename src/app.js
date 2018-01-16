@@ -49,15 +49,6 @@ let hydrated = false;
 
 });
 
-// if (!__IS_LOCAL__) {
-//     let _void = function(){};
-//     console.log = console.debug = console.info = console.warn = console.error = _void;
-// }
-
-//this is shit
-// const initialState = () => Immutable({
-//     rehydrated: hydrated,
-// });
 
 
 const appReducer = (state = {}, action) => {
@@ -95,24 +86,22 @@ export default class App {
 
     store;
     bugsnag;
+    cacheVersion: number;
 
     upgradingCache: boolean = false;
 
 
     constructor() {
 
-        this.prepare();
+        this.prepareRedux();
 
-
+        this.getCurrentCacheVersion().then(cacheVersion => {
+            this.cacheVersion = cacheVersion || 0;
+        });
         // since react-redux only works on components, we need to subscribe this class manually
         this.store.subscribe(this.onStoreUpdate.bind(this));
 
         this.start();
-    }
-
-
-    prepare() {
-        this.prepareRedux();
     }
 
     prepareUI() {
@@ -220,6 +209,10 @@ export default class App {
             console.debug("waiting for rehydration");
             return;
         }
+        if (this.cacheVersion === undefined) {
+            console.debug("waiting for cache version");
+            return;
+        }
 
         //finish app prepatation
         //singletons
@@ -258,9 +251,14 @@ export default class App {
     resolveMode() {
         let mode: AppMode = 'unknown';
 
-
         //invalidate cache if needed
-        let cacheVersion = this.store.getState().config.cacheVersion;
+        let cacheVersion = this.cacheVersion;
+        if (cacheVersion === undefined) {
+            console.debug("waiting for cache version (resolveMode)");
+        }
+
+
+        console.debug(`current cache version=${cacheVersion}, config cache version=${Config.CACHE_VERSION}`);
 
         if (!cacheVersion) {
             mode = 'init_cache';
@@ -282,7 +280,16 @@ export default class App {
         }
     }
 
-    //type AppMode = 'idle' | 'logged' | 'unlogged' | 'upgrading_cache'
+    async getCurrentCacheVersion() {
+        return AsyncStorage.getItem('@goodsh:cacheVersion');
+    }
+
+    async setCurrentCacheVersion(version: number) {
+        this.cacheVersion = version;
+        AsyncStorage.setItem('@goodsh:cacheVersion', version);
+    }
+
+//type AppMode = 'idle' | 'logged' | 'unlogged' | 'upgrading_cache'
 
     onAppModeChanged(oldMode: AppMode) {
 
@@ -291,6 +298,7 @@ export default class App {
         const testScreen = require("./testScreen").default;
         let navigatorStyle = {...UI.NavStyles};
 
+        const cacheVersion = Config.CACHE_VERSION;
         switch (this.mode) {
             case 'idle':
                 break;
@@ -317,11 +325,13 @@ export default class App {
                 this.startUnlogged(navigatorStyle);
                 break;
             case 'init_cache':
-                this.store.dispatch({type: INIT_CACHE, newCacheVersion: Config.CACHE_VERSION});
+                this.store.dispatch({type: INIT_CACHE, newCacheVersion: cacheVersion});
+                this.setCurrentCacheVersion(cacheVersion);
                 break;
             case 'upgrading_cache':
                 this.upgradingCache = true;
-                this.store.dispatch({type: UPGRADE_CACHE, newCacheVersion: Config.CACHE_VERSION});
+                this.store.dispatch({type: UPGRADE_CACHE, newCacheVersion: cacheVersion});
+                this.setCurrentCacheVersion(cacheVersion);
                 this.store.dispatch(appActions.me()).then(() => {
                     this.upgradingCache = false;
                     this.resolveMode()
@@ -351,9 +361,9 @@ export default class App {
         };
         let iconInsets = { // add this to change icon position (optional, iOS only).
             top: 6, // optional, default is 0.
-                left: 0, // optional, default is 0.
-                bottom: -6, // optional, default is 0.
-                right: 0 // optional, default is 0.
+            left: 0, // optional, default is 0.
+            bottom: -6, // optional, default is 0.
+            right: 0 // optional, default is 0.
         };
 
         Navigation.startTabBasedApp({

@@ -17,11 +17,12 @@ class _OnBoardingManager implements OnBoardingManager {
     init(store: any) {
         this.store = store;
 
-        setTimeout(()=> {
-            this.store.dispatch({type: SET_STEP, step: 'no_spam'});
-        }, 2000)
-
-
+        let {forceOnBoardingCycle} = this.store.getState().config;
+        if (forceOnBoardingCycle) {
+            setTimeout(()=> {
+                this.store.dispatch({type: SET_STEP, step: 'no_spam'});
+            }, 2000)
+        }
     }
 
     getPendingStep(): ?OnBoardingStep {
