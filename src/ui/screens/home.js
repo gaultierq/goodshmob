@@ -514,16 +514,17 @@ class HomeScreen extends Screen<Props, State> {
         this.props.navigator.showModal({
             screen: 'goodsh.ActivityDetailScreen',
             passProps: {activityId: saving.id, activityType: saving.type},
-            navigatorButtons: {
-                leftButtons: [
-                    {
-                        id: CLOSE_MODAL,
-                        icon: require('../../img2/circleBackArrow.png')
-                        //title: "#Cancel"
-
-                    }
-                ],
-                rightButtons: []},
+            navigatorButtons: Nav.CANCELABLE_MODAL,
+            // navigatorButtons: {
+            //     leftButtons: [
+            //         {
+            //             id: CLOSE_MODAL,
+            //             icon: require('../../img2/circleBackArrow.png')
+            //             //title: "#Cancel"
+            //
+            //         }
+            //     ],
+            //     rightButtons: []},
         });
         // }
     }

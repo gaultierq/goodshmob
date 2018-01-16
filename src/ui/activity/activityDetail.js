@@ -40,6 +40,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
     state = {};
 
+    /*
     static navigatorStyle = {
         drawUnderNavBar: true,
         navBarTransparent: true,
@@ -48,6 +49,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
         // statusBarBlur: true
         // navBarButtonColor: 'transparent',
     };
+    */
 
     componentDidMount() {
         this.load();
