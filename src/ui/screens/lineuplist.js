@@ -187,29 +187,6 @@ const reducer = (() => {
 })();
 
 
-// let path = `${activityType}.${activityId}.relationships.comments.data`;
-// state = doDataMergeInState(state, path, [{id, type}], {reverse: true});
-// break;
-
-//let screen = connect(mapStateToProps)(LineupListScreen);
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    searchContainer: {
-        backgroundColor: 'transparent',
-    },
-    searchInput: {
-        backgroundColor: 'white',
-        borderWidth: StyleSheet.hairlineWidth,
-        // borderRadius: 30,
-        // padding: 20,
-        borderColor: Colors.greyishBrown
-    },
-
-});
-
 export {reducer};
 
 export function renderSimpleListItem(navigator: *) {

@@ -42,6 +42,7 @@ export type Props = {
     categories: Array<SearchCategory>,
     navigator: *,
     searchEngine: SearchEngine,
+    token?: ?SearchToken
 };
 
 
@@ -93,7 +94,17 @@ export default class SearchScreen extends Component<Props, State> {
 
         props.navigator.setStyle({...UI.NavStyles,
             navBarCustomView: 'goodsh.SearchNavBar',
+            navBarCustomViewInitialProps: {initialInput: props.token}
         });
+
+        if (props.token) {
+            const token = props.token;
+            //weak
+            this.state.input = token;
+            setTimeout(()=> {
+                this.performSearch(token, 0);
+            });
+        }
     }
 
     handleIndexChange(index: number) {
@@ -363,6 +374,7 @@ class SearchPage extends Component<PageProps, PageState> {
 
 type NavProps = {
     onChangeText: (token: string) => void,
+    initialInput?: ?SearchToken,
     navigator: any
 };
 
@@ -395,6 +407,11 @@ export class SearchNavBar extends Component<NavProps, NavState> {
         },
     });
 
+    constructor(props) {
+        super(props);
+        this.state = {input: props.initialInput}
+    }
+
 
     render() {
 
@@ -412,6 +429,7 @@ export class SearchNavBar extends Component<NavProps, NavState> {
                 autoCapitalize='none'
                 autoCorrect={false}
                 returnKeyType={'search'}
+                value={this.state.input}
             />
         );
 

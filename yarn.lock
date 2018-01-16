@@ -4808,6 +4808,12 @@ react-native-root-toast@^2.2.1:
     prop-types "^15.5.10"
     react-native-root-siblings "^2.2.0"
 
+react-native-search-box@^0.0.13:
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/react-native-search-box/-/react-native-search-box-0.0.13.tgz#75b5d21ecfb5d5dc12e26fac85b1225b48070f90"
+  dependencies:
+    prop-types "^15.5.10"
+
 react-native-snackbar@^0.4.3:
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/react-native-snackbar/-/react-native-snackbar-0.4.4.tgz#46d35c171dd28189c60eab0998b88d1c37e9f14e"

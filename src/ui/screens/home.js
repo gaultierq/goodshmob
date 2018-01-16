@@ -2,6 +2,7 @@
 
 import React from 'react';
 import {
+    Alert,
     BackHandler,
     Dimensions,
     Image,
@@ -10,18 +11,17 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    View,
-    Alert
+    View
 } from 'react-native';
 
 import {connect} from "react-redux";
 import ActionButton from 'react-native-action-button';
 import {LineupListScreen} from './lineuplist'
-import type {Id, RNNNavigator, Saving} from "../../types";
+import type {Id, RNNNavigator, Saving, SearchToken} from "../../types";
 import {List} from "../../types"
 import Snackbar from "react-native-snackbar"
 import {stylePadding} from "../UIStyles";
-import {currentGoodshboxId, currentUserId, logged, logged2} from "../../managers/CurrentUser"
+import {currentGoodshboxId, currentUserId, logged} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import Modal from 'react-native-modal'
@@ -40,7 +40,6 @@ import LineupCellSaving from "../components/LineupCellSaving";
 import GTouchable from "../GTouchable";
 import AddLineupComponent from "../components/addlineup";
 import BottomSheet from 'react-native-bottomsheet';
-import {CLOSE_MODAL} from "../Nav";
 import Icon from 'react-native-vector-icons/Entypo';
 
 
@@ -65,7 +64,8 @@ type Props = {
 type State = {
     newLineupTitle?: string,
     newLineupPrivacy?: Visibility,
-    changeLinupTitleId?: {id:Id, name: string}
+    changeLinupTitleId?: {id:Id, name: string},
+    filter?: ?string
 };
 
 
@@ -89,10 +89,10 @@ class HomeScreen extends Screen<Props, State> {
                 }
         ],
         rightButtons: [
-            {
-                icon: require('../../img2/searchHeaderIcon.png'),
-                id: 'search'
-            }
+            // {
+            //     icon: require('../../img2/searchHeaderIcon.png'),
+            //     id: 'search'
+            // }
         ],
     };
 
@@ -143,23 +143,28 @@ class HomeScreen extends Screen<Props, State> {
                     });
                     break;
                 case 'search':
-                    let navigator = this.props.navigator;
-
-                    navigator.showModal({
-                        screen: 'goodsh.HomeSearchScreen', // unique ID registered with Navigation.registerScreen
-                        //title: "#Rechercher", // navigation bar title of the pushed screen (optional)
-                        animationType: 'none',
-                        backButtonHidden: true,
-                        passProps:{
-                            onClickClose: () => navigator.dismissModal({animationType: 'none'}),
-                        },
-                        navigatorButtons: Nav.CANCELABLE_SEARCH_MODAL,
-                    });
+                    this.launchSearch();
                     break;
             }
         }
     }
 
+
+    launchSearch(token?: SearchToken) {
+        let navigator = this.props.navigator;
+
+        navigator.showModal({
+            screen: 'goodsh.HomeSearchScreen', // unique ID registered with Navigation.registerScreen
+            //title: "#Rechercher", // navigation bar title of the pushed screen (optional)
+            animationType: 'none',
+            backButtonHidden: true,
+            passProps: {
+                onClickClose: () => navigator.dismissModal({animationType: 'none'}),
+                token
+            },
+            navigatorButtons: Nav.CANCELABLE_SEARCH_MODAL,
+        });
+    }
 
     componentDidMount() {
         setTimeout(() => {
@@ -173,6 +178,11 @@ class HomeScreen extends Screen<Props, State> {
             }
 
         }, 5000);
+    }
+
+    onFilter(filter: string) {
+        console.debug(`onFilter:${filter}`);
+        this.setState({filter});
     }
 
     render() {
@@ -211,6 +221,50 @@ class HomeScreen extends Screen<Props, State> {
                         renderSectionHeader={({section}) => this.renderSectionHeader(section)}
                         ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
                         feedId={"home list"}
+                        filter={{
+                            onSearch: (searchToken) => {
+                                this.launchSearch(searchToken);
+                            },
+                            applyFilter: (sections, filter) => {
+                                let contains = (container, token) => {
+                                    if (!container || !token) return false;
+                                    return container.toLowerCase().indexOf(token.toLowerCase()) >= 0;
+                                };
+
+                                let filterSavings = savings => {
+                                    return _.filter(savings, saving => saving && saving.resource && contains(saving.resource.title, filter))
+                                };
+
+                                let filterLineup = lineups => {
+                                    let result = [];
+                                    _.forEach(lineups, lineup => {
+                                        if (contains(lineup.name, filter)) {
+                                            result.push(lineup);
+                                        }
+                                        else {
+                                            let savings = filterSavings(lineup.savings);
+                                            if (!_.isEmpty(savings)) {
+                                                result.push({...lineup, savings});
+                                            }
+                                        }
+                                    });
+                                    return result;
+                                };
+
+
+                                let result = [];
+                                sections.forEach(section => {
+
+                                    const filteredLineups = filterLineup(section.data);
+
+                                    if (!_.isEmpty(filteredLineups)) {
+                                        result.push({...section, data: filteredLineups});
+                                    }
+
+                                });
+                                return result;
+                            }
+                        }}
                     />
 
                 </View>
@@ -353,7 +407,7 @@ class HomeScreen extends Screen<Props, State> {
                 alignItems: 'center',
                 justifyContent:'center'
             }
-            ]}>
+        ]}>
             <Icon name="plus" size={45} color={Colors.dirtyWhite}/>
         </View>);
         //
@@ -470,18 +524,18 @@ class HomeScreen extends Screen<Props, State> {
                     this.props.dispatch(LINEUP_DELETION.pending({lineupId}, {delayMs, lineupId}))
                         .then(pendingId => {
                             Snackbar.show({
-                                title: i18n.t("activity_item.buttons.deleted_list"),
-                                duration: Snackbar.LENGTH_LONG,
-                                action: {
-                                    title: i18n.t("actions.undo"),
-                                    color: 'green',
-                                    onPress: () => {
-                                        this.props.dispatch(LINEUP_DELETION.undo(pendingId))
+                                    title: i18n.t("activity_item.buttons.deleted_list"),
+                                    duration: Snackbar.LENGTH_LONG,
+                                    action: {
+                                        title: i18n.t("actions.undo"),
+                                        color: 'green',
+                                        onPress: () => {
+                                            this.props.dispatch(LINEUP_DELETION.undo(pendingId))
+                                        },
                                     },
-                                },
-                            }
-                        );
-                    });
+                                }
+                            );
+                        });
                 }
                 },
             ],

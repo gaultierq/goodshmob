@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import {connect} from "react-redux";
 import {currentUserId, logged} from "../../managers/CurrentUser"
-import type {Id, List, NavigableProps, Saving} from "../../types";
+import type {Id, List, NavigableProps, Saving, SearchToken} from "../../types";
 import ItemCell from "../components/ItemCell";
 import LineupCell from "../components/LineupCell";
 import {AlgoliaClient, createResultFromHit, makeAlgoliaSearch} from "../../helpers/AlgoliaUtils";
@@ -24,6 +24,7 @@ import {SearchStyles} from "../UIStyles";
 import GTouchable from "../GTouchable";
 
 type Props = NavigableProps & {
+    token?: ?SearchToken
 };
 
 type State = {
@@ -127,6 +128,7 @@ export default class HomeSearchScreen extends Screen<Props, State> {
                 searchEngine={{search}}
                 categories={categories}
                 navigator={navigator}
+                token={this.props.token}
             />
         );
     }

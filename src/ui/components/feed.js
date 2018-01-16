@@ -4,17 +4,18 @@ import type {Node} from 'react';
 import React, {Component} from 'react';
 import {ActivityIndicator, BackHandler, FlatList, RefreshControl, SectionList, Text, View} from 'react-native';
 import {connect} from "react-redux";
-import {logged} from "../../managers/CurrentUser"
 import {assertUnique} from "../../helpers/DataUtils";
 import ApiAction from "../../helpers/ApiAction";
 import * as Api from "../../managers/Api";
+import {TRIGGER_USER_DIRECT_ACTION, TRIGGER_USER_INDIRECT_ACTION} from "../../managers/Api";
 import {isEmpty} from "lodash";
-import type {i18Key, Id, ms, RequestState, Url} from "../../types";
+import type {i18Key, ms, RequestState, Url} from "../../types";
 import {renderSimpleButton} from "../UIStyles";
 import i18n from '../../i18n/i18n'
 import type {ScreenVisibility} from "./Screen";
-import {TRIGGER_USER_DIRECT_ACTION} from "../../managers/Api";
-import {TRIGGER_USER_INDIRECT_ACTION} from "../../managers/Api";
+import Search from 'react-native-search-box';
+import {Colors} from "../colors";
+import Fuse from 'fuse.js'
 
 
 export type FeedSource = {
@@ -175,10 +176,27 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             ...attributes
         };
 
-        if (sections) {
-            return React.createElement(SectionList, {sections, ...params});
+        let searchBar = !!this.props.filter && this.renderSearchBar();
+        let list;
+
+        if (this.props.filter && this.state.filter) {
+            items = this.props.filter.applyFilter(sections || data, this.state.filter);
         }
-        return React.createElement(FlatList, {data, ...params});
+        else {
+            items = sections || data;
+        }
+
+        if (sections) {
+            list = React.createElement(SectionList, {sections: items, ...params});
+        }
+        else {
+
+            list = React.createElement(FlatList, {data: items, ...params});
+        }
+
+        return <View>{searchBar}{list}</View>
+
+
         //
         // return (
         //     <SectionList
@@ -197,6 +215,73 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         //     />
         // );
     }
+
+    applyFilter(data, isSection: boolean = false) {
+        if (this.state.filter) {
+
+            let searchIn = data;
+
+            let fuse = new Fuse(searchIn, {
+                keys: [
+                    {
+                        name: 'name',
+                        weight: 0.6
+                    },
+                    {
+                        name: 'title',
+                        weight: 0.4
+                    }],
+                // keys: ['name', 'title'],
+                sort: true,
+                threshold: 0.6
+            });
+            data = fuse.search(this.state.filter);
+        }
+
+
+        return data;
+    }
+
+    renderSearchBar(){
+
+        let {onSearch} = this.props.filter;
+
+        let font = {
+            fontSize: 17,
+            lineHeight: 22};
+        const color = 'rgb(142,142,147)';
+
+        //TODO: finish design
+        //use https://github.com/agiletechvn/react-native-search-box
+        return React.createElement(Search, {
+            backgroundColor: Colors.white,
+            placeholderTextColor: color, //TODO
+            titleCancelColor: color,
+            tintColorSearch: color,
+            tintColorDelete: color,
+            // cancelButtonWidth: PropTypes.number,
+            // cancelButtonStyle: PropTypes.PropTypes.oneOfType([
+            //     PropTypes.number,
+            //     PropTypes.object
+            // ]),
+            cancelButtonTextStyle: {
+                ...font
+            },
+            // onLayout: PropTypes.func,
+            inputStyle: {
+                color: Colors.black,
+                ...font
+            },
+            placeholder: "Search",
+            cancelTitle: "Cancel",
+            inputStyle: {backgroundColor: 'rgb(230,230,230)'},
+            onChangeText: filter => this.setState({filter}),
+            onCancel: ()=>this.setState({filter: null}),
+            onDelete: ()=>this.setState({filter: null}),
+            onSearch
+        });
+    }
+
 
     //displayed when no data yet, and loading for the first time
     isFirstEmptyLoader() {
