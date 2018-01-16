@@ -44,7 +44,7 @@ export default class LineupCell extends React.Component<Props, State> {
 
         assertUnique(savings);
 
-        let {itemCount, padding} = this.props;
+        let {itemCount, padding, style} = this.props;
         if (!itemCount) {
             let pd = this.getPadding();
             itemCount = pd.n;
@@ -56,7 +56,7 @@ export default class LineupCell extends React.Component<Props, State> {
         return (
             <View style={[
                 {...stylePadding(padding, null, padding, padding)},
-                {backgroundColor: lineup.id.startsWith('pending') ? Colors.dirtyWhite : Colors.white}]}>
+                {backgroundColor: lineup.id.startsWith('pending') ? Colors.dirtyWhite : Colors.white}, style]}>
 
                 <View style={{flexDirection: titleChildrenBelow ? 'column' : 'row'}}>
                     {<LineupTitle lineup={lineup}/>}

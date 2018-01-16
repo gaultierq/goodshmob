@@ -92,7 +92,10 @@ export default class AddItemScreen extends Screen<Props, State> {
         </View>);
         return (
             <MainBackground>
-                <ScrollView>
+                <ScrollView
+                    style={{backgroundColor: 'white'}}
+                    contentContainerStyle={styles.container}
+                    >
                     <View>
                         <ItemCell item={item}>
                             <TextInput
@@ -103,6 +106,7 @@ export default class AddItemScreen extends Screen<Props, State> {
                                 placeholder={i18n.t("create_list_controller.add_description")}
                                 returnKeyType={selectedLineupId ? 'go' : 'next'}
                                 onSubmitEditing={() => {selectedLineupId && this._doAdd(selectedLineupId)}}
+                                multiline={true}
                             />
 
                             <CheckBox
@@ -124,7 +128,7 @@ export default class AddItemScreen extends Screen<Props, State> {
                     </View>
 
 
-                    {selectedLineupId && <LineupCell lineup={buildNonNullData(this.props.data, 'lists', selectedLineupId)}/>}
+                    {selectedLineupId && <LineupCell style={{backgroundColor: Colors.white82, marginRight: 8, marginLeft: 8, borderRadius: 8}} lineup={buildNonNullData(this.props.data, 'lists', selectedLineupId)}/>}
 
                     {showLineupList && <LineupListScreen
                         userId={currentUserId()}
@@ -133,7 +137,7 @@ export default class AddItemScreen extends Screen<Props, State> {
                         ListFooterComponent={<AddLineupComponent/>}
                         renderItem={(item) => (
                             <GTouchable onPress={() => this.setState({selectedLineupId: item.id, showLineupList: false})}>
-                                <LineupCell lineup={item}/>
+                                <LineupCell lineup={item} style={{backgroundColor: Colors.white82, marginRight: 8, marginLeft: 8, marginBottom: 10, borderRadius: 8}} />
                             </GTouchable>
                         )}
                     />
@@ -142,14 +146,15 @@ export default class AddItemScreen extends Screen<Props, State> {
                     {selectedLineupId && !showLineupList && (
                         <View style={{flex: 1}}>
                             {
-                                <View style={{flex: 1, alignItem:'flex-end', margin: 8}}>
+                                <View style={{flex: 1, alignItem:'flex-end', justifyContent: 'flex-end', margin: 8}}>
                                     {renderSimpleLink(
                                     i18n.t('create_list_controller.choose_list'),
                                     () => this.setState({showLineupList: true}),
+                                    {style:{textAlign:'right', color: Colors.greyishBrown, fontWeight: 'bold'}}
                                     )}
                                 </View>
                             }
-                            {renderSimpleButton(i18n.t('shared.add'), ()=>this._doAdd(selectedLineupId), )}
+                            {renderSimpleButton(i18n.t('shared.add'), ()=>this._doAdd(selectedLineupId), {style:{backgroundColor: Colors.green, padding: 10, marginTop: 10, marginRight: 8, marginLeft: 8}, textStyle:{ fontWeight:'normal', color: 'white' }})}
                         </View>
                     )
                     }
@@ -180,15 +185,17 @@ export default class AddItemScreen extends Screen<Props, State> {
 const styles = StyleSheet.create({
     container: {
         // flex: 1,
-        padding: 12
+        padding: 7
     },
     searchContainer: {
         backgroundColor: 'transparent',
     },
     input: {
         marginTop: 20,
-        fontSize: 16,
-        borderColor: Colors.greyishBrown,
+        fontSize: 15,
+        height: 60,
+        borderColor: Colors.greyish,
         borderWidth: StyleSheet.hairlineWidth,
+        borderRadius: 5,
     }
 });
