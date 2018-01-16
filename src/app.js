@@ -32,6 +32,7 @@ import {SFP_TEXT_REGULAR} from "./ui/fonts";
 import NavManager from "./managers/NavManager";
 import Analytics from "./managers/Analytics";
 import * as appActions from "./auth/actions";
+import OnBoardingManager from "./managers/OnBoardingManager";
 
 console.log(`staring app with env=${JSON.stringify(Config)}`);
 
@@ -230,6 +231,7 @@ export default class App {
         Messenger.init();
         NavManager.init();
         Analytics.init();
+        OnBoardingManager.init(this.store);
 
 
         if (__WITH_BUGSNAG__) {

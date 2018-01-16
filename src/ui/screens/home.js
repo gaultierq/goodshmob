@@ -3,7 +3,7 @@
 import React from 'react';
 import {
     Alert,
-    BackHandler,
+    BackHandler, Button,
     Dimensions,
     Image,
     Platform,
@@ -41,6 +41,12 @@ import GTouchable from "../GTouchable";
 import AddLineupComponent from "../components/addlineup";
 import BottomSheet from 'react-native-bottomsheet';
 import Icon from 'react-native-vector-icons/Entypo';
+import PopupDialog, {
+    DialogTitle,
+    DialogButton,
+    ScaleAnimation,
+} from 'react-native-popup-dialog';
+import OnBoardingManager from "../../managers/OnBoardingManager";
 
 
 // let AppTour;
@@ -99,6 +105,7 @@ class HomeScreen extends Screen<Props, State> {
     state : State = {};
 
     appTourTargets= [];
+    scaleAnimationDialog;
 
 
     constructor(props: Props){
@@ -175,9 +182,11 @@ class HomeScreen extends Screen<Props, State> {
                 // });
                 //
                 // AppTour.ShowSequence(appTourSequence);
-            }
 
+            }
         }, 5000);
+
+
     }
 
     onFilter(filter: string) {
@@ -186,6 +195,8 @@ class HomeScreen extends Screen<Props, State> {
     }
 
     render() {
+
+        let onBoardingStep = OnBoardingManager.getPendingStep();
 
         return (
             <View>
@@ -269,16 +280,55 @@ class HomeScreen extends Screen<Props, State> {
 
                 </View>
 
-                {this.displayFloatingButton() && this.renderFloatingButton()
-                }
+                {this.displayFloatingButton() && this.renderFloatingButton()}
+
+
+
 
                 <View >
                     {this.renderChangeTitleModal()}
+
                 </View>
+
+                {onBoardingStep === 'no_spam' && this.renderNoSpam()}
+
             </View>
         );
     }
 
+
+
+    renderNoSpam() {
+
+        return (<PopupDialog
+            ref={(popupDialog) => {
+                this.scaleAnimationDialog = popupDialog;
+                if (this.scaleAnimationDialog && !this.timeout) {
+                    this.timeout = setTimeout(()=>this.scaleAnimationDialog.show(), 1000);
+                }
+            }}
+            dialogAnimation={new ScaleAnimation()}
+            dialogTitle={<DialogTitle title="Popup Dialog - Scale Animation" />}
+            onDismissed={() => {
+                OnBoardingManager.onDisplayed('no_spam')
+            }}
+            actions={[
+                <DialogButton
+                    text="DISMISS"
+                    onPress={() => {
+                        this.scaleAnimationDialog.dismiss();
+                    }}
+                    key="button-1"
+                />,
+            ]}>
+            <View style={[styles.dialogContentView, ]}>
+                <Text>test</Text>
+            </View>
+        </PopupDialog>)
+
+
+
+    }
 
     renderFloatingButton() {
         let floating = <ActionButton
@@ -590,5 +640,37 @@ class HomeScreen extends Screen<Props, State> {
 
 const screen = HomeScreen;
 
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    dialogContentView: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    navigationBar: {
+        borderBottomColor: '#b5b5b5',
+        borderBottomWidth: 0.5,
+        backgroundColor: '#ffffff',
+    },
+    navigationTitle: {
+        padding: 10,
+    },
+    navigationButton: {
+        padding: 10,
+    },
+    navigationLeftButton: {
+        paddingLeft: 20,
+        paddingRight: 40,
+    },
+    navigator: {
+        flex: 1,
+        // backgroundColor: '#000000',
+    },
+});
 
 export {screen};

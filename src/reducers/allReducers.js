@@ -10,6 +10,7 @@ import {reducer as peopleYouMayKnow} from '../ui/screens/community';
 import {reducer as interaction} from '../ui/screens/interactions';
 import {statReducer as stat} from '../managers/Statistics';
 import {authReducer as auth, deviceReducer as device} from '../auth/reducer';
+import OnBoardingManager from "../managers/OnBoardingManager";
 
 function reduceReducers(...reducers) {
     return (previous, current) =>
@@ -29,6 +30,7 @@ let data = reduceReducers(
     lineups2
 );
 
+const onBoarding = OnBoardingManager.createReducer();
 
 export {
     data,
@@ -40,5 +42,6 @@ export {
     interaction,
     config,
     pending,
+    onBoarding,
     // search,
 };
