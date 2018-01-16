@@ -97,7 +97,7 @@ class CommentsScreen extends Screen<Props, State> {
                             navigator={this.props.navigator}
                         />
 
-                        <Text>{activity.description}</Text>
+                        <Text style={styles.comment}>{activity.description}</Text>
                     </View>}
                     {activity &&
                     <Feed
@@ -170,14 +170,14 @@ class CommentsScreen extends Screen<Props, State> {
         if (!comment) return null;
 
         return (
-            <View style={{padding: 12, }}>
+            <View style={{padding: 12, paddingTop: 0, paddingBottom: 15, backgroundColor: 'white'}}>
                 <UserActivity
                     activityTime={comment.createdAt}
                     user={comment.user}
                     navigator={this.props.navigator}
                 />
 
-                <Text>{comment.content}</Text>
+            <Text style={styles.comment}>{comment.content}</Text>
             </View>
         );
     }
@@ -280,5 +280,9 @@ const styles = StyleSheet.create({
         marginTop: 0,
         backgroundColor: 'white'
     },
+    comment: {
+        marginLeft: 38,
+        marginTop: -16,
+        color: Colors.brownishGrey
+    }
 });
-

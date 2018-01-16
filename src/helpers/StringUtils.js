@@ -33,6 +33,10 @@ export function fullName(user: User) {
     return user ? `${user.firstName} ${user.lastName}` : "";
 }
 
+export function firstName(user: User) {
+    return user ? `${user.firstName}` : "";
+}
+
 
 export function isId(id: string) {
     return /^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/g.test(id)

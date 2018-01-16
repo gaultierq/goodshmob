@@ -32,6 +32,8 @@ import * as Nav from "../Nav";
 import {Colors} from "../colors";
 import GTouchable from "../GTouchable";
 import {CachedImage} from "react-native-img-cache";
+import Icon from "react-native-vector-icons/SimpleLineIcons";
+import {SFP_TEXT_REGULAR} from "../fonts";
 
 type Props = {
     // userId: Id,
@@ -111,7 +113,7 @@ export default class Profile extends Component<Props, State> {
             }
 
         };
-        return <GTouchable onPress={handler}><Text>v1.0</Text></GTouchable>
+        return <GTouchable onPress={handler}><Text style={{textAlign: 'center', color: Colors.greyish}}>v1.0</Text></GTouchable>
     }
 
 
@@ -119,53 +121,57 @@ export default class Profile extends Component<Props, State> {
         let user = this.getUser(currentUserId());
 
         return (
-
-            <ImageBackground
-                source={require('../../img/welcome_screen.jpg')}
-                style={{
+            <KeyboardAwareScrollView
+                style={{flex: 1}}
+                scrollEnabled={false}
+                contentContainerStyle={{
                     flex: 1,
-                    alignItems: 'center',
-                }}
-            >
-                <KeyboardAwareScrollView
-                    scrollEnabled={false}
-                    contentContainerStyle={{flex: 1}}
-                >
+                    backgroundColor: 'white',
+                    justifyContent: 'center',
+                    paddingRight:20,
+                    paddingLeft: 20
+            }}>
+
+                <View>
+
+                    {this.renderUser(user)}
+
                     <View style={{
-                        flex: 1,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}>
+                            alignItems: 'center',
+                            marginTop: 30,
+                            marginBottom: 20,
+                            paddingTop: 25,
+                            paddingBottom: 25,
+                            borderTopWidth: 1,
+                            borderBottomWidth: 1,
+                            borderColor: Colors.grey4,
+                        }}>
 
-                        <Image style={{width: 200, marginBottom: 25}} source={require('../../img/logo_goodsh.png')}
-                               resizeMode="contain"/>
-
-                        {this.renderUser(user)}
+                        <Icon name="heart" size={30} color={Colors.green} style={{marginBottom: 20}}/>
 
                         <Text style={{
-
-                            marginBottom: 20,
-                            fontSize: 17,
-                            marginTop: 18
-                            // fontWeight: 'bold'
+                            fontSize: 14,
+                            marginBottom: 10,
+                            color: Colors.green
                         }}>{i18n.t('profile_screen.title', {love: i18n.t('profile_screen.love')})}</Text>
-                        <Text style={{fontSize: 15, textAlign: "center"}}>{i18n.t('profile_screen.subtitle')}</Text>
-
 
                         <SmartInput
                             containerStyle={{padding: 6}}
-                            inputStyle={{fontSize: 17}}
-                            inputContainerStyle={{padding: 4, borderRadius: 4, borderWidth: StyleSheet.hairlineWidth}}
+                            inputStyle={{fontSize: 14}}
+                            inputContainerStyle={{padding: 4, borderRadius: 4, borderWidth: StyleSheet.hairlineWidth, borderColor: Colors.green}}
                             execAction={(input: string) => this.sendFeedback(input)}
-                            placeholder={"profile_screen.feedback_textfield.placeholder"}
+                            placeholder={'profile_screen.subtitle'}
                             multiline
                             height={100}
                             returnKeyType={'send'}
+                            buttonStyle={{padding: 10}}
                         />
 
+                    </View>
 
 
-                        {renderSimpleButton(i18n.t("actions.logout"), this.logout.bind(this), {loading: this.state.reqLogout === 'sending'})}
+                    <View style={{alignSelf:'center'}}>
+                        { renderSimpleButton(i18n.t("actions.logout"), this.logout.bind(this), {loading: this.state.reqLogout === 'sending', textStyle: {fontSize:15, fontWeight: 'normal', fontFamily: SFP_TEXT_REGULAR, color: Colors.greyish}}) }
 
                         {
                             this.props.config.devMenu &&
@@ -178,19 +184,15 @@ export default class Profile extends Component<Props, State> {
                         }
 
 
-                        {renderLink(i18n.t("actions.terms"), "https://goodsh.it/terms")}
-
-
-                        <View style={{position: 'absolute', bottom: 15}}>
+                        <View style={{alignSelf:'center'}}>
+                            {renderLink(i18n.t("actions.terms"), "https://goodsh.it/terms")}
                             {this.renderVersion()}
                         </View>
-
-
-
                     </View>
-                </KeyboardAwareScrollView>
-            </ImageBackground>
 
+                </View>
+
+            </KeyboardAwareScrollView>
         );
     }
 
@@ -200,7 +202,7 @@ export default class Profile extends Component<Props, State> {
 
     renderUser(user) {
         return <View style={{
-            flexDirection: 'row',
+            flexDirection: 'column',
             alignItems: 'center',
         }}
         >
@@ -282,8 +284,8 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     userAvatar: {
-        height: 30,
-        width: 30,
-        borderRadius: 15
+        height: 45,
+        width: 45,
+        borderRadius: 22
     },
 });

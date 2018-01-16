@@ -186,8 +186,8 @@ class NetworkScreen extends Screen<Props, State> {
 
 
                 <ActionButton
-                    icon={<Icon name="comment-question-outline" size={30} color={Colors.white} />}
-                    buttonColor={Colors.blue}
+                    icon={<Icon name="comment-question-outline" size={30} color={Colors.white} style={{paddingTop: 5}}/>}
+                    buttonColor={Colors.green}
                     onPress={() => { this.onFloatingButtonPressed() }}
                 />
 
@@ -198,8 +198,8 @@ class NetworkScreen extends Screen<Props, State> {
     navToActivity(activity) {
         this.props.navigator.push({
             screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
-            title: i18n.t("home_search_screen.saving.title"), // navigation bar title of the pushed screen (optional)
-            titleImage: require('../../img2/headerLogoBlack.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
+            //title: i18n.t("home_search_screen.saving.title"), // navigation bar title of the pushed screen (optional)
+            //titleImage: require('../../img2/headerLogoBlack.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
             passProps: {activityId: activity.id, activityType: activity.type}, // Object that will be passed as props to the pushed screen (optional)
             animated: true, // does the push have transition animation or does it happen immediately (optional)
             animationType: 'slide-up', // 'fade' (for both) / 'slide-horizontal' (for android) does the push have different transition animation (optional)

@@ -87,11 +87,15 @@ export default {
         "to_user":"%{activity}\npour %{user}"
     },
     "activity_screen":{
+        "user":{
+            "says":"dit:",
+        },
         "comments":{
             "no_comments":"Pas encore de commentaire",
             "user_answered":"%{user}  a commenté",
             "x_goodshers":"%{count} Goodshers",
-            "goodshers_answered":"%{goodshers}  ont commenté"
+            "goodshers_answered":"%{goodshers}  ont commenté",
+            "x_comments":" Commentaires"
         }
     },
     "login_screen":{
