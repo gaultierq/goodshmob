@@ -77,7 +77,9 @@ type State = {
 
 
 @logged
-@connect()
+@connect(state=>({
+    onBoarding: state.onBoarding,
+}))
 class HomeScreen extends Screen<Props, State> {
 
     static navigatorButtons = {
@@ -296,8 +298,6 @@ class HomeScreen extends Screen<Props, State> {
         );
     }
 
-
-
     renderNoSpam() {
 
         return (<PopupDialog
@@ -308,13 +308,13 @@ class HomeScreen extends Screen<Props, State> {
                 }
             }}
             dialogAnimation={new ScaleAnimation()}
-            dialogTitle={<DialogTitle title="Popup Dialog - Scale Animation" />}
+            dialogTitle={<DialogTitle title="Les promesses de Goodsh" />}
             onDismissed={() => {
                 OnBoardingManager.onDisplayed('no_spam')
             }}
             actions={[
                 <DialogButton
-                    text="DISMISS"
+                    text="#OK, go!"
                     onPress={() => {
                         this.scaleAnimationDialog.dismiss();
                     }}
@@ -322,12 +322,12 @@ class HomeScreen extends Screen<Props, State> {
                 />,
             ]}>
             <View style={[styles.dialogContentView, ]}>
-                <Text>test</Text>
+                <Text>Les trois grands principes de Goodsh :</Text>
+                <Text>- tes goodsh ne sont accessibles que par toi et tes proches</Text>
+                <Text>- pour un goodsh complètement privé, coche la case</Text>
+                <Text>- Goodsh ne spam jamais tes contacts</Text>
             </View>
         </PopupDialog>)
-
-
-
     }
 
     renderFloatingButton() {
