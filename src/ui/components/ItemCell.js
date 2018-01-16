@@ -45,6 +45,7 @@ export default class ItemCell extends React.Component<Props, State> {
                             alignSelf: 'center',
                             height: 80,
                             width: 80,
+                            borderRadius: 8,
                         }, UI.STYLES.lightBorder]}
                     />
                     }
