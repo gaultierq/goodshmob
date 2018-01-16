@@ -78,6 +78,8 @@ export class InteractionScreen extends Screen<Props, State> {
         let createdAt = activity.createdAt;
         let content = this.renderContentByType(activity);
 
+        if (!content) return null;
+
         return (
             <GTouchable
                 onPress={() => {
@@ -132,7 +134,7 @@ export class InteractionScreen extends Screen<Props, State> {
             if (!resource) {
                 console.warn(`say QG no resource found on activityId=${activity.id} type=${activity.type}`);
             }
-            else if (resource.type === 'asks') {
+            else if (sanitizeActivityType(resource.type) === 'asks') {
                 // return <Text style={{fontSize: 12}}>{username + " ask"}</Text>
                 return <Text style={{fontSize: 14}} numberOfLines={1}>
                     {i18n.t(key, {username, what: "ask"})}
@@ -140,7 +142,10 @@ export class InteractionScreen extends Screen<Props, State> {
             }
             else {
                 let innerResource = resource.resource;
-                if (!innerResource) throw "No resource for " + JSON.stringify(activity);
+                if (!innerResource) {
+                    console.warn("No resource for " + JSON.stringify(activity));
+                    return null;
+                }
                 let item_title = _.toUpper(innerResource.title);
 
                 return <Text style={{fontSize: 14}} numberOfLines={1}>

@@ -347,8 +347,13 @@ export default {
         copy_link: "Copier le lien",
         send_to_goodsher: "Envoyer à un autre\nGoodsher",
         skip: "Passer",
-        ask: "Sollicitez vos amis"
+        ask: "Sollicitez vos amis",
+        invite: "Inviter un ami à Goodsher"
 
+    },
+    share_goodsh: {
+        title: "Viens découvrir Goodsh!",
+        message: "J'ai découvert Goodsh, une app de recommendation entre amis. Viens m'y rejoindre!",
     },
     loading: {
         error: "Le chargement a échoué..."
