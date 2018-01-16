@@ -2,7 +2,7 @@
 
 import type {Node} from 'react';
 import React from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View, Share} from 'react-native';
 import {connect} from "react-redux";
 import {logged} from "../../managers/CurrentUser"
 import FriendCell from "../components/FriendCell";
@@ -16,6 +16,9 @@ import GTouchable from "../GTouchable";
 import {fullName} from "../../helpers/StringUtils";
 import * as Nav from "../Nav";
 import i18n from '../../i18n/i18n';
+import {Colors} from "../colors";
+import Button from 'apsl-react-native-button'
+import {SFP_TEXT_MEDIUM} from "../fonts";
 
 type Props = {
     userId: Id,
@@ -60,20 +63,53 @@ export default class FriendsScreen extends Screen<Props, State> {
             action = actionTypes.GET_USER;
         }
 
-        return (<Feed
-            {...attributes}
-            data={friends}
-            renderItem={({item}) => (renderItem||this.renderItem.bind(this))(item)}
-            fetchSrc={{
-                callFactory,
-                action,
-                options: {userId}
-            }}
-            // cannotFetch={!super.isVisible()}
-        />);
+        return (<View>
+            <Button
+                style={
+                    {
+                        backgroundColor: Colors.green,
+                        borderWidth: 0,
+                        borderRadius: 4,
+                        margin: 12,
+
+                    }
+                }
+                onPress={()=>this.share()}
+            >
+                <Text style={[{color: Colors.white, fontSize: 16, fontFamily: SFP_TEXT_MEDIUM,}]}>
+                    {i18n.t('actions.invite')}
+                </Text></Button>
+            <Feed
+                {...attributes}
+                data={friends}
+                renderItem={({item}) => (renderItem||this.renderItem.bind(this))(item)}
+                fetchSrc={{
+                    callFactory,
+                    action,
+                    options: {userId}
+                }}
+                // cannotFetch={!super.isVisible()}
+            />
+
+        </View>);
     }
 
 
+
+    share() {
+
+        let message = i18n.t('share_goodsh.message');
+        let title = i18n.t('share_goodsh.title');
+
+        let intent = {
+            message,
+            title
+        };
+
+        Share.share(intent, {
+            dialogTitle: title,
+        })
+    }
 
     renderItem(item: Item) : Node {
         let user = buildData(this.props.data, "users", item.id);

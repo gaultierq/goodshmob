@@ -200,6 +200,6 @@ let testScreen = null;
 //  testScreen = lineupScreen;
 //  testScreen = activityDetailScreen;
 //  testScreen = loginScreen;
-//  testScreen = friendScreen;
+ testScreen = friendScreen;
 
 export default testScreen;

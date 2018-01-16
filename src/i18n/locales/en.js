@@ -356,7 +356,12 @@ export default {
         copy_link: "Copy link",
         send_to_goodsher: "Send to another\nGoodsher",
         skip: "Skip",
-        ask: "Ask your friends"
+        ask: "Ask your friends",
+        invite: "Invite a friend to Goodsh"
+    },
+    share_goodsh: {
+        title: "I just discovered Goodsh!",
+        message: "I have plenty of recommendation for you on Goodsh! Install the app so we can goodsh together!",
     },
     alert: {
         delete: {
