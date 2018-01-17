@@ -81,14 +81,17 @@ export function logged(target) {
 
 export function listenToUserChange(options: {onUser?: ?(user: User) => void, onNoUser?: ?() => void, triggerOnListen: ?boolean}) {
     const {onUser, onNoUser, triggerOnListen} = options;
-    let triggering;
+
 
     let callback = user => {
         if (user) onUser && onUser(user);
         else onNoUser && onNoUser();
     };
 
-    EventBus.addEventListener(USER_CHANGE, event => {
+    let triggering;
+    const eventName = USER_CHANGE;
+
+    EventBus.addEventListener(eventName, event => {
         if (triggering) {
             console.warn("looping");
             return;

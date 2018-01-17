@@ -3,14 +3,17 @@
 import {requestPermissionsForLoggedUser} from "./notification";
 import {listenToUserChange} from "./CurrentUser";
 import CurrentUser from "./CurrentUser";
-import type {User} from "../types";
+import watch from 'redux-watch'
+import EventBus from 'eventbusjs'
 
 const NEXT_STEP = 'NEXT_STEP';
 const SET_STEP = 'SET_STEP';
 
 export type OnBoardingStep = 'no_spam' | 'focus_add' | 'notification';
 
-const ALL_STEPS = ['no_spam', /*'focus_add', */];
+const ALL_STEPS = ['no_spam', 'focus_add'];
+
+export const ON_BOARDING_STEP_CHANGED = 'ON_BOARDING_STEP_CHANGED';
 
 class _OnBoardingManager implements OnBoardingManager {
     id = Math.random();
@@ -52,11 +55,15 @@ class _OnBoardingManager implements OnBoardingManager {
                 }
 
             }, triggerOnListen: true});
-    }
 
 
-    testCondition(user: User) {
-        return true;
+        let w = watch(store.getState, 'onBoarding.nextStep');
+        store.subscribe(w((newVal, oldVal, objectPath) => {
+                console.info(`onBoarding: next step changed old=${oldVal}, new=${newVal}`);
+
+                EventBus.dispatch(ON_BOARDING_STEP_CHANGED, {step: newVal});
+            })
+        );
     }
 
     getPendingStep(): ?OnBoardingStep {
@@ -93,6 +100,26 @@ class _OnBoardingManager implements OnBoardingManager {
     onDisplayed(step: OnBoardingStep): void {
         this.store.dispatch({type: NEXT_STEP});
     }
+
+    listenToStepChange(options: {callback: (step?: ?OnBoardingStep) => void, triggerOnListen: ?boolean}) {
+        const {callback, triggerOnListen} = options;
+        let triggering;
+
+        EventBus.addEventListener(ON_BOARDING_STEP_CHANGED, event => {
+            if (triggering) {
+                console.warn("looping");
+                return;
+            }
+            const step: OnBoardingStep = event.target.step;
+            callback(step);
+        });
+
+        if (triggerOnListen) {
+            triggering = true;
+            callback(this.getPendingStep());
+            triggering = false;
+        }
+    }
 }
 
 
@@ -105,6 +132,8 @@ export interface OnBoardingManager {
     createReducer(): any;
 
     onDisplayed(step: OnBoardingStep): void;
+
+    listenToStepChange(options: {callback: (step?: ?OnBoardingStep) => void, triggerOnListen: ?boolean}): void;
 
 }
 

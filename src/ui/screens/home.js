@@ -47,24 +47,13 @@ import PopupDialog, {
     DialogButton,
     ScaleAnimation,
 } from 'react-native-popup-dialog';
-import OnBoardingManager from "../../managers/OnBoardingManager";
-
-
-// let AppTour;
-// let AppTourSequence;
-// let AppTourView;
-//
-// if (__IS_IOS__) {
-//     let showCase = require("react-native-material-showcase-ios");
-//
-//     AppTour = showCase.AppTour;
-//     AppTourSequence = showCase.AppTourSequence;
-//     AppTourView = showCase.AppTourView;
-// }
-
+import OnBoardingManager, {ON_BOARDING_STEP_CHANGED} from "../../managers/OnBoardingManager";
+import EventBus from 'eventbusjs'
 import util from 'util'
 
+// $FlowFixMe
 import {AppTour, AppTourSequence, AppTourView} from "../../../vendors/taptarget";
+import type {OnBoardingStep} from "../../managers/OnBoardingManager";
 
 
 
@@ -79,8 +68,6 @@ type State = {
     changeLinupTitleId?: {id:Id, name: string},
     filter?: ?string
 };
-
-
 
 @logged
 @connect(state=>({
@@ -183,17 +170,32 @@ class HomeScreen extends Screen<Props, State> {
     }
 
     componentDidMount() {
-        setTimeout(() => {
-            if (this.appTourTargets.size > 0) {
-                let appTourSequence = new AppTourSequence();
-                this.appTourTargets.forEach((appTourTarget, view) => {
-                    appTourSequence.add(appTourTarget);
-                });
-                AppTour.ShowSequence(appTourSequence);
+
+        //if a new onBoarding step is broadcasted, then display it
+        OnBoardingManager.listenToStepChange({
+            triggerOnListen: true,
+            callback: (step?: ?OnBoardingStep) => {
+                if (step === 'focus_add' && this.isVisible()) {
+                    setTimeout(() => {
+                        if (this.appTourTargets.size > 0) {
+                            let appTourSequence = new AppTourSequence();
+                            this.appTourTargets.forEach((appTourTarget, view) => {
+                                appTourSequence.add(appTourTarget);
+                            });
+                            AppTour.ShowSequence(appTourSequence);
+
+
+                            //as we don't have a callback on when the tour is finished,
+                            // we are using a 10s timer, to go to the next onBoardingStep
+                            setTimeout(()=>{
+                                OnBoardingManager.onDisplayed('focus_add')
+                            }, 5000);
+
+                        }
+                    }, 1000);
+                }
             }
-        }, 5000);
-
-
+        })
     }
 
     onFilter(filter: string) {
@@ -304,9 +306,6 @@ class HomeScreen extends Screen<Props, State> {
 
                 {this.displayFloatingButton() && this.renderFloatingButton()}
 
-
-
-
                 <View >
                     {this.renderChangeTitleModal()}
 
@@ -352,6 +351,7 @@ class HomeScreen extends Screen<Props, State> {
 
     _targetRef = (primaryText, secondaryText) => ref => {
         if (!ref) return;
+
 
         console.log(`this is my floating ref:`);
         //logObject(ref);
