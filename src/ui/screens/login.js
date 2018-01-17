@@ -260,6 +260,8 @@ const styles = StyleSheet.create({
         borderColor: Colors.green,
         borderWidth: StyleSheet.hairlineWidth,
         borderRadius: 8,
+        paddingRight: 10,
+        paddingLeft: 10
     },
     facebookButtonText: {
         color: Colors.green,
