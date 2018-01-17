@@ -395,6 +395,7 @@ class HomeScreen extends Screen<Props, State> {
                     this.onFloatingButtonPressed()
                 }}
                 mainRef={this._targetRef("#Save your goodsh", "#Click here to add your first goodsh!")}
+                buttonTextStyle={{fontSize: 26, fontWeight: 'bold', marginTop: -6}}
             />
         );
     }
