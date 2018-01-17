@@ -30,6 +30,11 @@ export default {
             title: "Mes listes"
         }
     },
+    no_spam: {
+        dialog_title: "Les promesses de Goodsh",
+        dialog_body: "Les trois grands principes de Goodsh :\n\n- tes goodsh ne sont accessibles que par toi et tes proches\n- pour un goodsh complètement privé, coche la case\n- Goodsh ne spam jamais tes contacts\n\n",
+        dialog_button: 'Ok j\'y vais !',
+    },
     search: "Rechercher",
     "shared":{
         "ok":"OK",

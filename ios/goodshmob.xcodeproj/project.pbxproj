@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -51,6 +52,7 @@
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		8FFE34B700BF4203B893822D /* SFProDisplay-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = EEA2D22D585747DB8BA2D6C6 /* SFProDisplay-LightItalic.otf */; };
 		90C407EB6BAC424492F7C571 /* Chivo-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 224F1BE54A5D4D8AAC1B5B12 /* Chivo-Regular.ttf */; };
+		95025F9D983C4013B67F611E /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 35C24F0535F74219B08A8897 /* libRNFetchBlob.a */; };
 		AE0DB3C792FE41C4AB2E7E45 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0172E0B5EAEF42B19DF6273D /* libRNFirebase.a */; };
 		AF19B0F819114F88962429D8 /* SFProText-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 826353747CD045BFB4950A84 /* SFProText-Bold.otf */; };
 		B096BAC853F3496CB6AA33EB /* SFProText-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = D4679778DB004D97AC2294FA /* SFProText-Regular.otf */; };
@@ -75,7 +77,6 @@
 		E562BCD35F904331841C43E0 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7D9112FBAA7A42859CAEC569 /* SimpleLineIcons.ttf */; };
 		E9D14054512E440696F419D5 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0709F72F103D467887885332 /* libRNDeviceInfo.a */; };
 		F52F29A1D072424D85D70653 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F79D97351B445FE8CF44CB5 /* libRCTActionSheet.a */; };
-		95025F9D983C4013B67F611E /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 35C24F0535F74219B08A8897 /* libRNFetchBlob.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -422,6 +423,13 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNFirebase;
 		};
+		E978788A200F88CE0021757B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EFC06FE802CC4765911E6132 /* RNFetchBlob.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A15C300E1CD25C330074CB35;
+			remoteInfo = RNFetchBlob;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -471,6 +479,7 @@
 		1D7E73F0709F4B7187928641 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		224F1BE54A5D4D8AAC1B5B12 /* Chivo-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Chivo-Regular.ttf"; path = "../src/assets/fonts/Chivo-Regular.ttf"; sourceTree = "<group>"; };
 		2D5CA237152F47B5959632D7 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
+		35C24F0535F74219B08A8897 /* libRNFetchBlob.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFetchBlob.a; sourceTree = "<group>"; };
 		36D22C90CE4E4C5A944FCA81 /* SMXCrashlytics.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = SMXCrashlytics.xcodeproj; path = "../node_modules/react-native-fabric/ios/SMXCrashlytics.xcodeproj"; sourceTree = "<group>"; };
 		3713A1A16A3B474CBF4B2E0E /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		371A98AD53534AB18A91EF21 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ./ios/Frameworks/FBSDKCoreKit.framework; sourceTree = "<group>"; };
@@ -524,12 +533,11 @@
 		E22644B9C668496B992BC6E1 /* SFProDisplay-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProDisplay-Regular.otf"; path = "../src/assets/fonts/SFProDisplay-Regular.otf"; sourceTree = "<group>"; };
 		E79F654AE19EC47D5F3244D7 /* Pods-goodshmob.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-goodshmob.debug.xcconfig"; path = "Pods/Target Support Files/Pods-goodshmob/Pods-goodshmob.debug.xcconfig"; sourceTree = "<group>"; };
 		EEA2D22D585747DB8BA2D6C6 /* SFProDisplay-LightItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProDisplay-LightItalic.otf"; path = "../src/assets/fonts/SFProDisplay-LightItalic.otf"; sourceTree = "<group>"; };
+		EFC06FE802CC4765911E6132 /* RNFetchBlob.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFetchBlob.xcodeproj; path = "../node_modules/react-native-fetch-blob/ios/RNFetchBlob.xcodeproj"; sourceTree = "<group>"; };
 		EFE82430CC8C4D96B3BE95E5 /* libRNSnackbar.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSnackbar.a; sourceTree = "<group>"; };
 		F0E96BCC274685F5679F551E /* Pods-goodshmobTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-goodshmobTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-goodshmobTests/Pods-goodshmobTests.debug.xcconfig"; sourceTree = "<group>"; };
 		F67A393C22434FF8ADFA75F4 /* SFProText-RegularItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProText-RegularItalic.otf"; path = "../src/assets/fonts/SFProText-RegularItalic.otf"; sourceTree = "<group>"; };
 		FF95AED0484E442B85B9D1D0 /* SFProText-LightItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProText-LightItalic.otf"; path = "../src/assets/fonts/SFProText-LightItalic.otf"; sourceTree = "<group>"; };
-		EFC06FE802CC4765911E6132 /* RNFetchBlob.xcodeproj */ = {isa = PBXFileReference; name = "RNFetchBlob.xcodeproj"; path = "../node_modules/react-native-fetch-blob/ios/RNFetchBlob.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		35C24F0535F74219B08A8897 /* libRNFetchBlob.a */ = {isa = PBXFileReference; name = "libRNFetchBlob.a"; path = "libRNFetchBlob.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -835,6 +843,7 @@
 				0709F72F103D467887885332 /* libRNDeviceInfo.a */,
 				BACB85B5C915456898EE135D /* libRNMaterialShowcase.a */,
 				85BCD7D4A5A34F739241A13A /* libSMXCrashlytics.a */,
+				35C24F0535F74219B08A8897 /* libRNFetchBlob.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -948,6 +957,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		E9787887200F88CE0021757B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E978788B200F88CE0021757B /* libRNFetchBlob.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		F0171AA1D52D93C817AEB3C4 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -1029,10 +1046,11 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = 67AZ59K3Q9;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = 656VNMF77V;
+						DevelopmentTeam = 67AZ59K3Q9;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.GameCenter = {
@@ -1131,6 +1149,10 @@
 				{
 					ProductGroup = D0DF62B31FB58C0A0000AD5E /* Products */;
 					ProjectRef = D0DF62B21FB58C0A0000AD5E /* RNDeviceInfo.xcodeproj */;
+				},
+				{
+					ProductGroup = E9787887200F88CE0021757B /* Products */;
+					ProjectRef = EFC06FE802CC4765911E6132 /* RNFetchBlob.xcodeproj */;
 				},
 				{
 					ProductGroup = D0E93C381FB54528003DB2BA /* Products */;
@@ -1495,6 +1517,13 @@
 			remoteRef = D0E93C411FB54528003DB2BA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		E978788B200F88CE0021757B /* libRNFetchBlob.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNFetchBlob.a;
+			remoteRef = E978788A200F88CE0021757B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -1722,6 +1751,7 @@
 			baseConfigurationReference = F0E96BCC274685F5679F551E /* Pods-goodshmobTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 67AZ59K3Q9;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -1767,6 +1797,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 67AZ59K3Q9;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1813,7 +1844,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = 656VNMF77V;
+				DEVELOPMENT_TEAM = 67AZ59K3Q9;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1867,7 +1898,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 656VNMF77V;
+				DEVELOPMENT_TEAM = 67AZ59K3Q9;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",

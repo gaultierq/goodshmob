@@ -50,6 +50,7 @@ import PopupDialog, {
 import OnBoardingManager, {ON_BOARDING_STEP_CHANGED} from "../../managers/OnBoardingManager";
 import EventBus from 'eventbusjs'
 import util from 'util'
+import Markdown from 'react-native-simple-markdown'
 
 // $FlowFixMe
 import {AppTour, AppTourSequence, AppTourView} from "../../../vendors/taptarget";
@@ -327,24 +328,27 @@ class HomeScreen extends Screen<Props, State> {
                 }
             }}
             dialogAnimation={new ScaleAnimation()}
-            dialogTitle={<DialogTitle title="Les promesses de Goodsh" />}
+            dialogTitle={<DialogTitle title={i18n.t('no_spam.dialog_title')} titleStyle={{backgroundColor: Colors.green}} titleTextStyle={{color: 'white', fontWeight: 'bold'}}/>}
             onDismissed={() => {
                 OnBoardingManager.onDisplayed('no_spam')
             }}
             actions={[
                 <DialogButton
-                    text="#OK, go!"
+                    text={i18n.t('no_spam.dialog_button')}
                     onPress={() => {
                         this.scaleAnimationDialog.dismiss();
                     }}
                     key="button-1"
                 />,
-            ]}>
-            <View style={[styles.dialogContentView, ]}>
-                <Text>Les trois grands principes de Goodsh :</Text>
-                <Text>- tes goodsh ne sont accessibles que par toi et tes proches</Text>
-                <Text>- pour un goodsh complètement privé, coche la case</Text>
-                <Text>- Goodsh ne spam jamais tes contacts</Text>
+            ]}
+            width={0.9}
+            height={270}>
+            <View style={[styles.dialogContentView]}>
+                <View style={styles.dialogContentViewInner}>
+                    <Markdown styles={markdownStyles}>
+                        {i18n.t('no_spam.dialog_body')}
+                    </Markdown>
+                </View>
             </View>
         </PopupDialog>)
     }
@@ -692,9 +696,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     dialogContentView: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
+        //padding: 20
+    },
+    dialogContentViewInner: {
+
     },
     navigationBar: {
         borderBottomColor: '#b5b5b5',
@@ -716,5 +721,15 @@ const styles = StyleSheet.create({
         // backgroundColor: '#000000',
     },
 });
+
+const markdownStyles = {
+    view: {
+        paddingRight: 20,
+        paddingLeft: 20,
+    },
+    listItemText: {
+        paddingTop: 6
+    }
+};
 
 export {screen};
