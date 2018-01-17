@@ -37,6 +37,7 @@ import {SFP_TEXT_MEDIUM} from "../fonts";
 import LineupTitle from "../components/LineupTitle";
 import Feed from "../components/feed";
 import LineupCellSaving from "../components/LineupCellSaving";
+
 import GTouchable from "../GTouchable";
 import AddLineupComponent from "../components/addlineup";
 import BottomSheet from 'react-native-bottomsheet';
@@ -60,6 +61,11 @@ import OnBoardingManager from "../../managers/OnBoardingManager";
 //     AppTourSequence = showCase.AppTourSequence;
 //     AppTourView = showCase.AppTourView;
 // }
+
+import util from 'util'
+
+import {AppTour, AppTourSequence, AppTourView} from "../../../vendors/taptarget";
+
 
 
 type Props = {
@@ -106,7 +112,8 @@ class HomeScreen extends Screen<Props, State> {
 
     state : State = {};
 
-    appTourTargets= [];
+
+    appTourTargets = new Map();
     scaleAnimationDialog;
 
 
@@ -177,14 +184,12 @@ class HomeScreen extends Screen<Props, State> {
 
     componentDidMount() {
         setTimeout(() => {
-            if (this.appTourTargets.length > 0) {
-                // let appTourSequence = new AppTourSequence();
-                // this.appTourTargets.forEach(appTourTarget => {
-                //     appTourSequence.add(appTourTarget);
-                // });
-                //
-                // AppTour.ShowSequence(appTourSequence);
-
+            if (this.appTourTargets.size > 0) {
+                let appTourSequence = new AppTourSequence();
+                this.appTourTargets.forEach((appTourTarget, view) => {
+                    appTourSequence.add(appTourTarget);
+                });
+                AppTour.ShowSequence(appTourSequence);
             }
         }, 5000);
 
@@ -195,6 +200,21 @@ class HomeScreen extends Screen<Props, State> {
         console.debug(`onFilter:${filter}`);
         this.setState({filter});
     }
+
+    // render() {
+    //     return (
+    //         <View style={{ flex: 1, backgroundColor: 'blue' }}>
+    //             <View ref={ref=>{
+    //                 let appTourTarget = AppTourView.for(ref, {
+    //                     primaryText: 'This is a target button 1',
+    //                     secondaryText: 'We have the best targets, believe me'
+    //                 });
+    //                 this.appTourTargets.push(appTourTarget);
+    //             }}
+    //                   style={{ width: 100, height: 100,backgroundColor: 'red' }}/>
+    //         </View>
+    //     );
+    // }
 
     render() {
 
@@ -330,25 +350,49 @@ class HomeScreen extends Screen<Props, State> {
         </PopupDialog>)
     }
 
+    _targetRef = (primaryText, secondaryText) => ref => {
+        if (!ref) return;
+
+        console.log(`this is my floating ref:`);
+        //logObject(ref);
+
+        if (!this.appTourTargets.has(ref)) {
+            let params;
+            if (__IS_IOS__) {
+                params = {
+                    primaryText,
+                    secondaryText,
+                    targetHolderColor: Colors.blue,
+                    targetTintColor: Colors.white,
+                    primaryTextColor: Colors.white,
+                }
+            }
+            else {
+                params = {
+                    title: primaryText,
+                    description: secondaryText,
+                    //defined in android/app/src/main/res/values/colors.xml
+                    outerCircleColor: 'outerCircleColorPrimary',
+                    targetCircleColor: 'outerCircleColorSecondary',
+                }
+            }
+
+            let appTourTarget = AppTourView.for(ref, params);
+            this.appTourTargets.set(ref, appTourTarget);
+        }
+    };
+
     renderFloatingButton() {
-        let floating = <ActionButton
-            buttonColor={Colors.green}
-            onPress={() => {
-                this.onFloatingButtonPressed()
-            }}
-            ref={ref=>{
-                // let appTourTarget = AppTourView.for(ref, {
-                //     primaryText: 'This is a target button 1',
-                //     secondaryText: 'We have the best targets, believe me'
-                // });
 
-                //this.appTourTargets.push(appTourTarget);
-            }}
-        />;
-
-
-        return floating;
-        //return appTourTarget;
+        return (
+            <ActionButton
+                buttonColor={Colors.green}
+                onPress={() => {
+                    this.onFloatingButtonPressed()
+                }}
+                mainRef={this._targetRef("#Save your goodsh", "#Click here to add your first goodsh!")}
+            />
+        );
     }
 
     renderSectionHeader({title, subtitle, onPress, renderSectionHeaderChildren}) {

@@ -13,11 +13,14 @@ import com.facebook.react.ReactApplication;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.clipsub.rnbottomsheet.RNBottomSheetPackage;
 import com.smixx.fabric.FabricPackage;
+
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import io.fabric.sdk.android.Fabric;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
+import ui.taptargetview.RNTapTargetViewPackage;
+
 import com.bugsnag.BugsnagReactNative;
 import com.azendoo.reactnativesnackbar.SnackbarPackage;
 import com.microsoft.codepush.react.CodePush;
@@ -55,6 +58,7 @@ public class MainApplication extends NavigationApplication implements ReactAppli
             new RNFetchBlobPackage(),
             new RNBottomSheetPackage(),
             new FabricPackage(),
+            new RNTapTargetViewPackage(),
             new ReactNativeConfigPackage(),
             new RNDeviceInfo(),
             new RNFirebasePackage(),
