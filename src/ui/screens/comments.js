@@ -83,11 +83,11 @@ class CommentsScreen extends Screen<Props, State> {
                 <KeyboardAwareScrollView
                     // style={{ backgroundColor: '#4c69a5' }}
                     // resetScrollToCoords={{ x: 0, y: 0 }}
-                    contentContainerStyle={styles.container}
+                    // contentContainerStyle={styles.container}
                     scrollEnabled={false}
                     keyboardShouldPersistTaps={true}
                 >
-                    {/*<View style={[styles.container]}>*/}
+                    <View style={[styles.container]}>
 
                     {activity &&
                     <View style={{padding: 12, backgroundColor:"transparent"}}>
@@ -123,7 +123,7 @@ class CommentsScreen extends Screen<Props, State> {
                             // multiline
                         />
                     }
-                    {/*</View>*/}
+                    </View>
                 </KeyboardAwareScrollView>
             </MainBackground>
         );
