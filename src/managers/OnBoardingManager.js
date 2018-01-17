@@ -2,6 +2,8 @@
 
 import {requestPermissionsForLoggedUser} from "./notification";
 import {listenToUserChange} from "./CurrentUser";
+import CurrentUser from "./CurrentUser";
+import type {User} from "../types";
 
 const NEXT_STEP = 'NEXT_STEP';
 const SET_STEP = 'SET_STEP';
@@ -30,12 +32,11 @@ class _OnBoardingManager implements OnBoardingManager {
         listenToUserChange({
             onUser: user => {
 
-                let {forceOnBoardingCycle} = this.store.getState().config;
+                let {forceOnBoardingCycle, onBoardingOnEveryLogin} = this.store.getState().config;
                 //step to set
-                if (forceOnBoardingCycle || this.testCondition(user)) {
+                if (forceOnBoardingCycle || (onBoardingOnEveryLogin || true) && CurrentUser.loggedSince() < 5000) {
                     this.store.dispatch({type: SET_STEP, step: 'no_spam'});
                 }
-
                 //getPendingStep must be ok after init
 
                 if (this.getPendingStep() === null) {

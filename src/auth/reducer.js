@@ -43,8 +43,8 @@ export function authReducer(state = {}, action) {
             let client = resp.headers.get('Client');
             let uid = resp.headers.get('Uid');
             let accessToken = resp.headers.get('Access-Token');
-
-            state = {...state, client, uid, accessToken, currentUserId};
+            let now = new Date();
+            state = {...state, client, uid, accessToken, currentUserId, loggedAt: now};
             break;
         case types.FETCH_ME.success():
             let algoliaToken = _.get(action.payload, "meta.key", null);

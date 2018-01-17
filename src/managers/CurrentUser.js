@@ -2,7 +2,7 @@
 
 import type {Store} from 'redux';
 import {buildNonNullData} from "../helpers/DataUtils";
-import type {Id, User} from "../types";
+import type {Id, ms, User} from "../types";
 import Scope from "./Scope";
 import watch from 'redux-watch'
 import EventBus from 'eventbusjs'
@@ -42,8 +42,15 @@ class CurrentUser {
 
     currentGoodshboxId() {
         let state = this.store.getState();
-        let userId : Id = this.id();
+        let userId: Id = this.id();
         return _.get(state, `data.users.${userId}.relationships.goodshbox.data.id`, null);
+    }
+
+    loggedSince(): ms {
+        if (!isLogged()) return NaN;
+        let loggedAt = _.get(this.store.getState(), `auth.loggedAt`, null);
+        if (!loggedAt) return NaN;
+        return Date.now() - Date.parse(loggedAt);
     }
 }
 

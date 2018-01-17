@@ -17,7 +17,8 @@ export const CONFIG_SET = 'CONFIG_SET';
 const initConfig = {
     devMenu: false,
     disableOfflineMode: false,
-    forceOnBoardingCycle: false
+    forceOnBoardingCycle: false,
+    onBoardingOnEveryLogin: false //doesnt work. TODO: persistent config accross logouts
 };
 
 export  function config(state = initConfig, action) {
