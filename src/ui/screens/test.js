@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import {Clipboard, Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpacity, User, View} from 'react-native';
 import {CheckBox} from "react-native-elements";
 
-import {AppTour, AppTourSequence, AppTourView} from "react-native-material-showcase-ios";
+import {AppTour, AppTourSequence, AppTourView} from "../../../vendors/taptarget";
 
 type Props = {
 };

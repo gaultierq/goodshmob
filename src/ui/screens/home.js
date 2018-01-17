@@ -39,7 +39,7 @@ import Feed from "../components/feed";
 import LineupCellSaving from "../components/LineupCellSaving";
 import util from 'util'
 
-import {AppTour, AppTourSequence, AppTourView} from "react-native-material-showcase-ios";
+import {AppTour, AppTourSequence, AppTourView} from "../../../vendors/taptarget";
 
 
 type Props = {
@@ -232,14 +232,29 @@ class HomeScreen extends Screen<Props, State> {
 
         console.log(`this is my floating ref:`);
         //logObject(ref);
+
         if (!this.appTourTargets.has(ref)) {
-            let appTourTarget = AppTourView.for(ref, {
-                primaryText,
-                secondaryText,
-                targetHolderColor: Colors.blue,
-                targetTintColor: Colors.white,
-                primaryTextColor: Colors.white,
-            });
+            let params;
+            if (__IS_IOS__) {
+                params = {
+                    primaryText,
+                    secondaryText,
+                    targetHolderColor: Colors.blue,
+                    targetTintColor: Colors.white,
+                    primaryTextColor: Colors.white,
+                }
+            }
+            else {
+                params = {
+                    title: primaryText,
+                    description: secondaryText,
+                    //defined in android/app/src/main/res/values/colors.xml
+                    outerCircleColor: 'outerCircleColorPrimary',
+                    targetCircleColor: 'outerCircleColorSecondary',
+                }
+            }
+
+            let appTourTarget = AppTourView.for(ref, params);
             this.appTourTargets.set(ref, appTourTarget);
         }
     };
