@@ -64,6 +64,7 @@
 		"redux-object": "^0.5.3",
 		"redux-persist": "^4.10.2",
 		"redux-thunk": "^2.2.0",
+		"redux-watch": "^1.1.1",
 		"seamless-immutable": "^7.1.2",
 		"url-parse": "^1.2.0",
 		"xcode": "^0.9.3"

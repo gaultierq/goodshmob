@@ -1,10 +1,14 @@
 // @flow
-import type {Node} from 'react';
+
+import {requestPermissionsForLoggedUser} from "./notification";
+import {listenToUserChange} from "./CurrentUser";
 
 const NEXT_STEP = 'NEXT_STEP';
 const SET_STEP = 'SET_STEP';
 
-const ALL_STEPS = ['no_spam', 'focus_add', 'notification'];
+export type OnBoardingStep = 'no_spam' | 'focus_add' | 'notification';
+
+const ALL_STEPS = ['no_spam', /*'focus_add', */];
 
 class _OnBoardingManager implements OnBoardingManager {
     id = Math.random();
@@ -17,12 +21,41 @@ class _OnBoardingManager implements OnBoardingManager {
     init(store: any) {
         this.store = store;
 
-        let {forceOnBoardingCycle} = this.store.getState().config;
-        if (forceOnBoardingCycle) {
-            setTimeout(()=> {
-                this.store.dispatch({type: SET_STEP, step: 'no_spam'});
-            }, 2000)
-        }
+        //TODO: let current user implement this, and warn everybody when something is changing
+        // on user (now, or later):
+
+        // on no_user (now, or later)
+
+        //this should trigger th onboarding on user login
+        listenToUserChange({
+            onUser: user => {
+
+                let {forceOnBoardingCycle} = this.store.getState().config;
+                //step to set
+                if (forceOnBoardingCycle || this.testCondition(user)) {
+                    this.store.dispatch({type: SET_STEP, step: 'no_spam'});
+                }
+
+                //getPendingStep must be ok after init
+
+                if (this.getPendingStep() === null) {
+                    requestPermissionsForLoggedUser();
+                }
+                else {
+                    let unsubscribe = this.store.subscribe(() => {
+                        if (!this.getPendingStep()) {
+                            requestPermissionsForLoggedUser();
+                            unsubscribe();
+                        }
+                    });
+                }
+
+            }, triggerOnListen: true});
+    }
+
+
+    testCondition(user: User) {
+        return true;
     }
 
     getPendingStep(): ?OnBoardingStep {
@@ -33,12 +66,20 @@ class _OnBoardingManager implements OnBoardingManager {
         return "OnBoardingManager-" + this.id;
     }
 
-
     createReducer() {
         return (state: any = {}, action: any) => {
+
+            let nextStep = (current: OnBoardingStep) => {
+                let i = ALL_STEPS.indexOf(current);
+                if (i > -1) {
+                    return _.nth(ALL_STEPS, ++i)
+                }
+                return null;
+            };
+
             switch (action.type) {
                 case NEXT_STEP:
-                    state = {...state, nextStep: this.nextStep(state.nextStep)};
+                    state = {...state, nextStep: nextStep(state.nextStep)};
                     break;
                 case SET_STEP:
                     state = {...state, nextStep: action.step};
@@ -46,14 +87,6 @@ class _OnBoardingManager implements OnBoardingManager {
             }
             return state;
         }
-    }
-
-    nextStep(current: OnBoardingStep) {
-        let i = ALL_STEPS.indexOf(current);
-        if (i > -1) {
-            return _.nth(ALL_STEPS, ++i)
-        }
-        return null;
     }
 
     onDisplayed(step: OnBoardingStep): void {
@@ -73,11 +106,6 @@ export interface OnBoardingManager {
     onDisplayed(step: OnBoardingStep): void;
 
 }
-
-
-export type OnBoardingStep = 'no_spam' | 'focus_add' | 'notification';
-
-
 
 
 

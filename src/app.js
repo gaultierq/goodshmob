@@ -5,7 +5,6 @@ import {Navigation} from 'react-native-navigation';
 import * as reducers from "./reducers/allReducers";
 import {createWithReducers} from "./auth/reducer";
 import thunk from "redux-thunk";
-import logger from 'redux-logger'
 
 import * as Api from './managers/Api';
 import {autoRehydrate, createTransform, persistStore} from 'redux-persist'
@@ -83,6 +82,7 @@ export default class App {
     mode: AppMode = 'idle';
 
     initialized: boolean; //is app prepared
+    initializing: boolean; //is app initializing
 
     store;
     bugsnag;
@@ -101,7 +101,7 @@ export default class App {
         // since react-redux only works on components, we need to subscribe this class manually
         this.store.subscribe(this.onStoreUpdate.bind(this));
 
-        this.start();
+        this.initialize();
     }
 
     prepareUI() {
@@ -165,7 +165,7 @@ export default class App {
             reducer,
             window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
             compose(
-                applyMiddleware(thunk, logger),
+                applyMiddleware(thunk/*, logger*/),
                 autoRehydrate()
             )
         );
@@ -195,13 +195,21 @@ export default class App {
     }
 
     onStoreUpdate() {
+        if (this.initializing) return;
+
         if (!this.initialized) {
-            this.start();
+            this.initialize();
         }
+
 
         this.resolveMode();
     }
 
+    initialize() {
+        this.initializing = true;
+        this.start();
+        this.initializing = false;
+    }
     start() {
         //waiting rehydration before starting app
         let rehydrated = this.store.getState().app.rehydrated;

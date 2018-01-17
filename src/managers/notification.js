@@ -3,6 +3,7 @@
 import RNFirebase from 'react-native-firebase'
 import {Navigation} from 'react-native-navigation';
 import NavManager from "./NavManager";
+import {isLogged} from "./CurrentUser";
 
 let handleNotif = function (notif) {
     console.log("app opened from notification:" + JSON.stringify(notif));
@@ -12,6 +13,13 @@ let handleNotif = function (notif) {
     //test
     NavManager.goToDeeplink(deeplink);
 };
+
+export function requestPermissionsForLoggedUser() {
+    if (isLogged()) {
+        RNFirebase.app().messaging().requestPermissions();
+    }
+
+}
 
 export function load() {
     console.info("fcm:load");
@@ -29,7 +37,7 @@ export function load() {
         handleNotif(notif);
     });
 
-    messaging.requestPermissions();
+    // messaging.requestPermissions();
 
     //test
     // setTimeout(()=> {
