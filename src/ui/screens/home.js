@@ -356,10 +356,6 @@ class HomeScreen extends Screen<Props, State> {
     _targetRef = (primaryText, secondaryText) => ref => {
         if (!ref) return;
 
-
-        console.log(`this is my floating ref:`);
-        //logObject(ref);
-
         if (!this.appTourTargets.has(ref)) {
             let params;
             if (__IS_IOS__) {

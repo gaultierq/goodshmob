@@ -357,7 +357,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             this.fetchMore({trigger: TRIGGER_USER_INDIRECT_ACTION});
         }
         else {
-            console.info("== end of feed ==")
+            console.debug("== end of feed ==")
         }
     }
 

@@ -11,7 +11,7 @@ class _Analytics implements Analytics {
     constructor() {
         this.screenVisibilityListener = new RNNScreenVisibilityListener({
             didAppear: ({screen, startTime, endTime, commandType}) => {
-                console.log('screenVisibility', `Screen ${screen} displayed in ${endTime - startTime} millis after [${commandType}]`);
+                console.debug('screenVisibility', `Screen ${screen} displayed in ${endTime - startTime} millis after [${commandType}]`);
                 this.screen(screen, {"displayedInMs": endTime - startTime});
             }
         });
