@@ -99,7 +99,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
 
                 //TODO: use instedAt and improve sequence
-                let likesCount = activity.meta ? activity.meta["likes-count"] : 0;
+                let likesCount = activity.meta ? activity.meta["likesCount"] : 0;
                 likesCount += pendingLike;
 
                 return likesCount > 0 ? likesCount +'' : '';
