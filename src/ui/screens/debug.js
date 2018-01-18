@@ -1,14 +1,14 @@
 // @flow
 
 import React from 'react';
-import {AsyncStorage, Button, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {AsyncStorage, Clipboard, Button, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {connect} from "react-redux";
-import {logged} from "../../managers/CurrentUser"
+import {currentUser, logged} from "../../managers/CurrentUser"
 import {CheckBox} from "react-native-elements";
 import {CONFIG_SET} from "../../reducers/dataReducer";
 import Screen from "../components/Screen";
 import codePush from "react-native-code-push";
-
+import Snackbar from "react-native-snackbar"
 
 type Props = {
 
@@ -58,6 +58,10 @@ export default class DebugScreen extends Screen<Props, State> {
                         onPress={this.printStorage.bind(this)}
                     />
                     <Button
+                        title="send storage"
+                        onPress={this.copyStorage.bind(this)}
+                    />
+                    <Button
                         title="sync codepush"
                         onPress={this.syncCodepush.bind(this)}
                     />
@@ -78,26 +82,42 @@ export default class DebugScreen extends Screen<Props, State> {
         );
     }
 
+    copyStorage() {
+        this.getStorage().then(storage=> {
+            Clipboard.setString(storage);
+            Snackbar.show({
+                title: "copié!",
+            });
+        })
+    }
 
     printStorage() {
-        AsyncStorage.getAllKeys((err, keys) => {
-            AsyncStorage.multiGet(keys, (err, stores) => {
-                let text = 'Storage values:\n';
-                stores.map((result, i, store) => {
-                    // get at each store's key/value so you can work with it
-                    let key = store[i][0];
-                    let value = store[i][1];
-                    text += `key=${key}, value=${value}\n`
+        this.getStorage().then(storage=>this.setState({text:storage}))
+    }
+
+
+    getStorage() {
+        return new Promise((resolve, reject) => {
+            AsyncStorage.getAllKeys((err, keys) => {
+                AsyncStorage.multiGet(keys, (err, stores) => {
+                    let text = 'Storage values:\n';
+                    stores.map((result, i, store) => {
+                        // get at each store's key/value so you can work with it
+                        let key = store[i][0];
+                        let value = store[i][1];
+                        text += `key=${key}, value=${value}\n`
+                        resolve(text);
+                    });
                 });
-                this.setState({text});
             });
         });
     }
+
+
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'green',
     }
 });
