@@ -177,10 +177,7 @@ export default class App {
             // whitelist: ['auth','device']
         };
 
-        if (__USE_CACHE_LOCAL__) {
-            console.info(`local cache: enabled -> __USE_CACHE_LOCAL__=${__USE_CACHE_LOCAL__}`);
-        } else {
-            console.info(`local cache: disabled -> __USE_CACHE_LOCAL__=${__USE_CACHE_LOCAL__}`);
+        if (!__USE_CACHE_LOCAL__) {
             persistConfig = {...persistConfig, whitelist: ['auth', 'device', 'stat', 'config']};
         }
 
@@ -202,15 +199,18 @@ export default class App {
         }
 
 
-        this.resolveMode();
+        this.refreshAppMode();
     }
 
     initialize() {
-        this.initializing = true;
-        this.start();
-        this.initializing = false;
-    }
-    start() {
+        if (this.initializing) {
+            console.debug("app already initializing");
+            return;
+        }
+        if (this.initialized) {
+            console.debug("app already initialized");
+            return;
+        }
         //waiting rehydration before starting app
         let rehydrated = this.store.getState().app.rehydrated;
         if (!rehydrated) {
@@ -221,8 +221,11 @@ export default class App {
             console.debug("waiting for cache version");
             return;
         }
+        console.debug("== app init ==");
+        this.initializing = true;
 
-        //finish app prepatation
+
+        //managers init rely on a ready store
         //singletons
         Api.init(this.store);
         CurrentUser.init(this.store);
@@ -252,11 +255,14 @@ export default class App {
 
 
         this.prepareUI();
+
+        console.info("== app initialized ==");
+
         this.initialized = true;
-        console.info("App initialized.");
+        this.initializing = false;
     }
 
-    resolveMode() {
+    refreshAppMode() {
         let mode: AppMode = 'unknown';
 
         //invalidate cache if needed
@@ -264,9 +270,7 @@ export default class App {
         if (cacheVersion === undefined) {
             console.debug("waiting for cache version (resolveMode)");
         }
-
-
-        console.debug(`current cache version=${cacheVersion}, config cache version=${Config.CACHE_VERSION}`);
+        //console.debug(`current cache version=${cacheVersion}, config cache version=${Config.CACHE_VERSION}`);
 
         if (!cacheVersion) {
             mode = 'init_cache';
@@ -335,6 +339,7 @@ export default class App {
             case 'init_cache':
                 this.store.dispatch({type: INIT_CACHE, newCacheVersion: cacheVersion});
                 this.setCurrentCacheVersion(cacheVersion);
+                this.refreshAppMode();
                 break;
             case 'upgrading_cache':
                 this.upgradingCache = true;
@@ -342,7 +347,7 @@ export default class App {
                 this.setCurrentCacheVersion(cacheVersion);
                 this.store.dispatch(appActions.me()).then(() => {
                     this.upgradingCache = false;
-                    this.resolveMode()
+                    this.refreshAppMode()
                 });
 
                 //TODO: move to messenger
