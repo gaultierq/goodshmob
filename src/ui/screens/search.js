@@ -188,7 +188,7 @@ export default class SearchScreen extends Component<Props, State> {
         let nCat = this.props.categories.length;
         let hasSearched = !_.isEmpty(this.state.searches);
 
-        const showTabs = nCat > 1 && hasSearched;
+        const showTabs = nCat > 1 && (hasSearched || true);
         return (
             <View style={{width:"100%", height: "100%", backgroundColor: "transparent"}}>
 
@@ -211,8 +211,8 @@ export default class SearchScreen extends Component<Props, State> {
     }
 
     onSearchInputChange(input: string) {
-        this.setState({input});
-        // this.setState({input}, () => this.performSearch(input, 0));
+        //this.setState({input});
+        this.setState({input}, () => this.performSearch(input, 0));
     }
 
 
