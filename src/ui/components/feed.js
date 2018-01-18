@@ -194,7 +194,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             list = React.createElement(FlatList, {data: items, ...params});
         }
 
-        return <View><View style={{backgroundColor: Colors.white82, paddingTop: 5, paddingBottom: 5, paddingLeft: 9, paddingRight: 9}}>{searchBar}</View>{list}</View>
+        return <View>{searchBar}{list}</View>
 
 
         //
@@ -253,35 +253,39 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
         //TODO: finish design
         //use https://github.com/agiletechvn/react-native-search-box
-        return React.createElement(Search, {
-            backgroundColor: Colors.white82,
-            placeholderTextColor: color, //TODO
-            titleCancelColor: color,
-            tintColorSearch: color,
-            tintColorDelete: color,
-            // cancelButtonWidth: PropTypes.number,
-            // cancelButtonStyle: PropTypes.PropTypes.oneOfType([
-            //     PropTypes.number,
-            //     PropTypes.object
-            // ]),
-            cancelButtonTextStyle: {
-                ...font
-            },
-            // onLayout: PropTypes.func,
-            inputStyle: {
-                color: Colors.black,
-                ...font
-            },
-            placeholder: "Search",
-            cancelTitle: "Cancel",
-            inputStyle: {backgroundColor: 'rgb(230,230,230)'},
-            inputBorderRadius: 10,
-            inputHeight: 32,
-            onChangeText: filter => this.setState({filter}),
-            onCancel: ()=>this.setState({filter: null}),
-            onDelete: ()=>this.setState({filter: null}),
-            onSearch
-        });
+        return (
+            <View style={{backgroundColor: Colors.white82, paddingTop: 5, paddingBottom: 5, paddingLeft: 9, paddingRight: 9, borderBottomWidth: 1, borderBottomColor: Colors.grey3}}>
+                {React.createElement(Search, {
+                    backgroundColor: Colors.white82,
+                    placeholderTextColor: color, //TODO
+                    titleCancelColor: color,
+                    tintColorSearch: color,
+                    tintColorDelete: color,
+                    // cancelButtonWidth: PropTypes.number,
+                    // cancelButtonStyle: PropTypes.PropTypes.oneOfType([
+                    //     PropTypes.number,
+                    //     PropTypes.object
+                    // ]),
+                    cancelButtonTextStyle: {
+                        ...font
+                    },
+                    // onLayout: PropTypes.func,
+                    inputStyle: {
+                        color: Colors.black,
+                        ...font
+                    },
+                    placeholder: "Search",
+                    cancelTitle: "Cancel",
+                    inputStyle: {backgroundColor: 'rgb(230,230,230)'},
+                    inputBorderRadius: 10,
+                    inputHeight: 32,
+                    onChangeText: filter => this.setState({filter}),
+                    onCancel: ()=>this.setState({filter: null}),
+                    onDelete: ()=>this.setState({filter: null}),
+                    onSearch
+                })}
+            </View>
+        );
     }
 
 

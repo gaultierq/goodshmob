@@ -383,7 +383,7 @@ export default class App {
                     selectedIcon: require('./img2/mystuff_Glyph_Active.png'),
                     // titleImage: require('./img2/headerLogoBlack.png'),
                     title: i18n.t('tabs.home.title'),
-                    navigatorStyle,
+                    navigatorStyle: [navigatorStyle],
                     iconInsets
                 },
                 {

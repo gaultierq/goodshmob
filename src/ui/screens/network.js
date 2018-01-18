@@ -58,7 +58,7 @@ class NetworkScreen extends Screen<Props, State> {
 
 
     static navigatorStyle = {
-        navBarBackgroundColor: Colors.blue,
+        navBarBackgroundColor: Colors.blue
     };
 
     state = {};
@@ -164,7 +164,7 @@ class NetworkScreen extends Screen<Props, State> {
         } : null;
 
         return (
-            <View>
+            <View style={{flex:1, backgroundColor: 'red'}}>
                 <Feed
                     data={activities}
                     renderItem={this.renderItem.bind(this)}
