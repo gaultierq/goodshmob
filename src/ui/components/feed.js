@@ -194,7 +194,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             list = React.createElement(FlatList, {data: items, ...params});
         }
 
-        return <View>{searchBar}{list}</View>
+        return <View><View style={{backgroundColor: Colors.white82, paddingTop: 5, paddingBottom: 5, paddingLeft: 9, paddingRight: 9}}>{searchBar}</View>{list}</View>
 
 
         //
@@ -254,7 +254,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         //TODO: finish design
         //use https://github.com/agiletechvn/react-native-search-box
         return React.createElement(Search, {
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.white82,
             placeholderTextColor: color, //TODO
             titleCancelColor: color,
             tintColorSearch: color,
@@ -275,6 +275,8 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             placeholder: "Search",
             cancelTitle: "Cancel",
             inputStyle: {backgroundColor: 'rgb(230,230,230)'},
+            inputBorderRadius: 10,
+            inputHeight: 32,
             onChangeText: filter => this.setState({filter}),
             onCancel: ()=>this.setState({filter: null}),
             onDelete: ()=>this.setState({filter: null}),
