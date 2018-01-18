@@ -149,7 +149,7 @@ class Api {
             }
         }
         else {
-            console.info("no pending action found");
+            console.debug("api: no pending action found");
         }
     }
 

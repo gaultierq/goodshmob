@@ -66,10 +66,6 @@ export class LineupListScreen extends Component<Props, State> {
         isLoadingMore: false,
     };
 
-    componentWillReceiveProps(nextProps: Props) {
-        console.log("receiving new props");
-    }
-
     render() {
         const {
             userId,
@@ -85,7 +81,6 @@ export class LineupListScreen extends Component<Props, State> {
         } = this.props;
 
         let user: User = buildData(this.props.data, "users", userId);
-        console.log("Feed attributes: scrollUpOnBack="+attributes.scrollUpOnBack);
         let lists, sections, fetchSrc;
         if (user && user.lists) {
             lists = user.lists;

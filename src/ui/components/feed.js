@@ -148,9 +148,9 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         let firstEmptyLoader = this.isFirstEmptyLoader(data);
         //firstEmptyLoader = true;
 
-        if (feedId) {
-            console.log(`feed '${feedId}' render: empt=${isEmpty(data)} nitd=${nothingInterestingToDisplay} fil=${firstEmptyLoader} data.len=${data ? data.length : -1}`);
-        }
+        // if (feedId) {
+        //     console.debug(`feed '${feedId}' render: empt=${isEmpty(data)} nitd=${nothingInterestingToDisplay} fil=${firstEmptyLoader} data.len=${data ? data.length : -1}`);
+        // }
 
         if (nothingInterestingToDisplay) {
             if (this.state.isFetchingFirst === 'ko') {

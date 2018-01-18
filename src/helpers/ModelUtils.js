@@ -272,7 +272,10 @@ export class Merge<T, K> {
 
         //(start, end)
         let segment = this.getSegment();
-        console.log(`segment= ${JSON.stringify(segment)}`);
+        if (segment) {
+            console.debug(`merge: segment=${JSON.stringify(segment)}`);
+        }
+
 
         let mergeIds : Array<K> = this.getIds(this.mergeInto);
 
