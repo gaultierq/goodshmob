@@ -143,7 +143,7 @@ export default class ActivityCell extends React.Component<Props, State> {
     }
 
     getAskBackgroundColor(activity: Activity) {
-        const askColors = ['rgb(51,51,51)', Colors.green, Colors.pink, Colors.darkSkyBlue];
+        const askColors = ['rgb(51,51,51)', /*Colors.green, */Colors.pink, Colors.darkSkyBlue];
         return askColors[Date.parse(activity.createdAt) % askColors.length];
     }
 
