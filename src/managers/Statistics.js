@@ -62,15 +62,18 @@ class _Statistics {
     }
 
     recordTime(category: StatisticCategory, duration: ms) {
-        this.time.push({category, duration});
-        if (this.timeout) {
-            clearTimeout(this.timeout);
+        if (__WITH_STATS__) {
+            this.time.push({category, duration});
+            if (this.timeout) {
+                clearTimeout(this.timeout);
+            }
+            this.timeout = setTimeout(()=> {
+                //this.store.dispatch({type: STAT_DURATION, path: `time.${category}`, value: duration});
+                this.store.dispatch({type: STAT_DURATION, stats: this.time});
+                this.time = [];
+            }, 5000);
         }
-        this.timeout = setTimeout(()=> {
-            //this.store.dispatch({type: STAT_DURATION, path: `time.${category}`, value: duration});
-            this.store.dispatch({type: STAT_DURATION, stats: this.time});
-            this.time = [];
-        }, 5000);
+
 
     }
 }
