@@ -118,7 +118,7 @@ export default class ActivityBody extends React.Component<Props, State> {
             tags.push(inLineup);
         }
 
-        return tags.map(tag=><View style={{flexDirection:'row', marginTop: 10}}>
+        return tags.map(tag=><View key={tag} style={{flexDirection:'row', marginTop: 10}}>
             <GTouchable onPress={press}>
                 <Text
                     style={[{paddingTop: 4, paddingLeft: pa, paddingRight: pa,

@@ -55,6 +55,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
             if (this.canExec(a, activity)) {
                 res.push(
                     this.renderButton(
+                        a,
                         this.renderImageButton(a),
                         this.renderTextButton(a, activity),
                         //$FlowFixMe
@@ -215,9 +216,9 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     //     return goodshed;
     // }
 
-    renderButton(img: Url, text: string, handler: ()=>void, active:boolean = false) {
+    renderButton(key: string, img: Url, text: string, handler: ()=>void, active:boolean = false) {
         let color = active ? Colors.green: Colors.greyishBrown;
-        return (<GTouchable onPress={handler}>
+        return (<GTouchable onPress={handler} key={key}>
                 <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 6}}>
 
                     <Image source={img} style={{width: 24, height: 24, margin: 8, resizeMode: 'contain', tintColor: color}}/>
