@@ -126,31 +126,36 @@ export class InteractionScreen extends Screen<Props, State> {
     renderContentByType(activity:Activity) {
         if (!activity) return null;
         let type = activity.type.toLowerCase();
+        const resource = activity.resource;
+        const isAsk = sanitizeActivityType(resource.type) === 'asks';
 
         let build = (key) => {
-            let resource = activity.resource;
+
             let username = activity.user.firstName + " " + activity.user.lastName;
 
             if (!resource) {
                 console.warn(`say QG no resource found on activityId=${activity.id} type=${activity.type}`);
             }
-            else if (sanitizeActivityType(resource.type) === 'asks') {
-                // return <Text style={{fontSize: 12}}>{username + " ask"}</Text>
-                return <Text style={{fontSize: 14}} numberOfLines={1}>
-                    {i18n.t(key, {username, what: "ask"})}
-                </Text>
-            }
             else {
-                let innerResource = resource.resource;
-                if (!innerResource) {
-                    console.warn("No resource for " + JSON.stringify(activity));
-                    return null;
-                }
-                let item_title = _.toUpper(innerResource.title);
 
-                return <Text style={{fontSize: 14}} numberOfLines={1}>
-                    {i18n.t(key, {username, what: item_title})}
-                </Text>
+                if (isAsk) {
+                    // return <Text style={{fontSize: 12}}>{username + " ask"}</Text>
+                    return <Text style={{fontSize: 14}} numberOfLines={1}>
+                        {i18n.t(key, {username, what: resource.content})}
+                    </Text>
+                }
+                else {
+                    let innerResource = resource.resource;
+                    if (!innerResource) {
+                        console.warn("No resource for " + JSON.stringify(activity));
+                        return null;
+                    }
+                    let item_title = _.toUpper(innerResource.title);
+
+                    return <Text style={{fontSize: 14}} numberOfLines={1}>
+                        {i18n.t(key, {username, what: item_title})}
+                    </Text>
+                }
             }
 
         };
@@ -159,6 +164,7 @@ export class InteractionScreen extends Screen<Props, State> {
             case 'answer':
                 return build("interactions.answer");
             case 'comment':
+                if (isAsk) return build("interactions.comment_ask");
                 return build("interactions.comment");
             case 'like':
                 return build("interactions.like");

@@ -262,6 +262,7 @@ export default {
     "interactions":{
         "saving":"saved %{what}",
         "comment":"commented %{what}",
+        "comment_ask":"answered: '%{what}'",
         "like":"said YEAAH! on %{what}",
         "list":"created the lineup %{what}",
         "post":"posted %{what}",

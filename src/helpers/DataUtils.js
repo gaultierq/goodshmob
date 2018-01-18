@@ -48,7 +48,7 @@ export let sanitizeActivityType = activityType => {
     return activityType;
 };
 
-const ACTIVITY_TYPES = ['savings', 'sendings', 'posts' ];
+const ACTIVITY_TYPES = ['savings', 'sendings', 'posts', 'asks'];
 export const isActivityType = (candidate: string) => {
     return ACTIVITY_TYPES.indexOf(candidate) >= 0;
 

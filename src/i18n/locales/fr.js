@@ -257,6 +257,7 @@ export default {
     "interactions":{
         "saving":"a enregistré %{what}",
         "comment":"a commenté %{what}",
+        "comment_ask":"a répondu à '%{what}'",
         "like":"a dit YEAAH! à %{what}",
         "list":"a crée la lineup %{what}",
         "post":"a posté %{what}",
