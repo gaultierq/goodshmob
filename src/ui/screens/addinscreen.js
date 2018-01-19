@@ -24,7 +24,7 @@ class AddInScreen extends Component<Props, State> {
             <View style={[styles.container]}>
 
                 <LineupListScreen
-                    ListHeaderComponent={<AddLineupComponent/>}
+                    ListHeaderComponent={<AddLineupComponent navigator={this.props.navigator}/>}
                     {...this.props}
                 />
             </View>

@@ -28,6 +28,7 @@ import TestScreen from './screens/test';
 import UserSheetScreen from './screens/userSheet';
 import MyAvatar from './components/MyAvatar';
 import {InteractionScreen} from './screens/interactions';
+import AddLineupSheet from './screens/addlineupsheet';
 
 
 import RnRenderPerfs from 'rn-render-perfs';
@@ -88,4 +89,5 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.InteractionScreen', () => InteractionScreen, store, Provider);
     wrap('goodsh.MyAvatar', () => MyAvatar, store, Provider);
     wrap('goodsh.UserSheetScreen', () => UserSheetScreen, store, Provider);
+    wrap('goodsh.AddLineupSheet', () => AddLineupSheet, store, Provider);
 }

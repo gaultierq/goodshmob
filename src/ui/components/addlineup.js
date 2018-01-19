@@ -5,37 +5,38 @@ import {Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View,} f
 
 import {connect} from "react-redux";
 import {logged} from "../../managers/CurrentUser"
-import Snackbar from "react-native-snackbar"
 import i18n from '../../i18n/i18n'
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import {Menu, MenuContext, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
-import type {Visibility} from "../screens/additem";
-import Modal from 'react-native-modal'
-import SmartInput from "./SmartInput";
-import {LINEUP_CREATION} from '../lineup/actions'
 import {Colors} from "../colors";
-import * as UI from "../UIStyles";
 import GTouchable from "../GTouchable";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import type {RNNNavigator} from "../../types";
+
 
 type Props = {
+    navigator: RNNNavigator,
 };
 
 type State = {
-    isCreatingLineup?: boolean, //create lineup mode
-    newLineupPrivacy?: Visibility,
 };
+
 
 @connect()
 @logged
-export default class AddLineupComponent extends Component<Props, State> {
+export default class AddLineupComponent extends Component<*, *> {
 
     state = {};
 
-    _closeModal = ()=> {this.setState({isCreatingLineup: false})};
+    _openModal = () => {
+        let {navigator} = this.props;
 
-    _openModal = () => {this.setState({isCreatingLineup: true})};
-
+        navigator.showModal({
+            screen: 'goodsh.AddLineupSheet', // unique ID registered with Navigation.registerScreen
+            animationType: 'none'
+        });
+    };
 
     render() {
 
@@ -58,69 +59,48 @@ export default class AddLineupComponent extends Component<Props, State> {
                         >{i18n.t('create_list_controller.title')}</Text>
                     </View>
                 </GTouchable>
-
-                {this.createModal()}
             </View>
         );
     }
 
-    createModal() {
-        return <Modal
-            isVisible={!!this.state.isCreatingLineup}
-            backdropOpacity={0.3}
-            onBackButtonPress={() => {
-                this._closeModal();
-                return true;
-            }}
-            onBackdropPress={this._closeModal}
-        >
+    // createModal() {
+    //     return <Modal
+    //         isVisible={!!this.state.isCreatingLineup}
+    //         backdropOpacity={0.3}
+    //         onBackButtonPress={() => {
+    //             this._closeModal();
+    //             return true;
+    //         }}
+    //         onBackdropPress={this._closeModal}
+    //     >
+    //
+    //         <View style={[UI.CARD(12), styles.header, {flexDirection: 'column'}]}>
+    //
+    //             <Text style={{fontSize: 16, marginBottom: 12}}>{i18n.t('create_list_controller.action')}</Text>
+    //             <SmartInput
+    //                 execAction={(input: string) => this.createLineup(input)}
+    //                 placeholder={"create_list_controller.placeholder"}
+    //                 button={<Text>{i18n.t('actions.create')}</Text>}
+    //                 returnKeyType={'go'}
+    //             />
+    //
+    //             <CheckBox
+    //                 right
+    //                 title={i18n.t('create_list_controller.visible')}
+    //                 size={16}
+    //                 checkedColor={Colors.greyishBrown}
+    //                 uncheckedColor={Colors.greyishBrown}
+    //                 onPress={(newValue) => this.setState({newLineupPrivacy: !!this.state.newLineupPrivacy ? 0 : 1})}
+    //                 checked={!this.state.newLineupPrivacy}
+    //                 textStyle={{color: Colors.greyishBrown, fontSize: 12,}}
+    //                 containerStyle={{backgroundColor: "transparent", borderWidth: 0, width: "100%"}}
+    //             />
+    //
+    //         </View>
+    //
+    //     </Modal>;
+    // }
 
-            <View style={[UI.CARD(12), styles.header, {flexDirection: 'column'}]}>
-
-                <Text style={{fontSize: 16, marginBottom: 12}}>{i18n.t('create_list_controller.action')}</Text>
-                <SmartInput
-                    execAction={(input: string) => this.createLineup(input)}
-                    placeholder={"create_list_controller.placeholder"}
-                    button={<Text>{i18n.t('actions.create')}</Text>}
-                    returnKeyType={'go'}
-                />
-
-                <CheckBox
-                    right
-                    title={i18n.t('create_list_controller.visible')}
-                    size={16}
-                    checkedColor={Colors.greyishBrown}
-                    uncheckedColor={Colors.greyishBrown}
-                    onPress={(newValue) => this.setState({newLineupPrivacy: !!this.state.newLineupPrivacy ? 0 : 1})}
-                    checked={!this.state.newLineupPrivacy}
-                    textStyle={{color: Colors.greyishBrown, fontSize: 12,}}
-                    containerStyle={{backgroundColor: "transparent", borderWidth: 0, width: "100%"}}
-                />
-
-            </View>
-
-        </Modal>;
-    }
-
-    createLineup(name: string) {
-        let delayMs = 3000;
-        return this.props.dispatch(LINEUP_CREATION.pending({listName: name}, {delayMs}))
-            .then((pendingId)=> {
-                this._closeModal();
-                Snackbar.show({
-                        title: i18n.t('create_list_controller.created'),
-                        duration: Snackbar.LENGTH_LONG,
-                        action: {
-                            title: i18n.t('actions.undo'),
-                            color: 'green',
-                            onPress: () => {
-                                this.props.dispatch(LINEUP_CREATION.undo(pendingId))
-                            },
-                        },
-                    }
-                );
-            });
-    }
 }
 
 

@@ -134,7 +134,7 @@ export default class AddItemScreen extends Screen<Props, State> {
                         userId={currentUserId()}
                         navigator={this.props.navigator}
                         ListHeaderComponent={xml}
-                        ListFooterComponent={<AddLineupComponent/>}
+                        ListFooterComponent={<AddLineupComponent navigator={this.props.navigator}/>}
                         renderItem={(item) => (
                             <GTouchable onPress={() => this.setState({selectedLineupId: item.id, showLineupList: false})}>
                                 <LineupCell lineup={item} style={{backgroundColor: Colors.white82, marginRight: 8, marginLeft: 8, marginBottom: 10, borderRadius: 8}} />

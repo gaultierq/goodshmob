@@ -253,7 +253,7 @@ class HomeScreen extends Screen<Props, State> {
                                 {
                                     data: _.slice(lineups, 1),
                                     title: i18n.t("lineups.mine.title"),
-                                    renderSectionHeaderChildren:() => <AddLineupComponent/>,
+                                    renderSectionHeaderChildren:() => <AddLineupComponent navigator={this.props.navigator}/>,
                                     renderItem: ({item})=>this.renderListItem(item, {withMenuButton: true, withLineupTitle: true})
                                 },
                             ];
