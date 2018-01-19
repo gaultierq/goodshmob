@@ -41,22 +41,23 @@ public class MainActivity extends SplashActivity {
 
             LinearLayout view = new LinearLayout(this);
             view.setGravity(Gravity.CENTER);
+            view.setBackgroundColor(Color.parseColor("#01DEB1"));
 
 
-            Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.splash1);
+            /*Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.splash1);
             BitmapDrawable bitmapDrawable = new BitmapDrawable(bmp);
-            /*bitmapDrawable.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);*/
+            bitmapDrawable.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);*/
 
-            view.setBackgroundDrawable(bitmapDrawable);
+            /*view.setBackgroundDrawable(bitmapDrawable);*/
 
-            //ImageView goodsh = new ImageView(this);
-            //goodsh.setImageResource(R.drawable.goodsh2);
+            ImageView goodsh = new ImageView(this);
+            goodsh.setImageResource(R.drawable.logo_white);
             //int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 180, getResources().getDisplayMetrics());
 
-            //goodsh.setLayoutParams(new FrameLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT));
+            goodsh.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
 
-            //view.addView(goodsh);
+            view.addView(goodsh);
             return view;
         }
 }
