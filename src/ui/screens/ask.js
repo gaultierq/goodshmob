@@ -84,6 +84,7 @@ export default class AskScreen extends Component<Props, State> {
                             placeholderTextColor={"rgba(255,255,255,0.6)"}
                             autoFocus={true}
                             textAlignVertical={'top'}
+                            selectionColor={'transparent'}
                             style={[
                                 {backgroundColor: 'transparent', margin: 20},
                                 styles.input,
