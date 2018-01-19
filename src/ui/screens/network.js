@@ -164,7 +164,7 @@ class NetworkScreen extends Screen<Props, State> {
         } : null;
 
         return (
-            <View style={{flex:1, backgroundColor: 'red'}}>
+            <View style={{flex:1}}>
                 <Feed
                     data={activities}
                     renderItem={this.renderItem.bind(this)}
