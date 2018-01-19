@@ -332,7 +332,11 @@ class HomeScreen extends Screen<Props, State> {
                 }
             }}
             dialogAnimation={new ScaleAnimation()}
-            dialogTitle={<DialogTitle title={i18n.t('no_spam.dialog_title')} titleStyle={{backgroundColor: Colors.green}} titleTextStyle={{color: 'white', fontWeight: 'bold'}}/>}
+            dialogTitle={
+                <DialogTitle
+                    title={i18n.t('no_spam.dialog_title')} titleStyle={{backgroundColor: Colors.green}}
+                    titleTextStyle={{color: 'white', fontWeight: 'bold'}}
+                />}
             onDismissed={() => {
                 OnBoardingManager.onDisplayed('no_spam')
             }}
@@ -345,8 +349,9 @@ class HomeScreen extends Screen<Props, State> {
                     key="button-1"
                 />,
             ]}
-            width={0.9}
-            height={270}>
+            width={0.8}
+            height={240}
+        >
             <View style={[styles.dialogContentView]}>
                 <View style={styles.dialogContentViewInner}>
                     <Markdown styles={markdownStyles}>
