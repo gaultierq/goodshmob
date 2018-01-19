@@ -33,49 +33,9 @@ import Analytics from "./managers/Analytics";
 import * as appActions from "./auth/actions";
 import OnBoardingManager from "./managers/OnBoardingManager";
 
-console.log(`staring app with env=${JSON.stringify(Config)}`);
-
-initGlobal();
-
-const CACHE_VERSION = 1;
-
-let hydrated = false;
-
-['log', 'debug', 'info', 'warn', 'error'].forEach((level) => {
-    if (!(_.includes(Config.ENABLED_LOGS, level))) {
-        console[level] = function () {};
-    }
-
-});
-
-
-
-const appReducer = (state = {}, action) => {
-    switch (action.type) {
-        case REHYDRATE:
-            return {...state, rehydrated: true};
-        //return state.merge({rehydrated: true})
-    }
-    return state;
-};
-
-//see the network requests in the debugger
-//TODO: doesnt work yet
-//GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
-//if (!__IS_LOCAL__) {
-console.disableYellowBox = true;
-//}
-const APP_STYLES = StyleSheet.create({
-    TEXT_DEFAULT: {
-        fontFamily: SFP_TEXT_REGULAR,
-        color: Colors.black,
-    }
-});
-
-//dont know it doesnt work
-//const __USE_CACHE_LOCAL__ = false;
 
 type AppMode = 'idle' | 'init_cache' | 'logged' | 'unlogged' | 'upgrading_cache' | 'unknown'
+
 
 export default class App {
 
@@ -85,32 +45,75 @@ export default class App {
     initializing: boolean; //is app initializing
 
     store;
-    bugsnag;
+    bugsnag; //move to some manager
     cacheVersion: number;
 
     upgradingCache: boolean = false;
 
+    hydrated: boolean;
+
 
     constructor() {
 
-        this.prepareRedux();
 
-        this.getCurrentCacheVersion().then(cacheVersion => {
-            this.cacheVersion = cacheVersion || 0;
-        });
-        // since react-redux only works on components, we need to subscribe this class manually
-        this.store.subscribe(this.onStoreUpdate.bind(this));
+        this.spawn();
 
+
+
+
+
+
+        //when store is ready
         this.initialize();
     }
+
+    spawn() {
+
+        console.log(`spawning app with env=${JSON.stringify(Config)}`);
+
+        if (module && module.hot) {
+            global.reloads = 0;
+            module.hot.accept(() => {
+                ++global.reloads;
+                console.info(`hot reload (#${global.reloads})`);
+            });
+        }
+
+        console.info("DEBUG:::::: hot=" + global.reloads);
+
+        initGlobal(false);
+
+        //this.hydrated = false;
+
+        ['log', 'debug', 'info', 'warn', 'error'].forEach((level) => {
+            if (!(_.includes(Config.ENABLED_LOGS, level))) {
+                console[level] = function () {};
+            }
+        });
+
+        //see the network requests in the debugger
+        //TODO: doesnt work yet
+        //GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
+        //if (!__IS_LOCAL__) {
+        console.disableYellowBox = true;
+        //}
+        //dont know it doesnt work
+        //const __USE_CACHE_LOCAL__ = false;
+
+        this.prepareRedux();
+    };
 
     prepareUI() {
 
         const {height, width} = Dimensions.get('window');
         console.info(`window dimensions=${width}x${height}`);
 
+
         globalProps.setCustomText({
-            style: APP_STYLES.TEXT_DEFAULT
+            style: {
+                fontFamily: SFP_TEXT_REGULAR,
+                color: Colors.black,
+            }
         });
 
         globalProps.setCustomView({
@@ -159,6 +162,16 @@ export default class App {
     }
 
     prepareRedux() {
+
+        const appReducer = (state = {}, action) => {
+            switch (action.type) {
+                case REHYDRATE:
+                    return {...state, rehydrated: true};
+                //return state.merge({rehydrated: true})
+            }
+            return state;
+        };
+
         let allReducers = combineReducers({...reducers, app: appReducer});
         const reducer = createWithReducers(allReducers);
         this.store = createStore(
@@ -185,10 +198,16 @@ export default class App {
             persistConfig,
             () => {
                 console.log("persist store complete");
-                hydrated = true;
+                this.hydrated = true;
                 //configureApp();
             }
         );
+
+        this.getCurrentCacheVersion().then(cacheVersion => {
+            this.cacheVersion = cacheVersion || 0;
+        });
+        // since react-redux only works on components, we need to subscribe this class manually
+        this.store.subscribe(this.onStoreUpdate.bind(this));
     }
 
     onStoreUpdate() {
@@ -307,7 +326,14 @@ export default class App {
 
         console.debug(`mode changed: new mode=${this.mode} (old mode=${oldMode})`);
 
-        const testScreen = require("./testScreen").default;
+        let testScreen;
+
+        if (Config.TEST_SCREEN) {
+            testScreen = require("./testScreen")[Config.TEST_SCREEN];
+            if (!testScreen) {
+                console.warn(`test screen not found${Config.TEST_SCREEN}`);
+            }
+        }
         let navigatorStyle = {...UI.NavStyles};
 
         const cacheVersion = Config.CACHE_VERSION;
@@ -315,7 +341,7 @@ export default class App {
             case 'idle':
                 break;
             case 'logged':
-                if (__IS_LOCAL__ && testScreen) {
+                if (testScreen) {
                     Object.assign(testScreen.screen, {navigatorStyle});
                     Navigation.startSingleScreenApp(testScreen);
                 }

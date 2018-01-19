@@ -1,6 +1,6 @@
 import {currentUserId} from "./managers/CurrentUser";
 
-const homeScreen = {
+export const homeScreen = {
     screen: {
         label: 'test',
         screen: 'goodsh.HomeScreen',
@@ -11,7 +11,7 @@ const homeScreen = {
 };
 
 
-const communityScreen = {
+export const communityScreen = {
     screen: {
         label: 'test',
         screen: 'goodsh.CommunityScreen',
@@ -27,7 +27,7 @@ const communityScreen = {
     }
 };
 
-const activityDetailScreen = {
+export const activityDetailScreen = {
     screen: {
         screen: 'goodsh.ActivityDetailScreen',
     },
@@ -37,7 +37,7 @@ const activityDetailScreen = {
     }
 };
 
-const commentsScreen = {
+export const commentsScreen = {
     screen: {
         label: 'test',
         screen: 'goodsh.CommentsScreen',
@@ -48,7 +48,7 @@ const commentsScreen = {
     }
 };
 
-const profileScreen = {
+export const profileScreen = {
     screen: {
         label: 'test',
         screen: 'goodsh.ProfileScreen',
@@ -58,7 +58,7 @@ const profileScreen = {
     }
 };
 
-const sendScreen = {
+export const sendScreen = {
     screen: {
         label: 'test',
         screen: 'goodsh.SendScreen',
@@ -67,7 +67,7 @@ const sendScreen = {
         itemId: "8ab94a3c-43b2-4e5c-acfb-d4ff268f93b1",
     }
 };
-const interactionsScreen = {
+export const interactionsScreen = {
     screen: {
         label: 'test',
         screen: 'goodsh.InteractionScreen',
@@ -76,7 +76,7 @@ const interactionsScreen = {
     }
 };
 
-const userScreen = {
+export const userScreen = {
     screen: {
         label: 'test',
         screen: 'goodsh.UserScreen',
@@ -86,7 +86,7 @@ const userScreen = {
     }
 };
 
-const addItemScreen = {
+export const addItemScreen = {
     screen: {
         label: 'test',
         screen: 'goodsh.AddItemScreen',
@@ -98,7 +98,7 @@ const addItemScreen = {
     }
 };
 
-// const addItemScreen2 = {
+// export const addItemScreen2 = {
 //     screen: {
 //         label: 'test',
 //         screen: 'goodsh.AddItemScreen',
@@ -109,7 +109,7 @@ const addItemScreen = {
 //         defaultLineupId: '37e67b05-c86c-4aeb-b3af-bf1c34862cd0'
 //     }
 // };
-const lineupScreen = {
+export const lineupScreen = {
     screen: {
         label: 'test',
         screen: 'goodsh.LineupScreen',
@@ -120,7 +120,7 @@ const lineupScreen = {
     }
 };
 
-const networkSearchScreen = {
+export const networkSearchScreen = {
     screen: {
         label: 'test',
         screen: 'goodsh.NetworkSearchScreen',
@@ -128,7 +128,7 @@ const networkSearchScreen = {
     },
 };
 
-const searchItemsScreen = {
+export const searchItemsScreen = {
     screen: {
         label: 'test',
         screen: 'goodsh.SearchItemsScreen',
@@ -136,20 +136,20 @@ const searchItemsScreen = {
     },
 };
 
-const homeSearchItemsScreen = {
+export const homeSearchItemsScreen = {
     screen: {
         screen: 'goodsh.HomeSearchScreen',
         title: 'Test goodsh.HomeSearchScreen',
     },
 };
-const networkScreen = {
+export const networkScreen = {
     screen: {
         screen: 'goodsh.NetworkScreen',
         title: 'Test goodsh.NetworkScreen',
     },
 };
 
-const loginScreen = {
+export const loginScreen = {
     screen: {
         screen: 'goodsh.LoginScreen',
     },
@@ -157,7 +157,7 @@ const loginScreen = {
         initialIndex: 0,
     }
 };
-const friendScreen = {
+export const friendScreen = {
     screen: {
         screen: 'goodsh.FriendsScreen',
     },
@@ -167,7 +167,7 @@ const friendScreen = {
 };
 
 
-const test = {
+export const test = {
     screen: {
         label: 'test',
         screen: 'goodsh.TestScreen',
@@ -178,10 +178,7 @@ const test = {
     }
 };
 
-let testScreen = null;
-
 //change this line
-
 
  // testScreen = test;
 // testScreen = profileScreen;
@@ -201,5 +198,3 @@ let testScreen = null;
 //  testScreen = activityDetailScreen;
 //  testScreen = loginScreen;
 //  testScreen = friendScreen;
-
-export default testScreen;

@@ -13,7 +13,7 @@ declare var superConsole: any;
 declare var ENABLE_PERF_OPTIM: boolean;
 declare var ensureNotNull: () => void;
 
-export function init() {
+export function init(hotReload: boolean) {
     global._ = __;
     global.i18n = _i18n;
     global.superLog = _superLog;
@@ -34,13 +34,7 @@ export function init() {
     global.__IS_PROD__= Config.ENV === 'PROD';
     global.__IS_DEV__= Config.ENV === 'DEV';
 
-
-    global.__USE_CACHE_LOCAL__= Config.USE_CACHE_LOCAL === "true";
-    global.__WITH_FABRIC__ = Config.WITH_FABRIC === 'true';
-    global.__WITH_BUGSNAG__ = Config.WITH_BUGSNAG === 'true';
-    global.__WITH_STATS__ = Config.WITH_STATS === 'true';
-
-    global.__HTTP_TIMEOUT__ = Number(Config.HTTP_TIMEOUT);
+    confToGlobal();
 
 
     let {width, height} = Dimensions.get('window');
@@ -54,3 +48,27 @@ export function init() {
         }
     }
 }
+
+
+let confToGlobal = function () {
+    let convert = (value) => {
+
+        let isNumeric = n => !isNaN(parseFloat(n)) && isFinite(n);
+
+        if (value === 'true') value = true;
+        else if (value === 'false') value = false;
+        else if (isNumeric(value)) value = _.toNumber(value);
+        else if (value === '') value = undefined;
+        return value;
+    };
+
+    let setGlobalFromConfig = (key, value) => {
+        key = `__${_.toUpper(key)}__`;
+        if (key in global) throw `global already defined:${key}`;
+        global[key] = convert(value);
+    };
+
+    _.keys(Config).forEach(k => {
+        setGlobalFromConfig(k, Config[k]);
+    });
+};
