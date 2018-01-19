@@ -23,7 +23,7 @@ import ApiAction from "../../helpers/ApiAction";
 import * as Api from "../../managers/Api";
 import * as authActions from '../../auth/actions'
 
-import {renderLink, renderSimpleButton} from "../UIStyles";
+import {openLinkSafely, renderLink, renderSimpleButton, stylePadding} from "../UIStyles";
 import SmartInput from "../components/SmartInput";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import Toast from 'react-native-root-toast';
@@ -33,7 +33,8 @@ import {Colors} from "../colors";
 import GTouchable from "../GTouchable";
 import {CachedImage} from "react-native-img-cache";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
-import {SFP_TEXT_REGULAR} from "../fonts";
+import {SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "../fonts";
+import FeedSeparator from "../activity/components/FeedSeparator";
 
 type Props = {
     // userId: Id,
@@ -71,6 +72,86 @@ export default class Profile extends Component<Props, State> {
             });
         }
     }
+
+    render() {
+        let user = this.getUser(currentUserId());
+
+        return (
+
+            <View style={{
+                // flex: 1,
+                height: "100%",
+                backgroundColor: Colors.white
+            }}>
+                <View style={{
+                    margin: 40,
+                    marginTop: 80
+                }}>
+                    {this.renderUser(user)}
+                </View>
+
+                <View style={{
+                }}>
+
+                    <FeedSeparator/>
+                    <GTouchable style={styles.headerContainer} onPress={() => {
+                        this.sendFeedback(encodeURIComponent(i18n.t('profile_screen.subtitle')))
+                    }}>
+                        <Text style={styles.header}>{i18n.t('profile_screen.title')}</Text>
+                        {this.renderChevron()}
+                    </GTouchable>
+
+                    <FeedSeparator/>
+
+                    <GTouchable style={styles.headerContainer} onPress={() => {
+                        openLinkSafely("https://goodsh.it/terms");
+                    }}>
+                        <Text style={styles.header}>{i18n.t('actions.terms')}</Text>
+                        {this.renderChevron()}
+                    </GTouchable>
+                    <FeedSeparator/>
+
+                </View>
+
+
+                <View style={{
+                    position: 'absolute',
+                    bottom: 52,
+                    left: 17
+                }}>
+                    {renderSimpleButton(
+                        i18n.t("actions.logout"),
+                        this.logout.bind(this),
+                        {
+                            loading: this.state.reqLogout === 'sending',
+                            style: {alignSelf: 'flex-start'},
+                            textStyle: styles.footerButton
+                        }
+                    )}
+
+                    {
+                        this.props.config.devMenu &&
+                        renderSimpleButton(i18n.t("dev.label"),
+                            () => this.props.navigator.showModal({
+                                    screen: 'goodsh.DebugScreen', // unique ID registered with Navigation.registerScreen
+                                    title: i18n.t("dev.title"), // navigation bar title of the pushed screen (optional)
+                                    navigatorButtons: Nav.CANCELABLE_MODAL,
+                                }
+                            ),
+                            {
+                                style: {alignSelf: 'flex-start'},
+                                textStyle: styles.footerButton
+                            }
+                        )
+                    }
+                    {this.renderVersion()}
+                </View>
+
+            </View>
+
+        );
+    }
+
 
 
     renderVersion() {
@@ -113,91 +194,20 @@ export default class Profile extends Component<Props, State> {
             }
 
         };
-        return <GTouchable onPress={handler}><Text style={{textAlign: 'center', color: Colors.greyish}}>v1.0</Text></GTouchable>
+        return <GTouchable onPress={handler}><Text style={styles.version}>v1.0</Text></GTouchable>
     }
 
 
-    render() {
-        let user = this.getUser(currentUserId());
-
-        return (
-            <KeyboardAwareScrollView
-                style={{flex: 1}}
-                scrollEnabled={false}
-                contentContainerStyle={{
-                    flex: 1,
-                    backgroundColor: 'white',
-                    justifyContent: 'center',
-                    paddingRight:20,
-                    paddingLeft: 20
-            }}>
-
-                <View>
-
-                    {this.renderUser(user)}
-
-                    <View style={{
-                            alignItems: 'center',
-                            marginTop: 30,
-                            marginBottom: 20,
-                            paddingTop: 25,
-                            paddingBottom: 25,
-                            borderTopWidth: 1,
-                            borderBottomWidth: 1,
-                            borderColor: Colors.grey4,
-                        }}>
-
-                        <Icon name="heart" size={30} color={Colors.green} style={{marginBottom: 20}}/>
-
-                        <Text style={{
-                            fontSize: 14,
-                            marginBottom: 10,
-                            color: Colors.green
-                        }}>{i18n.t('profile_screen.title', {love: i18n.t('profile_screen.love')})}</Text>
-
-                        <SmartInput
-                            containerStyle={{padding: 6}}
-                            inputStyle={{fontSize: 14}}
-                            inputContainerStyle={{padding: 4, borderRadius: 4, borderWidth: StyleSheet.hairlineWidth, borderColor: Colors.green}}
-                            execAction={(input: string) => this.sendFeedback(input)}
-                            placeholder={'profile_screen.subtitle'}
-                            multiline
-                            height={100}
-                            returnKeyType={'send'}
-                            buttonStyle={{padding: 10}}
-                        />
-
-                    </View>
-
-
-                    <View style={{alignSelf:'center'}}>
-                        { renderSimpleButton(i18n.t("actions.logout"), this.logout.bind(this), {loading: this.state.reqLogout === 'sending', textStyle: {fontSize:15, fontWeight: 'normal', fontFamily: SFP_TEXT_REGULAR, color: Colors.greyish}}) }
-
-                        {
-                            this.props.config.devMenu &&
-                            renderSimpleButton(i18n.t("dev.label"), () => this.props.navigator.showModal({
-                                    screen: 'goodsh.DebugScreen', // unique ID registered with Navigation.registerScreen
-                                    title: i18n.t("dev.title"), // navigation bar title of the pushed screen (optional)
-                                    navigatorButtons: Nav.CANCELABLE_MODAL,
-                                }
-                            ))
-                        }
-
-
-                        <View style={{alignSelf:'center'}}>
-                            {renderLink(i18n.t("actions.terms"), "https://goodsh.it/terms")}
-                            {this.renderVersion()}
-                        </View>
-                    </View>
-
-                </View>
-
-            </KeyboardAwareScrollView>
-        );
+    renderChevron() {
+        return <Image source={require('../../img2/rightArrowSmallGrey.png')}
+                      style={{
+                          width: 7,
+                          height: 12,
+                      }}
+        />;
     }
 
-
-    clicksMs;
+// clicksMs;
 
 
     renderUser(user) {
@@ -207,7 +217,7 @@ export default class Profile extends Component<Props, State> {
         }}
         >
             {user && user.image && <CachedImage source={{uri: user.image}}
-                                          style={styles.userAvatar}
+                                                style={styles.userAvatar}
             />}
             {user && <Text style={styles.userName}>{user.firstName + " " + user.lastName}</Text>}
 
@@ -267,25 +277,35 @@ const actions = (() => {
 
 
 const styles = StyleSheet.create({
-    input:{
-        height: 100,
-        width: "80%",
-
-        fontSize: 14,
-        borderWidth: StyleSheet.hairlineWidth,
-        borderRadius: 5,
-        borderColor: Colors.greyishBrown,
-
-    },
     userName: {
         fontSize: 20,
-
-        //color: UI.Colors.grey1,
         padding: 10,
+    },
+    footerButton: {
+        fontSize:15, fontWeight: 'normal', fontFamily: SFP_TEXT_REGULAR, color: Colors.greyish
     },
     userAvatar: {
         height: 45,
         width: 45,
         borderRadius: 22
     },
+    header: {
+        fontSize: 20,
+        fontFamily: SFP_TEXT_MEDIUM,
+        color: Colors.black,
+        borderTopColor: Colors.greyish,
+
+    },
+    headerContainer: {
+        ...stylePadding(15,22),
+        margin: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    version: {
+        fontSize: 12.5,
+        fontFamily: SFP_TEXT_MEDIUM,
+        color: Colors.greyish
+    }
 });

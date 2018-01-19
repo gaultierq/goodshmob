@@ -124,9 +124,8 @@ export default {
         "credentials": "Made with love in Paris",
     },
     "profile_screen":{
-        "love":" LOOOVE ",
-        "title":"WE’D %{love} YOUR FEEDBACK!",
-        "subtitle":"Is this what you've been dreaming of?\nHow good do you feel?\nWhat's badly missing?\nWe can't wait to know…",
+        "title":"Feedback",
+        "subtitle":"Is this what you've been dreaming of? How good do you feel? What's badly missing? We can't wait to know…",
         "feedback_textfield":{
             "placeholder":"Talk to me baby"
         },

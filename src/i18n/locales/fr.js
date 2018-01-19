@@ -119,9 +119,8 @@ export default {
         "credentials": "Fait avec amour à Paris",
     },
     "profile_screen":{
-        "love":" AMOUR ",
-        "title":"Cette app est faite pour toi.",
-        "subtitle":"Comment tu la trouves ?\nTu la kiffes ?\nQu'est-ce qui manque cruellement ?\nOn a très envie de savoir...",
+        "title":"Feedback",
+        "subtitle":"Comment tu la trouves ? Tu la kiffes ? Qu'est-ce qui manque cruellement ? On a très envie de savoir...",
         "feedback_textfield":{
             "placeholder":"Dis-nous tout."
         },
