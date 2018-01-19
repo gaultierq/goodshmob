@@ -98,6 +98,10 @@ class HomeScreen extends Screen<Props, State> {
         ],
     };
 
+    static navigatorStyle = {
+        navBarNoBorder: true
+    };
+
     state : State = {};
 
 
@@ -224,8 +228,8 @@ class HomeScreen extends Screen<Props, State> {
         let onBoardingStep = OnBoardingManager.getPendingStep();
 
         return (
-            <View>
-                <View>
+            <View style={{flex:1}}>
+                <View style={{paddingBottom: 100}}>
                     <LineupListScreen
                         userId={currentUserId()}
                         onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
@@ -391,7 +395,7 @@ class HomeScreen extends Screen<Props, State> {
                     this.onFloatingButtonPressed()
                 }}
                 mainRef={this._targetRef("#Save your goodsh", "#Click here to add your first goodsh!")}
-                buttonTextStyle={{fontSize: 26, fontWeight: 'bold', marginTop: -6}}
+                buttonTextStyle={{fontSize: 26, fontWeight: 'bold', marginTop: -5}}
             />
         );
     }

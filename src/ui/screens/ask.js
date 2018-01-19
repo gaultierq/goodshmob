@@ -75,14 +75,15 @@ export default class AskScreen extends Component<Props, State> {
                             editable={!notEditable}
                             onSubmitEditing={this.createAsk.bind(this)}
                             value={askContent}
-                            multiline
+                            multiline={true}
+                            numberOfLines={6}
                             maxLength={200}
                             blurOnSubmit
                             onChangeText={(askContent) => this.setState({askContent})}
                             placeholder={i18n.t("actions.ask_friend")}
                             placeholderTextColor={"rgba(255,255,255,0.6)"}
-                            //autofocus fucked up the animation
-                            // autoFocus
+                            autoFocus={true}
+                            textAlignVertical={'top'}
                             style={[
                                 {backgroundColor: 'transparent', margin: 20},
                                 styles.input,
