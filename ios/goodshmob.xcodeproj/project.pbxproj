@@ -311,6 +311,13 @@
 			remoteGlobalIDString = 5DBEB1501B18CEA900B34395;
 			remoteInfo = RNVectorIcons;
 		};
+		D06F5B69201229630044AA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EFC06FE802CC4765911E6132 /* RNFetchBlob.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A15C300E1CD25C330074CB35;
+			remoteInfo = RNFetchBlob;
+		};
 		D087DD2A1FF362040052651C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0FD5D01AB4964D99A9A49C7E /* RNMaterialShowcase.xcodeproj */;
@@ -422,13 +429,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNFirebase;
-		};
-		E978788A200F88CE0021757B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EFC06FE802CC4765911E6132 /* RNFetchBlob.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A15C300E1CD25C330074CB35;
-			remoteInfo = RNFetchBlob;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -890,6 +890,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		D06F5B66201229630044AA7B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D06F5B6A201229630044AA7B /* libRNFetchBlob.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		D087DD271FF362040052651C /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -953,14 +961,6 @@
 			isa = PBXGroup;
 			children = (
 				D0E93C421FB54528003DB2BA /* libRNFirebase.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		E9787887200F88CE0021757B /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				E978788B200F88CE0021757B /* libRNFetchBlob.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1046,11 +1046,10 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
-						DevelopmentTeam = 67AZ59K3Q9;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = 67AZ59K3Q9;
+						DevelopmentTeam = 656VNMF77V;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.GameCenter = {
@@ -1151,7 +1150,7 @@
 					ProjectRef = D0DF62B21FB58C0A0000AD5E /* RNDeviceInfo.xcodeproj */;
 				},
 				{
-					ProductGroup = E9787887200F88CE0021757B /* Products */;
+					ProductGroup = D06F5B66201229630044AA7B /* Products */;
 					ProjectRef = EFC06FE802CC4765911E6132 /* RNFetchBlob.xcodeproj */;
 				},
 				{
@@ -1412,6 +1411,13 @@
 			remoteRef = D069B2731F693FB800F152ED /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		D06F5B6A201229630044AA7B /* libRNFetchBlob.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNFetchBlob.a;
+			remoteRef = D06F5B69201229630044AA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		D087DD2B1FF362040052651C /* libRNMaterialShowcase.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1515,13 +1521,6 @@
 			fileType = archive.ar;
 			path = libRNFirebase.a;
 			remoteRef = D0E93C411FB54528003DB2BA /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		E978788B200F88CE0021757B /* libRNFetchBlob.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNFetchBlob.a;
-			remoteRef = E978788A200F88CE0021757B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1751,7 +1750,6 @@
 			baseConfigurationReference = F0E96BCC274685F5679F551E /* Pods-goodshmobTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = 67AZ59K3Q9;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -1797,7 +1795,6 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = 67AZ59K3Q9;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1844,7 +1841,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = 67AZ59K3Q9;
+				DEVELOPMENT_TEAM = 656VNMF77V;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1898,7 +1895,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 67AZ59K3Q9;
+				DEVELOPMENT_TEAM = 656VNMF77V;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
