@@ -171,7 +171,7 @@ class CommentsScreen extends Screen<Props, State> {
         if (!comment) return null;
 
         return (
-            <View style={{padding: 12, paddingTop: 0, paddingBottom: 15, backgroundColor: 'white'}}>
+            <View style={{padding: 12, paddingTop: 0, paddingBottom: 15, backgroundColor: Colors.white}}>
                 <UserActivity
                     activityTime={comment.createdAt}
                     user={comment.user}
@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
         paddingRight: 14,
         margin: 10,
         marginTop: 0,
-        backgroundColor: 'white'
+        backgroundColor: Colors.white
     },
     comment: {
         marginLeft: 38,

@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent',
     },
     searchInput: {
-        backgroundColor: 'white',
+        backgroundColor: Colors.white,
         borderWidth: StyleSheet.hairlineWidth,
         borderColor: Colors.greyishBrown
     },

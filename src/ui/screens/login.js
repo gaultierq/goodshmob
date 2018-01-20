@@ -257,7 +257,7 @@ export {screen};
 
 const styles = StyleSheet.create({
     facebookButton: {
-        backgroundColor: 'white',
+        backgroundColor: Colors.white,
         borderColor: Colors.green,
         borderWidth: StyleSheet.hairlineWidth,
         borderRadius: 8,

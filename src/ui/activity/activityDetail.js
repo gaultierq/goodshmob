@@ -94,7 +94,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                     />
                                 </GTouchable>
 
-                                <View style={{backgroundColor: 'white', paddingLeft: 15, paddingRight: 15}}>
+                                <View style={{backgroundColor: Colors.white, paddingLeft: 15, paddingRight: 15}}>
                                     <UserRow
                                         user={activity.user}
                                         text={activity.createdAt ? TimeUtils.timeSince(Date.parse(activity.createdAt)):''}

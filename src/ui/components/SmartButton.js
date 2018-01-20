@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
         borderColor: Colors.greyishBrown,
         borderWidth: StyleSheet.hairlineWidth,
         borderRadius: 6,
-        backgroundColor: 'white',
+        backgroundColor: Colors.white,
     },
     input:{
         fontSize: 18,

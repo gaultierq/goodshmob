@@ -44,7 +44,7 @@ export default class AddLineupSheet extends Component<Props, State> {
                 navigator={this.props.navigator}
                 // ref={ref => this._sheet = ref}
             >
-                <View style={{height: 300, padding: 20, backgroundColor: 'white'}}>
+                <View style={{height: 300, padding: 20, backgroundColor: Colors.white}}>
 
                     <View style={[styles.header, {flexDirection: 'column'}]}>
 

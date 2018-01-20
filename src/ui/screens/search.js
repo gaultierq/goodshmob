@@ -346,7 +346,7 @@ class SearchPage extends Component<PageProps, PageState> {
         let loadingFirst = isSearchRequesting && search.page === 0;
 
         return (
-            <View style={{flex: 1, width:"100%", height: "100%", backgroundColor: 'white'}}>
+            <View style={{flex: 1, width:"100%", height: "100%", backgroundColor: Colors.white}}>
                 {
                     loadingFirst && <ActivityIndicator
                         animating={loadingFirst}
@@ -492,10 +492,10 @@ const styles = StyleSheet.create({
     },
 
     searchInput: {
-        backgroundColor: 'white',
+        backgroundColor: Colors.white,
     },
     tabbar: {
-        backgroundColor: 'white',
+        backgroundColor: Colors.white,
     },
     indicator: {
         backgroundColor: Colors.green,

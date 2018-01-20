@@ -72,7 +72,7 @@ export class CommunityScreen extends Screen<Props, State> {
                 navigator={navigator}
                 //renderItem={(item) => this.renderItem(item)}
                 ListFooterComponent={this.renderFriendsSuggestion.bind(this)}
-                style={{backgroundColor: 'white'}}
+                style={{backgroundColor: Colors.white}}
                 //bug: drawer passProps not working [https://github.com/wix/react-native-navigation/issues/663]
                 // onScreen={this.isVisible()}
                 onScreen={true}
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
         color: '#000000',
     },
     tabbar: {
-        backgroundColor: 'white',
+        backgroundColor: Colors.white,
     },
     indicator: {
         backgroundColor: Colors.green,
@@ -175,4 +175,3 @@ export const reducer = (() => {
         return Api.reduceList(state, action, {fetchFirst: FETCH_PEOPLE_YOU_MAY_KNOW});
     }
 })();
-

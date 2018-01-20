@@ -308,7 +308,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
             passProps:{
                 itemId: resource.id,
                 itemType: resource.type,
-                containerStyle: {backgroundColor: __IS_IOS__ ? 'transparent' : 'white'},
+                containerStyle: {backgroundColor: __IS_IOS__ ? 'transparent' : Colors.white},
                 onClickClose: () => navigator.dismissModal({animationType: 'none',})
             },
             navigatorStyle: {navBarHidden: true},

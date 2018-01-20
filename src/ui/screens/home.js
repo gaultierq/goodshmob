@@ -334,7 +334,7 @@ class HomeScreen extends Screen<Props, State> {
             dialogTitle={
                 <DialogTitle
                     title={i18n.t('no_spam.dialog_title')} titleStyle={{backgroundColor: Colors.green}}
-                    titleTextStyle={{color: 'white', fontWeight: 'bold'}}
+                    titleTextStyle={{color: Colors.white, fontWeight: 'bold'}}
                 />}
             onDismissed={() => {
                 OnBoardingManager.onDisplayed('no_spam')

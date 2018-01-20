@@ -93,7 +93,7 @@ export default class AddItemScreen extends Screen<Props, State> {
         return (
             <MainBackground>
                 <ScrollView
-                    style={{backgroundColor: 'white'}}
+                    style={{backgroundColor: Colors.white}}
                     contentContainerStyle={styles.container}
                     >
                     <View>
@@ -154,7 +154,7 @@ export default class AddItemScreen extends Screen<Props, State> {
                                     )}
                                 </View>
                             }
-                            {renderSimpleButton(i18n.t('shared.add'), ()=>this._doAdd(selectedLineupId), {style:{backgroundColor: Colors.green, padding: 10, marginTop: 10, marginRight: 8, marginLeft: 8}, textStyle:{ fontWeight:'normal', color: 'white' }})}
+                            {renderSimpleButton(i18n.t('shared.add'), ()=>this._doAdd(selectedLineupId), {style:{backgroundColor: Colors.green, padding: 10, marginTop: 10, marginRight: 8, marginLeft: 8}, textStyle:{ fontWeight:'normal', color: Colors.white }})}
                         </View>
                     )
                     }

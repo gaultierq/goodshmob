@@ -72,4 +72,3 @@ export default class TestScreen extends Component<Props, State> {
 //         );
     }
 }
-
