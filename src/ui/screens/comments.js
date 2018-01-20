@@ -79,54 +79,55 @@ class CommentsScreen extends Screen<Props, State> {
         );
 
         return (
-            <MainBackground>
                 <KeyboardAwareScrollView
                     // style={{ backgroundColor: '#4c69a5' }}
                     // resetScrollToCoords={{ x: 0, y: 0 }}
-                    // contentContainerStyle={styles.container}
+                    contentContainerStyle={styles.container}
                     scrollEnabled={false}
                     keyboardShouldPersistTaps={true}
                 >
-                    <View style={[styles.container]}>
+
+                    <View style={{flex: 1}}>
+                        {activity &&
+                        <View style={{ padding: 12, backgroundColor: Colors.white82 }}>
+                            <UserActivity
+                                activityTime={activity.createdAt}
+                                user={activity.user}
+                                navigator={this.props.navigator}
+                            />
+                            <Text style={styles.comment}>{activity.description}</Text>
+                        </View>}
+
+                        {activity &&
+                        <Feed
+                            inverted
+                            data={items}
+                            renderItem={this.renderItem.bind(this)}
+                            fetchSrc={{
+                                callFactory:()=>actions.loadComments(activity),
+                                action: LOAD_COMMENTS,
+                                options: {activityId: activity.id, activityType: activity.type}
+                            }}
+                            //hasMore={false}
+                            ItemSeparatorComponent={()=> <FeedSeparator/>}
+                            contentContainerStyle={{paddingTop: 120}}
+                        />}
+                    </View>
 
                     {activity &&
-                    <View style={{padding: 12, backgroundColor:"transparent"}}>
-                        <UserActivity
-                            activityTime={activity.createdAt}
-                            user={activity.user}
-                            navigator={this.props.navigator}
-                        />
-
-                        <Text style={styles.comment}>{activity.description}</Text>
-                    </View>}
-                    {activity &&
-                    <Feed
-                        inverted
-                        data={items}
-                        renderItem={this.renderItem.bind(this)}
-                        fetchSrc={{
-                            callFactory:()=>actions.loadComments(activity),
-                            action: LOAD_COMMENTS,
-                            options: {activityId: activity.id, activityType: activity.type}
-                        }}
-                        //hasMore={false}
-                        ItemSeparatorComponent={()=> <FeedSeparator/>}
-                    />}
-
-                    {
-                        activity && <SmartInput
-                            containerStyle={{padding: 6, backgroundColor: Colors.grey4}}
+                    <View style={{height:60, justifyContent: 'flex-end', borderTopWidth: 1, borderColor: Colors.grey3}}>
+                        <SmartInput
+                            containerStyle={{padding: 6, paddingBottom: 10, backgroundColor: Colors.white}}
                             inputContainerStyle={{borderRadius: 4, borderWidth: 0}}
                             execAction={(input: string) => this.addComment3(activity, input)}
                             placeholder={"activity_comments_screen.add_comment_placeholder"}
                             returnKeyType={'send'}
                             // multiline
                         />
-                    }
-                    </View>
+                    </View>}
+
                 </KeyboardAwareScrollView>
-            </MainBackground>
-        );
+            );
     }
 
     getActivity() {
@@ -264,7 +265,7 @@ export {reducer, screen, actions};
 const styles = StyleSheet.create({
     container: {
         flex:1,
-        backgroundColor: 'transparent'
+        backgroundColor: Colors.white
     },
     input:{
         height: 40,
