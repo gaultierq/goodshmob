@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import type {Node} from 'react';
 import {Image, Linking, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
 import {logged} from "../../../managers/CurrentUser"
@@ -16,6 +17,7 @@ import {getPendingLikeStatus} from "../../rights";
 import {SFP_TEXT_BOLD} from "../../fonts";
 import {Colors} from "../../colors";
 import User from "react-native-firebase/lib/modules/auth/user";
+import {stylePadding} from "../../UIStyles";
 
 export type ActivityDisplayContext = {
 
@@ -76,46 +78,14 @@ export default class ActivityCell extends React.Component<Props, State> {
         // const {skipLineup, withFollowButton} = this.props;
         // if (skipLineup) return null;
 
-        let halfAvatar = AVATAR_DIM / 2;
-        let avatarTopMargin = halfAvatar;
-
-
-        const padding = 10;
-        let planeTranslate = 10;
-
-        // image = null;
-        const dim = 16;
-        // const translateY = -10;
-        const translateY = -25;
-        const translateX = 25;
-
-        const navigator = this.props.navigator;
         const user = activity.user;
         return (
             <View>
-                <View style={{zIndex: 2}}>
-                    <View style={{left: padding, flexDirection: 'row',}}>
-                        {this.renderUserAvatar(user)}
-                        {postedToUser && <Image style={[{
-                            width: dim,
-                            height: dim,
-                            transform: [{translateY: -20}, {translateX: 15}, {rotate: '20deg'}]
-                        }]} source={require('../../../img2/sendIcon.png')}/>}
-                    </View>
-                    {postedToUser && <View style={{position: 'absolute', right: padding, flexDirection: 'row'}}>
-
-                        <Image style={[{
-                            width: dim,
-                            height: dim,
-                            transform: [{translateY}, {translateX: -translateX}, {rotate: '70deg'}]
-                        }]} source={require('../../../img2/sendIcon.png')}/>
-                        <GTouchable onPress={() => seeUser(navigator, postedToUser)}>
-                            {this.renderUserAvatar(postedToUser)}
-                        </GTouchable>
-                    </View>}
+                <View style={{zIndex: 2, position: 'absolute', left: 12, top: 12}}>
+                    {this.renderUserGeneral(user, postedToUser)}
                 </View>
 
-                <View style={{top: -(AVATAR_DIM + padding)}}>
+                <View>
                     <GTouchable activeOpacity={0.9} onPress={this.props.onPressItem} onDoublePress={() => {
                         let liked = this.isLiked(activity);
                         const toggleLike = liked ? activityAction.unlike : activityAction.like;
@@ -149,17 +119,70 @@ export default class ActivityCell extends React.Component<Props, State> {
 
     renderUserAvatar(user: User, styles?: *) {
         let navigator: RNNNavigator = this.props.navigator;
-        return <GTouchable onPress={() => seeUser(navigator, user)} style={[styles, {
-            borderColor: "rgba(255,255,255,0.4)",
-            borderWidth: StyleSheet.hairlineWidth,
-            shadowColor: Colors.white,
-            shadowOpacity: 0.7,
-            shadowRadius: 3,
-            shadowOffset: {width: 0, height: 0},
-            elevation: 50,
-            borderRadius: AVATAR_DIM * 0.5}]}>
-            <Avatar user={user} style={{dim: AVATAR_DIM}}/>
+        return this.wrapUserAvatar(
+            <GTouchable onPress={() => seeUser(navigator, user)}>
+                <Avatar user={user} style={{
+                    dim: AVATAR_DIM,
+                }}/>
+            </GTouchable>,
+            styles
+        )
+    }
+
+    renderUserGeneral(user: User, user2?: User, style?: ?*) {
+        let navigator: RNNNavigator = this.props.navigator;
+        // let result = this.wrapUserAvatar(
+        return this.wrapUserAvatar(
+            <View style={{
+                flexDirection: 'row',
+                alignItems: 'center'
+            }}>
+                {this.renderAvatar(navigator, user)}
+                {user2 && <Image style={{margin: 10}} tintColor={Colors.black} source={require('../../../img2/rightArrowSmallGrey.png')}/>}
+                {user2 && this.renderAvatar(navigator, user2)}
+            </View>,
+            style
+        );
+    }
+
+    renderAvatar(navigator, user) {
+
+        return <GTouchable onPress={() => seeUser(navigator, user)}>
+            <Avatar user={user} style={{
+                dim: AVATAR_DIM,
+            }}/>
         </GTouchable>;
+    }
+
+    wrapUserAvatar(children: Node, styles?: *) {
+        const padding = 6;
+
+        const shadowHeightShift = 1;
+        return <View style={[styles, {
+            borderColor: Colors.greyish,
+            borderWidth: StyleSheet.hairlineWidth,
+
+            shadowColor: Colors.greyish,
+            shadowOpacity: 1,
+            shadowRadius: 0,
+            shadowOffset: {width: 0, height: shadowHeightShift * 2},
+
+
+            elevation: 50,
+            borderRadius: (AVATAR_DIM + 2 * padding)* 0.5,
+            backgroundColor: "rgba(255, 255, 255, 0.85)",
+            ...stylePadding(padding, padding - shadowHeightShift, padding, padding + shadowHeightShift),
+        }]}>
+            <View style={{
+                shadowColor: Colors.brownishGrey,
+                shadowOpacity: 1,
+                shadowRadius: 2,
+                elevation: 10,
+                shadowOffset: {width: 0, height: shadowHeightShift},
+            }}>
+                {children}
+            </View>
+        </View>;
     }
 
     isLiked(activity) {
