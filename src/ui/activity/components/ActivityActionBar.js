@@ -129,7 +129,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
             case 'share':
                 return require('../../../img2/sendIcon.png');
             case 'save':
-                return require('../../../img2/lineUpIcon.png');
+                return require('../../../img2/bookmarkIcon.png');
             case 'unsave':
                 return require('../../../img2/trashIcon.png');
             case 'see':
