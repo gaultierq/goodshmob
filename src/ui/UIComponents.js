@@ -54,8 +54,8 @@ export const TRANSPARENT_SPACER = (height: number) => ()=><View style={{height, 
 
 export function activityFeedProps() {
     return {
-        ItemSeparatorComponent: TRANSPARENT_SPACER(50),
-        ListHeaderComponent: TRANSPARENT_SPACER(40)(),
+        ItemSeparatorComponent: TRANSPARENT_SPACER(20),
+        ListHeaderComponent: TRANSPARENT_SPACER(10)(),
         style: {backgroundColor: Colors.dirtyWhite}
     };
 
