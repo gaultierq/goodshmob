@@ -5,6 +5,7 @@ import {Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} f
 import {isEmpty} from "lodash";
 import type {List} from "../../types";
 import {Colors} from "../colors";
+import Icon from 'react-native-vector-icons/Entypo';
 //;
 
 type Props = {
@@ -29,6 +30,7 @@ export default class LineupTitle extends React.Component<Props, State> {
 
         return <Text style={[styles.lineupTitle, {}]}>
             {title}
+            <Icon name="chevron-right" size={15} color={Colors.greyishBrown}/>
             <Text
                 style={{color: Colors.greyish}}
             >
