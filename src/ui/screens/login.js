@@ -82,7 +82,7 @@ class Login extends Component<Props, State> {
                           </Text>
                           <Image style={[styles.image, {opacity:0, marginTop: marg}]} source={require("../../img2/askIcon.png")}/>
                       </View>
-                      <Image style={[styles.path, {width: '100%', transform: [{translateY: transformBase+ 107}]}]} source={require("../../img2/Path3.png")}/>
+                      <Image style={[styles.path, {transform: [{translateY: transformBase+ 107}]}]} source={require("../../img2/Path3.png")}/>
                   </View>
                   <View style={[styles.slide, {backgroundColor: Colors.green}]}>
                       <View style={[styles.desc]}>
@@ -234,7 +234,8 @@ class Login extends Component<Props, State> {
                     flexDirection: 'row',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    backgroundColor: 'transparent'
+                    backgroundColor: 'transparent',
+                    marginBottom: 20
                 }]}>
                     {dots}
                 </View>

@@ -31,9 +31,15 @@ export default {
         }
     },
     no_spam: {
-        dialog_title: "#Les trois grands principes de Goodsh",
-        dialog_body: "#- tes goodsh ne sont accessibles que par toi et tes proches\n- pour un goodsh complètement privé, coche la case\n- Goodsh ne spam jamais tes contacts\n\n",
-        dialog_button: 'Ok, go !',
+        dialog_title: "Three Goodsh Privacy Pilars",
+        dialog_body: "Your Goodsh's are only visible by you and your friends\nControl your Goodsh privacy with a simple checkbox\nGoodsh never spam your contacts\n\n",
+        dialog_button: 'Ok, let\'s go !',
+    },
+    home: {
+        wizard: {
+            action_button_label : "Save your goodsh",
+            action_button_body : "Click here to add your first goodsh!",
+        }
     },
     search: "Search",
     "shared":{

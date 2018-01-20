@@ -32,8 +32,14 @@ export default {
     },
     no_spam: {
         dialog_title: "Les trois grands principes de Goodsh",
-        dialog_body: "- tes goodsh ne sont accessibles que par toi et tes proches\n- pour un goodsh complètement privé, coche la case\n- Goodsh ne spam jamais tes contacts\n\n",
+        dialog_body: "Tes goodsh ne sont accessibles que par toi et tes proches\nPour un goodsh complètement privé, coche la case\nGoodsh ne spam jamais tes contacts\n\n",
         dialog_button: 'Ok, go !',
+    },
+    home: {
+        wizard: {
+            action_button_label : "Enregistrer un goodsh",
+            action_button_body : "Tap ici pour ton premier gooodsh.",
+        }
     },
     search: "Rechercher",
     "shared":{
@@ -110,12 +116,11 @@ export default {
             "example":"Bouquin, restaurant, film, série, artiste,\nlieu, musique, gadget, fringue, vin, …"
         },
         "value_proposal":"Marre d’oublier les recommandations\nqu’on te fait ?",
-        "slider_intro_1": "I was told it was great.\n" +
-        "To not forget it\n" +
-        "I have it goodshé.",
-        "slider_intro_2": "And it's so good I share it with my relatives.",
-        "slider_intro_3": "I ask questions, I with advice and suggestions.",
-        "slider_intro_4": "I discover books, movies, music, restaurants, gift ideas, stuff to do, to visit...",
+        "slider_intro_1": "On m'a dit que c’était top.\n" +
+        "Pour ne pas l'oublier je l’ai goodshé.",
+        "slider_intro_2": "J'échange des recos avec mes proches.",
+        "slider_intro_3": "Je pose des questions, je demande des avis, des suggestions.",
+        "slider_intro_4": "Je découvre livres, films, musiques, restos, idées cadeau, choses à faire, à visiter...\nJ'achète ou je réserve en un clin d’œil.",
         "credentials": "Fait avec amour à Paris",
     },
     "profile_screen":{

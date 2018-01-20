@@ -50,7 +50,6 @@ import PopupDialog, {
 import OnBoardingManager, {ON_BOARDING_STEP_CHANGED} from "../../managers/OnBoardingManager";
 import EventBus from 'eventbusjs'
 import util from 'util'
-import Markdown from 'react-native-simple-markdown'
 
 // $FlowFixMe
 import {AppTour, AppTourSequence, AppTourView} from "../../../vendors/taptarget";
@@ -353,11 +352,7 @@ class HomeScreen extends Screen<Props, State> {
             height={240}
         >
             <View style={[styles.dialogContentView]}>
-                <View style={styles.dialogContentViewInner}>
-                    <Markdown styles={markdownStyles}>
-                        {i18n.t('no_spam.dialog_body')}
-                    </Markdown>
-                </View>
+                <Text>{i18n.t('no_spam.dialog_body')}</Text>
             </View>
         </PopupDialog>)
     }
@@ -399,7 +394,7 @@ class HomeScreen extends Screen<Props, State> {
                 onPress={() => {
                     this.onFloatingButtonPressed()
                 }}
-                mainRef={this._targetRef("#Save your goodsh", "#Click here to add your first goodsh!")}
+                mainRef={this._targetRef(i18n.t("home.wizard.action_button_label"), i18n.t("home.wizard.action_button_body"))}
                 buttonTextStyle={{fontSize: 26, fontWeight: 'bold', marginTop: -5}}
             />
         );
@@ -702,10 +697,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     dialogContentView: {
-        //padding: 20
-    },
-    dialogContentViewInner: {
-
+        padding: 20,
+        paddingBottom: 0,
     },
     navigationBar: {
         borderBottomColor: '#b5b5b5',
