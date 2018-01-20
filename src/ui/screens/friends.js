@@ -76,7 +76,7 @@ export default class FriendsScreen extends Screen<Props, State> {
                 }
                 onPress={()=>this.share()}
             >
-                <Text style={[{color: Colors.white, fontSize: 16, fontFamily: SFP_TEXT_MEDIUM,}]}>
+                <Text style={[{color: Colors.white, fontSize: 17, fontFamily: SFP_TEXT_MEDIUM, fontWeight: 'bold'}]}>
                     {i18n.t('actions.invite')}
                 </Text></Button>
             <Feed
