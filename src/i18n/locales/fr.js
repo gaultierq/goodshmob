@@ -11,7 +11,7 @@ export default {
             label: "Mes goodsh"
         },
         network: {
-            title: "Réseau",
+            title: "Mon Réseau",
             label: "Mon Réseau"
         },
         search: {
@@ -104,7 +104,7 @@ export default {
         "comments":{
             "no_comments":"Pas encore de commentaire",
             "user_answered":"%{user}  a commenté",
-            "x_goodshers":"%{count} Goodshers",
+            "x_goodshers":"%{count} goodshers",
             "goodshers_answered":"%{goodshers}  ont commenté",
             "x_comments":" Commentaires"
         }
@@ -336,7 +336,7 @@ export default {
             title: "Details",
         },
         community: {
-            title: "Communauté",
+            title: "Mon Réseau",
         }
     },
     actions: {
@@ -355,10 +355,10 @@ export default {
         logout: "Déconnexion",
         terms: "Mentions légales",
         copy_link: "Copier le lien",
-        send_to_goodsher: "Envoyer à un autre\nGoodsher",
+        send_to_goodsher: "Envoyer à un autre\ngoodsher",
         skip: "Passer",
         ask: "Sollicitez vos amis",
-        invite: "Inviter un ami à Goodsher"
+        invite: "Inviter un ami à goodsher"
 
     },
     share_goodsh: {

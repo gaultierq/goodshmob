@@ -32,7 +32,7 @@ export default {
     },
     no_spam: {
         dialog_title: "Three Goodsh Privacy Pilars",
-        dialog_body: "Your Goodsh's are only visible by you and your friends\nControl your Goodsh privacy with a simple checkbox\nGoodsh never spam your contacts\n\n",
+        dialog_body: "Your goodsh's are only visible by you and your friends\nControl your goodsh's privacy with a simple checkbox\nGoodsh never spam your contacts\n\n",
         dialog_button: 'Ok, let\'s go !',
     },
     home: {
@@ -44,9 +44,9 @@ export default {
     search: "Search",
     "shared":{
         "ok":"OK",
-        "goodsh_sent":"Goodsh sent",
-        "goodsh_posted":"Goodsh posted",
-        "goodsh_saved":"Goodsh saved in your Line Up",
+        "goodsh_sent":"goodsh sent",
+        "goodsh_posted":"goodsh posted",
+        "goodsh_saved":"goodsh saved in your Line Up",
         "goodsh":"Goodsh",
         "goodshbox":"GoodshBox",
         "line_up":"LINE UP",
@@ -57,7 +57,7 @@ export default {
         "confirm":"Are you (really) sure? :)"
     },
     "sharing":{
-        "title":"Sent you a Goodsh %{title}",
+        "title":"Sent you a goodsh %{title}",
         "invite_title":"- Hey, do you have some Goodsh?"
     },
     "sending_choice_screen":{
@@ -105,7 +105,7 @@ export default {
         "comments":{
             "no_comments":"No one commented yet",
             "user_answered":"%{user} answered",
-            "x_goodshers":"%{count} Goodshers",
+            "x_goodshers":"%{count} goodshers",
             "goodshers_answered":"%{goodshers} answered",
             "x_comments":" Comments"
         }
@@ -144,7 +144,7 @@ export default {
     "friends_screen":{
         "connections":"CONNECTIONS",
         "interactions":"NOTIFICATIONS",
-        "share":"Share your Goodsh to other friends",
+        "share":"Share your goodsh to other friends",
         "send_invitation_to":"Invite friends on Goodsh via:",
         "connect_error":"Error while trying to connect!",
         "connect_success":"You are now connected!",
@@ -228,7 +228,7 @@ export default {
             "movies":"Cinéma\nSérie\nDVD\n...",
             "musics":"Track\nAlbum\nArtiste\n..."
         },
-        "query_on_place_placeholder":"To share a Goodsh, it's here",
+        "query_on_place_placeholder":"To share a goodsh, it's here",
         "place_placeholder":"City, Address...",
         "around_me":"Around me",
         "consumer_goods":"Stuff",
@@ -249,7 +249,7 @@ export default {
         },
         "duplicated_list_item":{
             "title":"Ooooops…",
-            "body":"This Goodsh is already in this line up ;)"
+            "body":"This goodsh is already in this line up ;)"
         },
         "in_list":"in %{list_name}",
         "invalid_activity":{
@@ -327,7 +327,7 @@ export default {
         lineup: "This list is empty"
     },
     activity_action_bar: {
-        goodsh_deleted: "Goodsh deleted",
+        goodsh_deleted: "goodsh deleted",
         comment: {
             title: "Comments"
         },
@@ -365,7 +365,7 @@ export default {
         logout: "Logout",
         terms: "Terms",
         copy_link: "Copy link",
-        send_to_goodsher: "Send to another\nGoodsher",
+        send_to_goodsher: "Send to another\ngoodsher",
         skip: "Skip",
         ask: "Ask your friends",
         invite: "Invite a friend to Goodsh"

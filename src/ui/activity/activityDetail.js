@@ -160,7 +160,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                         alignItems: 'center',
                     }
                     }>
-                        <Text style={[UI.TEXT_LEAST_IMPORTANT, {marginLeft: 18}]}>i18n.t("activity_screen.comments.no_comments")</Text>
+                        <Text style={[UI.TEXT_LEAST_IMPORTANT, {marginLeft: 18}]}>{i18n.t("activity_screen.comments.no_comments")}</Text>
                         <Icon name="chevron-small-right" size={20} color={Colors.greyishBrown} />
                     </View>
                     }
