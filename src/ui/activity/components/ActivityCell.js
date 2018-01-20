@@ -163,7 +163,7 @@ export default class ActivityCell extends React.Component<Props, State> {
             borderWidth: StyleSheet.hairlineWidth,
 
             shadowColor: Colors.greyish,
-            shadowOpacity: 1,
+            shadowOpacity: 0.4,
             shadowRadius: 0,
             shadowOffset: {width: 0, height: shadowHeightShift * 2},
 
