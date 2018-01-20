@@ -320,7 +320,7 @@ export default {
         lineup: "Cette liste est vide"
     },
     activity_action_bar: {
-        goodsh_deleted: "Goodsh effacé",
+        goodsh_deleted: "goodsh effacé",
         comment: {
             title: "Commentaires"
         },
