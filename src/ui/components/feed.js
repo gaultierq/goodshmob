@@ -244,7 +244,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
     renderSearchBar(){
 
-        let {onSearch} = this.props.filter;
+        let {onSearch, style} = this.props.filter;
 
         let font = {
             fontSize: 17,
@@ -254,7 +254,9 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         //TODO: finish design
         //use https://github.com/agiletechvn/react-native-search-box
         return (
-            <View style={{backgroundColor: Colors.white82, paddingTop: 5, paddingBottom: 5, paddingLeft: 9, paddingRight: 9, borderBottomWidth: 1, borderBottomColor: Colors.grey3}}>
+            <View style={[{
+
+            }, style]}>
                 {React.createElement(Search, {
                     backgroundColor: Colors.white82,
                     placeholderTextColor: color, //TODO
@@ -274,7 +276,9 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                         color: Colors.black,
                         ...font
                     },
+                    //MagicString
                     placeholder: "Search",
+                    //MagicString
                     cancelTitle: "Cancel",
                     inputStyle: {backgroundColor: 'rgb(230,230,230)'},
                     inputBorderRadius: 10,
@@ -301,6 +305,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     renderEmpty() {
         return <Text style={{
             fontSize: 20,
+            //BadFont
             fontFamily: 'Chivo-Light',
             margin: '10%',
             textAlign: 'center'

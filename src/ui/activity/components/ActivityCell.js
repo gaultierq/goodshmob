@@ -157,7 +157,7 @@ export default class ActivityCell extends React.Component<Props, State> {
     wrapUserAvatar(children: Node, styles?: *) {
         const padding = 6;
 
-        const shadowHeightShift = 1;
+        const shadowHeightShift = __IS_IOS__ ?  1 : 0;
         return <View style={[styles, {
             borderColor: Colors.greyish,
             borderWidth: StyleSheet.hairlineWidth,
@@ -177,7 +177,7 @@ export default class ActivityCell extends React.Component<Props, State> {
                 shadowColor: Colors.brownishGrey,
                 shadowOpacity: 1,
                 shadowRadius: 2,
-                elevation: 10,
+                elevation: 2,
                 shadowOffset: {width: 0, height: shadowHeightShift},
             }}>
                 {children}

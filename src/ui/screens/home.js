@@ -20,7 +20,7 @@ import {LineupListScreen} from './lineuplist'
 import type {Id, RNNNavigator, Saving, SearchToken} from "../../types";
 import {List} from "../../types"
 import Snackbar from "react-native-snackbar"
-import {stylePadding} from "../UIStyles";
+import {NavStyles, stylePadding} from "../UIStyles";
 import {currentGoodshboxId, currentUserId, logged} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
@@ -98,7 +98,8 @@ class HomeScreen extends Screen<Props, State> {
     };
 
     static navigatorStyle = {
-        navBarNoBorder: true
+        navBarNoBorder: true,
+        topBarElevationShadowEnabled: false
     };
 
     state : State = {};
@@ -263,6 +264,15 @@ class HomeScreen extends Screen<Props, State> {
                         filter={{
                             onSearch: (searchToken) => {
                                 this.launchSearch(searchToken);
+                            },
+                            style: {
+                                backgroundColor: NavStyles.navBarBackgroundColor,
+                                paddingTop: 5,
+                                paddingBottom: 5,
+                                paddingLeft: 9,
+                                paddingRight: 9,
+                                borderBottomWidth: 1,
+                                borderBottomColor: Colors.grey3
                             },
                             applyFilter: (sections, filter) => {
                                 let contains = (container, token) => {
