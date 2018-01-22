@@ -199,6 +199,7 @@ export default class SearchScreen extends Component<Props, State> {
                     renderScene={this.renderScene.bind(this)}
                     renderHeader={this.renderHeader.bind(this)}
                     onIndexChange={this.handleIndexChange.bind(this)}
+                    keyboardShouldPersistTaps={true}
                 />}
 
                 {
@@ -361,6 +362,7 @@ class SearchPage extends Component<PageProps, PageState> {
                         renderItem={this.props.renderItem}
                         keyExtractor={(item) => item.id}
                         ListFooterComponent={this.props.ListFooterComponent}
+                        keyboardShouldPersistTaps={true}
                     />
                 }
                 {emptySearchResult && <Text style={{alignSelf: "center", marginTop: 20}}>Pas de résultat</Text>}
