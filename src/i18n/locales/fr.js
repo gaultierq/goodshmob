@@ -172,6 +172,7 @@ export default {
         "action":"Créer une nouvelle liste",
         "created":"Liste créée",
         "visible":"Visible par mes amis",
+        "unvisible":"Invisible par mes amis",
         "add_description":"Ajouter une description",
         "choose_list":"Choisir une autre liste",
         "all_list" : "Toutes vos listes"

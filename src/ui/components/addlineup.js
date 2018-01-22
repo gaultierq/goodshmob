@@ -18,6 +18,8 @@ import type {RNNNavigator} from "../../types";
 type Props = {
     navigator: RNNNavigator,
     disableOffline?: ?boolean,
+    style?: *,
+    styleText?: *,
 };
 
 type State = {
@@ -47,20 +49,20 @@ export default class AddLineupComponent extends Component<*, *> {
 
     render() {
 
+        let {style, styleText} = this.props;
+
         return (
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}>
                 <GTouchable onPress={this._openModal}>
-                    <View style={
-                        [styles.header]
-                    }>
+                    <View style={[styles.header, style]}>
                         <Text
                             style={[
                                 styles.headerText,
-
                                 {
                                     flex:0,
                                     color: Colors.black
                                 },
+                                styleText
                                 //__IS_IOS__ ? {lineHeight: 40} : {height: 40}
                             ]}
                         >{i18n.t('create_list_controller.title')}</Text>

@@ -178,6 +178,7 @@ export default {
         "action":"Add new list",
         "created":"List created",
         "visible":"Visible by friends",
+        "unvisible":"Unvisible by friends",
         "add_description":"Add description",
         "choose_list":"Choose another list",
         "all_list" : "All your lists"

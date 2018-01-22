@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {ActivityIndicator, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image} from 'react-native';
 import {CheckBox, SearchBar} from "react-native-elements";
 import {renderSimpleButton} from "../UIStyles";
 import type {Id, Item, ItemType} from "../../types";
@@ -18,6 +18,8 @@ import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import Sheet from "../components/sheet";
 import {CANCELABLE_MODAL} from "../Nav";
 import Snackbar from "react-native-snackbar"
+import {SFP_TEXT_ITALIC, SFP_TEXT_REGULAR} from "../fonts"
+import GTouchable from "../GTouchable";
 
 type Props = {
     defaultLineupId: Id,
@@ -53,6 +55,8 @@ export default class AddItemScreen extends Screen<Props, State> {
         modalPresentationStyle: 'overFullScreen',
         tapBackgroundToDismiss: true
     };
+
+    _sheet;
 
 
     constructor(props: Props) {
@@ -104,13 +108,37 @@ export default class AddItemScreen extends Screen<Props, State> {
             >
                 <Sheet
                     navigator={this.props.navigator}
+                    ref={ref => this._sheet = ref}
                 >
 
-                    <View style={{height: 400, backgroundColor: Colors.white}}>
+                    <View style={{height: 350, paddingTop: 7, paddingLeft: 7, paddingRight: 7, paddingBottom: 15, backgroundColor: Colors.white}}>
+                        <View style={{flexDirection: 'row', padding: 8}}>
+                            <GTouchable onPress={()=>this._sheet && this._sheet.close()}>
+                                <Image source={require('../../img2/closeXGrey.png')}/>
+                            </GTouchable>
+                            <CheckBox
+                                right
+                                title={i18n.t("create_list_controller.unvisible")}
+                                checkedTitle={i18n.t("create_list_controller.visible")}
+                                iconRight
+                                size={16}
+                                checkedColor={grey}
+                                uncheckedColor={grey}
+                                onPress={(newValue)=> this.setState({visibility: visibility === 1 ? 0 : 1})}
+                                checked={!visibility}
+                                style={{backgroundColor: 'transparent', alignSelf: 'flex-end'}}
+                                textStyle={{color: Colors.brownishGrey, fontSize: 14, fontFamily: SFP_TEXT_REGULAR, fontWeight: 'normal'}}
+                                containerStyle={{ backgroundColor: "transparent", borderWidth: 0, marginRight:0, padding: 0, flex: 1}}
+                                checkedIcon='unlock'
+                                uncheckedIcon='unlock-alt'
+                                checkedColor={Colors.brownishGrey}
+                                uncheckedColor={Colors.brownishGrey}
+                            />
+                        </View>
                         <ItemCell item={item}>
                             <TextInput
                                 editable={editable}
-                                style={[styles.input, (editable ? {color: "black"} : {color: "grey"})]}
+                                style={[styles.input, (editable ? {color: Colors.greyish} : {color: "grey"})]}
                                 value={description}
                                 onChangeText={description => this.setState({description})}
                                 placeholder={i18n.t("create_list_controller.add_description")}
@@ -118,26 +146,10 @@ export default class AddItemScreen extends Screen<Props, State> {
                                 onSubmitEditing={() => {selectedLineupId && this._doAdd(selectedLineupId)}}
                                 multiline={true}
                             />
-
-                            <CheckBox
-                                right
-                                title={i18n.t("create_list_controller.visible")}
-                                iconRight
-                                size={16}
-                                checkedColor={grey}
-                                uncheckedColor={grey}
-                                onPress={(newValue)=> this.setState({visibility: visibility === 1 ? 0 : 1})}
-                                checked={!visibility}
-                                style={{backgroundColor: 'transparent'}}
-                                textStyle={{color: grey, fontSize: 12, }}
-                                containerStyle={{ backgroundColor: "transparent", borderWidth: 0, width: "100%"}}
-                            />
                         </ItemCell>
                         {/*{selectedLineupId && <LineupCell style={{backgroundColor: Colors.white82, marginRight: 8, marginLeft: 8, borderRadius: 8}} lineup={buildNonNullData(this.props.data, 'lists', selectedLineupId)}/>}*/}
                         {selectedLineupId && this.renderList(selectedLineupId)}
                         {renderSimpleButton(i18n.t('shared.add'), ()=>this._doAdd(selectedLineupId), {style:{backgroundColor: Colors.green, padding: 10, marginTop: 10, marginRight: 8, marginLeft: 8}, textStyle:{ fontWeight:'normal', color: Colors.white }})}
-
-
                     </View>
                 </Sheet>
             </KeyboardAwareScrollView>
@@ -149,7 +161,7 @@ export default class AddItemScreen extends Screen<Props, State> {
 
         //QtoK: wrapping a child positioning in absolute is the only wa I found to have a component with the good width
         //other idea?
-        return <View style={{height: 50}}>
+        return <View style={{height: 35, paddingLeft: 8}}>
             {renderTag(lineup.name, () => {
                 //select lineup
                 this.props.navigator.showModal({
@@ -197,11 +209,11 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent',
     },
     input: {
-        marginTop: 20,
+        backgroundColor: 'transparent',
+        marginTop: 15,
         fontSize: 15,
-        height: 60,
-        borderColor: Colors.greyish,
-        borderWidth: StyleSheet.hairlineWidth,
-        borderRadius: 5,
+        fontFamily: SFP_TEXT_ITALIC,
+        height: 80,
+        borderWidth: 0,
     }
 });
