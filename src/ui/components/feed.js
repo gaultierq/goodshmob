@@ -248,15 +248,14 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
         let font = {
             fontSize: 17,
-            lineHeight: 22};
+            lineHeight: 22,
+            textAlign: 'left'};
         const color = 'rgb(142,142,147)';
 
         //TODO: finish design
         //use https://github.com/agiletechvn/react-native-search-box
         return (
-            <View style={[{
-
-            }, style]}>
+            <View style={[{}, style]}>
                 {React.createElement(Search, {
                     backgroundColor: Colors.white82,
                     placeholderTextColor: color, //TODO
@@ -277,7 +276,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                         ...font
                     },
                     //MagicString
-                    placeholder: "Search",
+                    placeholder: i18n.t('search.in_feed'),
                     //MagicString
                     cancelTitle: "Cancel",
                     inputStyle: {backgroundColor: 'rgb(230,230,230)'},

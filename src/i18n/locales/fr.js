@@ -41,7 +41,11 @@ export default {
             action_button_body : "Tap ici pour ton premier gooodsh.",
         }
     },
-    search: "Rechercher",
+    search: {
+        in_items: "Saisir nom du goodsh à enregistrer",
+        in_network: "Rechercher un goodsh, un contact, une liste,...",
+        in_feed: "Rechercher dans mes listes"
+    },
     "shared":{
         "ok":"OK",
         "goodsh_sent":"C'est bon, c'est goodshé.",
@@ -164,7 +168,7 @@ export default {
     "create_list_controller":{
         "title":"Nouvelle liste",
         "subtitle":"Pour y ranger plein de trucs top et les partager si je veux",
-        "placeholder":"Titre de la Line up",
+        "placeholder":"Sois créatif :)",
         "action":"Créer une nouvelle liste",
         "created":"Liste créée",
         "visible":"Visible par mes amis",
@@ -351,7 +355,7 @@ export default {
         send: "Envoyer",
         create: "Créer",
         try_again: "Réessayer",
-        ask_friend: "Poser une question à vos amis",
+        ask_friend: "Un avis, une idée, un conseil, des suggestions à demander à tes proches ?",
         logout: "Déconnexion",
         terms: "Mentions légales",
         copy_link: "Copier le lien",

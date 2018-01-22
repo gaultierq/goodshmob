@@ -129,6 +129,7 @@ export default class HomeSearchScreen extends Screen<Props, State> {
                 categories={categories}
                 navigator={navigator}
                 token={this.props.token}
+                placeholder={i18n.t('search.in_feed')}
             />
         );
     }

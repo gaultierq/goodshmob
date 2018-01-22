@@ -41,7 +41,11 @@ export default {
             action_button_body : "Click here to add your first goodsh!",
         }
     },
-    search: "Search",
+    search: {
+        in_items: "Name of the goodsh",
+        in_network: "Search for goodsh, contact or list,...",
+        in_feed: "Search in my lists"
+    },
     "shared":{
         "ok":"OK",
         "goodsh_sent":"goodsh sent",
@@ -170,7 +174,7 @@ export default {
     "create_list_controller":{
         "title":"Add new",
         "subtitle":"Be creative ;)",
-        "placeholder":"Line up name",
+        "placeholder":"Be creative ;)",
         "action":"Add new list",
         "created":"List created",
         "visible":"Visible by friends",
@@ -361,7 +365,7 @@ export default {
         send: "Send",
         create: "Create",
         try_again: "Try Again",
-        ask_friend: "Ask question to friends",
+        ask_friend: "Ask questions to your friends",
         logout: "Logout",
         terms: "Terms",
         copy_link: "Copy link",

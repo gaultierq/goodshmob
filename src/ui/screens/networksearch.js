@@ -165,6 +165,7 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
             searchEngine={{search}}
             categories={categories}
             navigator={navigator}
+            placeholder={i18n.t('search.in_network')}
         />;
     }
 

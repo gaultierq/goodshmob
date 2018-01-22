@@ -94,7 +94,7 @@ export default class SearchScreen extends Component<Props, State> {
 
         props.navigator.setStyle({...UI.NavStyles,
             navBarCustomView: 'goodsh.SearchNavBar',
-            navBarCustomViewInitialProps: {initialInput: props.token}
+            navBarCustomViewInitialProps: {initialInput: props.token, placeholder: props.placeholder}
         });
 
         if (props.token) {
@@ -375,6 +375,7 @@ class SearchPage extends Component<PageProps, PageState> {
 type NavProps = {
     onChangeText: (token: string) => void,
     initialInput?: ?SearchToken,
+    placeholder?: string,
     navigator: any
 };
 
@@ -389,7 +390,10 @@ const DEEPLINK_SEARCH_CLOSE = 'DEEPLINK_SEARCH_CLOSE';
 //connect -> redux
 export class SearchNavBar extends Component<NavProps, NavState> {
 
-    state = {input: null};
+    state = {
+        input: null,
+        placeholder: 'what ?'
+    };
 
 
 
@@ -409,7 +413,7 @@ export class SearchNavBar extends Component<NavProps, NavState> {
 
     constructor(props) {
         super(props);
-        this.state = {input: props.initialInput}
+        this.state = {input: props.initialInput, placeholder: props.placeholder}
     }
 
 
@@ -422,7 +426,7 @@ export class SearchNavBar extends Component<NavProps, NavState> {
                 onChangeText={this.onChangeText.bind(this)}
                 onSubmitEditing={this.submit.bind(this)}
                 onClearText={this.onClearText.bind(this)}
-                placeholder={i18n.t('search')}
+                placeholder={this.state.placeholder}
                 clearIcon={!!this.state.input && {color: '#86939e'}}
                 containerStyle={SearchNavBar._styles.searchContainer}
                 inputStyle={SearchNavBar._styles.searchInput}

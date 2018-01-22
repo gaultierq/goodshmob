@@ -46,6 +46,7 @@ class SearchItem extends Screen<Props, State> {
         return <SearchScreen
             searchEngine={{search: this.search.bind(this)}}
             categories={categories}
+            placeholder={i18n.t('search.in_items')}
             {...this.props}
         />;
     }
