@@ -351,7 +351,7 @@ export default {
         send: "Envoyer",
         create: "Créer",
         try_again: "Réessayer",
-        ask_friend: "Poser une question à vos amis",
+        ask_friend: "Pose une\nquestion à\nton réseau",
         logout: "Déconnexion",
         terms: "Mentions légales",
         copy_link: "Copier le lien",

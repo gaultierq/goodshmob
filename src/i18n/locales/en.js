@@ -361,7 +361,7 @@ export default {
         send: "Send",
         create: "Create",
         try_again: "Try Again",
-        ask_friend: "Ask question to friends",
+        ask_friend: "Ask a question\n to your network",
         logout: "Logout",
         terms: "Terms",
         copy_link: "Copy link",
