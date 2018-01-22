@@ -54,9 +54,9 @@ class Login extends Component<Props, State> {
                               {i18n.t("login_screen.slider_intro_1")}</Text>
                           <Image style={[styles.image]} source={require("../../img2/logoWhite.png")}/>
                           {/*todo: find a better way to obtain
-                      1. goodsh centered
-                      2. goodsh and text never overlapping
-                      */}
+                              1. goodsh centered
+                              2. goodsh and text never overlapping
+                              */}
                           <Text style={[styles.text, {marginTop: marg,opacity: 0}]}>
                               {i18n.t("login_screen.slider_intro_1")}</Text>
                       </View>
@@ -135,7 +135,7 @@ class Login extends Component<Props, State> {
         const white = '#ffffff';
         switch (this.state.index) {
             case 0:
-                dotColor = 'transparent';
+                dotColor = white;
                 loveColor = white;
                 eiffel = require("../../img2/eiffelWhite.png");
                 break;
@@ -200,7 +200,7 @@ class Login extends Component<Props, State> {
 
     renderPagination = (index, total, context) => {
         // By default, dots only show when `total` >= 2
-        if (total <= 1) return null;
+        //if (total <= 1) return null;
         let {dotColor, eiffel, loveColor} = this.getColorsByIndex();
 
         const spacing = 6;
@@ -212,7 +212,8 @@ class Login extends Component<Props, State> {
         const Dot = <View style={[dotStyle]} />;
 
         for (let i = 0; i < total; i++) {
-            if (i === 0 || i === total-1)continue;
+            //if (i === 0 || i === total-1)continue;
+            if (i === total-1)continue;
             dots.push(i === this.state.index
                 ? React.cloneElement(ActiveDot, {key: i})
                 : React.cloneElement(Dot, {key: i})

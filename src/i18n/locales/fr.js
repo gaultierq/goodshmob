@@ -31,8 +31,8 @@ export default {
         }
     },
     no_spam: {
-        dialog_title: "Les trois grands principes de Goodsh",
-        dialog_body: "Tes goodsh ne sont accessibles que par toi et tes proches\nPour un goodsh complètement privé, coche la case\nGoodsh ne spam jamais tes contacts\n\n",
+        dialog_title: "Les 3 grands principes de Goodsh",
+        dialog_body: "Tes goodsh ne sont accessibles que par toi et tes proches.\n\nPour un goodsh complètement privé, active le cadenas.\n\nGoodsh ne spam jamais tes contacts.",
         dialog_button: 'Ok, go !',
     },
     home: {
@@ -122,9 +122,9 @@ export default {
         "value_proposal":"Marre d’oublier les recommandations\nqu’on te fait ?",
         "slider_intro_1": "On m'a dit que c’était top.\n" +
         "Pour ne pas l'oublier je l’ai goodshé.",
-        "slider_intro_2": "J'échange des recos avec mes proches.",
-        "slider_intro_3": "Je pose des questions, je demande des avis, des suggestions.",
-        "slider_intro_4": "Je découvre livres, films, musiques, restos, idées cadeau, choses à faire, à visiter...\nJ'achète ou je réserve en un clin d’œil.",
+        "slider_intro_2": "Je retrouve mes recos quand j'en ai besoin.\nEt je peux les partager facilement.",
+        "slider_intro_3": "Je demande des recos, des avis, des idées à mon réseau.",
+        "slider_intro_4": "Je découvre livres, films, musiques, restos, idées cadeau, choses à faire...et j'achète en un clin d'oeil.",
         "credentials": "Fait avec amour à Paris",
     },
     "profile_screen":{
@@ -365,6 +365,9 @@ export default {
         ask: "Sollicitez vos amis",
         invite: "Inviter un ami à goodsher"
 
+    },
+    ask: {
+        sent: "Question envoyée"
     },
     share_goodsh: {
         title: "Viens découvrir Goodsh!",

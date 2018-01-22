@@ -375,6 +375,9 @@ export default {
         ask: "Ask your friends",
         invite: "Invite a friend to Goodsh"
     },
+    ask: {
+        sent: "Question sent"
+    },
     share_goodsh: {
         title: "I just discovered Goodsh!",
         message: "Join me on Goodsh ! https://goodsh.it/",

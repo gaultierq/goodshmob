@@ -360,7 +360,7 @@ class HomeScreen extends Screen<Props, State> {
                 />,
             ]}
             width={0.8}
-            height={240}
+            height={250}
         >
             <View style={[styles.dialogContentView]}>
                 <Text>{i18n.t('no_spam.dialog_body')}</Text>
