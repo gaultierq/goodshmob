@@ -367,7 +367,7 @@ export default {
     },
     share_goodsh: {
         title: "Viens découvrir Goodsh!",
-        message: "J'ai découvert Goodsh, une app de recommendation entre amis. Viens m'y rejoindre!",
+        message: "Rejoins-moi sur Goodsh ! https://goodsh.it/",
     },
     loading: {
         error: "Le chargement a échoué..."

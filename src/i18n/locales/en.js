@@ -376,7 +376,7 @@ export default {
     },
     share_goodsh: {
         title: "I just discovered Goodsh!",
-        message: "I have plenty of recommendation for you on Goodsh! Install the app so we can goodsh together!",
+        message: "Join me on Goodsh ! https://goodsh.it/",
     },
     alert: {
         delete: {
