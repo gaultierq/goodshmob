@@ -1,10 +1,12 @@
 // @flow
 
 import React, {Component} from 'react';
-import {Image, View} from 'react-native';
+import {StyleSheet, Image, Text, View} from 'react-native';
 import {Colors} from "./colors";
 import User from "react-native-firebase/lib/modules/auth/user";
 import {CachedImage} from "react-native-img-cache";
+import GTouchable from "./GTouchable";
+import {SFP_TEXT_ITALIC} from "./fonts";
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
@@ -44,6 +46,7 @@ export class Avatar extends Component<Props, State> {
                 height: dim,
                 width: dim,
                 borderRadius: dim / 2,
+
             }]}
         />
     }
@@ -55,8 +58,31 @@ export const TRANSPARENT_SPACER = (height: number) => ()=><View style={{height, 
 export function activityFeedProps() {
     return {
         ItemSeparatorComponent: TRANSPARENT_SPACER(20),
-        ListHeaderComponent: TRANSPARENT_SPACER(10)(),
-        style: {backgroundColor: Colors.dirtyWhite}
+        ListHeaderComponent: TRANSPARENT_SPACER(0)(),
+        style: {backgroundColor: Colors.greying}
     };
-
 }
+
+export function renderTag(tag: string, onPress: () => void, style?:?*) {
+    return (<GTouchable onPress={onPress}>
+        <Text style={[styles.tag, style]}>{tag}</Text>
+    </GTouchable>);
+}
+
+
+
+const styles = StyleSheet.create({
+    tag: {paddingTop: 4, paddingLeft: 16, paddingRight: 16,
+        color: Colors.greyish,
+        alignSelf: 'stretch',
+        borderRadius: 13,
+        height: 26,
+        //lineHeight: 26,
+        // padding: 2,
+        borderWidth: StyleSheet.hairlineWidth,
+        borderColor: Colors.greyish,
+        fontFamily: SFP_TEXT_ITALIC,
+        fontSize: 13
+
+    }
+});

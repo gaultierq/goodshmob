@@ -259,6 +259,7 @@ class HomeScreen extends Screen<Props, State> {
                             ];
                         }}
                         renderSectionHeader={({section}) => this.renderSectionHeader(section)}
+                        renderSectionFooter={()=> <View style={{height: 25, width: "100%"}} />}
                         ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
                         feedId={"home list"}
                         filter={{
@@ -421,7 +422,7 @@ class HomeScreen extends Screen<Props, State> {
                 paddingLeft: 15,
                 paddingRight: 15,
                 paddingTop: 15,
-                paddingBottom: 15,
+                paddingBottom: 10,
             }}>
                 <Text style={{
                     fontSize: 20,

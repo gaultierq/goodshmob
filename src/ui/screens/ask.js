@@ -65,7 +65,7 @@ export default class AskScreen extends Component<Props, State> {
                     navigator={this.props.navigator}
                     ref={ref => this._sheet = ref}
                 >
-                    <View style={{height: 300, backgroundColor: 'rgba(220,124,223,1)', padding: 20}}>
+                    <View style={{height: 400, backgroundColor: Colors.green, padding: 15}}>
 
                         {/*<Text style={styles.header}>{i18n.t("actions.ask")}</Text>*/}
                         <GTouchable onPress={()=>this._sheet && this._sheet.close()}>

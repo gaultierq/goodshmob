@@ -1,7 +1,7 @@
 // @flow
 
 import type {Node} from 'react';
-import React, {Component} from 'react';
+import React from 'react';
 import {
     ActivityIndicator,
     Button,
@@ -28,17 +28,11 @@ import ApiAction from "../../helpers/ApiAction";
 import {buildData, doDataMergeInState} from "../../helpers/DataUtils";
 import {CREATE_LINEUP, DELETE_LINEUP} from "../lineup/actionTypes";
 import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
-import {Colors} from "../colors";
 import GTouchable from "../GTouchable";
-//TODO: clean
-// export const DELETE_LINEUP = lineup_actions.DELETE_LINEUP;
-// export const EDIT_LINEUP = lineup_actions.EDIT_LINEUP;
+import Screen from "../components/Screen";
 
 export type Props = FeedProps<List> & {
     userId: Id,
-    onSavingPressed: Function,
-    canFilterOverItems: boolean | ()=>boolean,
-    // filter:? string,
     data?: any,
     onCancel?: ()=>void,
     sectionMaker?: (lineups: List<List>) => Array<*>,
@@ -59,7 +53,7 @@ type State = {
     data: state.data,
     pending: state.pending
 }))
-export class LineupListScreen extends Component<Props, State> {
+export class LineupListScreen extends Screen<Props, State> {
 
     state = {
         isLoading: false,
@@ -69,8 +63,6 @@ export class LineupListScreen extends Component<Props, State> {
     render() {
         const {
             userId,
-            onSavingPressed,
-            canFilterOverItems,
             data,
             onCancel,
             renderItem,
@@ -184,6 +176,7 @@ const reducer = (() => {
 
 export {reducer};
 
+//TODO: REMOVE
 export function renderSimpleListItem(navigator: *) {
 
     return (item: List) => (<GTouchable

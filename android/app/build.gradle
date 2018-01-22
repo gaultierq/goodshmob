@@ -225,15 +225,16 @@ android {
             signingConfig signingConfigs.dev
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             applicationIdSuffix ".dev"
-//            debuggable true
-//            buildConfigField "boolean", "DISPLAY_DEBUG_BUTTON", "true"
-//            buildConfigField "boolean", "DISABLE_HOCKEYAPP_UPDATE", "false"
-//            buildConfigField "boolean", "DISABLE_HOCKEYAPP_TRACKING", "false"
-//            manifestPlaceholders = [HOCKEYAPP_APP_ID: ""]
-            //config api client
+        }
+        preprod {
+            minifyEnabled true
+            useProguard true
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            applicationIdSuffix ".preprod"
         }
         release {
-            minifyEnabled enableProguardInReleaseBuilds
+            minifyEnabled true
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }

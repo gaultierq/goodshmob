@@ -407,7 +407,7 @@ export class SearchNavBar extends Component<NavProps, NavState> {
             borderTopColor: 'transparent',
         },
         searchInput: {
-            backgroundColor: NavStyles.navBarInputBackgroundColor,
+            backgroundColor: NavStyles.navBarBackgroundColor,
         },
     });
 

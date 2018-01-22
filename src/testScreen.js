@@ -94,7 +94,7 @@ export const addItemScreen = {
     passProps: {
         itemId: 'ca2a01a0-6431-4704-aef2-0c6b493b6957',
         itemType: 'CreativeWork',
-        defaultLineupId: null
+        defaultLineupId: "37e67b05-c86c-4aeb-b3af-bf1c34862cd0"
     }
 };
 
