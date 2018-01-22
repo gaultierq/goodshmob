@@ -31,7 +31,7 @@ export default class AddInScreen extends Screen<Props, State> {
             <View style={[styles.container]}>
 
                 <LineupListScreen
-                    ListHeaderComponent={<AddLineupComponent navigator={this.props.navigator}/>}
+                    ListHeaderComponent={<AddLineupComponent disableOffline={true} navigator={this.props.navigator}/>}
                     {...otherProps}
                     userId={currentUserId()}
                     renderItem={(item)=> (

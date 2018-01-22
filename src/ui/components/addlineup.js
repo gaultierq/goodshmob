@@ -17,6 +17,7 @@ import type {RNNNavigator} from "../../types";
 
 type Props = {
     navigator: RNNNavigator,
+    disableOffline?: ?boolean,
 };
 
 type State = {
@@ -34,7 +35,13 @@ export default class AddLineupComponent extends Component<*, *> {
 
         navigator.showModal({
             screen: 'goodsh.AddLineupSheet', // unique ID registered with Navigation.registerScreen
-            animationType: 'none'
+            animationType: 'none',
+            passProps: {
+                disableOffline: this.props.disableOffline,
+                onFinished: () => {
+                    navigator.dismissModal({animationType: 'none'});
+                }
+            }
         });
     };
 

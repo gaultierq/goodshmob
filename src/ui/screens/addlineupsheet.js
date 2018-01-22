@@ -11,17 +11,20 @@ import type {Visibility} from "../screens/additem";
 import SmartInput from "../components/SmartInput";
 import {LINEUP_CREATION} from '../lineup/actions'
 import {Colors} from "../colors";
-import * as UI from "../UIStyles";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import Sheet from "../components/sheet";
+import {connect} from "react-redux";
 
 type Props = {
+    disableOffline?: ?boolean,
+    onFinished?:?()=>void
 };
 
 type State = {
     newLineupPrivacy?: Visibility,
 };
 
+@connect()
 export default class AddLineupSheet extends Component<Props, State> {
 
     static navigatorStyle = {
@@ -76,9 +79,10 @@ export default class AddLineupSheet extends Component<Props, State> {
 
     createLineup(name: string) {
         let delayMs = 3000;
-        return this.props.dispatch(LINEUP_CREATION.pending({listName: name}, {delayMs}))
+        return this.props.dispatch(LINEUP_CREATION[this.props.disableOffline ? 'exec' : 'pending']({listName: name}, {delayMs}))
             .then((pendingId)=> {
-                this._closeModal();
+                const onFinished = this.props.onFinished;
+                onFinished && onFinished();
                 Snackbar.show({
                         title: i18n.t('create_list_controller.created'),
                         duration: Snackbar.LENGTH_LONG,
