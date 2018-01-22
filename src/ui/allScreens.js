@@ -8,7 +8,7 @@ import DebugScreen from './screens/debug';
 
 import {screen as ActivityDetailScreen} from './activity/activityDetail';
 import {LineupListScreen} from './screens/lineuplist';
-import {screen as AddInScreen} from './screens/addinscreen';
+import AddInScreen from './screens/addinscreen';
 import {screen as LineupScreen} from './screens/lineup';
 import {screen as HomeScreen} from './screens/home';
 import {screen as CommentsScreen} from './screens/comments';

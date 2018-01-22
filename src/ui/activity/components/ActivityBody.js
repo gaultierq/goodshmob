@@ -25,6 +25,7 @@ import GTouchable from "../../GTouchable";
 import {CachedImage} from "react-native-img-cache";
 import Icon from 'react-native-vector-icons/Feather';
 import {firstName} from "../../../helpers/StringUtils";
+import {renderTag} from "../../UIComponents";
 
 
 type Props = {
@@ -109,34 +110,16 @@ export default class ActivityBody extends React.Component<Props, State> {
             return null;
         }
 
-        const color = Colors.greyish;
 
-        const pa = 16;
+
+
         const inLineup = i18n.t(key) + ' ' + targetName;
         const tags = [];
         if (!this.props.skipLineup) {
             tags.push(inLineup);
         }
-
         return tags.map(tag=><View key={tag} style={{flexDirection:'row', marginTop: 10}}>
-            <GTouchable onPress={press}>
-                <Text
-                    style={[{paddingTop: 4, paddingLeft: pa, paddingRight: pa,
-                        color,
-                        alignSelf: 'stretch',
-                        borderRadius: 13,
-                        height: 26,
-                        //lineHeight: 26,
-                        // padding: 2,
-                        borderWidth: StyleSheet.hairlineWidth,
-                        borderColor: color,
-                        fontFamily: SFP_TEXT_ITALIC,
-                        fontSize: 13
-
-                    }]}>
-                    {tag}
-                </Text>
-            </GTouchable>
+            {renderTag(tag, press)}
         </View>)
     }
 

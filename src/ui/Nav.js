@@ -33,7 +33,7 @@ export const CANCELABLE_SEARCH_MODAL = {
 
 export function startAddItem(navigator: *, defaultLineupId: Id) {
     let cancel = () => {
-        navigator.dismissModal()
+        navigator.dismissAllModals()
     };
 
     navigator.showModal({
@@ -43,9 +43,10 @@ export function startAddItem(navigator: *, defaultLineupId: Id) {
         passProps: {
             onItemSelected: (item: Item, navigator: RNNNavigator) => {
 
-                navigator.push({
-                    screen: 'goodsh.AddItemScreen', // unique ID registered with Navigation.registerScreen
+                navigator.showModal({
+                    screen: 'goodsh.AddItemScreen',
                     title: i18n.t("add_item_screen.title"),
+                    animationType: 'none',
                     passProps: {
                         itemId: item.id,
                         itemType: item.type,

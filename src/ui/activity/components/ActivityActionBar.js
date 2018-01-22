@@ -232,15 +232,17 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
         let item = activity.resource;
 
-        this.props.navigator.push({
+        const onFinished = () => this.props.navigator.dismissModal();
+        this.props.navigator.showModal({
             screen: 'goodsh.AddItemScreen', // unique ID registered with Navigation.registerScreen
+            animationType: 'none',
             title: i18n.t("actions.add"),
             passProps: {
                 itemId: item.id,
                 itemType: item.type,
                 defaultLineupId: currentGoodshboxId(),
-                onCancel: () => this.props.navigator.popToRoot(),
-                onAdded: () => this.props.navigator.popToRoot(),
+                onCancel: onFinished,
+                onAdded: onFinished,
             },
         });
 
