@@ -375,6 +375,9 @@ export default {
         ask: "Ask your friends",
         invite: "Invite a friend to Goodsh"
     },
+    common: {
+        empty_feed_generic: "Nothing here yet..."
+    },
     ask: {
         sent: "Question sent"
     },

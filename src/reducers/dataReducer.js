@@ -18,6 +18,7 @@ const initConfig = {
     devMenu: false,
     disableOfflineMode: false,
     forceOnBoardingCycle: false,
+    onlyEmptyFeeds: false,
     onBoardingOnEveryLogin: false //doesnt work. TODO: persistent config accross logouts
 };
 
