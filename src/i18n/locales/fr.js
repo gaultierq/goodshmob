@@ -106,8 +106,8 @@ export default {
             "says":"dit:",
         },
         "comments":{
-            "no_comments":"Pas encore de commentaire",
-            "user_answered":"%{user}  a commenté",
+            "no_comments":"Laisse un commentaire",
+            "user_answered":"a commenté",
             "x_goodshers":"%{count} goodshers",
             "goodshers_answered":"%{goodshers}  ont commenté",
             "x_comments":" Commentaires"

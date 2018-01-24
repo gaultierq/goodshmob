@@ -92,7 +92,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
                 commentsCount += pendingCount;
 
-                return commentsCount + '';
+                return commentsCount > 0 ? commentsCount +'' : '';
                 // return i18n.t(`activity_item.buttons.${action}`,{count: commentsCount});
             case 'like':
             case 'unlike':

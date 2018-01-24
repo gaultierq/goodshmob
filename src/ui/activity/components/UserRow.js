@@ -15,7 +15,9 @@ type Props = {
     small?: boolean,
     text?: string,
     style?: any,
-    navigator: *
+    navigator: *,
+    pic?: boolean,
+    noImage: boolean
 };
 
 type State = {
@@ -28,7 +30,7 @@ export default class UserRow extends React.Component<Props, State> {
             {...this.props}
             rightComponent={!!this.props.text &&
             <Text style={{
-                fontSize: 14,
+                fontSize: 13,
                 color: Colors.greyish,
                 marginLeft: 4
             }}>{this.props.text}

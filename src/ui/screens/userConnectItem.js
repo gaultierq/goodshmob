@@ -38,11 +38,16 @@ export default class UserConnectItem extends Component<Props, State> {
 
     render() {
         let item = this.props.user;
-        return <UserRowI user={item}
-                         navigator={this.props.navigator}
-                         rightComponent={this.renderConnectButton(item)}
-                         style={styles.userRow}
-        />;
+        return (
+            <View style={{flex: 1, flexDirection: 'row'}}>
+                <UserRowI user={item}
+                    navigator={this.props.navigator}
+                    //rightComponent={this.renderConnectButton(item)}
+                    style={styles.userRow}
+                />
+                {this.renderConnectButton(item)}
+            </View>
+        )
     }
 
     renderConnectButton(user: User) {
@@ -54,11 +59,11 @@ export default class UserConnectItem extends Component<Props, State> {
 
         let ok = reqState === 'ok';
 
-        return <View style={{position: 'absolute', right: 0, alignItems: 'center'}}>{
+        return <View style={{flex: 1, alignItems:'flex-end', justifyContent: 'center'}}>{
             renderSimpleButton(
                 i18n.t(`friends.` + (ok ? 'messages' : 'buttons') + `.${remainingAction}`),
                 alreadyFriends ? ()=> this.disconnectWith(user) : ()=> this.connectWith(user),
-                {loading: reqState === 'sending', disabled: ok, textStyle: {fontWeight: "normal", fontSize: 16, }}
+                {loading: reqState === 'sending', disabled: ok, textStyle: {fontWeight: "normal", fontSize: 14, color: Colors.grey}}
             )
         }</View>
     }

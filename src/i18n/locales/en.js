@@ -107,8 +107,8 @@ export default {
             "says":"says:",
         },
         "comments":{
-            "no_comments":"No one commented yet",
-            "user_answered":"%{user} answered",
+            "no_comments":"Leave a comment",
+            "user_answered":"answered",
             "x_goodshers":"%{count} goodshers",
             "goodshers_answered":"%{goodshers} answered",
             "x_comments":" Comments"

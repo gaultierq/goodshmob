@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import {ActivityIndicator, FlatList, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, FlatList, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View, Image} from 'react-native';
 import * as actions from './actions'
 import {connect} from "react-redux";
 import {logged} from "../../managers/CurrentUser"
@@ -14,6 +14,7 @@ import * as UI from "../UIStyles";
 import FeedSeparator from "./components/FeedSeparator";
 import ActivityActionBar from "./components/ActivityActionBar";
 import Icon from 'react-native-vector-icons/Entypo';
+import IconFA from 'react-native-vector-icons/FontAwesome';
 import UserRow from "./components/UserRow";
 import Screen from "../components/Screen";
 import {Colors} from "../colors";
@@ -94,7 +95,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                     />
                                 </GTouchable>
 
-                                <View style={{backgroundColor: Colors.white, paddingLeft: 15, paddingRight: 15}}>
+                                <View style={{backgroundColor: Colors.white, padding: 15}}>
                                     <UserRow
                                         user={activity.user}
                                         text={activity.createdAt ? TimeUtils.timeSince(Date.parse(activity.createdAt)):''}
@@ -114,8 +115,9 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
                             <FeedSeparator/>
 
-
-                            {this.renderComments(activity)}
+                            <View style={{marginTop: 15, padding: 15, backgroundColor: Colors.white}}>
+                                {this.renderComments(activity)}
+                            </View>
 
                             <FlatList
                                 data={activity.relatedActivities}
@@ -150,38 +152,40 @@ class ActivityDetailScreen extends Screen<Props, State> {
         return (
             <GTouchable
                 onPress={()=> this.displayActivityComments(activity)}>
-                <View style={[UI.CARD(0), {marginTop: 15, padding: 10, paddingLeft: 15, backgroundColor: "#fefefe"}]}>
+                <View style={[UI.CARD(0), {backgroundColor: "#fefefe"}]}>
 
                     {/*empty*/}
                     {_.isEmpty(activity.commentators) &&
                     <View style={{flex: 1,
                         flexDirection: 'row',
-                        justifyContent: 'space-between',
+                        //justifyContent: 'space-between',
                         alignItems: 'center',
                     }
                     }>
-                        <Text style={[UI.TEXT_LEAST_IMPORTANT, {marginLeft: 18}]}>{i18n.t("activity_screen.comments.no_comments")}</Text>
-                        <Icon name="chevron-small-right" size={20} color={Colors.greyishBrown} />
+                        <Text style={{fontSize: 11, color: Colors.greyish}}>{i18n.t("activity_screen.comments.no_comments")}</Text>
+                        <Icon name="chevron-small-right" size={20} color={Colors.greyish} />
                     </View>
                     }
 
                     {/*non empty*/}
                     {!_.isEmpty(activity.commentators) &&
                     <View>
-                        <View><Text style={{fontSize: 16, fontFamily: SFP_TEXT_MEDIUM, color: Colors.greyish}}>{activity.comments.length + i18n.t('activity_screen.comments.x_comments')}</Text></View>
                         <View style={{flex: 1,
                             flexDirection: 'row',
-                            justifyContent: 'space-between',
+                            justifyContent: 'flex-start',
                             alignItems: 'center',
                         }
                         }>
+                            <Image source={require('../../img2/commentIcon.png')} style={{width: 18, height: 18, resizeMode: 'contain', tintColor: Colors.greyish}}/>
+                            <Text style={{fontSize: 14, fontFamily: SFP_TEXT_MEDIUM, color: Colors.greyish, marginLeft: 6, marginRight: 6}}>{activity.comments.length}</Text>
                             <UserRow
                                 user={activity.commentators[0]}
-                                text={"answered"}
+                                text={i18n.t("activity_screen.comments.user_answered")}
                                 small={true}
                                 navigator={this.props.navigator}
+                                noImage={true}
                             />
-                            <Icon name="chevron-small-right" size={20} color={Colors.greyishBrown} />
+                            <Icon name="chevron-small-right" size={20} color={Colors.greyish} />
                         </View>
                     </View>
                     }
@@ -193,18 +197,16 @@ class ActivityDetailScreen extends Screen<Props, State> {
     }
 
     renderRelatedActivities({item}) {
-        return (<View>
-                <GTouchable
-                    // underlayColor={"red"}
-                    onPress={()=> this.displayActivityComments(item)}
-                >
+        return (
+            <View style={{backgroundColor: Colors.white, marginTop: 15, padding: 10, paddingLeft: 15, paddingRight: 15}}>
+                <GTouchable onPress={()=> this.displayActivityComments(item)}>
                     <View>
                         <ActivityDescription activity={item} navigator={this.props.navigator}/>
                     </View>
-
                 </GTouchable>
-
-                {this.renderComments(item)}
+                <View style={{paddingLeft: 38, paddingTop: 5}}>
+                    {this.renderComments(item)}
+                </View>
             </View>
         );
     }

@@ -109,7 +109,7 @@ class CommentsScreen extends Screen<Props, State> {
                                 options: {activityId: activity.id, activityType: activity.type}
                             }}
                             //hasMore={false}
-                            ItemSeparatorComponent={()=> <FeedSeparator/>}
+                            //ItemSeparatorComponent={()=> <FeedSeparator/>}
                             contentContainerStyle={{paddingTop: 120}}
                         />}
                     </View>
@@ -171,14 +171,14 @@ class CommentsScreen extends Screen<Props, State> {
         if (!comment) return null;
 
         return (
-            <View style={{padding: 12, paddingTop: 0, paddingBottom: 15, backgroundColor: Colors.white}}>
+            <View style={{padding: 12, paddingTop: 0, paddingBottom: 15, backgroundColor: Colors.white, borderBottomWidth: 1, borderColor: Colors.greyish}}>
                 <UserActivity
                     activityTime={comment.createdAt}
                     user={comment.user}
                     navigator={this.props.navigator}
+                    style={{marginTop:12}}
                 />
-
-            <Text style={styles.comment}>{comment.content}</Text>
+                <Text style={styles.comment}>{comment.content}</Text>
             </View>
         );
     }
@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
     },
     comment: {
         marginLeft: 38,
-        marginTop: -16,
+        marginTop: -4,
         color: Colors.brownishGrey
     }
 });

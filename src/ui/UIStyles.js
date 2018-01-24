@@ -137,7 +137,7 @@ export function renderSimpleButton(
         style={[{marginBottom: 0}, STYLES.button, style]}
         disabledStyle={STYLES.disabledButton}
     >
-        <Text style={[{color, fontWeight: "bold", fontSize: 18, fontFamily: "Chivo"}, textStyle]}>{text}</Text>
+        <Text style={[{color, fontWeight: "bold", fontSize: 18}, textStyle]}>{text}</Text>
     </Button>);
 }
 

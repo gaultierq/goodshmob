@@ -26,7 +26,7 @@ type State = {
 export default class UserRowI extends React.Component<Props, State> {
 
     render() {
-        const {small, user, style, noImage} = this.props;
+        const {small, user, style, noImage, rightComponent} = this.props;
 
         let imageDim = small ? 20 : 30;
 
@@ -44,19 +44,19 @@ export default class UserRowI extends React.Component<Props, State> {
                 />
             }
 
-            <View style={{flex: 1, width: '100%', height: 60}}>
-                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{/*flex: 1, width: '100%', height: 60*/}}>
+                <View style={{flexDirection: 'row'/*flex: 1, , alignItems: 'center'*/}}>
                     <GTouchable
                         onPress={()=>this.navigateToUser(user)}
                     >
                         <Text style={{
-                            fontSize: 14,
-                            color: Colors.greyishBrown
+                            fontSize: 13,
+                            color: Colors.greyishBrown,
+                            fontWeight: 'bold'
                         }}>{fullName(user)}</Text>
                     </GTouchable>
                     {this.props.rightComponent}
-
-
+                    
                 </View>
 
                 {this.props.children}

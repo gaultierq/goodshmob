@@ -92,7 +92,7 @@ export class InteractionScreen extends Screen<Props, State> {
                     style={{paddingLeft: 12, paddingRight: 12}}
                 >
                 </UserActivity>
-                <View style={{marginLeft: 51, marginTop: -16}}>
+                <View style={{marginLeft: 51, marginTop: -4}}>
                     {content}
                 </View>
             </GTouchable>

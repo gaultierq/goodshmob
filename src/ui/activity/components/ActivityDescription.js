@@ -9,6 +9,7 @@ import UserActivity from "./UserActivity";
 import {fullName} from "../../../helpers/StringUtils";
 import {Colors} from "../../colors";
 import GTouchable from "../../GTouchable";
+import {SFP_TEXT_ITALIC} from "../../fonts";
 
 type Props = {
     activity: Activity,
@@ -31,7 +32,7 @@ export default class ActivityDescription extends React.Component<Props, State> {
         let cardMargin = 12;
 
 
-        return <View style={{margin: cardMargin, marginBottom: 8, backgroundColor: 'transparent'}}>
+        return <View style={{backgroundColor: 'transparent'}}>
 
 
             <UserActivity
@@ -44,14 +45,14 @@ export default class ActivityDescription extends React.Component<Props, State> {
                 {activity.type === 'asks' ? this.renderAsk() : this.renderTarget()}
             </UserActivity>
 
-            {!!activity.description && <Text style={{fontSize: 14}}>{activity.description}</Text>}
+            {!!activity.description && <Text style={{fontSize: 13, paddingLeft: 38, paddingTop: 3, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey}}>{'"' + activity.description + '"'}</Text>}
         </View>;
     }
 
     renderAsk() {
         return <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
             <Text
-                style={{fontSize: 13, fontFamily: 'Chivo-Light'}}>
+                style={{fontSize: 13}}>
                 {i18n.t('activity_item.header.ask')}
             </Text>
         </View>
@@ -81,13 +82,13 @@ export default class ActivityDescription extends React.Component<Props, State> {
         return <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                 <Text style={{
-                    fontSize: 9,
+                    fontSize: 10,
                     color: Colors.greyishBrown,
-                    marginRight: 4
+                    marginRight: 3
                 }}>{i18n.t(key)}</Text>
                 <GTouchable onPress={press}>
                     <Text
-                        style={UI.TEXT_LIST}>
+                        style={[UI.TEXT_LIST, {fontSize: 10}]}>
                         {targetName}
                     </Text>
                 </GTouchable>
@@ -124,7 +125,6 @@ export default class ActivityDescription extends React.Component<Props, State> {
             <GTouchable>
                 <Text style={{
                     fontSize: 9,
-
                     color: Colors.greyishBrown,
                     padding: 5,
                     borderRadius: 5,
@@ -137,7 +137,6 @@ export default class ActivityDescription extends React.Component<Props, State> {
                 style={{backgroundColor: "white", padding: 5, borderRadius: 5}}>
                 <Text style={{
                     fontSize: 9,
-
                     color: Colors.blue
                 }}>{i18n.t("activity_item.buttons.follow_list")}</Text>
             </GTouchable>;

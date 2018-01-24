@@ -305,7 +305,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         return <Text style={{
             fontSize: 20,
             //BadFont
-            fontFamily: 'Chivo-Light',
+            //fontFamily: 'Chivo-Light',
             margin: '10%',
             textAlign: 'center'
         }}>{i18n.t(this.props.empty)}</Text>;
