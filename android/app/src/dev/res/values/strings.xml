@@ -2,4 +2,5 @@
     <string name="app_name" translatable="false">Goodsh - dev</string>
     <string moduleConfig="true" name="reactNativeCodePush_androidDeploymentKey">wMQv5aKdleNZ-rplWQONOYVrVdw24cc6d0ae-bf43-4a45-ac18-52fde4b1b1b2</string>
     <string name="facebook_app_id">857429951037660</string>
+    <string name="bugsnag_api_key">e9d1e430d2405cc1e6f6d775fac95ca9</string>
 </resources>
