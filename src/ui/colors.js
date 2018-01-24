@@ -12,7 +12,8 @@ export const Colors = Object.freeze({
     dirtyWhite: 'rgb(247,247,247)',
     pink: 'rgb(220,124,223)',
     greying: '#EBEBEB',
-    white82: 'rgba(248, 248, 248, 0.82)'
+    white82: 'rgba(248, 248, 248, 0.82)',
+    grey142: 'rgb(142,142,147)'
 });
 
 

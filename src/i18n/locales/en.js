@@ -7,17 +7,11 @@ export default {
     },
     "tabs": {
         home: {
-            title: "My lists",
-            label: "My Goodsh"
+            title: "My lists"
         },
         network: {
-            title: "Network",
-            label: "My Network"
-        },
-        search: {
-            title: "Add something",
-            title_in: "Add something to %{list_name}",
-        },
+            title: "Network"
+        }
     },
     lineups: {
         search: {
@@ -47,27 +41,9 @@ export default {
         in_feed: "Search in my lists"
     },
     "shared":{
-        "ok":"OK",
-        "goodsh_sent":"goodsh sent",
-        "goodsh_posted":"goodsh posted",
         "goodsh_saved":"goodsh saved in your Line Up",
-        "goodsh":"Goodsh",
-        "goodshbox":"GoodshBox",
-        "line_up":"LINE UP",
-        "person":"GOODSHER",
         "add":"Add",
-        "cancel":"Cancel",
         "link_copied":"Your link has been copied ✓",
-        "confirm":"Are you (really) sure? :)"
-    },
-    "sharing":{
-        "title":"Sent you a goodsh %{title}",
-        "invite_title":"- Hey, do you have some Goodsh?"
-    },
-    "sending_choice_screen":{
-        "copy":"Copy the link",
-        "send":"Send to another goodsher",
-        "share":"Share elsewhere"
     },
     "activity_item":{
         header: {
@@ -98,20 +74,10 @@ export default {
             "deleted_list": "List deleted"
         }
     },
-    "activity":{
-        "in_list":"%{activity}\nin %{list}",
-        "to_user":"%{activity}\nto %{user}"
-    },
     "activity_screen":{
-        "user":{
-            "says":"says:",
-        },
         "comments":{
             "no_comments":"Leave a comment",
             "user_answered":"answered",
-            "x_goodshers":"%{count} goodshers",
-            "goodshers_answered":"%{goodshers} answered",
-            "x_comments":" Comments"
         }
     },
     "login_screen":{
@@ -135,41 +101,7 @@ export default {
     },
     "profile_screen":{
         "title":"Feedback",
-        "subtitle":"Is this what you've been dreaming of? How good do you feel? What's badly missing? We can't wait to know…",
-        "feedback_textfield":{
-            "placeholder":"Talk to me baby"
-        },
-        "terms_of_use":"Terms of use",
-        "mail":{
-            "subject":"Goodsh Feedback",
-            "recipient":"feedback@goodsh.it"
-        }
-    },
-    "friends_screen":{
-        "connections":"CONNECTIONS",
-        "interactions":"NOTIFICATIONS",
-        "share":"Share your goodsh to other friends",
-        "send_invitation_to":"Invite friends on Goodsh via:",
-        "connect_error":"Error while trying to connect!",
-        "connect_success":"You are now connected!",
-        "send_success":"GOODSH sent",
-        "sms":{
-            "subject":"Goodsh invitation",
-            "body":"SMS Time to GOODSH! Join me on Goodsh: https:\/\/itunes.apple.com\/us\/app\/goodsh\/id1049336202?l=fr&ls=1&mt=8"
-        },
-        "sections":{
-            "friends":"Goodsh FRIENDS",
-            "contacts":"PHONE CONTACTS",
-            "people_you_may_know":"PEOPLE YOU MAY KNOW"
-        },
-        "filter":{
-            "connected":"Connected",
-            "others":"Others"
-        },
-        "friend":"FRIEND",
-        "search_bar":{
-            "placeholder":"Search a %{friend}"
-        }
+        "subtitle":"Is this what you've been dreaming of? How good do you feel? What's badly missing? We can't wait to know…"
     },
     "create_list_controller":{
         "title":"Add new",
@@ -182,17 +114,6 @@ export default {
         "add_description":"Add description",
         "choose_list":"Choose another list",
         "all_list" : "All your lists"
-    },
-    "list_selection_screen":{
-        "description":"Select existing line up below or create a new one:"
-    },
-    "lists_screen":{
-        "filter":{
-            "me":"Me",
-            "friends":"Friends"
-        },
-        "duplicated_list":"You already have a list with this name.",
-        "invalid_list_name":"Invalid list name: %{list_name}",
     },
     "search_bar":{
         "me_placeholder":"Search in your lists",
@@ -220,48 +141,7 @@ export default {
             "places":"City, Address...",
             "movies":"Movies",
             "musics":"Musics"
-        },
-        "filter":{
-            "things":"STUFF",
-            "places":"PLACES",
-            "movies":"MOVIES",
-            "musics":"MUSIC"
-        },
-        "samples":{
-            "things":"Livre\nGadget\nChaussures\nVin\nJouet\n...",
-            "places":"Restau\nBoutique\nHôtels\nMonuments\nDocteur\n...",
-            "movies":"Cinéma\nSérie\nDVD\n...",
-            "musics":"Track\nAlbum\nArtiste\n..."
-        },
-        "query_on_place_placeholder":"To share a goodsh, it's here",
-        "place_placeholder":"City, Address...",
-        "around_me":"Around me",
-        "consumer_goods":"Stuff",
-        "places":"Places and people",
-        "musics":"Musics",
-        "movies":"Movies",
-        "in_category":"in %{category}"
-    },
-    "create_activity_screen":{
-        "to":"to",
-        "publish_to_friends":"Publish to my friends",
-        "post_description_placeholder":"Add your comment",
-        "sending_description_placeholder":"Add your comment",
-        "list_description_placeholder":"Add your comment?",
-        "privacy":{
-            "me":"Me",
-            "everyone":"Everyone"
-        },
-        "duplicated_list_item":{
-            "title":"Ooooops…",
-            "body":"This goodsh is already in this line up ;)"
-        },
-        "in_list":"in %{list_name}",
-        "invalid_activity":{
-            "title":"Oooopppsss",
-            "body":"Sorry you must write a longer comment"
-        },
-        "share":"Share your GOODSH’ to other friends"
+        }
     },
     "activity_comments_screen":{
         "add_comment_placeholder":"Add a comment"
@@ -280,7 +160,6 @@ export default {
         "invitation":"and %{you} are now connected",
         "you":"you"
     },
-
     util: {
         time: {
             since_seconds: {

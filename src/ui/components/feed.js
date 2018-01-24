@@ -257,14 +257,12 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         let {onSearch, style} = this.props.filter;
 
         let font = {
-            fontSize: 17,
+            fontSize: 16,
             lineHeight: 22,
             textAlign: 'left',
-            //MagicColor
-            backgroundColor: 'rgb(230,230,230)'
         };
-        //MagicColor
-        const color = 'rgb(142,142,147)';
+
+        const color = Colors.grey142;
 
         //TODO: adjust fr, en margins
         const placeholderConfig = {
@@ -298,8 +296,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                         ...font
                     },
                     ...placeholderConfig,
-                    //MagicString
-                    cancelTitle: "Cancel",
+                    cancelTitle: i18n.t('actions.cancel'),
                     // inputStyle: {backgroundColor: 'rgb(230,230,230)'},
                     inputBorderRadius: 10,
                     inputHeight: 32,
