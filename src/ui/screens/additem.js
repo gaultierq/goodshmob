@@ -40,6 +40,7 @@ type State = {
     reqAdd?: number,
     reqFetch?: number,
     selectedLineupId?: Id,
+    adding?: boolean
 };
 
 
@@ -64,6 +65,7 @@ export default class AddItemScreen extends Screen<Props, State> {
 
         this.state = {
             visibility: 0,
+            adding: false,
             selectedLineupId: props.defaultLineupId,
             showLineupList: !props.defaultLineupId
         };
@@ -96,6 +98,7 @@ export default class AddItemScreen extends Screen<Props, State> {
         let grey = Colors.greyishBrown;
         let req = this.state.reqAdd;
         let editable = req !== 1;
+        let adding = this.state.adding;
         let xml = (<View style={[styles.container]}>
             <Text>{i18n.t('create_list_controller.all_list')}</Text>
         </View>);
@@ -147,7 +150,7 @@ export default class AddItemScreen extends Screen<Props, State> {
                         </ItemCell>
                         {/*{selectedLineupId && <LineupCell style={{backgroundColor: Colors.white82, marginRight: 8, marginLeft: 8, borderRadius: 8}} lineup={buildNonNullData(this.props.data, 'lists', selectedLineupId)}/>}*/}
                         {selectedLineupId && this.renderList(selectedLineupId)}
-                        {renderSimpleButton(i18n.t('shared.add'), ()=>this._doAdd(selectedLineupId), {style:{backgroundColor: Colors.green, padding: 10, marginTop: 10, marginRight: 8, marginLeft: 8}, textStyle:{ fontWeight:'normal', color: Colors.white }})}
+                        {renderSimpleButton(i18n.t('shared.add'), ()=>this._doAdd(selectedLineupId), {loading: adding, style:{backgroundColor: Colors.green, padding: 10, marginTop: 10, marginRight: 8, marginLeft: 8}, textStyle:{ fontWeight:'normal', color: Colors.white }})}
                     </View>
                 </Sheet>
             </KeyboardAwareScrollView>
@@ -180,6 +183,9 @@ export default class AddItemScreen extends Screen<Props, State> {
     }
 
     _doAdd = (lineupId: Id) => {
+
+        this.setState({adding: true});
+
         let {description, visibility} = this.state;
 
         safeDispatchAction.call(
@@ -193,6 +199,7 @@ export default class AddItemScreen extends Screen<Props, State> {
                 });
                 let onAdded = this.props.onAdded;
                 onAdded && onAdded();
+                this.setState({adding: false});
             }
         ).then(() => this.setState({selectedLineupId: null}))
     }
