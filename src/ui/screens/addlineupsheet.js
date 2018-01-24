@@ -14,6 +14,8 @@ import {Colors} from "../colors";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import Sheet from "../components/sheet";
 import {connect} from "react-redux";
+import {SFP_TEXT_REGULAR} from "../fonts";
+import GTouchable from "../GTouchable";
 
 type Props = {
     disableOffline?: ?boolean,
@@ -34,6 +36,8 @@ export default class AddLineupSheet extends Component<Props, State> {
         tapBackgroundToDismiss: true
     };
 
+    _sheet;
+
     state = {};
 
     render() {
@@ -45,30 +49,40 @@ export default class AddLineupSheet extends Component<Props, State> {
         >
             <Sheet
                 navigator={this.props.navigator}
-                // ref={ref => this._sheet = ref}
+                ref={ref => this._sheet = ref}
             >
-                <View style={{height: 300, padding: 20, backgroundColor: Colors.white}}>
+                <View style={{height: 165, paddingTop: 7, paddingLeft: 7, paddingRight: 7, paddingBottom: 0, backgroundColor: Colors.white}}>
 
-                    <View style={[styles.header, {flexDirection: 'column'}]}>
-
-                        <Text style={{fontSize: 16, marginBottom: 12}}>{i18n.t('create_list_controller.action')}</Text>
-                        <SmartInput
-                            execAction={(input: string) => this.createLineup(input)}
-                            placeholder={"create_list_controller.placeholder"}
-                            button={<Text>{i18n.t('actions.create')}</Text>}
-                            returnKeyType={'go'}
-                        />
-
+                    <View style={{flexDirection: 'row', padding: 8}}>
+                        <GTouchable onPress={()=>this._sheet && this._sheet.close()}>
+                            <Image source={require('../../img2/closeXGrey.png')}/>
+                        </GTouchable>
                         <CheckBox
                             right
-                            title={i18n.t('create_list_controller.visible')}
+                            title={i18n.t("create_list_controller.unvisible")}
+                            checkedTitle={i18n.t("create_list_controller.visible")}
+                            iconRight
+                            checkedIcon='unlock'
+                            uncheckedIcon='unlock-alt'
                             size={16}
                             checkedColor={Colors.greyishBrown}
                             uncheckedColor={Colors.greyishBrown}
                             onPress={(newValue) => this.setState({newLineupPrivacy: !!this.state.newLineupPrivacy ? 0 : 1})}
                             checked={!this.state.newLineupPrivacy}
-                            textStyle={{color: Colors.greyishBrown, fontSize: 12,}}
-                            containerStyle={{backgroundColor: "transparent", borderWidth: 0, width: "100%"}}
+                            style={{backgroundColor: 'transparent', alignSelf: 'flex-end'}}
+                            textStyle={{color: Colors.brownishGrey, fontSize: 14, fontFamily: SFP_TEXT_REGULAR, fontWeight: 'normal'}}
+                            containerStyle={{ backgroundColor: "transparent", borderWidth: 0, marginRight:0, padding: 0, flex: 1}}
+                        />
+                    </View>
+
+                    <View style={[styles.header, {flexDirection: 'column'}]}>
+                        <SmartInput
+                            execAction={(input: string) => this.createLineup(input)}
+                            placeholder={"create_list_controller.placeholder"}
+                            button={<Text>{i18n.t('actions.create')}</Text>}
+                            returnKeyType={'go'}
+                            inputContainerStyle={{borderWidth: 0}}
+                            autoFocus={true}
                         />
                     </View>
                 </View>
