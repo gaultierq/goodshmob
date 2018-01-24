@@ -122,8 +122,6 @@ export default class AddItemScreen extends Screen<Props, State> {
                                 checkedTitle={i18n.t("create_list_controller.visible")}
                                 iconRight
                                 size={16}
-                                checkedColor={grey}
-                                uncheckedColor={grey}
                                 onPress={(newValue)=> this.setState({visibility: visibility === 1 ? 0 : 1})}
                                 checked={!visibility}
                                 style={{backgroundColor: 'transparent', alignSelf: 'flex-end'}}

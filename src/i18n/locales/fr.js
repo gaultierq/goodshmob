@@ -7,17 +7,11 @@ export default {
     },
     "tabs": {
         home: {
-            title: "Mes listes",
-            label: "Mes goodsh"
+            title: "Mes listes"
         },
         network: {
-            title: "Mon Réseau",
-            label: "Mon Réseau"
-        },
-        search: {
-            title: "Ajouter quelquechose",
-            title_in: "Ajouter quelquechose à %{list_name}",
-        },
+            title: "Mon Réseau"
+        }
     },
     lineups: {
         search: {
@@ -47,27 +41,9 @@ export default {
         in_feed: "Rechercher dans mes listes"
     },
     "shared":{
-        "ok":"OK",
-        "goodsh_sent":"C'est bon, c'est goodshé.",
-        "goodsh_posted":"C'est bon, c'est goodshé.",
         "goodsh_saved":"C'est bon, c'est goodshé.",
-        "goodsh":"GOODSH'",
-        "goodshbox":"GoodshBox",
-        "line_up":"LINE UP",
-        "person":"GOODSHER",
         "add":"Ajouter",
-        "cancel":"Annuler",
         "link_copied":"Lien copié ✓",
-        "confirm":"Vraiment sûr ?"
-    },
-    "sharing":{
-        "title":"T’as envoyé un GOODSH' %{title}",
-        "invite_title":"- Eh, t'as pas du GOODSH' ?"
-    },
-    "sending_choice_screen":{
-        "copy":"COPIER LE LIEN",
-        "send":"ENVOYER A UN AUTRE GOODSHER",
-        "share":"ENVOYER SUR"
     },
     "activity_item": {
         header: {
@@ -97,20 +73,10 @@ export default {
             "deleted_list": "Liste effacée"
         }
     },
-    "activity":{
-        "in_list":"%{activity}\ndans %{list}",
-        "to_user":"%{activity}\npour %{user}"
-    },
     "activity_screen":{
-        "user":{
-            "says":"dit:",
-        },
         "comments":{
             "no_comments":"Laisse un commentaire",
             "user_answered":"a commenté",
-            "x_goodshers":"%{count} goodshers",
-            "goodshers_answered":"%{goodshers}  ont commenté",
-            "x_comments":" Commentaires"
         }
     },
     "login_screen":{
@@ -130,40 +96,6 @@ export default {
     "profile_screen":{
         "title":"Feedback",
         "subtitle":"Comment tu la trouves ? Tu la kiffes ? Qu'est-ce qui manque cruellement ? On a très envie de savoir...",
-        "feedback_textfield":{
-            "placeholder":"Dis-nous tout."
-        },
-        "terms_of_use":"Charte d'utilisation",
-        "mail":{
-            "subject":"Goodsh Feedback",
-            "recipient":"feedback@goodsh.it"
-        }
-    },
-    "friends_screen":{
-        "connections":"CONNEXIONS",
-        "interactions":"NOTIFICATIONS",
-        "share":"Partager ce GOODSH' ailleurs que sur Goodsh ?",
-        "send_invitation_to":"Inviter des amis sur Goodsh via :",
-        "connect_error":"Impossible de vous connecter!",
-        "connect_success":"Vous êtes maintenant amis!",
-        "send_success":"GOODSH envoyé",
-        "sms":{
-            "subject":"invitation Goodsh",
-            "body":"Eh, t'as pas du GOODSH' ?\nhttps:\/\/itunes.apple.com\/us\/app\/goodsh\/id1049336202?l=fr&ls=1&mt=8"
-        },
-        "sections":{
-            "friends":"CONNECTÉS AVEC MOI SUR Goodsh",
-            "contacts":"MES CONTACTS",
-            "people_you_may_know":"DES GENS QUE JE POURRAIS CONNAÎTRE (ON NE SAIT JAMAIS...)"
-        },
-        "filter":{
-            "connected":"Moi",
-            "others":"Les autres"
-        },
-        "friend":"AMI",
-        "search_bar":{
-            "placeholder":"Rechercher"
-        }
     },
     "create_list_controller":{
         "title":"Nouvelle liste",
@@ -176,17 +108,6 @@ export default {
         "add_description":"Ajouter une description",
         "choose_list":"Choisir une autre liste",
         "all_list" : "Toutes vos listes"
-    },
-    "list_selection_screen":{
-        "description":"Enregistrer sous, comme dirait l'autre :"
-    },
-    "lists_screen":{
-        "filter":{
-            "me":"Mes GOODSH'",
-            "friends":"Ceux des autres"
-        },
-        "duplicated_list":"Cette Line up existe déjà.",
-        "invalid_list_name":"Nom de line up non valide: %{list_name}",
     },
     "search_bar":{
         "me_placeholder":"Rechercher dans vos listes",
@@ -215,47 +136,6 @@ export default {
             "movies":"Plein de films",
             "musics":"Plein de sons"
         },
-        "filter":{
-            "things":"TRUC",
-            "places":"LIEU",
-            "movies":"FILM",
-            "musics":"SON"
-        },
-        "samples":{
-            "things":"",
-            "places":"",
-            "movies":"",
-            "musics":""
-        },
-        "place_placeholder":"Ville, Adresse...",
-        "query_on_place_placeholder":"Pour un GOODSH' à partager, c’est ici",
-        "around_me":"Autour de moi",
-        "consumer_goods":"Plein de trucs",
-        "places":"Plein d'endroits",
-        "musics":"Plein de son",
-        "movies":"Plein de films",
-        "in_category":"dans %{category}"
-    },
-    "create_activity_screen":{
-        "to":"pour",
-        "publish_to_friends":"Publier à mes amis",
-        "post_description_placeholder":"Alors c'est de la bombe ?",
-        "sending_description_placeholder":"Ajouter un commentaire",
-        "list_description_placeholder":"Ajouter un commentaire ?",
-        "privacy":{
-            "me":"Privé",
-            "everyone":"Visible par mes amis"
-        },
-        "duplicated_list_item":{
-            "title":"Ooooops…",
-            "body":"GOODSH' déjà enregistré dans cette line up ;)"
-        },
-        "in_list":"dans %{list_name}",
-        "invalid_activity":{
-            "title":"Ooooops…",
-            "body":"Un GOODSH' c'est mieux avec un commentaire plus long."
-        },
-        "share":"Partager ce GOODSH' ailleurs que sur Goodsh ?"
     },
     "activity_comments_screen":{
         "add_comment_placeholder":"Ajouter un commentaire"

@@ -38,7 +38,6 @@ export function startAddItem(navigator: *, defaultLineupId: Id) {
 
     navigator.showModal({
         screen: 'goodsh.SearchItemsScreen', // unique ID registered with Navigation.registerScreen
-        // title: i18n.t("tabs.search.title"),
         navigatorButtons: CANCELABLE_SEARCH_MODAL,
         passProps: {
             onItemSelected: (item: Item, navigator: RNNNavigator) => {
