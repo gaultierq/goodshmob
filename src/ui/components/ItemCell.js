@@ -28,28 +28,15 @@ export default class ItemCell extends React.Component<Props, State> {
         let image = resource ? resource.image : undefined;
 
         return (
-            <View style={
-                {padding: 8, flex: 1,}}>
-                <View style={
+            <View style={styles.container}>
+                <View style={styles.containerInner}>
                     {
-                        flexDirection: 'row',
-                        justifyContent: "flex-start",
-                        alignItems: 'center'
-                    }}>
-
-
-                    { image && <CachedImage
+                        image && <CachedImage
                         source={{uri: image}}
                         resizeMode='cover'
-                        style={[{
-                            alignSelf: 'center',
-                            height: 80,
-                            width: 80,
-                            borderRadius: 8,
-                        }, UI.STYLES.lightBorder]}
-                    />
+                        style={[styles.image, UI.STYLES.lightBorder]}/>
                     }
-                    <View style={{flex:1, padding: 15}}>
+                    <View style={styles.containerText}>
                         <Text
                             style={styles.title}
                             numberOfLines={this.props.displayDetails ? 7 : 3}
@@ -68,7 +55,23 @@ export default class ItemCell extends React.Component<Props, State> {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        padding: 8,
+        flex: 1
+    },
+    containerInner: {
+        flexDirection: 'row',
+        justifyContent: "flex-start",
+        alignItems: 'center'
+    },
+    image: {
+        alignSelf: 'center',
+        height: 80,
+        width: 80,
+        borderRadius: 8,
+    },
+    containerText: {
+        flex:1,
+        padding: 15
     },
     title: {fontSize: 18, },
     subtitle: {fontSize: 12, color: Colors.greyish}

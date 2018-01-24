@@ -92,7 +92,7 @@ export default class LineupCell extends React.Component<Props, State> {
         for (let i = 0; i < n; i++) {
             result.push(this.renderItem({item: _.nth(savings, i), index: i}))
         }
-        return <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>{result}</View>;
+        return <View style={styles.lineupList}>{result}</View>;
     }
 
     renderItem({item, index}: {item: Saving}) {
@@ -122,6 +122,10 @@ export default class LineupCell extends React.Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
+    lineupList: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
     lineupTitle: {
         fontSize: 16,
         marginTop: 4,

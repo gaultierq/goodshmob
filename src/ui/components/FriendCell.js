@@ -26,37 +26,16 @@ export default class FriendCell extends React.Component<Props, State> {
         }
 
         return (
-            <View style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                backgroundColor: "transparent",
-                justifyContent: 'space-between',
-                //borderWidth: StyleSheet.hairlineWidth,
-                margin: 10,
-            }}>
-                <View style={{
-                    flex: 1,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    backgroundColor: "transparent",
-                    //borderWidth: StyleSheet.hairlineWidth,
-                    margin: 10,
-                }}>
+            <View style={styles.friendContainer}>
+                <View style={styles.friend}>
                     <CachedImage
                         source={{uri: friend.image}}
-                        style={{
-                            height: 40,
-                            width: 40,
-                            borderRadius: 20,
-                            marginRight: 10
-                        }}
+                        style={styles.image}
                     />
                     <View style={childrenBelow ? {flex: 1}: {}}>
                         <Text>{`${friend.firstName} ${friend.lastName}`}</Text>
                         {childrenBelow && children}
                     </View>
-
-
                 </View>
                 <View>
                     {!childrenBelow && children}
@@ -65,3 +44,26 @@ export default class FriendCell extends React.Component<Props, State> {
         )
     }
 }
+
+const styles = StyleSheet.create({
+    image: {
+        height: 40,
+        width: 40,
+        borderRadius: 20,
+        marginRight: 10
+    },
+    friend: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: "transparent",
+        margin: 10,
+    },
+    friendContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: "transparent",
+        justifyContent: 'space-between',
+        margin: 10
+    }
+});
