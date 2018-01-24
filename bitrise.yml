@@ -3,9 +3,91 @@ format_version: '4'
 default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 project_type: react-native
 trigger_map:
-- pull_request_source_branch: "*"
-  workflow: android
 workflows:
+  qtest:
+    steps:
+    # - activate-ssh-key@3.1.1:
+    #     run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    # - git-clone: {}
+    # - slack@2.6.3:
+    #     inputs:
+    #     - message: Building... $GIT_CLONE_COMMIT_MESSAGE_SUBJECT
+    #     - webhook_url: https://hooks.slack.com/services/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
+
+
+#    - git-clone:
+#        inputs:
+#        - repository_url: "https://github.com/goodshopping/goodshmob-build"
+##        - clone_into_dir: $BITRISE_SOURCE_DIR
+#        - clone_into_dir: "~/Desktop/a/"
+    - script@1.1.5:
+        inputs:
+        - content: |-
+
+            #!/usr/bin/env bash
+            set -ex
+
+            echo "== Starting build =="
+
+            echo "downloading builder"
+            if [ -d goodshmob-build ];
+            then
+                cd goodshmob-build
+                git checkout
+                git pull
+                cd -
+            else
+                git clone https://github.com/goodshopping/goodshmob-build
+            fi
+            chmod +x ./goodshmob-build/prepare-env.sh
+            exit
+            
+    - script@1.1.5:
+        inputs:
+        - content: |-
+
+            #!/usr/bin/env bash
+            set -ex
+
+            echo "preparing env"
+            ./goodshmob-build/prepare-env.sh
+    - script@1.1.5:
+        inputs:
+        - content: |-
+            
+            #!/usr/bin/env bash
+            set -ex
+
+            if [ ! -f /tmp/foo.txt ]; then
+                echo "creating .env file"
+                cp $GOODSH_BUILD_REACT_NATIVE_ENV_FILE .env
+            fi
+            
+    - install-react-native@0.9.1: {}
+    - npm@0.9.0:
+        inputs:
+        - command: install
+    # - install-missing-android-tools: {}
+    # - file-downloader@0.9.1:
+    #     inputs:
+    #     - source: "$BITRISEIO_ANDROID_DEV_KEYSTORE_URL"
+    #     - destination: "$BITRISE_SOURCE_DIR/android/keystores/goodsh-dev.keystore"
+    - gradle-runner@1.8.0:
+        inputs:
+        - gradle_file: "$GRADLE_BUILD_FILE_PATH"
+        - gradle_task: "$GOODSH_BUILD_GRALDE_TASK"
+        - apk_file_include_filter: "$GOODSH_BUILD_APK_FILE_INCLUDE_FILTER"
+        - gradlew_path: "$GRADLEW_PATH"
+    - hockeyapp-deploy-android:
+        inputs:
+        - app_id: "$GOODSH_BUILD_HOCKEY_APP_APP_ID"
+        - api_token: "$GOODSH_BUILD_HOCKEY_APP_API_TOKEN"
+        - notify: '0'
+        - notes: "$GIT_CLONE_COMMIT_MESSAGE_SUBJECT"
+    - slack@2.6.3:
+        inputs:
+        - message: 'Build and deployed [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT'
+        - webhook_url: https://hooks.slack.com/services/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
   deploy:
     steps:
     - activate-ssh-key@3.1.1:
@@ -76,52 +158,6 @@ workflows:
         inputs:
         - message: 'Build and deployed: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT'
         - webhook_url: https://hooks.slack.com/services/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
-  ios:
-    steps:
-    - activate-ssh-key@3.1.1:
-        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
-    - git-clone@3.5.1: {}
-    - install-react-native@0.9.1: {}
-    - npm@0.9.0:
-        inputs:
-        - command: install
-    - npm@0.9.0:
-        inputs:
-        - command: test
-    - certificate-and-profile-installer@1.9.2: {}
-    - xcode-archive@2.3.7: {}
-    - hockeyapp-deploy@2.4.2:
-        inputs:
-        - api_token: f191e719336d431aa8e3210f64e44052
-        - app_id: '0718789d9866499cbc827f68e1627a17'
-    - deploy-to-bitrise-io@1.3.6: {}
-  android:
-    steps:
-    - activate-ssh-key@3.1.1:
-        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
-    - git-clone@3.5.1: {}
-    - script@1.1.4:
-        title: Do anything with Script step
-    - install-react-native@0.9.1: {}
-    - npm@0.9.0:
-        inputs:
-        - command: install
-    - npm@0.9.0:
-        inputs:
-        - command: test
-    - file-downloader@0.9.1:
-        inputs:
-        - source: "$BITRISEIO_ANDROID_DEV_KEYSTORE_URL"
-        - destination: "$BITRISE_SOURCE_DIR/android/keystores/goodsh-dev.keystore"
-    - gradle-runner@1.7.7:
-        inputs:
-        - gradle_task: assembleDev
-    - hockeyapp-deploy-android@1.1.1:
-        inputs:
-        - app_id: 9413859c01db4f2cbb918da583156db2
-        - api_token: 371fb124534f4777934cd8101157d47a
-        - notify: '0'
-    - deploy-to-bitrise-io@1.3.6: {}
 app:
   envs:
   - opts:

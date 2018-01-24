@@ -32,3 +32,9 @@ On Android, when launching the app on emulator you may end up with error :
 `Error: Activity class {it.goodsh.mob/it.goodsh.mob.MainActivity} does not exist.`<br/>
 
 The app is installed but doesn't launch automatically, just navigate to applications you may find it already installed
+
+
+cannot follow symbolic link
+/Users/qg/projects/goodshmob/node_modules/node-pre-gyp/node_modules/.bin/rc
+/Users/qg/projects/goodshmob/node_modules/node-pre-gyp/node_modules/request/node_modules/.bin/uuid
+/Users/qg/projects/goodshmob/node_modules/react-native/node_modules/jest-haste-map/node_modules/sane/node_modules/.bin/watch
