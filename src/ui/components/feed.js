@@ -16,6 +16,8 @@ import type {ScreenVisibility} from "./Screen";
 import Search from 'react-native-search-box';
 import {Colors} from "../colors";
 import Fuse from 'fuse.js'
+import { getLanguages } from 'react-native-i18n'
+
 
 
 export type FeedSource = {
@@ -70,11 +72,19 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
     lastFetchFail: number;
 
+    isFrenchLang: boolean;
+
+
     constructor(props: Props<T>) {
         super(props);
         this.createdAt = Date.now();
         this.postFetchFirst();
         props.feedId && console.log(`constructing feed '${props.feedId}'`);
+
+        getLanguages().then(languages => {
+            console.log(languages) // ['en-US', 'en']
+            this.isFrenchLang = _.startWith(_.first(languages), 'fr');
+        })
     }
 
     componentWillReceiveProps(nextProps: Props<*>) {
@@ -249,8 +259,20 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         let font = {
             fontSize: 17,
             lineHeight: 22,
-            textAlign: 'left'};
+            textAlign: 'left',
+            //MagicColor
+            backgroundColor: 'rgb(230,230,230)'
+        };
+        //MagicColor
         const color = 'rgb(142,142,147)';
+
+        //TODO: adjust fr, en margins
+        const placeholderConfig = {
+            placeholder: i18n.t('search.in_feed'),
+            placeholderCollapsedMargin: this.isFrenchLang ? 65 : 65,
+            searchIconCollapsedMargin: this.isFrenchLang ? 80 : 80,
+        };
+
 
         //TODO: finish design
         //use https://github.com/agiletechvn/react-native-search-box
@@ -275,11 +297,10 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                         color: Colors.black,
                         ...font
                     },
-                    //MagicString
-                    placeholder: i18n.t('search.in_feed'),
+                    ...placeholderConfig,
                     //MagicString
                     cancelTitle: "Cancel",
-                    inputStyle: {backgroundColor: 'rgb(230,230,230)'},
+                    // inputStyle: {backgroundColor: 'rgb(230,230,230)'},
                     inputBorderRadius: 10,
                     inputHeight: 32,
                     onChangeText: filter => this.setState({filter}),
