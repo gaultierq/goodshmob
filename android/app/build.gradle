@@ -87,6 +87,10 @@ project.ext.react = [
         // whether to bundle JS and assets in debug mode
         bundleInDev: true,
 
+        bundleInPreprod: true,
+
+        bundleInProd: true,
+
         // whether to bundle JS and assets in release mode
         bundleInRelease: true,
 
@@ -189,7 +193,7 @@ android {
 
     signingConfigs {
         release {
-            File propFile = rootProject.file("release.properties")
+            File propFile = rootProject.file("keystores/goodsh-preprod-keystore.properties")
             if (propFile.exists()) {
                 Properties releaseProps = new Properties()
                 releaseProps.load(new FileInputStream(propFile))
@@ -199,6 +203,26 @@ android {
                     keyAlias releaseProps.getProperty("keyAlias")
                     keyPassword releaseProps.getProperty("keyAliasPassword")
                 }
+            }
+        }
+        preprod {
+
+            File propFile = rootProject.file("keystores/goodsh-preprod-keystore.properties")
+            if (propFile.exists()) {
+                Properties releaseProps = new Properties()
+                releaseProps.load(new FileInputStream(propFile))
+                if (releaseProps.getProperty("storeFile", "") != "") {
+                    storeFile rootProject.file(releaseProps.getProperty("storeFile"))
+                    storePassword releaseProps.getProperty("storePassword")
+                    keyAlias releaseProps.getProperty("keyAlias")
+                    keyPassword releaseProps.getProperty("keyPassword")
+                }
+                else {
+                    throw new GradleException('no storeFile found')
+                }
+            }
+            else {
+                throw new GradleException('prop file not found:' + propFile)
             }
         }
 
@@ -229,7 +253,7 @@ android {
         preprod {
             minifyEnabled true
             useProguard true
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.preprod
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             applicationIdSuffix ".preprod"
         }

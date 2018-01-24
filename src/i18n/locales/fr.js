@@ -366,6 +366,9 @@ export default {
         invite: "Inviter un ami à goodsher"
 
     },
+    common: {
+        empty_feed_generic: "Rien ici pour le moment..."
+    },
     ask: {
         sent: "Question envoyée"
     },

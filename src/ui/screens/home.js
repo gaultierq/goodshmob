@@ -71,6 +71,7 @@ type State = {
 
 @logged
 @connect(state=>({
+    config: state.config,
     onBoarding: state.onBoarding,
 }))
 class HomeScreen extends Screen<Props, State> {

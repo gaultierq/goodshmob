@@ -50,8 +50,9 @@ type State = {
     moreLink?: Url
 };
 
-@connect()
-//@logged
+@connect((state, ownProps) => ({
+    config: state.config,
+}))
 export default class Feed<T> extends Component<Props<T>, State>  {
 
     keyExtractor = (item, index) => item.id;
@@ -61,7 +62,8 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     createdAt: ms;
 
     static defaultProps = {
-        visibility: 'unknown'
+        visibility: 'unknown',
+        empty: 'common.empty_feed_generic'
     };
 
     _listener: ()=>boolean;
@@ -115,7 +117,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     postFetchFirst() {
         setTimeout(() => {
             if (this.canFetch() && this.state.firstLoad === 'idle') {
-                let trigger = this.hasData() ? TRIGGER_USER_INDIRECT_ACTION : TRIGGER_USER_DIRECT_ACTION;
+                let trigger = this.hasItems() ? TRIGGER_USER_INDIRECT_ACTION : TRIGGER_USER_DIRECT_ACTION;
                 Api.safeExecBlock.call(
                     this,
                     () => this.fetchIt({trigger}),
@@ -126,7 +128,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     render() {
-        assertUnique(this.props.data);
+        assertUnique(this.getItems());
 
         const {
             sections,
@@ -143,14 +145,11 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             ...attributes
         } = this.props;
 
-        let nothingInterestingToDisplay = isEmpty(data) && this.state.isFetchingFirst === 'ok';
+        let items = this.getItems();
 
-        let firstEmptyLoader = this.isFirstEmptyLoader(data);
-        //firstEmptyLoader = true;
+        let nothingInterestingToDisplay = !this.hasItems() && this.state.isFetchingFirst === 'ok';
 
-        // if (feedId) {
-        //     console.debug(`feed '${feedId}' render: empt=${isEmpty(data)} nitd=${nothingInterestingToDisplay} fil=${firstEmptyLoader} data.len=${data ? data.length : -1}`);
-        // }
+        let firstEmptyLoader = this.isFirstEmptyLoader();
 
         if (nothingInterestingToDisplay) {
             if (this.state.isFetchingFirst === 'ko') {
@@ -160,7 +159,6 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         }
 
         let params =  {
-            // data,
             ref: "feed",
             renderItem,
             keyExtractor: this.keyExtractor,
@@ -179,18 +177,16 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         let searchBar = !!this.props.filter && this.renderSearchBar();
         let list;
 
+
+
         if (this.props.filter && this.state.filter) {
-            items = this.props.filter.applyFilter(sections || data, this.state.filter);
-        }
-        else {
-            items = sections || data;
+            items = this.props.filter.applyFilter(items, this.state.filter);
         }
 
         if (sections) {
             list = React.createElement(SectionList, {sections: items, ...params});
         }
         else {
-
             list = React.createElement(FlatList, {data: items, ...params});
         }
 
@@ -214,6 +210,10 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         //         {...attributes}
         //     />
         // );
+    }
+
+    debugOnlyEmptyFeeds() {
+        return this.props.config && !!this.props.config.onlyEmptyFeeds;
     }
 
     applyFilter(data, isSection: boolean = false) {
@@ -294,11 +294,19 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
     //displayed when no data yet, and loading for the first time
     isFirstEmptyLoader() {
-        return (this.state.firstLoad === 'sending' || this.state.firstLoad === 'idle') && !this.hasData();
+        return (this.state.firstLoad === 'sending' || this.state.firstLoad === 'idle') && !this.hasItems();
     }
 
-    hasData() {
-        return !isEmpty(this.props.data);
+    hasItems(): boolean {
+        return this.itemsLen() > 0;
+    }
+    itemsLen(): number {
+        return _.size(this.getItems());
+    }
+
+    getItems() {
+        if (this.debugOnlyEmptyFeeds()) return [];
+        return this.props.sections || this.props.data;
     }
 
     renderEmpty() {
@@ -341,8 +349,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         let height = lastEvent.layoutMeasurement.height;
         let totalSize = lastEvent.contentSize.height;
 
-        let data = this.props.data;
-        let elem = (data || []).length;
+        let elem = this.itemsLen();
         if (elem) {
             let rowHeight = totalSize / elem;
 
@@ -457,11 +464,11 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     fetchMore(options ?: any = {}) {
-        let c = this.props.data;
-        if (!c) return;
-        let last = c[c.length-1];
-        if (!last) return;
-        this.tryFetchIt({afterId: last.id, ...options});
+        let last = _.last(this.getItems());
+        if (last) {
+            this.tryFetchIt({afterId: last.id, ...options});
+        }
+
     }
 
     onRefresh() {
@@ -473,11 +480,10 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                 .catch(err=>{console.warn("error while fetching:" + err)})
                 .then(()=>this.setState({isPulling: false}));
         }
-
     }
 
     renderRefreshControl() {
-        let displayLoader = (this.isFetchingFirst() && isEmpty(this.props.data)) || this.state.isPulling;
+        let displayLoader = (this.isFetchingFirst() && this.hasItems()) || this.state.isPulling;
         return (<RefreshControl
             refreshing={!!displayLoader}
             onRefresh={this.onRefresh.bind(this)}
@@ -509,7 +515,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         )
     }
 
-    renderFail(fetch: () => Promise<*>) {
+    renderFail(fetch: () => void) {
 
         return (
             <View style={{padding: 12}}>
