@@ -63,3 +63,6 @@ ios/Pods
 clean_script.local.sh
 goodshmob-build
 
+# q vim ctags
+.tags.lock
+.tags.temp
