@@ -110,6 +110,41 @@
           "status": 2
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:246122737219:android:a282474fa92ebb88",
+        "android_client_info": {
+          "package_name": "it.goodsh.mob"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "246122737219-qfs6se8ghjbcuj0lcqaotrgno71muhm4.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "246122737219-oas3e00l3fbbumtab8vrsf470gea1pdn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVsEe5OTKLVGKMh8bMbVzYLQ8BCKStgKs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
     }
   ],
   "configuration_version": "1"
