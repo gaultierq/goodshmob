@@ -66,3 +66,4 @@ goodshmob-build
 # q vim ctags
 .tags.lock
 .tags.temp
+gradle.deps
