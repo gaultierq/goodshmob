@@ -6,26 +6,19 @@ trigger_map:
 workflows:
   qtest:
     steps:
-    # - activate-ssh-key@3.1.1:
-    #     run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
-    # - git-clone: {}
-    # - slack@2.6.3:
-    #     inputs:
-    #     - message: Building... $GIT_CLONE_COMMIT_MESSAGE_SUBJECT
-    #     - webhook_url: https://hooks.slack.com/services/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
-
-
-#    - git-clone:
-#        inputs:
-#        - repository_url: "https://github.com/goodshopping/goodshmob-build"
-##        - clone_into_dir: $BITRISE_SOURCE_DIR
-#        - clone_into_dir: "~/Desktop/a/"
+    - activate-ssh-key@3.1.1:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    - git-clone: {}
+    - slack@2.6.3:
+        inputs:
+        - message: Building [$BITRISE_GIT_BRANCH]... $GIT_CLONE_COMMIT_MESSAGE_SUBJECT
+        - webhook_url: https://hooks.slack.com/services/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
     - script@1.1.5:
         inputs:
         - content: |-
 
             #!/usr/bin/env bash
-            set -ex
+            set -e
 
             echo "== Starting build =="
 
@@ -33,28 +26,26 @@ workflows:
             if [ -d goodshmob-build ];
             then
                 cd goodshmob-build
-                git checkout
                 git pull
                 cd -
             else
                 git clone https://github.com/goodshopping/goodshmob-build
             fi
             chmod +x ./goodshmob-build/prepare-env.sh
-            exit
             
     - script@1.1.5:
         inputs:
         - content: |-
 
             #!/usr/bin/env bash
-            set -ex
+            set -e
 
             echo "preparing env"
             ./goodshmob-build/prepare-env.sh
+
     - script@1.1.5:
         inputs:
         - content: |-
-            
             #!/usr/bin/env bash
             set -ex
 
@@ -62,16 +53,30 @@ workflows:
                 echo "creating .env file"
                 cp $GOODSH_BUILD_REACT_NATIVE_ENV_FILE .env
             fi
-            
     - install-react-native@0.9.1: {}
     - npm@0.9.0:
         inputs:
         - command: install
+    # == ANDROID START ==
     # - install-missing-android-tools: {}
-    # - file-downloader@0.9.1:
-    #     inputs:
-    #     - source: "$BITRISEIO_ANDROID_DEV_KEYSTORE_URL"
-    #     - destination: "$BITRISE_SOURCE_DIR/android/keystores/goodsh-dev.keystore"
+    - script@1.1.5:
+        inputs:
+        - content: |-
+
+            #!/usr/bin/env bash
+            set -ex
+
+            echo "== Downloading android keystores =="
+
+            echo "downloading builder"
+            if [ -d android/keystores ];
+            then
+                cd android/keystores
+                git pull
+                cd -
+            else
+                git clone https://github.com/goodshopping/goodshmob-keystores
+            fi
     - gradle-runner@1.8.0:
         inputs:
         - gradle_file: "$GRADLE_BUILD_FILE_PATH"
@@ -79,6 +84,8 @@ workflows:
         - apk_file_include_filter: "$GOODSH_BUILD_APK_FILE_INCLUDE_FILTER"
         - gradlew_path: "$GRADLEW_PATH"
     - hockeyapp-deploy-android:
+        run_if: |-
+            {{enveq "GOODSH_BUILD_HOCKEY_APP_DEPLOY" "true"}}
         inputs:
         - app_id: "$GOODSH_BUILD_HOCKEY_APP_APP_ID"
         - api_token: "$GOODSH_BUILD_HOCKEY_APP_API_TOKEN"
