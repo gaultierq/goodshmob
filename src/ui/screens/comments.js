@@ -86,8 +86,7 @@ class CommentsScreen extends Screen<Props, State> {
                     scrollEnabled={false}
                     keyboardShouldPersistTaps={true}
                 >
-
-                    <View style={{flex: 1}}>
+                    <View style={{flex:1}}>
                         {activity &&
                         <View style={{ padding: 12, backgroundColor: Colors.white82 }}>
                             <UserActivity
@@ -99,30 +98,31 @@ class CommentsScreen extends Screen<Props, State> {
                         </View>}
 
                         {activity &&
-                        <Feed
-                            inverted
-                            data={items}
-                            renderItem={this.renderItem.bind(this)}
-                            fetchSrc={{
-                                callFactory:()=>actions.loadComments(activity),
-                                action: LOAD_COMMENTS,
-                                options: {activityId: activity.id, activityType: activity.type}
-                            }}
-                            //hasMore={false}
-                            //ItemSeparatorComponent={()=> <FeedSeparator/>}
-                            contentContainerStyle={{paddingTop: 120}}
-                        />}
+                        <View style={{flex:1, justifyContent: 'flex-end'}}>
+                            <Feed
+                                inverted
+                                data={items}
+                                renderItem={this.renderItem.bind(this)}
+                                fetchSrc={{
+                                    callFactory:()=>actions.loadComments(activity),
+                                    action: LOAD_COMMENTS,
+                                    options: {activityId: activity.id, activityType: activity.type}
+                                }}
+                                //hasMore={false}
+                                //ItemSeparatorComponent={()=> <FeedSeparator/>}
+                            />
+                        </View>}
                     </View>
 
                     {activity &&
-                    <View style={{height:60, justifyContent: 'flex-end', borderTopWidth: 1, borderColor: Colors.grey3}}>
+                    <View style={{height:60, justifyContent: 'flex-end', borderTopWidth: 1, borderColor: Colors.grey3, backgroundColor: Colors.white}}>
                         <SmartInput
-                            containerStyle={{padding: 6, paddingBottom: 10, backgroundColor: Colors.white}}
+                            containerStyle={{padding: 6, paddingBottom: 10}}
                             inputContainerStyle={{borderRadius: 4, borderWidth: 0}}
                             execAction={(input: string) => this.addComment3(activity, input)}
                             placeholder={"activity_comments_screen.add_comment_placeholder"}
                             returnKeyType={'send'}
-                            // multiline
+                            autoFocus={comments.length == 0 ? true : false}
                         />
                     </View>}
 
