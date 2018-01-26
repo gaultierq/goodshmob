@@ -94,7 +94,7 @@ export default class ActivityBody extends React.Component<Props, State> {
         if (!(target = activity.target)) return null;
 
         if (target.type === 'lists') {
-            let count = target.meta ? target.meta["savings-count"] : 0;
+            let count = target.meta ? target.meta["savingsCount"] : 0;
             targetName = target.name;
             if (count) targetName += " (" + count + ")";
 
