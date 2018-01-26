@@ -31,7 +31,7 @@ export default class ActionRights {
 
     canUnsave() {
         if (!this.activity.resource) return false;
-        return this.isGoodshed2() && this.byMe();
+        return this.isGoodshedByMe();
     }
 
     liked() {
@@ -51,15 +51,19 @@ export default class ActionRights {
         return this.activity.user.id === currentUserId();
     }
 
-    isGoodshed2() {
+    isGoodshedByMe() {
         let resource = this.activity.resource;
+
+        //savedIn = not only my lists... server fail
         let savedIn = _.get(resource, 'meta.savedIn', []);
-        let target = this.activity.target;
-        let goodshed;
-        if (target && target.type === 'lists') {
-            goodshed = _.indexOf(savedIn, target.id) > -1;
-        }
-        return goodshed;
+        return !_.isEmpty(savedIn);
+
+        // let target = this.activity.target;
+        // let goodshed;
+        // if (target && target.type === 'lists') {
+        //     goodshed = _.indexOf(savedIn, target.id) > -1;
+        // }
+        // return goodshed;
     }
 }
 
