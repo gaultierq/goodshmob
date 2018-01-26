@@ -501,7 +501,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     renderRefreshControl() {
-        let displayLoader = (this.isFetchingFirst() && this.hasItems()) || this.state.isPulling;
+        let displayLoader = (this.isFetchingFirst() && !this.hasItems()) || this.state.isPulling;
         return (<RefreshControl
             refreshing={!!displayLoader}
             onRefresh={this.onRefresh.bind(this)}

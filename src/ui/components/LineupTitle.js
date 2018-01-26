@@ -24,7 +24,7 @@ export default class LineupTitle extends React.Component<Props, State> {
 
     render() {
         const  {lineup} = this.props;
-        let savingCount = _.get(lineup, `meta.savings-count`, null);
+        let savingCount = _.get(lineup, `meta.savingsCount`, null);
         let countString = savingCount  !== null ? ' (' + savingCount + ')' : '';
         let title = lineup.name;
 
