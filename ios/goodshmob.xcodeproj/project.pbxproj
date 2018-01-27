@@ -1881,7 +1881,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = it.goodsh.mob;
+				PRODUCT_BUNDLE_IDENTIFIER = it.goodsh.mob.debug;
 				PRODUCT_NAME = goodshmob;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2130,8 +2130,8 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = it.goodsh.mob;
-				PRODUCT_NAME = goodshmob;
+				PRODUCT_BUNDLE_IDENTIFIER = it.goodsh.mob.preprod;
+				PRODUCT_NAME = "goodshmob preprod";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
