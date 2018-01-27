@@ -9,9 +9,13 @@
 		"flow-stop": "flow stop",
 		"postinstall": "react-native-schemes-manager all"
 	},
-		"xcodeSchemes": {
-		"Debug": ["Debug"],
-		"Release": ["Preprod"]
+	"xcodeSchemes": {
+		"Debug": [
+			"Debug"
+		],
+		"Release": [
+			"Preprod"
+		]
 	},
 	"dependencies": {
 		"@types/react": "^16.0.20",

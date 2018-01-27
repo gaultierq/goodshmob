@@ -32,15 +32,6 @@ workflows:
                 git clone https://github.com/goodshopping/goodshmob-build
             fi
             chmod +x ./goodshmob-build/prepare-env.sh
-            
-    - script@1.1.5:
-        inputs:
-        - content: |-
-
-            #!/usr/bin/env bash
-            set -e
-
-            echo "preparing env"
             ./goodshmob-build/prepare-env.sh
 
     - script@1.1.5:
@@ -87,7 +78,7 @@ workflows:
             {{enveq "GOODSH_BUILD_HOCKEY_APP_DEPLOY" "true"}}
         inputs:
         - app_id: "$GOODSH_BUILD_HOCKEY_APP_APP_ID"
-        - api_token: "$GOODSH_BUILD_HOCKEY_APP_API_TOKEN"
+        - api_token: "$HOCKEY_APP_API_TOKEN"
         - notify: '0'
         - notes: "$GIT_CLONE_COMMIT_MESSAGE_SUBJECT"
 
@@ -112,6 +103,52 @@ workflows:
     - slack@2.6.3:
         inputs:
         - message: 'Android: build and deployed [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT'
+        - webhook_url: $SLACK_WEBHOOK_URL
+
+  _prepare-ios:
+    steps:
+    # - install-missing-android-tools: {}
+    - fastlane-match@0.1.0:
+        inputs:
+        - git_url: https://github.com/goodshopping/ios-certs
+        - app_id: $GOODSH_BUILD_IOS_APP_ID
+        - decrypt_password: "$CERTS_DECRYPT"
+    - recreate-user-schemes@1.0.2:
+        inputs:
+        - project_path: "$BITRISE_PROJECT_PATH"
+    - cocoapods-install@1.7.2: {}
+
+  _build-ios:
+    steps:
+    - xcode-archive:
+        inputs:
+        - scheme: "$BITRISE_SCHEME"
+        - configuration: "$GOODSH_BUILD_IOS_CONFIGURATION"
+        - project_path: "$BITRISE_WORKSPACE_PATH"
+        - output_tool: xcodebuild
+
+  _deploy-ios:
+    steps:    
+    - hockeyapp-deploy@2.4.2:
+        run_if: |-
+            {{enveq "GOODSH_BUILD_HOCKEY_APP_DEPLOY" "true"}}
+        inputs:
+        - api_token: "$HOCKEY_APP_API_TOKEN"
+        - app_id: "$GOODSH_BUILD_HOCKEY_APP_IOS_APP_ID"
+        - notify: '0'
+        - notes: "$GIT_CLONE_COMMIT_MESSAGE_SUBJECT"
+
+
+  ios:
+    before_run:
+    - _prepare
+    - _prepare-ios
+    - _build-ios
+    - _deploy-ios
+    steps:
+    - slack@2.6.3:
+        inputs:
+        - message: 'Ios: build and deployed [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT'
         - webhook_url: $SLACK_WEBHOOK_URL
 
 
@@ -206,7 +243,13 @@ app:
     GRADLE_BUILD_FILE_PATH: android/build.gradle
   - opts:
       is_expand: false
+    HOCKEY_APP_API_TOKEN: 21bebd0454554933b41d91a90c3df9c5
+  - opts:
+      is_expand: false
     GRADLEW_PATH: android/gradlew
+  - opts:
+      is_expand: false
+    CERTS_DECRYPT: x4d3$DovRq9n
   - opts:
       is_expand: false
     BITRISE_PROJECT_PATH: ios/goodshmob.xcodeproj
