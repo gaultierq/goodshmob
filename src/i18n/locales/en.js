@@ -22,7 +22,8 @@ export default {
         },
         mine : {
             title: "My lineups"
-        }
+        },
+        empty_screen: "You'll find all your goodsh saved here."
     },
     no_spam: {
         dialog_title: "Three Goodsh Privacy Pilars",
@@ -128,6 +129,7 @@ export default {
             "friends":"My friends",
             "notifications":"Notifications",
         },
+        "empty_screen": "Here you'll find your friends goodsh."
     },
     "search_item_screen":{
         "tabs": {
@@ -158,7 +160,8 @@ export default {
         "post":"posted %{what}",
         "sending":"sended %{what} to you",
         "invitation":"and %{you} are now connected",
-        "you":"you"
+        "you":"you",
+        empty_screen: "Fully enjoy Goodsh by inviting your friends.",
     },
     util: {
         time: {
@@ -198,6 +201,7 @@ export default {
     send_message: "I found something for you:\n%{what}\n\nSpotted on Goodsh: %{url}",
     goodsh_url: "https:\/\/goodsh.it\/",
     friends: {
+        empty_screen: "Fully enjoy Goodsh by inviting your friends.",
         buttons: {
             connect: "connect",
             disconnect: "disconnect",

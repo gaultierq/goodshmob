@@ -18,6 +18,8 @@ import {Colors} from "../colors";
 import Fuse from 'fuse.js'
 import { getLanguages } from 'react-native-i18n'
 
+import {SFP_TEXT_REGULAR} from "../fonts"
+
 
 
 export type FeedSource = {
@@ -325,11 +327,10 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
     renderEmpty() {
         return <Text style={{
-            fontSize: 20,
-            //BadFont
-            //fontFamily: 'Chivo-Light',
+            fontSize: 18,
             margin: '10%',
-            textAlign: 'center'
+            textAlign: 'center',
+            fontFamily: SFP_TEXT_REGULAR,
         }}>{i18n.t(this.props.empty)}</Text>;
     }
 

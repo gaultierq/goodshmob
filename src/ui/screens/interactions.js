@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, TouchableOpacity, View, Share} from 'react-native';
 import {connect} from "react-redux";
 import {logged} from "../../managers/CurrentUser"
 import Immutable from 'seamless-immutable';
@@ -16,6 +16,10 @@ import FeedSeparator from "../activity/components/FeedSeparator";
 import Screen from "../components/Screen";
 import NavManager from "../../managers/NavManager";
 import GTouchable from "../GTouchable";
+
+import {Colors} from "../colors";
+import Button from 'apsl-react-native-button'
+import {SFP_TEXT_MEDIUM} from "../fonts";
 
 type Props = {
     navigator: *,
@@ -47,6 +51,18 @@ export class InteractionScreen extends Screen<Props, State> {
 
         return (
             <View style={styles.container}>
+
+                {
+                    (data && data.length > 0) &&
+                    <Button
+                        style={{backgroundColor: Colors.green,borderWidth: 0,borderRadius: 4,margin: 12}}
+                        onPress={()=>this.share()}>
+                        <Text style={[{color: Colors.white, fontSize: 17, fontFamily: SFP_TEXT_MEDIUM, fontWeight: 'bold'}]}>
+                            {i18n.t('actions.invite')}
+                        </Text>
+                    </Button>
+                }
+
                 <Feed
                     data={data}
                     renderItem={this.renderItem.bind(this)}
@@ -58,12 +74,29 @@ export class InteractionScreen extends Screen<Props, State> {
                     hasMore={!interaction.hasNoMore}
                     ItemSeparatorComponent={()=> <FeedSeparator vMargin={12} />}
                     contentContainerStyle={{paddingTop: 10}}
+                    empty={'interactions.empty_screen'}
                     // cannotFetch={!super.isVisible()}
                 />
 
             </View>
         );
     }
+
+    share() {
+
+        let message = i18n.t('share_goodsh.message');
+        let title = i18n.t('share_goodsh.title');
+
+        let intent = {
+            message,
+            title
+        };
+
+        Share.share(intent, {
+            dialogTitle: title,
+        })
+    }
+
     //"interactions?include=user,resource,resource.resource&page=#{page}"
     fetchInteractions() {
         return new Api.Call().withMethod('GET')

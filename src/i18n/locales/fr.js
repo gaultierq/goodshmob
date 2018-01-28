@@ -22,7 +22,8 @@ export default {
         },
         mine : {
             title: "Mes listes"
-        }
+        },
+        empty_screen: "Retrouve ici tous tes goodsh.\nSave pour en ajouter un."
     },
     no_spam: {
         dialog_title: "Les 3 grands principes de Goodsh",
@@ -122,6 +123,7 @@ export default {
             "friends":"Mes amis",
             "notifications":"Notifications",
         },
+        "empty_screen": "Découvre ici les goodsh de tes proches. Ask pour les solliciter."
     },
     "search_item_screen":{
         "tabs": {
@@ -152,7 +154,8 @@ export default {
         "post":"a posté %{what}",
         "sending":"t’a envoyé %{item_title} to you",
         "invitation":"et %{you} êtes désormais connectés",
-        "you":"toi"
+        "you":"toi",
+        "empty_screen":"Profite pleinement de Goodsh et invite des proches."
     },
     util: {
         time: {
@@ -192,6 +195,7 @@ export default {
     send_message: "J'ai quelquechose à te recommender:\n%{what}\n\nJe l'ai trouvé grace a Goodsh: %{url}",
     goodsh_url: "https:\/\/goodsh.it\/",
     friends: {
+        empty_screen: "Profite pleinement de Goodsh et invite des proches.",
         buttons: {
             connect: "Se connecter",
             disconnect: "Se déconnecter",

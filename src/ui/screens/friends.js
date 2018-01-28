@@ -88,6 +88,7 @@ export default class FriendsScreen extends Screen<Props, State> {
                     action,
                     options: {userId}
                 }}
+                empty={'friends.empty_screen'}
                 // cannotFetch={!super.isVisible()}
             />
 

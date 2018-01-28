@@ -178,6 +178,7 @@ class NetworkScreen extends Screen<Props, State> {
                     scrollUpOnBack={scrollUpOnBack}
                     cannotFetch={!super.isVisible()}
                     visibility={super.getVisibility()}
+                    empty={'community_screen.empty_screen'}
                     // ItemSeparatorComponent={TRANSPARENT_SPACER(50)}
                     // ListHeaderComponent={TRANSPARENT_SPACER(40)()}
                     // style={{backgroundColor: Colors.dirtyWhite}}

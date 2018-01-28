@@ -114,6 +114,7 @@ export class LineupListScreen extends Screen<Props, State> {
                 sections={sections}
                 renderItem={this.renderItem.bind(this)}
                 fetchSrc={fetchSrc}
+                empty={'lineups.empty_screen'}
                 {...attributes}
             />
         );
