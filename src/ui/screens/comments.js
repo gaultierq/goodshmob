@@ -122,7 +122,7 @@ class CommentsScreen extends Screen<Props, State> {
                             execAction={(input: string) => this.addComment3(activity, input)}
                             placeholder={"activity_comments_screen.add_comment_placeholder"}
                             returnKeyType={'send'}
-                            autoFocus={comments.length == 0 ? true : false}
+                            autoFocus={(comments && (comments.length == 0))  ? true : false}
                         />
                     </View>}
 
