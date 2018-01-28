@@ -51,7 +51,7 @@ workflows:
 
   _prepare-android:
     steps:
-    # - install-missing-android-tools: {}
+    - install-missing-android-tools: {}
     - script@1.1.5:
         inputs:
         - content: |-
@@ -146,7 +146,7 @@ workflows:
     steps:
     - slack@2.6.3:
         inputs:
-        - message: 'Ios: build and deployed [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT'
+        - message: 'Built: [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT'
         - webhook_url: $SLACK_WEBHOOK_URL
 
 
@@ -232,7 +232,7 @@ workflows:
         - notify_user_groups: everyone
     - slack@2.6.3:
         inputs:
-        - message: 'Build and deployed: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT'
+        - message: 'Built: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT'
         - webhook_url: $SLACK_WEBHOOK_URL
 app:
   envs:
