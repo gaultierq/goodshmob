@@ -5,7 +5,7 @@ import React from 'react';
 import {Image, StyleSheet, TextInput, View} from 'react-native';
 import {isEmpty} from "lodash";
 import type {i18Key, RequestState} from "../../types";
-import i18n from '../../i18n/i18n'
+
 import Button from 'apsl-react-native-button'
 import {Colors} from "../colors";
 

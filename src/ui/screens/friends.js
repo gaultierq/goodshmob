@@ -15,7 +15,7 @@ import Screen from "../components/Screen";
 import GTouchable from "../GTouchable";
 import {fullName} from "../../helpers/StringUtils";
 import * as Nav from "../Nav";
-import i18n from '../../i18n/i18n';
+;
 import {Colors} from "../colors";
 import Button from 'apsl-react-native-button'
 import {SFP_TEXT_MEDIUM} from "../fonts";

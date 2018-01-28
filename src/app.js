@@ -11,7 +11,6 @@ import {autoRehydrate, createTransform, persistStore} from 'redux-persist'
 import {Alert, AsyncStorage, Dimensions, StyleSheet, TouchableOpacity} from 'react-native'
 import immutableTransform from './immutableTransform'
 import {REHYDRATE} from 'redux-persist/constants'
-import i18n from './i18n/i18n'
 import * as CurrentUser from './managers/CurrentUser'
 import {currentUserId} from './managers/CurrentUser'
 import {Client} from 'bugsnag-react-native';
