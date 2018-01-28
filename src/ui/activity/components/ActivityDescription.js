@@ -31,8 +31,8 @@ export default class ActivityDescription extends React.Component<Props, State> {
         let cardMargin = 12;
 
 
-        return
-            <View style={styles.decriptionContainer}>
+        return(
+            <View style={styles.descriptionContainer}>
                 <UserActivity
                     activityTime={activity.createdAt}
                     user={user}
@@ -43,17 +43,19 @@ export default class ActivityDescription extends React.Component<Props, State> {
                 </UserActivity>
 
                 {!!activity.description && <Text style={styles.description}>{'"' + activity.description + '"'}</Text>}
-            </View>;
+            </View>
+        );
     }
 
     renderAsk() {
-        return
+        return(
             <View style={styles.ask}>
                 <Text
                     style={styles.askText}>
                     {i18n.t('activity_item.header.ask')}
                 </Text>
             </View>
+        )
     }
 
     renderTarget() {
@@ -77,7 +79,7 @@ export default class ActivityDescription extends React.Component<Props, State> {
             press = () => this.seeUser(target);
         }
 
-        return
+        return(
             <View style={styles.target}>
                 <View style={styles.target}>
                     <Text style={styles.targetText}>{i18n.t(key)}</Text>
@@ -89,7 +91,8 @@ export default class ActivityDescription extends React.Component<Props, State> {
                     </GTouchable>
                 </View>
                 {withFollowButton && this.renderFollowButton(target)}
-            </View>;
+            </View>
+        );
     }
 
     seeList(lineup: List) {
@@ -124,7 +127,7 @@ export default class ActivityDescription extends React.Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
-    decriptionContainer: {backgroundColor: 'transparent'},
+    descriptionContainer: {backgroundColor: 'red'},
     description: {fontSize: 13, paddingLeft: 38, paddingTop: 3, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey},
     ask: {flex: 1, flexDirection: 'row', alignItems: 'center'},
     askText: {fontSize: 13},

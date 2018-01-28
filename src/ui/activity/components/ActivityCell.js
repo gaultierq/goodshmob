@@ -57,10 +57,10 @@ export default class ActivityCell extends React.Component<Props, State> {
 
         if (sanitizeActivityType(activity.type) === 'asks') {
             return (
-                <View style={[styles.askContent, {backgroundColor: this.getAskBackgroundColor(activity)}]}>
-                    {this.renderUserAvatar(activity.user, styles.userAvatar)}
-                    <Text style={[styles.askText]}>{activity.content}</Text>
-                    <View style={styles.width100}>
+                <View style={[_styles.askContent, {backgroundColor: this.getAskBackgroundColor(activity)}]}>
+                    {this.renderUserAvatar(activity.user, _styles.userAvatar)}
+                    <Text style={[_styles.askText]}>{activity.content}</Text>
+                    <View style={_styles.width100}>
                         {!activity.pending && <ActivityActionBar
                             activityId={activity.id}
                             activityType={activity.type}
@@ -81,7 +81,7 @@ export default class ActivityCell extends React.Component<Props, State> {
         const user = activity.user;
         return (
             <View>
-                <View style={styles.posted}>
+                <View style={_styles.posted}>
                     {this.renderUserGeneral(user, postedToUser)}
                 </View>
 
@@ -100,6 +100,7 @@ export default class ActivityCell extends React.Component<Props, State> {
                     </GTouchable>
 
                     {/*<FeedSeparator/>*/}
+
 
                     <ActivityActionBar
                         activityId={activity.id}
@@ -132,9 +133,9 @@ export default class ActivityCell extends React.Component<Props, State> {
         let navigator: RNNNavigator = this.props.navigator;
         // let result = this.wrapUserAvatar(
         return this.wrapUserAvatar(
-            <View style={styles.userWrap}>
+            <View style={_styles.userWrap}>
                 {this.renderAvatar(navigator, user)}
-                {user2 && <Image style={styles.userImage} tintColor={Colors.black} source={require('../../../img2/rightArrowSmallGrey.png')}/>}
+                {user2 && <Image style={_styles.userImage} tintColor={Colors.black} source={require('../../../img2/rightArrowSmallGrey.png')}/>}
                 {user2 && this.renderAvatar(navigator, user2)}
             </View>,
             style
@@ -142,26 +143,27 @@ export default class ActivityCell extends React.Component<Props, State> {
     }
 
     renderAvatar(navigator, user) {
+
         return <GTouchable onPress={() => seeUser(navigator, user)}>
             <Avatar user={user} style={{
-                    dim: AVATAR_DIM
+                dim: AVATAR_DIM,
             }}/>
         </GTouchable>;
     }
 
     wrapUserAvatar(children: Node, styles?: *) {
         const padding = 3;
-        const shadowHeightShift = __IS_IOS__ ?  StyleSheet.hairlineWidth : 0;
-        return
-            <View style={[styles, styles.userAvatarWrapper, {
-                borderRadius: (AVATAR_DIM + 2 * padding)* 0.5,
-                shadowOffset: {width: 0, height: shadowHeightShift * 2},
-                ...stylePadding(padding, padding - shadowHeightShift, padding, padding + shadowHeightShift)}]}>
 
-                <View style={[styles.userAvatarChildren, {shadowOffset: {width: 0, height: shadowHeightShift}}]}>
-                    {children}
-                </View>
-            </View>;
+        const shadowHeightShift = __IS_IOS__ ?  StyleSheet.hairlineWidth : 0;
+        return <View style={[styles, _styles.userAvatarWrapper, {
+            shadowOffset: {width: 0, height: shadowHeightShift * 2},
+            borderRadius: (AVATAR_DIM + 2 * padding)* 0.5,
+            ...stylePadding(padding, padding - shadowHeightShift, padding, padding + shadowHeightShift),
+        }]}>
+            <View style={[_styles.userAvatarChildren, {shadowOffset: {width: 0, height: shadowHeightShift}}]}>
+                {children}
+            </View>
+        </View>;
     }
 
     isLiked(activity) {
@@ -220,7 +222,7 @@ export default class ActivityCell extends React.Component<Props, State> {
     }
 }
 
-const styles = StyleSheet.create({
+const _styles = StyleSheet.create({
     askText: {
         fontSize: 30,
         lineHeight: 35,
