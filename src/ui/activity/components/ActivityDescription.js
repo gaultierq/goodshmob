@@ -31,30 +31,29 @@ export default class ActivityDescription extends React.Component<Props, State> {
         let cardMargin = 12;
 
 
-        return <View style={{backgroundColor: 'transparent'}}>
+        return
+            <View style={styles.decriptionContainer}>
+                <UserActivity
+                    activityTime={activity.createdAt}
+                    user={user}
+                    navigator={this.props.navigator}
+                >
+                    {/* in Séries(1) */}
+                    {activity.type === 'asks' ? this.renderAsk() : this.renderTarget()}
+                </UserActivity>
 
-
-            <UserActivity
-                activityTime={activity.createdAt}
-                user={user}
-                navigator={this.props.navigator}
-            >
-
-                {/* in Séries(1) */}
-                {activity.type === 'asks' ? this.renderAsk() : this.renderTarget()}
-            </UserActivity>
-
-            {!!activity.description && <Text style={{fontSize: 13, paddingLeft: 38, paddingTop: 3, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey}}>{'"' + activity.description + '"'}</Text>}
-        </View>;
+                {!!activity.description && <Text style={styles.description}>{'"' + activity.description + '"'}</Text>}
+            </View>;
     }
 
     renderAsk() {
-        return <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-            <Text
-                style={{fontSize: 13}}>
-                {i18n.t('activity_item.header.ask')}
-            </Text>
-        </View>
+        return
+            <View style={styles.ask}>
+                <Text
+                    style={styles.askText}>
+                    {i18n.t('activity_item.header.ask')}
+                </Text>
+            </View>
     }
 
     renderTarget() {
@@ -78,26 +77,19 @@ export default class ActivityDescription extends React.Component<Props, State> {
             press = () => this.seeUser(target);
         }
 
-        return <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                <Text style={{
-                    fontSize: 10,
-                    color: Colors.greyishBrown,
-                    marginRight: 3
-                }}>{i18n.t(key)}</Text>
-                <GTouchable onPress={press}>
-                    <Text
-                        style={[UI.TEXT_LIST, {fontSize: 10}]}>
-                        {targetName}
-                    </Text>
-                </GTouchable>
-            </View>
-
-            {
-                withFollowButton && this.renderFollowButton(target)
-            }
-
-        </View>;
+        return
+            <View style={styles.target}>
+                <View style={styles.target}>
+                    <Text style={styles.targetText}>{i18n.t(key)}</Text>
+                    <GTouchable onPress={press}>
+                        <Text
+                            style={[UI.TEXT_LIST, {fontSize: 10}]}>
+                            {targetName}
+                        </Text>
+                    </GTouchable>
+                </View>
+                {withFollowButton && this.renderFollowButton(target)}
+            </View>;
     }
 
     seeList(lineup: List) {
@@ -122,22 +114,23 @@ export default class ActivityDescription extends React.Component<Props, State> {
     renderFollowButton(target) {
         return target.primary ?
             <GTouchable>
-                <Text style={{
-                    fontSize: 9,
-                    color: Colors.greyishBrown,
-                    padding: 5,
-                    borderRadius: 5,
-                    borderWidth: StyleSheet.hairlineWidth,
-                    borderColor: Colors.greyishBrown
-                }}>{i18n.t("activity_item.buttons.unfollow_list")}</Text>
+                <Text style={styles.unfollowText}>{i18n.t("activity_item.buttons.unfollow_list")}</Text>
             </GTouchable>
             :
-            <GTouchable
-                style={{backgroundColor: "white", padding: 5, borderRadius: 5}}>
-                <Text style={{
-                    fontSize: 9,
-                    color: Colors.blue
-                }}>{i18n.t("activity_item.buttons.follow_list")}</Text>
+            <GTouchable style={styles.followContainer}>
+                <Text style={styles.followText}>{i18n.t("activity_item.buttons.follow_list")}</Text>
             </GTouchable>;
     }
 }
+
+const styles = StyleSheet.create({
+    decriptionContainer: {backgroundColor: 'transparent'},
+    description: {fontSize: 13, paddingLeft: 38, paddingTop: 3, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey},
+    ask: {flex: 1, flexDirection: 'row', alignItems: 'center'},
+    askText: {fontSize: 13},
+    target: {flex: 1, flexDirection: 'row', alignItems: 'center'},
+    targetText: {fontSize: 10,color: Colors.greyishBrown,marginRight: 3},
+    unfollowText:{fontSize: 9, color: Colors.greyishBrown, padding: 5, borderRadius: 5, borderWidth: StyleSheet.hairlineWidth, borderColor: Colors.greyishBrown},
+    followContainer: {backgroundColor: "white", padding: 5, borderRadius: 5},
+    followText: {fontSize: 9, color: Colors.blue}
+});

@@ -58,9 +58,9 @@ export default class ActivityCell extends React.Component<Props, State> {
         if (sanitizeActivityType(activity.type) === 'asks') {
             return (
                 <View style={[styles.askContent, {backgroundColor: this.getAskBackgroundColor(activity)}]}>
-                    {this.renderUserAvatar(activity.user, {position: 'absolute', zIndex: 2, top: 15, left: 15})}
+                    {this.renderUserAvatar(activity.user, styles.userAvatar)}
                     <Text style={[styles.askText]}>{activity.content}</Text>
-                    <View style={{width: "100%"}}>
+                    <View style={styles.width100}>
                         {!activity.pending && <ActivityActionBar
                             activityId={activity.id}
                             activityType={activity.type}
@@ -81,7 +81,7 @@ export default class ActivityCell extends React.Component<Props, State> {
         const user = activity.user;
         return (
             <View>
-                <View style={{zIndex: 2, position: 'absolute', left: 12, top: 12}}>
+                <View style={styles.posted}>
                     {this.renderUserGeneral(user, postedToUser)}
                 </View>
 
@@ -101,7 +101,6 @@ export default class ActivityCell extends React.Component<Props, State> {
 
                     {/*<FeedSeparator/>*/}
 
-
                     <ActivityActionBar
                         activityId={activity.id}
                         activityType={activity.type}
@@ -113,7 +112,7 @@ export default class ActivityCell extends React.Component<Props, State> {
     }
 
     getAskBackgroundColor(activity: Activity) {
-        const askColors = ['rgb(51,51,51)', /*Colors.green, */Colors.pink, Colors.darkSkyBlue];
+        const askColors = ['rgb(51,51,51)', Colors.pink, Colors.darkSkyBlue];
         return askColors[Date.parse(activity.createdAt) % askColors.length];
     }
 
@@ -133,12 +132,9 @@ export default class ActivityCell extends React.Component<Props, State> {
         let navigator: RNNNavigator = this.props.navigator;
         // let result = this.wrapUserAvatar(
         return this.wrapUserAvatar(
-            <View style={{
-                flexDirection: 'row',
-                alignItems: 'center'
-            }}>
+            <View style={styles.userWrap}>
                 {this.renderAvatar(navigator, user)}
-                {user2 && <Image style={{margin: 10}} tintColor={Colors.black} source={require('../../../img2/rightArrowSmallGrey.png')}/>}
+                {user2 && <Image style={styles.userImage} tintColor={Colors.black} source={require('../../../img2/rightArrowSmallGrey.png')}/>}
                 {user2 && this.renderAvatar(navigator, user2)}
             </View>,
             style
@@ -146,43 +142,26 @@ export default class ActivityCell extends React.Component<Props, State> {
     }
 
     renderAvatar(navigator, user) {
-
         return <GTouchable onPress={() => seeUser(navigator, user)}>
             <Avatar user={user} style={{
-                dim: AVATAR_DIM,
+                    dim: AVATAR_DIM
             }}/>
         </GTouchable>;
     }
 
     wrapUserAvatar(children: Node, styles?: *) {
         const padding = 3;
-
         const shadowHeightShift = __IS_IOS__ ?  StyleSheet.hairlineWidth : 0;
-        return <View style={[styles, {
-            borderColor: Colors.greyish,
-            borderWidth: StyleSheet.hairlineWidth,
+        return
+            <View style={[styles, styles.userAvatarWrapper, {
+                borderRadius: (AVATAR_DIM + 2 * padding)* 0.5,
+                shadowOffset: {width: 0, height: shadowHeightShift * 2},
+                ...stylePadding(padding, padding - shadowHeightShift, padding, padding + shadowHeightShift)}]}>
 
-            shadowColor: Colors.greyish,
-            shadowOpacity: 0.4,
-            shadowRadius: 0,
-            shadowOffset: {width: 0, height: shadowHeightShift * 2},
-
-
-            elevation: 3,
-            borderRadius: (AVATAR_DIM + 2 * padding)* 0.5,
-            backgroundColor: "rgba(255, 255, 255, 0.85)",
-            ...stylePadding(padding, padding - shadowHeightShift, padding, padding + shadowHeightShift),
-        }]}>
-            <View style={{
-                shadowColor: Colors.brownishGrey,
-                shadowOpacity: 1,
-                shadowRadius: 1,
-                elevation: 2,
-                shadowOffset: {width: 0, height: shadowHeightShift},
-            }}>
-                {children}
-            </View>
-        </View>;
+                <View style={[styles.userAvatarChildren, {shadowOffset: {width: 0, height: shadowHeightShift}}]}>
+                    {children}
+                </View>
+            </View>;
     }
 
     isLiked(activity) {
@@ -253,9 +232,44 @@ const styles = StyleSheet.create({
     askContent: {
         width: "100%",
         minHeight: 64,
-        // backgroundColor: "pink",
         alignItems: 'center',
         justifyContent: 'center'
-    }
-
+    },
+    userAvatar: {
+        position: 'absolute',
+        zIndex: 2,
+        top: 15,
+        left: 15
+    },
+    width100: {
+        width: "100%"
+    },
+    posted: {
+        zIndex: 2,
+        position: 'absolute',
+        left: 12,
+        top: 12
+    },
+    userWrap: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    userImage: {
+        margin: 10
+    },
+    userAvatarWrapper: {
+        borderColor: Colors.greyish,
+        borderWidth: StyleSheet.hairlineWidth,
+        shadowColor: Colors.greyish,
+        shadowOpacity: 0.4,
+        shadowRadius: 0,
+        elevation: 3,
+        backgroundColor: "rgba(255, 255, 255, 0.85)"
+    },
+    userAvatarChildren: {
+        shadowColor: Colors.brownishGrey,
+        shadowOpacity: 1,
+        shadowRadius: 1,
+        elevation: 2
+    },
 });

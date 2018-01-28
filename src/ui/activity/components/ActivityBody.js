@@ -58,9 +58,9 @@ export default class ActivityBody extends React.Component<Props, State> {
                 {this.renderImage()}
 
                 {resource && (
-                    <View style={{padding: 15, paddingBottom: 0, backgroundColor: ACTIVITY_CELL_BACKGROUND,}}>
-                        <View style={{flexDirection: 'row'}}>
-                            <View style={{flex:1}}>
+                    <View style={styles.body}>
+                        <View style={styles.bodyInner}>
+                            <View style={styles.flex1}>
                                 <Text style={[styles.title]} numberOfLines={2}>{resource.title}</Text>
                                 <Text style={[styles.subtitle]}>{resource.subtitle}</Text>
 
@@ -73,10 +73,7 @@ export default class ActivityBody extends React.Component<Props, State> {
 
                         {!!activity.description && <Text style={[styles.description]}>{"\"" + activity.description + "\""}</Text>}
                     </View>
-                )
-
-                }
-
+                )}
             </View>
         )
     }
@@ -110,15 +107,12 @@ export default class ActivityBody extends React.Component<Props, State> {
             return null;
         }
 
-
-
-
         const inLineup = i18n.t(key) + ' ' + targetName;
         const tags = [];
         if (!this.props.skipLineup) {
             tags.push(inLineup);
         }
-        return tags.map(tag=><View key={tag} style={{flexDirection:'row', marginTop: 10}}>
+        return tags.map(tag=><View key={tag} style={styles.tag}>
             {renderTag(tag, press)}
         </View>)
     }
@@ -158,12 +152,10 @@ export default class ActivityBody extends React.Component<Props, State> {
         let image = resource ? resource.image : undefined;
         let imageHeight = 288;
         if (activity.type === 'asks'){
-
             let content = activity.content;
             if (__IS_LOCAL__) content += ` (id=${activity.id.substr(0, 5)})`;
-            return <Text style={[{margin: 12, fontSize: 30}]}>{content}</Text>;
+            return <Text style={styles.askText}>{content}</Text>;
         }
-
 
         const resize = image && (
             resource.type === 'CreativeWork'
@@ -176,44 +168,20 @@ export default class ActivityBody extends React.Component<Props, State> {
             outputRange: [0, 1]
         });
 
-
-        return <View style={{
-            flex:1,
-            alignSelf: 'center',
-            height: imageHeight,
-            width: "100%",
-            backgroundColor: 'transparent',
-
-        }}>
+        return <View style={[styles.imageContainer, {height: imageHeight}]}>
 
             <CachedImage
                 source={image ? {uri: image} : require('../../../img/goodsh_placeholder.png')}
                 resizeMode={resize}
-                style={{
-                    alignSelf: 'center',
-                    height: imageHeight,
-                    //position: 'absolute',
-                    // borderWidth: 2,
-                    backgroundColor: ACTIVITY_CELL_BACKGROUND,
-                    width: "100%",
-                }}
+                style={[styles.image, {height: imageHeight}]}
                 defaultSource={{}}
             />
 
-
             {
-                <Animated.View style={{
-                    position: 'absolute', width: "100%", height: "100%",
-                    backgroundColor: 'rgba(0,0,0,0.3)',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    opacity
-                }}>
-
+                <Animated.View style={[styles.yheaaContainer, {opacity}]}>
                     <Image resizeMode={'cover'} style={{}} source={require('../../../img2/yeaahAction.png')}/>
                 </Animated.View>
             }
-
 
         </View>
 
@@ -238,8 +206,15 @@ export default class ActivityBody extends React.Component<Props, State> {
 
 
 const styles = StyleSheet.create({
+    body: {padding: 15, paddingBottom: 0, backgroundColor: ACTIVITY_CELL_BACKGROUND},
+    bodyInner: {flexDirection: 'row'},
+    flex1: {flex:1},
     title: {fontSize: 19, color: Colors.black, marginBottom: 4, marginRight: 5},
     subtitle: {fontSize: 14, color: Colors.greyish},
     description: {fontSize: 14, fontFamily: SFP_TEXT_ITALIC, marginTop: 10, color: Colors.brownishGrey},
-    says: {fontSize: 16, fontFamily: SFP_TEXT_MEDIUM, color: Colors.greyish, marginTop: 10},
+    imageContainer: {flex:1, alignSelf: 'center', width: "100%", backgroundColor: 'transparent'},
+    image: {alignSelf: 'center', backgroundColor: ACTIVITY_CELL_BACKGROUND, width: "100%"},
+    yheaaContainer: {position: 'absolute', width: "100%", height: "100%",backgroundColor: 'rgba(0,0,0,0.3)',alignItems: 'center',justifyContent: 'center'},
+    tag: {flexDirection:'row', marginTop: 10},
+    askText: {margin: 12, fontSize: 30}
 });

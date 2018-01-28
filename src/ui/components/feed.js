@@ -293,7 +293,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                     },
                     ...placeholderConfig,
                     cancelTitle: i18n.t('actions.cancel'),
-                    // inputStyle: {backgroundColor: 'rgb(230,230,230)'},
+                    inputStyle: {backgroundColor: Colors.steel12},
                     inputBorderRadius: 10,
                     inputHeight: 32,
                     onChangeText: filter => this.setState({filter}),

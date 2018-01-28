@@ -68,18 +68,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
         },[]);
 
 
-        return <View style={{
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            paddingLeft: 10,
-            paddingRight: 10,
-            backgroundColor: ACTIVITY_CELL_BACKGROUND,
-        }}>
-
-            {buttons}
-
-        </View>;
+        return <View style={styles.actionBar}>{buttons}</View>;
     }
 
     renderTextButton(action: ActivityActionType, activity: Activity) {
@@ -219,10 +208,9 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     renderButton(key: string, img: Url, text: string, handler: ()=>void, active:boolean = false) {
         let color = active ? Colors.green: Colors.greyishBrown;
         return (<GTouchable onPress={handler} key={key}>
-                <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 6}}>
-
-                    <Image source={img} style={{width: 24, height: 24, margin: 8, resizeMode: 'contain', tintColor: color}}/>
-                    <Text style={{ textAlign: 'center', fontSize: 15, color: color}}>{text}</Text>
+                <View style={styles.button}>
+                    <Image source={img} style={[styles.buttonImage, {tintColor: color}]}/>
+                    <Text style={[styles.buttonText, {color: color}]}>{text}</Text>
                 </View>
             </GTouchable>
         );
@@ -256,9 +244,9 @@ export default class ActivityActionBar extends React.Component<Props, State> {
             [
                 {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
                 {text: i18n.t("actions.ok"), onPress: () => {
-                    console.log('OK Pressed');
+                    //console.log('OK Pressed');
                     this.props.dispatch(unsave(saving.id, saving.target.id)).then(() => {
-                        console.info(`saving ${saving.id} unsaved`)
+                        //console.info(`saving ${saving.id} unsaved`)
                         Snackbar.show({title: i18n.t("activity_action_bar.goodsh_deleted")});
                     });
                 }
@@ -343,4 +331,29 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
 
 const styles = StyleSheet.create({
+    actionBar: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingLeft: 10,
+        paddingRight: 10,
+        backgroundColor: ACTIVITY_CELL_BACKGROUND,
+    },
+    button: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 6
+    },
+    buttonImage: {
+        width: 24,
+        height: 24,
+        margin: 8,
+        resizeMode: 'contain'
+    },
+    buttonText: {
+        textAlign: 'center',
+        fontSize: 15
+    }
 });

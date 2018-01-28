@@ -31,7 +31,7 @@ export default class UserRowI extends React.Component<Props, State> {
         let imageDim = small ? 20 : 30;
 
         let uri = user ? user.image: "";
-        return <View style={[style, {alignItems: 'center', flexDirection: 'row'}]}>
+        return <View style={[style, styles.userContainer]}>
             {
                 !!uri && !noImage && <Image
                     source={{uri}}
@@ -44,19 +44,15 @@ export default class UserRowI extends React.Component<Props, State> {
                 />
             }
 
-            <View style={{/*flex: 1, width: '100%', height: 60*/}}>
-                <View style={{flexDirection: 'row'/*flex: 1, , alignItems: 'center'*/}}>
+            <View>
+                <View style={styles.rightContainer}>
                     <GTouchable
                         onPress={()=>this.navigateToUser(user)}
                     >
-                        <Text style={{
-                            fontSize: 13,
-                            color: Colors.greyishBrown,
-                            fontWeight: 'bold'
-                        }}>{fullName(user)}</Text>
+                        <Text style={styles.rightText}>{fullName(user)}</Text>
                     </GTouchable>
                     {this.props.rightComponent}
-                    
+
                 </View>
 
                 {this.props.children}
@@ -77,3 +73,9 @@ export default class UserRowI extends React.Component<Props, State> {
 
     }
 }
+
+const styles = StyleSheet.create({
+    userContainer: {alignItems: 'center', flexDirection: 'row'},
+    rightContainer: {flexDirection: 'row'},
+    rightText: {fontSize: 13, color: Colors.greyishBrown, fontWeight: 'bold'}
+});
