@@ -91,8 +91,6 @@ workflows:
         - apk_file_include_filter: "$GOODSH_BUILD_APK_FILE_INCLUDE_FILTER"
         - gradlew_path: "$GRADLEW_PATH"
 
-
-
   android:
     before_run:
     - _prepare
@@ -107,12 +105,12 @@ workflows:
 
   _prepare-ios:
     steps:
-    # - install-missing-android-tools: {}
     - fastlane-match@0.1.0:
         inputs:
         - git_url: https://github.com/goodshopping/ios-certs
         - app_id: $GOODSH_BUILD_IOS_APP_ID
         - decrypt_password: "$CERTS_DECRYPT"
+        - type: adhoc
     - recreate-user-schemes@1.0.2:
         inputs:
         - project_path: "$BITRISE_PROJECT_PATH"

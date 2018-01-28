@@ -14,7 +14,9 @@
 			"Debug"
 		],
 		"Release": [
-			"Preprod"
+			"Dev",
+			"Preprod",
+			"Prod"
 		]
 	},
 	"dependencies": {
