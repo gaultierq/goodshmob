@@ -5,7 +5,7 @@ import {Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View,} f
 
 import {connect} from "react-redux";
 import {logged} from "../../managers/CurrentUser"
-import i18n from '../../i18n/i18n'
+
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import {Menu, MenuContext, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';

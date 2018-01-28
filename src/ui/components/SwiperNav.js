@@ -3,7 +3,7 @@
 import React, {Component} from 'react';
 import {View, Image, StyleSheet, Text, TextInput, TouchableOpacity} from 'react-native';
 import {Colors} from "../colors";
-import i18n from '../../i18n/i18n';
+;
 import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts";
 
 export default class SwiperNav extends Component<Props, State> {

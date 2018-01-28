@@ -11,7 +11,7 @@ import {TRIGGER_USER_DIRECT_ACTION, TRIGGER_USER_INDIRECT_ACTION} from "../../ma
 import {isEmpty} from "lodash";
 import type {i18Key, ms, RequestState, Url} from "../../types";
 import {renderSimpleButton} from "../UIStyles";
-import i18n from '../../i18n/i18n'
+
 import type {ScreenVisibility} from "./Screen";
 import Search from 'react-native-search-box';
 import {Colors} from "../colors";
@@ -80,11 +80,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         this.createdAt = Date.now();
         this.postFetchFirst();
         props.feedId && console.log(`constructing feed '${props.feedId}'`);
-
-        getLanguages().then(languages => {
-            console.log(languages) // ['en-US', 'en']
-            this.isFrenchLang = _.startWith(_.first(languages), 'fr');
-        })
+        this.isFrenchLang = _.startsWith(i18n.locale, 'fr');
     }
 
     componentWillReceiveProps(nextProps: Props<*>) {
@@ -263,12 +259,12 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         };
 
         const color = Colors.grey142;
-
+        console.debug("DEBUG:::"+this.isFrenchLang);
         //TODO: adjust fr, en margins
         const placeholderConfig = {
             placeholder: i18n.t('search.in_feed'),
-            placeholderCollapsedMargin: this.isFrenchLang ? 65 : 65,
-            searchIconCollapsedMargin: this.isFrenchLang ? 80 : 80,
+            placeholderCollapsedMargin: this.isFrenchLang ? 95 : 65,
+            searchIconCollapsedMargin: this.isFrenchLang ? 110 : 80,
         };
 
 

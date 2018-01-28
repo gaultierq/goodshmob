@@ -7,7 +7,7 @@ import {isEmpty} from "lodash";
 import type {i18Key, RequestState} from "../../types";
 import Button from 'apsl-react-native-button'
 import {Colors} from "../colors";
-import i18n from '../../i18n/i18n'
+
 
 type Props = {
 

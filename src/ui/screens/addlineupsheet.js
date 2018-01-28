@@ -3,7 +3,7 @@
 import React, {Component} from 'react';
 import {Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View,} from 'react-native';
 import Snackbar from "react-native-snackbar"
-import i18n from '../../i18n/i18n'
+
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import {Menu, MenuContext, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';

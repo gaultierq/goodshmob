@@ -2,7 +2,6 @@
 
 import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import i18n from '../../../i18n/i18n'
 import * as UI from "../../UIStyles";
 import type {Activity, i18Key, List, User} from "../../../types";
 import UserActivity from "./UserActivity";

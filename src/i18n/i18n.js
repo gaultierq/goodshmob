@@ -8,5 +8,11 @@ I18n.translations = {
     en,
     fr
 };
+var old = I18n.missingTranslation;
 
-export default I18n;
+I18n.missingTranslation = function(scope, options) {
+    console.error("missing locale:" + JSON.stringify([scope,options]));
+    return old.apply(I18n, [scope, options])
+};
+
+module.exports = I18n;
