@@ -130,6 +130,94 @@ class CommentsScreen extends Screen<Props, State> {
             );
     }
 
+
+
+
+    render() {
+        let activity = this.getActivity();
+        let comments = activity ? activity.comments : [];
+
+        let items = mergeItemsAndPendings(
+            comments,
+            this.props.pending[CREATE_COMMENT],
+            [],
+            (pending) => ({
+                id: pending.id,
+                name: pending.payload.listName,
+                content: pending.payload.content,
+                createdAt: pending.insertedAt,
+                user: currentUser(),
+                type: 'comments',
+                pending: true
+            })
+        );
+        return (
+            <MainBackground>
+                <KeyboardAwareScrollView
+                    // style={{ backgroundColor: '#4c69a5' }}
+                    // resetScrollToCoords={{ x: 0, y: 0 }}
+                    contentContainerStyle={styles.container}
+                    scrollEnabled={false}
+                    keyboardShouldPersistTaps={true}
+                >
+                    {/*<View style={[styles.container]}>*/}
+
+                    {activity &&
+                    <View style={
+                        {
+                            padding: 12,
+                            backgroundColor:"white",
+                            shadowOffset: {width: 0, height: 4},
+                            shadowColor: Colors.black,
+                            shadowOpacity: 0.3,
+                            shadowRadius: 2,
+                            elevation: 1,
+                            zIndex: 10,
+                        }
+                    }>
+                        <View>
+                        <UserActivity
+                            activityTime={activity.createdAt}
+                            user={activity.user}
+                            navigator={this.props.navigator}
+                        />
+                        </View>
+
+                        <Text>{activity.description}</Text>
+                    </View>}
+                    {activity &&
+                    <Feed
+                        inverted
+                        data={items}
+                        renderItem={this.renderItem.bind(this)}
+                        fetchSrc={{
+                            callFactory:()=>actions.loadComments(activity),
+                            action: LOAD_COMMENTS,
+                            options: {activityId: activity.id, activityType: activity.type}
+                        }}
+                        //hasMore={false}
+                        ItemSeparatorComponent={()=> <FeedSeparator/>}
+                        contentContainerStyle={{marginBottom: 4, paddingTop: 120, backgroundColor: Colors.greying}}
+                    />}
+
+                    {
+                        activity && <SmartInput
+                            containerStyle={{position: 'absolute', bottom: 0, padding: 3, backgroundColor: Colors.greying}}
+                            inputContainerStyle={{borderRadius: 4, borderWidth: 0}}
+                            execAction={(input: string) => this.addComment3(activity, input)}
+                            placeholder={"activity_comments_screen.add_comment_placeholder"}
+                            returnKeyType={'send'}
+                            // multiline
+                        />
+                    }
+                    {/*</View>*/}
+                </KeyboardAwareScrollView>
+            </MainBackground>
+        );
+    }
+
+
+
     getActivity() {
         return buildData(this.props.data, this.props.activityType, this.props.activityId);
     }
@@ -171,7 +259,7 @@ class CommentsScreen extends Screen<Props, State> {
         if (!comment) return null;
 
         return (
-            <View style={{padding: 12, paddingTop: 0, paddingBottom: 15, backgroundColor: Colors.white, borderBottomWidth: 1, borderColor: Colors.greyish}}>
+            <View style={{padding: 12, paddingTop: 0, paddingBottom: 15, backgroundColor: Colors.white, }}>
                 <UserActivity
                     activityTime={comment.createdAt}
                     user={comment.user}
