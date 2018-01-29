@@ -1061,8 +1061,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = 656VNMF77V;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.GameCenter = {
 								enabled = 1;
@@ -1852,10 +1851,10 @@
 				BUNDLE_DISPLAY_NAME = "Goodsh L";
 				CODE_SIGN_ENTITLEMENTS = goodshmob/goodshmob.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = 656VNMF77V;
+				DEVELOPMENT_TEAM = "";
 				FACEBOOK_APP_ID = 857429951037660;
 				FACEBOOK_DISPLAY_NAME = "debug - Goodsh";
 				FACEBOOK_LOGIN_URL_SCHEME = fb857429951037660;
@@ -1912,9 +1911,9 @@
 				BUNDLE_DISPLAY_NAME = "Goodsh R";
 				CODE_SIGN_ENTITLEMENTS = goodshmob/goodshmob.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 656VNMF77V;
+				DEVELOPMENT_TEAM = "";
 				FACEBOOK_APP_ID = 857429951037660;
 				FACEBOOK_DISPLAY_NAME = "release - Goodsh";
 				FACEBOOK_LOGIN_URL_SCHEME = fb857429951037660;
@@ -2112,7 +2111,7 @@
 				BUNDLE_DISPLAY_NAME = "Goodsh P";
 				CODE_SIGN_ENTITLEMENTS = goodshmob/goodshmob.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 656VNMF77V;
 				FACEBOOK_APP_ID = 1933031383391822;
@@ -2155,7 +2154,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = it.goodsh.mob.preprod;
 				PRODUCT_NAME = "goodshmob preprod";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "78324f49-c85a-4435-9ff8-b53eb5dcb318";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development it.goodsh.mob.preprod";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Preprod;
@@ -2256,7 +2256,7 @@
 				BUNDLE_DISPLAY_NAME = "Goodsh D";
 				CODE_SIGN_ENTITLEMENTS = goodshmob/goodshmob.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 656VNMF77V;
 				FACEBOOK_APP_ID = 857429951037660;
@@ -2299,7 +2299,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = it.goodsh.mob.dev;
 				PRODUCT_NAME = "goodshmob dev";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "f06c57ff-f319-41f1-af1d-9ec75dab201f";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development it.goodsh.mob.dev";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Dev;
@@ -2400,7 +2401,7 @@
 				BUNDLE_DISPLAY_NAME = Goodsh;
 				CODE_SIGN_ENTITLEMENTS = goodshmob/goodshmob.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 656VNMF77V;
 				FACEBOOK_APP_ID = 787478441366145;
@@ -2443,7 +2444,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = it.goodsh.mob;
 				PRODUCT_NAME = "goodshmob prod";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "c97ffad1-842f-411d-acc6-df77fbcb2223";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development it.goodsh.mob";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Prod;
