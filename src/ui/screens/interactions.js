@@ -53,14 +53,14 @@ export class InteractionScreen extends Screen<Props, State> {
             <View style={styles.container}>
 
                 {
-                    (data && data.length > 0) &&
+                    (data && data.length == 0) ?
                     <Button
                         style={{backgroundColor: Colors.green,borderWidth: 0,borderRadius: 4,margin: 12}}
                         onPress={()=>this.share()}>
                         <Text style={[{color: Colors.white, fontSize: 17, fontFamily: SFP_TEXT_MEDIUM, fontWeight: 'bold'}]}>
                             {i18n.t('actions.invite')}
                         </Text>
-                    </Button>
+                    </Button> : null
                 }
 
                 <Feed

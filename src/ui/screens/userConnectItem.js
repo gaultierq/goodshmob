@@ -74,9 +74,20 @@ export default class UserConnectItem extends Component<Props, State> {
     }
 
     disconnectWith(user: User) {
-
         let action = actions.deleteFriendship(user.id).disptachForAction2(DISCONNECT);
         Api.safeDispatchAction.call(this, this.props.dispatch, action, 'disconnect');
+        /*Alert.alert(
+            i18n.t("friends.alert.title"),
+            i18n.t("friends.alert.label"),
+            [
+                {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                {text: i18n.t("actions.ok"), onPress: () => {
+                    let action = actions.deleteFriendship(user.id).disptachForAction2(DISCONNECT);
+                    Api.safeDispatchAction.call(this, this.props.dispatch, action, 'disconnect');
+                }},
+            ],
+            { cancelable: true }
+        )*/
     }
 }
 

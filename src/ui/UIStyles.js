@@ -10,7 +10,7 @@ import GTouchable from "./GTouchable";
 export const NavStyles = {
     navBarButtonColor: Colors.greyishBrown,
     navBarBackgroundColor: Colors.dirtyWhite,
-    navBarTextFontSize: 20,
+    navBarTextFontSize: 18,
     navBarTextFontFamily: SFP_TEXT_MEDIUM,
     navBarInputBackgroundColor: Colors.greying
 };

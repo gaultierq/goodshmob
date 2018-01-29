@@ -203,6 +203,10 @@ export default {
         messages: {
             connect: "connectés",
             disconnect: "déconnectés",
+        },
+        alert: {
+            title: "Déconnexion",
+            label: "Êtes-vous sûr de vouloir vous déconnecter ?"
         }
     },
     empty: {

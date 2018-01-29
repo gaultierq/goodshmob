@@ -127,7 +127,7 @@ export default class ActivityDescription extends React.Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
-    descriptionContainer: {backgroundColor: 'red'},
+    descriptionContainer: {backgroundColor: 'transparent'},
     description: {fontSize: 13, paddingLeft: 38, paddingTop: 3, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey},
     ask: {flex: 1, flexDirection: 'row', alignItems: 'center'},
     askText: {fontSize: 13},

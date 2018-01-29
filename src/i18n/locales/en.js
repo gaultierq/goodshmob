@@ -209,6 +209,10 @@ export default {
         messages: {
             connect: "connected",
             disconnect: "disconnected",
+        },
+        alert: {
+            title: "Disconnection",
+            label: "Are you sur ?"
         }
     },
     empty: {
