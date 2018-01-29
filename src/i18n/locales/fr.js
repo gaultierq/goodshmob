@@ -2,20 +2,20 @@ export default {
     app : {
         update: {
             title: "Mise à jour",
-            label : "Mise à jour de votre app, un instant svp..."
+            label : "Mise à jour de Goodsh. Un peu de patience..."
         }
     },
     "tabs": {
         home: {
-            title: "Mes listes"
+            title: "Mes goodsh"
         },
         network: {
-            title: "Mon Réseau"
+            title: "Mon réseau"
         }
     },
     lineups: {
         search: {
-            placeholder: "Rechercher dans mes listes"
+            placeholder: "Rechercher"
         },
         goodsh : {
             title: "GoodshBox"
@@ -27,30 +27,30 @@ export default {
     },
     no_spam: {
         dialog_title: "Les 3 grands principes de Goodsh",
-        dialog_body: "Tes goodsh ne sont accessibles que par toi et tes proches.\n\nPour un goodsh complètement privé, active le cadenas.\n\nGoodsh ne spam jamais tes contacts.",
-        dialog_button: 'Ok, go !',
+        dialog_body: "Tes goodsh ne sont visibles QUE par toi et ton réseau.\n\nQuand tu enregistres un goodsh, tes contacts ne sont PAS notifiés. \n\nPour un goodsh COMPLÈTEMENT privé, active le cadenas.",
+        dialog_button: 'OK, GO!',
     },
     home: {
         wizard: {
-            action_button_label : "Enregistrer un goodsh",
-            action_button_body : "Tap ici pour ton premier gooodsh.",
+            action_button_label : "Enregistrer un goodsh.",
+            action_button_body : "Tap '+' pour ton premier gooodsh.",
         }
     },
     search: {
-        in_items: "Saisir nom du goodsh à enregistrer",
-        in_network: "Rechercher un goodsh, un contact, une liste,...",
+        in_items: "Saisir le nom à enregistrer",
+        in_network: "Rechercher dans mon réseau",
         in_feed: "Rechercher dans mes listes"
     },
     "shared":{
         "goodsh_saved":"C'est bon, c'est goodshé.",
-        "add":"Ajouter",
+        "add":"##Ajouter",
         "link_copied":"Lien copié ✓",
     },
     "activity_item": {
         header: {
             in: "dans",
             to: "à",
-            ask: "cherche des recommendations",
+            ask: "a besoin de recos !",
         },
         buttons:{
             "comment": {
@@ -70,13 +70,13 @@ export default {
             },
             "follow_list": "SUIVRE LA LISTE",
             "unfollow_list": "NE PLUS SUIVRE",
-            "modified_list": "Liste modifiée",
+            "modified_list": "Liste renommée",
             "deleted_list": "Liste effacée"
         }
     },
     "activity_screen":{
         "comments":{
-            "no_comments":"Laisse un commentaire",
+            "no_comments":"Donner son avis",
             "user_answered":"a commenté",
         }
     },
@@ -84,44 +84,43 @@ export default {
         "facebook_signin":"SE CONNECTER AVEC FACEBOOK",
         "no_publication":"Goodsh ne publie rien sur Facebook.",
         "definition":{
-            "example":"Bouquin, restaurant, film, série, artiste,\nlieu, musique, gadget, fringue, vin, …"
+            "example":"##Bouquin, restaurant, film, série, artiste,\nlieu, musique, gadget, fringue, vin, …"
         },
-        "value_proposal":"Marre d’oublier les recommandations\nqu’on te fait ?",
-        "slider_intro_1": "On m'a dit que c’était top.\n" +
-        "Pour ne pas l'oublier je l’ai goodshé.",
+        "value_proposal":"##Marre d’oublier les recommandations\nqu’on te fait ?",
+        "slider_intro_1": "On m'a dit que c’était top.\nPour ne pas l'oublier\nje l’ai goodshé.",
         "slider_intro_2": "Je retrouve mes recos quand j'en ai besoin.\nEt je peux les partager facilement.",
-        "slider_intro_3": "Je demande des recos, des avis, des idées à mon réseau.",
+        "slider_intro_3": "Je demande des des avis, des idées, des conseils à mon réseau.",
         "slider_intro_4": "Je découvre livres, films, musiques, restos, idées cadeau, choses à faire...et j'achète en un clin d'oeil.",
         "credentials": "Fait avec amour à Paris",
     },
     "profile_screen":{
         "title":"Feedback",
-        "subtitle":"Comment tu la trouves ? Tu la kiffes ? Qu'est-ce qui manque cruellement ? On a très envie de savoir...",
+        "subtitle":"##Comment tu la trouves ? Tu la kiffes ? Qu'est-ce qui manque cruellement ? On a très envie de savoir...",
     },
     "create_list_controller":{
         "title":"Nouvelle liste",
-        "subtitle":"Pour y ranger plein de trucs top et les partager si je veux",
-        "placeholder":"Sois créatif :)",
+        "subtitle":"##Pour y ranger plein de trucs top et les partager si je veux",
+        "placeholder":"Sois créatif !",
         "action":"Créer une nouvelle liste",
         "created":"Liste créée",
-        "visible":"Visible par mes amis",
-        "unvisible":"Invisible par mes amis",
-        "add_description":"Ajouter une description",
+        "visible":"Visible par mon réseau",
+        "unvisible":"Liste privée",
+        "add_description":"Ajouter un petit mot",
         "choose_list":"Choisir une autre liste",
-        "all_list" : "Toutes vos listes"
+        "all_list" : "Toutes mes listes"
     },
     "search_bar":{
-        "me_placeholder":"Rechercher dans vos listes",
-        "network_placeholder":"Rechercher dans votre réseau"
+        "me_placeholder":"##Rechercher dans mes listes",
+        "network_placeholder":"##Rechercher dans mon réseau"
     },
     "network_search_tabs":{
-        "savings":"Goodshs & Lineups",
-        "users":"Goodshers"
+        "savings":"GOODSH & LISTE",
+        "users":"GOODSHER"
     },
     "community_screen":{
         "tabs": {
-            "friends":"Mes amis",
-            "notifications":"Notifications",
+            "friends":"MES CONTACTS",
+            "notifications":"NOTIFICATIONS",
         },
         "empty_screen": "Découvre ici les goodsh de tes proches. Ask pour les solliciter."
     },
@@ -133,27 +132,27 @@ export default {
             "musics":"SON"
         },
         "placeholder": {
-            "consumer_goods":"Plein de trucs",
-            "places":"Plein d'endroits",
-            "movies":"Plein de films",
-            "musics":"Plein de sons"
+            "consumer_goods":"##Plein de trucs",
+            "places":"##Plein d'endroits",
+            "movies":"##Plein de films",
+            "musics":"##Plein de sons"
         },
     },
     "activity_comments_screen":{
-        "add_comment_placeholder":"Ajouter un commentaire"
+        "add_comment_placeholder":"Répondre"
     },
     "send_screen":{
-        "add_description_placeholder":"Ajouter un petit mot"
+        "add_description_placeholder":"Ajouter un petit mot à l'envoi (visible uniquement par le destinataire)."
     },
     "interactions":{
         "saving":"a enregistré %{what}",
         "comment":"a commenté %{what}",
         "comment_ask":"a répondu à '%{what}'",
-        "like":"a dit YEAAH! à %{what}",
-        "list":"a crée la lineup %{what}",
+        "like":"dit YEAAH! à %{what}",
+        "list":"a créé la liste %{what}",
         "post":"a posté %{what}",
-        "sending":"t’a envoyé %{item_title} to you",
-        "invitation":"et %{you} êtes désormais connectés",
+        "sending":"t’a envoyé %{item_title}",
+        "invitation":"Connexion réussie avec %{you} :-)",
         "you":"toi",
         "empty_screen":"Profite pleinement de Goodsh et invite des proches."
     },
@@ -192,17 +191,17 @@ export default {
         }
     },
     loadmore: "Chargement...",
-    send_message: "J'ai quelquechose à te recommender:\n%{what}\n\nJe l'ai trouvé grace a Goodsh: %{url}",
+    send_message: "J'ai quelque chose à te recommander:\n%{what}\n\nJe l'ai trouvé grâce à Goodsh : %{url}",
     goodsh_url: "https:\/\/goodsh.it\/",
     friends: {
         empty_screen: "Profite pleinement de Goodsh et invite des proches.",
         buttons: {
-            connect: "Se connecter",
-            disconnect: "Se déconnecter",
+            connect: "Connecter",
+            disconnect: "Déconnecter",
         },
         messages: {
-            connect: "connectés",
-            disconnect: "déconnectés",
+            connect: "connecté",
+            disconnect: "déconnecté",
         },
         alert: {
             title: "Déconnexion",
@@ -210,10 +209,10 @@ export default {
         }
     },
     empty: {
-        lineup: "Cette liste est vide"
+        lineup: "Ach, cette liste est vide\n\net c'est bien dommage !"
     },
     activity_action_bar: {
-        goodsh_deleted: "goodsh effacé",
+        goodsh_deleted: "Goodsh supprimé",
         comment: {
             title: "Commentaires"
         },
@@ -222,55 +221,55 @@ export default {
         }
     },
     add_item_screen: {
-        title: "Choisissez une liste"
+        title: "Choisir une liste"
     },
     home_search_screen: {
         saving: {
-            title: "Details",
+            title: "Détails",
         },
         community: {
-            title: "Mon Réseau",
+            title: "Mon réseau",
         }
     },
     actions: {
         ok: "Ok",
         add: "Ajouter",
         delete: "Supprimer",
-        change: "Changer",
-        change_title: "Changer titre",
+        change: "Modifier",
+        change_title: "Modifier le titre",
         undo: "Annuler",
         cancel: "Annuler",
         buy: "Acheter",
         send: "Envoyer",
         create: "Créer",
         try_again: "Réessayer",
-        ask_friend: "Pose une\nquestion à\nton réseau",
+        ask_friend: "Pose une\nquestion à\nmon réseau",
         logout: "Déconnexion",
         terms: "Mentions légales",
         copy_link: "Copier le lien",
         send_to_goodsher: "Envoyer à un autre\ngoodsher",
-        skip: "Passer",
-        ask: "Sollicitez vos amis",
+        skip: "OK",
+        ask: "Demander à mon réseau",
         invite: "Inviter un ami à goodsher"
 
     },
     common: {
-        empty_feed_generic: "Rien ici pour le moment..."
+        empty_feed_generic: "Mince, il n'y à rien ici.\nPourquoi ne pas inviter des amis à goodsher ?"
     },
     ask: {
-        sent: "Question envoyée"
+        sent: "Demande envoyée"
     },
     share_goodsh: {
-        title: "Viens découvrir Goodsh!",
-        message: "Rejoins-moi sur Goodsh ! https://goodsh.it/",
+        title: "Viens goodshit avec moi",
+         //insérer plutôt le lien vers le store non ?//message: "Rejoins-moi sur Goodsh : https://goodsh.it/",
     },
     loading: {
-        error: "Le chargement a échoué..."
+        error: "Z@#u$%t, le chargement a échoué. "
     },
     alert: {
         delete: {
             title: "Suppression",
-            label: "Êtes-vous sûr de vouloir effacer cet élément ?"
+            label: "Confirmer la suppression ?"
         }
     },
     dev: {
