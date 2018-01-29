@@ -84,6 +84,9 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         this.postFetchFirst();
         props.feedId && console.log(`constructing feed '${props.feedId}'`);
         this.isFrenchLang = _.startsWith(i18n.locale, 'fr');
+        if (!this.props.fetchSrc) {
+            console.warn("no fetch source provided");
+        }
     }
 
     componentWillReceiveProps(nextProps: Props<*>) {
@@ -125,11 +128,14 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
     postFetchFirst() {
         setTimeout(() => {
-            if (this.canFetch() && this.state.firstLoad === 'idle') {
-                let trigger = this.hasItems() ? TRIGGER_USER_INDIRECT_ACTION : TRIGGER_USER_DIRECT_ACTION;
+            let trigger = this.hasItems() ? TRIGGER_USER_INDIRECT_ACTION : TRIGGER_USER_DIRECT_ACTION;
+            const options = {trigger};
+
+            if (this.canFetch('isFetchingFirst', options) && this.state.firstLoad === 'idle') {
+
                 Api.safeExecBlock.call(
                     this,
-                    () => this.fetchIt({trigger}),
+                    () => this.fetchIt(options),
                     'firstLoad'
                 );
             }
@@ -137,7 +143,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     render() {
-        assertUnique(this.getItems());
+        assertUnique(this.getFlatItems());
 
         const {
             sections,
@@ -156,12 +162,12 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
         let items = this.getItems();
 
-        let nothingInterestingToDisplay = !this.hasItems() && this.state.isFetchingFirst === 'ok';
+        let nothingInterestingToDisplay = !this.hasItems() && this.manager.isSuccess('isFetchingFirst', this);
 
         let firstEmptyLoader = this.isFirstEmptyLoader();
 
         if (nothingInterestingToDisplay) {
-            if (this.state.isFetchingFirst === 'ko') {
+            if (this.manager.isFail('isFetchingFirst', this)) {
                 return this.renderFail(()=>this.tryFetchIt());
             }
             if (empty) return this.renderEmpty();
@@ -200,25 +206,6 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         }
 
         return <View>{searchBar}{list}</View>
-
-
-        //
-        // return (
-        //     <SectionList
-        //         sections={[{data, title: 'test'}]}
-        //         ref="feed"
-        //         renderItem={renderItem}
-        //         keyExtractor={this.keyExtractor}
-        //         refreshControl={this.renderRefreshControl()}
-        //         onEndReached={ this.onEndReached.bind(this) }
-        //         onEndReachedThreshold={0.1}
-        //         ListFooterComponent={!firstEmptyLoader && this.renderFetchMoreLoader(ListFooterComponent)}
-        //         style={{...this.props.style,  minHeight: 100}}
-        //         ListHeaderComponent={!firstEmptyLoader && ListHeaderComponent}
-        //         onScroll={this._handleScroll}
-        //         {...attributes}
-        //     />
-        // );
     }
 
     debugOnlyEmptyFeeds() {
@@ -262,7 +249,6 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         };
 
         const color = Colors.grey142;
-        console.debug("DEBUG:::"+this.isFrenchLang);
         //TODO: adjust fr, en margins
         const placeholderConfig = {
             placeholder: i18n.t('search.in_feed'),
@@ -317,13 +303,31 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     hasItems(): boolean {
         return this.itemsLen() > 0;
     }
+
     itemsLen(): number {
         return _.size(this.getItems());
+    }
+
+    getFlatItems() {
+        if (this.props.sections) {
+            let datas = this.props.sections.map(s=>s.data);
+            return Array.prototype.concat.apply([], datas)
+        }
+        return this.props.data;
     }
 
     getItems() {
         if (this.debugOnlyEmptyFeeds()) return [];
         return this.props.sections || this.props.data;
+    }
+
+    getLastItem() {
+        let data;
+        if (this.props.sections) {
+            let lastSection = _.last(this.props.sections);
+            data = lastSection && lastSection.data;
+        }
+        return _.last(data);
     }
 
     renderEmpty() {
@@ -349,16 +353,17 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         let lastEvent = event.nativeEvent;
         this.lastEvent = lastEvent;
 
-        this.prefetch(lastEvent);
+        this._throttledPrefetch();
     };
 
+    _throttledPrefetch = _.throttle(()=> this.prefetch(), 3000);
 
     //fetching next elements if only 5 rows remaining
-    prefetch(lastEvent) {
+    prefetch() {
 //
-        let scrollY = lastEvent.contentOffset.y;
-        let height = lastEvent.layoutMeasurement.height;
-        let totalSize = lastEvent.contentSize.height;
+        let scrollY = this.lastEvent.contentOffset.y;
+        let height = this.lastEvent.layoutMeasurement.height;
+        let totalSize = this.lastEvent.contentSize.height;
 
         let elem = this.itemsLen();
         if (elem) {
@@ -369,38 +374,58 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             let remainingRows = hidden / rowHeight;
 
             if (remainingRows < 5) {
-                console.log("Only " + remainingRows + " left. Prefetching...");
-                this.gentleFetchMore();
+                if (this.gentleFetchMore()) {
+                    console.debug("Only " + remainingRows + " left. Prefetching...");
+                }
             }
         }
     }
 
     onEndReached() {
-        console.debug("onEndReached");
-        this.gentleFetchMore();
+        if (this.gentleFetchMore()) {
+            console.debug("onEndReached => fetching more");
+        }
     }
 
     gentleFetchMore() {
         if (this.hasMore()) {
-            this.fetchMore({trigger: TRIGGER_USER_INDIRECT_ACTION});
+            return this.fetchMore({trigger: TRIGGER_USER_INDIRECT_ACTION});
         }
         else {
-            console.debug("== end of feed ==")
+            console.debug("== end of feed ==");
+            return false;
         }
     }
 
     canFetch(requestName: string = 'isFetchingFirst', options: * = {}): boolean {
-        if (this.props.cannotFetch) {
-            console.log(requestName + " fetch prevented");
+        if (this.props.cannotFetch || !this.props.fetchSrc) {
+            //console.log(requestName + " fetch prevented");
             return false;
         }
-        else if (this.state[requestName] === 'sending') {
-            console.log(requestName + " is already running. state="+JSON.stringify(this.state));
+        else if (this.manager.isSending(requestName, this)) {
+            console.log(`'${requestName}' prevented: is already running. state=${JSON.stringify(this.state)}`);
             return false;
         }
-        else if (this.lastFetchFail + 2000 > Date.now()) {
-            console.log("request debounced");
-            return false;
+        else if (options.trigger === TRIGGER_USER_INDIRECT_ACTION) {
+            let events = this.manager.getEvents(this, requestName);
+
+            //if recent (30s) result is a failure, do not refetch now
+            {
+                let lastFail = _.last(events.filter(e=> e.status === 'ko'));
+                if (lastFail && Date.now() < lastFail.date + 30 * 1000) {
+                    console.debug("debounced fetch: recent failure");
+                    return false;
+                }
+            }
+
+            //if recent (5min) result with no data, do not refetch now
+            {
+                let lastEmpty = _.last(events.filter(e=> _.get(e, 'options.emptyResult')));
+                if (lastEmpty && Date.now() < lastEmpty.date + 5 * 60 * 1000) {
+                    console.debug("debounced fetch: recent empty result");
+                    return false;
+                }
+            }
         }
         return true;
     }
@@ -408,9 +433,11 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     tryFetchIt(options?: any = {}) {
         let {afterId} = options;
         let requestName = afterId ? 'isFetchingMore' : 'isFetchingFirst';
-        if (this.canFetch(requestName)) {
+        if (this.canFetch(requestName, options)) {
             this.fetchIt(options);
+            return true;
         }
+        return false;
     }
 
     fetchIt(options?: any = {}) {
@@ -457,9 +484,11 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                         return reject(`no data provided for ${fetchSrc.action}`);
                     }
                     // this.setState({[requestName]: 'ok'});
-                    reqTrack.success();
+
 
                     let hasNoMore = data.length === 0;
+                    reqTrack.success({emptyResult: hasNoMore});
+
                     if (hasNoMore) {
                         this.setState({lastEmptyResultMs: Date.now()});
                     }
@@ -484,11 +513,12 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     fetchMore(options ?: any = {}) {
-        let last = _.last(this.getItems());
+        let last = this.getLastItem();
         if (last) {
-            this.tryFetchIt({afterId: last.id, ...options});
+            if (!last.id) throw "no id found for this item:" + last;
+            return this.tryFetchIt({afterId: last.id, ...options});
         }
-
+        return false;
     }
 
     onRefresh() {
@@ -517,7 +547,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         return (<View style={{backgroundColor: 'transparent'}}>
                 {ListFooterComponent}
                 {
-                    this.state.isFetchingMore === 'sending' && !recentlyCreated && (
+                    this.manager.isSending('isFetchingMore', this) && !recentlyCreated && (
 
                         <View style={{flex:1, margin:12, justifyContent:'center'}}>
                             <Text style={{fontSize: 10, alignSelf: "center", marginRight: 8}}>{i18n.t('loadmore')}</Text>
@@ -529,7 +559,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                     )
                 }
                 {
-                    this.state.isFetchingMore === 'ko' && this.renderFail(() => this.fetchMore({trigger: TRIGGER_USER_DIRECT_ACTION}))
+                    this.manager.isFail('isFetchingMore', this) && this.renderFail(() => this.fetchMore({trigger: TRIGGER_USER_DIRECT_ACTION}))
                 }
             </View>
         )
@@ -546,13 +576,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     hasMore() {
-        let last = this.state.lastEmptyResultMs;
-        if (last && Date.now() - last < 1000 * 10) {
-            console.log("throttled -> hasMore=false");
-            return false;
-        }
-        if (typeof this.props.hasMore !== 'undefined') return this.props.hasMore;
-        return true;
+        return (typeof this.props.hasMore !== 'undefined' && this.props.hasMore) || true;
     }
 
 

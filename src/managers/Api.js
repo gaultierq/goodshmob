@@ -64,7 +64,7 @@ class Api {
     pendingAction;
 
     execPendings() {
-        console.debug('Api: exec pendings');
+
         if (!this.isConnected) {
             console.debug('Api: exec pendings: no connection');
             return;
@@ -83,6 +83,7 @@ class Api {
         let pend = _.head(pendings);
 
         if (pend) {
+            console.debug('Api: exec pendings');
             let delay = pend.dueAt - Date.now();
             if (delay > 0) {
                 console.info(`execPendings: pending action found but not dued yet (schedueuled in ${delay} ms)`);
@@ -149,7 +150,7 @@ class Api {
             }
         }
         else {
-            console.debug("api: no pending action found");
+            //console.debug("api: no pending action found");
         }
     }
 
@@ -394,8 +395,8 @@ export function safeDispatchAction(dispatch, action, stateName: string) {
 //move
 export function safeExecBlock(block, stateName: string) {
 
-    let setRequestState: (reqFetch: RequestState) => Promise<*> = (reqFetch: RequestState) => {
-        return new Promise((resolve, reject) => {
+    let setRequestState: (reqFetch: RequestState) => () => Promise<*> = (reqFetch: RequestState) => {
+        return () => new Promise((resolve, reject) => {
             this.setState({[stateName]: reqFetch}, resolve);
         });
 
@@ -404,13 +405,14 @@ export function safeExecBlock(block, stateName: string) {
     if (this.state[stateName] !== 'sending') {
 
         // $FlowFixMe
-        return setRequestState('sending')
+        return setRequestState('sending')()
             .then(block)
             .then(
-                () => setRequestState('ok'),
+                setRequestState('ok'),
                 err => {
-                    setRequestState('ko');
-                    console.error(err);
+                    setRequestState('ko')().then(()=> {
+                        console.error(err);
+                    });
                     throw err;
                 }
             );

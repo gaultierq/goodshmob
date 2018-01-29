@@ -77,7 +77,7 @@ export function assertUnique(data: Array<>) {
     data && data.forEach((d) => {
         if (ids.indexOf(d.id)>=0) {
             //throw new Error(`id already in this array: ${d.id}`);
-            console.warn(`id already in this array: ${d.id}`);
+            console.warn(`assertUnique: id already in this array: ${d.id}`);
         }
         ids.push(d.id);
     });

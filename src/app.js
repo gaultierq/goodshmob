@@ -78,8 +78,6 @@ export default class App {
             });
         }
 
-        console.info("DEBUG:::::: hot=" + global.reloads);
-
         initGlobal(false);
 
         //this.hydrated = false;
