@@ -24,6 +24,11 @@ update app/build.gradle with latest google service version
 
 ./node_modules/flow-bin/flow-osx-v0.57.3/flow check --show-all-errors | grep 'Error: src'
 
+## Debugging
+To output in console. In `.env` file :
+
+`ENABLED_LOGS=log,debug,info,warn,error`<br/>
+
 ## Troubleshooting
 On Android, when launching the app on emulator you may end up with error :
 
