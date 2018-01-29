@@ -13,26 +13,21 @@ workflows:
         inputs:
         - message: Building [$BITRISE_GIT_BRANCH]... $GIT_CLONE_COMMIT_MESSAGE_SUBJECT
         - webhook_url: $SLACK_WEBHOOK_URL
-    - script@1.1.5:
+
+    - git-clone:
+        run_if: true
         inputs:
-        - content: |-
+        - repository_url: "git@github.com:goodshopping/goodshmob-build"
+        - clone_into_dir: "./goodshmob-build"
+        - branch: master
 
-            #!/usr/bin/env bash
-            set -e
+    - script@1.1.5:
+            inputs:
+            - content: |-
 
-            echo "== Starting build =="
-
-            echo "downloading builder"
-            if [ -d goodshmob-build ];
-            then
-                cd goodshmob-build
-                git pull
-                cd -
-            else
-                git clone https://github.com/goodshopping/goodshmob-build
-            fi
-            chmod +x ./goodshmob-build/prepare-env.sh
-            ./goodshmob-build/prepare-env.sh
+                #!/usr/bin/env bash
+                set -e
+                ./goodshmob-build/prepare-env.sh
 
     - script@1.1.5:
         inputs:
@@ -40,7 +35,7 @@ workflows:
             #!/usr/bin/env bash
             set -ex
 
-            if [ ! -f /tmp/foo.txt ]; then
+            if [ ! -f .env ]; then
                 echo "creating .env file"
                 cp $GOODSH_BUILD_REACT_NATIVE_ENV_FILE .env
             fi
@@ -51,25 +46,15 @@ workflows:
 
   _prepare-android:
     steps:
-    - install-missing-android-tools: {}
-    - script@1.1.5:
+    - git-clone:
+        run_if: true
         inputs:
-        - content: |-
+        - repository_url: "git@github.com:goodshopping/goodshmob-keystores"
+        - clone_into_dir: "./android/keystores"
+        - branch: master
+        - reset_repository: "Yes"
+    - install-missing-android-tools: {}
 
-            #!/usr/bin/env bash
-            set -ex
-
-            echo "== Downloading android keystores =="
-
-            echo "downloading builder"
-            if [ -d android/keystores ];
-            then
-                cd android/keystores
-                git pull
-                cd -
-            else
-                git clone https://github.com/goodshopping/goodshmob-keystores
-            fi
 
   _deploy-android:
     steps:
@@ -107,7 +92,7 @@ workflows:
     steps:
     - fastlane-match@0.1.0:
         inputs:
-        - git_url: https://github.com/goodshopping/ios-certs
+        - git_url: "git@github.com:goodshopping/ios-certs"
         - app_id: $GOODSH_BUILD_IOS_APP_ID
         - decrypt_password: "$CERTS_DECRYPT"
         - type: adhoc
@@ -120,6 +105,7 @@ workflows:
     steps:
     - xcode-archive:
         inputs:
+        - export_method: "ad-hoc"
         - scheme: "$BITRISE_SCHEME"
         - configuration: "$GOODSH_BUILD_IOS_CONFIGURATION"
         - project_path: "$BITRISE_WORKSPACE_PATH"
@@ -194,10 +180,10 @@ workflows:
         inputs:
         - command: install
     - install-missing-android-tools: {}
-    - file-downloader@0.9.1:
-        inputs:
-        - source: "$BITRISEIO_ANDROID_DEV_KEYSTORE_URL"
-        - destination: "$BITRISE_SOURCE_DIR/android/keystores/goodsh-dev.keystore"
+#    - file-downloader@0.9.1:
+#        inputs:
+#        - source: "$BITRISEIO_ANDROID_DEV_KEYSTORE_URL"
+#        - destination: "$BITRISE_SOURCE_DIR/android/keystores/goodsh-dev.keystore"
     - gradle-runner@1.8.0:
         inputs:
         - gradle_file: "$GRADLE_BUILD_FILE_PATH"
