@@ -403,6 +403,7 @@ export function safeExecBlock(block, stateName: string) {
     // $FlowFixMe
     if (this.state[stateName] !== 'sending') {
 
+        // $FlowFixMe
         return setRequestState('sending')
             .then(block)
             .then(

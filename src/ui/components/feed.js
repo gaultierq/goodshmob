@@ -19,6 +19,7 @@ import Fuse from 'fuse.js'
 import { getLanguages } from 'react-native-i18n'
 
 import {SFP_TEXT_REGULAR} from "../fonts"
+import {RequestManager} from "../../managers/request";
 
 
 
@@ -75,6 +76,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
     isFrenchLang: boolean;
 
+    manager: RequestManager = new RequestManager();
 
     constructor(props: Props<T>) {
         super(props);
@@ -387,7 +389,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         }
     }
 
-    canFetch(requestName: string = 'isFetchingFirst'): boolean {
+    canFetch(requestName: string = 'isFetchingFirst', options: * = {}): boolean {
         if (this.props.cannotFetch) {
             console.log(requestName + " fetch prevented");
             return false;
@@ -415,12 +417,19 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         let {afterId, trigger} = options;
         let requestName = afterId ? 'isFetchingMore' : 'isFetchingFirst';
 
+        // $FlowFixMe
         return new Promise((resolve, reject) => {
             let {fetchSrc}= this.props;
 
-            if (!fetchSrc) return;
+            if (!fetchSrc) {
+                reject("no fetch source provided");
+                return;
+            }
+            let reqTrack = this.manager.createTracker(requestName, this);
 
-            this.setState({[requestName]: 'sending'});
+            // this.setState({[requestName]: 'sending'});
+
+            reqTrack.sending();
 
             const {callFactory, useLinks} = fetchSrc;
             let call;
@@ -438,16 +447,17 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                 trigger = afterId ? TRIGGER_USER_INDIRECT_ACTION : TRIGGER_USER_DIRECT_ACTION;
             }
 
-
             this.props
                 .dispatch(call.disptachForAction2(fetchSrc.action, {trigger, ...fetchSrc.options}))
                 .then(({data, links})=> {
                     console.debug("disptachForAction3 " + JSON.stringify(this.props.fetchSrc.action));
                     if (!data) {
-                        this.setState({[requestName]: 'ko'});
+                        reqTrack.fail();
+                        // this.setState({[requestName]: 'ko'});
                         return reject(`no data provided for ${fetchSrc.action}`);
                     }
-                    this.setState({[requestName]: 'ok'});
+                    // this.setState({[requestName]: 'ok'});
+                    reqTrack.success();
 
                     let hasNoMore = data.length === 0;
                     if (hasNoMore) {
@@ -467,7 +477,8 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                 }, err => {
                     console.warn("feed error:" + err);
                     this.lastFetchFail = Date.now();
-                    this.setState({[requestName]: 'ko'});
+                    reqTrack.fail();
+                    // this.setState({[requestName]: 'ko'});
                 })
         });
     }
