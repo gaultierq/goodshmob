@@ -76,17 +76,6 @@ workflows:
         - apk_file_include_filter: "$GOODSH_BUILD_APK_FILE_INCLUDE_FILTER"
         - gradlew_path: "$GRADLEW_PATH"
 
-  android:
-    before_run:
-    - _prepare
-    - _prepare-android
-    - _build-android
-    - _deploy-android
-    steps:
-    - slack@2.6.3:
-        inputs:
-        - message: 'Android: build and deployed [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT'
-        - webhook_url: $SLACK_WEBHOOK_URL
 
   _prepare-ios:
     steps:
@@ -95,7 +84,7 @@ workflows:
         - git_url: "git@github.com:goodshopping/ios-certs"
         - app_id: $GOODSH_BUILD_IOS_APP_ID
         - decrypt_password: "$CERTS_DECRYPT"
-        - type: adhoc
+        - type: development
     - recreate-user-schemes@1.0.2:
         inputs:
         - project_path: "$BITRISE_PROJECT_PATH"
@@ -105,7 +94,7 @@ workflows:
     steps:
     - xcode-archive:
         inputs:
-        - export_method: "ad-hoc"
+        - export_method: "development"
         - scheme: "$BITRISE_SCHEME"
         - configuration: "$GOODSH_BUILD_IOS_CONFIGURATION"
         - project_path: "$BITRISE_WORKSPACE_PATH"
@@ -123,6 +112,19 @@ workflows:
         - notes: "$GIT_CLONE_COMMIT_MESSAGE_SUBJECT"
 
 
+
+  android:
+    before_run:
+    - _prepare
+    - _prepare-android
+    - _build-android
+    - _deploy-android
+    steps:
+    - slack@2.6.3:
+        inputs:
+        - message: 'Build SUCCESSFUL: [android] [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT'
+        - webhook_url: $SLACK_WEBHOOK_URL
+
   ios:
     before_run:
     - _prepare
@@ -132,9 +134,24 @@ workflows:
     steps:
     - slack@2.6.3:
         inputs:
-        - message: 'Built: [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT'
+        - message: 'Build SUCCESSFUL: [ios] [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT'
         - webhook_url: $SLACK_WEBHOOK_URL
 
+
+  build:
+    before_run:
+    - _prepare
+    - _prepare-ios
+    - _prepare-android
+    - _build-android
+    - _build-ios
+    - _deploy-ios
+    - _deploy-android
+    steps:
+    - slack@2.6.3:
+        inputs:
+        - message: 'Build SUCCESSFUL: [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT'
+        - webhook_url: $SLACK_WEBHOOK_URL
 
 #react-native:
 #    before_run:
