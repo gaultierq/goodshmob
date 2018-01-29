@@ -4,7 +4,7 @@ import Button from 'apsl-react-native-button'
 import * as React from "react";
 import {toUppercase} from "../helpers/StringUtils";
 import {Colors} from "./colors";
-import {SFP_TEXT_MEDIUM} from "./fonts";
+import {SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "./fonts";
 import GTouchable from "./GTouchable";
 
 export const NavStyles = {
@@ -193,5 +193,11 @@ export const STYLES = StyleSheet.create({
     lightBorder: {
         borderWidth: StyleSheet.hairlineWidth,
         borderColor: Colors.greyish,
+    },
+    empty_message: {
+        fontSize: 18,
+        margin: '10%',
+        textAlign: 'center',
+        fontFamily: SFP_TEXT_REGULAR
     }
 });

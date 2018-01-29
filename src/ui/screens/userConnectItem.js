@@ -9,7 +9,8 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
-    View
+    View,
+    Alert
 } from 'react-native';
 import {connect} from "react-redux";
 import {currentUserId, logged} from "../../managers/CurrentUser"
@@ -74,9 +75,7 @@ export default class UserConnectItem extends Component<Props, State> {
     }
 
     disconnectWith(user: User) {
-        let action = actions.deleteFriendship(user.id).disptachForAction2(DISCONNECT);
-        Api.safeDispatchAction.call(this, this.props.dispatch, action, 'disconnect');
-        /*Alert.alert(
+        Alert.alert(
             i18n.t("friends.alert.title"),
             i18n.t("friends.alert.label"),
             [
@@ -87,7 +86,7 @@ export default class UserConnectItem extends Component<Props, State> {
                 }},
             ],
             { cancelable: true }
-        )*/
+        )
     }
 }
 

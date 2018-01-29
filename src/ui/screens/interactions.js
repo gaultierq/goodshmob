@@ -16,10 +16,12 @@ import FeedSeparator from "../activity/components/FeedSeparator";
 import Screen from "../components/Screen";
 import NavManager from "../../managers/NavManager";
 import GTouchable from "../GTouchable";
+import ShareButton from "../components/ShareButton";
 
 import {Colors} from "../colors";
 import Button from 'apsl-react-native-button'
 import {SFP_TEXT_MEDIUM} from "../fonts";
+import {STYLES} from "../UIStyles";
 
 type Props = {
     navigator: *,
@@ -49,19 +51,11 @@ export class InteractionScreen extends Screen<Props, State> {
         let interaction = this.props.interaction;
         let data = interaction.list;
 
+        console.log('interaction', interaction);
+        console.log('data', data);
+
         return (
             <View style={styles.container}>
-
-                {
-                    (data && data.length == 0) ?
-                    <Button
-                        style={{backgroundColor: Colors.green,borderWidth: 0,borderRadius: 4,margin: 12}}
-                        onPress={()=>this.share()}>
-                        <Text style={[{color: Colors.white, fontSize: 17, fontFamily: SFP_TEXT_MEDIUM, fontWeight: 'bold'}]}>
-                            {i18n.t('actions.invite')}
-                        </Text>
-                    </Button> : null
-                }
 
                 <Feed
                     data={data}
@@ -74,27 +68,16 @@ export class InteractionScreen extends Screen<Props, State> {
                     hasMore={!interaction.hasNoMore}
                     ItemSeparatorComponent={()=> <FeedSeparator vMargin={12} />}
                     contentContainerStyle={{paddingTop: 10}}
-                    empty={'interactions.empty_screen'}
+                    empty={
+                        <View>
+                            <ShareButton text={i18n.t('actions.invite')}/>
+                            <Text style={STYLES.empty_message}>{i18n.t('interactions.empty_screen')}</Text>
+                        </View>}
                     // cannotFetch={!super.isVisible()}
                 />
 
             </View>
         );
-    }
-
-    share() {
-
-        let message = i18n.t('share_goodsh.message');
-        let title = i18n.t('share_goodsh.title');
-
-        let intent = {
-            message,
-            title
-        };
-
-        Share.share(intent, {
-            dialogTitle: title,
-        })
     }
 
     //"interactions?include=user,resource,resource.resource&page=#{page}"

@@ -10,7 +10,7 @@ import * as Api from "../../managers/Api";
 import {TRIGGER_USER_DIRECT_ACTION, TRIGGER_USER_INDIRECT_ACTION} from "../../managers/Api";
 import {isEmpty} from "lodash";
 import type {i18Key, ms, RequestState, Url} from "../../types";
-import {renderSimpleButton} from "../UIStyles";
+import {renderSimpleButton, STYLES} from "../UIStyles";
 
 import type {ScreenVisibility} from "./Screen";
 import Search from 'react-native-search-box';
@@ -37,7 +37,7 @@ export type Props<T> = {
     hasMore: boolean,
     ListHeaderComponent?: Node,
     ListFooterComponent?: Node,
-    empty: i18Key,
+    empty: Node,
     style: any,
     scrollUpOnBack?: ()=>boolean,
     cannotFetch?: boolean,
@@ -66,8 +66,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     createdAt: ms;
 
     static defaultProps = {
-        visibility: 'unknown',
-        empty: 'common.empty_feed_generic'
+        visibility: 'unknown'
     };
 
     _listener: ()=>boolean;
@@ -326,12 +325,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     renderEmpty() {
-        return <Text style={{
-            fontSize: 18,
-            margin: '10%',
-            textAlign: 'center',
-            fontFamily: SFP_TEXT_REGULAR,
-        }}>{i18n.t(this.props.empty)}</Text>;
+        return this.props.empty;
     }
 
     isFetchingFirst() {

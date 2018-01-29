@@ -20,6 +20,7 @@ import type {PendingAction} from "../../helpers/ModelUtils";
 import {mergeItemsAndPendings, pendingActionWrapper} from "../../helpers/ModelUtils";
 import {Colors} from "../colors";
 import Screen from "../components/Screen";
+import {STYLES} from "../UIStyles";
 
 
 const LOAD_COMMENTS = ApiAction.create("load_comments");
@@ -204,6 +205,7 @@ class CommentsScreen extends Screen<Props, State> {
                                 marginBottom: 4, paddingTop: 40,
                                 paddingBottom: 75,
                                 backgroundColor: Colors.greying}}
+                            empty={<Text style={STYLES.empty_message}>{i18n.t('common.empty_feed_generic')}</Text>}
                         />
 
                         <SmartInput
