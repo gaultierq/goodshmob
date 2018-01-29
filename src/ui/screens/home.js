@@ -195,7 +195,7 @@ class HomeScreen extends Screen<Props, State> {
                             // we are using a 10s timer, to go to the next onBoardingStep
                             setTimeout(()=>{
                                 OnBoardingManager.onDisplayed('focus_add')
-                            }, 5000);
+                            }, 10000);
 
                         }
                     }, 1000);
