@@ -503,7 +503,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         //this is a hack: do not display load more loader right away
         let recentlyCreated = Date.now() - this.createdAt < 2000;
 
-        return (<View>
+        return (<View style={{backgroundColor: 'transparent'}}>
                 {ListFooterComponent}
                 {
                     this.state.isFetchingMore === 'sending' && !recentlyCreated && (

@@ -37,7 +37,20 @@ export const activityDetailScreen = {
     }
 };
 
+//1 comment
 export const commentsScreen = {
+    screen: {
+        label: 'test',
+        screen: 'goodsh.CommentsScreen',
+    },
+    passProps: {
+        activityId: "381138c4-a988-4209-b9b0-285b62a11a43",
+        activityType: "savings",
+    }
+};
+
+//many comments
+export const commentsScreen2 = {
     screen: {
         label: 'test',
         screen: 'goodsh.CommentsScreen',

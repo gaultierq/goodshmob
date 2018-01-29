@@ -29,7 +29,8 @@ export const CREATE_COMMENT = ApiAction.create("create_comment");
 type Props = {
     activityId: Id,
     activityType: ActivityType,
-    pending: any
+    pending: any,
+    autofocus?:?boolean
 };
 
 type State = {
@@ -60,6 +61,80 @@ class CommentsScreen extends Screen<Props, State> {
             .then(this.setState({isFetchingActivity: false}))
     }
 
+    // render() {
+    //     let activity = this.getActivity();
+    //     let comments = activity ? activity.comments : [];
+    //
+    //     let items = mergeItemsAndPendings(
+    //         comments,
+    //         this.props.pending[CREATE_COMMENT],
+    //         [],
+    //         (pending) => ({
+    //             id: pending.id,
+    //             name: pending.payload.listName,
+    //             content: pending.payload.content,
+    //             createdAt: pending.insertedAt,
+    //             user: currentUser(),
+    //             type: 'comments',
+    //             pending: true
+    //         })
+    //     );
+    //
+    //     return (
+    //
+    //         <View style={{flex:1}}>
+    //             {activity &&
+    //             <View style={{ padding: 12, backgroundColor: Colors.white82 }}>
+    //                 <UserActivity
+    //                     activityTime={activity.createdAt}
+    //                     user={activity.user}
+    //                     navigator={this.props.navigator}
+    //                 />
+    //                 <Text style={styles.comment}>{activity.description}</Text>
+    //             </View>}
+    //
+    //
+    //             {activity &&
+    //             <KeyboardAwareScrollView
+    //                 // style={{ backgroundColor: '#4c69a5' }}
+    //                 // resetScrollToCoords={{ x: 0, y: 0 }}
+    //                 // contentContainerStyle={styles.container}
+    //                 scrollEnabled={false}
+    //                 keyboardShouldPersistTaps={true}
+    //             >
+    //                 <View style={{flex:1, justifyContent: 'flex-end'}}>
+    //                     <Feed
+    //                         inverted
+    //                         data={items}
+    //                         renderItem={this.renderItem.bind(this)}
+    //                         fetchSrc={{
+    //                             callFactory:()=>actions.loadComments(activity),
+    //                             action: LOAD_COMMENTS,
+    //                             options: {activityId: activity.id, activityType: activity.type}
+    //                         }}
+    //                         //hasMore={false}
+    //                         //ItemSeparatorComponent={()=> <FeedSeparator/>}
+    //                     />
+    //
+    //                     <SmartInput
+    //                         containerStyle={{position: 'absolute', bottom: 0, padding: 6, paddingBottom: 10}}
+    //                         inputContainerStyle={{borderRadius: 4, borderWidth: 0}}
+    //                         execAction={(input: string) => this.addComment3(activity, input)}
+    //                         placeholder={"activity_comments_screen.add_comment_placeholder"}
+    //                         returnKeyType={'send'}
+    //                         autoFocus={this.props.autofocus}
+    //                     />
+    //                 </View>
+    //             </KeyboardAwareScrollView>
+    //             }
+    //         </View>
+    //
+    //
+    //
+    //
+    //     );
+    // }
+
     render() {
         let activity = this.getActivity();
         let comments = activity ? activity.comments : [];
@@ -78,59 +153,77 @@ class CommentsScreen extends Screen<Props, State> {
                 pending: true
             })
         );
-
         return (
-                <KeyboardAwareScrollView
+            <MainBackground>
+
+                {activity && <View style={
+                    {
+                        position: 'absolute',
+                        width: '100%',
+                        top: 0,
+                        padding: 12,
+                        backgroundColor:Colors.white,
+                        shadowOffset: {width: 0, height: 4},
+                        shadowColor: Colors.black,
+                        shadowOpacity: 0.3,
+                        shadowRadius: 2,
+                        elevation: 1,
+                        zIndex: 10,
+                    }
+                }>
+                    <View>
+                        <UserActivity
+                            activityTime={activity.createdAt}
+                            user={activity.user}
+                            navigator={this.props.navigator}
+                        />
+                    </View>
+
+                    <Text>{activity.description}</Text>
+                </View>}
+                {activity && <KeyboardAwareScrollView
                     // style={{ backgroundColor: '#4c69a5' }}
                     // resetScrollToCoords={{ x: 0, y: 0 }}
                     contentContainerStyle={styles.container}
                     scrollEnabled={false}
                     keyboardShouldPersistTaps={true}
                 >
-                    <View style={{flex:1}}>
-                        {activity &&
-                        <View style={{ padding: 12, backgroundColor: Colors.white82 }}>
-                            <UserActivity
-                                activityTime={activity.createdAt}
-                                user={activity.user}
-                                navigator={this.props.navigator}
-                            />
-                            <Text style={styles.comment}>{activity.description}</Text>
-                        </View>}
 
-                        {activity &&
-                        <View style={{flex:1, justifyContent: 'flex-end'}}>
-                            <Feed
-                                inverted
-                                data={items}
-                                renderItem={this.renderItem.bind(this)}
-                                fetchSrc={{
-                                    callFactory:()=>actions.loadComments(activity),
-                                    action: LOAD_COMMENTS,
-                                    options: {activityId: activity.id, activityType: activity.type}
-                                }}
-                                empty={<Text style={STYLES.empty_message}>{i18n.t('common.empty_feed_generic')}</Text>}
-                                //hasMore={false}
-                                //ItemSeparatorComponent={()=> <FeedSeparator/>}
-                            />
-                        </View>}
-                    </View>
+                    <View style={{flex:1, justifyContent: 'flex-end'}}>
 
-                    {activity &&
-                    <View style={{height:60, justifyContent: 'flex-end', borderTopWidth: 1, borderColor: Colors.grey3, backgroundColor: Colors.white}}>
+                        <Feed
+                            inverted
+                            data={items}
+                            renderItem={this.renderItem.bind(this)}
+                            fetchSrc={{
+                                callFactory:()=>actions.loadComments(activity),
+                                action: LOAD_COMMENTS,
+                                options: {activityId: activity.id, activityType: activity.type}
+                            }}
+                            ItemSeparatorComponent={()=> <FeedSeparator/>}
+                            contentContainerStyle={{
+                                marginBottom: 4, paddingTop: 40,
+                                paddingBottom: 75,
+                                backgroundColor: Colors.greying}}
+                            empty={<Text style={STYLES.empty_message}>{i18n.t('common.empty_feed_generic')}</Text>}
+                        />
+
                         <SmartInput
-                            containerStyle={{padding: 6, paddingBottom: 10}}
+                            containerStyle={{position: 'absolute', bottom: 0, padding: 3, backgroundColor: Colors.greying}}
                             inputContainerStyle={{borderRadius: 4, borderWidth: 0}}
                             execAction={(input: string) => this.addComment3(activity, input)}
                             placeholder={"activity_comments_screen.add_comment_placeholder"}
                             returnKeyType={'send'}
-                            autoFocus={(comments && (comments.length == 0))  ? true : false}
+                            // multiline
                         />
-                    </View>}
 
-                </KeyboardAwareScrollView>
-            );
+                    </View>
+                </KeyboardAwareScrollView>}
+            </MainBackground>
+        );
     }
+
+
 
     getActivity() {
         return buildData(this.props.data, this.props.activityType, this.props.activityId);
@@ -173,7 +266,7 @@ class CommentsScreen extends Screen<Props, State> {
         if (!comment) return null;
 
         return (
-            <View style={{padding: 12, paddingTop: 0, paddingBottom: 15, backgroundColor: Colors.white, borderBottomWidth: 1, borderColor: Colors.greyish}}>
+            <View style={{padding: 12, paddingTop: 0, paddingBottom: 15, backgroundColor: Colors.white, }}>
                 <UserActivity
                     activityTime={comment.createdAt}
                     user={comment.user}
@@ -267,7 +360,7 @@ export {reducer, screen, actions};
 const styles = StyleSheet.create({
     container: {
         flex:1,
-        backgroundColor: Colors.white
+        backgroundColor: Colors.greying
     },
     input:{
         height: 40,

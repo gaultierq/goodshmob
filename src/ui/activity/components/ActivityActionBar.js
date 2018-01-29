@@ -264,7 +264,8 @@ export default class ActivityActionBar extends React.Component<Props, State> {
             title: i18n.t("activity_action_bar.comment.title"), // navigation bar title of the pushed screen (optional)
             passProps: {
                 activityId: activity.id,
-                activityType: activity.type
+                activityType: activity.type,
+                autofocus: true
             },
             navigatorButtons: Nav.CANCELABLE_MODAL,
         });
