@@ -314,7 +314,11 @@ export class Call {
                             // let errorAction = dispatch({ type: API_DATA_FAILURE, error: errMsg, origin: apiAction});
 
                             if (trigger <= 2) {
-                                sendMessage(`#request failure: '${errMsg}'`);
+                                sendMessage(
+                                    __IS_LOCAL__ ?
+                                        `#request failure: '${errMsg}'` :
+                                        i18n.t('common.api.generic_error')
+                                );
                             }
 
 
