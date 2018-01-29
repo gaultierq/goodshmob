@@ -111,8 +111,6 @@ workflows:
         - notify: '0'
         - notes: "$GIT_CLONE_COMMIT_MESSAGE_SUBJECT"
 
-
-
   android:
     before_run:
     - _prepare
