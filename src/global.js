@@ -25,6 +25,7 @@ export function init(hotReload: boolean) {
     //retry after react-native update !
     // global.__ENABLE_BACK_HANDLER__ = true;
     global.__IS_IOS__ = Platform.OS === 'ios';
+    global.__IS_ANDROID__ = Platform.OS === 'android';
 
     if (!Config.ENV) throw `No .env file found. Try to run 'cp env.local .env && react-native run-${Platform.OS}'`;
 

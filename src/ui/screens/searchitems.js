@@ -13,6 +13,7 @@ import normalize from 'json-api-normalizer';
 import GTouchable from "../GTouchable";
 import Screen from "../components/Screen";
 import type {Item, RNNNavigator} from "../../types";
+import {Colors} from "../colors";
 
 type SearchCategory = "consumer_goods" | "places" | "musics" | "movies";
 type SearchToken = string;
@@ -48,6 +49,7 @@ class SearchItem extends Screen<Props, State> {
             categories={categories}
             placeholder={i18n.t('search.in_items')}
             {...this.props}
+            style={{backgroundColor: Colors.white}}
         />;
     }
 

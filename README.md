@@ -38,3 +38,7 @@ cannot follow symbolic link
 /Users/qg/projects/goodshmob/node_modules/node-pre-gyp/node_modules/.bin/rc
 /Users/qg/projects/goodshmob/node_modules/node-pre-gyp/node_modules/request/node_modules/.bin/uuid
 /Users/qg/projects/goodshmob/node_modules/react-native/node_modules/jest-haste-map/node_modules/sane/node_modules/.bin/watch
+
+
+## tools
+RN menu on android device: adb shell input keyevent 82

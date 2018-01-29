@@ -42,7 +42,9 @@ export type Props = {
     categories: Array<SearchCategory>,
     navigator: *,
     searchEngine: SearchEngine,
-    token?: ?SearchToken
+    token?: ?SearchToken,
+    style?: ? *
+
 };
 
 
@@ -190,7 +192,7 @@ export default class SearchScreen extends Component<Props, State> {
 
         const showTabs = nCat > 1 && (hasSearched || true);
         return (
-            <View style={{width:"100%", height: "100%", backgroundColor: "transparent"}}>
+            <View style={[{width:"100%", height: "100%", backgroundColor: "transparent"},this.props.style]}>
 
 
                 { showTabs && <TabViewAnimated

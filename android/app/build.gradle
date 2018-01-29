@@ -217,12 +217,6 @@ android {
                     keyAlias releaseProps.getProperty("keyAlias")
                     keyPassword releaseProps.getProperty("keyPassword")
                 }
-                else {
-                    throw new GradleException('no storeFile found')
-                }
-            }
-            else {
-                throw new GradleException('prop file not found:' + propFile)
             }
         }
 

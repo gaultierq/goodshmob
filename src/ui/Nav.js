@@ -19,17 +19,16 @@ export const CANCELABLE_MODAL = {
     rightButtons: []
 };
 
-export const CANCELABLE_SEARCH_MODAL = {
-    rightButtons: [
+export const CANCELABLE_SEARCH_MODAL = () => ({
+    rightButtons: __IS_ANDROID__ ? [] : [
         {
             id: CLOSE_MODAL,
-            // icon: require('../img2/closeXGrey.png')
             title: i18n.t("actions.cancel")
 
         }
     ],
     leftButtons: []
-};
+});
 
 export function startAddItem(navigator: *, defaultLineupId: Id) {
     let cancel = () => {
@@ -38,7 +37,7 @@ export function startAddItem(navigator: *, defaultLineupId: Id) {
 
     navigator.showModal({
         screen: 'goodsh.SearchItemsScreen', // unique ID registered with Navigation.registerScreen
-        navigatorButtons: CANCELABLE_SEARCH_MODAL,
+        navigatorButtons: CANCELABLE_SEARCH_MODAL(),
         passProps: {
             onItemSelected: (item: Item, navigator: RNNNavigator) => {
 

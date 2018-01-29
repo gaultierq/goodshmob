@@ -171,7 +171,7 @@ class HomeScreen extends Screen<Props, State> {
                 onClickClose: () => navigator.dismissModal({animationType: 'none'}),
                 token
             },
-            navigatorButtons: Nav.CANCELABLE_SEARCH_MODAL,
+            navigatorButtons: Nav.CANCELABLE_SEARCH_MODAL(),
         });
     }
 
