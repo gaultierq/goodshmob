@@ -6,6 +6,7 @@ import {StyleSheet, Text, TouchableOpacity, View, Share} from 'react-native';
 import {connect} from "react-redux";
 import {logged} from "../../managers/CurrentUser"
 import FriendCell from "../components/FriendCell";
+import ShareButton from "../components/ShareButton";
 import * as Api from "../../managers/Api";
 import Feed from "../components/feed"
 import ApiAction from "../../helpers/ApiAction";
@@ -19,6 +20,7 @@ import * as Nav from "../Nav";
 import {Colors} from "../colors";
 import Button from 'apsl-react-native-button'
 import {SFP_TEXT_MEDIUM} from "../fonts";
+import {STYLES} from "../UIStyles";
 
 type Props = {
     userId: Id,
@@ -63,53 +65,22 @@ export default class FriendsScreen extends Screen<Props, State> {
             action = actionTypes.GET_USER;
         }
 
-        return (<View>
-            <Button
-                style={
-                    {
-                        backgroundColor: Colors.green,
-                        borderWidth: 0,
-                        borderRadius: 4,
-                        margin: 12,
-
-                    }
-                }
-                onPress={()=>this.share()}
-            >
-                <Text style={[{color: Colors.white, fontSize: 17, fontFamily: SFP_TEXT_MEDIUM, fontWeight: 'bold'}]}>
-                    {i18n.t('actions.invite')}
-                </Text></Button>
-            <Feed
-                {...attributes}
-                data={friends}
-                renderItem={({item}) => (renderItem||this.renderItem.bind(this))(item)}
-                fetchSrc={{
-                    callFactory,
-                    action,
-                    options: {userId}
-                }}
-                empty={'friends.empty_screen'}
-                // cannotFetch={!super.isVisible()}
-            />
-
+        return (
+            <View>
+                <ShareButton text={i18n.t('actions.invite')}/>
+                <Feed
+                    {...attributes}
+                    data={friends}
+                    renderItem={({item}) => (renderItem||this.renderItem.bind(this))(item)}
+                    fetchSrc={{
+                        callFactory,
+                        action,
+                        options: {userId}
+                    }}
+                    empty={<Text style={STYLES.empty_message}>{i18n.t('friends.empty_screen')}</Text>}
+                    // cannotFetch={!super.isVisible()}
+                />
         </View>);
-    }
-
-
-
-    share() {
-
-        let message = i18n.t('share_goodsh.message');
-        let title = i18n.t('share_goodsh.title');
-
-        let intent = {
-            message,
-            title
-        };
-
-        Share.share(intent, {
-            dialogTitle: title,
-        })
     }
 
     renderItem(item: Item) : Node {

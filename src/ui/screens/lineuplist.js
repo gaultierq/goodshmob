@@ -28,6 +28,7 @@ import ApiAction from "../../helpers/ApiAction";
 import {buildData, doDataMergeInState} from "../../helpers/DataUtils";
 import {CREATE_LINEUP, DELETE_LINEUP} from "../lineup/actionTypes";
 import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
+import {STYLES} from "../UIStyles";
 import GTouchable from "../GTouchable";
 import Screen from "../components/Screen";
 
@@ -114,7 +115,7 @@ export class LineupListScreen extends Screen<Props, State> {
                 sections={sections}
                 renderItem={this.renderItem.bind(this)}
                 fetchSrc={fetchSrc}
-                empty={'lineups.empty_screen'}
+                empty={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
                 {...attributes}
             />
         );

@@ -16,7 +16,7 @@ import ActionButton from 'react-native-action-button';
 import {startAddItem} from "../Nav";
 import {Colors} from "../colors";
 import Screen from "./../components/Screen";
-
+import {STYLES} from "../UIStyles";
 
 type Props = {
     lineupId: string,
@@ -91,7 +91,7 @@ class LineupScreen extends Screen<Props, State> {
                     renderItem={item => this.renderItem(item, lineup)}
                     fetchSrc={fetchSrc}
                     hasMore={true}
-                    empty={"empty.lineup"}
+                    empty={<Text style={STYLES.empty_message}>{i18n.t("empty.lineup")}</Text>}
                     {...activityFeedProps()}
                 />
                 {

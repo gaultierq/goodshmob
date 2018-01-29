@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import {ActivityIndicator, FlatList, Platform, RefreshControl, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, FlatList, Platform, RefreshControl, TouchableOpacity, View, Text} from 'react-native';
 import {connect} from "react-redux";
 import {currentUser, currentUserId, logged} from "../../managers/CurrentUser"
 import ActivityCell from "../activity/components/ActivityCell";
@@ -14,6 +14,7 @@ import LineupCell from "../components/LineupCell";
 import {FETCH_ACTIVITIES, fetchMyNetwork} from "../networkActions";
 import * as Nav from "../Nav";
 import Screen from "../components/Screen";
+import {STYLES} from "../UIStyles";
 import {Colors} from "../colors";
 import GTouchable from "../GTouchable";
 import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
@@ -178,7 +179,7 @@ class NetworkScreen extends Screen<Props, State> {
                     scrollUpOnBack={scrollUpOnBack}
                     cannotFetch={!super.isVisible()}
                     visibility={super.getVisibility()}
-                    empty={'community_screen.empty_screen'}
+                    empty={<Text style={STYLES.empty_message}>{i18n.t('community_screen.empty_screen')}</Text>}
                     // ItemSeparatorComponent={TRANSPARENT_SPACER(50)}
                     // ListHeaderComponent={TRANSPARENT_SPACER(40)()}
                     // style={{backgroundColor: Colors.dirtyWhite}}
