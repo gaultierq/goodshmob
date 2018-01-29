@@ -155,7 +155,7 @@ class CommentsScreen extends Screen<Props, State> {
         return (
             <MainBackground>
 
-                <View style={
+                {activity && <View style={
                     {
                         position: 'absolute',
                         width: '100%',
@@ -179,8 +179,8 @@ class CommentsScreen extends Screen<Props, State> {
                     </View>
 
                     <Text>{activity.description}</Text>
-                </View>
-                <KeyboardAwareScrollView
+                </View>}
+                {activity && <KeyboardAwareScrollView
                     // style={{ backgroundColor: '#4c69a5' }}
                     // resetScrollToCoords={{ x: 0, y: 0 }}
                     contentContainerStyle={styles.container}
@@ -188,7 +188,7 @@ class CommentsScreen extends Screen<Props, State> {
                     keyboardShouldPersistTaps={true}
                 >
 
-                    <View style={{flex:1}}>
+                    <View style={{flex:1, justifyContent: 'flex-end'}}>
 
                         <Feed
                             inverted
@@ -200,7 +200,10 @@ class CommentsScreen extends Screen<Props, State> {
                                 options: {activityId: activity.id, activityType: activity.type}
                             }}
                             ItemSeparatorComponent={()=> <FeedSeparator/>}
-                            contentContainerStyle={{marginBottom: 4, paddingTop: 40, paddingBottom: 75, backgroundColor: Colors.greying}}
+                            contentContainerStyle={{
+                                marginBottom: 4, paddingTop: 40,
+                                paddingBottom: 75,
+                                backgroundColor: Colors.greying}}
                         />
 
                         <SmartInput
@@ -213,7 +216,7 @@ class CommentsScreen extends Screen<Props, State> {
                         />
 
                     </View>
-                </KeyboardAwareScrollView>
+                </KeyboardAwareScrollView>}
             </MainBackground>
         );
     }

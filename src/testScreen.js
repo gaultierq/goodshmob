@@ -37,6 +37,7 @@ export const activityDetailScreen = {
     }
 };
 
+//1 comment
 export const commentsScreen = {
     screen: {
         label: 'test',
@@ -45,8 +46,18 @@ export const commentsScreen = {
     passProps: {
         activityId: "381138c4-a988-4209-b9b0-285b62a11a43",
         activityType: "savings",
-        // activityId: "e0574190-b0c3-4aed-b451-4ae73187db3d",
-        // activityType: "sendings",
+    }
+};
+
+//many comments
+export const commentsScreen2 = {
+    screen: {
+        label: 'test',
+        screen: 'goodsh.CommentsScreen',
+    },
+    passProps: {
+        activityId: "e0574190-b0c3-4aed-b451-4ae73187db3d",
+        activityType: "sendings",
     }
 };
 
