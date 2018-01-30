@@ -260,7 +260,7 @@ export default {
         sent: "Demande envoyée"
     },
     share_goodsh: {
-        title: "Viens goodshit avec moi",
+        title: "Viens goodsher avec moi",
          //insérer plutôt le lien vers le store non ?//message: "Rejoins-moi sur Goodsh : https://goodsh.it/",
     },
     loading: {
