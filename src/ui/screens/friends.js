@@ -66,7 +66,7 @@ export default class FriendsScreen extends Screen<Props, State> {
         }
 
         return (
-            <View>
+            <View style={styles.container}>
                 <ShareButton text={i18n.t('actions.invite')}/>
                 <Feed
                     {...attributes}
@@ -165,5 +165,6 @@ export const reducer =  (state = {}, action = {}) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: Colors.white,
     }
 });

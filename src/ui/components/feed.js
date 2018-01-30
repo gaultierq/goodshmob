@@ -331,7 +331,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     renderEmpty() {
-        return this.props.empty;
+        return <View>{this.props.empty}</View>;
     }
 
     isFetchingFirst() {

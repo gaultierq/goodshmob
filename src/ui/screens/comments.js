@@ -205,7 +205,7 @@ class CommentsScreen extends Screen<Props, State> {
                                 marginBottom: 4, paddingTop: 40,
                                 paddingBottom: 75,
                                 backgroundColor: Colors.greying}}
-                            empty={<Text style={STYLES.empty_message}>{i18n.t('common.empty_feed_generic')}</Text>}
+                            empty={<Text style={[STYLES.empty_message, {fontSize: 16, paddingBottom: 50}]}>{i18n.t('common.empty_feed_generic')}</Text>}
                         />
 
                         <SmartInput

@@ -361,7 +361,7 @@ class HomeScreen extends Screen<Props, State> {
                 />,
             ]}
             width={0.8}
-            height={250}
+            height={300}
         >
             <View style={[styles.dialogContentView]}>
                 <Text>{i18n.t('no_spam.dialog_body')}</Text>
@@ -671,7 +671,7 @@ class HomeScreen extends Screen<Props, State> {
             passProps: {
                 lineupId: lineup.id,
             },
-            navigatorButtons: Nav.CANCELABLE_MODAL,
+            navigatorButtons: Nav.CANCELABLE_MODAL
         });
     }
 
