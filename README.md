@@ -1,4 +1,4 @@
-# == Mobile app for goodsh ==
+# == Mobile app for goodsh - dev ==
 
 ## Lib
 * node 9.3
