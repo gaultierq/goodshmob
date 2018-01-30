@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name" translatable="false">Goodsh</string>
+    <string name="facebook_app_id">787478441366145</string>
     <string name="bugsnag_api_key">40d9f8b35e4216c738e694e92a9a57d6</string>
 </resources>
