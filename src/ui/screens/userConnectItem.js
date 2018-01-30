@@ -20,6 +20,7 @@ import ApiAction from "../../helpers/ApiAction";
 import {renderSimpleButton} from "../UIStyles";
 import UserRowI from "../activity/components/UserRowI";
 import {Colors} from "../colors";
+import _Messenger from "../../managers/Messenger";
 
 
 type Props = NavigableProps & {
@@ -71,7 +72,15 @@ export default class UserConnectItem extends Component<Props, State> {
 
     connectWith(user: User) {
         let action = actions.createFriendship(user.id).disptachForAction2(CONNECT);
-        Api.safeDispatchAction.call(this, this.props.dispatch, action, 'connect');
+        Api.safeDispatchAction.call(
+            this,
+            this.props.dispatch,
+            action,
+            'connect'
+        ).then(()=> {
+                _Messenger.sendMessage(i18n.t("friends.messages.connect"));
+            }
+        );
     }
 
     disconnectWith(user: User) {
@@ -82,7 +91,15 @@ export default class UserConnectItem extends Component<Props, State> {
                 {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
                 {text: i18n.t("actions.ok"), onPress: () => {
                     let action = actions.deleteFriendship(user.id).disptachForAction2(DISCONNECT);
-                    Api.safeDispatchAction.call(this, this.props.dispatch, action, 'disconnect');
+                    Api.safeDispatchAction.call(
+                        this,
+                        this.props.dispatch,
+                        action,
+                        'disconnect'
+                    ).then(()=> {
+                            _Messenger.sendMessage(i18n.t("friends.messages.disconnect"));
+                        }
+                    );
                 }},
             ],
             { cancelable: true }

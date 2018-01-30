@@ -227,7 +227,8 @@ export default class Profile extends Component<Props, State> {
     sendFeedback(input: string) {
         return new Promise((resolve, reject)=> {
 
-            let url = `mailto:feedback@goodsh.it?subject=GOODSH' Feedback&body=${input}`;
+            //let url = `mailto:feedback@goodsh.it?subject=GOODSH' Feedback&body=${input}`;
+            let url = `mailto:feedback@goodsh.it?subject=GOODSH' Feedback`;
             Linking.canOpenURL(url).then(supported => {
                 if (supported) {
                     Linking.openURL(url);
