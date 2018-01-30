@@ -43,7 +43,7 @@ export default {
     },
     "shared":{
         "goodsh_saved":"C'est bon, c'est goodshé.",
-        "add":"##Ajouter",
+        "add":"Ajouter",
         "link_copied":"Lien copié ✓",
     },
     "activity_item": {
