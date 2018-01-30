@@ -2,7 +2,6 @@
 format_version: '4'
 default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 project_type: react-native
-trigger_map:
 workflows:
   _prepare:
     steps:
@@ -12,24 +11,21 @@ workflows:
     - slack@2.6.3:
         inputs:
         - message: Building [$BITRISE_GIT_BRANCH]... $GIT_CLONE_COMMIT_MESSAGE_SUBJECT
-        - webhook_url: $SLACK_WEBHOOK_URL
-
+        - webhook_url: "$SLACK_WEBHOOK_URL"
     - git-clone:
         run_if: true
         inputs:
-        - repository_url: "git@github.com:goodshopping/goodshmob-build"
+        - repository_url: git@github.com:goodshopping/goodshmob-build
         - clone_into_dir: "./goodshmob-build"
         - branch: master
-        - commit: ""
-
+        - commit: ''
     - script@1.1.5:
-            inputs:
-            - content: |-
+        inputs:
+        - content: |2-
 
-                #!/usr/bin/env bash
-                set -e
-                ./goodshmob-build/prepare-env.sh
-
+            #!/usr/bin/env bash
+            set -e
+            ./goodshmob-build/prepare-env.sh
     - script@1.1.5:
         inputs:
         - content: |-
@@ -44,30 +40,25 @@ workflows:
     - npm@0.9.0:
         inputs:
         - command: install
-
   _prepare-android:
     steps:
     - git-clone:
         run_if: true
         inputs:
-        - repository_url: "git@github.com:goodshopping/goodshmob-keystores"
+        - repository_url: git@github.com:goodshopping/goodshmob-keystores
         - clone_into_dir: "./android/keystores"
         - branch: master
-        - commit: ""
+        - commit: ''
     - install-missing-android-tools: {}
-
-
   _deploy-android:
     steps:
     - hockeyapp-deploy-android:
-        run_if: |-
-            {{enveq "GOODSH_BUILD_HOCKEY_APP_DEPLOY" "true"}}
+        run_if: '{{enveq "GOODSH_BUILD_HOCKEY_APP_DEPLOY" "true"}}'
         inputs:
         - app_id: "$GOODSH_BUILD_HOCKEY_APP_APP_ID"
         - api_token: "$HOCKEY_APP_API_TOKEN"
         - notify: '0'
         - notes: "$GIT_CLONE_COMMIT_MESSAGE_SUBJECT"
-
   _build-android:
     steps:
     - gradle-runner@1.8.0:
@@ -76,42 +67,36 @@ workflows:
         - gradle_task: "$GOODSH_BUILD_GRALDE_TASK"
         - apk_file_include_filter: "$GOODSH_BUILD_APK_FILE_INCLUDE_FILTER"
         - gradlew_path: "$GRADLEW_PATH"
-
-
   _prepare-ios:
     steps:
     - fastlane-match@0.1.0:
         inputs:
-        - git_url: "git@github.com:goodshopping/ios-certs"
-        - app_id: $GOODSH_BUILD_IOS_APP_ID
+        - git_url: git@github.com:goodshopping/ios-certs
+        - app_id: "$GOODSH_BUILD_IOS_APP_ID"
         - decrypt_password: "$CERTS_DECRYPT"
         - type: development
     - recreate-user-schemes@1.0.2:
         inputs:
         - project_path: "$BITRISE_PROJECT_PATH"
     - cocoapods-install@1.7.2: {}
-
   _build-ios:
     steps:
     - xcode-archive:
         inputs:
-        - export_method: "development"
+        - export_method: development
         - scheme: "$BITRISE_SCHEME"
         - configuration: "$GOODSH_BUILD_IOS_CONFIGURATION"
         - project_path: "$BITRISE_WORKSPACE_PATH"
         - output_tool: xcodebuild
-
   _deploy-ios:
-    steps:    
+    steps:
     - hockeyapp-deploy@2.4.2:
-        run_if: |-
-            {{enveq "GOODSH_BUILD_HOCKEY_APP_DEPLOY" "true"}}
+        run_if: '{{enveq "GOODSH_BUILD_HOCKEY_APP_DEPLOY" "true"}}'
         inputs:
         - api_token: "$HOCKEY_APP_API_TOKEN"
         - app_id: "$GOODSH_BUILD_HOCKEY_APP_IOS_APP_ID"
         - notify: '0'
         - notes: "$GIT_CLONE_COMMIT_MESSAGE_SUBJECT"
-
   android:
     before_run:
     - _prepare
@@ -122,8 +107,7 @@ workflows:
     - slack@2.6.3:
         inputs:
         - message: 'Build SUCCESSFUL: [android] [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT'
-        - webhook_url: $SLACK_WEBHOOK_URL
-
+        - webhook_url: "$SLACK_WEBHOOK_URL"
   ios:
     before_run:
     - _prepare
@@ -134,9 +118,7 @@ workflows:
     - slack@2.6.3:
         inputs:
         - message: 'Build SUCCESSFUL: [ios] [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT'
-        - webhook_url: $SLACK_WEBHOOK_URL
-
-
+        - webhook_url: "$SLACK_WEBHOOK_URL"
   build:
     before_run:
     - _prepare
@@ -150,79 +132,7 @@ workflows:
     - slack@2.6.3:
         inputs:
         - message: 'Build SUCCESSFUL: [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT'
-        - webhook_url: $SLACK_WEBHOOK_URL
-
-
-#   deploy:
-#     steps:
-#     - activate-ssh-key@3.1.1:
-#         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
-#     - git-clone: {}
-#     - slack@2.6.3:
-#         inputs:
-#         - message: Building... $GIT_CLONE_COMMIT_MESSAGE_SUBJECT
-#         - webhook_url: $SLACK_WEBHOOK_URL
-#     - fastlane-match@0.1.0:
-#         inputs:
-#         - decrypt_password: "$MATCH_PASSWORD"
-#         - app_id: "$IOS_APP_ID"
-#         - git_url: https://github.com/bennytac/ios-certs
-#     - script@1.1.5:
-#         inputs:
-#         - content: |-
-#             #!/usr/bin/env bash
-#             # fail if any commands fails
-#             set -e
-#             # debug log
-#             set -x
-
-#             echo "Preparing .env"
-#             cp env.dev .env
-#     - install-react-native@0.9.1: {}
-#     - npm@0.9.0:
-#         inputs:
-#         - command: install
-#     - install-missing-android-tools: {}
-# #    - file-downloader@0.9.1:
-# #        inputs:
-# #        - source: "$BITRISEIO_ANDROID_DEV_KEYSTORE_URL"
-# #        - destination: "$BITRISE_SOURCE_DIR/android/keystores/goodsh-dev.keystore"
-#     - gradle-runner@1.8.0:
-#         inputs:
-#         - gradle_file: "$GRADLE_BUILD_FILE_PATH"
-#         - gradle_task: assembleDev
-#         - apk_file_include_filter: "*dev.apk"
-#         - gradlew_path: "$GRADLEW_PATH"
-#     - certificate-and-profile-installer@1.9.2: {}
-#     - recreate-user-schemes@1.0.2:
-#         inputs:
-#         - project_path: "$BITRISE_PROJECT_PATH"
-#     - cocoapods-install@1.7.2: {}
-#     - xcode-archive:
-#         inputs:
-#         - scheme: "$BITRISE_SCHEME"
-#         - configuration: Release
-#         - project_path: "$BITRISE_WORKSPACE_PATH"
-#         - output_tool: xcodebuild
-#     - hockeyapp-deploy-android:
-#         inputs:
-#         - app_id: 9413859c01db4f2cbb918da583156db2
-#         - api_token: 371fb124534f4777934cd8101157d47a
-#         - notify: '0'
-#         - notes: "$GIT_CLONE_COMMIT_MESSAGE_SUBJECT"
-#     - hockeyapp-deploy@2.4.2:
-#         inputs:
-#         - api_token: f191e719336d431aa8e3210f64e44052
-#         - app_id: '0718789d9866499cbc827f68e1627a17'
-#         - notify: '0'
-#         - notes: "$GIT_CLONE_COMMIT_MESSAGE_SUBJECT"
-#     - deploy-to-bitrise-io:
-#         inputs:
-#         - notify_user_groups: everyone
-#     - slack@2.6.3:
-#         inputs:
-#         - message: 'Built: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT'
-#         - webhook_url: $SLACK_WEBHOOK_URL
+        - webhook_url: "$SLACK_WEBHOOK_URL"
 app:
   envs:
   - opts:
@@ -245,3 +155,10 @@ app:
     BITRISE_SCHEME: goodshmob
   - BITRISE_WORKSPACE_PATH: ios/goodshmob.xcworkspace
   - SLACK_WEBHOOK_URL: https://hooks.slack.com/services/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
+trigger_map:
+- push_branch: master
+  workflow: build
+- push_branch: preprod
+  workflow: build
+- push_branch: prod
+  workflow: build
