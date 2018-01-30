@@ -1,5 +1,6 @@
 # == Mobile app for goodsh (prod) ==
 
+
 ## Lib
 * node 9.3
 * npm 5.6.0
@@ -40,9 +41,14 @@ The app is installed but doesn't launch automatically, just navigate to applicat
 
 
 cannot follow symbolic link
-/Users/qg/projects/goodshmob/node_modules/node-pre-gyp/node_modules/.bin/rc
-/Users/qg/projects/goodshmob/node_modules/node-pre-gyp/node_modules/request/node_modules/.bin/uuid
-/Users/qg/projects/goodshmob/node_modules/react-native/node_modules/jest-haste-map/node_modules/sane/node_modules/.bin/watch
+rm -rf /Users/qg/projects/goodshmob/node_modules/node-pre-gyp/node_modules/.bin/rc \
+/Users/qg/projects/goodshmob/node_modules/node-pre-gyp/node_modules/request/node_modules/.bin/uuid \
+/Users/qg/projects/goodshmob/node_modules/react-native/node_modules/jest-haste-map/node_modules/sane/node_modules/.bin/watch \
+/Users/qg/projects/goodshmob/node_modules/envify/node_modules/.bin/esparse \
+/Users/qg/projects/goodshmob/node_modules/envify/node_modules/.bin/esvalidate \
+/Users/qg/projects/goodshmob/node_modules/jest/node_modules/jest-cli/node_modules/.bin/jest-runtime \
+/Users/qg/projects/goodshmob/node_modules/node-pre-gyp/node_modules/.bin/detect-libc \
+/Users/qg/projects/goodshmob/node_modules/node-pre-gyp/node_modules/.bin/nopt
 
 
 ## tools
