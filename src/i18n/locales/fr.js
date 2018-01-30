@@ -15,7 +15,7 @@ export default {
     },
     lineups: {
         search: {
-            placeholder: "Rechercher"
+            placeholder: "##Rechercher"
         },
         goodsh : {
             title: "GoodshBox"
@@ -23,7 +23,7 @@ export default {
         mine : {
             title: "Mes listes"
         },
-        empty_screen: "Retrouve ici tous tes goodsh.\nSave pour en ajouter un."
+        empty_screen: "Retrouve ici tous tes goodsh.\nTap '+' pour en ajouter un."
     },
     no_spam: {
         dialog_title: "Les 3 grands principes de Goodsh",
@@ -43,7 +43,7 @@ export default {
     },
     "shared":{
         "goodsh_saved":"C'est bon, c'est goodshé.",
-        "add":"##Ajouter",
+        "add":"Ajouter",
         "link_copied":"Lien copié ✓",
     },
     "activity_item": {
@@ -154,7 +154,7 @@ export default {
         "sending":"t’a envoyé %{item_title}",
         "invitation":"Connexion réussie avec %{you} :-)",
         "you":"toi",
-        "empty_screen":"Profite pleinement de Goodsh et invite des proches."
+        "empty_screen":"Quand on aime on partage."
     },
     util: {
         time: {
@@ -191,7 +191,7 @@ export default {
         }
     },
     loadmore: "Chargement...",
-    send_message: "J'ai quelque chose à te recommander:\n%{what}\n\nJe l'ai trouvé grâce à Goodsh : %{url}",
+    send_message: "Je pense que tu vas aimer :\n\n%{what}\n%{url}\n\nTrouvé grâce à Goodsh.",
     goodsh_url: "https:\/\/goodsh.it\/",
     friends: {
         empty_screen: "Profite pleinement de Goodsh et invite des proches.",
@@ -243,7 +243,7 @@ export default {
         send: "Envoyer",
         create: "Créer",
         try_again: "Réessayer",
-        ask_friend: "Pose une\nquestion à\nmon réseau",
+        ask_friend: "Poser une\nquestion à\nmon réseau",
         logout: "Déconnexion",
         terms: "Mentions légales",
         copy_link: "Copier le lien",
@@ -254,13 +254,13 @@ export default {
 
     },
     common: {
-        empty_feed_generic: "Mince, il n'y à rien ici.\nPourquoi ne pas inviter des amis à goodsher ?"
+        empty_feed_generic: "Quand on aime on partage.\nCrée ton réseau de goodshers. "
     },
     ask: {
         sent: "Demande envoyée"
     },
     share_goodsh: {
-        title: "Viens goodshit avec moi",
+        title: "Viens goodsher avec moi",
          //insérer plutôt le lien vers le store non ?//message: "Rejoins-moi sur Goodsh : https://goodsh.it/",
     },
     loading: {

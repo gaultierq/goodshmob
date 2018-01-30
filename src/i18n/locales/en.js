@@ -229,7 +229,7 @@ export default {
             title: "Details",
         },
         community: {
-            title: "my network",
+            title: "My network",
         }
     },
     loading: {
