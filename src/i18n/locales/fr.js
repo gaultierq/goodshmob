@@ -124,6 +124,9 @@ export default {
         },
         "empty_screen": "Découvre ici les goodsh de tes proches. Ask pour les solliciter."
     },
+    "comments_screen":{
+        "title": "Commentaires"
+    },
     "search_item_screen":{
         "tabs": {
             "consumer_goods":"TRUC",

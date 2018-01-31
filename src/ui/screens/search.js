@@ -70,17 +70,6 @@ export type State = {
 @logged
 export default class SearchScreen extends Component<Props, State> {
 
-    // static navigatorButtons = {
-    //     rightButtons: [
-    //         {
-    //             //icon: require('../../img/drawer_line_up.png'), // for icon button, provide the local image asset name
-    //             id: 'cancel_search', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
-    //             title: "Cancel"
-    //         }
-    //     ],
-    // };
-
-
     state : State;
 
     constructor(props: Props) {

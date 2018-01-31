@@ -42,10 +42,8 @@ class NetworkScreen extends Screen<Props, State> {
     static navigatorButtons = {
         rightButtons: [
             {
-                //icon: require('../../img/drawer_line_up.png'), // for icon button, provide the local image asset name
                 id: 'search', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
                 icon: require('../../img2/searchHeaderIcon.png'),
-                //title: "#Ask"
             },
         ],
         leftButtons: [
@@ -200,8 +198,6 @@ class NetworkScreen extends Screen<Props, State> {
     navToActivity(activity) {
         this.props.navigator.push({
             screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
-            //title: i18n.t("home_search_screen.saving.title"), // navigation bar title of the pushed screen (optional)
-            //titleImage: require('../../img2/headerLogoBlack.png'), // iOS only. navigation bar title image instead of the title text of the pushed screen (optional)
             passProps: {activityId: activity.id, activityType: activity.type}, // Object that will be passed as props to the pushed screen (optional)
             animated: true, // does the push have transition animation or does it happen immediately (optional)
             animationType: 'slide-up', // 'fade' (for both) / 'slide-horizontal' (for android) does the push have different transition animation (optional)
@@ -274,7 +270,6 @@ class NetworkScreen extends Screen<Props, State> {
 
         navigator.showModal({
             screen: 'goodsh.NetworkSearchScreen',
-            // title: "#Rechercher",
             animationType: 'none',
             backButtonHidden: true,
             passProps:{

@@ -125,6 +125,9 @@ export default {
         },
         "empty_screen": "Here you'll find your friends goodsh."
     },
+    "comments_screen":{
+        "title": "Comments"
+    },
     "search_item_screen":{
         "tabs": {
             "consumer_goods":"STUFF",

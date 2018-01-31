@@ -214,7 +214,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
     displayActivityComments(activity: Activity) {
         this.props.navigator.push({
             screen: 'goodsh.CommentsScreen', // unique ID registered with Navigation.registerScreen
-            title: "Commentaires", // navigation bar title of the pushed screen (optional)
+            title: i18n.t('comments_screen.title'), // navigation bar title of the pushed screen (optional)
             passProps: {
                 activityId: activity.id,
                 activityType: activity.type

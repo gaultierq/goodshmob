@@ -12,8 +12,6 @@ export const CANCELABLE_MODAL = {
         {
             id: CLOSE_MODAL,
             icon: require('../img2/closeXGrey.png')
-            //title: "#Cancel"
-
         }
     ],
     rightButtons: []

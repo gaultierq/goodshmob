@@ -164,7 +164,6 @@ class HomeScreen extends Screen<Props, State> {
 
         navigator.showModal({
             screen: 'goodsh.HomeSearchScreen', // unique ID registered with Navigation.registerScreen
-            //title: "#Rechercher", // navigation bar title of the pushed screen (optional)
             animationType: 'none',
             backButtonHidden: true,
             passProps: {
@@ -680,18 +679,7 @@ class HomeScreen extends Screen<Props, State> {
             screen: 'goodsh.ActivityDetailScreen',
             passProps: {activityId: saving.id, activityType: saving.type},
             navigatorButtons: Nav.CANCELABLE_MODAL,
-            // navigatorButtons: {
-            //     leftButtons: [
-            //         {
-            //             id: CLOSE_MODAL,
-            //             icon: require('../../img2/circleBackArrow.png')
-            //             //title: "#Cancel"
-            //
-            //         }
-            //     ],
-            //     rightButtons: []},
         });
-        // }
     }
 
     onFloatingButtonPressed() {
