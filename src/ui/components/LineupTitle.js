@@ -30,16 +30,16 @@ export default class LineupTitle extends React.Component<Props, State> {
 
         return <Text style={[styles.lineupTitle, {}]}>
             {title}
-
             <Text
                 style={{color: Colors.greyish}}
             >
                 {countString}
-                <Icon name="chevron-right" size={16} color={Colors.greyishBrown}/>
+
                 {__IS_LOCAL__ && <Text
                     style={{color: Colors.grey3}}
                 >{` id=(#${lineup.id.substr(0, 5)})`}</Text>}
             </Text>
+            <Icon name="chevron-right" size={16} color={Colors.greyishBrown}/>
         </Text>;
     }
 }
