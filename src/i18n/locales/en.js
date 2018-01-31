@@ -48,7 +48,7 @@ export default {
     },
     "activity_item":{
         header: {
-            in: "in",
+            in: "added in",
             to: "to",
             ask: "needs some tips!",
         },

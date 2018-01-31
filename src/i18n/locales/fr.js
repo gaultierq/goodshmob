@@ -48,7 +48,7 @@ export default {
     },
     "activity_item": {
         header: {
-            in: "dans",
+            in: "a ajouté dans",
             to: "à",
             ask: "a besoin de recos !",
         },
