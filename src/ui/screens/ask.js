@@ -92,7 +92,18 @@ export default class AskScreen extends Component<Props, State> {
                             ]}
                             returnKeyType={'send'}
                         />
-                        <Text style={{color: Colors.white, fontSize: 15}}>{`${200 - (askContent || "").length}`}</Text>
+                        <View style={{flexDirection: 'row'}}>
+                            <View>
+                                <Text style={{color: Colors.white, fontSize: 15}}>{`${200 - (askContent || "").length}`}</Text>
+                            </View>
+                            <View style={{flex: 1, alignItems: 'flex-end'}}>
+                                <GTouchable
+                                    onPress={()=>this.createAsk()}
+                                    style={{backgroundColor: Colors.white, borderRadius: 6, padding: 4, paddingRight: 8, paddingLeft: 8}}>
+                                    <Text style={{color: Colors.green, fontSize: 14}}>SEND</Text>
+                                </GTouchable>
+                            </View>
+                        </View>
 
                     </View>
 
