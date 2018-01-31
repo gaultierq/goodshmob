@@ -41,7 +41,7 @@ import LineupCellSaving from "../components/LineupCellSaving";
 import GTouchable from "../GTouchable";
 import AddLineupComponent from "../components/addlineup";
 import BottomSheet from 'react-native-bottomsheet';
-import Icon from 'react-native-vector-icons/Entypo';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import PopupDialog, {
     DialogTitle,
     DialogButton,
@@ -54,6 +54,8 @@ import util from 'util'
 // $FlowFixMe
 import {AppTour, AppTourSequence, AppTourView} from "../../../vendors/taptarget";
 import type {OnBoardingStep} from "../../managers/OnBoardingManager";
+
+import {SFP_TEXT_REGULAR} from "../fonts"
 
 
 
@@ -344,8 +346,8 @@ class HomeScreen extends Screen<Props, State> {
             dialogAnimation={new ScaleAnimation()}
             dialogTitle={
                 <DialogTitle
-                    title={i18n.t('no_spam.dialog_title')} titleStyle={{backgroundColor: Colors.green}}
-                    titleTextStyle={{color: Colors.white, fontWeight: 'bold'}}
+                    title={i18n.t('no_spam.dialog_title')} titleStyle={{alignItems: 'flex-start', paddingLeft: 20/*backgroundColor: Colors.green*/}}
+                    titleTextStyle={{color: Colors.grey, fontFamily: SFP_TEXT_MEDIUM, fontSize: 20}}
                 />}
             onDismissed={() => {
                 OnBoardingManager.onDisplayed('no_spam')
@@ -360,10 +362,13 @@ class HomeScreen extends Screen<Props, State> {
                 />,
             ]}
             width={0.8}
-            height={300}
+            height={325}
         >
             <View style={[styles.dialogContentView]}>
-                <Text>{i18n.t('no_spam.dialog_body')}</Text>
+                <Text style={{color:Colors.greyishBrown}}>{i18n.t('no_spam.dialog_body')}</Text>
+                <View style={{alignItems: 'center', paddingTop: 15, paddingBottom: 0}}>
+                    <Image source={require('../../img2/lockClosed.png')} resizeMode="contain"/>
+                </View>
             </View>
         </PopupDialog>)
     }

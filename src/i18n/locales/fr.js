@@ -89,7 +89,7 @@ export default {
         "value_proposal":"##Marre d’oublier les recommandations\nqu’on te fait ?",
         "slider_intro_1": "On m'a dit que c’était top.\nPour ne pas l'oublier\nje l’ai goodshé.",
         "slider_intro_2": "Je retrouve mes recos quand j'en ai besoin.\nEt je peux les partager facilement.",
-        "slider_intro_3": "Je demande des des avis, des idées, des conseils à mon réseau.",
+        "slider_intro_3": "Je demande des avis, des idées, des conseils à mon réseau.",
         "slider_intro_4": "Je découvre livres, films, musiques, restos, idées cadeau, choses à faire...et j'achète en un clin d'oeil.",
         "credentials": "Fait avec amour à Paris",
     },
