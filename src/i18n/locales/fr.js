@@ -248,7 +248,7 @@ export default {
         try_again: "Réessayer",
         ask_friend: "Poser une\nquestion à\nmon réseau",
         logout: "Déconnexion",
-        terms: "Mentions légales",
+        terms: "Conditions d'utilisation et données personnelles",
         copy_link: "Copier le lien",
         send_to_goodsher: "Envoyer à un autre\ngoodsher",
         skip: "OK",
@@ -260,10 +260,10 @@ export default {
         empty_feed_generic: "Quand on aime on partage.\nCrée ton réseau de goodshers. "
     },
     ask: {
-        sent: "Demande envoyée"
+        sent: "Demande envoyée."
     },
     share_goodsh: {
-        title: "Viens goodsher avec moi",
+        title: "Viens goodsher avec moi.",
          //insérer plutôt le lien vers le store non ?//message: "Rejoins-moi sur Goodsh : https://goodsh.it/",
     },
     loading: {
