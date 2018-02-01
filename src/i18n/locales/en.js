@@ -195,7 +195,7 @@ export default {
         }
     },
     loadmore: "Loading...",
-    send_message: "I found something for you:\n%{what}\n%{url}\nSpotted on Goodsh: %{url}",
+    send_message: "I found something for you:\n%{what}\n%{url}\nSpotted on Goodsh: https://goodsh.it/",
     goodsh_url: "https:\/\/goodsh.it\/",
     friends: {
         empty_screen: "Fully enjoy Goodsh by inviting your friends.",
