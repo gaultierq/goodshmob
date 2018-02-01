@@ -257,7 +257,10 @@ export default {
 
     },
     common: {
-        empty_feed_generic: "Quand on aime on partage.\nCrée ton réseau de goodshers. "
+        empty_feed_generic: "Quand on aime on partage.\nCrée ton réseau de goodshers. ",
+        api: {
+            generic_error: "Oups... Y a quelquechose qui cloche"
+        }
     },
     ask: {
         sent: "Demande envoyée."

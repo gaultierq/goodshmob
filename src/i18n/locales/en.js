@@ -260,7 +260,10 @@ export default {
         invite: "Invite a friend to goodsh"
     },
     common: {
-        empty_feed_generic: "If you love it, share it.\nWhy don't you invite some friends to goodsh?"
+        empty_feed_generic: "If you love it, share it.\nWhy don't you invite some friends to goodsh?",
+        api: {
+            generic_error: "Oops... Something went wrong"
+        }
     },
     ask: {
         sent: "Request sent"
