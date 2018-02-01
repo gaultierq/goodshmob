@@ -504,13 +504,13 @@ class HomeScreen extends Screen<Props, State> {
                         {withMenuButton && this.renderMenuButton(item, 15)}
                     </View>
                 </GTouchable>}
-                {this.renderList(item.savings)}
+                {this.renderList(item)}
             </View>
 
         )
     }
 
-    renderEmptyList() {
+    renderEmptyList(list: List) {
         let result = [];
         // first item render
         result.push(<View style={[
@@ -536,15 +536,18 @@ class HomeScreen extends Screen<Props, State> {
                 }
             ]}/>);
         }
-        return (<GTouchable onPress={() => this.onFloatingButtonPressed()}>
+        return (<GTouchable onPress={() => {
+            startAddItem(this.props.navigator, list.id);
+        }
+        }>
             <View style={{flexDirection: 'row', paddingLeft: 15}}>{result}</View>
         </GTouchable>);
     }
 
-    renderList(savings) {
-
+    renderList(list: List) {
+        let savings = list.savings;
         if (_.isEmpty(savings)) {
-            return this.renderEmptyList()
+            return this.renderEmptyList(list)
         }
 
         return <Feed
