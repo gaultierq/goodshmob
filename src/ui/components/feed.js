@@ -327,6 +327,9 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             let lastSection = _.last(this.props.sections);
             data = lastSection && lastSection.data;
         }
+        else {
+            data = this.props.data;
+        }
         return _.last(data);
     }
 
