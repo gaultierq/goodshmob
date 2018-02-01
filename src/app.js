@@ -91,9 +91,7 @@ export default class App {
         //see the network requests in the debugger
         //TODO: doesnt work yet
         //GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
-        //if (!__IS_LOCAL__) {
         console.disableYellowBox = true;
-        //}
         //dont know it doesnt work
         //const __USE_CACHE_LOCAL__ = false;
 

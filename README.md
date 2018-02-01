@@ -53,3 +53,4 @@ rm -rf /Users/qg/projects/goodshmob/node_modules/node-pre-gyp/node_modules/.bin/
 
 ## tools
 RN menu on android device: adb shell input keyevent 82
+tester la preprod, avec le debugger et les logs: RCTDefines.h, `RCT_DEV 1`

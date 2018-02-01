@@ -35,7 +35,7 @@ export default class LineupTitle extends React.Component<Props, State> {
             >
                 {countString}
 
-                {__IS_LOCAL__ && <Text
+                {__DEBUG_SHOW_IDS__ && <Text
                     style={{color: Colors.grey3}}
                 >{` id=(#${lineup.id.substr(0, 5)})`}</Text>}
             </Text>

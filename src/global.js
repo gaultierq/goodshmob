@@ -29,7 +29,7 @@ export function init(hotReload: boolean) {
 
     if (!Config.ENV) throw `No .env file found. Try to run 'cp env.local .env && react-native run-${Platform.OS}'`;
 
-    global.__DEBUG_PERFS__ = false;
+    // global.__DEBUG_PERFS__ = false;
     // global.__DEBUG_PERFS__ = true;
     global.__IS_LOCAL__= Config.ENV === 'LOCAL';
     global.__IS_PROD__= Config.ENV === 'PROD';

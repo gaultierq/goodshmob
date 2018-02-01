@@ -64,7 +64,7 @@ export default class ActivityBody extends React.Component<Props, State> {
                                 <Text style={[styles.title]} numberOfLines={2}>{resource.title}</Text>
                                 <Text style={[styles.subtitle]}>{resource.subtitle}</Text>
 
-                                {__IS_LOCAL__ &&
+                                {__DEBUG_SHOW_IDS__ &&
                                 <Text style={UI.TEXT_LESS_IMPORTANT}>{activity.type + " " + activity.id}</Text>}
                             </View>
                             {this.renderBuyButton(activity)}
@@ -153,7 +153,7 @@ export default class ActivityBody extends React.Component<Props, State> {
         let imageHeight = 288;
         if (activity.type === 'asks'){
             let content = activity.content;
-            if (__IS_LOCAL__) content += ` (id=${activity.id.substr(0, 5)})`;
+            if (__DEBUG_SHOW_IDS__) content += ` (id=${activity.id.substr(0, 5)})`;
             return <Text style={styles.askText}>{content}</Text>;
         }
 
