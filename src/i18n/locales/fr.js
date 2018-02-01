@@ -122,7 +122,7 @@ export default {
             "friends":"MES CONTACTS",
             "notifications":"NOTIFICATIONS",
         },
-        "empty_screen": "Découvre ici les goodsh de tes proches. Ask pour les solliciter."
+        "empty_screen": "Découvre ici les goodsh de tes proches. ASK pour en avoir encore plus."
     },
     "comments_screen":{
         "title": "Commentaires"
@@ -155,7 +155,7 @@ export default {
         "list":"a créé la liste %{what}",
         "post":"a posté %{what}",
         "sending":"t’a envoyé %{item_title}",
-        "invitation":"Connexion réussie avec %{you} :-)",
+        "invitation":"Connexion réussie avec %{you}",
         "you":"toi",
         "empty_screen":"Quand on aime on partage."
     },
@@ -194,7 +194,7 @@ export default {
         }
     },
     loadmore: "Chargement...",
-    send_message: "Je pense que tu vas aimer :\n\n%{what}\n%{url}\n\nTrouvé grâce à Goodsh.",
+    send_message: "Je pense que tu vas aimer :\n%{what}\n%{url}\nTrouvé grâce à Goodsh %{url}",
     goodsh_url: "https:\/\/goodsh.it\/",
     friends: {
         empty_screen: "Profite pleinement de Goodsh et invite des proches.",
@@ -264,7 +264,7 @@ export default {
     },
     share_goodsh: {
         title: "Viens goodsher avec moi.",
-         //insérer plutôt le lien vers le store non ?//message: "Rejoins-moi sur Goodsh : https://goodsh.it/",
+        message: "Rejoins-moi sur Goodsh : https://goodsh.it/",
     },
     loading: {
         error: "Z@#u$%t, le chargement a échoué. "

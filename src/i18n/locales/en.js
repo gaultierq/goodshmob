@@ -15,35 +15,35 @@ export default {
     },
     lineups: {
         search: {
-            placeholder: "Search"
+            placeholder: "##Search"
         },
         goodsh : {
             title: "GoodshBox"
         },
         mine : {
-            title: "My lineups"
+            title: "My lists"
         },
-        empty_screen: "You'll find all your goodsh saved here."
+        empty_screen: "All your goodsh in one place. Tap '+' to save a new one."
     },
     no_spam: {
-        dialog_title: "The 3 Goodsh Privacy Pilars",
-        dialog_body: "Your goodsh are ONLY visible by you and your friends\nWhen you save a goodsh, we DON'T notify your contacts\nFor a fully private goodsh, tap on the lock\n\n",
-        dialog_button: 'Ok, let\'s go!',
+        dialog_title: "The 3 pillars of Goodsh",
+        dialog_body: "Your goodsh are ONLY visible by you and your friends.\nWhen you save a goodsh, we DON'T notify your contacts.\nFor a fully private goodsh, tap the lock.\n\n",
+        dialog_button: 'Ok, LET\'S GO!',
     },
     home: {
         wizard: {
             action_button_label : "Save a goodsh.",
-            action_button_body : "Tap '+' your first goodsh.",
+            action_button_body : "Tap '+' for your first goodsh.",
         }
     },
-    search: {
-        in_items: "Name of the goodsh",
-        in_network: "Search for a goodsh",
+    search:{ 
+        in_items: "What would you like to save?",
+        in_network: "Search in my network",
         in_feed: "Search in my lists"
     },
     "shared":{
         "goodsh_saved":"Goodshed!",
-        "##add":"Add",
+        "add":"Add",
         "link_copied":"Link copied ✓",
     },
     "activity_item":{
@@ -83,15 +83,15 @@ export default {
     },
     "login_screen":{
         "facebook_signin":"SIGN IN WITH FACEBOOK",
-        "no_publication":"Goodsh doesn't post anything on Facebook.",
+        "no_publication":"Goodsh does not post anything on Facebook.",
         "definition":{
             "example":"##Bouquin, restaurant, film, série, artiste,lieu, musique, gadget, fringue, vin, …"
         },
         "value_proposal":"##I was said it is\n" +"very good.\n" + "Not to forget it\n" + "I stored it\n" + "in",
-        "slider_intro_1": "I was told it was great.\n" + "To not forget it\nI goodshed it.",
-        "slider_intro_2": "I find my stuff whenever I need it, and I can share it easily.",
-        "slider_intro_3": "I request recommandations, ideas, suggestions from my network.",
-        "slider_intro_4": "I discover books, movies, music, restaurants, gift ideas, stuff to do, to visit...and I buy in a blink of an eye.",
+        "slider_intro_1": "Don't forget your friends' tips,\ngoodsh them.",
+        "slider_intro_2": "Find your stuff whenever you need them, and share easily.",
+        "slider_intro_3": "Request ideas, suggestions, reviews from your network.",
+        "slider_intro_4": "Discover books, movies, music, restaurants, gift ideas, things to do, to visit...and buy in a blink of an eye.",
         "credentials": "Made with love in Paris",
     },
     "profile_screen":{
@@ -108,7 +108,7 @@ export default {
         "unvisible":"Private list",
         "add_description":"Add a note",
         "choose_list":"Choose another list",
-        "all_list" : "All my lists"
+        "all_list": "All my lists"
     },
     "search_bar":{
         "me_placeholder":"##Search in your lists",
@@ -123,7 +123,7 @@ export default {
             "friends":"MY CONTACTS",
             "notifications":"NOTIFICATIONS",
         },
-        "empty_screen": "Here you'll find your friends goodsh."
+        "empty_screen": "The goodsh of your friends are here. ASK for more."
     },
     "comments_screen":{
         "title": "Comments"
@@ -131,15 +131,15 @@ export default {
     "search_item_screen":{
         "tabs": {
             "consumer_goods":"STUFF",
-            "places":"PLACES",
-            "movies":"MOVIES",
+            "places":"PLACE",
+            "movies":"MOVIE",
             "musics":"MUSIC"
         },
         "placeholder": {
-            "consumer_goods":"Stuff",
-            "places":"City, Address...",
-            "movies":"Movies",
-            "musics":"Musics"
+            "consumer_goods":"##Stuff",
+            "places":"##City, Address...",
+            "movies":"##Movies",
+            "musics":"##Musics"
         }
     },
     "activity_comments_screen":{
@@ -151,14 +151,14 @@ export default {
     "interactions":{
         "saving":"saved %{what}",
         "comment":"commented %{what}",
-        "comment_ask":"replied: '%{what}'",
+        "comment_ask":"replied on '%{what}'",
         "like":"said YEAAH! to %{what}",
-        "list":"created the lineup %{what}",
+        "list":"created the list %{what}",
         "post":"posted %{what}",
         "sending":"sent %{what} to you",
         "invitation":"Connexion successful with %{you}",
         "you":"you",
-        "empty_screen": "Fully enjoy Goodsh by inviting your friends.",
+        "empty_screen": "If you love it, share it.",
     },
     util: {
         time: {
@@ -195,7 +195,7 @@ export default {
         }
     },
     loadmore: "Loading...",
-    send_message: "I found something for you:\n%{what}\n\nSpotted on Goodsh: %{url}",
+    send_message: "I found something for you:\n%{what}\n%{url}\nSpotted on Goodsh: %{url}",
     goodsh_url: "https:\/\/goodsh.it\/",
     friends: {
         empty_screen: "Fully enjoy Goodsh by inviting your friends.",
@@ -209,14 +209,14 @@ export default {
         },
         alert: {
             title: "Disconnection",
-            label: "Are you sur ?"
+            label: "Are you sure?"
         }
     },
     empty: {
         lineup: "This list is empty, what a shame!"
     },
     activity_action_bar: {
-        goodsh_deleted: "goodsh deleted",
+        goodsh_deleted: "Goodsh deleted",
         comment: {
             title: "Comments"
         },
@@ -236,7 +236,7 @@ export default {
         }
     },
     loading: {
-        error: "Loading Error..."
+        error: "D@#m$%n, loading error."
     },
     actions: {
         ok: "Ok",
@@ -252,7 +252,7 @@ export default {
         try_again: "Try Again",
         ask_friend: "Ask my network",
         logout: "Logout",
-        terms: "Terms",
+        terms: "Terms and personal data",
         copy_link: "Copy link",
         send_to_goodsher: "Send to another\ngoodsher",
         skip: "OK",
@@ -260,13 +260,13 @@ export default {
         invite: "Invite a friend to goodsh"
     },
     common: {
-        empty_feed_generic: "Damn, nothing here yet.\nWhy don't you invite some friends to goodsh?"
+        empty_feed_generic: "If you love it, share it.\nWhy don't you invite some friends to goodsh?"
     },
     ask: {
         sent: "Request sent"
     },
     share_goodsh: {
-        title: "Come Goodsh with me",
+        title: "Come goodsh with me",
         message: "Join me on Goodsh: https://goodsh.it/"
     },
     alert: {
