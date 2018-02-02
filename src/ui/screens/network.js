@@ -112,6 +112,7 @@ class NetworkScreen extends Screen<Props, State> {
     }
 
     render() {
+
         let userId = currentUserId();
 
         let network = this.props.network[userId] || {};
@@ -130,7 +131,7 @@ class NetworkScreen extends Screen<Props, State> {
 
         myAsks = _.orderBy(myAsks, 'attributes.createdAt', 'asc');
 
-        let firstActivityOfFeed = Date.parse(_.get(activities, '0.attributes.createdAt'));
+        let firstActivityOfFeed = Date.parse(_.get(activities, '0.createdAt'));
 
         for (let i = 0; i < myAsks.length; i++) {
             let a = myAsks[i];

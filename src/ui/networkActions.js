@@ -33,7 +33,12 @@ export const reducer = (() => {
 
             if (userId) {
                 let subState = state[userId] || initialSubState;
-                subState = Api.reduceList(subState, action, {fetchFirst: FETCH_ACTIVITIES});
+                subState = Api.reduceList(
+                    subState,
+                    action,
+                    {fetchFirst: FETCH_ACTIVITIES},
+                    activity => ({createdAt: activity.attributes['created-at']})
+                    );
                 state = state.merge({[userId]: subState}, {deep: true});
             }
         }

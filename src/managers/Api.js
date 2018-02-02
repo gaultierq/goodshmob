@@ -424,7 +424,7 @@ export function safeExecBlock(block, stateName: string) {
 }
 
 //move
-export const reduceList = (state, action, desc) => {
+export const reduceList = (state, action, desc, optionalExtractor?) => {
     switch (action.type) {
         case desc.fetchFirst.success():
 
@@ -435,9 +435,13 @@ export const reduceList = (state, action, desc) => {
 
             let hasNoMore = payload.data.length === 0;
 
-            let newList = payload.data.map((f) => {
+            let newList = payload.data.map(f => {
                 let {id, type} = f;
-                return {id, type};
+                let options = {};
+                if (optionalExtractor) {
+                    options = optionalExtractor(f);
+                }
+                return {id, type, ...options};
             });
 
             new Util.Merge(currentList, newList)
