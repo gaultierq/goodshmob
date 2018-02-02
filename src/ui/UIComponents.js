@@ -69,20 +69,20 @@ export function renderTag(tag: string, onPress: () => void, style?:?*) {
     </GTouchable>);
 }
 
-
-
 const styles = StyleSheet.create({
-    tag: {paddingTop: 4, paddingLeft: 16, paddingRight: 16,
+    tag: {
+        paddingLeft: 8, paddingRight: 8,
         color: Colors.greyish,
         alignSelf: 'stretch',
-        borderRadius: 13,
-        height: 26,
-        //lineHeight: 26,
+        borderRadius: 10,
+        height: 20,
+        lineHeight: 20,
+        textAlignVertical: 'center',
         // padding: 2,
         borderWidth: StyleSheet.hairlineWidth,
         borderColor: Colors.greyish,
         fontFamily: SFP_TEXT_ITALIC,
-        fontSize: 13
+        fontSize: 12
 
     }
 });

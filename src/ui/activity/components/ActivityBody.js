@@ -24,8 +24,11 @@ import {seeList, seeUser} from "../../Nav";
 import GTouchable from "../../GTouchable";
 import {CachedImage} from "react-native-img-cache";
 import Icon from 'react-native-vector-icons/Feather';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Octicons from 'react-native-vector-icons/Octicons';
 import {firstName} from "../../../helpers/StringUtils";
-import {renderTag} from "../../UIComponents";
+import {Avatar, renderTag} from "../../UIComponents";
+import {stylePadding} from "../../UIStyles";
 
 
 type Props = {
@@ -69,9 +72,23 @@ export default class ActivityBody extends React.Component<Props, State> {
                             </View>
                             {this.renderBuyButton(activity)}
                         </View>
-                        {this.renderTags()}
+                        {/*{this.renderDescription(activity)}*/}
+                        <View style={{flex:1, flexDirection: 'row', ...stylePadding(0, 14)}}>
+                            <Avatar user={activity.user} style={{dim: 18, marginRight: 8, marginTop: 2}}/>
+                            <View>
+                                {this.renderTags()}
+                                <View style={{flex:1, flexDirection: 'row', marginTop: 15}}>
+                                    {activity.description && <Octicons name="quote" size={10} color={Colors.brownishGrey} style={{alignSelf: 'flex-start'}}/>}
+                                    {activity.description && <Text style={[styles.description, {flex:1, alignItems: 'center', textAlignVertical: 'center', ...stylePadding(10, 0)}]}>{activity.description}</Text>}
 
-                        {!!activity.description && <Text style={[styles.description]}>{"\"" + activity.description + "\""}</Text>}
+                                </View>
+
+                            </View>
+                        </View>
+
+
+
+
                     </View>
                 )}
             </View>
@@ -99,22 +116,26 @@ export default class ActivityBody extends React.Component<Props, State> {
             press = () => seeList(this.props.navigator, target);
         }
         else if (target.type === 'users') {
-            targetName = target.firstName + " " + target.lastName;
-            key = "activity_item.header.to";
-            press = () => seeUser(this.props.navigator, target);
-
+            // targetName = target.firstName + " " + target.lastName;
+            // key = "activity_item.header.to";
+            // press = () => seeUser(this.props.navigator, target);
             //new spec. todo clean
             return null;
         }
-
-        const inLineup = i18n.t(key) + ' ' + targetName;
-        const tags = [];
         if (!this.props.skipLineup) {
-            tags.push(inLineup);
+            return(
+                <View style={styles.tag}>
+                    <Text style={{
+                        textAlign: 'center',
+                        marginRight: 8,
+                        fontFamily: SFP_TEXT_MEDIUM,
+                        fontsize: 12,
+                        color: Colors.greyishBrown}}>{i18n.t(key)}</Text>
+                    {renderTag(targetName, press)}
+                </View>
+            )
         }
-        return tags.map(tag=><View key={tag} style={styles.tag}>
-            {renderTag(tag, press)}
-        </View>)
+        else  return null;
     }
 
 
@@ -211,10 +232,10 @@ const styles = StyleSheet.create({
     flex1: {flex:1},
     title: {fontSize: 19, color: Colors.black, marginBottom: 4, marginRight: 5},
     subtitle: {fontSize: 14, color: Colors.greyish},
-    description: {fontSize: 14, fontFamily: SFP_TEXT_ITALIC, marginTop: 10, color: Colors.brownishGrey},
+    description: {fontSize: 14, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey},
     imageContainer: {flex:1, alignSelf: 'center', width: "100%", backgroundColor: 'transparent'},
     image: {alignSelf: 'center', backgroundColor: ACTIVITY_CELL_BACKGROUND, width: "100%"},
     yheaaContainer: {position: 'absolute', width: "100%", height: "100%",backgroundColor: 'rgba(0,0,0,0.3)',alignItems: 'center',justifyContent: 'center'},
-    tag: {flexDirection:'row', marginTop: 10},
+    tag: {flexDirection:'row', alignItems: 'center'},
     askText: {margin: 12, fontSize: 30}
 });
