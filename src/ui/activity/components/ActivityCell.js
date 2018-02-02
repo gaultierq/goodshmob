@@ -50,6 +50,13 @@ export default class ActivityCell extends React.Component<Props, State> {
     refKeys: any;
 
 
+    renderDebugActivityInfo(activity: Activity) {
+        return (
+            <View>
+                {_.keys(activity).map(k => <Text style={{fontSize: 9}}>{`${k}=${activity[k]}`}</Text>)}
+            </View>
+        );
+    }
 
     render() {
         let activity = this.getActivity();
@@ -60,6 +67,7 @@ export default class ActivityCell extends React.Component<Props, State> {
                 <View style={[_styles.askContent, {backgroundColor: this.getAskBackgroundColor(activity)}]}>
                     {this.renderUserAvatar(activity.user, _styles.userAvatar)}
                     <Text style={[_styles.askText]}>{activity.content}</Text>
+                    {__DEBUG_SHOW_IDS__ && this.renderDebugActivityInfo(activity) }
                     <View style={_styles.width100}>
                         {!activity.pending && <ActivityActionBar
                             activityId={activity.id}
@@ -101,7 +109,7 @@ export default class ActivityCell extends React.Component<Props, State> {
 
                     {/*<FeedSeparator/>*/}
 
-
+                    {__DEBUG_SHOW_IDS__ && this.renderDebugActivityInfo(activity) }
                     <ActivityActionBar
                         activityId={activity.id}
                         activityType={activity.type}
