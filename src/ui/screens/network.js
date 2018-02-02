@@ -111,7 +111,15 @@ class NetworkScreen extends Screen<Props, State> {
         });
     }
 
+    //hack to skip the first render
+    hasBeenRenderedOnce = false;
+
     render() {
+        if (ENABLE_PERF_OPTIM) {
+            if (!this.hasBeenRenderedOnce && !this.isVisible()) return null;
+            this.hasBeenRenderedOnce = true;
+        }
+
 
         let userId = currentUserId();
 
