@@ -42,7 +42,7 @@ export default {
         in_feed: "Rechercher dans mes listes"
     },
     "shared":{
-        "goodsh_saved":"C'est bon, c'est goodshé.",
+        "goodsh_saved":"Enregistré",
         "add":"Ajouter",
         "link_copied":"Lien copié ✓",
     },
@@ -115,14 +115,14 @@ export default {
     },
     "network_search_tabs":{
         "savings":"GOODSH & LISTE",
-        "users":"GOODSHER"
+        "users":"CONTACT"
     },
     "community_screen":{
         "tabs": {
             "friends":"MES CONTACTS",
             "notifications":"NOTIFICATIONS",
         },
-        "empty_screen": "Découvre ici les goodsh de tes proches. ASK pour en avoir encore plus."
+        "empty_screen": "Découvre ici les goodsh de tes contacts. Tap ASK pour leur poser des questions."
     },
     "comments_screen":{
         "title": "Commentaires"
@@ -145,7 +145,7 @@ export default {
         "add_comment_placeholder":"Répondre"
     },
     "send_screen":{
-        "add_description_placeholder":"Ajouter un petit mot à l'envoi (visible uniquement par le destinataire)."
+        "add_description_placeholder":"Ajouter un petit mot (visible uniquement par le destinataire)."
     },
     "interactions":{
         "saving":"a enregistré %{what}",
@@ -248,22 +248,22 @@ export default {
         try_again: "Réessayer",
         ask_friend: "Poser une\nquestion à\nmon réseau",
         logout: "Déconnexion",
-        terms: "Conditions d'utilisation et données personnelles",
+        terms: "Conditions d'utilisation",
         copy_link: "Copier le lien",
         send_to_goodsher: "Envoyer à un autre\ngoodsher",
         skip: "OK",
         ask: "Demander à mon réseau",
-        invite: "Inviter un ami à goodsher"
+        invite: "Inviter un ami"
 
     },
     common: {
-        empty_feed_generic: "Quand on aime on partage.\nCrée ton réseau de goodshers. ",
+        empty_feed_generic: "Quand on aime on partage.\nCrée ton réseau de contacts. ",
         api: {
-            generic_error: "Oups... Y a quelquechose qui cloche"
+            generic_error: "Oups... Y a quelque chose qui cloche."
         }
     },
     ask: {
-        sent: "Demande envoyée."
+        sent: "Demande envoyée"
     },
     share_goodsh: {
         title: "Viens goodsher avec moi.",
