@@ -305,7 +305,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     itemsLen(): number {
-        return _.size(this.getItems());
+        return _.size(this.getFlatItems());
     }
 
     getFlatItems() {
