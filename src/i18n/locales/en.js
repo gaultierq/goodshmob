@@ -42,7 +42,7 @@ export default {
         in_feed: "Search in my lists"
     },
     "shared":{
-        "goodsh_saved":"Goodshed!",
+        "goodsh_saved":"Saved",
         "add":"Add",
         "link_copied":"Link copied ✓",
     },
@@ -116,14 +116,14 @@ export default {
     },
     "network_search_tabs":{
         "savings":"GOODSH & LIST",
-        "users":"GOODSHER"
+        "users":"CONTACT"
     },
     "community_screen":{
         "tabs": {
             "friends":"MY CONTACTS",
             "notifications":"NOTIFICATIONS",
         },
-        "empty_screen": "The goodsh of your friends are here. ASK for more."
+        "empty_screen": "The goodsh of your friends are here. Tap ASK for a specific request."
     },
     "comments_screen":{
         "title": "Comments"
@@ -146,7 +146,7 @@ export default {
         "add_comment_placeholder":"Reply"
     },
     "send_screen":{
-        "add_description_placeholder":"Say something nice (visible only to the recipient)."
+        "add_description_placeholder":"Add a note (visible only to the recipient)."
     },
     "interactions":{
         "saving":"saved %{what}",
@@ -254,10 +254,10 @@ export default {
         logout: "Logout",
         terms: "Terms and personal data",
         copy_link: "Copy link",
-        send_to_goodsher: "Send to another\ngoodsher",
+        send_to_goodsher: "Send to another\nuser",
         skip: "OK",
         ask: "Ask my network",
-        invite: "Invite a friend to goodsh"
+        invite: "Invite a friend"
     },
     common: {
         empty_feed_generic: "If you love it, share it.\nWhy don't you invite some friends to goodsh?",
