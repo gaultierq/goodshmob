@@ -22,6 +22,7 @@ import type {SearchCategory} from "./search";
 import SearchScreen from "./search";
 import {SearchStyles} from "../UIStyles";
 import GTouchable from "../GTouchable";
+import Config from 'react-native-config'
 
 type Props = NavigableProps & {
     token?: ?SearchToken
@@ -79,7 +80,7 @@ export default class HomeSearchScreen extends Screen<Props, State> {
 
 
         let index = new Promise(resolve => {
-            AlgoliaClient.createAlgoliaIndex('Saving_staging').then(index => {
+            AlgoliaClient.createAlgoliaIndex(Config.ALGOLIA_SAVING_INDEX).then(index => {
                 index.setSettings({
                         searchableAttributes: [
                             'item_title',

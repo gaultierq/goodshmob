@@ -137,8 +137,7 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
             },
             {
                 type: "users",
-                index: AlgoliaClient.createAlgoliaIndex('User_staging'),
-                //index: client.initIndex('User_staging'),
+                index: AlgoliaClient.createAlgoliaIndex(Config.ALGOLIA_USER_INDEX),
                 query: {
                     filters: `NOT objectID:${currentUserId()}`,
 
