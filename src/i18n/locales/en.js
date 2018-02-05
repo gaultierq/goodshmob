@@ -17,6 +17,10 @@ export default {
         search: {
             placeholder: "##Search"
         },
+        filter: {
+            empty: "No results. You can try to launch a deep search",
+            deepsearch: "Deep search",
+        },
         goodsh : {
             title: "GoodshBox"
         },

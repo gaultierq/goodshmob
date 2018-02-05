@@ -42,8 +42,18 @@ export type Props<T> = {
     style: any,
     scrollUpOnBack?: ()=>boolean,
     cannotFetch?: boolean,
-    visibility: ScreenVisibility
+    visibility: ScreenVisibility,
+    filter?: ?FilterConfig<T>
 };
+
+export type FilterConfig<T> = {
+    placeholder: i18Key,
+    onSearch: string => void,
+    emptyFilterResult: string => Node,
+    style: *,
+    applyFilter: (Array<T>, string) => Array<T>
+};
+
 
 
 type State = {
@@ -189,23 +199,31 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             ...attributes
         };
 
-        let searchBar = !!this.props.filter && this.renderSearchBar();
+
         let list;
 
+        let allViews = [];
 
+        const filter = this.props.filter;
+        if (filter) {
+            allViews.push(this.renderSearchBar(filter));
+            if (this.state.filter) {
 
-        if (this.props.filter && this.state.filter) {
-            items = this.props.filter.applyFilter(items, this.state.filter);
+                items = filter.applyFilter(items, this.state.filter);
+                if (_.isEmpty(items)) {
+                    allViews.push(filter.emptyFilterResult(this.state.filter));
+                }
+            }
         }
 
         if (sections) {
-            list = React.createElement(SectionList, {sections: items, ...params});
+            allViews.push(React.createElement(SectionList, {sections: items, ...params}));
         }
         else {
-            list = React.createElement(FlatList, {data: items, ...params});
+            allViews.push(React.createElement(FlatList, {data: items, ...params}));
         }
 
-        return <View>{searchBar}{list}</View>
+        return <View>{allViews}</View>
     }
 
     debugOnlyEmptyFeeds() {
@@ -238,9 +256,9 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         return data;
     }
 
-    renderSearchBar(){
+    renderSearchBar(filter: FilterConfig<T>){
 
-        let {onSearch, style} = this.props.filter;
+        let {onSearch, style, placeholder} = filter;
 
         let font = {
             fontSize: 16,
@@ -250,15 +268,15 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
         const color = Colors.grey142;
         //TODO: adjust fr, en margins
+        //TODO: center placeholder ! https://github.com/agiletechvn/react-native-search-box
         const placeholderConfig = {
-            placeholder: i18n.t('search.in_feed'),
+            placeholder: i18n.t(placeholder),
+            //TOREMOVE
             placeholderCollapsedMargin: this.isFrenchLang ? 95 : 65,
+            //TOREMOVE
             searchIconCollapsedMargin: this.isFrenchLang ? 110 : 80,
         };
 
-
-        //TODO: finish design
-        //use https://github.com/agiletechvn/react-native-search-box
         return (
             <View style={[{}, style]}>
                 {React.createElement(Search, {
@@ -267,15 +285,9 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                     titleCancelColor: color,
                     tintColorSearch: color,
                     tintColorDelete: color,
-                    // cancelButtonWidth: PropTypes.number,
-                    // cancelButtonStyle: PropTypes.PropTypes.oneOfType([
-                    //     PropTypes.number,
-                    //     PropTypes.object
-                    // ]),
                     cancelButtonTextStyle: {
                         ...font
                     },
-                    // onLayout: PropTypes.func,
                     inputStyle: {
                         color: Colors.black,
                         ...font

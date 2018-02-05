@@ -20,7 +20,7 @@ import {LineupListScreen} from './lineuplist'
 import type {Id, RNNNavigator, Saving, SearchToken} from "../../types";
 import {List} from "../../types"
 import Snackbar from "react-native-snackbar"
-import {NavStyles, stylePadding} from "../UIStyles";
+import {NavStyles, renderSimpleButton, stylePadding, STYLES} from "../UIStyles";
 import {currentGoodshboxId, currentUserId, logged} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
@@ -241,6 +241,7 @@ class HomeScreen extends Screen<Props, State> {
                         scrollUpOnBack={super.isVisible() ? ()=>false : null}
                         cannotFetch={!super.isVisible()}
                         visibility={super.getVisibility()}
+                        empty={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
                         sectionMaker={(lineups)=> {
                             const goodshbox = _.head(lineups);
                             let savingCount = _.get(goodshbox, `meta.savingsCount`, null) || 0;
@@ -265,9 +266,16 @@ class HomeScreen extends Screen<Props, State> {
                         ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
                         feedId={"home list"}
                         filter={{
-                            onSearch: (searchToken) => {
+                            placeholder: 'search.in_feed',
+                            onSearch: (searchToken: string) => {
                                 this.launchSearch(searchToken);
                             },
+                            emptyFilterResult: (searchToken: string) => (
+                                <View>
+                                    <Text style={STYLES.empty_message}>{i18n.t('lineups.filter.empty')}</Text>
+                                    {renderSimpleButton(i18n.t('lineups.filter.deepsearch'), searchToken => this.launchSearch(searchToken), {style:{}, })}
+                                </View>
+                            ),
                             style: {
                                 backgroundColor: NavStyles.navBarBackgroundColor,
                                 paddingTop: 5,

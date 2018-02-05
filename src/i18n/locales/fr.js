@@ -14,6 +14,10 @@ export default {
         }
     },
     lineups: {
+        filter: {
+            empty: "Pas de résultat, vous pouvez essayer de lancer une recherche approfondie",
+            deepsearch: "Recherche approfondie",
+        },
         search: {
             placeholder: "##Rechercher"
         },
