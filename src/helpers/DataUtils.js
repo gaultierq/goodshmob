@@ -44,6 +44,9 @@ export let sanitizeActivityType = activityType => {
         case "ask":
         case "asks":
             return "asks";
+        case "track":
+        case "tracks":
+            return "tracks";
     }
     return activityType;
 };
@@ -66,7 +69,7 @@ export function buildNonNullData(store, type, id: Id, assertNonNull?: boolean = 
     let result = build(store, sanitized, id, {includeType: true});
 
 
-    if (assertNonNull && !result) throw new Error(`resource not found for type=${type} id=${id}`);
+    if (assertNonNull && !result && __WITH_ASSERTS__) throw new Error(`resource not found for type=${type} id=${id}`);
     //Statistics.record('build', Date.now()-start);
     Statistics.recordTime(`buildData`, Date.now()-start);
     return result;
