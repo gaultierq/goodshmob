@@ -131,7 +131,7 @@ class LineupScreen extends Screen<Props, State> {
             <ActivityCell
                 activityId={saving.id}
                 activityType={saving.type}
-                skipLineup={true}
+                // skipLineup={true}
                 // skipDescription={true}
                 onPressItem={() => this.navToSavingDetail(saving)}
                 navigator={this.props.navigator}
