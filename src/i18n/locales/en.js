@@ -109,7 +109,7 @@ export default {
         "action":"Add new list",
         "created":"New list added",
         "visible":"Visible by network",
-        "unvisible":"Private list",
+        "unvisible":"Visible only by me",
         "add_description":"Add a note",
         "choose_list":"Choose a list",
         "choose_another_list":"Choose another list",

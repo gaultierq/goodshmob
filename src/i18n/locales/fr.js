@@ -108,7 +108,7 @@ export default {
         "action":"Créer une nouvelle liste",
         "created":"Liste créée",
         "visible":"Visible par mon réseau",
-        "unvisible":"Liste privée",
+        "unvisible":"Visible que par moi",
         "add_description":"Ajouter un petit mot",
         "choose_list":"Choisir une liste",
         "choose_another_list":"Choisir une autre liste",
@@ -217,7 +217,7 @@ export default {
         }
     },
     empty: {
-        lineup: "Ach, cette liste est vide\n\net c'est bien dommage !"
+        lineup: "Ach, cette liste est vide\net c'est bien dommage !"
     },
     activity_action_bar: {
         goodsh_deleted: "Goodsh supprimé",
@@ -255,7 +255,7 @@ export default {
         logout: "Déconnexion",
         terms: "Conditions d'utilisation",
         copy_link: "Copier le lien",
-        send_to_goodsher: "Envoyer à un autre\ngoodsher",
+        send_to_goodsher: "Envoyer à un contact",
         skip: "OK",
         ask: "Demander à mon réseau",
         invite: "Inviter un ami"
