@@ -42,7 +42,7 @@ export const savingDetail = {
         screen: 'goodsh.ActivityDetailScreen',
     },
     passProps: {
-        activityId: "2d9cb677-9d8f-441b-9aa5-ee0b3a66d28a",
+        activityId: "c36bc6e3-1425-40af-a1d9-8e31c2dc2a69",
         activityType: "savings"
     }
 };
