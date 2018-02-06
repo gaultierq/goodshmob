@@ -65,7 +65,7 @@ let confToGlobal = function () {
 
     let setGlobalFromConfig = (key, value) => {
         key = `__${_.toUpper(key)}__`;
-        if (key in global) throw `global already defined:${key}`;
+        if (key in global && !__IS_LOCAL__) throw `global already defined:${key}`;
         global[key] = convert(value);
     };
 

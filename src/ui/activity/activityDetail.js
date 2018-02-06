@@ -21,6 +21,7 @@ import {Colors} from "../colors";
 import GTouchable from "../GTouchable";
 import * as TimeUtils from '../../helpers/TimeUtils';
 import {SFP_TEXT_MEDIUM} from "../fonts";
+import ActivityStatus from "./components/ActivityStatus";
 
 type Props = {
     activityId: Id,
@@ -114,12 +115,18 @@ class ActivityDetailScreen extends Screen<Props, State> {
                             </View>
 
                             {/*<FeedSeparator/>*/}
+                            <ActivityStatus
+                                activity={activity}
+                                skipLineup={this.props.skipLineup}
+                                navigator={this.props.navigator}
+                                style={{marginTop: 15, padding: 15}}
+                            />
 
                             <View style={{marginTop: 15, padding: 15, backgroundColor: Colors.white}}>
-                                {this.renderComments(activity)}
+                                {this.renderActivityComments(activity)}
                             </View>
 
-                            <Text> Related activities:</Text>
+                            <Text>Related Activities:</Text>
                             <FlatList
                                 data={activity.relatedActivities}
                                 renderItem={this.renderRelatedActivities.bind(this)}
@@ -149,7 +156,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
     }
 
-    renderComments(activity) {
+    renderActivityComments(activity) {
         return (
             <GTouchable
                 onPress={()=> this.displayActivityComments(activity)}>
@@ -206,7 +213,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                     </View>
                 </GTouchable>
                 <View style={{paddingLeft: 38, paddingTop: 5}}>
-                    {this.renderComments(item)}
+                    {this.renderActivityComments(item)}
                 </View>
             </View>
         );

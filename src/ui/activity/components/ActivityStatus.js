@@ -2,41 +2,128 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {Colors} from "../../colors";
-import {stylePadding} from "../../UIStyles";
-import {Avatar, renderTag} from "../../UIComponents";
-import type {i18Key} from "../../../types";
+import {stylePadding, STYLES} from "../../UIStyles";
+import {Avatar} from "../../UIComponents";
+import type {Activity, i18Key, RNNNavigator} from "../../../types";
 import Octicons from "react-native-vector-icons/Octicons";
-import {seeList} from "../../Nav";
+import {seeList, seeUser} from "../../Nav";
+import {SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "../../fonts";
+import GTouchable from "../../GTouchable";
+import {isSaving, isSending} from "../../../helpers/DataUtils";
 
 
+const styles = StyleSheet.create({
+    // body: {padding: 15, paddingBottom: 0, backgroundColor: ACTIVITY_CELL_BACKGROUND},
+    // bodyInner: {flexDirection: 'row'},
+    // flex1: {flex:1},
+    // title: {fontSize: 19, color: Colors.black, marginBottom: 4, marginRight: 5},
+    // subtitle: {fontSize: 14, color: Colors.greyish},
+    description: {fontSize: 14, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey},
+    // imageContainer: {flex:1, alignSelf: 'center', width: "100%", backgroundColor: 'transparent'},
+    // image: {alignSelf: 'center', backgroundColor: ACTIVITY_CELL_BACKGROUND, width: "100%"},
+    // yheaaContainer: {position: 'absolute', width: "100%", height: "100%",backgroundColor: 'rgba(0,0,0,0.3)',alignItems: 'center',justifyContent: 'center'},
+    tag: {flexDirection:'row', alignItems: 'center'},
+    // askText: {margin: 12, fontSize: 30}
+});
 
-function renderTags(activity, skipLineup) {
-    let target, targetName: string, key: i18Key, press: () => void;
-    if (!activity) return null;
-    if (activity.type === 'asks') throw 'no ask';
+type Props = {
+    activity: Activity,
+    navigator: RNNNavigator,
+    skipLineup?: boolean,
+    style?: ?*
+};
 
-    // const {skipLineup, withFollowButton} = this.props;
-    // if (skipLineup) return null;
+type State = {
+};
+
+export default class ActivityStatus extends React.Component<Props, State> {
 
 
-    if (!(target = activity.target)) return null;
+    render() {
+        const {activity, skipLineup, style} = this.props;
 
-    if (target.type === 'lists') {
+        let type = activity.type;
+
+        return (
+            <View style={style}>
+                <View style={{flex: 1, flexDirection: 'row', ...stylePadding(0, 14)}}>
+                    <Avatar user={activity.user} style={{dim: 26, marginRight: 8, marginTop: 0}}/>
+                    <View style={{flex: 1, marginTop: 3}}>
+
+                        {isSaving(activity) && !skipLineup && this.renderSavedInList()}
+                        {isSending(activity) && this.renderSendTo()}
+                    </View>
+
+                </View>
+
+                <View style={{flex: 1, flexDirection: 'row',}}>
+                    {activity.description &&
+                    <Octicons name="quote" size={10} color={Colors.brownishGrey} style={{alignSelf: 'flex-start'}}/>}
+                    {activity.description && <Text numberOfLines={3} style={[styles.description, {
+                        flex: 1,
+                        alignItems: 'center',
+                        textAlignVertical: 'center', ...stylePadding(6, 0)
+                    }]}>{activity.description}</Text>}
+
+                </View>
+            </View>
+        )
+    }
+
+    renderSendTo() {
+        const {activity, skipLineup} = this.props;
+        let target, targetName: string, key: i18Key, press: () => void;
+        if (!activity) return null;
+        if (activity.type === 'asks') throw 'no ask';
+
+        // const {skipLineup, withFollowButton} = this.props;
+        // if (skipLineup) return null;
+
+
+        if (!(target = activity.target)) return null;
+
+        if (target.type === 'lists') {
+            let count = target.meta ? target.meta["savingsCount"] : 0;
+            targetName = target.name;
+            if (count) targetName += " (" + count + ")";
+
+            key = "activity_item.header.in";
+            press = () => seeList(this.props.navigator, target);
+        }
+        else if (target.type === 'users') {
+            targetName = target.firstName + " " + target.lastName;
+            key = "activity_item.header.to";
+            press = () => seeUser(this.props.navigator, target);
+            //new spec. todo clean
+            // return null;
+        }
+        if (!skipLineup) {
+            return(
+                <View style={styles.tag}>
+                    <Text style={{
+                        textAlign: 'center',
+                        marginRight: 8,
+                        fontFamily: SFP_TEXT_MEDIUM,
+                        fontsize: 12,
+                        color: Colors.greyishBrown}}>{i18n.t(key)}</Text>
+
+                    <GTouchable onPress={press}>
+                        <Text style={[STYLES.tag]}>{targetName}</Text>
+                    </GTouchable>
+                </View>
+            )
+        }
+        else  return null;
+    }
+
+    renderSavedInList() {
+        const {activity} = this.props;
+        let target = activity.target;
+
         let count = target.meta ? target.meta["savingsCount"] : 0;
-        targetName = target.name;
+        let targetName = target.name;
         if (count) targetName += " (" + count + ")";
 
-        key = "activity_item.header.in";
-        press = () => seeList(this.props.navigator, target);
-    }
-    else if (target.type === 'users') {
-        // targetName = target.firstName + " " + target.lastName;
-        // key = "activity_item.header.to";
-        // press = () => seeUser(this.props.navigator, target);
-        //new spec. todo clean
-        return null;
-    }
-    if (!skipLineup) {
         return(
             <View style={styles.tag}>
                 <Text style={{
@@ -44,34 +131,16 @@ function renderTags(activity, skipLineup) {
                     marginRight: 8,
                     fontFamily: SFP_TEXT_MEDIUM,
                     fontsize: 12,
-                    color: Colors.greyishBrown}}>{i18n.t(key)}</Text>
-                {renderTag(targetName, press)}
+                    color: Colors.greyishBrown}}>{i18n.t("activity_item.header.in")}</Text>
+
+                <GTouchable onPress={() => seeList(this.props.navigator, target)}>
+                    <Text style={[STYLES.tag]}>{targetName}</Text>
+                </GTouchable>
             </View>
         )
     }
-    else  return null;
+
+
+
 }
 
-
-export default ({activity, skipLineup}) => (
-    <View>
-        <View style={{flex: 1, flexDirection: 'row', ...stylePadding(0, 14)}}>
-            <Avatar user={activity.user} style={{dim: 26, marginRight: 8, marginTop: 0}}/>
-            <View style={{flex: 1, marginTop: 3}}>
-                {!skipLineup && renderTags(activity)}
-            </View>
-
-        </View>
-
-        <View style={{flex: 1, flexDirection: 'row',}}>
-            {activity.description &&
-            <Octicons name="quote" size={10} color={Colors.brownishGrey} style={{alignSelf: 'flex-start'}}/>}
-            {activity.description && <Text numberOfLines={3} style={[styles.description, {
-                flex: 1,
-                alignItems: 'center',
-                textAlignVertical: 'center', ...stylePadding(6, 0)
-            }]}>{activity.description}</Text>}
-
-        </View>
-    </View>
-);

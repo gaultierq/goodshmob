@@ -1,6 +1,6 @@
 // @flow
 import build from '../../vendors/redux-object'
-import type {Id, MergeOpts} from "../types";
+import type {Activity, Id, MergeOpts} from "../types";
 import {mergeLists} from "./ModelUtils";
 import dotprop from "dot-prop-immutable"
 import {Statistics} from "../managers/Statistics"
@@ -117,4 +117,13 @@ export function updateDelete(state, path, predicate) {
     let obj = _.set({}, path, {$splice: [[indexToRemove, 1]]});
     state = update(state, obj);
     return state;
+}
+
+
+export function isSaving(activity: Activity) {
+    return activity && activity.type &&  sanitizeActivityType(activity.type) === 'savings';
+}
+
+export function isSending(activity: Activity) {
+    return activity && activity.type &&  sanitizeActivityType(activity.type) === 'sendings';
 }
