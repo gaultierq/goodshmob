@@ -95,30 +95,31 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                     />
                                 </GTouchable>
 
-                                <View style={{backgroundColor: Colors.white, padding: 15}}>
-                                    <UserRow
-                                        user={activity.user}
-                                        text={activity.createdAt ? TimeUtils.timeSince(Date.parse(activity.createdAt)):''}
-                                        navigator={this.props.navigator}
-                                    />
-                                </View>
+                                {/*<View style={{backgroundColor: Colors.white, padding: 15}}>*/}
+                                    {/*<UserRow*/}
+                                        {/*user={activity.user}*/}
+                                        {/*text={activity.createdAt ? TimeUtils.timeSince(Date.parse(activity.createdAt)):''}*/}
+                                        {/*navigator={this.props.navigator}*/}
+                                    {/*/>*/}
+                                {/*</View>*/}
 
-                                <FeedSeparator/>
+                                {/*<FeedSeparator/>*/}
 
-                                <ActivityActionBar
-                                    activityId={activity.id}
-                                    activityType={activity.type}
-                                    navigator={this.props.navigator}
-                                    // actions={['answer', 'share', 'save', 'buy']}
-                                />
+                                {/*<ActivityActionBar*/}
+                                    {/*activityId={activity.id}*/}
+                                    {/*activityType={activity.type}*/}
+                                    {/*navigator={this.props.navigator}*/}
+                                    {/*// actions={['answer', 'share', 'save', 'buy']}*/}
+                                {/*/>*/}
                             </View>
 
-                            <FeedSeparator/>
+                            {/*<FeedSeparator/>*/}
 
                             <View style={{marginTop: 15, padding: 15, backgroundColor: Colors.white}}>
                                 {this.renderComments(activity)}
                             </View>
 
+                            <Text> Related activities:</Text>
                             <FlatList
                                 data={activity.relatedActivities}
                                 renderItem={this.renderRelatedActivities.bind(this)}

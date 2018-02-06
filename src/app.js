@@ -53,14 +53,7 @@ export default class App {
 
 
     constructor() {
-
-
         this.spawn();
-
-
-
-
-
 
         //when store is ready
         this.initialize();
@@ -72,10 +65,10 @@ export default class App {
 
         if (module && module.hot) {
             global.reloads = 0;
-            module.hot.accept(() => {
-                ++global.reloads;
-                console.info(`hot reload (#${global.reloads})`);
-            });
+            // module.hot.accept(() => {
+            //     ++global.reloads;
+            //     console.info(`hot reload (#${global.reloads})`);
+            // });
         }
 
         initGlobal(false);

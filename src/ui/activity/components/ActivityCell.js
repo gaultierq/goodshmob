@@ -6,7 +6,7 @@ import {Image, Linking, Share, StyleSheet, Text, TouchableOpacity, View} from 'r
 import {connect} from "react-redux";
 import {logged} from "../../../managers/CurrentUser"
 import {buildNonNullData, sanitizeActivityType} from "../../../helpers/DataUtils";
-import type {Activity, ActivityType, Id, RNNNavigator} from "../../../types"
+import type {Activity, ActivityType, i18Key, Id, RNNNavigator} from "../../../types"
 import ActivityBody from "./ActivityBody";
 import ActivityActionBar from "./ActivityActionBar";
 import {Avatar, renderTag} from "../../UIComponents";
@@ -94,16 +94,16 @@ export default class ActivityCell extends React.Component<Props, State> {
             <View>
 
                 {/*<View style={{flex:1, borderColor: 'black', backgroundColor: 'white', flexDirection: 'row', ...stylePadding(14, 14)}}>*/}
-                    {/*<Avatar user={activity.user} style={{dim: 26, marginRight: 8, marginTop: 0}}/>*/}
-                    {/*<View style={{flex:1, marginTop: 3}}>*/}
-                        {/*{this.renderTags()}*/}
-                        {/*<View style={{flex:1, flexDirection: 'row', marginTop: 15}}>*/}
-                            {/*{activity.description && <Octicons name="quote" size={10} color={Colors.brownishGrey} style={{alignSelf: 'flex-start'}}/>}*/}
-                            {/*{activity.description && <Text numberOfLines={3} style={[styles.description, {flex:1, alignItems: 'center', textAlignVertical: 'center', ...stylePadding(10, 0)}]}>{activity.description}</Text>}*/}
+                {/*<Avatar user={activity.user} style={{dim: 26, marginRight: 8, marginTop: 0}}/>*/}
+                {/*<View style={{flex:1, marginTop: 3}}>*/}
+                {/*{this.renderTags()}*/}
+                {/*<View style={{flex:1, flexDirection: 'row', marginTop: 15}}>*/}
+                {/*{activity.description && <Octicons name="quote" size={10} color={Colors.brownishGrey} style={{alignSelf: 'flex-start'}}/>}*/}
+                {/*{activity.description && <Text numberOfLines={3} style={[styles.description, {flex:1, alignItems: 'center', textAlignVertical: 'center', ...stylePadding(10, 0)}]}>{activity.description}</Text>}*/}
 
-                        {/*</View>*/}
+                {/*</View>*/}
 
-                    {/*</View>*/}
+                {/*</View>*/}
                 {/*</View>*/}
 
 
@@ -123,11 +123,14 @@ export default class ActivityCell extends React.Component<Props, State> {
                             navigator={this.props.navigator}
                             skipLineup={this.props.skipLineup}
                         />
+
+                        {this.renderActivity(activity)}
+
                     </GTouchable>
 
                     {/*<FeedSeparator/>*/}
 
-                    {__DEBUG_SHOW_IDS__ && this.renderDebugActivityInfo(activity) }
+                    {__DEBUG_SHOW_IDS__ && this.renderDebugActivityInfo(activity)}
                     <ActivityActionBar
                         activityId={activity.id}
                         activityType={activity.type}
@@ -139,6 +142,28 @@ export default class ActivityCell extends React.Component<Props, State> {
     }
 
 
+    renderActivity(activity) {
+        return <View>
+            <View style={{flex: 1, flexDirection: 'row', ...stylePadding(0, 14)}}>
+                <Avatar user={activity.user} style={{dim: 26, marginRight: 8, marginTop: 0}}/>
+                <View style={{flex: 1, marginTop: 3}}>
+                    {this.renderTags()}
+                </View>
+
+            </View>
+
+            <View style={{flex: 1, flexDirection: 'row',}}>
+                {activity.description &&
+                <Octicons name="quote" size={10} color={Colors.brownishGrey} style={{alignSelf: 'flex-start'}}/>}
+                {activity.description && <Text numberOfLines={3} style={[styles.description, {
+                    flex: 1,
+                    alignItems: 'center',
+                    textAlignVertical: 'center', ...stylePadding(6, 0)
+                }]}>{activity.description}</Text>}
+
+            </View>
+        </View>;
+    }
 
     renderTags() {
         let activity, target, targetName: string, key: i18Key, press: () => void;
