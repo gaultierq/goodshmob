@@ -85,7 +85,7 @@ workflows:
     steps:
     - xcode-archive:
         inputs:
-        - export_method: development
+        - export_method: app-store
         - scheme: "$BITRISE_SCHEME"
         - configuration: "$GOODSH_BUILD_IOS_CONFIGURATION"
         - project_path: "$BITRISE_WORKSPACE_PATH"

@@ -42,19 +42,10 @@ export default class ActivityStatus extends React.Component<Props, State> {
     render() {
         const {activity, skipLineup, style} = this.props;
 
-        let type = activity.type;
-
         return (
             <View style={style}>
-                <View style={{flex: 1, flexDirection: 'row', ...stylePadding(0, 14)}}>
-                    <Avatar user={activity.user} style={{dim: 26, marginRight: 8, marginTop: 0}}/>
-                    <View style={{flex: 1, marginTop: 3}}>
-
-                        {isSaving(activity) && !skipLineup && this.renderSavedInList()}
-                        {isSending(activity) && this.renderSendTo()}
-                    </View>
-
-                </View>
+                {isSaving(activity) && !skipLineup && this.renderSavedInList()}
+                {isSending(activity) && this.renderSendTo()}
 
                 <View style={{flex: 1, flexDirection: 'row',}}>
                     {activity.description &&
@@ -67,53 +58,31 @@ export default class ActivityStatus extends React.Component<Props, State> {
 
                 </View>
             </View>
-        )
+        )t
     }
 
     renderSendTo() {
-        const {activity, skipLineup} = this.props;
-        let target, targetName: string, key: i18Key, press: () => void;
+        const {activity} = this.props;
+        let target = activity.target;
         if (!activity) return null;
-        if (activity.type === 'asks') throw 'no ask';
 
-        // const {skipLineup, withFollowButton} = this.props;
-        // if (skipLineup) return null;
+        //new spec. todo clean
+        // return null;
+        return(
+            <View style={{flex: 1, alignItems: 'center', flexDirection: 'row', ...stylePadding(0, 14)}}>
+                <Avatar user={activity.user} style={{dim: 26, marginRight: 8, marginTop: 0}}/>
+                <Text style={{
+                    textAlign: 'center',
+                    marginRight: 8,
+                    fontFamily: SFP_TEXT_MEDIUM,
+                    fontsize: 12,
+                    color: Colors.greyishBrown}}>{i18n.t("activity_item.header.to")}</Text>
+                <Avatar user={target} style={{dim: 26, marginRight: 8, marginTop: 0}}/>
+
+            </View>
 
 
-        if (!(target = activity.target)) return null;
-
-        if (target.type === 'lists') {
-            let count = target.meta ? target.meta["savingsCount"] : 0;
-            targetName = target.name;
-            if (count) targetName += " (" + count + ")";
-
-            key = "activity_item.header.in";
-            press = () => seeList(this.props.navigator, target);
-        }
-        else if (target.type === 'users') {
-            targetName = target.firstName + " " + target.lastName;
-            key = "activity_item.header.to";
-            press = () => seeUser(this.props.navigator, target);
-            //new spec. todo clean
-            // return null;
-        }
-        if (!skipLineup) {
-            return(
-                <View style={styles.tag}>
-                    <Text style={{
-                        textAlign: 'center',
-                        marginRight: 8,
-                        fontFamily: SFP_TEXT_MEDIUM,
-                        fontsize: 12,
-                        color: Colors.greyishBrown}}>{i18n.t(key)}</Text>
-
-                    <GTouchable onPress={press}>
-                        <Text style={[STYLES.tag]}>{targetName}</Text>
-                    </GTouchable>
-                </View>
-            )
-        }
-        else  return null;
+        )
     }
 
     renderSavedInList() {
@@ -125,18 +94,26 @@ export default class ActivityStatus extends React.Component<Props, State> {
         if (count) targetName += " (" + count + ")";
 
         return(
-            <View style={styles.tag}>
-                <Text style={{
-                    textAlign: 'center',
-                    marginRight: 8,
-                    fontFamily: SFP_TEXT_MEDIUM,
-                    fontsize: 12,
-                    color: Colors.greyishBrown}}>{i18n.t("activity_item.header.in")}</Text>
 
-                <GTouchable onPress={() => seeList(this.props.navigator, target)}>
-                    <Text style={[STYLES.tag]}>{targetName}</Text>
-                </GTouchable>
+            <View style={{flex: 1, flexDirection: 'row', ...stylePadding(0, 14)}}>
+                <Avatar user={activity.user} style={{dim: 26, marginRight: 8, marginTop: 0}}/>
+                <View style={{flex: 1, marginTop: 3}}>
+                    <View style={styles.tag}>
+                        <Text style={{
+                            textAlign: 'center',
+                            marginRight: 8,
+                            fontFamily: SFP_TEXT_MEDIUM,
+                            fontsize: 12,
+                            color: Colors.greyishBrown}}>{i18n.t("activity_item.header.in")}</Text>
+
+                        <GTouchable onPress={() => seeList(this.props.navigator, target)}>
+                            <Text style={[STYLES.tag]}>{targetName}</Text>
+                        </GTouchable>
+                    </View>
+                </View>
+
             </View>
+
         )
     }
 
