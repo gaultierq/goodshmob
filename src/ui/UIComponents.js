@@ -7,6 +7,7 @@ import User from "react-native-firebase/lib/modules/auth/user";
 import {CachedImage} from "react-native-img-cache";
 import GTouchable from "./GTouchable";
 import {SFP_TEXT_ITALIC} from "./fonts";
+import {STYLES} from "./UIStyles";
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
@@ -63,26 +64,27 @@ export function activityFeedProps() {
     };
 }
 
+//TODO: useless, inline
 export function renderTag(tag: string, onPress: () => void, style?:?*) {
     return (<GTouchable onPress={onPress}>
-        <Text style={[styles.tag, style]}>{tag}</Text>
+        <Text style={[STYLES.tag, style]}>{tag}</Text>
     </GTouchable>);
 }
 
-const styles = StyleSheet.create({
-    tag: {
-        paddingLeft: 8, paddingRight: 8,
-        color: Colors.greyish,
-        alignSelf: 'stretch',
-        borderRadius: 10,
-        height: 20,
-        lineHeight: 20,
-        textAlignVertical: 'center',
-        // padding: 2,
-        borderWidth: StyleSheet.hairlineWidth,
-        borderColor: Colors.greyish,
-        fontFamily: SFP_TEXT_ITALIC,
-        fontSize: 12
-
-    }
-});
+// const styles = StyleSheet.create({
+//     tag: {
+//         paddingLeft: 8, paddingRight: 8,
+//         color: Colors.greyish,
+//         alignSelf: 'stretch',
+//         borderRadius: 10,
+//         height: 20,
+//         lineHeight: 20,
+//         textAlignVertical: 'center',
+//         // padding: 2,
+//         borderWidth: StyleSheet.hairlineWidth,
+//         borderColor: Colors.greyish,
+//         fontFamily: SFP_TEXT_ITALIC,
+//         fontSize: 12
+//
+//     }
+// });

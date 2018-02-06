@@ -2,7 +2,7 @@
 import React from 'react';
 import {ActivityIndicator, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image} from 'react-native';
 import {CheckBox, SearchBar} from "react-native-elements";
-import {renderSimpleButton} from "../UIStyles";
+import {renderSimpleButton, STYLES} from "../UIStyles";
 import type {Id, Item, ItemType} from "../../types";
 import {fetchItemCall, saveItem} from "../lineup/actions";
 import {logged} from "../../managers/CurrentUser";
@@ -102,6 +102,7 @@ export default class AddItemScreen extends Screen<Props, State> {
         let xml = (<View style={[styles.container]}>
             <Text>{i18n.t('create_list_controller.all_list')}</Text>
         </View>);
+        const style = {backgroundColor: Colors.green, padding: 10, marginTop: 10, marginRight: 8, marginLeft: 8,};
         return (
             <KeyboardAwareScrollView
                 contentContainerStyle={{flex:1}}
@@ -149,37 +150,51 @@ export default class AddItemScreen extends Screen<Props, State> {
                             />
                         </ItemCell>
                         {/*{selectedLineupId && <LineupCell style={{backgroundColor: Colors.white82, marginRight: 8, marginLeft: 8, borderRadius: 8}} lineup={buildNonNullData(this.props.data, 'lists', selectedLineupId)}/>}*/}
-                        {selectedLineupId && this.renderList(selectedLineupId)}
-                        {renderSimpleButton(i18n.t('shared.add'), ()=>this._doAdd(selectedLineupId), {loading: adding, style:{backgroundColor: Colors.green, padding: 10, marginTop: 10, marginRight: 8, marginLeft: 8,}, textStyle:{ fontWeight:'normal', color: Colors.white }})}
+                        {this.renderListSelector(selectedLineupId)}
+                        {renderSimpleButton(
+                            i18n.t('shared.add'),
+                            ()=>this._doAdd(selectedLineupId),
+                            {disabled: !selectedLineupId, loading: adding, style: styles.lineupSelector, textStyle:styles.lineupSelectorText}
+                        )}
                     </View>
                 </Sheet>
             </KeyboardAwareScrollView>
         );
     }
 
-    renderList(selectedLineupId: Id) {
-        const lineup = buildNonNullData(this.props.data, 'lists', selectedLineupId);
+    renderListSelector(selectedLineupId: Id) {
+        const lineup = buildData(this.props.data, 'lists', selectedLineupId);
 
         //QtoK: wrapping a child positioning in absolute is the only wa I found to have a component with the good width
         //other idea?
-        return <View style={{height: 35, paddingLeft: 8}}>
-            {renderTag(lineup.name, () => {
-                //select lineup
-                this.props.navigator.showModal({
-                    screen: 'goodsh.AddInScreen', // unique ID registered with Navigation.registerScreen
-                    title: i18n.t('create_list_controller.choose_list'),
-                    passProps: {
-                        onListSelected: list => {
-                            this.setState({selectedLineupId:list.id});
-                            this.props.navigator.dismissModal();
-                        }
-                    },
-                    navigatorButtons: CANCELABLE_MODAL,
-                });
-            }, {position: 'absolute'})
-            }
-        </View>;
-        // return <LineupCell style={{backgroundColor: Colors.white82, marginRight: 8, marginLeft: 8, borderRadius: 8}} lineup={buildNonNullData}/>;
+        const handler = () => {
+            //select lineup
+            this.props.navigator.showModal({
+                screen: 'goodsh.AddInScreen',
+                title: i18n.t('create_list_controller.choose_another_list'),
+                passProps: {
+                    onListSelected: list => {
+                        this.setState({selectedLineupId:list.id});
+                        this.props.navigator.dismissModal();
+                    }
+                },
+                navigatorButtons: CANCELABLE_MODAL,
+            });
+        };
+
+        let tag = lineup.name;
+        tag = tag || i18n.t('create_list_controller.choose_list');
+
+        return (<View style={{height: 35, paddingLeft: 8}}>
+            {/*{renderTag(lineup.name, handler, {position: 'absolute'})}*/}
+            <GTouchable onPress={handler}>
+                <Text style={[STYLES.tag, {position: 'absolute'}]}>
+                    {tag}
+                    <Text style={{color: Colors.brownishGrey, fontSize: 8, justifyContent: "flex-end", alignItems: "flex-end"}}>  ▼</Text>
+
+                </Text>
+            </GTouchable>
+        </View>);
     }
 
     _doAdd = (lineupId: Id) => {
@@ -213,6 +228,14 @@ const styles = StyleSheet.create({
     searchContainer: {
         backgroundColor: 'transparent',
     },
+    lineupSelector: {
+        backgroundColor: Colors.green,
+        padding: 10,
+        marginTop: 10,
+        marginRight: 8,
+        marginLeft: 8,
+    },
+    lineupSelectorText: { fontWeight:'normal', color: Colors.white },
     input: {
         backgroundColor: 'transparent',
         marginTop: 15,

@@ -111,7 +111,8 @@ export default {
         "visible":"Visible by network",
         "unvisible":"Private list",
         "add_description":"Add a note",
-        "choose_list":"Choose another list",
+        "choose_list":"Choose a list",
+        "choose_another_list":"Choose another list",
         "all_list": "All my lists"
     },
     "search_bar":{

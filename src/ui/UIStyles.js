@@ -4,7 +4,7 @@ import Button from 'apsl-react-native-button'
 import * as React from "react";
 import {toUppercase} from "../helpers/StringUtils";
 import {Colors} from "./colors";
-import {SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "./fonts";
+import {SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "./fonts";
 import GTouchable from "./GTouchable";
 
 export const NavStyles = {
@@ -201,5 +201,20 @@ export const STYLES = StyleSheet.create({
         margin: '10%',
         textAlign: 'center',
         fontFamily: SFP_TEXT_REGULAR
+    },
+    tag: {
+        paddingLeft: 8, paddingRight: 8,
+        color: Colors.greyish,
+        alignSelf: 'stretch',
+        borderRadius: 10,
+        height: 20,
+        lineHeight: 20,
+        textAlignVertical: 'center',
+        // padding: 2,
+        borderWidth: StyleSheet.hairlineWidth,
+        borderColor: Colors.greyish,
+        fontFamily: SFP_TEXT_ITALIC,
+        fontSize: 12
+
     }
 });

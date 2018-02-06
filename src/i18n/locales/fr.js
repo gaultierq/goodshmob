@@ -110,7 +110,8 @@ export default {
         "visible":"Visible par mon réseau",
         "unvisible":"Liste privée",
         "add_description":"Ajouter un petit mot",
-        "choose_list":"Choisir une autre liste",
+        "choose_list":"Choisir une liste",
+        "choose_another_list":"Choisir une autre liste",
         "all_list" : "Toutes mes listes"
     },
     "search_bar":{
