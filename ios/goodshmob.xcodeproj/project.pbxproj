@@ -1061,6 +1061,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = 656VNMF77V;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.GameCenter = {
@@ -2400,7 +2401,7 @@
 				BUGSNAG_API_KEY = f5136193bd74c794739ab36caae0107c;
 				BUNDLE_DISPLAY_NAME = Goodsh;
 				CODE_SIGN_ENTITLEMENTS = goodshmob/goodshmob.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Benoit Taconet (656VNMF77V)";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 656VNMF77V;
@@ -2445,7 +2446,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = it.goodsh.mob;
 				PRODUCT_NAME = "goodshmob prod";
 				PROVISIONING_PROFILE = "c97ffad1-842f-411d-acc6-df77fbcb2223";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development it.goodsh.mob";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore it.goodsh.mob";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Prod;

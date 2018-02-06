@@ -67,3 +67,4 @@ goodshmob-build
 .tags.lock
 .tags.temp
 gradle.deps
+.env.local
