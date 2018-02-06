@@ -114,7 +114,7 @@ export default class AddItemScreen extends Screen<Props, State> {
                     ref={ref => this._sheet = ref}
                 >
 
-                    <View style={{height: 350, paddingTop: 7, paddingLeft: 7, paddingRight: 7, paddingBottom: 15, backgroundColor: Colors.white}}>
+                    <View style={{height: 370, paddingTop: 7, paddingLeft: 7, paddingRight: 7, paddingBottom: 45, backgroundColor: Colors.white}}>
                         <View style={{flexDirection: 'row', padding: 8}}>
                             <GTouchable onPress={()=>this._sheet && this._sheet.close()}>
                                 <Image source={require('../../img2/closeXGrey.png')}/>
@@ -150,7 +150,7 @@ export default class AddItemScreen extends Screen<Props, State> {
                         </ItemCell>
                         {/*{selectedLineupId && <LineupCell style={{backgroundColor: Colors.white82, marginRight: 8, marginLeft: 8, borderRadius: 8}} lineup={buildNonNullData(this.props.data, 'lists', selectedLineupId)}/>}*/}
                         {selectedLineupId && this.renderList(selectedLineupId)}
-                        {renderSimpleButton(i18n.t('shared.add'), ()=>this._doAdd(selectedLineupId), {loading: adding, style:{backgroundColor: Colors.green, padding: 10, marginTop: 10, marginRight: 8, marginLeft: 8}, textStyle:{ fontWeight:'normal', color: Colors.white }})}
+                        {renderSimpleButton(i18n.t('shared.add'), ()=>this._doAdd(selectedLineupId), {loading: adding, style:{backgroundColor: Colors.green, padding: 10, marginTop: 10, marginRight: 8, marginLeft: 8,}, textStyle:{ fontWeight:'normal', color: Colors.white }})}
                     </View>
                 </Sheet>
             </KeyboardAwareScrollView>
