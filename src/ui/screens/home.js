@@ -273,7 +273,7 @@ class HomeScreen extends Screen<Props, State> {
                             emptyFilterResult: (searchToken: string) => (
                                 <View>
                                     <Text style={STYLES.empty_message}>{i18n.t('lineups.filter.empty')}</Text>
-                                    {renderSimpleButton(i18n.t('lineups.filter.deepsearch'), searchToken => this.launchSearch(searchToken), {style:{}, })}
+                                    {renderSimpleButton(i18n.t('lineups.filter.deepsearch'), () => this.launchSearch(searchToken))}
                                 </View>
                             ),
                             style: {

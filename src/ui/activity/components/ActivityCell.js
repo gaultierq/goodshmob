@@ -9,15 +9,18 @@ import {buildNonNullData, sanitizeActivityType} from "../../../helpers/DataUtils
 import type {Activity, ActivityType, Id, RNNNavigator} from "../../../types"
 import ActivityBody from "./ActivityBody";
 import ActivityActionBar from "./ActivityActionBar";
-import {Avatar} from "../../UIComponents";
+import {Avatar, renderTag} from "../../UIComponents";
 import {seeUser} from "../../Nav";
 import GTouchable from "../../GTouchable";
 import * as activityAction from "../actions";
 import {getPendingLikeStatus} from "../../rights";
-import {SFP_TEXT_BOLD} from "../../fonts";
-import {Colors} from "../../colors";
+import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "../../fonts";
+import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
 import User from "react-native-firebase/lib/modules/auth/user";
 import {stylePadding} from "../../UIStyles";
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {firstName} from "../../../helpers/StringUtils";
+import Octicons from "react-native-vector-icons/Octicons";
 
 export type ActivityDisplayContext = {
 
@@ -89,8 +92,23 @@ export default class ActivityCell extends React.Component<Props, State> {
         const user = activity.user;
         return (
             <View>
+
+                {/*<View style={{flex:1, borderColor: 'black', backgroundColor: 'white', flexDirection: 'row', ...stylePadding(14, 14)}}>*/}
+                    {/*<Avatar user={activity.user} style={{dim: 26, marginRight: 8, marginTop: 0}}/>*/}
+                    {/*<View style={{flex:1, marginTop: 3}}>*/}
+                        {/*{this.renderTags()}*/}
+                        {/*<View style={{flex:1, flexDirection: 'row', marginTop: 15}}>*/}
+                            {/*{activity.description && <Octicons name="quote" size={10} color={Colors.brownishGrey} style={{alignSelf: 'flex-start'}}/>}*/}
+                            {/*{activity.description && <Text numberOfLines={3} style={[styles.description, {flex:1, alignItems: 'center', textAlignVertical: 'center', ...stylePadding(10, 0)}]}>{activity.description}</Text>}*/}
+
+                        {/*</View>*/}
+
+                    {/*</View>*/}
+                {/*</View>*/}
+
+
                 <View style={_styles.posted}>
-                    {this.renderUserGeneral(user, postedToUser)}
+                    {/*{this.renderUserGeneral(user, postedToUser)}*/}
                 </View>
 
                 <View>
@@ -119,6 +137,51 @@ export default class ActivityCell extends React.Component<Props, State> {
             </View>
         )
     }
+
+
+
+    renderTags() {
+        let activity, target, targetName: string, key: i18Key, press: () => void;
+        if (!(activity = this.getActivity())) return null;
+        if (activity.type === 'asks') throw 'no ask';
+
+        // const {skipLineup, withFollowButton} = this.props;
+        // if (skipLineup) return null;
+
+
+        if (!(target = activity.target)) return null;
+
+        if (target.type === 'lists') {
+            let count = target.meta ? target.meta["savingsCount"] : 0;
+            targetName = target.name;
+            if (count) targetName += " (" + count + ")";
+
+            key = "activity_item.header.in";
+            press = () => seeList(this.props.navigator, target);
+        }
+        else if (target.type === 'users') {
+            // targetName = target.firstName + " " + target.lastName;
+            // key = "activity_item.header.to";
+            // press = () => seeUser(this.props.navigator, target);
+            //new spec. todo clean
+            return null;
+        }
+        if (!this.props.skipLineup) {
+            return(
+                <View style={styles.tag}>
+                    <Text style={{
+                        textAlign: 'center',
+                        marginRight: 8,
+                        fontFamily: SFP_TEXT_MEDIUM,
+                        fontsize: 12,
+                        color: Colors.greyishBrown}}>{i18n.t(key)}</Text>
+                    {renderTag(targetName, press)}
+                </View>
+            )
+        }
+        else  return null;
+    }
+
 
     getAskBackgroundColor(activity: Activity) {
         const askColors = ['rgb(51,51,51)', Colors.pink, Colors.darkSkyBlue];
@@ -229,6 +292,22 @@ export default class ActivityCell extends React.Component<Props, State> {
         return this.props.activity || buildNonNullData(this.props.data, this.props.activityType, this.props.activityId);
     }
 }
+
+
+const styles = StyleSheet.create({
+    body: {padding: 15, paddingBottom: 0, backgroundColor: ACTIVITY_CELL_BACKGROUND},
+    bodyInner: {flexDirection: 'row'},
+    flex1: {flex:1},
+    title: {fontSize: 19, color: Colors.black, marginBottom: 4, marginRight: 5},
+    subtitle: {fontSize: 14, color: Colors.greyish},
+    description: {fontSize: 14, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey},
+    imageContainer: {flex:1, alignSelf: 'center', width: "100%", backgroundColor: 'transparent'},
+    image: {alignSelf: 'center', backgroundColor: ACTIVITY_CELL_BACKGROUND, width: "100%"},
+    yheaaContainer: {position: 'absolute', width: "100%", height: "100%",backgroundColor: 'rgba(0,0,0,0.3)',alignItems: 'center',justifyContent: 'center'},
+    tag: {flexDirection:'row', alignItems: 'center'},
+    askText: {margin: 12, fontSize: 30}
+});
+
 
 const _styles = StyleSheet.create({
     askText: {

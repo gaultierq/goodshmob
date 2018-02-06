@@ -62,7 +62,8 @@ type State = {
     firstLoad?: RequestState,
     isPulling?: boolean,
     lastEmptyResultMs?: number,
-    moreLink?: Url
+    moreLink?: Url,
+    filter?:? string
 };
 
 @connect((state, ownProps) => ({

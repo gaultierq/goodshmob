@@ -74,21 +74,18 @@ export default class ActivityBody extends React.Component<Props, State> {
                         </View>
                         {/*{this.renderDescription(activity)}*/}
                         <View style={{flex:1, flexDirection: 'row', ...stylePadding(0, 14)}}>
-                            <Avatar user={activity.user} style={{dim: 18, marginRight: 8, marginTop: 2}}/>
-                            <View>
+                            <Avatar user={activity.user} style={{dim: 26, marginRight: 8, marginTop: 0}}/>
+                            <View style={{flex:1, marginTop: 3}}>
                                 {this.renderTags()}
-                                <View style={{flex:1, flexDirection: 'row', marginTop: 15}}>
-                                    {activity.description && <Octicons name="quote" size={10} color={Colors.brownishGrey} style={{alignSelf: 'flex-start'}}/>}
-                                    {activity.description && <Text style={[styles.description, {flex:1, alignItems: 'center', textAlignVertical: 'center', ...stylePadding(10, 0)}]}>{activity.description}</Text>}
-
-                                </View>
-
                             </View>
+
                         </View>
 
+                        <View style={{flex:1, flexDirection: 'row', }}>
+                            {activity.description && <Octicons name="quote" size={10} color={Colors.brownishGrey} style={{alignSelf: 'flex-start'}}/>}
+                            {activity.description && <Text numberOfLines={3} style={[styles.description, {flex:1, alignItems: 'center', textAlignVertical: 'center', ...stylePadding(6, 0)}]}>{activity.description}</Text>}
 
-
-
+                        </View>
                     </View>
                 )}
             </View>

@@ -80,7 +80,7 @@ export default class SearchScreen extends Component<Props, State> {
         this.state = {
             searches: {},
             index: 0,
-            routes: props.categories.map((c, i) => ({key: `${i}`, title: i18n.t(c.tabName)})),
+            routes: props.categories.map((c, i) => ({key: `${i}`, title: c.tabName ? i18n.t(c.tabName) : null})),
         };
 
         props.navigator.setStyle({...UI.NavStyles,
