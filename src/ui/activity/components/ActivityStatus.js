@@ -58,16 +58,12 @@ export default class ActivityStatus extends React.Component<Props, State> {
 
                 </View>
             </View>
-        )t
+        )
     }
 
     renderSendTo() {
         const {activity} = this.props;
         let target = activity.target;
-        if (!activity) return null;
-
-        //new spec. todo clean
-        // return null;
         return(
             <View style={{flex: 1, alignItems: 'center', flexDirection: 'row', ...stylePadding(0, 14)}}>
                 <Avatar user={activity.user} style={{dim: 26, marginRight: 8, marginTop: 0}}/>
