@@ -216,5 +216,20 @@ export const STYLES = StyleSheet.create({
         fontFamily: SFP_TEXT_ITALIC,
         fontSize: 12
 
+    },
+    tag2: {
+        paddingLeft: 6, paddingRight: 6,
+        color: Colors.greyish,
+        alignSelf: 'stretch',
+        borderRadius: 8,
+        height: 16,
+        lineHeight: 16,
+        textAlignVertical: 'center',
+        // padding: 2,
+        borderWidth: StyleSheet.hairlineWidth,
+        borderColor: Colors.greyish,
+        fontFamily: SFP_TEXT_ITALIC,
+        fontSize: 10
+
     }
 });

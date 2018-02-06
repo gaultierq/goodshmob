@@ -10,6 +10,9 @@ import {seeList, seeUser} from "../../Nav";
 import {SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "../../fonts";
 import GTouchable from "../../GTouchable";
 import {isSaving, isSending} from "../../../helpers/DataUtils";
+import UserActivity from "./UserActivity";
+import UserRow from "./UserRow";
+import UserRowI from "./UserRowI";
 
 
 const styles = StyleSheet.create({
@@ -22,8 +25,20 @@ const styles = StyleSheet.create({
     // imageContainer: {flex:1, alignSelf: 'center', width: "100%", backgroundColor: 'transparent'},
     // image: {alignSelf: 'center', backgroundColor: ACTIVITY_CELL_BACKGROUND, width: "100%"},
     // yheaaContainer: {position: 'absolute', width: "100%", height: "100%",backgroundColor: 'rgba(0,0,0,0.3)',alignItems: 'center',justifyContent: 'center'},
-    tag: {flexDirection:'row', alignItems: 'center'},
+    tag: {flex:1, flexDirection:'row', alignItems: 'center'},
     // askText: {margin: 12, fontSize: 30}
+
+
+
+    descriptionContainer: {backgroundColor: 'transparent'},
+    description: {fontSize: 13, paddingLeft: 38, paddingTop: 3, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey},
+    // ask: {flex: 1, flexDirection: 'row', alignItems: 'center'},
+    // askText: {fontSize: 13},
+    // target: {flex: 1, flexDirection: 'row', alignItems: 'center'},
+    // targetText: {fontSize: 10,color: Colors.greyishBrown,marginRight: 3},
+    // unfollowText:{fontSize: 9, color: Colors.greyishBrown, padding: 5, borderRadius: 5, borderWidth: StyleSheet.hairlineWidth, borderColor: Colors.greyishBrown},
+    // followContainer: {backgroundColor: "white", padding: 5, borderRadius: 5},
+    // followText: {fontSize: 9, color: Colors.blue}
 });
 
 type Props = {
@@ -41,22 +56,40 @@ export default class ActivityStatus extends React.Component<Props, State> {
 
     render() {
         const {activity, skipLineup, style} = this.props;
-
+        let rightComponent;
+        if (isSaving(activity) && !skipLineup) {
+            rightComponent = this.renderSavedInList();
+        }
+        else if (isSending(activity)) {
+            rightComponent = this.renderSendTo();
+        }
         return (
-            <View style={style}>
-                {isSaving(activity) && !skipLineup && this.renderSavedInList()}
-                {isSending(activity) && this.renderSendTo()}
 
-                <View style={{flex: 1, flexDirection: 'row',}}>
-                    {activity.description &&
-                    <Octicons name="quote" size={10} color={Colors.brownishGrey} style={{alignSelf: 'flex-start'}}/>}
-                    {activity.description && <Text numberOfLines={3} style={[styles.description, {
+
+            <View style={[styles.descriptionContainer, style]}>
+                <UserActivity
+                    activityTime={activity.createdAt}
+                    user={activity.user}
+                    navigator={this.props.navigator}
+                >
+
+
+                    {rightComponent}
+
+
+                </UserActivity>
+                {activity.description && <View style={{flex: 1, flexDirection: 'row', marginTop: 10}}>
+
+                    <Octicons name="quote" size={10} color={Colors.brownishGrey} style={{alignSelf: 'flex-start'}}/>
+                    <Text numberOfLines={3} style={[styles.description, {
                         flex: 1,
                         alignItems: 'center',
                         textAlignVertical: 'center', ...stylePadding(6, 0)
-                    }]}>{activity.description}</Text>}
+                    }]}>{activity.description}
+                    </Text>
 
-                </View>
+                </View>}
+
             </View>
         )
     }
@@ -74,7 +107,6 @@ export default class ActivityStatus extends React.Component<Props, State> {
                     fontsize: 12,
                     color: Colors.greyishBrown}}>{i18n.t("activity_item.header.to")}</Text>
                 <Avatar user={target} style={{dim: 26, marginRight: 8, marginTop: 0}}/>
-
             </View>
 
 
@@ -90,20 +122,21 @@ export default class ActivityStatus extends React.Component<Props, State> {
         if (count) targetName += " (" + count + ")";
 
         return(
-
-            <View style={{flex: 1, flexDirection: 'row', ...stylePadding(0, 14)}}>
-                <Avatar user={activity.user} style={{dim: 26, marginRight: 8, marginTop: 0}}/>
-                <View style={{flex: 1, marginTop: 3}}>
+            <View style={{flex: 1, alignItems: 'center', flexDirection: 'row'}}>
+                {/*<Avatar user={activity.user} style={{dim: 26, marginRight: 8, marginTop: 0}}/>*/}
+                <View style={{flex: 1, }}>
                     <View style={styles.tag}>
                         <Text style={{
                             textAlign: 'center',
                             marginRight: 8,
+                            // marginLeft: 6,
                             fontFamily: SFP_TEXT_MEDIUM,
-                            fontsize: 12,
-                            color: Colors.greyishBrown}}>{i18n.t("activity_item.header.in")}</Text>
+                            fontSize: 12,
+                            color: Colors.greyishBrown}}>{i18n.t("activity_item.header.in")}
+                        </Text>
 
-                        <GTouchable onPress={() => seeList(this.props.navigator, target)}>
-                            <Text style={[STYLES.tag]}>{targetName}</Text>
+                        <GTouchable style={{}} onPress={() => seeList(this.props.navigator, target)}>
+                            <Text style={[STYLES.tag2, {}]}>{targetName}</Text>
                         </GTouchable>
                     </View>
                 </View>
@@ -112,8 +145,8 @@ export default class ActivityStatus extends React.Component<Props, State> {
 
         )
     }
-
-
-
 }
+
+
+
 

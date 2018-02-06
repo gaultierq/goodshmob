@@ -119,7 +119,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                 activity={activity}
                                 skipLineup={this.props.skipLineup}
                                 navigator={this.props.navigator}
-                                style={{marginTop: 15, padding: 15}}
+                                style={{padding: 15}}
                             />
 
                             <View style={{marginTop: 15, padding: 15, backgroundColor: Colors.white}}>
