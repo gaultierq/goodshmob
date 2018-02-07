@@ -22,6 +22,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {firstName} from "../../../helpers/StringUtils";
 import Octicons from "react-native-vector-icons/Octicons";
 import ActivityStatus from "./ActivityStatus";
+import FeedSeparator from "./FeedSeparator";
 
 export type ActivityDisplayContext = {
 
@@ -85,34 +86,20 @@ export default class ActivityCell extends React.Component<Props, State> {
             )
         }
 
-        let target = activity.target;
-        let postedToUser = target && target.type === 'users' && target;
-        // const {skipLineup, withFollowButton} = this.props;
-        // if (skipLineup) return null;
-
-        const user = activity.user;
         return (
             <View>
 
-                {/*<View style={{flex:1, borderColor: 'black', backgroundColor: 'white', flexDirection: 'row', ...stylePadding(14, 14)}}>*/}
-                {/*<Avatar user={activity.user} style={{dim: 26, marginRight: 8, marginTop: 0}}/>*/}
-                {/*<View style={{flex:1, marginTop: 3}}>*/}
-                {/*{this.renderTags()}*/}
-                {/*<View style={{flex:1, flexDirection: 'row', marginTop: 15}}>*/}
-                {/*{activity.description && <Octicons name="quote" size={10} color={Colors.brownishGrey} style={{alignSelf: 'flex-start'}}/>}*/}
-                {/*{activity.description && <Text numberOfLines={3} style={[styles.description, {flex:1, alignItems: 'center', textAlignVertical: 'center', ...stylePadding(10, 0)}]}>{activity.description}</Text>}*/}
-
-                {/*</View>*/}
-
-                {/*</View>*/}
-                {/*</View>*/}
-
-
-                <View style={_styles.posted}>
-                    {/*{this.renderUserGeneral(user, postedToUser)}*/}
-                </View>
-
                 <View>
+
+                    <ActivityStatus
+                        activity={activity}
+                        skipLineup={this.props.skipLineup}
+                        navigator={this.props.navigator}
+                        cardStyle={{padding: 8,
+                        }}
+                    />
+                    <FeedSeparator/>
+
                     <GTouchable activeOpacity={0.9} onPress={this.props.onPressItem} onDoublePress={() => {
                         let liked = this.isLiked(activity);
                         const toggleLike = liked ? activityAction.unlike : activityAction.like;
@@ -125,12 +112,11 @@ export default class ActivityCell extends React.Component<Props, State> {
                             skipLineup={this.props.skipLineup}
                         />
 
-                        {/*{this.renderActivity(activity)}*/}
-                        <ActivityStatus
-                            activity={activity}
-                            skipLineup={this.props.skipLineup}
-                            navigator={this.props.navigator}
-                        />
+                        {/*<ActivityStatus*/}
+                            {/*activity={activity}*/}
+                            {/*skipLineup={this.props.skipLineup}*/}
+                            {/*navigator={this.props.navigator}*/}
+                        {/*/>*/}
 
                     </GTouchable>
 

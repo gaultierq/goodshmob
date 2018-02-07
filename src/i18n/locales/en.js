@@ -54,7 +54,7 @@ export default {
         header: {
             in: "added in",
             added_somewhere: "added it",
-            to: "to",
+            to: "sent it to",
             ask: "needs some tips!",
         },
         buttons:{

@@ -1,17 +1,14 @@
 // @flow
 import React, {Component} from 'react';
 import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
-import ApiAction from "../../helpers/ApiAction";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-import UserActivity from "../activity/components/UserActivity";
 import {Avatar} from "../UIComponents";
 import type {User} from "../../types";
-import {styleMargin, stylePadding} from "../UIStyles";
-import {timeSince} from "../../helpers/TimeUtils";
+import {styleMargin} from "../UIStyles";
 import {timeSinceActivity} from "../../helpers/DataUtils";
 import {Colors} from "../colors";
 import {SFP_TEXT_REGULAR} from "../fonts";
-import { Col, Row, Grid } from "react-native-easy-grid";
+import {Col, Grid, Row} from "react-native-easy-grid";
 
 type Props = {
     comment: Comment,

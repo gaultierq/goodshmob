@@ -12,6 +12,7 @@ import GTouchable from "../../GTouchable";
 import {isSaving, isSending, timeSinceActivity} from "../../../helpers/DataUtils";
 import UserRowI from "./UserRowI";
 import Triangle from "react-native-triangle";
+import {userFirstName} from "../../../helpers/StringUtils";
 
 
 const styles = StyleSheet.create({
@@ -89,7 +90,7 @@ export default class ActivityStatus extends React.Component<Props, State> {
                         navigator={this.props.navigator}
                         rightComponent={rightComponent}
                     >
-                        <Text style={[styles.userText, {alignSelf: 'flex-start', ...stylePadding(0, 0)}]}>{timeSinceActivity(activity)}</Text>
+                        <Text style={[styles.userText, {alignSelf: 'flex-start', ...stylePadding(0, 3)}]}>{timeSinceActivity(activity)}</Text>
 
                     </UserRowI>
 
@@ -104,7 +105,7 @@ export default class ActivityStatus extends React.Component<Props, State> {
     renderDescription(activity: Activity, children?: Node) {
         return <View style={[{
 
-            ...stylePadding(0, 6, 0, 0),
+            ...stylePadding(0, 0, 0, 0),
 
             // borderLeftWidth: StyleSheet.hairlineWidth,
             marginLeft: 2,
@@ -115,7 +116,7 @@ export default class ActivityStatus extends React.Component<Props, State> {
                 flex: 1,
                 flexDirection: 'row',
                 backgroundColor: 'white',
-                ...styleMargin(0, 0, 0, 0),
+                ...styleMargin(14, 0, 0, 0),
                 ...stylePadding(10, 10),
                 // borderRadius: 6,
 
@@ -126,8 +127,9 @@ export default class ActivityStatus extends React.Component<Props, State> {
                 <Text numberOfLines={3} style={[styles.description, {
                     flex: 1,
                     alignItems: 'center',
-                    textAlignVertical: 'center', ...stylePadding(6, 0)
-                }]}>{activity.description}
+                    textAlignVertical: 'center',
+                    ...stylePadding(2, 0)
+                }]}>{_.upperFirst(activity.description)}
                 </Text>
             </View>
 
@@ -141,16 +143,19 @@ export default class ActivityStatus extends React.Component<Props, State> {
         const {activity} = this.props;
         let target = activity.target;
         return(
-            <View style={{flex: 1, alignItems: 'center', flexDirection: 'row', ...stylePadding(0, 14)}}>
-                <Avatar user={activity.user} style={{dim: 26, marginRight: 8, marginTop: 0}}/>
+            <Text style={{
+                textAlign: 'center',
+                marginRight: 8,
+                fontFamily: SFP_TEXT_MEDIUM,
+                fontsize: 12,
+                color: Colors.greyishBrown}}>{" " +i18n.t("activity_item.header.to")}
+
                 <Text style={{
-                    textAlign: 'center',
-                    marginRight: 8,
-                    fontFamily: SFP_TEXT_MEDIUM,
+                    fontFamily: SFP_TEXT_BOLD,
                     fontsize: 12,
-                    color: Colors.greyishBrown}}>{i18n.t("activity_item.header.to")}</Text>
-                <Avatar user={target} style={{dim: 26, marginRight: 8, marginTop: 0}}/>
-            </View>
+                    color: Colors.black}}>{" "+userFirstName(target)}</Text>
+            </Text>
+
 
 
         )

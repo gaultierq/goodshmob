@@ -9,6 +9,7 @@ import type {User} from "../../../types";
 import {fullName} from "../../../helpers/StringUtils";
 import {Colors} from "../../colors";
 import {CachedImage} from "react-native-img-cache";
+import {SFP_TEXT_BOLD} from "../../fonts";
 
 type Props = {
     user: User,
@@ -73,5 +74,5 @@ export default class UserRowI extends React.Component<Props, State> {
 const styles = StyleSheet.create({
     userContainer: {alignItems: 'center', flexDirection: 'row'},
     rightContainer: {flexDirection: 'row'},
-    rightText: {alignSelf: 'center', fontSize: 13, color: Colors.greyishBrown, fontWeight: 'bold'}
+    rightText: {alignSelf: 'center', fontSize: 13, color: Colors.black, fontFamily: SFP_TEXT_BOLD}
 });

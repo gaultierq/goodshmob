@@ -47,6 +47,16 @@ export const savingDetail = {
     }
 };
 
+export const dragonBallZSending = {
+    screen: {
+        screen: 'goodsh.ActivityDetailScreen',
+    },
+    passProps: {
+        activityId: "f5c41253-7ab4-4311-bf6a-d7d62ca33fab",
+        activityType: "sendings"
+    }
+};
+
 export const ebauchoirDetail = {
     screen: {
         screen: 'goodsh.ActivityDetailScreen',
