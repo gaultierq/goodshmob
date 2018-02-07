@@ -36,7 +36,11 @@ export default class CommentCell extends Component<Props, State> {
                         <Avatar user={user} style={{dim: 24}}/>
                     </Col>
                     <Col>
-                        <View style={{padding: 6, backgroundColor: 'white', borderRadius: 6}}>
+                        <View style={{
+                            padding: 6, backgroundColor: 'white', borderRadius: 4,
+                            borderWidth: StyleSheet.hairlineWidth,
+                            borderColor: Colors.greyish
+                        }}>
 
                             <Text style={{
                                 fontSize: 14, lineHeight: 14,

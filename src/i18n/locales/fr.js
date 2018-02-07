@@ -83,9 +83,19 @@ export default {
             "no_comments":"Donner son avis",
             "user_answered":"a commenté",
             "has_commented": {
-                zero: "%{first} a commenté",
-                one: "%{first} et %{second} ont commenté",
-                other: "%{first} et %{count} autres ont commenté"
+                zero: "%{first} a commenté:",
+                one: "%{first} et %{second} ont commenté:",
+                other: "%{first} et %{count} autres ont commenté:"
+            },
+            "has_commented_as_well": {
+                zero: "%{first} a aussi commenté ceci",
+                one: "%{first} et %{second} ont aussi commenté ceci",
+                other: "%{first} et %{count} autres ont aussi commenté ceci"
+            },
+            "see_theirs_comments": {
+                zero: "Voir ses commentaires",
+                one: "Voir ses commentaires",
+                other: "Voir leurs commentaires"
             }
         }
     },

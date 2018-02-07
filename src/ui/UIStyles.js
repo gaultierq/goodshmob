@@ -99,8 +99,18 @@ let styleLTRB = function (args, method) {
 
     return ['left', 'top', 'right', 'bottom'].reduce((res, p, i) => {
         let arg = args[i];
+
         if (arg != null) {
-            Object.assign(res, {[method + toUppercase(p)]: arg});
+            let newVar;
+            if (typeof method === 'string') {
+                newVar = method + toUppercase(p);
+            }
+            else {
+                newVar = method(p);
+            }
+
+
+            Object.assign(res, {[newVar]: arg});
         }
         return res;
     }, {});
@@ -114,6 +124,10 @@ export function stylePadding(left?: number, top?: number, right?: number, bottom
 
 export function styleMargin(left?: number, top?: number, right?: number, bottom?: number) {
     return styleLTRB(arguments, "margin");
+}
+
+export function styleBorder(left?: number, top?: number, right?: number, bottom?: number) {
+    return styleLTRB(arguments, direction=> "border" + toUppercase(direction) + "Width");
 }
 
 //TODO: convert to stylesheet

@@ -7,17 +7,14 @@ import {Call} from "../../managers/Api";
 import type {Activity, ActivityType, Id} from "../../types";
 import ApiAction from "../../helpers/ApiAction";
 import {doDataMergeInState, sanitizeActivityType} from "../../helpers/DataUtils";
-import SmartInput from "../components/SmartInput";
 import type {Props as SmartInputProps} from "../components/SmartInput";
+import SmartInput from "../components/SmartInput";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import type {PendingAction} from "../../helpers/ModelUtils";
 import {pendingActionWrapper} from "../../helpers/ModelUtils";
-import {Colors} from "../colors";
-import Screen from "../components/Screen";
 import {connect} from "react-redux";
 
 
-const LOAD_COMMENTS = ApiAction.create("load_comments");
 export const CREATE_COMMENT = ApiAction.create("create_comment");
 
 type Props = {

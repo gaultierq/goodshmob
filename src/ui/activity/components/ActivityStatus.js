@@ -83,7 +83,7 @@ export default class ActivityStatus extends React.Component<Props, State> {
                     marginBottom:3,
                     // borderRadius: 4
                 },
-                    // styles.shadow
+                    styles.shadow
                 ]}>
                     <UserRowI
                         // activityTime={activity.createdAt}

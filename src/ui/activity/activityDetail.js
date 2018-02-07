@@ -27,8 +27,9 @@ import GTouchable from "../GTouchable";
 import ActivityStatus from "./components/ActivityStatus";
 import {component as CommentInput} from '../components/CommentInput';
 import {userFirstName} from "../../helpers/StringUtils";
-import UserActivity from "./components/UserActivity";
 import CommentCell from "../components/CommentCell";
+import {styleBorder, styleMargin, stylePadding} from "../UIStyles";
+import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts";
 
 type Props = {
     activityId: Id,
@@ -80,6 +81,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
         let showLoader = !activity && this.state.isLoading;
 
+        const h = StyleSheet.hairlineWidth;
         return (
             <MainBackground>
                 <ScrollView contentContainerStyle={{flexGrow: 1}}>
@@ -110,9 +112,20 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                 activity={activity}
                                 skipLineup={this.props.skipLineup}
                                 navigator={this.props.navigator}
-                                style={{padding: 15}}
+                                style={{
+                                    margin: 15,
+                                    // borderLeftWidth: StyleSheet.hairlineWidth,
+                                    // borderColor: Colors.brownishGrey
+                                }}
                             >
-                                <View style={{padding: 15, backgroundColor: Colors.greying}}>
+                                <View style={{
+                                    ...styleMargin(8),
+                                    ...stylePadding(6, 12),
+                                    backgroundColor: Colors.dirtyWhite,
+                                    ...styleBorder(h, 0, h, h),
+                                    borderRadius: 2,
+                                    borderColor: Colors.greyish
+                                }}>
                                     {this.renderActivityComments(activity)}
                                 </View>
                             </ActivityStatus>
@@ -171,54 +184,69 @@ class ActivityDetailScreen extends Screen<Props, State> {
         };
 
         const noCommentators = _.isEmpty(activity.commentators);
+        const lastCommentator = _.nth(activity.commentators, 0);
         return (
             <GTouchable
                 onPress={()=> this.displayActivityComments(activity)}>
-                <View style={[{}]}>
+                <View >
 
 
                     {/*empty*/}
                     {noCommentators && renderEmpty()}
 
-                    {!noCommentators && <View style={{flex: 1,
+                    {!noCommentators && <View style={{
+                        flex: 1,
                         flexDirection: 'row',
                         //justifyContent: 'space-between',
                         alignItems: 'center',
                     }
                     }>
-                        {_.take(activity.commentators, 4).map(user=> user && <Avatar user={user} style={{dim: 16}}/>)}
-                        <Text>
+                        {
+                            lastComment && <Text style={{marginLeft: 6, fontSize: 12, fontFamily:SFP_TEXT_MEDIUM, color: Colors.black}}>
                             {i18n.t(
                                 'activity_screen.comments.has_commented',
                                 {
-                                    first: userFirstName(_.nth(activity.commentators, 0)),
-                                    second: userFirstName(_.nth(activity.commentators, 1)),
-                                    count: activity.commentators.length -1
+                                    first: userFirstName(lastComment.user),
+                                    count: 0
                                 })}
                         </Text>
+                        }
 
                     </View>}
                     {/*comments bloc*/}
-                    <View style={{padding: 10}}>
-                        {commentCount > 1 && <Text style={{fontSize: 10, color: Colors.greyish}}>Voir les commentaires précédents</Text>}
+                    <View style={{padding: 8}}>
                         {
                             lastComment && <CommentCell comment={lastComment} user={lastComment.user}/>
                         }
-                        <View style={{flex: 1,
+                        <View style={{
+                            flex: 1,
                             flexDirection: 'row',
                             alignItems: 'center',
+                            marginTop: 8,
                         }}>
-                            <Avatar user={currentUser()} style={{dim: 16}}/>
+
+                            <Avatar user={currentUser()} style={{marginLeft: 6, dim: 18}}/>
+
                             <CommentInput
                                 activity={activity}
-                                containerStyle={{backgroundColor: Colors.greying}}
-                                inputContainerStyle={{borderRadius: 8, borderWidth: 0}}
-                                inputStyle={{fontSize: 10, }}
-                                height={25}
+                                containerStyle={{marginLeft: 6, flex:1}}
+                                inputContainerStyle={{borderWidth: StyleSheet.hairlineWidth, borderColor: Colors.greyish}}
+                                inputStyle={{borderRadius: 16, fontSize: 10, }}
+                                height={20}
                                 placeholder={"activity_comments_screen.add_comment_placeholder"}
                             />
 
+
                         </View>
+                        {
+                            this.renderOtherCommentators(_.slice(activity.commentators, 1, 4))
+                        }
+                        {/*{*/}
+                        {/*commentCount > 1 && <Text style={{fontSize: 12, color: Colors.greyish, ...styleMargin(0, 8)}}>*/}
+                        {/*Voir les commentaires précédents ({commentCount - 1})*/}
+                        {/*</Text>*/}
+
+                        {/*}*/}
                     </View>
 
 
@@ -226,6 +254,34 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
                 </View>
             </GTouchable>);
+    }
+
+    renderOtherCommentators(othersCommentators) {
+        let count = othersCommentators.length;
+        if (othersCommentators <=0) return null;
+
+        return (
+            <View style={{marginTop: 16}}>
+                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+                    {othersCommentators.map(user => user && <Avatar user={user} style={{dim: 16}}/>)}
+                    <Text style={{fontSize: 12, color: Colors.greyishBrown, marginLeft: 8}}>
+                        {i18n.t(
+                            'activity_screen.comments.has_commented_as_well',
+                            {
+                                first: userFirstName(_.nth(othersCommentators, 0)),
+                                second: userFirstName(_.nth(othersCommentators, 1)),
+                                count: othersCommentators.length - 1
+                            }) + ". "
+                        }
+                        <Text style={{paddingLeft: 6, marginTop: 8, fontSize: 12, fontFamily: SFP_TEXT_BOLD, color: Colors.black}}>
+                            {i18n.t('activity_screen.comments.see_theirs_comments', {count: othersCommentators.length})}
+                        </Text>
+                    </Text>
+
+                </View>
+
+            </View>
+        );
     }
 
     renderRelatedActivities({item}) {

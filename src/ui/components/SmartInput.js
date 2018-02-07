@@ -155,7 +155,6 @@ const styles = StyleSheet.create({
     },
     input:{
         fontSize: 18,
-
     },
     button: {
         // height: HEIGHT,
