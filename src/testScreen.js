@@ -47,6 +47,16 @@ export const savingDetail = {
     }
 };
 
+export const ebauchoirDetail = {
+    screen: {
+        screen: 'goodsh.ActivityDetailScreen',
+    },
+    passProps: {
+        activityId: "ea9a9d93-3818-473d-b9d2-833b5dc17c7f",
+        activityType: "savings"
+    }
+};
+
 //1 comment
 export const commentsScreen = {
     screen: {

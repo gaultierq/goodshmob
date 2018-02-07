@@ -32,18 +32,21 @@ export default class CommentCell extends Component<Props, State> {
         return (
             <Grid>
                 <Row style={{ }}>
-                    <Col style={{ width: 28 }}>
+                    <Col style={{ width: 28, justifyContent: 'center'}}>
                         <Avatar user={user} style={{dim: 24}}/>
                     </Col>
                     <Col>
                         <View style={{
-                            padding: 6, backgroundColor: 'white', borderRadius: 4,
+                            padding: 4,
+                            backgroundColor: 'white',
+                            borderRadius: 6,
                             // borderWidth: StyleSheet.hairlineWidth,
                             borderColor: Colors.greyish
                         }}>
 
                             <Text style={{
-                                fontSize: 14, lineHeight: 14,
+                                fontSize: 13,
+                                // lineHeight: 20,
                                 fontFamily: SFP_TEXT_REGULAR, color: Colors.brownishGrey, }}>{comment.content}
                             </Text>
                         </View>
@@ -52,7 +55,7 @@ export default class CommentCell extends Component<Props, State> {
                 <Row>
                     <Col style={{ width: 28 }}/>
                     <Col>
-                        <Text style={[styles.timeSince, {alignSelf: 'flex-start', ...styleMargin(0, 4)}]}>{timeSinceActivity(comment)}</Text>
+                        <Text style={[styles.timeSince, {alignSelf: 'flex-start', ...styleMargin(4, 4)}]}>{timeSinceActivity(comment)}</Text>
                     </Col>
                 </Row>
             </Grid>

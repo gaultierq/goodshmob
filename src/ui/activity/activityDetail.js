@@ -166,7 +166,8 @@ class ActivityDetailScreen extends Screen<Props, State> {
                 ...stylePadding(12, 0, 12, 12),
                 backgroundColor: Colors.dirtyWhite,
                 ...styleBorder(StyleSheet.hairlineWidth, 0, StyleSheet.hairlineWidth, StyleSheet.hairlineWidth),
-                borderRadius: 2,
+                borderBottomLeftRadius: 6,
+                borderBottomRightRadius: 6,
                 borderColor: Colors.greyish
             }}>
                 {this.renderActivityComments(activity)}
@@ -252,13 +253,6 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                     />
 
                                 </View>
-
-                                {/*{*/}
-                                {/*commentCount > 1 && <Text style={{fontSize: 12, color: Colors.greyish, ...styleMargin(0, 8)}}>*/}
-                                {/*Voir les commentaires précédents ({commentCount - 1})*/}
-                                {/*</Text>*/}
-
-                                {/*}*/}
                             </View>
                         </View>}
 
@@ -281,8 +275,9 @@ class ActivityDetailScreen extends Screen<Props, State> {
         return (
             <View style={{marginTop: 16}}>
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                    {othersCommentators.map(user => user && <Avatar user={user} style={{dim: 16}}/>)}
-                    <Text style={{fontSize: 12, color: Colors.greyishBrown, marginLeft: 8}}>
+
+                    <Text style={{flex:1, fontSize: 12, alignItems: 'center', lineHeight: 22, color: Colors.greyishBrown, marginLeft: 8}}>
+                        {this.renderMedals(othersCommentators)}
                         {i18n.t(
                             `activity_screen.comments.${asWell ? 'has_commented_this_as_well' : 'has_commented_this'}`,
                             {
@@ -300,6 +295,25 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
             </View>
         );
+    }
+
+    renderMedals(othersCommentators) {
+        const dim = 20;
+        const shift = 0.5;
+        const n = othersCommentators.length;
+        const width  = dim + (dim * shift) * Math.max(n-1, 0) + 5;
+        return <View style={{width, height: 18}}>
+            {
+                othersCommentators.map((user, i) => user && <Avatar user={user} style={{
+                    dim: dim,
+                    position: 'absolute',
+                    left: dim * shift * i,
+                    zIndex: (10 - i),
+                    borderWidth: StyleSheet.hairlineWidth,
+                    borderColor: Colors.white
+                }}/>)
+            }
+        </View>;
     }
 
     displayActivityComments(activity: Activity) {
