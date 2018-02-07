@@ -167,11 +167,7 @@ export default {
     },
     util: {
         time: {
-            since_seconds: {
-                zero: "",
-                one: "1 second ago",
-                other: "%{count} seconds ago"
-            },
+            since_seconds: "just now",
             since_minutes: {
                 zero: "",
                 one: "1 minute ago",

@@ -7,7 +7,7 @@ import {connect} from "react-redux";
 import {logged} from "../../managers/CurrentUser"
 import ActivityBody from "./components/ActivityBody";
 import {buildData} from "../../helpers/DataUtils";
-import {MainBackground} from "../UIComponents";
+import {Avatar, MainBackground} from "../UIComponents";
 import ActivityDescription from "./components/ActivityDescription";
 import type {Activity, ActivityType, Id} from "../../types";
 import * as UI from "../UIStyles";
@@ -97,22 +97,6 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                     />
                                 </GTouchable>
 
-                                {/*<View style={{backgroundColor: Colors.white, padding: 15}}>*/}
-                                    {/*<UserRow*/}
-                                        {/*user={activity.user}*/}
-                                        {/*text={activity.createdAt ? TimeUtils.timeSince(Date.parse(activity.createdAt)):''}*/}
-                                        {/*navigator={this.props.navigator}*/}
-                                    {/*/>*/}
-                                {/*</View>*/}
-
-                                {/*<FeedSeparator/>*/}
-
-                                {/*<ActivityActionBar*/}
-                                    {/*activityId={activity.id}*/}
-                                    {/*activityType={activity.type}*/}
-                                    {/*navigator={this.props.navigator}*/}
-                                    {/*// actions={['answer', 'share', 'save', 'buy']}*/}
-                                {/*/>*/}
                             </View>
 
                             {/*<FeedSeparator/>*/}
@@ -160,10 +144,18 @@ class ActivityDetailScreen extends Screen<Props, State> {
     }
 
     renderActivityComments(activity) {
+
+        let commentCount = _.get(activity, 'meta.commentsCount');
+        let comments= _.take(activity.comments, 4);
+        let commentators= _.take(activity.commentators, 4);
+        let lastComment = _.head(comments);
+
+
         return (
             <GTouchable
                 onPress={()=> this.displayActivityComments(activity)}>
                 <View style={[{}]}>
+
 
                     {/*empty*/}
                     {_.isEmpty(activity.commentators) &&
@@ -175,11 +167,20 @@ class ActivityDetailScreen extends Screen<Props, State> {
                     }>
                         <Text style={{fontSize: 11, color: Colors.greyish}}>{i18n.t("activity_screen.comments.no_comments")}</Text>
                         <Icon name="chevron-small-right" size={20} color={Colors.greyish} />
+
                     </View>
                     }
 
-                    {/*non empty*/}
-                    {!_.isEmpty(activity.commentators) &&
+                    <View style={{flex: 1,
+                        flexDirection: 'row',
+                        //justifyContent: 'space-between',
+                        alignItems: 'center',
+                    }
+                    }>
+                        {commentators.map(user=> user && <Avatar user={user} style={{dim: 14}}/>)}
+                    </View>
+
+
                     <View>
                         <View style={{flex: 1,
                             flexDirection: 'row',
@@ -187,8 +188,8 @@ class ActivityDetailScreen extends Screen<Props, State> {
                             alignItems: 'center',
                         }
                         }>
-                            <Image source={require('../../img2/commentIcon.png')} style={{width: 18, height: 18, resizeMode: 'contain', tintColor: Colors.greyish}}/>
-                            <Text style={{fontSize: 14, fontFamily: SFP_TEXT_MEDIUM, color: Colors.greyish, marginLeft: 6, marginRight: 6}}>{activity.comments.length}</Text>
+                            {/*<Image source={require('../../img2/commentIcon.png')} style={{width: 18, height: 18, resizeMode: 'contain', tintColor: Colors.greyish}}/>*/}
+                            {/*<Text style={{fontSize: 14, fontFamily: SFP_TEXT_MEDIUM, color: Colors.greyish, marginLeft: 6, marginRight: 6}}>{activity.comments.length}</Text>*/}
                             <UserRow
                                 user={activity.commentators[0]}
                                 text={i18n.t("activity_screen.comments.user_answered")}
@@ -199,7 +200,8 @@ class ActivityDetailScreen extends Screen<Props, State> {
                             <Icon name="chevron-small-right" size={20} color={Colors.greyish} />
                         </View>
                     </View>
-                    }
+
+
 
 
 

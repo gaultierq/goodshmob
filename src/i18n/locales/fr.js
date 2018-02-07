@@ -166,11 +166,7 @@ export default {
     },
     util: {
         time: {
-            since_seconds: {
-                zero: "",
-                one: "Il y a 1 seconde",
-                other: "Il y a %{count} secondes"
-            },
+            since_seconds: "à l'instant",
             since_minutes: {
                 zero: "",
                 one: "Il y a 1 minute",

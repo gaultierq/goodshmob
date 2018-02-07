@@ -9,7 +9,7 @@ import type {i18Key, RequestState} from "../../types";
 import Button from 'apsl-react-native-button'
 import {Colors} from "../colors";
 
-type Props = {
+export type Props = {
     placeholder: i18Key,
     execAction: (input: string) => Promise<*>,
     defaultValue?: string,
