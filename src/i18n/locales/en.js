@@ -83,6 +83,11 @@ export default {
         "comments":{
             "no_comments":"Reply",
             "user_answered":"replied",
+            "has_commented": {
+                zero: "%{first} a commenté",
+                one: "%{first} et %{second} ont commenté",
+                other: "%{first} et %{count} autres ont commenté"
+            }
         }
     },
     "login_screen":{

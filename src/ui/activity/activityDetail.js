@@ -1,28 +1,34 @@
 // @flow
 
 import React from 'react';
-import {ActivityIndicator, FlatList, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View, Image} from 'react-native';
+import {
+    ActivityIndicator,
+    FlatList,
+    Image,
+    Linking,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
+} from 'react-native';
 import * as actions from './actions'
 import {connect} from "react-redux";
-import {logged} from "../../managers/CurrentUser"
+import {currentUser, logged} from "../../managers/CurrentUser"
 import ActivityBody from "./components/ActivityBody";
 import {buildData} from "../../helpers/DataUtils";
 import {Avatar, MainBackground} from "../UIComponents";
 import ActivityDescription from "./components/ActivityDescription";
 import type {Activity, ActivityType, Id} from "../../types";
-import * as UI from "../UIStyles";
-import FeedSeparator from "./components/FeedSeparator";
-import ActivityActionBar from "./components/ActivityActionBar";
 import Icon from 'react-native-vector-icons/Entypo';
-import IconFA from 'react-native-vector-icons/FontAwesome';
-import UserRow from "./components/UserRow";
 import Screen from "../components/Screen";
 import {Colors} from "../colors";
 import GTouchable from "../GTouchable";
-import * as TimeUtils from '../../helpers/TimeUtils';
-import {SFP_TEXT_MEDIUM} from "../fonts";
 import ActivityStatus from "./components/ActivityStatus";
-import Triangle from 'react-native-triangle';
+import {component as CommentInput} from '../components/CommentInput';
+import {userFirstName} from "../../helpers/StringUtils";
+import UserActivity from "./components/UserActivity";
+import CommentCell from "../components/CommentCell";
 
 type Props = {
     activityId: Id,
@@ -106,7 +112,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                 navigator={this.props.navigator}
                                 style={{padding: 15}}
                             >
-                                <View style={{marginTop: 15, padding: 15, }}>
+                                <View style={{padding: 15, backgroundColor: Colors.greying}}>
                                     {this.renderActivityComments(activity)}
                                 </View>
                             </ActivityStatus>
@@ -143,14 +149,28 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
     }
 
-    renderActivityComments(activity) {
+    renderActivityComments(activity: Activity) {
 
         let commentCount = _.get(activity, 'meta.commentsCount');
         let comments= _.take(activity.comments, 4);
         let commentators= _.take(activity.commentators, 4);
         let lastComment = _.head(comments);
 
+        let renderEmpty = () => {
+            return (
+                <View style={{flex: 1,
+                    flexDirection: 'row',
+                    //justifyContent: 'space-between',
+                    alignItems: 'center',
+                }
+                }>
+                    <Text style={{fontSize: 11, color: Colors.greyish}}>{i18n.t("activity_screen.comments.no_comments")}</Text>
+                    <Icon name="chevron-small-right" size={20} color={Colors.greyish} />
+                </View>
+            );
+        };
 
+        const noCommentators = _.isEmpty(activity.commentators);
         return (
             <GTouchable
                 onPress={()=> this.displayActivityComments(activity)}>
@@ -158,49 +178,48 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
 
                     {/*empty*/}
-                    {_.isEmpty(activity.commentators) &&
-                    <View style={{flex: 1,
+                    {noCommentators && renderEmpty()}
+
+                    {!noCommentators && <View style={{flex: 1,
                         flexDirection: 'row',
                         //justifyContent: 'space-between',
                         alignItems: 'center',
                     }
                     }>
-                        <Text style={{fontSize: 11, color: Colors.greyish}}>{i18n.t("activity_screen.comments.no_comments")}</Text>
-                        <Icon name="chevron-small-right" size={20} color={Colors.greyish} />
+                        {_.take(activity.commentators, 4).map(user=> user && <Avatar user={user} style={{dim: 16}}/>)}
+                        <Text>
+                            {i18n.t(
+                                'activity_screen.comments.has_commented',
+                                {
+                                    first: userFirstName(_.nth(activity.commentators, 0)),
+                                    second: userFirstName(_.nth(activity.commentators, 1)),
+                                    count: activity.commentators.length -1
+                                })}
+                        </Text>
 
-                    </View>
-                    }
-
-                    <View style={{flex: 1,
-                        flexDirection: 'row',
-                        //justifyContent: 'space-between',
-                        alignItems: 'center',
-                    }
-                    }>
-                        {commentators.map(user=> user && <Avatar user={user} style={{dim: 14}}/>)}
-                    </View>
-
-
-                    <View>
+                    </View>}
+                    {/*comments bloc*/}
+                    <View style={{padding: 10}}>
+                        {commentCount > 1 && <Text style={{fontSize: 10, color: Colors.greyish}}>Voir les commentaires précédents</Text>}
+                        {
+                            lastComment && <CommentCell comment={lastComment} user={lastComment.user}/>
+                        }
                         <View style={{flex: 1,
                             flexDirection: 'row',
-                            justifyContent: 'flex-start',
                             alignItems: 'center',
-                        }
-                        }>
-                            {/*<Image source={require('../../img2/commentIcon.png')} style={{width: 18, height: 18, resizeMode: 'contain', tintColor: Colors.greyish}}/>*/}
-                            {/*<Text style={{fontSize: 14, fontFamily: SFP_TEXT_MEDIUM, color: Colors.greyish, marginLeft: 6, marginRight: 6}}>{activity.comments.length}</Text>*/}
-                            <UserRow
-                                user={activity.commentators[0]}
-                                text={i18n.t("activity_screen.comments.user_answered")}
-                                small={true}
-                                navigator={this.props.navigator}
-                                noImage={true}
+                        }}>
+                            <Avatar user={currentUser()} style={{dim: 16}}/>
+                            <CommentInput
+                                activity={activity}
+                                containerStyle={{backgroundColor: Colors.greying}}
+                                inputContainerStyle={{borderRadius: 8, borderWidth: 0}}
+                                inputStyle={{fontSize: 10, }}
+                                height={25}
+                                placeholder={"activity_comments_screen.add_comment_placeholder"}
                             />
-                            <Icon name="chevron-small-right" size={20} color={Colors.greyish} />
+
                         </View>
                     </View>
-
 
 
 

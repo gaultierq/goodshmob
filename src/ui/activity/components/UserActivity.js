@@ -29,12 +29,12 @@ export default class UserActivity extends React.Component<Props, State> {
 
 
         return <UserRowI
-            rightComponent={this.extracted(activityTime)}
+            rightComponent={this.right(activityTime)}
             {...attributes}
         />
     }
 
-    extracted(activityTime) {
+    right(activityTime) {
         let text= activityTime ? TimeUtils.timeSince(Date.parse(activityTime)):'';
         return (
             !!text && <View style={{flex: 1, alignSelf: 'center', justifyContent: 'flex-end'}}>

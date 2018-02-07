@@ -33,7 +33,7 @@ export function fullName(user: User) {
     return user ? `${user.firstName} ${user.lastName}` : "";
 }
 
-export function firstName(user: User) {
+export function userFirstName(user: User) {
     return user ? `${user.firstName}` : "";
 }
 

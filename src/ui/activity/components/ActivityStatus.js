@@ -4,14 +4,12 @@ import {Image, StyleSheet, Text, View} from 'react-native';
 import {Colors} from "../../colors";
 import {styleMargin, stylePadding, STYLES} from "../../UIStyles";
 import {Avatar} from "../../UIComponents";
-import type {Activity, i18Key, RNNNavigator} from "../../../types";
+import type {Activity, RNNNavigator} from "../../../types";
 import Octicons from "react-native-vector-icons/Octicons";
-import {seeList, seeUser} from "../../Nav";
+import {seeList} from "../../Nav";
 import {SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "../../fonts";
 import GTouchable from "../../GTouchable";
 import {isSaving, isSending, timeSinceActivity} from "../../../helpers/DataUtils";
-import UserActivity from "./UserActivity";
-import UserRow from "./UserRow";
 import UserRowI from "./UserRowI";
 import Triangle from "react-native-triangle";
 
@@ -46,9 +44,9 @@ const styles = StyleSheet.create({
         color: Colors.greyish,
     },
     shadow: {
-        shadowColor: Colors.greyish,
-        shadowOffset: {width: -2, height: 4},
-        shadowOpacity: 0.2,
+        shadowColor: Colors.greyishBrown,
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.3,
         shadowRadius: 1,
         elevation: 3,
     }
@@ -68,7 +66,6 @@ type State = {
 
 export default class ActivityStatus extends React.Component<Props, State> {
 
-
     render() {
         const {activity, skipLineup, style, children} = this.props;
         let rightComponent;
@@ -79,21 +76,28 @@ export default class ActivityStatus extends React.Component<Props, State> {
             rightComponent = this.renderSendTo();
         }
         return (
-
-
             <View style={[styles.descriptionContainer, style]}>
-                <UserRowI
-                    // activityTime={activity.createdAt}
-                    user={activity.user}
-                    navigator={this.props.navigator}
-                    rightComponent={rightComponent}
-                >
+                <View style={[{
+                    backgroundColor: 'white',
+                    padding: 6,
+                    marginBottom:3,
+                    // borderRadius: 4
+                },
+                    // styles.shadow
+                ]}>
+                    <UserRowI
+                        // activityTime={activity.createdAt}
+                        user={activity.user}
+                        navigator={this.props.navigator}
+                        rightComponent={rightComponent}
+                    >
+                        <Text style={[styles.userText, {alignSelf: 'flex-start', ...stylePadding(0, 0)}]}>{timeSinceActivity(activity)}</Text>
 
-                    <Text style={[styles.userText, {alignSelf: 'flex-start', ...stylePadding(0, 2)}]}>{timeSinceActivity(activity)}</Text>
+                    </UserRowI>
 
-                </UserRowI>
-
-                {activity.description && this.renderDescription(activity, children)}
+                    {activity.description && this.renderDescription(activity)}
+                </View>
+                {children}
 
             </View>
         )
@@ -109,23 +113,16 @@ export default class ActivityStatus extends React.Component<Props, State> {
 
 
         }]}>
-            <Triangle
-                width={10}
-                height={6}
-                color={'white'}
-                direction={'up'}
-                style={[{marginLeft: 8}, styles.shadow]}
-            />
             <View style={[{
                 flex: 1,
                 flexDirection: 'row',
                 backgroundColor: 'white',
                 ...styleMargin(0, 0, 0, 0),
                 ...stylePadding(10, 10),
-                borderRadius: 6,
+                // borderRadius: 6,
 
 
-            }, styles.shadow]}>
+            }]}>
 
                 <Octicons name="quote" size={10} color={Colors.brownishGrey} style={{alignSelf: 'flex-start'}}/>
                 <Text numberOfLines={3} style={[styles.description, {
@@ -136,7 +133,7 @@ export default class ActivityStatus extends React.Component<Props, State> {
                 </Text>
             </View>
 
-            {children}
+            {/*{children}*/}
 
 
         </View>;

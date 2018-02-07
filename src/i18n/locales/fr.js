@@ -82,6 +82,11 @@ export default {
         "comments":{
             "no_comments":"Donner son avis",
             "user_answered":"a commenté",
+            "has_commented": {
+                zero: "%{first} a commenté",
+                one: "%{first} et %{second} ont commenté",
+                other: "%{first} et %{count} autres ont commenté"
+            }
         }
     },
     "login_screen":{
