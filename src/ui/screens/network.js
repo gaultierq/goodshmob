@@ -206,21 +206,14 @@ class NetworkScreen extends Screen<Props, State> {
 
     navToActivity(activity) {
         this.props.navigator.push({
-            screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
-            passProps: {activityId: activity.id, activityType: activity.type}, // Object that will be passed as props to the pushed screen (optional)
-            animated: true, // does the push have transition animation or does it happen immediately (optional)
-            animationType: 'slide-up', // 'fade' (for both) / 'slide-horizontal' (for android) does the push have different transition animation (optional)
-            backButtonTitle: undefined, // override the back button title (optional)
-            backButtonHidden: false, // hide the back button altogether (optional)
-            navigatorStyle: {}, // override the navigator style for the pushed screen (optional)
-            navigatorButtons: {} // override the nav buttons for the pushed screen (optional)
+            screen: 'goodsh.ActivityDetailScreen',
+            passProps: {activityId: activity.id, activityType: activity.type},
         });
     }
 
     onFloatingButtonPressed() {
         this.showAsk();
     }
-
 
     showSearch() {
         let navigator = this.props.navigator;

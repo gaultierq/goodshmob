@@ -53,6 +53,7 @@ export default {
     "activity_item":{
         header: {
             in: "added in",
+            added_somewhere: "added it",
             to: "to",
             ask: "needs some tips!",
         },

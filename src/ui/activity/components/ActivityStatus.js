@@ -160,8 +160,8 @@ export default class ActivityStatus extends React.Component<Props, State> {
         const {activity} = this.props;
         let target = activity.target;
 
-        let count = target.meta ? target.meta["savingsCount"] : 0;
-        let targetName = target.name;
+        let count = target && target.meta ? target.meta["savingsCount"] : 0;
+        let targetName = target && target.name;
         if (count) targetName += " (" + count + ")";
 
         return(
@@ -175,12 +175,15 @@ export default class ActivityStatus extends React.Component<Props, State> {
                             // marginLeft: 6,
                             fontFamily: SFP_TEXT_MEDIUM,
                             fontSize: 12,
-                            color: Colors.greyishBrown}}>{i18n.t("activity_item.header.in")}
+                            color: Colors.greyishBrown}}>
+                            {i18n.t(!!target ? "activity_item.header.in" : "activity_item.header.added_somewhere")}
                         </Text>
 
-                        <GTouchable style={{}} onPress={() => seeList(this.props.navigator, target)}>
+                        {
+                            target && <GTouchable style={{}} onPress={() => seeList(this.props.navigator, target)}>
                             <Text style={[STYLES.tag2, {}]}>{targetName}</Text>
                         </GTouchable>
+                        }
                     </View>
                 </View>
 

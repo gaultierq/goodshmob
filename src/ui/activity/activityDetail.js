@@ -30,6 +30,7 @@ import {userFirstName} from "../../helpers/StringUtils";
 import CommentCell from "../components/CommentCell";
 import {styleBorder, styleMargin, stylePadding} from "../UIStyles";
 import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts";
+import ActivityActionBar from "./components/ActivityActionBar";
 
 type Props = {
     activityId: Id,
@@ -106,7 +107,21 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
                             </View>
 
-                            {this.renderActivityBlock(activity, 0)}
+                            <View style={{width: "100%"}}>
+                                <ActivityActionBar
+                                    activityId={activity.id}
+                                    activityType={activity.type}
+                                    navigator={this.props.navigator}
+                                />
+
+                            </View>
+
+                            <View style={{marginTop: 10}}>
+                                {
+                                    this.renderActivityBlock(activity, 0)
+                                }
+                            </View>
+
 
                             {!_.isEmpty(activity.relatedActivities) && <FlatList
                                 data={activity.relatedActivities}
