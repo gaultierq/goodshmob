@@ -5,6 +5,7 @@ import {mergeLists} from "./ModelUtils";
 import dotprop from "dot-prop-immutable"
 import {Statistics} from "../managers/Statistics"
 import update from "immutability-helper";
+import * as TimeUtils from "./TimeUtils";
 
 //ask backend to sanitize types
 export let sanitizeActivityType = activityType => {
@@ -126,4 +127,8 @@ export function isSaving(activity: Activity) {
 
 export function isSending(activity: Activity) {
     return activity && activity.type &&  sanitizeActivityType(activity.type) === 'sendings';
+}
+
+export function timeSinceActivity(activity: Activity) {
+    return activity ? TimeUtils.timeSince(Date.parse(activity.updatedAt || activity.createdAt)):'';
 }

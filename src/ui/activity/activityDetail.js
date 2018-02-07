@@ -22,6 +22,7 @@ import GTouchable from "../GTouchable";
 import * as TimeUtils from '../../helpers/TimeUtils';
 import {SFP_TEXT_MEDIUM} from "../fonts";
 import ActivityStatus from "./components/ActivityStatus";
+import Triangle from 'react-native-triangle';
 
 type Props = {
     activityId: Id,
@@ -120,11 +121,13 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                 skipLineup={this.props.skipLineup}
                                 navigator={this.props.navigator}
                                 style={{padding: 15}}
-                            />
+                            >
+                                <View style={{marginTop: 15, padding: 15, }}>
+                                    {this.renderActivityComments(activity)}
+                                </View>
+                            </ActivityStatus>
 
-                            <View style={{marginTop: 15, padding: 15, backgroundColor: Colors.white}}>
-                                {this.renderActivityComments(activity)}
-                            </View>
+
 
                             <Text>Related Activities:</Text>
                             <FlatList
@@ -160,7 +163,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
         return (
             <GTouchable
                 onPress={()=> this.displayActivityComments(activity)}>
-                <View style={[UI.CARD(0), {backgroundColor: "#fefefe"}]}>
+                <View style={[{}]}>
 
                     {/*empty*/}
                     {_.isEmpty(activity.commentators) &&

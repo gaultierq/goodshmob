@@ -90,32 +90,31 @@ export const TP_MARGINS = (margin) => {
     }
 };
 
+let styleLTRB = function (args, method) {
+
+
+    if (args[0] != null && args[2] == null) args[2] = args[0];
+    if (args[1] != null && args[3] == null) args[3] = args[1];
+
+
+    return ['left', 'top', 'right', 'bottom'].reduce((res, p, i) => {
+        let arg = args[i];
+        if (arg != null) {
+            Object.assign(res, {[method + toUppercase(p)]: arg});
+        }
+        return res;
+    }, {});
+};
+
 //stylePadding(12, null) => left = righ = 12
 //stylePadding(12, 14) => left = righ = 12
 export function stylePadding(left?: number, top?: number, right?: number, bottom?: number) {
-
-    const method = "padding";
-    const args = arguments;
-
-    let styleLTRB = function () {
-
-
-        if (args[0] != null && args[2] == null) args[2] = args[0];
-        if (args[1] != null && args[3] == null) args[3] = args[1];
-
-
-        return ['left', 'top', 'right', 'bottom'].reduce((res, p, i) => {
-            let arg = args[i];
-            if (arg != null) {
-                Object.assign(res, {[method + toUppercase(p)]: arg});
-            }
-            return res;
-        }, {});
-    };
-    return styleLTRB();
+    return styleLTRB(arguments, "padding");
 }
 
-
+export function styleMargin(left?: number, top?: number, right?: number, bottom?: number) {
+    return styleLTRB(arguments, "margin");
+}
 
 //TODO: convert to stylesheet
 export const TEXT_LIST = {fontSize: 14, color: Colors.blue};

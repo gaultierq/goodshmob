@@ -4897,6 +4897,13 @@ react-native-taptargetview@^0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/react-native-taptargetview/-/react-native-taptargetview-0.0.2.tgz#aa88b9b0c35d692b9695b615558b31ad9b3e593e"
 
+react-native-triangle@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/react-native-triangle/-/react-native-triangle-0.0.9.tgz#53e804019477f757208da6c5977fc8695f49d4c8"
+  dependencies:
+    create-react-class "^15.6.0"
+    prop-types "^15.5.10"
+
 react-native-vector-icons@^4.4.2:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-4.5.0.tgz#6b95619e64f62f05f579f74a01fe5640df95158b"
