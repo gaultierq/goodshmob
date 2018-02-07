@@ -112,6 +112,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                     activityId={activity.id}
                                     activityType={activity.type}
                                     navigator={this.props.navigator}
+                                    blackList={['comment']}
                                 />
 
                             </View>
