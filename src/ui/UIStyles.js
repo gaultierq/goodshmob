@@ -232,17 +232,20 @@ export const STYLES = StyleSheet.create({
     },
     tag2: {
         paddingLeft: 6, paddingRight: 6,
-        color: Colors.greyish,
+
         alignSelf: 'stretch',
         borderRadius: 8,
         height: 16,
-        lineHeight: 16,
+
         textAlignVertical: 'center',
         // padding: 2,
         borderWidth: StyleSheet.hairlineWidth,
         borderColor: Colors.greyish,
+
+        color: Colors.greyish,
         fontFamily: SFP_TEXT_ITALIC,
-        fontSize: 10
+        fontSize: 10,
+        lineHeight: 10
 
     }
 });

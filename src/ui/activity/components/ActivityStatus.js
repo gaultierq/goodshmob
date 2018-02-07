@@ -7,7 +7,7 @@ import {Avatar} from "../../UIComponents";
 import type {Activity, RNNNavigator} from "../../../types";
 import Octicons from "react-native-vector-icons/Octicons";
 import {seeList} from "../../Nav";
-import {SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "../../fonts";
+import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "../../fonts";
 import GTouchable from "../../GTouchable";
 import {isSaving, isSending, timeSinceActivity} from "../../../helpers/DataUtils";
 import UserRowI from "./UserRowI";
@@ -169,21 +169,32 @@ export default class ActivityStatus extends React.Component<Props, State> {
                 {/*<Avatar user={activity.user} style={{dim: 26, marginRight: 8, marginTop: 0}}/>*/}
                 <View style={{flex: 1, }}>
                     <View style={styles.tag}>
-                        <Text style={{
-                            textAlign: 'center',
-                            marginRight: 8,
-                            // marginLeft: 6,
-                            fontFamily: SFP_TEXT_MEDIUM,
-                            fontSize: 12,
-                            color: Colors.greyishBrown}}>
-                            {i18n.t(!!target ? "activity_item.header.in" : "activity_item.header.added_somewhere")}
-                        </Text>
 
-                        {
-                            target && <GTouchable style={{}} onPress={() => seeList(this.props.navigator, target)}>
-                            <Text style={[STYLES.tag2, {}]}>{targetName}</Text>
+                        <GTouchable
+                            disabled={!target}
+                            style={{}} onPress={() => seeList(this.props.navigator, target)}>
+
+
+                            <Text style={{
+                                textAlign: 'center',
+                                marginRight: 8,
+                                // marginLeft: 6,
+                                fontFamily: SFP_TEXT_MEDIUM,
+                                fontSize: 12,
+                                color: Colors.greyishBrown}}>
+                                {i18n.t(!!target ? "activity_item.header.in" : "activity_item.header.added_somewhere")}
+
+                                {target && <Text style={[{
+                                    color: Colors.black,
+                                    fontFamily: SFP_TEXT_BOLD,
+                                    // fontSize: 12,
+                                    // lineHeight: 12
+
+                                }]}>{" " + targetName}</Text>
+                                }
+
+                            </Text>
                         </GTouchable>
-                        }
                     </View>
                 </View>
 
