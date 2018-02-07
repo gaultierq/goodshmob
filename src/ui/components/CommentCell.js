@@ -38,7 +38,7 @@ export default class CommentCell extends Component<Props, State> {
                     <Col>
                         <View style={{
                             padding: 6, backgroundColor: 'white', borderRadius: 4,
-                            borderWidth: StyleSheet.hairlineWidth,
+                            // borderWidth: StyleSheet.hairlineWidth,
                             borderColor: Colors.greyish
                         }}>
 

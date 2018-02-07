@@ -57,6 +57,7 @@ type Props = {
     navigator: RNNNavigator,
     skipLineup?: boolean,
     style?: ?*,
+    cardStyle?: ?*,
     children?: ?Node,
 
 };
@@ -67,7 +68,7 @@ type State = {
 export default class ActivityStatus extends React.Component<Props, State> {
 
     render() {
-        const {activity, skipLineup, style, children} = this.props;
+        const {activity, skipLineup, style, cardStyle, children} = this.props;
         let rightComponent;
         if (isSaving(activity) && !skipLineup) {
             rightComponent = this.renderSavedInList();
@@ -80,10 +81,7 @@ export default class ActivityStatus extends React.Component<Props, State> {
                 <View style={[{
                     backgroundColor: 'white',
                     padding: 6,
-                    marginBottom:3,
-                    // borderRadius: 4
-                },
-                    styles.shadow
+                },cardStyle
                 ]}>
                     <UserRowI
                         // activityTime={activity.createdAt}

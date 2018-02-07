@@ -80,14 +80,19 @@ export default {
     },
     "activity_screen":{
         "comments":{
-            "no_comments":"Donner son avis",
+            "no_comments":"Pas encore de commentaire. Donner son avis",
             "user_answered":"a commenté",
             "has_commented": {
                 zero: "%{first} a commenté:",
                 one: "%{first} et %{second} ont commenté:",
                 other: "%{first} et %{count} autres ont commenté:"
             },
-            "has_commented_as_well": {
+            "has_commented_this": {
+                zero: "%{first} a commenté ceci",
+                one: "%{first} et %{second} ont commenté ceci",
+                other: "%{first} et %{count} autres ont commenté ceci"
+            },
+            "has_commented_this_as_well": {
                 zero: "%{first} a aussi commenté ceci",
                 one: "%{first} et %{second} ont aussi commenté ceci",
                 other: "%{first} et %{count} autres ont aussi commenté ceci"
