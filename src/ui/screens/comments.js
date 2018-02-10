@@ -3,7 +3,7 @@ import React from 'react';
 import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
 import {connect} from "react-redux";
 import {currentUser, logged} from "../../managers/CurrentUser"
-import {MainBackground} from "../UIComponents";
+import {MainBackground, TRANSPARENT_SPACER} from "../UIComponents";
 import Immutable from 'seamless-immutable';
 import * as Api from "../../managers/Api";
 import {Call} from "../../managers/Api";
@@ -11,8 +11,6 @@ import Feed from "../components/feed";
 import type {Activity, ActivityType, Comment, Id} from "../../types";
 import ApiAction from "../../helpers/ApiAction";
 import {buildData, doDataMergeInState, sanitizeActivityType} from "../../helpers/DataUtils";
-import UserActivity from "../activity/components/UserActivity";
-import FeedSeparator from "../activity/components/FeedSeparator";
 import {fetchActivity} from "../activity/actions";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import type {PendingAction} from "../../helpers/ModelUtils";
@@ -23,6 +21,7 @@ import {component as CommentInput} from "../components/CommentInput"
 import {styleMargin, STYLES} from "../UIStyles";
 import ActivityStatus from "../activity/components/ActivityStatus";
 import CommentCell from "../components/CommentCell";
+import MultiMap from "multimap";
 
 
 const LOAD_COMMENTS = ApiAction.create("load_comments");
@@ -124,19 +123,35 @@ class CommentsScreen extends Screen<Props, State> {
 
                         <Feed
                             inverted
-                            data={items}
-                            renderItem={this.renderItem.bind(this)}
+                            // data={items}
+                            // renderItem={this.renderItem.bind(this)}
+                            // ItemSeparatorComponent={()=> <View style={{margin: 60}} />}
+
+                            sections={this.splitCommentsInSections(items)}
+                            keyExtractor={item => _.head(item).id}
+                            SectionSeparatorComponent={()=> <View style={{margin: 4}} />}
+
+                            renderSectionFooter={({section}) => <Text
+                                style={{
+                                    // alignItems: 'center',
+                                    alignSelf: 'center',
+                                    fontSize: 11,
+                                    // backgroundColor: 'red',
+                                    color: Colors.greyish,
+                                }}>
+                                {section.title}</Text>}
+
+
                             fetchSrc={{
                                 callFactory:()=>actions.loadComments(activity),
                                 action: LOAD_COMMENTS,
                                 options: {activityId: activity.id, activityType: activity.type}
                             }}
-                            // ItemSeparatorComponent={()=> <FeedSeparator/>}
                             contentContainerStyle={{
                                 marginBottom: 4, paddingTop: 40,
                                 paddingBottom: 75,
                                 backgroundColor: Colors.greying}}
-                            empty={<Text style={[STYLES.empty_message, {fontSize: 16, paddingBottom: 50}]}>{i18n.t('common.empty_feed_generic')}</Text>}
+                            empty={<Text style={[STYLES.empty_message, {fontSize: 20, paddingBottom: 50}]}>{i18n.t('common.empty_feed_generic')}</Text>}
                         />
 
                         <CommentInput
@@ -152,6 +167,70 @@ class CommentsScreen extends Screen<Props, State> {
         );
     }
 
+    splitCommentsInSections(comments: Array<Comment>) {
+
+        const sectionsMap = new MultiMap();
+
+
+        comments.forEach(c => {
+            //group by day
+            let day = i18n.strftime(new Date(c.createdAt), "%d/%m/%Y");
+            sectionsMap.set(day, c);
+        });
+
+
+        // [c1, c2, c3] ==> [[c1,c2], [c3]]
+        let groupByAuthor = comments => {
+            const grouped = [];
+
+            for (let i = 0, lastAuthorId = null, lastAuthorIx = null; i <= comments.length; i++) {
+                let current = _.nth(comments,i);
+                const authorId = current && current.user.id;
+
+
+                if (authorId !== lastAuthorId) {
+                    //pushing old group
+                    if (lastAuthorIx !== null) {
+                        grouped.push(_.slice(comments, lastAuthorIx, i));
+                    }
+
+                    //starting new group
+                    lastAuthorIx = i;
+                    lastAuthorId = authorId;
+                }
+            }
+            return grouped;
+        };
+
+        const authorGrouped = new MultiMap();
+        // group authors
+        sectionsMap.forEachEntry((value, k) => {
+            let groupedValues = groupByAuthor(value);
+            authorGrouped.set(k, ...groupedValues);
+        });
+
+        const sections = [];
+
+
+        authorGrouped.forEachEntry((value, k) => {
+
+            const dateStr = _.nth(_.nth(value, 0), 0).createdAt;
+            const date = new Date(dateStr);
+            let format = Date.now() - Date.parse(dateStr) < 7 * 24 * 60 * 60 * 1000 ? "%a %-H:%M" :  "%d/%m/%-y %-H:%M";
+
+            sections.push({
+                data: value,
+                title: i18n.strftime(date, format),
+                // subtitle: ` (${savingCount})`,
+                // onPress: () => this.seeLineup(goodshbox.id),
+                renderItem: this.renderItem.bind(this)
+            })
+        });
+
+        console.debug(`DEBUG === SECTIONS === `);
+        console.debug(sections);
+        return sections;
+    }
 
 
     getActivity() {
@@ -172,13 +251,15 @@ class CommentsScreen extends Screen<Props, State> {
 
     renderItem({item}) {
 
-        let comment : Comment = item.pending ? item : buildData(this.props.data, "comments", item.id);
+        // let comment : Comment = item.pending ? item : buildData(this.props.data, "comments", item.id);
+        let comments = (_.isArray(item) && item || [item]).map(c => c.pending ? c : buildData(this.props.data, "comments", c.id));
 
-        if (!comment) return null;
+        //why ?
+        if (_.isEmpty(comments)) return null;
 
         return (
             <View style={{padding: 12, paddingTop: 0, paddingBottom: 15, }}>
-                <CommentCell comment={item} user={item.user}/>
+                <CommentCell comment={comments} user={_.head(comments).user} skipTime={true}/>
             </View>
         );
     }
