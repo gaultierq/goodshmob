@@ -2,7 +2,7 @@
 import React from 'react';
 import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
 import {connect} from "react-redux";
-import {currentUser, logged} from "../../managers/CurrentUser"
+import {currentUser, isCurrentUser, logged} from "../../managers/CurrentUser"
 import {MainBackground, TRANSPARENT_SPACER} from "../UIComponents";
 import Immutable from 'seamless-immutable';
 import * as Api from "../../managers/Api";
@@ -74,7 +74,7 @@ class CommentsScreen extends Screen<Props, State> {
                 id: pending.id,
                 name: pending.payload.listName,
                 content: pending.payload.content,
-                createdAt: pending.insertedAt,
+                createdAt: Date(pending.insertedAt),
                 user: currentUser(),
                 type: 'comments',
                 pending: true
@@ -191,7 +191,9 @@ class CommentsScreen extends Screen<Props, State> {
                 if (authorId !== lastAuthorId) {
                     //pushing old group
                     if (lastAuthorIx !== null) {
-                        grouped.push(_.slice(comments, lastAuthorIx, i));
+                        let commentsFor1Author = _.slice(comments, lastAuthorIx, i);
+                        commentsFor1Author = _.reverse(commentsFor1Author);
+                        grouped.push(commentsFor1Author);
                     }
 
                     //starting new group
@@ -199,14 +201,17 @@ class CommentsScreen extends Screen<Props, State> {
                     lastAuthorId = authorId;
                 }
             }
+
+
             return grouped;
         };
 
         const authorGrouped = new MultiMap();
         // group authors
         sectionsMap.forEachEntry((value, k) => {
-            let groupedValues = groupByAuthor(value);
-            authorGrouped.set(k, ...groupedValues);
+            let groupedByAuthor = groupByAuthor(value);
+            groupedByAuthor = _.reverse(groupedByAuthor);
+            authorGrouped.set(k, ...groupedByAuthor);
         });
 
         const sections = [];
@@ -218,7 +223,9 @@ class CommentsScreen extends Screen<Props, State> {
             const date = new Date(dateStr);
             let format = Date.now() - Date.parse(dateStr) < 7 * 24 * 60 * 60 * 1000 ? "%a %-H:%M" :  "%d/%m/%-y %-H:%M";
 
+            const data = _.reverse(value);
             sections.push({
+                // data: data,
                 data: value,
                 title: i18n.strftime(date, format),
                 // subtitle: ` (${savingCount})`,
@@ -227,26 +234,12 @@ class CommentsScreen extends Screen<Props, State> {
             })
         });
 
-        console.debug(`DEBUG === SECTIONS === `);
-        console.debug(sections);
         return sections;
     }
 
 
     getActivity() {
         return buildData(this.props.data, this.props.activityType, this.props.activityId);
-    }
-
-    addComment(activity: Activity, newComment: string) {
-        let delayMs = 3000;
-        let activityId = activity.id;
-        let activityType = sanitizeActivityType(activity.type);
-        let content = newComment;
-
-        let payload = {activityId, activityType, content};
-        let options = {delayMs, activityId, activityType};
-
-        return this.props.dispatch(COMMENT_CREATION.pending(payload, options))
     }
 
     renderItem({item}) {
@@ -257,9 +250,15 @@ class CommentsScreen extends Screen<Props, State> {
         //why ?
         if (_.isEmpty(comments)) return null;
 
+        const user = _.head(comments).user;
         return (
             <View style={{padding: 12, paddingTop: 0, paddingBottom: 15, }}>
-                <CommentCell comment={comments} user={_.head(comments).user} skipTime={true}/>
+                <CommentCell
+                    comment={comments}
+                    user={user}
+                    rightDisplay={isCurrentUser(user)}
+                    skipTime={true}
+                />
             </View>
         );
     }

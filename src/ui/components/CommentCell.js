@@ -13,7 +13,8 @@ import {Col, Grid, Row} from "react-native-easy-grid";
 type Props = {
     comment: Comment | Array<Comment>,
     user: User,
-    skipTime?: boolean
+    skipTime?: boolean,
+    rightDisplay?: boolean
 };
 
 type State = {
@@ -30,27 +31,31 @@ export default class CommentCell extends Component<Props, State> {
         const comments: Array<Comment> = _.isArray(comment) ? comment : [comment];
 
         const dimension = 32;
+        const rightDisplay = this.props.rightDisplay;
         return (
             <Grid>
                 <Row style={{ }}>
                     <Col style={{ width: dimension, justifyContent: 'flex-start'}}>
-                        <Avatar user={user} style={{dim: 24}}/>
+                        {!rightDisplay && <Avatar user={user} style={{dim: 24}}/>}
                     </Col>
-                    <Col>
+                    <Col style={{ alignItems: rightDisplay ? 'flex-end': 'flex-start', }}>
                         {comments.map((comment: Comment, i) => <Row style={{marginTop: !!i ? 8 : 0}} key={comment.id}>
-                            <View style={{flexDirection: "row",}}>
+                            <View style={{flexDirection: "row"}}>
                                 <View style={{
                                     ...stylePadding(12, 4),
-                                    backgroundColor: Colors.white,
+                                    backgroundColor: rightDisplay ? Colors.green : Colors.white,
                                     borderRadius: 12,
-                                    borderColor: Colors.greyish
+                                    borderColor: Colors.greyish,
+
                                 }}>
 
                                     <Text style={{
                                         fontSize: 13,
                                         // lineHeight: 20,
                                         // backgroundColor: 'red',
-                                        fontFamily: SFP_TEXT_REGULAR, color: Colors.brownishGrey, }}>{comment.content}
+                                        fontFamily: SFP_TEXT_REGULAR,
+                                        color: rightDisplay ? Colors.white : Colors.brownishGrey,
+                                    }}>{comment.content}
                                     </Text>
                                 </View>
                             </View>
