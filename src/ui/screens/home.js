@@ -521,7 +521,7 @@ class HomeScreen extends Screen<Props, State> {
     renderEmptyList(list: List) {
         let result = [];
         // first item render
-        result.push(<View style={[
+        result.push(<View key={`key-${0}`} style={[
             LineupCellSaving.styles.cell,
             {
                 backgroundColor: Colors.grey3,
@@ -535,7 +535,7 @@ class HomeScreen extends Screen<Props, State> {
         </View>);
         //
         for (let i = 1; i < 5; i++) {
-            result.push(<View style={[
+            result.push(<View key={`key-${i}`} style={[
                 LineupCellSaving.styles.cell,
                 {
                     backgroundColor: Colors.grey3,

@@ -279,7 +279,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         };
 
         return (
-            <View style={[{}, style]}>
+            <View key={'searchbar_container'} style={[style]}>
                 {React.createElement(Search, {
                     backgroundColor: Colors.white82,
                     placeholderTextColor: color, //TODO
