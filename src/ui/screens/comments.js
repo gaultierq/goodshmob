@@ -14,14 +14,15 @@ import {buildData, doDataMergeInState, sanitizeActivityType} from "../../helpers
 import UserActivity from "../activity/components/UserActivity";
 import FeedSeparator from "../activity/components/FeedSeparator";
 import {fetchActivity} from "../activity/actions";
-import SmartInput from "../components/SmartInput";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import type {PendingAction} from "../../helpers/ModelUtils";
 import {mergeItemsAndPendings, pendingActionWrapper} from "../../helpers/ModelUtils";
 import {Colors} from "../colors";
 import Screen from "../components/Screen";
 import {component as CommentInput} from "../components/CommentInput"
-import {STYLES} from "../UIStyles";
+import {styleMargin, STYLES} from "../UIStyles";
+import ActivityStatus from "../activity/components/ActivityStatus";
+import CommentCell from "../components/CommentCell";
 
 
 const LOAD_COMMENTS = ApiAction.create("load_comments");
@@ -88,25 +89,28 @@ class CommentsScreen extends Screen<Props, State> {
                         position: 'absolute',
                         width: '100%',
                         top: 0,
-                        padding: 12,
                         backgroundColor:Colors.white,
-                        shadowOffset: {width: 0, height: 4},
-                        shadowColor: Colors.black,
-                        shadowOpacity: 0.3,
-                        shadowRadius: 2,
-                        elevation: 1,
                         zIndex: 10,
                     }
                 }>
-                    <View>
-                        <UserActivity
-                            activityTime={activity.createdAt}
-                            user={activity.user}
-                            navigator={this.props.navigator}
-                        />
-                    </View>
+                    <ActivityStatus
+                        activity={activity}
+                        // skipLineup={this.props.skipLineup}
+                        navigator={this.props.navigator}
+                        style={{
+                            ...styleMargin(0, 0),
+                        }}
+                        cardStyle={{
+                            shadowColor: Colors.greyishBrown,
+                            shadowOffset: {width: 0, height: 4},
+                            shadowOpacity: 0.3,
+                            shadowRadius: 1,
+                            elevation: 3,
+                            marginBottom:3,
+                        }}
+                    />
 
-                    <Text>{activity.description}</Text>
+
                 </View>}
                 {activity && <KeyboardAwareScrollView
                     // style={{ backgroundColor: '#4c69a5' }}
@@ -127,22 +131,13 @@ class CommentsScreen extends Screen<Props, State> {
                                 action: LOAD_COMMENTS,
                                 options: {activityId: activity.id, activityType: activity.type}
                             }}
-                            ItemSeparatorComponent={()=> <FeedSeparator/>}
+                            // ItemSeparatorComponent={()=> <FeedSeparator/>}
                             contentContainerStyle={{
                                 marginBottom: 4, paddingTop: 40,
                                 paddingBottom: 75,
                                 backgroundColor: Colors.greying}}
                             empty={<Text style={[STYLES.empty_message, {fontSize: 16, paddingBottom: 50}]}>{i18n.t('common.empty_feed_generic')}</Text>}
                         />
-
-                        {/*<SmartInput*/}
-                            {/*containerStyle={{position: 'absolute', bottom: 0, padding: 3, backgroundColor: Colors.greying}}*/}
-                            {/*inputContainerStyle={{borderRadius: 4, borderWidth: 0}}*/}
-                            {/*execAction={(input: string) => this.addComment(activity, input)}*/}
-                            {/*placeholder={"activity_comments_screen.add_comment_placeholder"}*/}
-                            {/*returnKeyType={'send'}*/}
-                            {/*// multiline*/}
-                        {/*/>*/}
 
                         <CommentInput
                             activity={activity}
@@ -182,17 +177,12 @@ class CommentsScreen extends Screen<Props, State> {
         if (!comment) return null;
 
         return (
-            <View style={{padding: 12, paddingTop: 0, paddingBottom: 15, backgroundColor: Colors.white, }}>
-                <UserActivity
-                    activityTime={comment.createdAt}
-                    user={comment.user}
-                    navigator={this.props.navigator}
-                    style={{marginTop:12}}
-                />
-                <Text style={styles.comment}>{comment.content}</Text>
+            <View style={{padding: 12, paddingTop: 0, paddingBottom: 15, }}>
+                <CommentCell comment={item} user={item.user}/>
             </View>
         );
     }
+
 }
 
 
