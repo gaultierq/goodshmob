@@ -3,7 +3,8 @@
 import React from 'react';
 import {
     Alert,
-    BackHandler, Button,
+    BackHandler,
+    Button,
     Dimensions,
     Image,
     Platform,
@@ -42,20 +43,13 @@ import GTouchable from "../GTouchable";
 import AddLineupComponent from "../components/addlineup";
 import BottomSheet from 'react-native-bottomsheet';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import PopupDialog, {
-    DialogTitle,
-    DialogButton,
-    ScaleAnimation,
-} from 'react-native-popup-dialog';
-import OnBoardingManager, {ON_BOARDING_STEP_CHANGED} from "../../managers/OnBoardingManager";
-import EventBus from 'eventbusjs'
-import util from 'util'
-
+import PopupDialog, {DialogButton, DialogTitle, ScaleAnimation,} from 'react-native-popup-dialog';
+import type {OnBoardingStep} from "../../managers/OnBoardingManager";
+import OnBoardingManager from "../../managers/OnBoardingManager";
+import Markdown from 'react-native-simple-markdown'
+import NoSpamDialog from "./NoSpamDialog";
 // $FlowFixMe
 import {AppTour, AppTourSequence, AppTourView} from "../../../vendors/taptarget";
-import type {OnBoardingStep} from "../../managers/OnBoardingManager";
-
-import {SFP_TEXT_REGULAR} from "../fonts"
 
 
 
@@ -336,49 +330,11 @@ class HomeScreen extends Screen<Props, State> {
 
                 </View>
 
-                {onBoardingStep === 'no_spam' && this.renderNoSpam()}
+
+                {onBoardingStep === 'no_spam' && <NoSpamDialog/>}
 
             </View>
         );
-    }
-
-    renderNoSpam() {
-
-        return (<PopupDialog
-            ref={(popupDialog) => {
-                this.scaleAnimationDialog = popupDialog;
-                if (this.scaleAnimationDialog && !this.timeout) {
-                    this.timeout = setTimeout(()=>this.scaleAnimationDialog.show(), 1000);
-                }
-            }}
-            dialogAnimation={new ScaleAnimation()}
-            dialogTitle={
-                <DialogTitle
-                    title={i18n.t('no_spam.dialog_title')} titleStyle={{alignItems: 'flex-start', paddingLeft: 20/*backgroundColor: Colors.green*/}}
-                    titleTextStyle={{color: Colors.grey, fontFamily: SFP_TEXT_MEDIUM, fontSize: 20}}
-                />}
-            onDismissed={() => {
-                OnBoardingManager.onDisplayed('no_spam')
-            }}
-            actions={[
-                <DialogButton
-                    text={i18n.t('no_spam.dialog_button')}
-                    onPress={() => {
-                        this.scaleAnimationDialog.dismiss();
-                    }}
-                    key="button-1"
-                />,
-            ]}
-            width={0.8}
-            height={325}
-        >
-            <View style={[styles.dialogContentView]}>
-                <Text style={{color:Colors.greyishBrown}}>{i18n.t('no_spam.dialog_body')}</Text>
-                <View style={{alignItems: 'center', paddingTop: 15, paddingBottom: 0}}>
-                    <Image source={require('../../img2/lockClosed.png')} resizeMode="contain"/>
-                </View>
-            </View>
-        </PopupDialog>)
     }
 
     _targetRef = (primaryText, secondaryText) => ref => {
@@ -713,8 +669,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     dialogContentView: {
-        padding: 20,
-        paddingBottom: 0,
+        // padding: 20,
+        // paddingBottom: 0,
     },
     navigationBar: {
         borderBottomColor: '#b5b5b5',

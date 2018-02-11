@@ -31,8 +31,10 @@ export default {
     },
     no_spam: {
         dialog_title: "The 3 pillars of Goodsh",
-        dialog_body: "Your goodsh are ONLY visible by you and your friends.\nWhen you save a goodsh, we DON'T notify your contacts.\nFor a fully private goodsh, tap the lock.\n\n",
-        dialog_button: 'Ok, LET\'S GO!',
+        dialog_body: "- Your goodsh are **ONLY** visible by you and your friends\n\n" +
+        "- When you save a goodsh, we **DON'T** notify your contacts\n\n" +
+        "- For a fully private goodsh, tap the lock\n\n",
+        dialog_button: 'OK',
     },
     home: {
         wizard: {

@@ -65,7 +65,6 @@ export default class App {
 
         if (module && module.hot) {
             global.reloads = 0;
-            //deactivate the hot reloading :'(
             // module.hot.accept(() => {
             //     ++global.reloads;
             //     console.info(`hot reload (#${global.reloads})`);
