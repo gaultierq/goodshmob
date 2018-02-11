@@ -258,7 +258,7 @@ export default {
         send_to_goodsher: "Envoyer à un contact",
         skip: "OK",
         ask: "Demander à mon réseau",
-        ask_button: "SEND",
+        ask_button: "ASK",
         invite: "Inviter un ami"
 
     },

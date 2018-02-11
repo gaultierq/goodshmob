@@ -262,7 +262,7 @@ export default {
         send_to_goodsher: "Send to another\nuser",
         skip: "OK",
         ask: "Ask my network",
-        ask_button: "SEND",
+        ask_button: "ASK",
         invite: "Invite a friend"
     },
     common: {
