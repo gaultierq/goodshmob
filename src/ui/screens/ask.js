@@ -100,7 +100,9 @@ export default class AskScreen extends Component<Props, State> {
                                 <GTouchable
                                     onPress={()=>this.createAsk()}
                                     style={{backgroundColor: Colors.white, borderRadius: 6, padding: 4, paddingRight: 8, paddingLeft: 8}}>
-                                    <Text style={{color: Colors.green, fontSize: 14}}>SEND</Text>
+                                    <Text style={{color: Colors.green, fontSize: 14}}>
+                                        {i18n.t("actions.ask_button")}
+                                    </Text>
                                 </GTouchable>
                             </View>
                         </View>
