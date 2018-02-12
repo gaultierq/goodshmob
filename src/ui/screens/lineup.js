@@ -17,6 +17,7 @@ import {startAddItem} from "../Nav";
 import {Colors} from "../colors";
 import Screen from "./../components/Screen";
 import {STYLES} from "../UIStyles";
+import {fullName} from "../../helpers/StringUtils";
 
 type Props = {
     lineupId: string,
@@ -39,31 +40,17 @@ const DELETE_SAVING = ApiAction.create("delete_saving");
 class LineupScreen extends Screen<Props, State> {
 
 
-    //titleSet because when navigating back, a render may change the nav bar title. this is a flaw in wix nav
-    state = {title: null, titleSet: false};
-
     render() {
         const lineup = this.getLineup();
 
-        //FIXME: this is shit
-        if (!this.state.titleSet) {
-            if (this.state.title) {
-                this.setState({titleSet: true}, () => this.props.navigator.setTitle(this.state.title));
-            }
-            else if (lineup) {
-                //let user:User = lineup.user;
-                let title = lineup.name;
-                let titleImage = /*user.goodshbox.id === lineup.id ? require('../../img/goodshbox.png') : */null;
-                this.props.navigator.setTitle({title, titleImage});
-                this.setState({title: {title, titleImage}});
-                let user = lineup.user;
-                if (user && user.id !== currentUserId()) {
-                    this.props.navigator.setSubTitle({
-                        subtitle: "Par " + user.firstName + " " + user.lastName
-                    });
-                }
-            }
-        }
+        let subtitle = () => {
+            const user = _.get(lineup, 'user');
+            //MagicString
+            return user && "Par " + fullName(user)
+        };
+
+        this.setNavigatorTitle(this.props.navigator, {title: _.get(lineup, 'name'), subtitle: subtitle()});
+
 
         let savings, fetchSrc;
         if (lineup && lineup.savings) {

@@ -37,9 +37,9 @@ export default class CommentCell extends Component<Props, State> {
 
         let borderStyle = (i, radius) => {
 
-            const smallRadius = 4;
             let isFirst = i === 0;
             let isLast = i === comments.length - 1;
+            const smallRadius = radius / 4;
             if (rightDisplay) {
                 return {
                     borderTopLeftRadius: radius,

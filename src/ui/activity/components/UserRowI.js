@@ -48,7 +48,7 @@ export default class UserRowI extends React.Component<Props, State> {
             <View style={{flex:1}}>
                 <View style={[styles.rightContainer]}>
                     <Text style={styles.rightText}>{user && user.firstName}</Text>
-                    {this.props.rightComponent}
+                    {rightComponent}
 
                 </View>
 

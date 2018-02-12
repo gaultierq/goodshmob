@@ -6,7 +6,7 @@ import {styleMargin, stylePadding, STYLES} from "../../UIStyles";
 import {Avatar} from "../../UIComponents";
 import type {Activity, RNNNavigator} from "../../../types";
 import Octicons from "react-native-vector-icons/Octicons";
-import {seeList} from "../../Nav";
+import {seeList, seeUser} from "../../Nav";
 import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "../../fonts";
 import GTouchable from "../../GTouchable";
 import {isSaving, isSending, timeSinceActivity} from "../../../helpers/DataUtils";
@@ -69,7 +69,7 @@ type State = {
 export default class ActivityStatus extends React.Component<Props, State> {
 
     render() {
-        const {activity, skipLineup, style, cardStyle, children} = this.props;
+        const {activity, skipLineup, style, cardStyle, children, navigator} = this.props;
         let rightComponent;
         if (isSaving(activity) && !skipLineup) {
             rightComponent = this.renderSavedInList();
@@ -84,16 +84,18 @@ export default class ActivityStatus extends React.Component<Props, State> {
                     padding: 6,
                 },cardStyle
                 ]}>
-                    <UserRowI
-                        // activityTime={activity.createdAt}
-                        user={activity.user}
-                        navigator={this.props.navigator}
-                        rightComponent={rightComponent}
-                    >
-                        <Text style={[styles.userText, {alignSelf: 'flex-start', ...stylePadding(0, 3)}]}>{timeSinceActivity(activity)}</Text>
+                    <GTouchable onPress={() => seeUser(this.props.navigator, activity.user)}>
+                        <UserRowI
+                            // activityTime={activity.createdAt}
+                            user={activity.user}
+                            navigator={this.props.navigator}
+                            rightComponent={rightComponent}
+                        >
+                            <Text style={[styles.userText, {alignSelf: 'flex-start', ...stylePadding(0, 3)}]}>{timeSinceActivity(activity)}</Text>
 
-                    </UserRowI>
+                        </UserRowI>
 
+                    </GTouchable>
                     {activity.description && this.renderDescription(activity)}
                 </View>
                 {children}
