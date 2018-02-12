@@ -27,12 +27,42 @@ export const communityScreen = {
     }
 };
 
-export const activityDetailScreen = {
+export const sendingDetail = {
     screen: {
         screen: 'goodsh.ActivityDetailScreen',
     },
     passProps: {
-        activityId: "2d9cb677-9d8f-441b-9aa5-ee0b3a66d28a",
+        activityId: "f5c41253-7ab4-4311-bf6a-d7d62ca33fab",
+        activityType: "sendings"
+    }
+};
+
+export const savingDetail = {
+    screen: {
+        screen: 'goodsh.ActivityDetailScreen',
+    },
+    passProps: {
+        activityId: "c36bc6e3-1425-40af-a1d9-8e31c2dc2a69",
+        activityType: "savings"
+    }
+};
+
+export const dragonBallZSending = {
+    screen: {
+        screen: 'goodsh.ActivityDetailScreen',
+    },
+    passProps: {
+        activityId: "f5c41253-7ab4-4311-bf6a-d7d62ca33fab",
+        activityType: "sendings"
+    }
+};
+
+export const ebauchoirDetail = {
+    screen: {
+        screen: 'goodsh.ActivityDetailScreen',
+    },
+    passProps: {
+        activityId: "ea9a9d93-3818-473d-b9d2-833b5dc17c7f",
         activityType: "savings"
     }
 };

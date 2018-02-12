@@ -90,32 +90,45 @@ export const TP_MARGINS = (margin) => {
     }
 };
 
+let styleLTRB = function (args, method) {
+
+
+    if (args[0] != null && args[2] == null) args[2] = args[0];
+    if (args[1] != null && args[3] == null) args[3] = args[1];
+
+
+    return ['left', 'top', 'right', 'bottom'].reduce((res, p, i) => {
+        let arg = args[i];
+
+        if (arg != null) {
+            let newVar;
+            if (typeof method === 'string') {
+                newVar = method + toUppercase(p);
+            }
+            else {
+                newVar = method(p);
+            }
+
+
+            Object.assign(res, {[newVar]: arg});
+        }
+        return res;
+    }, {});
+};
+
 //stylePadding(12, null) => left = righ = 12
 //stylePadding(12, 14) => left = righ = 12
 export function stylePadding(left?: number, top?: number, right?: number, bottom?: number) {
-
-    const method = "padding";
-    const args = arguments;
-
-    let styleLTRB = function () {
-
-
-        if (args[0] != null && args[2] == null) args[2] = args[0];
-        if (args[1] != null && args[3] == null) args[3] = args[1];
-
-
-        return ['left', 'top', 'right', 'bottom'].reduce((res, p, i) => {
-            let arg = args[i];
-            if (arg != null) {
-                Object.assign(res, {[method + toUppercase(p)]: arg});
-            }
-            return res;
-        }, {});
-    };
-    return styleLTRB();
+    return styleLTRB(arguments, "padding");
 }
 
+export function styleMargin(left?: number, top?: number, right?: number, bottom?: number) {
+    return styleLTRB(arguments, "margin");
+}
 
+export function styleBorder(left?: number, top?: number, right?: number, bottom?: number) {
+    return styleLTRB(arguments, direction=> "border" + toUppercase(direction) + "Width");
+}
 
 //TODO: convert to stylesheet
 export const TEXT_LIST = {fontSize: 14, color: Colors.blue};
@@ -215,6 +228,24 @@ export const STYLES = StyleSheet.create({
         borderColor: Colors.greyish,
         fontFamily: SFP_TEXT_ITALIC,
         fontSize: 12
+
+    },
+    tag2: {
+        paddingLeft: 6, paddingRight: 6,
+
+        alignSelf: 'stretch',
+        borderRadius: 8,
+        height: 16,
+
+        textAlignVertical: 'center',
+        // padding: 2,
+        borderWidth: StyleSheet.hairlineWidth,
+        borderColor: Colors.greyish,
+
+        color: Colors.greyish,
+        fontFamily: SFP_TEXT_ITALIC,
+        fontSize: 10,
+        lineHeight: 10
 
     }
 });

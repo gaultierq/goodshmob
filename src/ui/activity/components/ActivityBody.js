@@ -15,20 +15,15 @@ import {
 import * as UI from "../../UIStyles";
 import {connect} from "react-redux";
 import {logged} from "../../../managers/CurrentUser"
-import type {Activity, i18Key} from "../../../types"
+import type {Activity} from "../../../types"
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
 import ActionRights from "../../rights";
 import Button from 'apsl-react-native-button';
-import {SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "../../fonts";
-import {seeList, seeUser} from "../../Nav";
-import GTouchable from "../../GTouchable";
+import {SFP_TEXT_ITALIC} from "../../fonts";
 import {CachedImage} from "react-native-img-cache";
 import Icon from 'react-native-vector-icons/Feather';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Octicons from 'react-native-vector-icons/Octicons';
 import {firstName} from "../../../helpers/StringUtils";
-import {Avatar, renderTag} from "../../UIComponents";
-import {stylePadding} from "../../UIStyles";
+import FeedSeparator from "./FeedSeparator";
 
 
 type Props = {
@@ -73,66 +68,10 @@ export default class ActivityBody extends React.Component<Props, State> {
                             {this.renderBuyButton(activity)}
                         </View>
                         {/*{this.renderDescription(activity)}*/}
-                        <View style={{flex:1, flexDirection: 'row', ...stylePadding(0, 14)}}>
-                            <Avatar user={activity.user} style={{dim: 26, marginRight: 8, marginTop: 0}}/>
-                            <View style={{flex:1, marginTop: 3}}>
-                                {this.renderTags()}
-                            </View>
-
-                        </View>
-
-                        <View style={{flex:1, flexDirection: 'row', }}>
-                            {activity.description && <Octicons name="quote" size={10} color={Colors.brownishGrey} style={{alignSelf: 'flex-start'}}/>}
-                            {activity.description && <Text numberOfLines={3} style={[styles.description, {flex:1, alignItems: 'center', textAlignVertical: 'center', ...stylePadding(6, 0)}]}>{activity.description}</Text>}
-
-                        </View>
                     </View>
                 )}
             </View>
         )
-    }
-
-
-    renderTags() {
-        let activity, target, targetName: string, key: i18Key, press: () => void;
-        if (!(activity = this.props.activity)) return null;
-        if (activity.type === 'asks') throw 'no ask';
-
-        // const {skipLineup, withFollowButton} = this.props;
-        // if (skipLineup) return null;
-
-
-        if (!(target = activity.target)) return null;
-
-        if (target.type === 'lists') {
-            let count = target.meta ? target.meta["savingsCount"] : 0;
-            targetName = target.name;
-            if (count) targetName += " (" + count + ")";
-
-            key = "activity_item.header.in";
-            press = () => seeList(this.props.navigator, target);
-        }
-        else if (target.type === 'users') {
-            // targetName = target.firstName + " " + target.lastName;
-            // key = "activity_item.header.to";
-            // press = () => seeUser(this.props.navigator, target);
-            //new spec. todo clean
-            return null;
-        }
-        if (!this.props.skipLineup) {
-            return(
-                <View style={styles.tag}>
-                    <Text style={{
-                        textAlign: 'center',
-                        marginRight: 8,
-                        fontFamily: SFP_TEXT_MEDIUM,
-                        fontsize: 12,
-                        color: Colors.greyishBrown}}>{i18n.t(key)}</Text>
-                    {renderTag(targetName, press)}
-                </View>
-            )
-        }
-        else  return null;
     }
 
 
@@ -186,8 +125,24 @@ export default class ActivityBody extends React.Component<Props, State> {
             outputRange: [0, 1]
         });
 
-        return <View style={[styles.imageContainer, {height: imageHeight}]}>
+        const shadowOpt = {
+            width:"100%",
+            height:imageHeight,
+            color:"#000",
+            border:5,
+            radius:3,
+            opacity:1,
+            x:0,
+            y:3,
+            style:{marginVertical:5}
+        }
 
+        return <View style={[styles.imageContainer,
+            {height: imageHeight,
+            }
+            ]}>
+
+            {/*<BoxShadow setting={shadowOpt}>*/}
             <CachedImage
                 source={image ? {uri: image} : require('../../../img/goodsh_placeholder.png')}
                 resizeMode={resize}
@@ -200,6 +155,7 @@ export default class ActivityBody extends React.Component<Props, State> {
                     <Image resizeMode={'cover'} style={{}} source={require('../../../img2/yeaahAction.png')}/>
                 </Animated.View>
             }
+            {/*</BoxShadow>*/}
 
         </View>
 

@@ -32,7 +32,7 @@ export default {
     no_spam: {
         dialog_title: "Les 3 grands principes de Goodsh",
         dialog_body: "Tes goodsh ne sont visibles QUE par toi et ton réseau.\n\nQuand tu enregistres un goodsh, tes contacts ne sont PAS notifiés. \n\nPour un goodsh COMPLÈTEMENT privé, active le cadenas.",
-        dialog_button: 'OK, GO!',
+        dialog_button: 'OK',
     },
     home: {
         wizard: {
@@ -53,7 +53,8 @@ export default {
     "activity_item": {
         header: {
             in: "a ajouté dans",
-            to: "à",
+            added_somewhere: "l'a ajouté",
+            to: "à envoyé à",
             ask: "a besoin de recos !",
         },
         buttons:{
@@ -80,8 +81,28 @@ export default {
     },
     "activity_screen":{
         "comments":{
-            "no_comments":"Donner son avis",
+            "no_comments":"Pas encore de commentaire. Donner son avis",
             "user_answered":"a commenté",
+            "has_commented": {
+                zero: "%{first} a commenté:",
+                one: "%{first} et %{second} ont commenté:",
+                other: "%{first} et %{count} autres ont commenté:"
+            },
+            "has_commented_this": {
+                zero: "%{first} a commenté ceci",
+                one: "%{first} et %{second} ont commenté ceci",
+                other: "%{first} et %{count} autres ont commenté ceci"
+            },
+            "has_commented_this_as_well": {
+                zero: "%{first} a aussi commenté ceci",
+                one: "%{first} et %{second} ont aussi commenté ceci",
+                other: "%{first} et %{count} autres ont aussi commenté ceci"
+            },
+            "see_theirs_comments": {
+                zero: "Voir ses commentaires",
+                one: "Voir ses commentaires",
+                other: "Voir leurs commentaires"
+            }
         }
     },
     "login_screen":{
@@ -100,6 +121,9 @@ export default {
     "profile_screen":{
         "title":"Feedback",
         "subtitle":"##Comment tu la trouves ? Tu la kiffes ? Qu'est-ce qui manque cruellement ? On a très envie de savoir...",
+    },
+    "detail_screen":{
+        "related_activities_title": "Autres activités:"
     },
     "create_list_controller":{
         "title":"Nouvelle liste",
@@ -166,11 +190,7 @@ export default {
     },
     util: {
         time: {
-            since_seconds: {
-                zero: "",
-                one: "Il y a 1 seconde",
-                other: "Il y a %{count} secondes"
-            },
+            since_seconds: "à l'instant",
             since_minutes: {
                 zero: "",
                 one: "Il y a 1 minute",

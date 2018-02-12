@@ -31,8 +31,10 @@ export default {
     },
     no_spam: {
         dialog_title: "The 3 pillars of Goodsh",
-        dialog_body: "Your goodsh are ONLY visible by you and your friends.\nWhen you save a goodsh, we DON'T notify your contacts.\nFor a fully private goodsh, tap the lock.\n\n",
-        dialog_button: 'Ok, LET\'S GO!',
+        dialog_body: "- Your goodsh are **ONLY** visible by you and your friends\n\n" +
+        "- When you save a goodsh, we **DON'T** notify your contacts\n\n" +
+        "- For a fully private goodsh, tap the lock\n\n",
+        dialog_button: 'OK',
     },
     home: {
         wizard: {
@@ -53,7 +55,8 @@ export default {
     "activity_item":{
         header: {
             in: "added in",
-            to: "to",
+            added_somewhere: "added it",
+            to: "sent it to",
             ask: "needs some tips!",
         },
         buttons:{
@@ -81,8 +84,28 @@ export default {
     },
     "activity_screen":{
         "comments":{
-            "no_comments":"Reply",
+            "no_comments":"No comment yet. Add a comment",
             "user_answered":"replied",
+            "has_commented": {
+                zero: "%{first} a commenté:",
+                one: "%{first} et %{second} ont commenté:",
+                other: "%{first} et %{count} autres ont commenté:"
+            },
+            "has_commented_this": {
+                zero: "%{first} a commenté ceci",
+                one: "%{first} et %{second} ont commenté ceci",
+                other: "%{first} et %{count} autres ont commenté ceci"
+            },
+            "has_commented_this_as_well": {
+                zero: "%{first} a aussi commenté ceci",
+                one: "%{first} et %{second} ont aussi commenté ceci",
+                other: "%{first} et %{count} autres ont aussi commenté ceci"
+            },
+            "see_theirs_comments": {
+                zero: "Voir ses commentaires",
+                one: "Voir ses commentaires",
+                other: "Voir leurs commentaires"
+            }
         }
     },
     "login_screen":{
@@ -101,6 +124,9 @@ export default {
     "profile_screen":{
         "title":"Feedback",
         "subtitle":"##Is this what you've been dreaming of? How good do you feel? What's badly missing? We can't wait to know…"
+    },
+    "detail_screen":{
+        "related_activities_title": "Related activities:"
     },
     "create_list_controller":{
         "title":"Add new",
@@ -167,11 +193,7 @@ export default {
     },
     util: {
         time: {
-            since_seconds: {
-                zero: "",
-                one: "1 second ago",
-                other: "%{count} seconds ago"
-            },
+            since_seconds: "just now",
             since_minutes: {
                 zero: "",
                 one: "1 minute ago",

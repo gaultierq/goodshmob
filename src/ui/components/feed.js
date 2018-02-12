@@ -71,14 +71,13 @@ type State = {
 }))
 export default class Feed<T> extends Component<Props<T>, State>  {
 
-    keyExtractor = (item, index) => item.id;
-
     state = {firstLoad: 'idle'};
 
     createdAt: ms;
 
     static defaultProps = {
-        visibility: 'unknown'
+        visibility: 'unknown',
+        keyExtractor: item => item.id
     };
 
     _listener: ()=>boolean;
@@ -187,7 +186,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         let params =  {
             ref: "feed",
             renderItem,
-            keyExtractor: this.keyExtractor,
+            // keyExtractor: this.keyExtractor,
             refreshControl: this.renderRefreshControl(),
             onEndReached: this.onEndReached.bind(this),
             onEndReachedThreshold: 0.1,
@@ -279,7 +278,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         };
 
         return (
-            <View style={[{}, style]}>
+            <View key={'searchbar_container'} style={[style]}>
                 {React.createElement(Search, {
                     backgroundColor: Colors.white82,
                     placeholderTextColor: color, //TODO
@@ -531,8 +530,9 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     fetchMore(options ?: any = {}) {
         let last = this.getLastItem();
         if (last) {
-            if (!last.id) throw "no id found for this item:" + last;
-            return this.tryFetchIt({afterId: last.id, ...options});
+            const lastId = this.props.keyExtractor(last);
+            if (!lastId) throw "no id found for this item:" + JSON.stringify(last);
+            return this.tryFetchIt({afterId: lastId, ...options});
         }
         return false;
     }

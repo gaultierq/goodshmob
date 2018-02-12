@@ -9,6 +9,7 @@ import {fullName} from "../../../helpers/StringUtils";
 import {Colors} from "../../colors";
 import GTouchable from "../../GTouchable";
 import {SFP_TEXT_ITALIC} from "../../fonts";
+import ActivityStatus from "./ActivityStatus";
 
 type Props = {
     activity: Activity,
@@ -28,8 +29,6 @@ export default class ActivityDescription extends React.Component<Props, State> {
         //let activity: Model.Activity = this.props.activity;
         let user: User = activity.user;
 
-        let cardMargin = 12;
-
 
         return(
             <View style={styles.descriptionContainer}>
@@ -45,6 +44,10 @@ export default class ActivityDescription extends React.Component<Props, State> {
                 {!!activity.description && <Text style={styles.description}>{'"' + activity.description + '"'}</Text>}
             </View>
         );
+    }
+
+    render() {
+        return <ActivityStatus {...this.props}/>
     }
 
     renderAsk() {

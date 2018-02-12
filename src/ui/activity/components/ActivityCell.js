@@ -6,7 +6,7 @@ import {Image, Linking, Share, StyleSheet, Text, TouchableOpacity, View} from 'r
 import {connect} from "react-redux";
 import {logged} from "../../../managers/CurrentUser"
 import {buildNonNullData, sanitizeActivityType} from "../../../helpers/DataUtils";
-import type {Activity, ActivityType, Id, RNNNavigator} from "../../../types"
+import type {Activity, ActivityType, i18Key, Id, RNNNavigator} from "../../../types"
 import ActivityBody from "./ActivityBody";
 import ActivityActionBar from "./ActivityActionBar";
 import {Avatar, renderTag} from "../../UIComponents";
@@ -21,6 +21,8 @@ import {stylePadding} from "../../UIStyles";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {firstName} from "../../../helpers/StringUtils";
 import Octicons from "react-native-vector-icons/Octicons";
+import ActivityStatus from "./ActivityStatus";
+import FeedSeparator from "./FeedSeparator";
 
 export type ActivityDisplayContext = {
 
@@ -84,34 +86,20 @@ export default class ActivityCell extends React.Component<Props, State> {
             )
         }
 
-        let target = activity.target;
-        let postedToUser = target && target.type === 'users' && target;
-        // const {skipLineup, withFollowButton} = this.props;
-        // if (skipLineup) return null;
-
-        const user = activity.user;
         return (
             <View>
 
-                {/*<View style={{flex:1, borderColor: 'black', backgroundColor: 'white', flexDirection: 'row', ...stylePadding(14, 14)}}>*/}
-                    {/*<Avatar user={activity.user} style={{dim: 26, marginRight: 8, marginTop: 0}}/>*/}
-                    {/*<View style={{flex:1, marginTop: 3}}>*/}
-                        {/*{this.renderTags()}*/}
-                        {/*<View style={{flex:1, flexDirection: 'row', marginTop: 15}}>*/}
-                            {/*{activity.description && <Octicons name="quote" size={10} color={Colors.brownishGrey} style={{alignSelf: 'flex-start'}}/>}*/}
-                            {/*{activity.description && <Text numberOfLines={3} style={[styles.description, {flex:1, alignItems: 'center', textAlignVertical: 'center', ...stylePadding(10, 0)}]}>{activity.description}</Text>}*/}
-
-                        {/*</View>*/}
-
-                    {/*</View>*/}
-                {/*</View>*/}
-
-
-                <View style={_styles.posted}>
-                    {/*{this.renderUserGeneral(user, postedToUser)}*/}
-                </View>
-
                 <View>
+
+                    <ActivityStatus
+                        activity={activity}
+                        skipLineup={this.props.skipLineup}
+                        navigator={this.props.navigator}
+                        cardStyle={{padding: 8,
+                        }}
+                    />
+                    <FeedSeparator/>
+
                     <GTouchable activeOpacity={0.9} onPress={this.props.onPressItem} onDoublePress={() => {
                         let liked = this.isLiked(activity);
                         const toggleLike = liked ? activityAction.unlike : activityAction.like;
@@ -123,11 +111,18 @@ export default class ActivityCell extends React.Component<Props, State> {
                             navigator={this.props.navigator}
                             skipLineup={this.props.skipLineup}
                         />
+
+                        {/*<ActivityStatus*/}
+                            {/*activity={activity}*/}
+                            {/*skipLineup={this.props.skipLineup}*/}
+                            {/*navigator={this.props.navigator}*/}
+                        {/*/>*/}
+
                     </GTouchable>
 
                     {/*<FeedSeparator/>*/}
 
-                    {__DEBUG_SHOW_IDS__ && this.renderDebugActivityInfo(activity) }
+                    {__DEBUG_SHOW_IDS__ && this.renderDebugActivityInfo(activity)}
                     <ActivityActionBar
                         activityId={activity.id}
                         activityType={activity.type}
@@ -139,48 +134,71 @@ export default class ActivityCell extends React.Component<Props, State> {
     }
 
 
+    // renderActivity(activity) {
+    //
+    //     return <View>
+    //         <View style={{flex: 1, flexDirection: 'row', ...stylePadding(0, 14)}}>
+    //             <Avatar user={activity.user} style={{dim: 26, marginRight: 8, marginTop: 0}}/>
+    //             <View style={{flex: 1, marginTop: 3}}>
+    //                 {this.renderTags()}
+    //             </View>
+    //
+    //         </View>
+    //
+    //         <View style={{flex: 1, flexDirection: 'row',}}>
+    //             {activity.description &&
+    //             <Octicons name="quote" size={10} color={Colors.brownishGrey} style={{alignSelf: 'flex-start'}}/>}
+    //             {activity.description && <Text numberOfLines={3} style={[styles.description, {
+    //                 flex: 1,
+    //                 alignItems: 'center',
+    //                 textAlignVertical: 'center', ...stylePadding(6, 0)
+    //             }]}>{activity.description}</Text>}
+    //
+    //         </View>
+    //     </View>;
+    // }
 
-    renderTags() {
-        let activity, target, targetName: string, key: i18Key, press: () => void;
-        if (!(activity = this.getActivity())) return null;
-        if (activity.type === 'asks') throw 'no ask';
-
-        // const {skipLineup, withFollowButton} = this.props;
-        // if (skipLineup) return null;
-
-
-        if (!(target = activity.target)) return null;
-
-        if (target.type === 'lists') {
-            let count = target.meta ? target.meta["savingsCount"] : 0;
-            targetName = target.name;
-            if (count) targetName += " (" + count + ")";
-
-            key = "activity_item.header.in";
-            press = () => seeList(this.props.navigator, target);
-        }
-        else if (target.type === 'users') {
-            // targetName = target.firstName + " " + target.lastName;
-            // key = "activity_item.header.to";
-            // press = () => seeUser(this.props.navigator, target);
-            //new spec. todo clean
-            return null;
-        }
-        if (!this.props.skipLineup) {
-            return(
-                <View style={styles.tag}>
-                    <Text style={{
-                        textAlign: 'center',
-                        marginRight: 8,
-                        fontFamily: SFP_TEXT_MEDIUM,
-                        fontsize: 12,
-                        color: Colors.greyishBrown}}>{i18n.t(key)}</Text>
-                    {renderTag(targetName, press)}
-                </View>
-            )
-        }
-        else  return null;
-    }
+    // renderTags() {
+    //     let activity, target, targetName: string, key: i18Key, press: () => void;
+    //     if (!(activity = this.getActivity())) return null;
+    //     if (activity.type === 'asks') throw 'no ask';
+    //
+    //     // const {skipLineup, withFollowButton} = this.props;
+    //     // if (skipLineup) return null;
+    //
+    //
+    //     if (!(target = activity.target)) return null;
+    //
+    //     if (target.type === 'lists') {
+    //         let count = target.meta ? target.meta["savingsCount"] : 0;
+    //         targetName = target.name;
+    //         if (count) targetName += " (" + count + ")";
+    //
+    //         key = "activity_item.header.in";
+    //         press = () => seeList(this.props.navigator, target);
+    //     }
+    //     else if (target.type === 'users') {
+    //         // targetName = target.firstName + " " + target.lastName;
+    //         // key = "activity_item.header.to";
+    //         // press = () => seeUser(this.props.navigator, target);
+    //         //new spec. todo clean
+    //         return null;
+    //     }
+    //     if (!this.props.skipLineup) {
+    //         return(
+    //             <View style={styles.tag}>
+    //                 <Text style={{
+    //                     textAlign: 'center',
+    //                     marginRight: 8,
+    //                     fontFamily: SFP_TEXT_MEDIUM,
+    //                     fontsize: 12,
+    //                     color: Colors.greyishBrown}}>{i18n.t(key)}</Text>
+    //                 {renderTag(targetName, press)}
+    //             </View>
+    //         )
+    //     }
+    //     else  return null;
+    // }
 
 
     getAskBackgroundColor(activity: Activity) {
@@ -200,27 +218,27 @@ export default class ActivityCell extends React.Component<Props, State> {
         )
     }
 
-    renderUserGeneral(user: User, user2?: User, style?: ?*) {
-        let navigator: RNNNavigator = this.props.navigator;
-        // let result = this.wrapUserAvatar(
-        return this.wrapUserAvatar(
-            <View style={_styles.userWrap}>
-                {this.renderAvatar(navigator, user)}
-                {user2 && <Image style={_styles.userImage} tintColor={Colors.black} source={require('../../../img2/rightArrowSmallGrey.png')}/>}
-                {user2 && this.renderAvatar(navigator, user2)}
-            </View>,
-            style
-        );
-    }
+    // renderUserGeneral(user: User, user2?: User, style?: ?*) {
+    //     let navigator: RNNNavigator = this.props.navigator;
+    //     // let result = this.wrapUserAvatar(
+    //     return this.wrapUserAvatar(
+    //         <View style={_styles.userWrap}>
+    //             {this.renderAvatar(navigator, user)}
+    //             {user2 && <Image style={_styles.userImage} tintColor={Colors.black} source={require('../../../img2/rightArrowSmallGrey.png')}/>}
+    //             {user2 && this.renderAvatar(navigator, user2)}
+    //         </View>,
+    //         style
+    //     );
+    // }
 
-    renderAvatar(navigator, user) {
-
-        return <GTouchable onPress={() => seeUser(navigator, user)}>
-            <Avatar user={user} style={{
-                dim: AVATAR_DIM,
-            }}/>
-        </GTouchable>;
-    }
+    // renderAvatar(navigator, user) {
+    //
+    //     return <GTouchable onPress={() => seeUser(navigator, user)}>
+    //         <Avatar user={user} style={{
+    //             dim: AVATAR_DIM,
+    //         }}/>
+    //     </GTouchable>;
+    // }
 
     wrapUserAvatar(children: Node, styles?: *) {
         const padding = 3;

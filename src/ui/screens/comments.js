@@ -2,8 +2,8 @@
 import React from 'react';
 import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
 import {connect} from "react-redux";
-import {currentUser, logged} from "../../managers/CurrentUser"
-import {MainBackground} from "../UIComponents";
+import {currentUser, isCurrentUser, logged} from "../../managers/CurrentUser"
+import {MainBackground, TRANSPARENT_SPACER} from "../UIComponents";
 import Immutable from 'seamless-immutable';
 import * as Api from "../../managers/Api";
 import {Call} from "../../managers/Api";
@@ -11,16 +11,17 @@ import Feed from "../components/feed";
 import type {Activity, ActivityType, Comment, Id} from "../../types";
 import ApiAction from "../../helpers/ApiAction";
 import {buildData, doDataMergeInState, sanitizeActivityType} from "../../helpers/DataUtils";
-import UserActivity from "../activity/components/UserActivity";
-import FeedSeparator from "../activity/components/FeedSeparator";
 import {fetchActivity} from "../activity/actions";
-import SmartInput from "../components/SmartInput";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import type {PendingAction} from "../../helpers/ModelUtils";
 import {mergeItemsAndPendings, pendingActionWrapper} from "../../helpers/ModelUtils";
 import {Colors} from "../colors";
 import Screen from "../components/Screen";
-import {STYLES} from "../UIStyles";
+import {component as CommentInput} from "../components/CommentInput"
+import {styleMargin, STYLES} from "../UIStyles";
+import ActivityStatus from "../activity/components/ActivityStatus";
+import CommentCell from "../components/CommentCell";
+import MultiMap from "multimap";
 
 
 const LOAD_COMMENTS = ApiAction.create("load_comments");
@@ -61,98 +62,27 @@ class CommentsScreen extends Screen<Props, State> {
             .then(this.setState({isFetchingActivity: false}))
     }
 
-    // render() {
-    //     let activity = this.getActivity();
-    //     let comments = activity ? activity.comments : [];
-    //
-    //     let items = mergeItemsAndPendings(
-    //         comments,
-    //         this.props.pending[CREATE_COMMENT],
-    //         [],
-    //         (pending) => ({
-    //             id: pending.id,
-    //             name: pending.payload.listName,
-    //             content: pending.payload.content,
-    //             createdAt: pending.insertedAt,
-    //             user: currentUser(),
-    //             type: 'comments',
-    //             pending: true
-    //         })
-    //     );
-    //
-    //     return (
-    //
-    //         <View style={{flex:1}}>
-    //             {activity &&
-    //             <View style={{ padding: 12, backgroundColor: Colors.white82 }}>
-    //                 <UserActivity
-    //                     activityTime={activity.createdAt}
-    //                     user={activity.user}
-    //                     navigator={this.props.navigator}
-    //                 />
-    //                 <Text style={styles.comment}>{activity.description}</Text>
-    //             </View>}
-    //
-    //
-    //             {activity &&
-    //             <KeyboardAwareScrollView
-    //                 // style={{ backgroundColor: '#4c69a5' }}
-    //                 // resetScrollToCoords={{ x: 0, y: 0 }}
-    //                 // contentContainerStyle={styles.container}
-    //                 scrollEnabled={false}
-    //                 keyboardShouldPersistTaps={true}
-    //             >
-    //                 <View style={{flex:1, justifyContent: 'flex-end'}}>
-    //                     <Feed
-    //                         inverted
-    //                         data={items}
-    //                         renderItem={this.renderItem.bind(this)}
-    //                         fetchSrc={{
-    //                             callFactory:()=>actions.loadComments(activity),
-    //                             action: LOAD_COMMENTS,
-    //                             options: {activityId: activity.id, activityType: activity.type}
-    //                         }}
-    //                         //hasMore={false}
-    //                         //ItemSeparatorComponent={()=> <FeedSeparator/>}
-    //                     />
-    //
-    //                     <SmartInput
-    //                         containerStyle={{position: 'absolute', bottom: 0, padding: 6, paddingBottom: 10}}
-    //                         inputContainerStyle={{borderRadius: 4, borderWidth: 0}}
-    //                         execAction={(input: string) => this.addComment3(activity, input)}
-    //                         placeholder={"activity_comments_screen.add_comment_placeholder"}
-    //                         returnKeyType={'send'}
-    //                         autoFocus={this.props.autofocus}
-    //                     />
-    //                 </View>
-    //             </KeyboardAwareScrollView>
-    //             }
-    //         </View>
-    //
-    //
-    //
-    //
-    //     );
-    // }
 
     render() {
         let activity = this.getActivity();
-        let comments = activity ? activity.comments : [];
 
-        let items = mergeItemsAndPendings(
-            comments,
+        let comments = mergeItemsAndPendings(
+            activity ? activity.comments : [],
             this.props.pending[CREATE_COMMENT],
             [],
             (pending) => ({
                 id: pending.id,
                 name: pending.payload.listName,
                 content: pending.payload.content,
-                createdAt: pending.insertedAt,
+                createdAt: Date(pending.insertedAt),
                 user: currentUser(),
                 type: 'comments',
                 pending: true
             })
         );
+
+
+
         return (
             <MainBackground>
 
@@ -161,25 +91,28 @@ class CommentsScreen extends Screen<Props, State> {
                         position: 'absolute',
                         width: '100%',
                         top: 0,
-                        padding: 12,
                         backgroundColor:Colors.white,
-                        shadowOffset: {width: 0, height: 4},
-                        shadowColor: Colors.black,
-                        shadowOpacity: 0.3,
-                        shadowRadius: 2,
-                        elevation: 1,
                         zIndex: 10,
                     }
                 }>
-                    <View>
-                        <UserActivity
-                            activityTime={activity.createdAt}
-                            user={activity.user}
-                            navigator={this.props.navigator}
-                        />
-                    </View>
+                    <ActivityStatus
+                        activity={activity}
+                        // skipLineup={this.props.skipLineup}
+                        navigator={this.props.navigator}
+                        style={{
+                            ...styleMargin(0, 0),
+                        }}
+                        cardStyle={{
+                            shadowColor: Colors.greyishBrown,
+                            shadowOffset: {width: 0, height: 4},
+                            shadowOpacity: 0.3,
+                            shadowRadius: 1,
+                            elevation: 3,
+                            marginBottom:3,
+                        }}
+                    />
 
-                    <Text>{activity.description}</Text>
+
                 </View>}
                 {activity && <KeyboardAwareScrollView
                     // style={{ backgroundColor: '#4c69a5' }}
@@ -193,28 +126,42 @@ class CommentsScreen extends Screen<Props, State> {
 
                         <Feed
                             inverted
-                            data={items}
-                            renderItem={this.renderItem.bind(this)}
+                            // data={comments}
+                            // renderItem={this.renderItem.bind(this)}
+                            // ItemSeparatorComponent={()=> <View style={{margin: 60}} />}
+
+                            sections={this.splitCommentsInSections(comments)}
+                            keyExtractor={item => _.head(item).id}
+                            SectionSeparatorComponent={()=> <View style={{margin: 4}} />}
+
+                            renderSectionFooter={({section}) => <Text
+                                style={{
+                                    // alignItems: 'center',
+                                    alignSelf: 'center',
+                                    fontSize: 11,
+                                    // backgroundColor: 'red',
+                                    color: Colors.greyish,
+                                }}>
+                                {section.title}</Text>}
+
+
                             fetchSrc={{
                                 callFactory:()=>actions.loadComments(activity),
                                 action: LOAD_COMMENTS,
                                 options: {activityId: activity.id, activityType: activity.type}
                             }}
-                            ItemSeparatorComponent={()=> <FeedSeparator/>}
                             contentContainerStyle={{
                                 marginBottom: 4, paddingTop: 40,
                                 paddingBottom: 75,
                                 backgroundColor: Colors.greying}}
-                            empty={<Text style={[STYLES.empty_message, {fontSize: 16, paddingBottom: 50}]}>{i18n.t('common.empty_feed_generic')}</Text>}
+                            empty={<Text style={[STYLES.empty_message, {fontSize: 20, paddingBottom: 50}]}>{i18n.t('common.empty_feed_generic')}</Text>}
                         />
 
-                        <SmartInput
+                        <CommentInput
+                            activity={activity}
                             containerStyle={{position: 'absolute', bottom: 0, padding: 3, backgroundColor: Colors.greying}}
                             inputContainerStyle={{borderRadius: 4, borderWidth: 0}}
-                            execAction={(input: string) => this.addComment3(activity, input)}
                             placeholder={"activity_comments_screen.add_comment_placeholder"}
-                            returnKeyType={'send'}
-                            // multiline
                         />
 
                     </View>
@@ -223,60 +170,102 @@ class CommentsScreen extends Screen<Props, State> {
         );
     }
 
+    splitCommentsInSections(comments: Array<Comment>) {
+
+        const sectionsMap = new MultiMap();
+
+
+        comments.forEach(c => {
+            //group by day
+            let day = i18n.strftime(new Date(c.createdAt), "%d/%m/%Y");
+            sectionsMap.set(day, c);
+        });
+
+
+        // [c1, c2, c3] ==> [[c1,c2], [c3]]
+        let groupByAuthor = comments => {
+            const grouped = [];
+
+            for (let i = 0, lastAuthorId = null, lastAuthorIx = null; i <= comments.length; i++) {
+                let current = _.nth(comments,i);
+                const authorId = current && current.user.id;
+
+
+                if (authorId !== lastAuthorId) {
+                    //pushing old group
+                    if (lastAuthorIx !== null) {
+                        let commentsFor1Author = _.slice(comments, lastAuthorIx, i);
+                        commentsFor1Author = _.reverse(commentsFor1Author);
+                        grouped.push(commentsFor1Author);
+                    }
+
+                    //starting new group
+                    lastAuthorIx = i;
+                    lastAuthorId = authorId;
+                }
+            }
+
+
+            return grouped;
+        };
+
+        const authorGrouped = new MultiMap();
+        // group authors
+        sectionsMap.forEachEntry((value, k) => {
+            let groupedByAuthor = groupByAuthor(value);
+            groupedByAuthor = _.reverse(groupedByAuthor);
+            authorGrouped.set(k, ...groupedByAuthor);
+        });
+
+        const sections = [];
+
+
+        authorGrouped.forEachEntry((value, k) => {
+
+            const dateStr = _.nth(_.nth(value, 0), 0).createdAt;
+            const date = new Date(dateStr);
+            let format = Date.now() - Date.parse(dateStr) < 7 * 24 * 60 * 60 * 1000 ? "%a %-H:%M" :  "%d/%m/%-y %-H:%M";
+
+            const data = _.reverse(value);
+            sections.push({
+                // data: data,
+                data: value,
+                title: i18n.strftime(date, format),
+                // subtitle: ` (${savingCount})`,
+                // onPress: () => this.seeLineup(goodshbox.id),
+                renderItem: this.renderItem.bind(this)
+            })
+        });
+
+        return sections;
+    }
 
 
     getActivity() {
         return buildData(this.props.data, this.props.activityType, this.props.activityId);
     }
 
-    // addComment(activity: Activity) {
-    //     if (this.state.isAddingComment) return;
-    //     this.setState({isAddingComment: true});
-    //     this.props.dispatch(actions.addComment(activity, this.state.newComment))
-    //         .then(()=>{
-    //             this.setState({newComment: '', isAddingComment: false});
-    //         });
-    //
-    // }
-
-    // addComment2(activity: Activity, newComment: string) {
-    //     return this.props.dispatch(actions.addComment(activity, newComment))
-    //         .then(()=> {
-    //
-    //         },(e)=> {throw e});
-    // }
-
-
-    addComment3(activity: Activity, newComment: string) {
-        let delayMs = 3000;
-        let activityId = activity.id;
-        let activityType = sanitizeActivityType(activity.type);
-        let content = newComment;
-
-        let payload = {activityId, activityType, content};
-        let options = {delayMs, activityId, activityType};
-
-        return this.props.dispatch(COMMENT_CREATION.pending(payload, options))
-    }
-
     renderItem({item}) {
 
-        let comment : Comment = item.pending ? item : buildData(this.props.data, "comments", item.id);
+        // let comment : Comment = item.pending ? item : buildData(this.props.data, "comments", item.id);
+        let comments = (_.isArray(item) && item || [item]).map(c => c.pending ? c : buildData(this.props.data, "comments", c.id));
 
-        if (!comment) return null;
+        //why ?
+        if (_.isEmpty(comments)) return null;
 
+        const user = _.head(comments).user;
         return (
-            <View style={{padding: 12, paddingTop: 0, paddingBottom: 15, backgroundColor: Colors.white, }}>
-                <UserActivity
-                    activityTime={comment.createdAt}
-                    user={comment.user}
-                    navigator={this.props.navigator}
-                    style={{marginTop:12}}
+            <View style={{padding: 12, paddingTop: 0, paddingBottom: 15, }}>
+                <CommentCell
+                    comment={comments}
+                    user={user}
+                    rightDisplay={isCurrentUser(user)}
+                    skipTime={true}
                 />
-                <Text style={styles.comment}>{comment.content}</Text>
             </View>
         );
     }
+
 }
 
 
@@ -336,15 +325,15 @@ const reducer = (() => {
                 state = doDataMergeInState(state, path, action.payload.data);
                 break;
             }
-            case CREATE_COMMENT.success(): {
-
-                let {id, type} = action.payload.data;
-                let {activityId, activityType} = action.options;
-                activityType = sanitizeActivityType(activityType);
-                let path = `${activityType}.${activityId}.relationships.comments.data`;
-                state = doDataMergeInState(state, path, [{id, type}], {reverse: true});
-                break;
-            }
+            // case CREATE_COMMENT.success(): {
+            //
+            //     let {id, type} = action.payload.data;
+            //     let {activityId, activityType} = action.options;
+            //     activityType = sanitizeActivityType(activityType);
+            //     let path = `${activityType}.${activityId}.relationships.comments.data`;
+            //     state = doDataMergeInState(state, path, [{id, type}], {reverse: true});
+            //     break;
+            // }
 
         }
         //let desc = {fetchFirst: LOAD_COMMENTS};

@@ -386,7 +386,7 @@ export function mergeItemsAndPendings<T>(
 
     let items: Array<T> = [];
 
-    let addCreate = () => {
+    let addPendingCreate = () => {
         _.forEach(pendingCreate, pending => {
             if (pending.state === 'pending' || pending.state === 'processing') {
 
@@ -395,8 +395,10 @@ export function mergeItemsAndPendings<T>(
         })
     };
 
+    if (afterI == null) addPendingCreate();
+
     for (let i = 0;; i++) {
-        if (afterI == null) addCreate();
+
 
         let l = _.get(syncedItems, i);
         if (!l) break;
@@ -406,7 +408,7 @@ export function mergeItemsAndPendings<T>(
 
         items.push(l);
 
-        if (i === afterI) addCreate();
+        if (i === afterI) addPendingCreate();
     }
     return items;
 }

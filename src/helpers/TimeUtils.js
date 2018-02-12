@@ -25,7 +25,7 @@ export function timeSince(lower, upper?) {
     if (interval >= 1) {
         return i18n.t("util.time.since_minutes", {count: interval});
     }
-    return i18n.t("util.time.since_seconds", {count: interval});
+    return i18n.t("util.time.since_seconds");
 }
 
 

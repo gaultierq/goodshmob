@@ -2,14 +2,15 @@
 
 import type {Node} from 'react';
 import React from 'react';
-import {Image, StyleSheet, TextInput, View} from 'react-native';
+import {Image, StyleSheet, Text, TextInput, View} from 'react-native';
 import {isEmpty} from "lodash";
 import type {i18Key, RequestState} from "../../types";
 
 import Button from 'apsl-react-native-button'
 import {Colors} from "../colors";
+import {stylePadding} from "../UIStyles";
 
-type Props = {
+export type Props = {
     placeholder: i18Key,
     execAction: (input: string) => Promise<*>,
     defaultValue?: string,
@@ -20,6 +21,7 @@ type Props = {
     height?: number,
     buttonStyle?: *,
     disabledButtonStyle?: *,
+    extendable?: boolean,
     button?: Node
 };
 
@@ -29,7 +31,6 @@ type State = {
     focus?: boolean
 };
 
-const HEIGHT = 40;
 
 export default class SmartInput extends React.Component<Props, State> {
 
@@ -37,6 +38,7 @@ export default class SmartInput extends React.Component<Props, State> {
 
     static defaultProps = {
         defaultValue: '',
+        height: 40,
         button: <Image source={require('../../img2/sendIcon.png')} resizeMode="contain"/>
     };
 
@@ -57,21 +59,31 @@ export default class SmartInput extends React.Component<Props, State> {
             inputStyle,
             canSendDefault,
             button,
-            // height,
+            height,
+            extendable,
             ...attributes
         } = this.props;
 
-        const height = this.props.height || HEIGHT;
-
-
         const {input} = this.state;
 
+        const isFocus = extendable ? this.state.focus : true;
         return (
-            <View style={[styles.container, containerStyle]}>
-                <View style={[styles.inputContainer, inputContainerStyle, {minHeight: height}]}>
+            <View style={[styles.container, containerStyle, {flex:1, flexDirection: 'row'}]}>
+                <View style={[styles.inputContainer, inputContainerStyle,
+                    {flex:isFocus? 1: 0,
+                        flexDirection: 'row',
+                        minHeight: height,
+                        borderRadius: height / 2,
+                        paddingHorizontal: height / 2,
+                        // ...stylePadding(height / 2, 0)
+                    }
+                ]}>
                     <TextInput
                         editable={!this.isSending()}
-                        style={[styles.input, inputStyle, {color: this.isSending() ? Colors.greyishBrown : 'black'}]}
+                        style={[styles.input, inputStyle, {
+                            flex: isFocus ? 1: 0,
+                            color: this.isSending() ? Colors.greyishBrown : Colors.black,
+                        }]}
                         onSubmitEditing={this.exec.bind(this)}
                         value={input}
                         onFocus={()=>this.setState({focus:true})}
@@ -82,15 +94,15 @@ export default class SmartInput extends React.Component<Props, State> {
                     />
                 </View>
                 {
-                    this.showButton() && <Button
+                    this.showButton() && <View style={{flex: isFocus? 0: 1, flexDirection: 'row', alignItems: 'flex-start'}}><Button
                         isLoading={this.isSending()}
                         isDisabled={(!canSendDefault && this.isDefault()) || this.isSending()}
                         onPress={this.exec.bind(this)}
-                        style={[styles.button, buttonStyle, {height}]}
+                        style={[styles.button, buttonStyle, {height, }]}
                         disabledStyle={[styles.disabledButton, disabledButtonStyle]}
                     >
                         {button}
-                    </Button>
+                    </Button></View>
 
                 }
             </View>
@@ -141,21 +153,17 @@ const styles = StyleSheet.create({
 
     container:{
         flexDirection: 'row',
-        alignItems: 'center',
+        // alignItems: 'center',
     },
     inputContainer:{
 
         flex:1,
-        justifyContent: "center",
-        // minHeight: HEIGHT,
         borderColor: Colors.greyishBrown,
         borderWidth: StyleSheet.hairlineWidth,
-        borderRadius: 6,
         backgroundColor: Colors.white,
     },
     input:{
         fontSize: 18,
-
     },
     button: {
         // height: HEIGHT,

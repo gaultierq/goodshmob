@@ -16,7 +16,6 @@ import ActionRights, {getPendingLikeStatus} from "../../rights";
 import {CREATE_COMMENT} from "../../screens/comments";
 import GTouchable from "../../GTouchable";
 import * as Nav from "../../Nav";
-import Icon from 'react-native-vector-icons/Ionicons';
 
 export type ActivityActionType = 'comment'| 'like'| 'unlike'| 'share'| 'save'| 'unsave'| 'see'| 'buy'| 'answer';
 const ACTIONS = ['comment', 'like', 'unlike','share', 'save', 'unsave', 'see', 'buy', 'answer'];
@@ -26,7 +25,8 @@ type Props = {
     activityId: Id,
     activityType: ActivityType,
     navigator: any,
-    actions?: Array<ActivityActionType>
+    actions?: Array<ActivityActionType>,
+    blackList?: Array<ActivityActionType>,
 };
 
 type State = {
@@ -134,10 +134,12 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
 
     canExec(action: ActivityActionType, activity: Activity) {
-        let {actions} = this.props;
+        let {actions, blackList} = this.props;
         if ((actions || ACTIONS).indexOf(action) < 0) {
             return false;
         }
+
+        if (blackList && blackList.indexOf(action) >= 0) return false;
 
         let canCheck = this['can' + toUppercase(action)];
 
