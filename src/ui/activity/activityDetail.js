@@ -18,20 +18,20 @@ import {currentUser, logged} from "../../managers/CurrentUser"
 import ActivityBody from "./components/ActivityBody";
 import {buildData} from "../../helpers/DataUtils";
 import {Avatar, MainBackground} from "../UIComponents";
-import ActivityDescription from "./components/ActivityDescription";
 import type {Activity, ActivityType, Id} from "../../types";
 import Icon from 'react-native-vector-icons/Entypo';
 import Screen from "../components/Screen";
 import {Colors} from "../colors";
 import GTouchable from "../GTouchable";
 import ActivityStatus from "./components/ActivityStatus";
-import {component as CommentInput} from '../components/CommentInput';
+import {component as CommentInput, CREATE_COMMENT} from '../components/CommentInput';
 import {userFirstName} from "../../helpers/StringUtils";
 import CommentCell from "../components/CommentCell";
 import {styleBorder, styleMargin, stylePadding} from "../UIStyles";
 import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts";
 import ActivityActionBar from "./components/ActivityActionBar";
 import FeedSeparator from "./components/FeedSeparator";
+import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
 
 type Props = {
     activityId: Id,
@@ -47,6 +47,7 @@ type State = {
 @logged
 @connect((state, ownProps) => ({
     data: state.data,
+    pending: state.pending
 }))
 class ActivityDetailScreen extends Screen<Props, State> {
 
@@ -187,15 +188,30 @@ class ActivityDetailScreen extends Screen<Props, State> {
                 }
             });
         }
-
-
     }
 
     renderActivityComments(activity: Activity) {
-        let comments= _.take(activity.comments, 4);
+
+        let comments = mergeItemsAndPendings(
+            activity ? activity.comments : [],
+            this.props.pending[CREATE_COMMENT],
+            [],
+            (pending) => ({
+                id: pending.id,
+                name: pending.payload.listName,
+                content: pending.payload.content,
+                createdAt: Date(pending.insertedAt),
+                user: currentUser(),
+                type: 'comments',
+                pending: true
+            })
+        );
+
+        comments= _.take(comments, 4);
+
         let lastComment = _.head(comments);
 
-        if (lastComment && !lastComment.built) lastComment = null;
+        if (lastComment && !lastComment.built && !lastComment.pending) lastComment = null;
 
         let renderEmpty = () => {
             return (

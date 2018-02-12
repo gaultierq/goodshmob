@@ -62,12 +62,12 @@ class CommentsScreen extends Screen<Props, State> {
             .then(this.setState({isFetchingActivity: false}))
     }
 
+
     render() {
         let activity = this.getActivity();
-        let comments = activity ? activity.comments : [];
 
-        let items = mergeItemsAndPendings(
-            comments,
+        let comments = mergeItemsAndPendings(
+            activity ? activity.comments : [],
             this.props.pending[CREATE_COMMENT],
             [],
             (pending) => ({
@@ -80,6 +80,9 @@ class CommentsScreen extends Screen<Props, State> {
                 pending: true
             })
         );
+
+
+
         return (
             <MainBackground>
 
@@ -123,11 +126,11 @@ class CommentsScreen extends Screen<Props, State> {
 
                         <Feed
                             inverted
-                            // data={items}
+                            // data={comments}
                             // renderItem={this.renderItem.bind(this)}
                             // ItemSeparatorComponent={()=> <View style={{margin: 60}} />}
 
-                            sections={this.splitCommentsInSections(items)}
+                            sections={this.splitCommentsInSections(comments)}
                             keyExtractor={item => _.head(item).id}
                             SectionSeparatorComponent={()=> <View style={{margin: 4}} />}
 
