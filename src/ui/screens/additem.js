@@ -106,7 +106,8 @@ export default class AddItemScreen extends Screen<Props, State> {
         return (
             <KeyboardAwareScrollView
                 contentContainerStyle={{flex:1}}
-                scrollEnabled={false}
+                scrollEnabled={true}
+                extraScrollHeight={20}
                 keyboardShouldPersistTaps={true}
                 // style={{position: 'absolute', bottom:0, top: 0}}
             >
