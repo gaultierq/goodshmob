@@ -83,27 +83,27 @@ export default {
     },
     "activity_screen":{
         "comments":{
-            "no_comments":"Pas encore de commentaire. Donner son avis",
+            "no_comments":"Pas encore de commentaire. Donner son avis.",
             "user_answered":"a commenté",
             "has_commented": {
-                zero: "%{first} a commenté:",
-                one: "%{first} et %{second} ont commenté:",
-                other: "%{first} et %{count} autres ont commenté:"
+                zero: "%{first} a commenté :",
+                one: "%{first} et %{second} ont commenté :",
+                other: "%{first} et %{count} autres ont commenté :"
             },
             "has_commented_this": {
-                zero: "%{first} a commenté ceci",
-                one: "%{first} et %{second} ont commenté ceci",
-                other: "%{first} et %{count} autres ont commenté ceci"
+                zero: "%{first} a commenté",
+                one: "%{first} et %{second} ont commenté",
+                other: "%{first} et %{count} autres ont commenté"
             },
             "has_commented_this_as_well": {
-                zero: "%{first} a aussi commenté ceci",
-                one: "%{first} et %{second} ont aussi commenté ceci",
-                other: "%{first} et %{count} autres ont aussi commenté ceci"
+                zero: "%{first} a aussi commenté",
+                one: "%{first} et %{second} ont aussi commenté",
+                other: "%{first} et %{count} autres ont aussi commenté"
             },
             "see_theirs_comments": {
-                zero: "Voir ses commentaires",
-                one: "Voir ses commentaires",
-                other: "Voir leurs commentaires"
+                zero: "Voir ses commentaires.",
+                one: "Voir ses commentaires.",
+                other: "Voir leurs commentaires."
             }
         }
     },
@@ -125,7 +125,7 @@ export default {
         "subtitle":"##Comment tu la trouves ? Tu la kiffes ? Qu'est-ce qui manque cruellement ? On a très envie de savoir...",
     },
     "detail_screen":{
-        "related_activities_title": "Autres activités:"
+        "related_activities_title": "Autres activités"
     },
     "create_list_controller":{
         "title":"Nouvelle liste",

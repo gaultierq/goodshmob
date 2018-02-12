@@ -86,27 +86,27 @@ export default {
     },
     "activity_screen":{
         "comments":{
-            "no_comments":"No comment yet. Add a comment",
+            "no_comments":"No comment yet. Add a comment.",
             "user_answered":"replied",
             "has_commented": {
-                zero: "%{first} a commenté:",
-                one: "%{first} et %{second} ont commenté:",
-                other: "%{first} et %{count} autres ont commenté:"
+                zero: "%{first} commented:",
+                one: "%{first} and %{second} commented:",
+                other: "%{first} and %{count} more commented:"
             },
             "has_commented_this": {
-                zero: "%{first} a commenté ceci",
-                one: "%{first} et %{second} ont commenté ceci",
-                other: "%{first} et %{count} autres ont commenté ceci"
+                zero: "%{first} commented",
+                one: "%{first} et %{second} commented",
+                other: "%{first} et %{count} more commented"
             },
             "has_commented_this_as_well": {
-                zero: "%{first} a aussi commenté ceci",
-                one: "%{first} et %{second} ont aussi commenté ceci",
-                other: "%{first} et %{count} autres ont aussi commenté ceci"
+                zero: "%{first} commented also",
+                one: "%{first} et %{second} commented also",
+                other: "%{first} et %{count} more commented also"
             },
             "see_theirs_comments": {
-                zero: "Voir ses commentaires",
-                one: "Voir ses commentaires",
-                other: "Voir leurs commentaires"
+                zero: "See their comments.",
+                one: "See their comments.",
+                other: "See their comments."
             }
         }
     },
@@ -128,7 +128,7 @@ export default {
         "subtitle":"##Is this what you've been dreaming of? How good do you feel? What's badly missing? We can't wait to know…"
     },
     "detail_screen":{
-        "related_activities_title": "Related activities:"
+        "related_activities_title": "Related activities"
     },
     "create_list_controller":{
         "title":"Add new",
