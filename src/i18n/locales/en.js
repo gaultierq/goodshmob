@@ -15,7 +15,8 @@ export default {
     },
     lineups: {
         search: {
-            placeholder: "##Search"
+            placeholder: "##Search",
+            empty: "No result",
         },
         filter: {
             empty: "No results. You can try to launch a deep search",
@@ -45,7 +46,8 @@ export default {
     search:{ 
         in_items: "What would you like to save?",
         in_network: "Search in my network",
-        in_feed: "Search in my lists"
+        in_feed: "Search in my lists",
+        by: "by",
     },
     "shared":{
         "goodsh_saved":"Saved",
@@ -177,7 +179,8 @@ export default {
         "add_comment_placeholder":"Reply"
     },
     "send_screen":{
-        "add_description_placeholder":"Add a note (visible only to the recipient)."
+        "add_description_placeholder":"Add a note (visible only to the recipient).",
+        "sent": "Sent"
     },
     "interactions":{
         "saving":"saved %{what}",
@@ -271,6 +274,7 @@ export default {
         delete: "Delete",
         change: "Change",
         change_title: "Change title",
+        change_name: "Rename this list",
         undo: "Undo",
         cancel: "Cancel",
         buy: "Buy",
@@ -285,7 +289,8 @@ export default {
         skip: "OK",
         ask: "Ask my network",
         ask_button: "ASK",
-        invite: "Invite a friend"
+        invite: "Invite a friend",
+        load_more: "Load more"
     },
     common: {
         empty_feed_generic: "If you love it, share it.\nWhy don't you invite some friends to goodsh?",

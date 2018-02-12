@@ -149,7 +149,7 @@ export default class SearchScreen extends Component<Props, State> {
             style={[styles.button, {marginTop: 15}]}
             disabledStyle={styles.button}
         >
-            <Text style={{color: isLoadingMore ? Colors.greyishBrown : Colors.black}}>load more</Text>
+            <Text style={{color: isLoadingMore ? Colors.greyishBrown : Colors.black}}>{i18n.t('actions.load_more')}</Text>
         </Button>);
     }
 
@@ -356,7 +356,7 @@ class SearchPage extends Component<PageProps, PageState> {
                         keyboardShouldPersistTaps={true}
                     />
                 }
-                {emptySearchResult && <Text style={{alignSelf: "center", marginTop: 20}}>Pas de résultat</Text>}
+                {emptySearchResult && <Text style={{alignSelf: "center", marginTop: 20}}>{i18n.t('lineups.search.empty')}</Text>}
 
             </View>
 

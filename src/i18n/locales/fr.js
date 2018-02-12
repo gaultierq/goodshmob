@@ -19,7 +19,8 @@ export default {
             deepsearch: "Recherche approfondie",
         },
         search: {
-            placeholder: "##Rechercher"
+            placeholder: "##Rechercher",
+            empty: "Pas de résultat",
         },
         goodsh : {
             title: "GoodshBox"
@@ -43,7 +44,8 @@ export default {
     search: {
         in_items: "Saisir le nom à enregistrer",
         in_network: "Rechercher dans mon réseau",
-        in_feed: "Rechercher dans mes listes"
+        in_feed: "Rechercher dans mes listes",
+        by: "de"
     },
     "shared":{
         "goodsh_saved":"Enregistré",
@@ -174,7 +176,8 @@ export default {
         "add_comment_placeholder":"Répondre"
     },
     "send_screen":{
-        "add_description_placeholder":"Ajouter un petit mot (visible uniquement par le destinataire)."
+        "add_description_placeholder":"Ajouter un petit mot (visible uniquement par le destinataire).",
+        "sent": "Envoyé"
     },
     "interactions":{
         "saving":"a enregistré %{what}",
@@ -265,6 +268,7 @@ export default {
         delete: "Supprimer",
         change: "Modifier",
         change_title: "Modifier le titre",
+        change_name: "Changer le nom de cette liste",
         undo: "Annuler",
         cancel: "Annuler",
         buy: "Acheter",
@@ -279,7 +283,8 @@ export default {
         skip: "OK",
         ask: "Demander à mon réseau",
         ask_button: "ASK",
-        invite: "Inviter un ami"
+        invite: "Inviter un ami",
+        load_more: "Charger la suite"
 
     },
     common: {

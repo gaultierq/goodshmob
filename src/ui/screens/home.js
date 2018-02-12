@@ -422,7 +422,7 @@ class HomeScreen extends Screen<Props, State> {
         >
             <View style={{ alignItems: 'center'}}>
                 <View style={{ backgroundColor: "white", padding: 12, borderRadius: 6, width: '100%'}}>
-                    <Text style={{fontSize: 16, marginBottom: 12}}>Changer le nom de cette liste:</Text>
+                    <Text style={{fontSize: 16, marginBottom: 12}}>{i18n.t("actions.change_name")}:</Text>
                     <SmartInput
                         execAction={(input: string) => this.requestChangeName(id, input)}
                         placeholder={"create_list_controller.placeholder"}
@@ -442,7 +442,7 @@ class HomeScreen extends Screen<Props, State> {
             .then(()=> {
                 this.setState({changeLinupTitleId: null})
             })
-            .then(()=> Snackbar.show({title: i18n.t("activity_item.button.modified_list")}))
+            .then(()=> Snackbar.show({title: i18n.t("activity_item.buttons.modified_list")}))
             ;
     }
 

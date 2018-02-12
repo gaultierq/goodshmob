@@ -94,7 +94,7 @@ export default class SendScreen extends Component<Props, State> {
     }
 
     renderChildren(isSelected: boolean, sent: boolean, friend: User) {
-        if (sent) return <Text style={UI.TEXT_LESS_IMPORTANT}>Envoyé</Text>
+        if (sent) return <Text style={UI.TEXT_LESS_IMPORTANT}>{i18n.t("send_screen.sent")}</Text>
         return isSelected &&
             <View style={{flex: 1}}>
                 <SmartInput
