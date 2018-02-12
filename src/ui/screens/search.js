@@ -2,7 +2,7 @@
 
 import type {Node} from 'react';
 import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, FlatList, StyleSheet, Text, Platform, TouchableOpacity, View, KeyboardAvoidingView} from 'react-native';
 import {connect} from "react-redux";
 import {logged} from "../../managers/CurrentUser"
 import {TabBar, TabViewAnimated} from 'react-native-tab-view';
@@ -181,8 +181,9 @@ export default class SearchScreen extends Component<Props, State> {
 
         const showTabs = nCat > 1 && (hasSearched || true);
         return (
-            <View style={[{width:"100%", height: "100%", backgroundColor: "transparent"},this.props.style]}>
-
+            <KeyboardAvoidingView behavior={ (Platform.OS === 'ios') ? 'padding' : null }
+                                  keyboardVerticalOffset={Platform.OS === 'ios' ? 50 : 0}
+                                  style={[{width:"100%", height: "100%", backgroundColor: "transparent"},this.props.style]}>
 
                 { showTabs && <TabViewAnimated
                     style={styles.container}
@@ -197,7 +198,7 @@ export default class SearchScreen extends Component<Props, State> {
                     nCat === 1 && this.renderSearchPage(this.props.categories[0])
                 }
 
-            </View>
+            </KeyboardAvoidingView>
 
         );
     }
