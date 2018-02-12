@@ -119,7 +119,7 @@ class CommentsScreen extends Screen<Props, State> {
                     // resetScrollToCoords={{ x: 0, y: 0 }}
                     contentContainerStyle={styles.container}
                     scrollEnabled={false}
-                    keyboardShouldPersistTaps={true}
+                    keyboardShouldPersistTaps='always'
                 >
 
                     <View style={{flex:1, justifyContent: 'flex-end'}}>

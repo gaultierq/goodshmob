@@ -108,7 +108,7 @@ export default class AddItemScreen extends Screen<Props, State> {
                 contentContainerStyle={{flex:1}}
                 scrollEnabled={true}
                 extraScrollHeight={20}
-                keyboardShouldPersistTaps={true}
+                keyboardShouldPersistTaps='always'
                 // style={{position: 'absolute', bottom:0, top: 0}}
             >
                 <Sheet

@@ -55,7 +55,7 @@ export default class SendScreen extends Component<Props, State> {
                 <KeyboardAwareScrollView
                     contentContainerStyle={{flex:1}}
                     scrollEnabled={false}
-                    keyboardShouldPersistTaps={true}
+                    keyboardShouldPersistTaps='always'
                 >
                     <FriendsFeed
                         userId={currentUserId()}

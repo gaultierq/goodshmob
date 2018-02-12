@@ -58,7 +58,7 @@ export default class AskScreen extends Component<Props, State> {
             <KeyboardAwareScrollView
                 contentContainerStyle={{flex:1}}
                 scrollEnabled={false}
-                keyboardShouldPersistTaps={true}
+                keyboardShouldPersistTaps='always'
                 // style={{position: 'absolute', bottom:0, top: 0}}
             >
                 <Sheet

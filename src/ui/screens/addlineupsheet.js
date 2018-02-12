@@ -44,7 +44,7 @@ export default class AddLineupSheet extends Component<Props, State> {
         return (<KeyboardAwareScrollView
             contentContainerStyle={{flex:1}}
             scrollEnabled={false}
-            keyboardShouldPersistTaps={true}
+            keyboardShouldPersistTaps='always'
             // style={{position: 'absolute', bottom:0, top: 0}}
         >
             <Sheet
