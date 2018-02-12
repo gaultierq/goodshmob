@@ -61,7 +61,7 @@ export default class UserConnectItem extends Component<Props, State> {
 
         let ok = reqState === 'ok';
 
-        return <View style={{flex: 1, alignItems:'flex-end', justifyContent: 'center'}}>{
+        return <View style={{ alignItems:'flex-end', justifyContent: 'center', paddingHorizontal: 10}}>{
             renderSimpleButton(
                 i18n.t(`friends.` + (ok ? 'messages' : 'buttons') + `.${remainingAction}`),
                 alreadyFriends ? ()=> this.disconnectWith(user) : ()=> this.connectWith(user),
