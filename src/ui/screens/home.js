@@ -8,6 +8,7 @@ import {
     Dimensions,
     Image,
     Platform,
+    KeyboardAvoidingView,
     StyleSheet,
     Text,
     TextInput,
@@ -225,7 +226,8 @@ class HomeScreen extends Screen<Props, State> {
 
         return (
             <View style={{flex:1}}>
-                <View style={{paddingBottom: 100}}>
+                <KeyboardAvoidingView behavior={ (Platform.OS === 'ios') ? 'padding' : null }
+                                      keyboardVerticalOffset={Platform.OS === 'ios' ? 120 : 0}>
                     <LineupListScreen
                         userId={currentUserId()}
                         onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
@@ -321,7 +323,7 @@ class HomeScreen extends Screen<Props, State> {
                         }}
                     />
 
-                </View>
+                </KeyboardAvoidingView>
 
                 {this.displayFloatingButton() && this.renderFloatingButton()}
 
