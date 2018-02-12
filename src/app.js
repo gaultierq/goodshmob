@@ -134,8 +134,8 @@ export default class App {
         const customTextInputProps = {
             underlineColorAndroid: 'rgba(0,0,0,0)',
             style: {
-                paddingVertical: 5,
-                paddingHorizontal: 8,
+                // paddingVertical: 5,
+                // paddingHorizontal: 8,
                 backgroundColor: 'white'
             }
         };

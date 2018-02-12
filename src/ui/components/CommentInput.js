@@ -70,14 +70,6 @@ const reducer = (() => {
     return (state = initialState, action = {}) => {
 
         switch (action.type) {
-            // case LOAD_COMMENTS.success(): {
-            //     let {activityId, activityType} = action.options;
-            //     activityType = sanitizeActivityType(activityType);
-            //     let path = `${activityType}.${activityId}.relationships.comments.data`;
-            //
-            //     state = doDataMergeInState(state, path, action.payload.data);
-            //     break;
-            // }
             case CREATE_COMMENT.success(): {
 
                 let {id, type} = action.payload.data;

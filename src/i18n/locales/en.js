@@ -125,6 +125,9 @@ export default {
         "title":"Feedback",
         "subtitle":"##Is this what you've been dreaming of? How good do you feel? What's badly missing? We can't wait to know…"
     },
+    "detail_screen":{
+        "related_activities_title": "Related activities:"
+    },
     "create_list_controller":{
         "title":"Add new",
         "subtitle":"##Be creative;)",

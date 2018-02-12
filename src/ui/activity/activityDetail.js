@@ -31,6 +31,7 @@ import CommentCell from "../components/CommentCell";
 import {styleBorder, styleMargin, stylePadding} from "../UIStyles";
 import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts";
 import ActivityActionBar from "./components/ActivityActionBar";
+import FeedSeparator from "./components/FeedSeparator";
 
 type Props = {
     activityId: Id,
@@ -84,7 +85,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
         return (
             <MainBackground>
-                <ScrollView contentContainerStyle={{flexGrow: 1}}>
+                <ScrollView contentContainerStyle={{flexGrow: 1, paddingBottom: 20}}>
                     {showLoader && <ActivityIndicator
                         animating = {showLoader}
                         size = "large"
@@ -117,23 +118,24 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
                             </View>
 
-                            <View style={{marginTop: 10}}>
+                            <View style={{}}>
+                                <FeedSeparator />
                                 {
-                                    this.renderActivityBlock(activity, 0)
+                                    this.renderActivityBlock(activity, {cardStyle: {paddingTop: 16}})
                                 }
                             </View>
 
 
                             {!_.isEmpty(activity.relatedActivities) && <FlatList
                                 data={activity.relatedActivities}
-                                renderItem={({item}) => this.renderActivityBlock(item)}
+                                renderItem={({item}) => this.renderActivityBlock(item, {style: {...styleMargin(15, 0)}})}
                                 keyExtractor={(item, index) => item.id}
                                 ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
                                 ListHeaderComponent={<Text style={{
                                     fontSize: 17,
                                     margin: 15,
                                     fontFamily: SFP_TEXT_MEDIUM
-                                }}>Related Activities:</Text>}
+                                }}>{i18n.t('detail_screen.related_activities_title')}</Text>}
 
                             />}
                         </View>
@@ -144,22 +146,20 @@ class ActivityDetailScreen extends Screen<Props, State> {
         );
     }
 
-    renderActivityBlock(activity, sideMargin: number = 15) {
+    renderActivityBlock(activity, {style, cardStyle}) {
         return <ActivityStatus
             activity={activity}
             skipLineup={this.props.skipLineup}
             navigator={this.props.navigator}
-            style={{
-                ...styleMargin(sideMargin, 0),
-            }}
-            cardStyle={{
+            style={[style]}
+            cardStyle={[{
                 shadowColor: Colors.greyishBrown,
                 shadowOffset: {width: 0, height: 4},
                 shadowOpacity: 0.3,
                 shadowRadius: 1,
                 elevation: 3,
                 marginBottom:3,
-            }}
+            }, cardStyle]}
         >
             <View style={{
                 ...styleMargin(12),
@@ -233,7 +233,10 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
                             {/*comments bloc*/}
                             <View style={{marginTop: 8}}>
-                                <CommentCell comment={lastComment} user={lastComment.user}/>
+                                <CommentCell
+                                    comment={lastComment} user={lastComment.user}
+                                    textContainerStyle={{borderWidth: StyleSheet.hairlineWidth}}
+                                />
                                 <View style={{
                                     flex: 1,
                                     flexDirection: 'row',
@@ -245,10 +248,11 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
                                     <CommentInput
                                         activity={activity}
-                                        containerStyle={{marginLeft: 6, flex:1}}
+                                        containerStyle={{marginLeft: 6}}
                                         inputContainerStyle={{borderWidth: StyleSheet.hairlineWidth, borderColor: Colors.greyish}}
-                                        inputStyle={{borderRadius: 16, fontSize: 10, }}
+                                        inputStyle={{fontSize: 10, }}
                                         height={20}
+                                        extendable
                                         placeholder={"activity_comments_screen.add_comment_placeholder"}
                                     />
 

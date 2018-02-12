@@ -14,7 +14,8 @@ type Props = {
     comment: Comment | Array<Comment>,
     user: User,
     skipTime?: boolean,
-    rightDisplay?: boolean
+    rightDisplay?: boolean,
+    textContainerStyle?: *
 };
 
 type State = {
@@ -23,7 +24,7 @@ type State = {
 export default class CommentCell extends Component<Props, State> {
 
     render() {
-        const {comment, user, skipTime} = this.props;
+        const {comment, user, skipTime, textContainerStyle} = this.props;
         if (!comment||!user) {
             console.warn("invalid comment props: " + user + comment);
             return null;
@@ -32,6 +33,32 @@ export default class CommentCell extends Component<Props, State> {
 
         const dimension = 32;
         const rightDisplay = this.props.rightDisplay;
+
+
+        let borderStyle = (i, radius) => {
+
+            const smallRadius = 4;
+            let isFirst = i === 0;
+            let isLast = i === comments.length - 1;
+            if (rightDisplay) {
+                return {
+                    borderTopLeftRadius: radius,
+                    borderTopRightRadius: isFirst ? radius : smallRadius,
+                    borderBottomRightRadius: isLast ? radius : smallRadius,
+                    borderBottomLeftRadius: radius,
+                };
+            }
+            else {
+                return {
+                    borderTopLeftRadius: isFirst ? radius : smallRadius,
+                    borderTopRightRadius: radius,
+                    borderBottomRightRadius: radius,
+                    borderBottomLeftRadius: isLast ? radius : smallRadius,
+                };
+            }
+
+        };
+
         return (
             <Grid>
                 <Row style={{ }}>
@@ -39,15 +66,15 @@ export default class CommentCell extends Component<Props, State> {
                         {!rightDisplay && <Avatar user={user} style={{dim: 24}}/>}
                     </Col>
                     <Col style={{ alignItems: rightDisplay ? 'flex-end': 'flex-start', }}>
-                        {comments.map((comment: Comment, i) => <Row style={{marginTop: !!i ? 8 : 0}} key={comment.id}>
+                        {comments.map((comment: Comment, i) => <Row style={{marginTop: !!i ? 4 : 0}} key={comment.id}>
                             <View style={{flexDirection: "row"}}>
-                                <View style={{
+                                <View style={[{
                                     ...stylePadding(12, 4),
                                     backgroundColor: rightDisplay ? Colors.green : Colors.white,
-                                    borderRadius: 12,
+                                    // borderRadius: 12,
+                                    ...borderStyle(i, 12),
                                     borderColor: Colors.greyish,
-
-                                }}>
+                                }, textContainerStyle]}>
 
                                     <Text style={{
                                         fontSize: 13,

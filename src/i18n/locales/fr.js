@@ -122,6 +122,9 @@ export default {
         "title":"Feedback",
         "subtitle":"##Comment tu la trouves ? Tu la kiffes ? Qu'est-ce qui manque cruellement ? On a très envie de savoir...",
     },
+    "detail_screen":{
+        "related_activities_title": "Autres activités:"
+    },
     "create_list_controller":{
         "title":"Nouvelle liste",
         "subtitle":"##Pour y ranger plein de trucs top et les partager si je veux",
