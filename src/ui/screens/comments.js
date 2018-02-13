@@ -118,6 +118,7 @@ class CommentsScreen extends Screen<Props, State> {
                     // style={{ backgroundColor: '#4c69a5' }}
                     // resetScrollToCoords={{ x: 0, y: 0 }}
                     contentContainerStyle={styles.container}
+                    extraScrollHeight={20}
                     scrollEnabled={false}
                     keyboardShouldPersistTaps='always'
                 >
