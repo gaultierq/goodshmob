@@ -156,7 +156,7 @@ export class InteractionScreen extends Screen<Props, State> {
 
                 if (isAsk) {
                     // return <Text style={{fontSize: 12}}>{username + " ask"}</Text>
-                    return <Text style={{fontSize: 14}} numberOfLines={1}>
+                    return <Text style={{fontSize: 14}}>
                         {i18n.t(key, {username, what: resource.content})}
                     </Text>
                 }
@@ -168,7 +168,7 @@ export class InteractionScreen extends Screen<Props, State> {
                     }
                     let item_title = _.toUpper(innerResource.title);
 
-                    return <Text style={{fontSize: 14}} numberOfLines={1}>
+                    return <Text style={{fontSize: 14}}>
                         {i18n.t(key, {username, what: item_title})}
                     </Text>
                 }
