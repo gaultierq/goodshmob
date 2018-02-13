@@ -4861,6 +4861,13 @@ react-native-modal@^4.1.1:
     prop-types "15.5.10"
     react-native-animatable "^1.2.3"
 
+react-native-modalbox@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/react-native-modalbox/-/react-native-modalbox-1.4.2.tgz#818c9354c9b13327ec807c6436e8516b3b419478"
+  dependencies:
+    create-react-class "^15.6.0"
+    prop-types "^15.5.10"
+
 react-native-navigation@1.1.295:
   version "1.1.295"
   resolved "https://registry.yarnpkg.com/react-native-navigation/-/react-native-navigation-1.1.295.tgz#3ee6b2fc4f94671246498ed285f3592355c063d3"
