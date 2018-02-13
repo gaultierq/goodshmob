@@ -299,7 +299,10 @@ export default {
         }
     },
     ask: {
-        sent: "Request sent"
+        sent: "Request sent",
+        cancel: "Cancel the request ?",
+        minimal_length: "The question must be at least 10 characters"
+
     },
     share_goodsh: {
         title: "Come goodsh with me",

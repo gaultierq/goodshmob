@@ -1,6 +1,6 @@
 // @flow
 import React, {Component} from 'react';
-import {Clipboard, Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {Alert, Clipboard, KeyboardAvoidingView, Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import type {Ask, Id, ItemType} from "../../types";
 import {CheckBox} from "react-native-elements";
 import {connect} from "react-redux";
@@ -55,20 +55,22 @@ export default class AskScreen extends Component<Props, State> {
         let buttonDisabled = this.state.isAsking || !askContent;
         let notEditable = this.state.isAsking;
         return (
-            <KeyboardAwareScrollView
+            <KeyboardAvoidingView
                 contentContainerStyle={{flex:1}}
                 scrollEnabled={false}
+                extraScrollHeight={20}
                 keyboardShouldPersistTaps='always'
                 // style={{position: 'absolute', bottom:0, top: 0}}
             >
                 <Sheet
                     navigator={this.props.navigator}
                     ref={ref => this._sheet = ref}
+                    closeCallback={this.closeWithConfirmation.bind(this)}
                 >
-                    <View style={{height: 400, backgroundColor: Colors.green, padding: 15}}>
+                    <View style={{height: 800, backgroundColor: Colors.green, padding: 15}}>
 
                         {/*<Text style={styles.header}>{i18n.t("actions.ask")}</Text>*/}
-                        <GTouchable onPress={()=>this._sheet && this._sheet.close()}>
+                        <GTouchable onPress={()=>this.closeWithConfirmation()}>
                             <Image source={require('../../img2/closeXWhite.png')}/>
                         </GTouchable>
                         <TextInput
@@ -110,14 +112,47 @@ export default class AskScreen extends Component<Props, State> {
                     </View>
 
                 </Sheet>
-            </KeyboardAwareScrollView>
+            </KeyboardAvoidingView>
         );
     }
+
+
+  closeWithConfirmation() {
+
+        if (!this._sheet) {
+            return
+        }
+
+        let content = this.state.askContent;
+
+        if (!content || content.length === 0) {
+            this._sheet.close();
+            return
+        }
+
+        Alert.alert(
+            i18n.t('actions.cancel'),
+            i18n.t('ask.cancel'),
+            [
+              {text: i18n.t('actions.cancel'), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+              {text: i18n.t('actions.ok'), onPress: () => {
+                  this._sheet.close();
+                }},
+            ],
+            { cancelable: true }
+          )
+    }
+
 
     createAsk() {
 
         let content = this.state.askContent;
         if (!content) return;
+
+        if (content.length < 10) {
+            Alert.alert(i18n.t('actions.ask'), i18n.t('ask.minimal_length'))
+            return
+        }
         if (this.state.isAsking) return;
         this.setState({isAsking: true});
 

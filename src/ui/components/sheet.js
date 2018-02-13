@@ -15,7 +15,10 @@ import {
 import Closable from "../screens/closable";
 
 type Props = {
-    children: Node
+    children: Node,
+    // If closeCallback is undefined, the sheet will close
+    closeCallback: () => void,
+
 };
 
 type State = {
@@ -61,7 +64,7 @@ export default class Sheet extends React.Component<Props, State> {
 
         return (<View style={{flex:1,}}>
             <TouchableWithoutFeedback
-                onPress={()=>this.close()}
+                onPress={()=> this.props.closeCallback ? this.props.closeCallback() : this.close()}
             >
                 <Animated.View style={[styles.container, {backgroundColor}]}>
                 </Animated.View>
