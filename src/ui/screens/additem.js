@@ -191,7 +191,7 @@ export default class AddItemScreen extends Screen<Props, State> {
             <GTouchable onPress={handler}>
                 <Text style={[STYLES.tag, {position: 'absolute'}]}>
                     {tag}
-                    <Text style={{color: Colors.brownishGrey, fontSize: 8, justifyContent: "flex-end", alignItems: "flex-end"}}>  ▼</Text>
+                    <Text style={{color: Colors.brownishGrey, fontSize: 13, justifyContent: "flex-end", alignItems: "flex-end"}}>  ▼</Text>
 
                 </Text>
             </GTouchable>
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
         marginTop: 15,
         fontSize: 15,
         fontFamily: SFP_TEXT_ITALIC,
-        height: 80,
+        height: 40,
         borderWidth: 0,
     }
 });

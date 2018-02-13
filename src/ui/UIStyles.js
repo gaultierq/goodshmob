@@ -227,7 +227,7 @@ export const STYLES = StyleSheet.create({
         borderWidth: StyleSheet.hairlineWidth,
         borderColor: Colors.greyish,
         fontFamily: SFP_TEXT_ITALIC,
-        fontSize: 12
+        fontSize: 18,
 
     },
     tag2: {
