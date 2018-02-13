@@ -129,7 +129,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
                             {!_.isEmpty(activity.relatedActivities) && <FlatList
                                 data={activity.relatedActivities}
-                                renderItem={({item}) => this.renderActivityBlock(item, {style: {...styleMargin(15, 0)}})}
+                                renderItem={({item}) => this.renderActivityBlock(item, {style: {...styleMargin(0, 0)}})}
                                 keyExtractor={(item, index) => item.id}
                                 ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
                                 ListHeaderComponent={<Text style={{
@@ -165,7 +165,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
             <View style={{
                 ...styleMargin(12),
                 ...stylePadding(12, 0, 12, 12),
-                backgroundColor: Colors.dirtyWhite,
+                backgroundColor: Colors.white82,
                 ...styleBorder(StyleSheet.hairlineWidth, 0, StyleSheet.hairlineWidth, StyleSheet.hairlineWidth),
                 borderBottomLeftRadius: 6,
                 borderBottomRightRadius: 6,
@@ -221,8 +221,11 @@ class ActivityDetailScreen extends Screen<Props, State> {
                     alignItems: 'center',
                 }
                 }>
-                    <Text style={{fontSize: 11, color: Colors.greyish}}>{i18n.t("activity_screen.comments.no_comments")}</Text>
-                    <Icon name="chevron-small-right" size={20} color={Colors.greyish} />
+                    <CommentInput
+                        activity={activity}
+                        inputStyle={{fontSize: 13, }}
+                        placeholder={"activity_screen.comments.no_comments"}
+                    />
                 </View>
             );
         };
@@ -251,7 +254,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                             <View style={{marginTop: 8}}>
                                 <CommentCell
                                     comment={lastComment} user={lastComment.user}
-                                    textContainerStyle={{borderWidth: StyleSheet.hairlineWidth}}
+                                    textContainerStyle={{backgroundColor: 'transparent', borderWidth: 0, paddingHorizontal: 0,}}
                                 />
                                 <View style={{
                                     flex: 1,
@@ -260,15 +263,12 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                     marginTop: 8,
                                 }}>
 
-                                    <Avatar user={currentUser()} style={{marginLeft: 6, dim: 18}}/>
+                                    {/*<Avatar user={currentUser()} style={{marginLeft: 0, dim: 22}}/>*/}
 
                                     <CommentInput
                                         activity={activity}
-                                        containerStyle={{marginLeft: 6}}
-                                        inputContainerStyle={{borderWidth: StyleSheet.hairlineWidth, borderColor: Colors.greyish}}
-                                        inputStyle={{fontSize: 10, }}
-                                        height={20}
-                                        extendable
+                                        containerStyle={{marginLeft: 30}}
+                                        inputStyle={{fontSize: 13, }}
                                         placeholder={"activity_comments_screen.add_comment_placeholder"}
                                     />
 
@@ -282,8 +282,6 @@ class ActivityDetailScreen extends Screen<Props, State> {
                             lastComment ? 1 : 0,
                             4), !!lastComment)
                     }
-
-
                 </View>
             </GTouchable>);
     }
@@ -296,7 +294,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
             <View style={{marginTop: 16}}>
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
 
-                    <Text style={{flex:1, fontSize: 12, alignItems: 'center', lineHeight: 22, color: Colors.greyishBrown, marginLeft: 8}}>
+                    <Text style={{flex:1, fontSize: 12, alignItems: 'center', lineHeight: 22, color: Colors.greyishBrown, marginLeft: 0}}>
                         {this.renderMedals(othersCommentators)}
                         {i18n.t(
                             `activity_screen.comments.${asWell ? 'has_commented_this_as_well' : 'has_commented_this'}`,

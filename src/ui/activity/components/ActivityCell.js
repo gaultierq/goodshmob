@@ -1,26 +1,24 @@
 // @flow
 
-import React from 'react';
 import type {Node} from 'react';
+import React from 'react';
 import {Image, Linking, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
 import {logged} from "../../../managers/CurrentUser"
 import {buildNonNullData, sanitizeActivityType} from "../../../helpers/DataUtils";
-import type {Activity, ActivityType, i18Key, Id, RNNNavigator} from "../../../types"
+import type {Activity, ActivityType, Id, RNNNavigator} from "../../../types"
 import ActivityBody from "./ActivityBody";
 import ActivityActionBar from "./ActivityActionBar";
-import {Avatar, renderTag} from "../../UIComponents";
+import {Avatar} from "../../UIComponents";
 import {seeUser} from "../../Nav";
 import GTouchable from "../../GTouchable";
 import * as activityAction from "../actions";
 import {getPendingLikeStatus} from "../../rights";
-import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "../../fonts";
+import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC} from "../../fonts";
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
 import User from "react-native-firebase/lib/modules/auth/user";
 import {stylePadding} from "../../UIStyles";
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {firstName} from "../../../helpers/StringUtils";
-import Octicons from "react-native-vector-icons/Octicons";
 import ActivityStatus from "./ActivityStatus";
 import FeedSeparator from "./FeedSeparator";
 
@@ -95,8 +93,8 @@ export default class ActivityCell extends React.Component<Props, State> {
                         activity={activity}
                         skipLineup={this.props.skipLineup}
                         navigator={this.props.navigator}
-                        cardStyle={{padding: 8,
-                        }}
+                        cardStyle={{paddingHorizontal: 23,
+                            paddingVertical: 10,}}
                     />
                     <FeedSeparator/>
 
@@ -110,13 +108,8 @@ export default class ActivityCell extends React.Component<Props, State> {
                             liked={this.isLiked(activity)}
                             navigator={this.props.navigator}
                             skipLineup={this.props.skipLineup}
+                            bodyStyle={{padding: 23}}
                         />
-
-                        {/*<ActivityStatus*/}
-                            {/*activity={activity}*/}
-                            {/*skipLineup={this.props.skipLineup}*/}
-                            {/*navigator={this.props.navigator}*/}
-                        {/*/>*/}
 
                     </GTouchable>
 

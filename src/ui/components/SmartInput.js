@@ -94,6 +94,7 @@ export default class SmartInput extends React.Component<Props, State> {
                         onBlur={()=>this.setState({focus:false})}
                         onChangeText={input => this.setState({input})}
                         placeholder={i18n.t(placeholder)}
+                        placeholderTextColor={Colors.grey3}
                         {...attributes}
                     />
                 </View>
@@ -162,8 +163,8 @@ const styles = StyleSheet.create({
     inputContainer:{
 
         flex:1,
-        borderColor: Colors.brownishGrey,
-        borderWidth: StyleSheet.hairlineWidth,
+        borderColor: Colors.greying,
+        borderWidth: 1,
         backgroundColor: Colors.white,
     },
     input:{
