@@ -117,8 +117,11 @@ export default class SearchScreen extends Component<Props, State> {
 
     renderSearchPage(category: SearchCategory) {
         let forToken = this.state.searches[this.state.input];
-        if (!forToken) return null;
-        let forType : SearchState = forToken[category.type];
+        let forType : SearchState = null
+
+        if (forToken) {
+            forType = forToken[category.type];
+        }
 
         return (
             <SearchPage
