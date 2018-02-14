@@ -103,7 +103,7 @@ export default class ActivityStatus extends React.Component<Props, State> {
                 flexDirection: 'row',
                 backgroundColor: 'white',
                 paddingHorizontal: 0,
-                paddingVertical: 10,
+                paddingTop: 10,
                 // borderRadius: 6,
             }]}>
 

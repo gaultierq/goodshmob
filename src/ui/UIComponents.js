@@ -21,7 +21,7 @@ import {STYLES} from "./UIStyles";
 export const MainBackground = (props) => <View
     style={{
         // flex: 1,
-        backgroundColor: Colors.dirtyWhite,
+        backgroundColor: Colors.dirtyWhite2,
         position: 'absolute',
         width: '100%',
         height: '100%',
