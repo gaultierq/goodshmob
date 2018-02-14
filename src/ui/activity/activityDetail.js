@@ -129,7 +129,10 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
                             {!_.isEmpty(activity.relatedActivities) && <FlatList
                                 data={activity.relatedActivities}
-                                renderItem={({item}) => this.renderActivityBlock(item, {style: {...styleMargin(0, 0)}})}
+                                renderItem={({item}) => this.renderActivityBlock(
+                                    item,
+                                    {style: {...styleMargin(0, 0)}, cardStyle: {paddingTop: 8}}
+                                    )}
                                 keyExtractor={(item, index) => item.id}
                                 ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
                                 ListHeaderComponent={<Text style={{
@@ -148,6 +151,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
     }
 
     renderActivityBlock(activity, {style, cardStyle}) {
+        const padding = 16;
         return <ActivityStatus
             activity={activity}
             skipLineup={this.props.skipLineup}
@@ -159,17 +163,18 @@ class ActivityDetailScreen extends Screen<Props, State> {
                 shadowOpacity: 0.3,
                 shadowRadius: 1,
                 elevation: 3,
-                marginBottom:3,
+                marginBottom:5,
+                paddingHorizontal: 16,
             }, cardStyle]}
         >
             <View style={{
-                ...styleMargin(12),
-                ...stylePadding(12, 0, 12, 12),
-                backgroundColor: Colors.white82,
-                ...styleBorder(StyleSheet.hairlineWidth, 0, StyleSheet.hairlineWidth, StyleSheet.hairlineWidth),
-                borderBottomLeftRadius: 6,
-                borderBottomRightRadius: 6,
-                borderColor: Colors.greyish
+                // ...styleMargin(12),
+                ...stylePadding(padding, 0, padding, 12),
+                backgroundColor: Colors.white,
+                // ...styleBorder(StyleSheet.hairlineWidth, 0, StyleSheet.hairlineWidth, StyleSheet.hairlineWidth),
+                borderBottomLeftRadius: 4,
+                borderBottomRightRadius: 4,
+                // borderColor: Colors.greyish
             }}>
                 {this.renderActivityComments(activity)}
             </View>

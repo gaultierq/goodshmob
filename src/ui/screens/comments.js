@@ -99,6 +99,7 @@ class CommentsScreen extends Screen<Props, State> {
                         activity={activity}
                         // skipLineup={this.props.skipLineup}
                         navigator={this.props.navigator}
+                        descriptionNumberOfLines={8}
                         style={{
                             ...styleMargin(0, 0),
                         }}

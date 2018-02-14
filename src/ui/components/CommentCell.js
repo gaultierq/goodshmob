@@ -79,7 +79,7 @@ export default class CommentCell extends Component<Props, State> {
                                 }, textContainerStyle]}>
 
                                     <Text style={{
-                                        fontSize: 13,
+                                        fontSize: 15,
                                         // lineHeight: 20,
                                         // backgroundColor: 'red',
                                         fontFamily: SFP_TEXT_REGULAR,

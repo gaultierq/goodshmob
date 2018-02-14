@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     description: {fontSize: 14, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey},
     tag: {flex:1, flexDirection:'row', alignItems: 'center'},
     descriptionContainer: {backgroundColor: 'transparent'},
-    description: {fontSize: 13, lineHeight: 13, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey},
+    description: {fontSize: 13, lineHeight: 18, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey},
     userText: {
         fontSize: 10,
         lineHeight: 10,
@@ -39,6 +39,7 @@ type Props = {
     style?: ?*,
     cardStyle?: ?*,
     children?: ?Node,
+    descriptionNumberOfLines?: number
 
 };
 
@@ -46,6 +47,10 @@ type State = {
 };
 
 export default class ActivityStatus extends React.Component<Props, State> {
+
+    static defaultProps = {
+        descriptionNumberOfLines: 50
+    };
 
     render() {
         const {activity, skipLineup, style, cardStyle, children, navigator} = this.props;
