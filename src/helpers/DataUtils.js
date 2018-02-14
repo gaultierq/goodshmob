@@ -6,6 +6,7 @@ import dotprop from "dot-prop-immutable"
 import {Statistics} from "../managers/Statistics"
 import update from "immutability-helper";
 import * as TimeUtils from "./TimeUtils";
+import {Colors} from "../ui/colors"
 
 //ask backend to sanitize types
 export let sanitizeActivityType = activityType => {
@@ -131,4 +132,9 @@ export function isSending(activity: Activity) {
 
 export function timeSinceActivity(activity: Activity) {
     return activity ? TimeUtils.timeSince(Date.parse(activity.updatedAt || activity.createdAt)):'';
+}
+
+export function getAskBackgroundColor(activity: Activity) {
+    const askColors = ['rgb(51,51,51)', Colors.pink, Colors.darkSkyBlue];
+    return askColors[Date.parse(activity.createdAt) % askColors.length];
 }

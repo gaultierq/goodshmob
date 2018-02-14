@@ -81,7 +81,7 @@ class CommentsScreen extends Screen<Props, State> {
             })
         );
 
-        const fullComments = comments.filter( c => { !_.isUndefined(c.author) })
+        const fullComments = comments.filter( c => { c.built })
 
         return (
             <MainBackground>

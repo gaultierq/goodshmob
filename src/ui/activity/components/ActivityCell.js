@@ -5,7 +5,7 @@ import React from 'react';
 import {Image, Linking, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
 import {logged} from "../../../managers/CurrentUser"
-import {buildNonNullData, sanitizeActivityType} from "../../../helpers/DataUtils";
+import {buildNonNullData, sanitizeActivityType, getAskBackgroundColor} from "../../../helpers/DataUtils";
 import type {Activity, ActivityType, Id, RNNNavigator} from "../../../types"
 import ActivityBody from "./ActivityBody";
 import ActivityActionBar from "./ActivityActionBar";
@@ -67,7 +67,7 @@ export default class ActivityCell extends React.Component<Props, State> {
 
         if (sanitizeActivityType(activity.type) === 'asks') {
             return (
-                <View style={[_styles.askContent, {backgroundColor: this.getAskBackgroundColor(activity)}]}>
+                <TouchableOpacity onPress={this.props.onPressItem} style={[_styles.askContent, {backgroundColor: getAskBackgroundColor(activity)}]}>
                     {this.renderUserAvatar(activity.user, _styles.userAvatar)}
                     <Text style={[_styles.askText]}>{activity.content}</Text>
                     {__DEBUG_SHOW_IDS__ && this.renderDebugActivityInfo(activity) }
@@ -80,7 +80,7 @@ export default class ActivityCell extends React.Component<Props, State> {
                         }
                     </View>
 
-                </View>
+                </TouchableOpacity>
             )
         }
 
@@ -194,11 +194,6 @@ export default class ActivityCell extends React.Component<Props, State> {
     //     else  return null;
     // }
 
-
-    getAskBackgroundColor(activity: Activity) {
-        const askColors = ['rgb(51,51,51)', Colors.pink, Colors.darkSkyBlue];
-        return askColors[Date.parse(activity.createdAt) % askColors.length];
-    }
 
     renderUserAvatar(user: User, styles?: *) {
         let navigator: RNNNavigator = this.props.navigator;

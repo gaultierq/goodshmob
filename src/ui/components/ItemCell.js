@@ -73,6 +73,9 @@ const styles = StyleSheet.create({
         flex:1,
         padding: 15
     },
+    placeholder: {
+        backgroundColor: Colors.greyish
+    },
     title: {fontSize: 18, },
     subtitle: {fontSize: 12, color: Colors.greyish}
 

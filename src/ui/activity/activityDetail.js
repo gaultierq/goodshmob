@@ -16,7 +16,7 @@ import * as actions from './actions'
 import {connect} from "react-redux";
 import {currentUser, logged} from "../../managers/CurrentUser"
 import ActivityBody from "./components/ActivityBody";
-import {buildData} from "../../helpers/DataUtils";
+import {buildData, sanitizeActivityType, getAskBackgroundColor} from "../../helpers/DataUtils";
 import {Avatar, MainBackground} from "../UIComponents";
 import type {Activity, ActivityType, Id} from "../../types";
 import Icon from 'react-native-vector-icons/Entypo';
@@ -85,6 +85,8 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
         let showLoader = !activity && this.state.isLoading;
 
+        const isAsk = sanitizeActivityType(activity.type) === 'asks';
+
         return (
             <MainBackground>
                 <ScrollView contentContainerStyle={{flexGrow: 1, paddingBottom: 20}}>
@@ -98,6 +100,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                         { activity &&
                         <View>
                             <View>
+                                {!isAsk &&
                                 <GTouchable
                                     onPress={() => this.goBuy(activity)}
                                 >
@@ -106,7 +109,12 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                         navigator={this.props.navigator}
                                         onPressItem={() => this.goBuy(activity)}
                                     />
-                                </GTouchable>
+                                </GTouchable>}
+                                {isAsk &&
+                                <View style={[styles.askContent, {backgroundColor: getAskBackgroundColor(activity)}]}>
+                                    <Text style={[styles.askText]}>{activity.content}</Text>
+                                </View>
+                                }
 
                             </View>
 
@@ -389,7 +397,21 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: 10,
         top: 20
-    }
+    },
+    askContent: {
+        width: "100%",
+        minHeight: 64,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    askText: {
+        fontSize: 30,
+        lineHeight: 35,
+        color: Colors.white,
+        textAlign: 'center',
+        fontFamily: SFP_TEXT_BOLD,
+        padding: 50
+    },
 });
 
 let screen = ActivityDetailScreen;
