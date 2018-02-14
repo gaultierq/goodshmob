@@ -316,10 +316,10 @@ export default class App {
 
         let testScreen;
 
-        if (Config.TEST_SCREEN) {
-            testScreen = require("./testScreen")[Config.TEST_SCREEN];
+        if (__TEST_SCREEN__) {
+            testScreen = require("./testScreen")[__TEST_SCREEN__];
             if (!testScreen) {
-                console.warn(`test screen not found${Config.TEST_SCREEN}`);
+                console.warn(`test screen not found${__TEST_SCREEN__}`);
             }
         }
         let navigatorStyle = {...UI.NavStyles};

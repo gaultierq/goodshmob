@@ -35,7 +35,8 @@ export function init(hotReload: boolean) {
     global.__IS_PROD__= Config.ENV === 'PROD';
     global.__IS_DEV__= Config.ENV === 'DEV';
 
-    confToGlobal();
+    confToGlobal(Config, true);
+    confToGlobal(require('./../env'), false);
 
 
     let {width, height} = Dimensions.get('window');
@@ -51,7 +52,7 @@ export function init(hotReload: boolean) {
 }
 
 
-let confToGlobal = function () {
+let confToGlobal = function (config, throwIfAlreadyDefined) {
     let convert = (value) => {
 
         let isNumeric = n => !isNaN(parseFloat(n)) && isFinite(n);
@@ -65,11 +66,12 @@ let confToGlobal = function () {
 
     let setGlobalFromConfig = (key, value) => {
         key = `__${_.toUpper(key)}__`;
-        if (key in global && !__IS_LOCAL__) throw `global already defined:${key}`;
+        if (key in global && throwIfAlreadyDefined && !__IS_LOCAL__) throw `global already defined:${key}`;
         global[key] = convert(value);
     };
 
-    _.keys(Config).forEach(k => {
-        setGlobalFromConfig(k, Config[k]);
+
+    _.keys(config).forEach(k => {
+        setGlobalFromConfig(k, config[k]);
     });
 };

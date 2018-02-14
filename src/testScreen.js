@@ -90,6 +90,17 @@ export const commentsScreen2 = {
         activityType: "sendings",
     }
 };
+//comments 3
+export const commentsScreen3 = {
+    screen: {
+        label: 'test',
+        screen: 'goodsh.CommentsScreen',
+    },
+    passProps: {
+        activityId: "381138c4-a988-4209-b9b0-285b62a11a43",
+        activityType: "savings",
+    }
+};
 
 export const profileScreen = {
     screen: {

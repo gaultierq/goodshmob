@@ -68,3 +68,4 @@ goodshmob-build
 .tags.temp
 gradle.deps
 .env.local
+env.js
