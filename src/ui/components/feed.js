@@ -226,6 +226,10 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         return <View style={this.props.style}>{allViews}</View>
     }
 
+    isFiltering() {
+        return !!this.props.filter;
+    }
+
     debugOnlyEmptyFeeds() {
         return this.props.config && !!this.props.config.onlyEmptyFeeds;
     }
@@ -321,6 +325,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     getFlatItems() {
+        if (this.debugOnlyEmptyFeeds()) return [];
         if (this.props.sections) {
             let datas = this.props.sections.map(s=>s.data);
             return Array.prototype.concat.apply([], datas)
@@ -413,6 +418,8 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     canFetch(requestName: string = 'isFetchingFirst', options: * = {}): boolean {
+        if (this.isFiltering()) return false;
+
         if (this.props.cannotFetch || !this.props.fetchSrc) {
             //console.log(requestName + " fetch prevented");
             return false;
