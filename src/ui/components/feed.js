@@ -11,6 +11,8 @@ import {TRIGGER_USER_DIRECT_ACTION, TRIGGER_USER_INDIRECT_ACTION} from "../../ma
 import {isEmpty} from "lodash";
 import type {i18Key, ms, RequestState, Url} from "../../types";
 import {renderSimpleButton, STYLES} from "../UIStyles";
+import {SearchBar} from 'react-native-elements'
+import {NavStyles} from "../UIStyles";
 
 import type {ScreenVisibility} from "./Screen";
 import Search from 'react-native-search-box';
@@ -283,29 +285,21 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
         return (
             <View key={'searchbar_container'} style={[style]}>
-                {React.createElement(Search, {
-                    backgroundColor: Colors.white82,
-                    placeholderTextColor: color, //TODO
-                    titleCancelColor: color,
-                    tintColorSearch: color,
-                    tintColorDelete: color,
-                    cancelButtonTextStyle: {
-                        ...font
-                    },
-                    inputStyle: {
-                        color: Colors.black,
-                        ...font
-                    },
-                    ...placeholderConfig,
-                    cancelTitle: i18n.t('actions.cancel'),
-                    inputStyle: {backgroundColor: Colors.steel12},
-                    inputBorderRadius: 10,
-                    inputHeight: 32,
-                    onChangeText: filter => this.setState({filter}),
-                    onCancel: ()=>this.setState({filter: null}),
-                    onDelete: ()=>this.setState({filter: null}),
-                    onSearch
-                })}
+
+                <SearchBar
+                    lightTheme
+                    onChangeText={filter => this.setState({filter})}
+                    onClearText={()=>this.setState({filter: null})}
+                    placeholder={i18n.t(placeholder)}
+                    autoCapitalize='none'
+                    clearIcon={!!this.state.filter && {color: '#86939e'}}
+                    containerStyle={{backgroundColor: NavStyles.navBarBackgroundColor, marginTop:0 ,marginBottom: 0, borderBottomWidth: 0, borderTopWidth: 0,}}
+                    inputStyle={{backgroundColor: Colors.steel12, textAlign: 'center', marginBottom: 5}}
+                    autoCorrect={false}
+                    style={{margin: 0,}}
+                    returnKeyType={'search'}
+                    value={this.state.filter}
+                />
             </View>
         );
     }
