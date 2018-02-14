@@ -138,7 +138,8 @@ export default {
         "add_description":"Ajouter un petit mot",
         "choose_list":"Choisir une liste",
         "choose_another_list":"Choisir une autre liste",
-        "all_list" : "Toutes mes listes"
+        "all_list" : "Toutes mes listes",
+        "add_to_list": "Ajouter à"
     },
     "search_bar":{
         "me_placeholder":"##Rechercher dans mes listes",

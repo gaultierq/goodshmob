@@ -141,7 +141,8 @@ export default {
         "add_description":"Add a note",
         "choose_list":"Choose a list",
         "choose_another_list":"Choose another list",
-        "all_list": "All my lists"
+        "all_list": "All my lists",
+        "add_to_list": "Add to"
     },
     "search_bar":{
         "me_placeholder":"##Search in your lists",
