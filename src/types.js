@@ -154,3 +154,8 @@ export type Deeplink = string;
 export type ms = number;
 
 export type RNNNavigator = any;
+
+export type Position = {
+    latitude: number,
+    longitude: number
+}
