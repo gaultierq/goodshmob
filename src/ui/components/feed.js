@@ -294,7 +294,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                     autoCapitalize='none'
                     clearIcon={!!this.state.filter && {color: '#86939e'}}
                     containerStyle={{backgroundColor: NavStyles.navBarBackgroundColor, marginTop:0 ,marginBottom: 0, borderBottomWidth: 0, borderTopWidth: 0,}}
-                    inputStyle={{backgroundColor: Colors.steel12, textAlign: 'center', marginBottom: 5}}
+                    inputStyle={{backgroundColor: Colors.steel12, textAlign: 'center', marginBottom: 5, fontSize: 13}}
                     autoCorrect={false}
                     style={{margin: 0,}}
                     returnKeyType={'search'}
