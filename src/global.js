@@ -7,11 +7,32 @@ import {superLog as _superLog} from './helpers/DebugUtils'
 
 import {Dimensions, Platform} from 'react-native';
 
+
 declare var i18n: any;
 declare var _: any;
 declare var superConsole: any;
 declare var ENABLE_PERF_OPTIM: boolean;
 declare var ensureNotNull: () => void;
+
+
+const ALL_KEYS = [
+    'ENV',
+    'SERVER_URL',
+    'ALGOLIA_SAVING_INDEX',
+    'ALGOLIA_USER_INDEX',
+    'CACHE_VERSION',
+    'WITH_FABRIC',
+    'USE_CACHE_LOCAL',
+    'API_VERSION',
+    'WITH_BUGSNAG',
+    'HTTP_TIMEOUT',
+    'WITH_STATS',
+    'ENABLED_LOGS',
+    'DEBUG_SHOW_IDS',
+    'DEBUG_PERFS',
+    'WITH_ASSERTS',
+    'TEST_SCREEN',
+];
 
 export function init(hotReload: boolean) {
     global._ = __;
@@ -36,8 +57,14 @@ export function init(hotReload: boolean) {
     global.__IS_DEV__= Config.ENV === 'DEV';
 
     confToGlobal(Config, true);
-    confToGlobal(require('./../env'), false);
 
+    // if (__IS_LOCAL__ && require.resolve('./../env')) {
+    //     try {
+    //         const config = require('./../env');
+    //         confToGlobal(config, false);
+    //     }
+    //     catch (e) {}
+    // }
 
     let {width, height} = Dimensions.get('window');
     global.__DEVICE_WIDTH__ = width;
@@ -71,7 +98,8 @@ let confToGlobal = function (config, throwIfAlreadyDefined) {
     };
 
 
-    _.keys(config).forEach(k => {
+    // _.keys(config).forEach(k => {
+    ALL_KEYS.forEach(k => {
         setGlobalFromConfig(k, config[k]);
     });
 };
