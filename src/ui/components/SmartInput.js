@@ -90,6 +90,8 @@ export default class SmartInput extends React.Component<Props, State> {
                         onBlur={()=>this.setState({focus:false})}
                         onChangeText={input => this.setState({input})}
                         placeholder={i18n.t(placeholder)}
+                        multiline={true}
+                        maxHeight={70}
                         {...attributes}
                     />
                 </View>
