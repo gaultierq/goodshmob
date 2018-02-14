@@ -234,7 +234,7 @@ export default class App {
 
         //managers init rely on a ready store
         //singletons
-        Api.init(this.store);
+
         CurrentUser.init(this.store);
         DeviceManager.init(this.store);
         AlgoliaClient.init(this.store);
@@ -243,6 +243,9 @@ export default class App {
         NavManager.init();
         Analytics.init();
         OnBoardingManager.init(this.store);
+
+        //api in the end: we dont want to make any call during the app init
+        Api.init(this.store);
 
 
         if (__WITH_BUGSNAG__) {
@@ -282,7 +285,7 @@ export default class App {
         if (!cacheVersion) {
             mode = 'init_cache';
         }
-        else if (this.upgradingCache  || cacheVersion < Config.CACHE_VERSION) {
+        else if (this.upgradingCache  || cacheVersion < __CACHE_VERSION__) {
             mode = 'upgrading_cache';
         }
         else {
@@ -305,7 +308,7 @@ export default class App {
 
     async setCurrentCacheVersion(version: number) {
         this.cacheVersion = version;
-        AsyncStorage.setItem('@goodsh:cacheVersion', version);
+        AsyncStorage.setItem('@goodsh:cacheVersion', ""+version);
     }
 
 //type AppMode = 'idle' | 'logged' | 'unlogged' | 'upgrading_cache'
@@ -324,7 +327,7 @@ export default class App {
         }
         let navigatorStyle = {...UI.NavStyles};
 
-        const cacheVersion = Config.CACHE_VERSION;
+        const cacheVersion = __CACHE_VERSION__;
         switch (this.mode) {
             case 'idle':
                 break;
@@ -340,6 +343,8 @@ export default class App {
                         // this.bugsnag.setUser(id, firstName + " " + lastName, email);
                         this.bugsnag.setUser(currentUserId(), '', '');
                     }
+                    DeviceManager.checkAndSendDiff();
+
                     this.startLogged(navigatorStyle);
                 }
                 break;
@@ -356,13 +361,6 @@ export default class App {
                 this.refreshAppMode();
                 break;
             case 'upgrading_cache':
-                this.upgradingCache = true;
-                this.store.dispatch({type: UPGRADE_CACHE, newCacheVersion: cacheVersion});
-                this.setCurrentCacheVersion(cacheVersion);
-                this.store.dispatch(appActions.me()).then(() => {
-                    this.upgradingCache = false;
-                    this.refreshAppMode()
-                });
 
                 //TODO: move to messenger
                 Alert.alert(
@@ -371,6 +369,16 @@ export default class App {
                     [],
                     { cancelable: false }
                 );
+
+                this.upgradingCache = true;
+                this.store.dispatch({type: UPGRADE_CACHE, newCacheVersion: cacheVersion});
+                this.setCurrentCacheVersion(cacheVersion);
+                this.store.dispatch(appActions.me()).then(() => {
+                    this.upgradingCache = false;
+                    this.refreshAppMode()
+                });
+
+
                 break;
         }
     }

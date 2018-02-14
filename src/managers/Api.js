@@ -181,6 +181,7 @@ class Api {
     submit(url, method, body, delay) {
         if (!this.initialized) throw "Api must be initialized before being used";
 
+
         let timeout = __HTTP_TIMEOUT__;
         let options = Object.assign({
             method,

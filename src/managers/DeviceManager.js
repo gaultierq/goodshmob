@@ -19,18 +19,18 @@ class DeviceManager {
         this.store = store;
 
         //init with logged user => check & send diff
-        if (store.getState().auth.currentUserId) {
-            this.checkAndSendDiff();
-        }
-        else {
-            console.debug("device manager: subscribing");
-            let unsubscribe = this.store.subscribe(() => {
-                if (store.getState().auth.currentUserId) {
-                    unsubscribe();
-                    this.checkAndSendDiff();
-                }
-            });
-        }
+        // if (store.getState().auth.currentUserId) {
+        //     this.checkAndSendDiff();
+        // }
+        // else {
+        //     console.debug("device manager: subscribing");
+        //     let unsubscribe = this.store.subscribe(() => {
+        //         if (store.getState().auth.currentUserId) {
+        //             unsubscribe();
+        //             this.checkAndSendDiff();
+        //         }
+        //     });
+        // }
         return this;
     }
 
@@ -99,6 +99,10 @@ function flatDiff(left, right) {
 
 export function init(store) {
     return (instance = new DeviceManager().init(store));
+}
+
+export function checkAndSendDiff() {
+    instance.checkAndSendDiff();
 }
 
 export function generateCurrentDevice(): Promise<Device> {
