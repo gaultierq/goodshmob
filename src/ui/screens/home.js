@@ -225,7 +225,7 @@ class HomeScreen extends Screen<Props, State> {
         let onBoardingStep = OnBoardingManager.getPendingStep();
 
         return (
-            <View style={{flex:1}}>
+            <View style={{flex:1, paddingBottom: 100}}>
                 <KeyboardAvoidingView behavior={ (Platform.OS === 'ios') ? 'padding' : null }
                                       keyboardVerticalOffset={Platform.OS === 'ios' ? 120 : 0}>
                     <LineupListScreen
