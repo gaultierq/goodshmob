@@ -81,7 +81,7 @@ class CommentsScreen extends Screen<Props, State> {
             })
         );
 
-
+        const fullComments = comments.filter( c => { !_.isUndefined(c.author) })
 
         return (
             <MainBackground>
@@ -132,7 +132,7 @@ class CommentsScreen extends Screen<Props, State> {
                             // renderItem={this.renderItem.bind(this)}
                             // ItemSeparatorComponent={()=> <View style={{margin: 60}} />}
 
-                            sections={this.splitCommentsInSections(comments)}
+                            sections={this.splitCommentsInSections(fullComments)}
                             keyExtractor={item => _.head(item).id}
                             SectionSeparatorComponent={()=> <View style={{margin: 4}} />}
 
