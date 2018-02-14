@@ -1,7 +1,7 @@
 export const Colors = Object.freeze({
     black: '#282828',
     blue: '#54A4E9',
-    darkSkyBlue: this.blue,
+    darkSkyBlue: '#54A4E9',
     greyishBrown: '#424242',
     brownishGrey: '#5C5C5C',
     greyish: '#B1B1B1',
@@ -14,7 +14,7 @@ export const Colors = Object.freeze({
 
     green: '#01DEB1',
     pink: 'rgb(220,124,223)',
-    white82: this.dirtyWhite, //'rgba(248, 248, 248, 0.82)',
+    white82: "#F7F7F7", //'rgba(248, 248, 248, 0.82)',
     grey142: 'rgb(142,142,147)',
     steel12: 'rgba(142,142,147,0.12)'
 });
