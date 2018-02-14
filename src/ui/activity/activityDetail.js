@@ -33,6 +33,7 @@ import ActivityActionBar from "./components/ActivityActionBar";
 import FeedSeparator from "./components/FeedSeparator";
 import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
 import BackButton from "../components/BackButton";
+import Feed from "../components/feed";
 
 type Props = {
     activityId: Id,
@@ -129,7 +130,10 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
                             {!_.isEmpty(activity.relatedActivities) && <FlatList
                                 data={activity.relatedActivities}
-                                renderItem={({item}) => this.renderActivityBlock(item, {style: {...styleMargin(15, 0)}})}
+                                renderItem={({item}) => this.renderActivityBlock(
+                                    item,
+                                    {style: {...styleMargin(0, 0)}, cardStyle: {paddingTop: 8}}
+                                )}
                                 keyExtractor={(item, index) => item.id}
                                 ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
                                 ListHeaderComponent={<Text style={{
@@ -155,28 +159,30 @@ class ActivityDetailScreen extends Screen<Props, State> {
     }
 
     renderActivityBlock(activity, {style, cardStyle}) {
+        const padding = 16;
         return <ActivityStatus
             activity={activity}
             skipLineup={this.props.skipLineup}
             navigator={this.props.navigator}
             style={[style]}
             cardStyle={[{
-                shadowColor: Colors.greyishBrown,
-                shadowOffset: {width: 0, height: 4},
-                shadowOpacity: 0.3,
-                shadowRadius: 1,
+                // shadowColor: Colors.greyishBrown,
+                // shadowOffset: {width: 0, height: 4},
+                // shadowOpacity: 0.3,
+                // shadowRadius: 1,
                 elevation: 3,
-                marginBottom:3,
+                // marginBottom:5,
+                paddingHorizontal: 16,
             }, cardStyle]}
         >
             <View style={{
-                ...styleMargin(12),
-                ...stylePadding(12, 0, 12, 12),
-                backgroundColor: Colors.dirtyWhite,
-                ...styleBorder(StyleSheet.hairlineWidth, 0, StyleSheet.hairlineWidth, StyleSheet.hairlineWidth),
-                borderBottomLeftRadius: 6,
-                borderBottomRightRadius: 6,
-                borderColor: Colors.greyish
+                // ...styleMargin(12),
+                ...stylePadding(padding, 0, padding, 12),
+                backgroundColor: Colors.white,
+                // ...styleBorder(StyleSheet.hairlineWidth, 0, StyleSheet.hairlineWidth, StyleSheet.hairlineWidth),
+                // borderBottomLeftRadius: 4,
+                // borderBottomRightRadius: 4,
+                // borderColor: Colors.greyish
             }}>
                 {this.renderActivityComments(activity)}
             </View>
@@ -224,15 +230,26 @@ class ActivityDetailScreen extends Screen<Props, State> {
             return (
                 <View style={{flex: 1,
                     flexDirection: 'row',
-                    marginTop: 8,
+                    paddingTop: 8,
                     alignItems: 'center',
                 }
                 }>
-                    <Text style={{fontSize: 11, color: Colors.greyish}}>{i18n.t("activity_screen.comments.no_comments")}</Text>
-                    <Icon name="chevron-small-right" size={20} color={Colors.greyish} />
+                    <CommentInput
+                        activity={activity}
+                        inputStyle={{fontSize: 13, }}
+                        placeholder={"activity_screen.comments.no_comments"}
+                    />
                 </View>
             );
         };
+
+        const jhop = (function *() {
+            yield <FeedSeparator style={{marginTop: 8, marginBottom: 8}} />;
+            return null;
+        })();
+
+        let separator = () => jhop.next().value;
+
 
         const noCommentators = _.isEmpty(activity.commentators);
         return (
@@ -243,8 +260,12 @@ class ActivityDetailScreen extends Screen<Props, State> {
                     {/*empty*/}
                     {noCommentators && renderEmpty()}
 
+
                     {
-                        lastComment && <View style={{marginTop: 8}}>
+                        lastComment && <View style={{paddingTop: 6}}>
+
+                            {separator()}
+
                             <Text style={{fontSize: 12, fontFamily:SFP_TEXT_MEDIUM, color: Colors.black}}>
                                 {i18n.t(
                                     'activity_screen.comments.has_commented',
@@ -258,7 +279,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                             <View style={{marginTop: 8}}>
                                 <CommentCell
                                     comment={lastComment} user={lastComment.user}
-                                    textContainerStyle={{borderWidth: StyleSheet.hairlineWidth}}
+                                    textContainerStyle={{backgroundColor: 'transparent', borderWidth: 0, paddingHorizontal: 0,}}
                                 />
                                 <View style={{
                                     flex: 1,
@@ -267,15 +288,12 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                     marginTop: 8,
                                 }}>
 
-                                    <Avatar user={currentUser()} style={{marginLeft: 6, dim: 18}}/>
+                                    {/*<Avatar user={currentUser()} style={{marginLeft: 0, dim: 22}}/>*/}
 
                                     <CommentInput
                                         activity={activity}
-                                        containerStyle={{marginLeft: 6}}
-                                        inputContainerStyle={{borderWidth: StyleSheet.hairlineWidth, borderColor: Colors.greyish}}
-                                        inputStyle={{fontSize: 10, }}
-                                        height={20}
-                                        extendable
+                                        containerStyle={{marginLeft: 30}}
+                                        inputStyle={{fontSize: 13, }}
                                         placeholder={"activity_comments_screen.add_comment_placeholder"}
                                     />
 
@@ -284,26 +302,26 @@ class ActivityDetailScreen extends Screen<Props, State> {
                         </View>}
 
                     {
-                        this.renderOtherCommentators(_.slice(
-                            activity.commentators,
-                            lastComment ? 1 : 0,
-                            4), !!lastComment)
+                        !_.isEmpty(activity.commentators) && <View>
+                            {separator()}
+                            {
+                                this.renderOtherCommentators(_.slice(
+                                    activity.commentators,
+                                    lastComment ? 1 : 0,
+                                    4), !!lastComment)
+                            }
+                        </View>
                     }
-
-
                 </View>
             </GTouchable>);
     }
 
     renderOtherCommentators(othersCommentators, asWell: boolean = true) {
-        let count = othersCommentators.length;
-        if (count <=0) return null;
-
         return (
-            <View style={{marginTop: 16}}>
+            <View style={{marginTop: 8}}>
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
 
-                    <Text style={{flex:1, fontSize: 12, alignItems: 'center', lineHeight: 22, color: Colors.greyishBrown, marginLeft: 8}}>
+                    <Text style={{flex:1, fontSize: 12, alignItems: 'center', lineHeight: 22, color: Colors.greyishBrown, marginLeft: 0}}>
                         {this.renderMedals(othersCommentators)}
                         {i18n.t(
                             `activity_screen.comments.${asWell ? 'has_commented_this_as_well' : 'has_commented_this'}`,

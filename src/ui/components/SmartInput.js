@@ -28,7 +28,8 @@ export type Props = {
 type State = {
     input?: string,
     requestState?: RequestState,
-    focus?: boolean
+    focus?: boolean,
+    rounded?: boolean
 };
 
 
@@ -61,6 +62,7 @@ export default class SmartInput extends React.Component<Props, State> {
             button,
             height,
             extendable,
+            rounded,
             ...attributes
         } = this.props;
 
@@ -69,14 +71,16 @@ export default class SmartInput extends React.Component<Props, State> {
         const isFocus = extendable ? this.state.focus : true;
         return (
             <View style={[styles.container, containerStyle, {flex:1, flexDirection: 'row'}]}>
-                <View style={[styles.inputContainer, inputContainerStyle,
+                <View style={[styles.inputContainer,
                     {flex:isFocus? 1: 0,
                         flexDirection: 'row',
                         minHeight: height,
+                    },
+                    rounded ? {
                         borderRadius: height / 2,
                         paddingHorizontal: height / 2,
-                        // ...stylePadding(height / 2, 0)
-                    }
+                    } : {paddingHorizontal: height / 4},
+                    inputContainerStyle,
                 ]}>
                     <TextInput
                         editable={!this.isSending()}
@@ -92,6 +96,7 @@ export default class SmartInput extends React.Component<Props, State> {
                         placeholder={i18n.t(placeholder)}
                         multiline={true}
                         maxHeight={70}
+                        placeholderTextColor={Colors.grey3}
                         {...attributes}
                     />
                 </View>
@@ -160,8 +165,8 @@ const styles = StyleSheet.create({
     inputContainer:{
 
         flex:1,
-        borderColor: Colors.greyishBrown,
-        borderWidth: StyleSheet.hairlineWidth,
+        borderColor: Colors.greying,
+        borderWidth: 1,
         backgroundColor: Colors.white,
     },
     input:{

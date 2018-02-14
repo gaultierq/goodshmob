@@ -2,8 +2,7 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {Colors} from "../../colors";
-import {styleMargin, stylePadding, STYLES} from "../../UIStyles";
-import {Avatar} from "../../UIComponents";
+import {stylePadding} from "../../UIStyles";
 import type {Activity, RNNNavigator} from "../../../types";
 import Octicons from "react-native-vector-icons/Octicons";
 import {seeList, seeUser} from "../../Nav";
@@ -11,34 +10,14 @@ import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "../../fonts";
 import GTouchable from "../../GTouchable";
 import {isSaving, isSending, timeSinceActivity} from "../../../helpers/DataUtils";
 import UserRowI from "./UserRowI";
-import Triangle from "react-native-triangle";
 import {userFirstName} from "../../../helpers/StringUtils";
 
 
 const styles = StyleSheet.create({
-    // body: {padding: 15, paddingBottom: 0, backgroundColor: ACTIVITY_CELL_BACKGROUND},
-    // bodyInner: {flexDirection: 'row'},
-    // flex1: {flex:1},
-    // title: {fontSize: 19, color: Colors.black, marginBottom: 4, marginRight: 5},
-    // subtitle: {fontSize: 14, color: Colors.greyish},
     description: {fontSize: 14, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey},
-    // imageContainer: {flex:1, alignSelf: 'center', width: "100%", backgroundColor: 'transparent'},
-    // image: {alignSelf: 'center', backgroundColor: ACTIVITY_CELL_BACKGROUND, width: "100%"},
-    // yheaaContainer: {position: 'absolute', width: "100%", height: "100%",backgroundColor: 'rgba(0,0,0,0.3)',alignItems: 'center',justifyContent: 'center'},
     tag: {flex:1, flexDirection:'row', alignItems: 'center'},
-    // askText: {margin: 12, fontSize: 30}
-
-
-
     descriptionContainer: {backgroundColor: 'transparent'},
-    description: {fontSize: 13, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey},
-    // ask: {flex: 1, flexDirection: 'row', alignItems: 'center'},
-    // askText: {fontSize: 13},
-    // target: {flex: 1, flexDirection: 'row', alignItems: 'center'},
-    // targetText: {fontSize: 10,color: Colors.greyishBrown,marginRight: 3},
-    // unfollowText:{fontSize: 9, color: Colors.greyishBrown, padding: 5, borderRadius: 5, borderWidth: StyleSheet.hairlineWidth, borderColor: Colors.greyishBrown},
-    // followContainer: {backgroundColor: "white", padding: 5, borderRadius: 5},
-    // followText: {fontSize: 9, color: Colors.blue}
+    description: {fontSize: 13, lineHeight: 18, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey},
     userText: {
         fontSize: 10,
         lineHeight: 10,
@@ -60,6 +39,7 @@ type Props = {
     style?: ?*,
     cardStyle?: ?*,
     children?: ?Node,
+    descriptionNumberOfLines?: number
 
 };
 
@@ -67,6 +47,10 @@ type State = {
 };
 
 export default class ActivityStatus extends React.Component<Props, State> {
+
+    static defaultProps = {
+        descriptionNumberOfLines: 50
+    };
 
     render() {
         const {activity, skipLineup, style, cardStyle, children, navigator} = this.props;
@@ -118,11 +102,9 @@ export default class ActivityStatus extends React.Component<Props, State> {
                 flex: 1,
                 flexDirection: 'row',
                 backgroundColor: 'white',
-                ...styleMargin(14, 0, 0, 0),
-                ...stylePadding(10, 10),
+                paddingHorizontal: 0,
+                paddingTop: 10,
                 // borderRadius: 6,
-
-
             }]}>
 
                 <Octicons name="quote" size={10} color={Colors.brownishGrey} style={{alignSelf: 'flex-start'}}/>
@@ -130,7 +112,7 @@ export default class ActivityStatus extends React.Component<Props, State> {
                     flex: 1,
                     alignItems: 'center',
                     textAlignVertical: 'center',
-                    ...stylePadding(2, 0)
+                    paddingHorizontal:2,
                 }]}>{_.upperFirst(activity.description)}
                 </Text>
             </View>

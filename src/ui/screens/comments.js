@@ -99,6 +99,7 @@ class CommentsScreen extends Screen<Props, State> {
                         activity={activity}
                         // skipLineup={this.props.skipLineup}
                         navigator={this.props.navigator}
+                        descriptionNumberOfLines={8}
                         style={{
                             ...styleMargin(0, 0),
                         }}
@@ -161,7 +162,9 @@ class CommentsScreen extends Screen<Props, State> {
                         <CommentInput
                             activity={activity}
                             containerStyle={{position: 'absolute', bottom: 0, padding: 3, backgroundColor: Colors.greying}}
-                            inputContainerStyle={{borderRadius: 4, borderWidth: 0}}
+                            inputContainerStyle={{
+                                borderRadius: 1, borderWidth: StyleSheet.hairlineWidth,
+                            }}
                             placeholder={"activity_comments_screen.add_comment_placeholder"}
                         />
 

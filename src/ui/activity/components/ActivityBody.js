@@ -23,7 +23,6 @@ import {SFP_TEXT_ITALIC} from "../../fonts";
 import {CachedImage} from "react-native-img-cache";
 import Icon from 'react-native-vector-icons/Feather';
 import {firstName} from "../../../helpers/StringUtils";
-import FeedSeparator from "./FeedSeparator";
 
 
 type Props = {
@@ -31,6 +30,7 @@ type Props = {
     onPressItem: (any) => void,
     skipLineup?: boolean,
     liked: boolean,
+    bodyStyle?: *
 };
 
 type State = {
@@ -47,7 +47,7 @@ export default class ActivityBody extends React.Component<Props, State> {
     }
 
     render() {
-        const {activity} = this.props;
+        const {activity, bodyStyle} = this.props;
         let resource = activity.resource;
 
         return (
@@ -56,7 +56,7 @@ export default class ActivityBody extends React.Component<Props, State> {
                 {this.renderImage()}
 
                 {resource && (
-                    <View style={styles.body}>
+                    <View style={[styles.body, bodyStyle]}>
                         <View style={styles.bodyInner}>
                             <View style={styles.flex1}>
                                 <Text style={[styles.title]} numberOfLines={2}>{resource.title}</Text>

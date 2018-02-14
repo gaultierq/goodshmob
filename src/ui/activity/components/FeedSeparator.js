@@ -6,14 +6,15 @@ import * as UI from "../../UIStyles";
 import {Colors} from "../../colors";
 
 type Props = {
-    vMargin?: number
+    vMargin?: number,
+    style?: ?*
 };
 
 type State = {
 };
 export default class FeedSeparator extends React.Component<Props, State> {
     render() {
-        return <View style={[styles.sep, UI.TP_MARGINS(this.props.vMargin)]}/>;
+        return <View style={[styles.sep, UI.TP_MARGINS(this.props.vMargin), this.props.style]}/>;
     }
 }
 

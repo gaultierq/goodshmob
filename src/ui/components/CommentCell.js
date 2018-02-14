@@ -69,15 +69,17 @@ export default class CommentCell extends Component<Props, State> {
                         {comments.map((comment: Comment, i) => <Row style={{marginTop: !!i ? 4 : 0}} key={comment.id}>
                             <View style={{flexDirection: "row"}}>
                                 <View style={[{
-                                    ...stylePadding(12, 4),
+                                    // ...stylePadding(12, 4),
+                                    paddingHorizontal: 12,
+                                    paddingVertical: 4,
                                     backgroundColor: rightDisplay ? Colors.green : Colors.white,
                                     // borderRadius: 12,
-                                    ...borderStyle(i, 12),
+                                    ...borderStyle(i, 4),
                                     borderColor: Colors.greyish,
                                 }, textContainerStyle]}>
 
                                     <Text style={{
-                                        fontSize: 13,
+                                        fontSize: 15,
                                         // lineHeight: 20,
                                         // backgroundColor: 'red',
                                         fontFamily: SFP_TEXT_REGULAR,
@@ -94,7 +96,7 @@ export default class CommentCell extends Component<Props, State> {
                     <Col style={{width: dimension}}/>
                     <Col>
                         <Text
-                            style={[styles.timeSince, {alignSelf: 'flex-start', ...styleMargin(4, 4)}]}>{timeSinceActivity(comment)}</Text>
+                            style={[styles.timeSince, {alignSelf: 'flex-start', ...styleMargin(0, 4)}]}>{timeSinceActivity(comment)}</Text>
                     </Col>
                 </Row>
                 }
