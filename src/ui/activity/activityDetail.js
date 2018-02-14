@@ -32,7 +32,6 @@ import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts";
 import ActivityActionBar from "./components/ActivityActionBar";
 import FeedSeparator from "./components/FeedSeparator";
 import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
-import BackButton from "../components/BackButton";
 
 type Props = {
     activityId: Id,
@@ -54,15 +53,16 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
     state = {};
 
+    /*
     static navigatorStyle = {
-        navBarHidden: true
-        // drawUnderNavBar: true,
-        // navBarTransparent: true,
-        // navBarTranslucent: true,
-        // navBarBackgroundColor: Colors.dirtyWhite,
+        drawUnderNavBar: true,
+        navBarTransparent: true,
+        navBarTranslucent: true,
+        navBarBackgroundColor: Colors.dirtyWhite,
         // statusBarBlur: true
         // navBarButtonColor: 'transparent',
     };
+    */
 
     componentDidMount() {
         this.load();
@@ -143,13 +143,6 @@ class ActivityDetailScreen extends Screen<Props, State> {
                         }
                     </View>
                 </ScrollView>
-                <View style={styles.backButtonWrapper} >
-                    <BackButton onPress={() => {
-                        this.props.navigator.pop({
-                            animated: true, // does the pop have transition animation or does it happen immediately (optional)
-                        })
-                    }}/>
-                </View>
             </MainBackground>
         );
     }
@@ -366,11 +359,6 @@ const styles = StyleSheet.create({
     loader: {
         top: "50%",
         bottom: "50%",
-    },
-    backButtonWrapper: {
-        position: 'absolute',
-        left: 10,
-        top: 20
     }
 });
 
