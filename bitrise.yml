@@ -37,7 +37,7 @@ workflows:
             if [ ! -d "goodshmob-version" ] ; then
               git clone git@github.com:goodshopping/goodshmob-version
             else
-                cd goodshmob-version && git checkout && cd -
+                cd goodshmob-version && git pull origin master && cd -
             fi
             cd goodshmob-version
 
@@ -92,6 +92,12 @@ workflows:
         - notes: "$GIT_CLONE_COMMIT_MESSAGE_SUBJECT"
   _build-android:
     steps:
+    - set-android-manifest-versions@1.0.5:
+        run_if: 'true'
+        inputs:
+        - manifest_file: "$BITRISE_SOURCE_DIR/android/app/src/main/AndroidManifest.xml"
+        - version_name: '$GOODSH_BUILD_VERSION'
+        - version_code: '$GOODSH_BUILD_VERSION'
     - gradle-runner@1.8.0:
         inputs:
         - gradle_file: "$GRADLE_BUILD_FILE_PATH"
@@ -112,6 +118,12 @@ workflows:
     - cocoapods-install@1.7.2: {}
   _build-ios:
     steps:
+    - set-xcode-build-number@1.0.5:
+        run_if: 'true'
+        inputs:
+        - plist_path: "$BITRISE_SOURCE_DIR/ios/goodshmob/Info.plist"
+        - build_version: '$GOODSH_BUILD_VERSION'
+        - build_short_version_string: '$GOODSH_BUILD_VERSION'
     - xcode-archive:
         inputs:
         - export_method: development
@@ -119,6 +131,7 @@ workflows:
         - configuration: "$GOODSH_BUILD_IOS_CONFIGURATION"
         - project_path: "$BITRISE_WORKSPACE_PATH"
         - output_tool: xcodebuild
+
   _deploy-ios:
     steps:
     - hockeyapp-deploy@2.4.2:
@@ -140,7 +153,7 @@ workflows:
             if [ ! -d "goodshmob-version" ] ; then
               git clone git@github.com:goodshopping/goodshmob-version
             else
-                cd goodshmob-version && git checkout && cd -
+                cd goodshmob-version && git pull origin master && cd -
             fi
             cd goodshmob-version
 
@@ -155,6 +168,9 @@ workflows:
             git add build.history
             git commit -m "increase history: -b $GOODSH_BUILD_BRANCH -c $GOODSH_BUILD_COMMIT_SHA1 -v $GOODSH_BUILD_VERSION -i $GOODSH_BUILD_ID -s $_status"
             git push
+
+            cd ..
+            git checkout android/app/src/main/AndroidManifest.xml ios/goodshmob/Info.plist
   android:
     before_run:
     - _prepare
@@ -199,8 +215,8 @@ workflows:
     - _prepare
     # - _prepare-ios
     # - _prepare-android
-    # - _build-android
-    # - _build-ios
+    - _build-android
+    - _build-ios
     # - _deploy-ios
     # - _deploy-android
     - _add_version
