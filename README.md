@@ -1,7 +1,8 @@
 # == Mobile app for goodsh (prod) ==
 
 
-## Lib
+## Setup
+Use the following versions:
 * node 9.3
 * npm 5.6.0
 * pod 1.4.0.rc.1
@@ -17,40 +18,50 @@
 
 NB: lineup.savings => the savings will be read once from data store. data store update won't be reflected on lineup.savings
 
-java.io.IOException: Duplicate zip entry [classes.jar:com/google/android/gms/internal/zzfgf.class]
 
-update app/build.gradle with latest google service version
-
-./gradlew :app:dependencies | grep google | grep '>'
-
-./node_modules/flow-bin/flow-osx-v0.57.3/flow check --show-all-errors | grep 'Error: src'
+display flow errors:  
+`./node_modules/flow-bin/flow-osx-v0.57.3/flow check --show-all-errors | grep 'Error: src'`
 
 ## Debugging
-To output in console. In `.env` file :
 
-`ENABLED_LOGS=log,debug,info,warn,error`<br/>
+`.env` file contains plenty of options to configure your app.  
+1. display console.logs:   
+ `ENABLED_LOGS=log,debug,info,warn,error`
+   
+2. show RN menu on android device: `adb shell input keyevent 82`
+
+3. tester la preprod, avec le debugger et les logs:  
+dans `RCTDefines.h` set `RCT_DEV 1`
+
+4. debug menu accessible depuis le menu profile, en cliquant 5 fois de suite rapidement sur le numero de version
+
 
 ## Troubleshooting
-On Android, when launching the app on emulator you may end up with error :
-
-`BUILD SUCCESSFUL in 7s...`<br/>
-`Error type 3`<br/>
-`Error: Activity class {it.goodsh.mob/it.goodsh.mob.MainActivity} does not exist.`<br/>
-
+1. On Android, when launching the app on emulator you may end up with error :
+```
+BUILD SUCCESSFUL in 7s...
+Error type 3
+Error: Activity class {it.goodsh.mob/it.goodsh.mob.MainActivity} does not exist.
+```
 The app is installed but doesn't launch automatically, just navigate to applications you may find it already installed
 
 
-cannot follow symbolic link
-rm -rf /Users/qg/projects/goodshmob/node_modules/node-pre-gyp/node_modules/.bin/rc \
-/Users/qg/projects/goodshmob/node_modules/node-pre-gyp/node_modules/request/node_modules/.bin/uuid \
-/Users/qg/projects/goodshmob/node_modules/react-native/node_modules/jest-haste-map/node_modules/sane/node_modules/.bin/watch \
-/Users/qg/projects/goodshmob/node_modules/envify/node_modules/.bin/esparse \
-/Users/qg/projects/goodshmob/node_modules/envify/node_modules/.bin/esvalidate \
-/Users/qg/projects/goodshmob/node_modules/jest/node_modules/jest-cli/node_modules/.bin/jest-runtime \
-/Users/qg/projects/goodshmob/node_modules/node-pre-gyp/node_modules/.bin/detect-libc \
-/Users/qg/projects/goodshmob/node_modules/node-pre-gyp/node_modules/.bin/nopt
+2. `java.io.IOException: Duplicate zip entry [classes.jar:com/google/android/gms/internal/zzfgf.class]`
+
+    update app/build.gradle with latest google service version  
+    
+    You can check before which version is resolved:  
+    `./gradlew :app:dependencies | grep google | grep '>'`
 
 
-## tools
-RN menu on android device: adb shell input keyevent 82
-tester la preprod, avec le debugger et les logs: RCTDefines.h, `RCT_DEV 1`
+#### Cannot follow symbolic link
+```  
+rm -rf ./node_modules/node-pre-gyp/node_modules/.bin/rc \
+rm -rf ./node_modules/node-pre-gyp/node_modules/request/node_modules/.bin/uuid \
+rm -rf ./node_modules/react-native/node_modules/jest-haste-map/node_modules/sane/node_modules/.bin/watch \
+rm -rf ./node_modules/envify/node_modules/.bin/esparse \
+rm -rf ./node_modules/envify/node_modules/.bin/esvalidate \
+rm -rf ./node_modules/jest/node_modules/jest-cli/node_modules/.bin/jest-runtime \
+rm -rf ./node_modules/node-pre-gyp/node_modules/.bin/detect-libc \
+rm -rf ./node_modules/node-pre-gyp/node_modules/.bin/nopt
+```
