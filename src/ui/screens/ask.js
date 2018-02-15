@@ -65,12 +65,12 @@ export default class AskScreen extends Component<Props, State> {
                 <Sheet
                     navigator={this.props.navigator}
                     ref={ref => this._sheet = ref}
-                    closeCallback={this.closeWithConfirmation.bind(this)}
+                    onBeforeClose={this.onBeforeClose.bind(this)}
                 >
                     <View style={{height: 800, backgroundColor: Colors.green, padding: 15}}>
 
                         {/*<Text style={styles.header}>{i18n.t("actions.ask")}</Text>*/}
-                        <GTouchable onPress={()=>this.closeWithConfirmation()}>
+                        <GTouchable onPress={()=>this._sheet && this._sheet.close()}>
                             <Image source={require('../../img2/closeXWhite.png')}/>
                         </GTouchable>
                         <TextInput
@@ -117,30 +117,30 @@ export default class AskScreen extends Component<Props, State> {
     }
 
 
-  closeWithConfirmation() {
+  onBeforeClose(proceed: ()=>void, interupt: ()=>void) {
 
-        if (!this._sheet) {
-            return
+        if (!_.isEmpty(this.state.askContent)) {
+
+            Alert.alert(
+                i18n.t('actions.cancel'),
+                i18n.t('ask.cancel'),
+                [
+                    {text: i18n.t('actions.cancel'), onPress: () => {
+                        console.log('Cancel Pressed');
+                        interupt();
+
+                    }, style: 'cancel'},
+                    {text: i18n.t('actions.ok'), onPress: () => {
+                        proceed();
+                    }},
+                ],
+                { cancelable: true }
+            )
+        }
+        else {
+            proceed();
         }
 
-        let content = this.state.askContent;
-
-        if (!content || content.length === 0) {
-            this._sheet.close();
-            return
-        }
-
-        Alert.alert(
-            i18n.t('actions.cancel'),
-            i18n.t('ask.cancel'),
-            [
-              {text: i18n.t('actions.cancel'), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-              {text: i18n.t('actions.ok'), onPress: () => {
-                  this._sheet.close();
-                }},
-            ],
-            { cancelable: true }
-          )
     }
 
 

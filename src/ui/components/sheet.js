@@ -1,5 +1,6 @@
-import type {Node} from 'react';
 // @flow
+
+import type {Node} from 'react';
 import React from 'react';
 import {
     Animated,
@@ -17,16 +18,20 @@ import Modal from 'react-native-modalbox';
 
 type Props = {
     children: Node,
-    // If closeCallback is undefined, the sheet will close
-    closeCallback: () => void,
+    // If onBeforeClose is undefined, the sheet will close
+    onBeforeClose: () => void,
 
 };
 
 type State = {
-    height: number
+    height: number,
+    opened?: ? boolean
 };
 
 export default class Sheet extends React.Component<Props, State> {
+
+
+    _modal;
 
     constructor(props: Props) {
         super(props);
@@ -36,58 +41,35 @@ export default class Sheet extends React.Component<Props, State> {
     }
 
     render() {
-// <<<<<<< HEAD
-//         const translateY = this.animatedValue.interpolate({
-//             inputRange: [0, 1],
-//             outputRange: [0, this.state.height]
-//         });
-//         const backgroundColor = this.animatedValue.interpolate({
-//             inputRange: [0, 1],
-//             outputRange: ['rgba(0, 0, 0, 0.3)', 'rgba(0, 0, 0, 0)']
-//         });
-
-//         return (<View style={{flex:1,}}>
-//             <TouchableWithoutFeedback
-//                 onPress={()=> this.props.closeCallback ? this.props.closeCallback() : this.close()}
-//             >
-//                 <Animated.View style={[styles.container, {backgroundColor}]}>
-//                 </Animated.View>
-//             </TouchableWithoutFeedback>
-
-//             <Animated.View style={
-//                 [
-//                     styles.content,
-//                     {transform: [{translateY}]}
-//                 ]
-//             }>
-//                 {this.props.children}
-//             </Animated.View>
-//         </View>);
-//     }
-
-//     close() {
-//         this.animate(0, 1, ()=>this.props.navigator.dismissModal({animationType: 'none'}));
-//     }
-// }
-
-// const styles = StyleSheet.create({
-//     container: {
-//         flex:1,
-//         width: "100%",
-//         height: "100%",
-//         justifyContent: 'flex-end',
-//     },
-//     content: {
-//         width: "100%",
-//         // backgroundColor: "white",
-// =======
         let height = _.get(this.props, 'children.props.style.height');
         return (
-            <Modal position={'bottom'}
-                onClosed={() => this.props.navigator.dismissModal({animationType: 'none'})}
+            <Modal
+            ref={modal=>this._modal = modal}
+                position={'bottom'}
+                   onClosed={this.onClose.bind(this)}
+                   onOpened={()=>this.setState({opened:true})}
                    isOpen={true}
+                   backButtonClose={true}
                    style={{height}}>{this.props.children}</Modal>
         );
-// >>>>>>> commit2
+    }
+
+    onClose() {
+        console.debug("onClosed");
+        if (this.props.onBeforeClose) {
+            this.props.onBeforeClose(()=>this.finishClose(), ()=>this.open())
+        }
+        else {
+            this.finishClose();
+        }
+    }
+
+
+    finishClose() {
+        this.props.navigator.dismissModal({animationType: 'none'});
+    }
+
+    open() {
+        this._modal.open();
     }
 }
