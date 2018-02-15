@@ -9,6 +9,7 @@ import {CONFIG_SET} from "../../reducers/dataReducer";
 import Screen from "../components/Screen";
 import codePush from "react-native-code-push";
 import Snackbar from "react-native-snackbar"
+import Config from 'react-native-config'
 
 type Props = {
 
@@ -65,10 +66,20 @@ export default class DebugScreen extends Screen<Props, State> {
                         title="sync codepush"
                         onPress={this.syncCodepush.bind(this)}
                     />
+                    <Button
+                        title="show build information"
+                        onPress={this.showBuildInfo.bind(this)}
+                    />
                     <Text>{this.state.text}</Text>
                 </View>
             </ScrollView>
         );
+    }
+
+    showBuildInfo() {
+        let text = _.keys(Config).filter(k=>k.startsWith("BUILD")).map(k=> `${k}=${Config[k]}`).join('\n');
+
+        this.setState({text});
     }
 
     syncCodepush() {
@@ -86,6 +97,7 @@ export default class DebugScreen extends Screen<Props, State> {
         this.getStorage().then(storage=> {
             Clipboard.setString(storage);
             Snackbar.show({
+                //MagicString
                 title: "copié!",
             });
         })
