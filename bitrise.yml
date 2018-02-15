@@ -25,7 +25,39 @@ workflows:
 
             #!/usr/bin/env bash
             set -e
+            envman add --key GOODSH_BUILD_BRANCH --value $(git rev-parse --abbrev-ref HEAD)
+            envman add --key GOODSH_BUILD_COMMIT_SHA1 --value $(git rev-parse HEAD)
             ./goodshmob-build/prepare-env.sh
+    - script@1.1.5:
+        inputs:
+        - content: |2-
+            #!/usr/bin/env bash
+            set -e
+            
+            if [ ! -d "goodshmob-version" ] ; then
+              git clone https://github.com/goodshopping/goodshmob-version
+            else
+                cd goodshmob-version && git checkout && cd -
+            fi
+            cd goodshmob-version
+
+            _version=$(./script.sh resolveNextVersion -b $GOODSH_BUILD_BRANCH)
+            envman add --key GOODSH_BUILD_VERSION --value $_version
+
+            if [ -z ${_version+x} ];
+            then
+                echo "cannot find resolve next version1"
+                exit 1
+            fi
+
+            echo build version:$_version
+
+            ./script.sh setBuildStatus -b $GOODSH_BUILD_BRANCH -c $GOODSH_BUILD_COMMIT_SHA1 -v $_version -i $GOODSH_BUILD_ID -s building
+
+            git add build.history
+            git commit -m "increase history: -b $GOODSH_BUILD_BRANCH -c $GOODSH_BUILD_COMMIT_SHA1 -v $_version -i $GOODSH_BUILD_ID -s building"
+            git push
+
     - script@1.1.5:
         inputs:
         - content: |-
@@ -37,9 +69,6 @@ workflows:
                 cp $GOODSH_BUILD_REACT_NATIVE_ENV_FILE .env
             fi
     - install-react-native@0.9.1: {}
-#    - npm@0.9.0:
-#        inputs:
-#        - command: install
     - yarn@0.0.4: {}
 
   _prepare-android:
@@ -99,12 +128,40 @@ workflows:
         - app_id: "$GOODSH_BUILD_HOCKEY_APP_IOS_APP_ID"
         - notify: '0'
         - notes: "$GIT_CLONE_COMMIT_MESSAGE_SUBJECT"
+
+  _add_version:
+    steps:
+    - script@1.1.5:
+        inputs:
+        - content: |2-
+            #!/usr/bin/env bash
+            set -e
+            
+            if [ ! -d "goodshmob-version" ] ; then
+              git clone https://github.com/goodshopping/goodshmob-version
+            else
+                cd goodshmob-version && git checkout && cd -
+            fi
+            cd goodshmob-version
+
+            if [ $BITRISE_BUILD_STATUS == "0" ] ; then
+                _status="success"
+            else
+                _status="fail"
+            fi
+
+            ./script.sh setBuildStatus -b $GOODSH_BUILD_BRANCH -c $GOODSH_BUILD_COMMIT_SHA1 -v $GOODSH_BUILD_VERSION -i $GOODSH_BUILD_ID -s $_status
+
+            git add build.history
+            git commit -m "increase history: -b $GOODSH_BUILD_BRANCH -c $GOODSH_BUILD_COMMIT_SHA1 -v $GOODSH_BUILD_VERSION -i $GOODSH_BUILD_ID -s $_status"
+            git push
   android:
     before_run:
     - _prepare
     - _prepare-android
     - _build-android
     - _deploy-android
+    - _add_version
     steps:
     - slack@2.6.3:
         inputs:
@@ -116,6 +173,7 @@ workflows:
     - _prepare-ios
     - _build-ios
     - _deploy-ios
+    - _add_version
     steps:
     - slack@2.6.3:
         inputs:
@@ -130,11 +188,27 @@ workflows:
     - _build-ios
     - _deploy-ios
     - _deploy-android
+    - _add_version
     steps:
     - slack@2.6.3:
         inputs:
         - message: 'Build SUCCESSFUL: [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT'
         - webhook_url: "$SLACK_WEBHOOK_URL"
+  build_test:
+    before_run:
+    - _prepare
+    # - _prepare-ios
+    # - _prepare-android
+    # - _build-android
+    # - _build-ios
+    # - _deploy-ios
+    # - _deploy-android
+    - _add_version
+    # steps:
+    # - slack@2.6.3:
+    #     inputs:
+    #     - message: 'Build SUCCESSFUL: [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT'
+    #     - webhook_url: "$SLACK_WEBHOOK_URL"
 app:
   envs:
   - opts:

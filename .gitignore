@@ -69,3 +69,5 @@ goodshmob-build
 gradle.deps
 .env.local
 env.js
+goodshmob-version/
+goodshmob-version
