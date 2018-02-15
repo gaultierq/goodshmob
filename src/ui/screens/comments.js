@@ -81,7 +81,7 @@ class CommentsScreen extends Screen<Props, State> {
             })
         );
 
-        const fullComments = comments.filter( c => { c.built })
+        const fullComments = comments.filter( c => c.built )
 
         return (
             <MainBackground>
