@@ -29,6 +29,7 @@ workflows:
             envman add --key GOODSH_BUILD_COMMIT_SHA1 --value $(git rev-parse HEAD)
             ./goodshmob-build/prepare-env.sh
     - script@1.1.5:
+        title: Resolve new version
         inputs:
         - content: |2-
             #!/usr/bin/env bash
