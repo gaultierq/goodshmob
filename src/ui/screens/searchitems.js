@@ -62,10 +62,16 @@ class SearchItem extends Screen<Props, State> {
 
             //actions.searchFor(this.state.input, cat)
 
+            //GeolocationManager
+            let {lat, lng} = {};
+
             let call = new Api.Call()
                 .withMethod('GET')
                 .withRoute(`search/${category}`)
-                .addQuery({'search[term]': token});
+                .addQuery({'search[term]': token})
+                .addQuery(lat && {'search[lat]': lat})
+                .addQuery(lng && {'search[lng]': lng})
+            ;
 
             //maybe use redux here ?
             call
