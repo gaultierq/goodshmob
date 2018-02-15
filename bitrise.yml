@@ -35,7 +35,7 @@ workflows:
             set -e
             
             if [ ! -d "goodshmob-version" ] ; then
-              git clone https://github.com/goodshopping/goodshmob-version
+              git clone git@github.com:goodshopping/goodshmob-version
             else
                 cd goodshmob-version && git checkout && cd -
             fi
@@ -138,7 +138,7 @@ workflows:
             set -e
             
             if [ ! -d "goodshmob-version" ] ; then
-              git clone https://github.com/goodshopping/goodshmob-version
+              git clone git@github.com:goodshopping/goodshmob-version
             else
                 cd goodshmob-version && git checkout && cd -
             fi
