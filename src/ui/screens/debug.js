@@ -10,6 +10,7 @@ import Screen from "../components/Screen";
 import codePush from "react-native-code-push";
 import Snackbar from "react-native-snackbar"
 import Config from 'react-native-config'
+import {Colors} from "../colors";
 
 type Props = {
 
@@ -131,5 +132,6 @@ export default class DebugScreen extends Screen<Props, State> {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: Colors.white,
     }
 });
