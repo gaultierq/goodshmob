@@ -143,13 +143,18 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             let trigger = this.hasItems() ? TRIGGER_USER_INDIRECT_ACTION : TRIGGER_USER_DIRECT_ACTION;
             const options = {trigger};
 
-            if (this.canFetch('isFetchingFirst', options) && this.state.firstLoad === 'idle') {
+            const canFetch = this.canFetch('isFetchingFirst', options);
+            const firstLoad = this.state.firstLoad;
+            if (canFetch && firstLoad === 'idle') {
 
                 Api.safeExecBlock.call(
                     this,
                     () => this.fetchIt(options),
                     'firstLoad'
                 );
+            }
+            else {
+                console.debug(`postFetchFirst was not performed: canFetch=${canFetch}, firstLoad=${firstLoad}`);
             }
         });
     }
@@ -229,7 +234,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     isFiltering() {
-        return !!this.props.filter;
+        return !!this.state.filter;
     }
 
     debugOnlyEmptyFeeds() {

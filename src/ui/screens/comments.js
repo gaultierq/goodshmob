@@ -302,19 +302,6 @@ const actions = (() => {
 })();
 
 
-
-
-type COMMENT_CREATION_PAYLOAD = {activityType: ActivityType, activityId: Id, content: string}
-
-export const COMMENT_CREATION: PendingAction<COMMENT_CREATION_PAYLOAD>  = pendingActionWrapper(
-    CREATE_COMMENT,
-    ({activityType, activityId, content}: COMMENT_CREATION_PAYLOAD) => new Call()
-        .withMethod('POST')
-        .withRoute(`${activityType}/${activityId}/comments`)
-        .addQuery({include: "user"})
-        .withBody({comment: {content}})
-);
-
 const reducer = (() => {
     const initialState = Immutable(Api.initialListState());
 
@@ -329,19 +316,8 @@ const reducer = (() => {
                 state = doDataMergeInState(state, path, action.payload.data);
                 break;
             }
-            // case CREATE_COMMENT.success(): {
-            //
-            //     let {id, type} = action.payload.data;
-            //     let {activityId, activityType} = action.options;
-            //     activityType = sanitizeActivityType(activityType);
-            //     let path = `${activityType}.${activityId}.relationships.comments.data`;
-            //     state = doDataMergeInState(state, path, [{id, type}], {reverse: true});
-            //     break;
-            // }
 
         }
-        //let desc = {fetchFirst: LOAD_COMMENTS};
-        //return Api.reduceList(state, action, desc);
         return state;
     }
 })();

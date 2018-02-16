@@ -20,6 +20,7 @@ import {CANCELABLE_MODAL} from "../Nav";
 import Snackbar from "react-native-snackbar"
 import {SFP_TEXT_ITALIC, SFP_TEXT_REGULAR} from "../fonts"
 import GTouchable from "../GTouchable";
+import {pendingActionWrapper} from "../../helpers/ModelUtils";
 
 type Props = {
     defaultLineupId: Id,
@@ -33,6 +34,7 @@ type Props = {
 
 export type Description = string;
 export type Visibility = 0 | 1;
+
 
 type State = {
     description?: Description,
@@ -221,6 +223,8 @@ export default class AddItemScreen extends Screen<Props, State> {
         ).then(() => this.setState({selectedLineupId: null}))
     }
 }
+
+
 
 const styles = StyleSheet.create({
     container: {

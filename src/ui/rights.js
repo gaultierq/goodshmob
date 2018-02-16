@@ -51,6 +51,7 @@ export default class ActionRights {
         return this.activity.user.id === currentUserId();
     }
 
+    //TODO: or is pending
     isGoodshedByMe() {
         let resource = this.activity.resource;
 

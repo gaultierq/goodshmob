@@ -150,7 +150,8 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                     fontFamily: SFP_TEXT_MEDIUM
                                 }}>{i18n.t('detail_screen.related_activities_title')}</Text>}
 
-                            />}
+                            />
+                            }
                         </View>
                         }
                     </View>

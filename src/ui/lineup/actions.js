@@ -6,6 +6,7 @@ import type {Id, List} from "../../types";
 import {CREATE_LINEUP, DELETE_LINEUP, EDIT_LINEUP, SAVE_ITEM} from "./actionTypes";
 import type {PendingAction} from "../../helpers/ModelUtils";
 import {pendingActionWrapper} from "../../helpers/ModelUtils";
+import type {Visibility} from "../screens/additem";
 
 
 //defining lineup creation cycle
@@ -35,7 +36,7 @@ export const LINEUP_DELETION: PendingAction<LINEUP_DELETION_PAYLOAD>  = pendingA
 export function saveItem(itemId: Id, lineupId: Id, privacy = 0, description = '') {
 
     let body = {
-        saving: { list_id: lineupId, privacy}
+        saving: { list_id: lineupId, privacy, description}
     };
     if (description) {
         Object.assign(body.saving, {description});
@@ -52,6 +53,23 @@ export function saveItem(itemId: Id, lineupId: Id, privacy = 0, description = ''
     return call.disptachForAction2(SAVE_ITEM, {lineupId});
 }
 
+export function bookmarkDispatchee(payload: SAVING_CREATION_PAYLOAD) {
+
+    return SAVING_CREATION.pending(payload, {});
+}
+
+export type SAVING_CREATION_PAYLOAD = {itemId: Id, lineupId: Id, privacy: Visibility, description: string}
+
+export const SAVING_CREATION: PendingAction<SAVING_CREATION_PAYLOAD>  = pendingActionWrapper(
+    SAVE_ITEM,
+    ({itemId, lineupId, privacy, description}: SAVING_CREATION_PAYLOAD) => new Api.Call()
+        .withMethod('POST')
+        .withRoute(`items/${itemId}/savings`)
+        .withBody({saving: { list_id: lineupId, privacy, description}})
+        .addQuery({'include': '*.*'})
+);
+
+
 export function fetchItemCall(itemId: Id) {
     return new Api.Call()
         .withMethod('GET')
@@ -59,13 +77,7 @@ export function fetchItemCall(itemId: Id) {
         .addQuery({'include': '*.*'});
 }
 
-// export function deleteLineup (lineupId: Id) {
-//     let call = new Api.Call()
-//         .withMethod('DELETE')
-//         .withRoute(`lists/${lineupId}`);
-//
-//     return call.disptachForAction2(DELETE_LINEUP, {lineupId});
-// }
+
 
 export function patchLineup(editedLineup: List) {
     let call = new Api.Call()

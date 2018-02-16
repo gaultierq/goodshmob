@@ -80,7 +80,7 @@ export default class ActivityStatus extends React.Component<Props, State> {
                         </UserRowI>
 
                     </GTouchable>
-                    {activity.description && this.renderDescription(activity)}
+                    {!!activity.description && this.renderDescription(activity)}
                 </View>
                 {children}
 

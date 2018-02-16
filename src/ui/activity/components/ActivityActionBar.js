@@ -16,6 +16,7 @@ import ActionRights, {getPendingLikeStatus} from "../../rights";
 import {CREATE_COMMENT} from "../../screens/comments";
 import GTouchable from "../../GTouchable";
 import * as Nav from "../../Nav";
+import {bookmarkDispatchee} from "../../lineup/actions";
 
 export type ActivityActionType = 'comment'| 'like'| 'unlike'| 'share'| 'save'| 'unsave'| 'see'| 'buy'| 'answer';
 const ACTIONS = ['comment', 'like', 'unlike','share', 'save', 'unsave', 'see', 'buy', 'answer'];
@@ -82,7 +83,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                 commentsCount += pendingCount;
 
                 return commentsCount > 0 ? commentsCount +'' : '';
-                // return i18n.t(`activity_item.buttons.${action}`,{count: commentsCount});
+            // return i18n.t(`activity_item.buttons.${action}`,{count: commentsCount});
             case 'like':
             case 'unlike':
                 let pendingLike = this.getPendingLikeStatus(activity);
@@ -220,21 +221,35 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
     execSave(activity: Activity) {
 
+        //bookmark
+        // create pending in goodshbox
+        // show snack with: change
+        //click on change, will delay the pending action, and show a list
+        // click on item in list will change the pending action list id, and restore old dueTo date
+
         let item = activity.resource;
 
-        const onFinished = () => this.props.navigator.dismissModal();
-        this.props.navigator.showModal({
-            screen: 'goodsh.AddItemScreen', // unique ID registered with Navigation.registerScreen
-            animationType: 'none',
-            title: i18n.t("actions.add"),
-            passProps: {
-                itemId: item.id,
-                itemType: item.type,
-                defaultLineupId: currentGoodshboxId(),
-                onCancel: onFinished,
-                onAdded: onFinished,
-            },
-        });
+        //1st: save in goodshbox. and no more !
+        this.props.dispatch(bookmarkDispatchee({
+            itemId: item.id,
+            lineupId: currentGoodshboxId(),
+            privacy: 0,
+            description: ''
+        }));
+
+        // const onFinished = () => this.props.navigator.dismissModal();
+        // this.props.navigator.showModal({
+        //     screen: 'goodsh.AddItemScreen', // unique ID registered with Navigation.registerScreen
+        //     animationType: 'none',
+        //     title: i18n.t("actions.add"),
+        //     passProps: {
+        //         itemId: item.id,
+        //         itemType: item.type,
+        //         defaultLineupId: currentGoodshboxId(),
+        //         onCancel: onFinished,
+        //         onAdded: onFinished,
+        //     },
+        // });
 
     }
 
