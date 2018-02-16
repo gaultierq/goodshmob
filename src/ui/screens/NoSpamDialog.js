@@ -64,11 +64,14 @@ export default class NoSpamDialog extends Component<Props, State> {
                     />,
                 ]}
                 width={0.8}
-                height={325}
+                height={400}
             >
 
 
-                <Markdown style={{color:Colors.greyishBrown}} body={i18n.t('no_spam.dialog_body')}/>
+                <View style={{flex:1, paddingRight: 15}}>
+                    <Markdown style={{color:Colors.greyishBrown}} body={i18n.t('no_spam.dialog_body')}/>
+                </View>
+
 
 
             </PopupDialog>

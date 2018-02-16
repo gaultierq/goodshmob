@@ -32,7 +32,9 @@ export default {
     },
     no_spam: {
         dialog_title: "Les 3 grands principes de Goodsh",
-        dialog_body: "Tes goodsh ne sont visibles QUE par toi et ton réseau.\n\nQuand tu enregistres un goodsh, tes contacts ne sont PAS notifiés. \n\nPour un goodsh COMPLÈTEMENT privé, active le cadenas.",
+        dialog_body: "- Tes goodsh ne sont visibles **QUE** par toi et ton réseau\n\n" +
+        "- Quand tu enregistres un goodsh, tes contacts ne sont **PAS** notifiés\n\n" +
+        "- Pour un goodsh **COMPLÈTEMENT** privé, active le cadenas",
         dialog_button: 'OK',
     },
     home: {
