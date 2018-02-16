@@ -145,7 +145,7 @@ const actions = (() => {
         fetchLineups: () => new Api.Call()
             .withMethod('GET')
             .withRoute("lists")
-            .delay(5000)
+            // .delay(5000)
             .addQuery({include: "savings,savings.resource"}),
 
         getUser: (userId): Api.Call => new Api.Call()
