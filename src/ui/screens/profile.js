@@ -35,6 +35,7 @@ import {CachedImage} from "react-native-img-cache";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 import {SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "../fonts";
 import FeedSeparator from "../activity/components/FeedSeparator";
+import {getDeviceInfo} from "../../managers/DeviceManager";
 
 type Props = {
     // userId: Id,
@@ -194,7 +195,8 @@ export default class Profile extends Component<Props, State> {
             }
 
         };
-        return <GTouchable onPress={handler}><Text style={styles.version}>v1.0</Text></GTouchable>
+        let version = getDeviceInfo('version') || '?';
+        return <GTouchable onPress={handler}><Text style={styles.version}>{`v${version}`}</Text></GTouchable>
     }
 
 

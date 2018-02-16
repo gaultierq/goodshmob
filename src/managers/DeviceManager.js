@@ -17,20 +17,6 @@ class DeviceManager {
     //waiting for user login to save the device
     init(store): DeviceManager {
         this.store = store;
-
-        //init with logged user => check & send diff
-        // if (store.getState().auth.currentUserId) {
-        //     this.checkAndSendDiff();
-        // }
-        // else {
-        //     console.debug("device manager: subscribing");
-        //     let unsubscribe = this.store.subscribe(() => {
-        //         if (store.getState().auth.currentUserId) {
-        //             unsubscribe();
-        //             this.checkAndSendDiff();
-        //         }
-        //     });
-        // }
         return this;
     }
 
@@ -46,7 +32,10 @@ class DeviceManager {
 
     }
 
-
+    getInfo(property) {
+        const device = this.store.getState().device;
+        return device && device[property];
+    }
 
     checkAndSendDiff() {
         console.debug("device manager: checkAndSendDiff");
@@ -103,6 +92,10 @@ export function init(store) {
 
 export function checkAndSendDiff() {
     instance.checkAndSendDiff();
+}
+
+export function getDeviceInfo(property: string) {
+    return instance.getInfo(property);
 }
 
 export function generateCurrentDevice(): Promise<Device> {
