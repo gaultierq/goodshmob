@@ -201,6 +201,7 @@ workflows:
     - slack@2.6.3:
         inputs:
         - message: 'Build SUCCESSFUL: [ios] [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT'
+        - message_on_error: "Ah! Something went wrong \U0001F631 logs: $BITRISE_BUILD_URL/logs.json?&download=log"
         - webhook_url: "$SLACK_WEBHOOK_URL"
   build:
     before_run:
@@ -216,6 +217,7 @@ workflows:
     - slack@2.6.3:
         inputs:
         - message: 'Build SUCCESSFUL: [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT'
+        - message_on_error: "Ah! Something went wrong \U0001F631 logs: $BITRISE_BUILD_URL/logs.json?&download=log"
         - webhook_url: "$SLACK_WEBHOOK_URL"
   build_test:
     before_run:
