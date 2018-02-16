@@ -299,7 +299,7 @@ export default {
     ask: {
         sent: "Demande envoyée",
         cancel: "Annuler la demande ?",
-        minimal_length: "La question doit faire au moins 10 caractères"
+        minimal_length: "La question doit faire au moins 10 caractères."
     },
     share_goodsh: {
         title: "Viens goodsher avec moi.",

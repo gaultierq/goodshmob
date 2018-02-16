@@ -19,7 +19,7 @@ export default {
             empty: "No result",
         },
         filter: {
-            empty: "No results. You can try to launch a deep search",
+            empty: "No result.Try launching a deep search.",
             deepsearch: "Deep search",
         },
         goodsh : {
@@ -28,7 +28,7 @@ export default {
         mine : {
             title: "My lists"
         },
-        empty_screen: "All your goodsh in one place. Tap '+' to save a new one."
+        empty_screen: "All your goodsh in one place.\nTap '+' to save a new one."
     },
     no_spam: {
         dialog_title: "The 3 pillars of Goodsh",
@@ -157,7 +157,7 @@ export default {
             "friends":"MY CONTACTS",
             "notifications":"NOTIFICATIONS",
         },
-        "empty_screen": "The goodsh of your friends are here. Tap ASK for a specific request."
+        "empty_screen": "Your friends' goodsh are here.\nTap Ask for a specific request."
     },
     "comments_screen":{
         "title": "Comments"
@@ -289,7 +289,7 @@ export default {
         send_to_goodsher: "Send to another\nuser",
         skip: "OK",
         ask: "Ask my network",
-        ask_button: "ASK",
+        ask_button: "Ask",
         invite: "Invite a friend",
         load_more: "Load more"
     },
@@ -302,7 +302,7 @@ export default {
     ask: {
         sent: "Request sent",
         cancel: "Cancel the request ?",
-        minimal_length: "The question must be at least 10 characters"
+        minimal_length: "The question must be at least 10 characters."
 
     },
     share_goodsh: {
