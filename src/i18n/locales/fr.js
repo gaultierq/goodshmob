@@ -15,7 +15,7 @@ export default {
     },
     lineups: {
         filter: {
-            empty: "Pas de résultat, tu peux essayer de lancer une recherche approfondie.",
+            empty: "Pas de résultat.\nPasser en mode recherche approfondie ?",
             deepsearch: "Recherche approfondie",
         },
         search: {
