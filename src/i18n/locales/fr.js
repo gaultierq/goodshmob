@@ -15,12 +15,12 @@ export default {
     },
     lineups: {
         filter: {
-            empty: "Pas de résultat, vous pouvez essayer de lancer une recherche approfondie",
+            empty: "Pas de résultat, tu peux essayer de lancer une recherche approfondie.",
             deepsearch: "Recherche approfondie",
         },
         search: {
             placeholder: "##Rechercher",
-            empty: "Pas de résultat",
+            empty: "Ach, pas de résultat",
         },
         goodsh : {
             title: "GoodshBox"
@@ -156,7 +156,7 @@ export default {
             "friends":"MES CONTACTS",
             "notifications":"NOTIFICATIONS",
         },
-        "empty_screen": "Découvre ici les goodsh de tes contacts. Tap ASK pour leur poser des questions."
+        "empty_screen": "Découvre ici les goodsh de tes contacts.\nTap Ask pour leur poser des questions."
     },
     "comments_screen":{
         "title": "Commentaires"
@@ -243,7 +243,7 @@ export default {
         }
     },
     empty: {
-        lineup: "Ach, cette liste est vide\net c'est bien dommage !"
+        lineup: "Ach, cette liste est vide\n c'est bien dommage !"
     },
     activity_action_bar: {
         goodsh_deleted: "Goodsh supprimé",
@@ -285,13 +285,13 @@ export default {
         send_to_goodsher: "Envoyer à un contact",
         skip: "OK",
         ask: "Demander à mon réseau",
-        ask_button: "ASK",
+        ask_button: "Ask",
         invite: "Inviter un ami",
         load_more: "Charger la suite"
 
     },
     common: {
-        empty_feed_generic: "Quand on aime on partage.\nCrée ton réseau de contacts. ",
+        empty_feed_generic: "Quand on aime on partage.\nCrée ton réseau de contacts.",
         api: {
             generic_error: "Oups... Y a quelque chose qui cloche."
         }
