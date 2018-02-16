@@ -10,13 +10,14 @@ import * as activityAction from "../actions";
 import {unsave} from "../actions";
 import Snackbar from "react-native-snackbar"
 import {toUppercase} from "../../../helpers/StringUtils";
-import {buildNonNullData, sanitizeActivityType} from "../../../helpers/DataUtils";
+import {buildData, buildNonNullData, sanitizeActivityType} from "../../../helpers/DataUtils";
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
 import ActionRights, {getPendingLikeStatus} from "../../rights";
 import {CREATE_COMMENT} from "../../screens/comments";
 import GTouchable from "../../GTouchable";
 import * as Nav from "../../Nav";
 import {bookmarkDispatchee} from "../../lineup/actions";
+import {sendMessage} from "../../../managers/Messenger";
 
 export type ActivityActionType = 'comment'| 'like'| 'unlike'| 'share'| 'save'| 'unsave'| 'see'| 'buy'| 'answer';
 const ACTIONS = ['comment', 'like', 'unlike','share', 'save', 'unsave', 'see', 'buy', 'answer'];
@@ -253,7 +254,34 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
     }
 
-    execUnsave(saving: Saving) {
+    execUnsave(remoteSaving: Saving) {
+        let resource = remoteSaving.resource;
+        let savedIn = _.get(resource, 'meta.savedIn', []);
+        let saving, lineup;
+        //one of the list where this item is saved
+        let lineupId = _.head(savedIn);
+        if (lineupId) {
+            lineup = buildData(this.props.data, 'lists', lineupId);
+            if (lineup) {
+                if (lineup.savings) {
+
+                    if (lineup) {
+                        saving = _.head(lineup.savings.filter(s =>_.get(s, 'resource.id') ===  resource.id));
+                    }
+                }
+                else {
+                    console.warn(`No savings in this linenup: ${JSON.stringify(lineup)}`);
+                }
+            }
+            else {
+                console.warn(`lineup not in cache: ${lineupId}`);
+            }
+        }
+
+        if (!saving) {
+            sendMessage(i18n.t('common.api.generic_error'));
+            return;
+        }
 
         Alert.alert(
             i18n.t("alert.delete.title"),
