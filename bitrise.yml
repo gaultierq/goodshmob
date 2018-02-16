@@ -68,7 +68,7 @@ workflows:
                 echo "creating .env file"
                 cp $GOODSH_BUILD_REACT_NATIVE_ENV_FILE .env
 
-                echo "BUILD_APP_VERSION=$GOODSH_BUILD_VERSION" >> .env
+                echo "BUILD_APP_VERSION=${GOODSH_BUILD_VERSION-unknown}" >> .env
                 echo "BUILD_COMMIT_SHA1=$GOODSH_BUILD_COMMIT_SHA1" >> .env
                 echo "BUILD_BRANCH=$GOODSH_BUILD_BRANCH" >> .env
                 echo "BUILD_ID=$BUILD_ID" >> .env
