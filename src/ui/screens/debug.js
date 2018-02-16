@@ -22,7 +22,8 @@ type State = {
 
 @logged
 @connect((state)=>({
-    config: state.config
+    config: state.config,
+    device: state.device
 }))
 export default class DebugScreen extends Screen<Props, State> {
 
@@ -71,6 +72,10 @@ export default class DebugScreen extends Screen<Props, State> {
                         title="show build information"
                         onPress={this.showBuildInfo.bind(this)}
                     />
+                    <Button
+                        title="show device information"
+                        onPress={this.showDeviceInfo.bind(this)}
+                    />
                     <Text>{this.state.text}</Text>
                 </View>
             </ScrollView>
@@ -80,6 +85,12 @@ export default class DebugScreen extends Screen<Props, State> {
     showBuildInfo() {
         let text = _.keys(Config).filter(k=>k.startsWith("BUILD")).map(k=> `${k}=${Config[k]}`).join('\n');
 
+        this.setState({text});
+    }
+
+    showDeviceInfo() {
+        const device = this.props.device;
+        let text = _.keys(device).map(k=> `${k}=${device[k]}`).join('\n');
         this.setState({text});
     }
 
@@ -108,7 +119,6 @@ export default class DebugScreen extends Screen<Props, State> {
         this.getStorage().then(storage=>this.setState({text:storage}))
     }
 
-
     getStorage() {
         return new Promise((resolve, reject) => {
             AsyncStorage.getAllKeys((err, keys) => {
@@ -125,8 +135,6 @@ export default class DebugScreen extends Screen<Props, State> {
             });
         });
     }
-
-
 }
 
 const styles = StyleSheet.create({
