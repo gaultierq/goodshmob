@@ -49,7 +49,6 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
         //let activity: Model.Activity = this.props.activity;
 
-        //let goodshed = resource && resource.meta ? savedIn : false;
 
         const possibleActions = ['comment', 'like', 'unlike', 'share', 'save', 'unsave', 'see', 'answer'];
 
@@ -194,20 +193,6 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     }
 
 
-    // byMe(activity: Activity) {
-    //     return activity.user.id === currentUserId();
-    // }
-    //
-    // isGoodshed2(activity: Activity) {
-    //     let resource = activity.resource;
-    //     let savedIn = _.get(resource, 'meta.saved-in', []);
-    //     let target = activity.target;
-    //     let goodshed;
-    //     if (target && target.type === 'lists') {
-    //         goodshed = _.indexOf(savedIn, target.id) > -1;
-    //     }
-    //     return goodshed;
-    // }
 
     renderButton(key: string, img: Url, text: string, handler: ()=>void, active:boolean = false) {
         let color = active ? Colors.green: Colors.greyishBrown;
@@ -302,6 +287,22 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
 
     }
+
+    execUnsave(remoteSaving: Saving) {
+        let resource = remoteSaving.resource;
+        let savingIds = _.get(resource, 'meta.mySavings', []);
+
+        this.props.navigator.showModal({
+            screen: 'goodsh.UnsaveScreen',
+            title: i18n.t("actions.unsave"),
+            passProps: {
+                savingIds,
+                // navigator: this.props.navigator
+            },
+            navigatorButtons: Nav.CANCELABLE_MODAL,
+        });
+    }
+
 
     execComment(activity: Activity) {
         this.props.navigator.showModal({

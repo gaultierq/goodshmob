@@ -55,9 +55,8 @@ export default class ActionRights {
     isGoodshedByMe() {
         let resource = this.activity.resource;
 
-        //savedIn = not only my lists... server fail
-        let savedIn = _.get(resource, 'meta.savedIn', []);
-        return !_.isEmpty(savedIn);
+        let mySavings = _.get(resource, 'meta.mySavings', []);
+        return !_.isEmpty(mySavings);
 
         // let target = this.activity.target;
         // let goodshed;

@@ -242,6 +242,14 @@ export default {
             label: "Êtes-vous sûr de vouloir vous déconnecter ?"
         }
     },
+    unsave_screen: {
+        unsave_button: {
+            idle: "Supprimer",
+            sending: "Suppression...",
+            ok: "Supprimé",
+            ko: "Ré-essayer",
+        }
+    },
     empty: {
         lineup: "Ach, cette liste est vide\net c'est bien dommage !"
     },
@@ -287,7 +295,8 @@ export default {
         ask: "Demander à mon réseau",
         ask_button: "ASK",
         invite: "Inviter un ami",
-        load_more: "Charger la suite"
+        load_more: "Charger la suite",
+        unsave: "Supprimer"
 
     },
     common: {
