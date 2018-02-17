@@ -1,6 +1,6 @@
 // @flow
 import React, {Component} from 'react';
-import {FlatList, StyleSheet, Text, TextInput, View} from 'react-native';
+import {ActivityIndicator, FlatList, StyleSheet, Text, TextInput, View} from 'react-native';
 import type {Id, RequestState, RNNNavigator, Save, Saving} from "../../types";
 import {CheckBox} from "react-native-elements";
 import Screen from "../components/Screen";
@@ -8,7 +8,7 @@ import {buildData} from "../../helpers/DataUtils";
 import {connect} from "react-redux";
 import {renderSimpleButton} from "../UIStyles";
 import * as Api from "../../managers/Api";
-import {unsave} from "../activity/actions";
+import {fetchActivity, unsave} from "../activity/actions";
 import {sendMessage} from "../../managers/Messenger";
 import {Colors} from "../colors"
 
@@ -18,12 +18,10 @@ type Props = {
 };
 
 type State = {
-    request: {}
 };
 
 export default class UnsaveScreen extends Screen<Props, State> {
 
-    state = {request: {}};
 
 
     render() {
@@ -49,7 +47,8 @@ export default class UnsaveScreen extends Screen<Props, State> {
 }
 
 type State2 = {
-    request: RequestState,
+    delete: RequestState,
+    fetch: RequestState,
 };
 
 type Props2 = {
@@ -63,9 +62,21 @@ type Props2 = {
 }))
 class UnsaveSavingCell extends Component<Props2, State2> {
 
-    state = {request: 'idle'};
+    state = {delete: 'idle', fetch: 'idle'};
 
-    componentWillMount() {
+    // TODO:
+    // this behavior could be generalized. ListCell should be able to fetch their own data if missing. But
+    // it should not be the default behavior, and also, these Cells should be dumb component, and delegate the data
+    // retrieval to some manager.
+    componentDidMount() {
+        if (!this.getLineup()) {
+            Api.safeDispatchAction.call(
+                this,
+                this.props.dispatch,
+                fetchActivity(this.props.savingId, 'savings', {include: 'target'}),
+                'fetch'
+            )
+        }
 
     }
 
@@ -73,48 +84,57 @@ class UnsaveSavingCell extends Component<Props2, State2> {
 
         const {savingId} = this.props;
 
-        let saving = buildData(this.props.data, 'savings', savingId) || {id: savingId, type: 'savings'};
-        let lineup = saving.target;
+        let lineup = this.getLineup(savingId);
 
-        //ItemPlaceholder
-        if (!lineup) return null;
+        let lineupId = lineup && lineup.id;
 
-
-        const status = this.state.request;
-        let enabled = status === 'idle' || status === 'ko';
+        const deleteStatus = this.state.delete;
+        let enabled = (deleteStatus === 'idle' || deleteStatus === 'ko') && lineupId;
 
         return (
             <View style={{flex: 1, flexDirection: 'row'}}>
-                <Text style={{}}>{lineup && lineup.name}</Text>
+                <View style={{flex: 1, justifyContent: 'center',}}>
+                    <Text style={{}}>{lineup && lineup.name}</Text>
+                    {!lineup && <ActivityIndicator
+                        animating={true}
+                        size="small"
+                        style={{margin: 0}}
+                    />}
+                </View>
                 <View style={{ alignItems:'flex-end', justifyContent: 'center', paddingHorizontal: 10}}>
                     {renderSimpleButton(
                         // i18n.t("actions.logout"),
-                        i18n.t(`unsave_screen.unsave_button.${status}`),
-                        () => this.unsave(saving),
+                        i18n.t(`unsave_screen.unsave_button.${deleteStatus}`),
+                        lineupId && (() => this.unsave(lineupId)),
                         {
-                            loading: status === 'sending',
+                            loading: deleteStatus === 'sending',
                             style: {alignSelf: 'flex-start'},
                             disabled: !enabled,
                             textStyle: {fontWeight: "normal", fontSize: 14, color: Colors.grey}
                         }
                     )}
                 </View>
-
             </View>
 
         );
     }
 
 
-    unsave(saving: Saving) {
-        let action = unsave(saving.id, saving.target.id);
+    getLineup(savingId) {
+        let saving = buildData(this.props.data, 'savings', savingId) || {id: savingId, type: 'savings'};
+        let lineup = saving.target;
+        return lineup;
+    }
+
+    unsave(lineupId: Id) {
+        let action = unsave(this.props.savingId, lineupId);
 
 
         Api.safeDispatchAction.call(
             this,
             this.props.dispatch,
             action,
-            'request'
+            'delete'
         ).then(()=> {
                 sendMessage(i18n.t("activity_action_bar.goodsh_deleted"));
             }
@@ -125,6 +145,7 @@ class UnsaveSavingCell extends Component<Props2, State2> {
 
 const styles = StyleSheet.create({
     container: {
+        paddingHorizontal: 16,
         flex: 1,
     },
 });

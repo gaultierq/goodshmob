@@ -54,6 +54,7 @@ class CommentsScreen extends Screen<Props, State> {
         this.load();
     }
 
+    //use Api.safeDispatchAction
     load() {
         if (this.state.isFetchingActivity) return;
         this.setState({isFetchingActivity: true});
