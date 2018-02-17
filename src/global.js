@@ -32,6 +32,7 @@ const ALL_KEYS = [
     'DEBUG_PERFS',
     'WITH_ASSERTS',
     'TEST_SCREEN',
+    'DEBUG_PENDING_DELAY',
 ];
 
 export function init(hotReload: boolean) {

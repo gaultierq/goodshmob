@@ -1,7 +1,7 @@
 // @flow
 import React, {Component} from 'react';
 import {ActivityIndicator, FlatList, StyleSheet, Text, TextInput, View} from 'react-native';
-import type {Id, RequestState, RNNNavigator, Save, Saving} from "../../types";
+import type {Id, ItemType, RequestState, RNNNavigator, Save, Saving} from "../../types";
 import {CheckBox} from "react-native-elements";
 import Screen from "../components/Screen";
 import {buildData} from "../../helpers/DataUtils";
@@ -11,24 +11,47 @@ import * as Api from "../../managers/Api";
 import {fetchActivity, unsave} from "../activity/actions";
 import {sendMessage} from "../../managers/Messenger";
 import {Colors} from "../colors"
+import {fetchItemCall, unsaveDispatchee} from "../lineup/actions";
+import {FETCH_ITEM} from "../lineup/actionTypes";
 
 type Props = {
-    savingIds: [Id],
+    itemId: Id,
+    itemType: ItemType,
     navigator: RNNNavigator
 };
 
 type State = {
+    fetch:? RequestState
 };
 
+@connect(state => ({
+    data: state.data,
+    pending: state.pending
+}))
 export default class UnsaveScreen extends Screen<Props, State> {
 
 
+    componentDidMount() {
+        if (!this.getItem()) {
+            Api.safeDispatchAction.call(
+                this,
+                this.props.dispatch,
+                fetchItemCall(this.props.itemId).disptachForAction2(FETCH_ITEM),
+                'fetch'
+            )
+        }
+
+    }
 
     render() {
-        const {savingIds} = this.props;
+
+        let item = this.getItem();
+
+        //TODO: display loader
+        if (!item) return null;
+        let savingIds = _.get(item, 'meta.mySavings', []);
 
         return (
-
             <View style={[styles.container]}>
                 <FlatList
                     data={savingIds}
@@ -38,6 +61,10 @@ export default class UnsaveScreen extends Screen<Props, State> {
 
             </View>
         );
+    }
+
+    getItem() {
+        return buildData(this.props.data, this.props.itemType, this.props.itemId);
     }
 
     renderItem(savingId: Id) {
@@ -69,7 +96,7 @@ class UnsaveSavingCell extends Component<Props2, State2> {
     // it should not be the default behavior, and also, these Cells should be dumb component, and delegate the data
     // retrieval to some manager.
     componentDidMount() {
-        if (!this.getLineup()) {
+        if (!this.getLineup(this.props.savingId)) {
             Api.safeDispatchAction.call(
                 this,
                 this.props.dispatch,
@@ -120,25 +147,35 @@ class UnsaveSavingCell extends Component<Props2, State2> {
     }
 
 
-    getLineup(savingId) {
-        let saving = buildData(this.props.data, 'savings', savingId) || {id: savingId, type: 'savings'};
+    getLineup(savingId: Id) {
+        let saving : Saving = buildData(this.props.data, 'savings', savingId) || {id: savingId, type: 'savings'};
         let lineup = saving.target;
         return lineup;
     }
 
     unsave(lineupId: Id) {
-        let action = unsave(this.props.savingId, lineupId);
+
+        //pending
+
+        //1st: save in goodshbox. and no more !
+        this.props.dispatch(unsaveDispatchee({
+            savingId: this.props.savingId,
+            lineupId,
+        }));
 
 
-        Api.safeDispatchAction.call(
-            this,
-            this.props.dispatch,
-            action,
-            'delete'
-        ).then(()=> {
-                sendMessage(i18n.t("activity_action_bar.goodsh_deleted"));
-            }
-        );
+        //call
+        // let action = unsave(this.props.savingId, lineupId);
+        //
+        // Api.safeDispatchAction.call(
+        //     this,
+        //     this.props.dispatch,
+        //     action,
+        //     'delete'
+        // ).then(()=> {
+        //         sendMessage(i18n.t("activity_action_bar.goodsh_deleted"));
+        //     }
+        // );
     }
 }
 

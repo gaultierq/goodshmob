@@ -290,14 +290,13 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
     execUnsave(remoteSaving: Saving) {
         let resource = remoteSaving.resource;
-        let savingIds = _.get(resource, 'meta.mySavings', []);
 
         this.props.navigator.showModal({
             screen: 'goodsh.UnsaveScreen',
             title: i18n.t("actions.unsave"),
             passProps: {
-                savingIds,
-                // navigator: this.props.navigator
+                itemId: resource.id,
+                itemType: resource.type
             },
             navigatorButtons: Nav.CANCELABLE_MODAL,
         });

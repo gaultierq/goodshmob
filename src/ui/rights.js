@@ -5,6 +5,7 @@ import type {Activity} from "../types";
 import {sanitizeActivityType} from "../helpers/DataUtils";
 import {currentUserId} from "../managers/CurrentUser";
 import {CREATE_LIKE, DELETE_LIKE} from "./activity/actionTypes";
+import StoreManager from "../managers/StoreManager";
 
 export default class ActionRights {
 
@@ -54,16 +55,11 @@ export default class ActionRights {
     //TODO: or is pending
     isGoodshedByMe() {
         let resource = this.activity.resource;
-
         let mySavings = _.get(resource, 'meta.mySavings', []);
-        return !_.isEmpty(mySavings);
+        if (!_.isEmpty(mySavings)) return true;
+        if (StoreManager.isItemPendingAdd(resource.id)) return true;
 
-        // let target = this.activity.target;
-        // let goodshed;
-        // if (target && target.type === 'lists') {
-        //     goodshed = _.indexOf(savedIn, target.id) > -1;
-        // }
-        // return goodshed;
+        return false;
     }
 }
 

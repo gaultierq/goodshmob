@@ -31,6 +31,7 @@ import NavManager from "./managers/NavManager";
 import Analytics from "./managers/Analytics";
 import * as appActions from "./auth/actions";
 import OnBoardingManager from "./managers/OnBoardingManager";
+import StoreManager from "./managers/StoreManager";
 
 
 type AppMode = 'idle' | 'init_cache' | 'logged' | 'unlogged' | 'upgrading_cache' | 'unknown'
@@ -235,6 +236,7 @@ export default class App {
         //managers init rely on a ready store
         //singletons
 
+        StoreManager.init(this.store);
         CurrentUser.init(this.store);
         DeviceManager.init(this.store);
         AlgoliaClient.init(this.store);

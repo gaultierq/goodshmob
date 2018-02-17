@@ -7,6 +7,13 @@ import {CREATE_LINEUP, DELETE_LINEUP, EDIT_LINEUP, SAVE_ITEM} from "./actionType
 import type {PendingAction} from "../../helpers/ModelUtils";
 import {pendingActionWrapper} from "../../helpers/ModelUtils";
 import type {Visibility} from "../screens/additem";
+import ApiAction from "../../helpers/ApiAction";
+import {UNSAVE} from "../activity/actionTypes";
+
+
+export const FETCH_LINEUP = ApiAction.create("fetch_lineup");
+export const FETCH_SAVINGS = ApiAction.create("fetch_savings");
+export const DELETE_SAVING = UNSAVE;
 
 
 //defining lineup creation cycle
@@ -53,6 +60,7 @@ export function saveItem(itemId: Id, lineupId: Id, privacy = 0, description = ''
     return call.disptachForAction2(SAVE_ITEM, {lineupId});
 }
 
+//save
 export function bookmarkDispatchee(payload: SAVING_CREATION_PAYLOAD) {
 
     return SAVING_CREATION.pending(payload, {});
@@ -67,6 +75,22 @@ export const SAVING_CREATION: PendingAction<SAVING_CREATION_PAYLOAD>  = pendingA
         .withRoute(`items/${itemId}/savings`)
         .withBody({saving: { list_id: lineupId, privacy, description}})
         .addQuery({'include': '*.*'})
+);
+
+
+//unsave
+export function unsaveDispatchee(payload: SAVING_DELETION_PAYLOAD) {
+
+    return SAVING_DELETION.pending(payload, {id: payload.savingId, lineupId: payload.lineupId});
+}
+
+export type SAVING_DELETION_PAYLOAD = {savingId: Id, lineupId: Id}
+
+export const SAVING_DELETION: PendingAction<SAVING_DELETION_PAYLOAD>  = pendingActionWrapper(
+    UNSAVE,
+    ({savingId, lineupId}: SAVING_DELETION_PAYLOAD) => new Api.Call()
+        .withMethod('DELETE')
+        .withRoute(`savings/${savingId}`)
 );
 
 

@@ -83,7 +83,7 @@ export function pending(state = {}, action) {
             const item : PendingItem = {
                 id: pendingId,
                 insertedAt: now,
-                dueAt: now + (options.delayMs || 0),
+                dueAt: now + (options.delayMs || __DEBUG_PENDING_DELAY__ || 0),
                 state: 'pending',
                 payload,
                 pendingActionType: pendingActionType.name(),
