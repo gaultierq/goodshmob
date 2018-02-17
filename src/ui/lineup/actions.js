@@ -78,12 +78,6 @@ export const SAVING_CREATION: PendingAction<SAVING_CREATION_PAYLOAD>  = pendingA
 );
 
 
-//unsave
-export function unsaveDispatchee(payload: SAVING_DELETION_PAYLOAD) {
-
-    return SAVING_DELETION.pending(payload, {id: payload.savingId, lineupId: payload.lineupId});
-}
-
 export type SAVING_DELETION_PAYLOAD = {savingId: Id, lineupId: Id}
 
 export const SAVING_DELETION: PendingAction<SAVING_DELETION_PAYLOAD>  = pendingActionWrapper(

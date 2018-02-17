@@ -8,6 +8,7 @@ import {pendingActionWrapper} from "../../helpers/ModelUtils";
 
 
 export function fetchActivity(activityId: Id, activityType: ActivityType, options?:any = {}) {
+    if (!activityId || !activityType) throw "invalid params";
     let type = sanitizeActivityType(activityType);
 
     let {include} = options;
@@ -20,8 +21,6 @@ export function fetchActivity(activityId: Id, activityType: ActivityType, option
             {id: activityId, type: activityType}
         );
 }
-
-
 
 //defining lineup creation cycle
 type LIKE_CREATION_PAYLOAD = {activityId:Id, activityType: ActivityType}

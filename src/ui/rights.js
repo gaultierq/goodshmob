@@ -32,7 +32,7 @@ export default class ActionRights {
 
     canUnsave() {
         if (!this.activity.resource) return false;
-        return this.isGoodshedByMe();
+        return this.isSavedByMe();
     }
 
     liked() {
@@ -53,13 +53,12 @@ export default class ActionRights {
     }
 
     //TODO: or is pending
-    isGoodshedByMe() {
+    isSavedByMe() {
         let resource = this.activity.resource;
-        let mySavings = _.get(resource, 'meta.mySavings', []);
-        if (!_.isEmpty(mySavings)) return true;
-        if (StoreManager.isItemPendingAdd(resource.id)) return true;
-
-        return false;
+        // let mySavings = _.get(resource, 'meta.mySavings', []);
+        // if (!_.isEmpty(mySavings)) return true;
+        // if (StoreManager.isItemPendingAdd(resource.id)) return true;
+        return !_.isEmpty(StoreManager.getMySavingsForItem(resource.id, resource.type));
     }
 }
 

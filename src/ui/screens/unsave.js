@@ -1,20 +1,20 @@
 // @flow
 import React, {Component} from 'react';
 import {ActivityIndicator, FlatList, StyleSheet, Text, TextInput, View} from 'react-native';
-import type {Id, ItemType, RequestState, RNNNavigator, Save, Saving} from "../../types";
+import type {Id, ItemType, RequestState, RNNNavigator, Save} from "../../types";
 import {CheckBox} from "react-native-elements";
 import Screen from "../components/Screen";
 import {buildData} from "../../helpers/DataUtils";
 import {connect} from "react-redux";
 import {renderSimpleButton} from "../UIStyles";
 import * as Api from "../../managers/Api";
-import {fetchActivity, unsave} from "../activity/actions";
-import {sendMessage} from "../../managers/Messenger";
+import {fetchActivity} from "../activity/actions";
 import {Colors} from "../colors"
-import {fetchItemCall, unsaveDispatchee} from "../lineup/actions";
+import {fetchItemCall, SAVING_CREATION, SAVING_DELETION} from "../lineup/actions";
 import {FETCH_ITEM, SAVE_ITEM} from "../lineup/actionTypes";
 import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
 import {UNSAVE} from "../activity/actionTypes";
+import StoreManager from "../../managers/StoreManager";
 
 type Props = {
     itemId: Id,
@@ -49,26 +49,9 @@ export default class UnsaveScreen extends Screen<Props, State> {
 
     render() {
 
-        let item = this.getItem();
+        const {itemId, itemType} = this.props;
 
-        //TODO: display loader
-        if (!item) return null;
-
-        //persisted savings
-        let savingIds = _.get(item, 'meta.mySavings', []);
-
-        // pending savings !
-
-
-        let savings = mergeItemsAndPendings(
-            savingIds.map(id => ({id})),
-            this.props.pending[SAVE_ITEM],
-            this.props.pending[UNSAVE],
-            pending => ({
-                lineupId: pending.payload.lineupId,
-                pending: true
-            })
-        );
+        let savings = StoreManager.getMySavingsForItem(itemId, itemType,);
 
         return (
             <View style={[styles.container]}>
@@ -115,11 +98,12 @@ class UnsaveSavingCell extends Component<Props2, State2> {
     // it should not be the default behavior, and also, these Cells should be dumb component, and delegate the data
     // retrieval to some manager.
     componentDidMount() {
-        if (!this.props.pending && !this.getLineupBySavingId(this.props.saving.id)) {
+        const saving = this.props.saving;
+        if (!saving.pending && !this.getLineupBySavingId(saving.id)) {
             Api.safeDispatchAction.call(
                 this,
                 this.props.dispatch,
-                fetchActivity(this.props.savingId, 'savings', {include: 'target'}),
+                fetchActivity(saving.id, 'savings', {include: 'target'}),
                 'fetch'
             )
         }
@@ -146,8 +130,8 @@ class UnsaveSavingCell extends Component<Props2, State2> {
         return (
             <View style={{flex: 1, flexDirection: 'row'}}>
                 <View style={{flex: 1, justifyContent: 'center',}}>
-                    <Text style={{}}>{lineup && lineup.name}</Text>
-                    {!lineup && <ActivityIndicator
+                    <Text style={{color: pending ? Colors.greying : Colors.black}}>{lineup && lineup.name}</Text>
+                    {this.state.fetch === 'sending' && <ActivityIndicator
                         animating={true}
                         size="small"
                         style={{margin: 0}}
@@ -162,7 +146,7 @@ class UnsaveSavingCell extends Component<Props2, State2> {
                             loading: deleteStatus === 'sending',
                             style: {alignSelf: 'flex-start'},
                             disabled: !enabled,
-                            textStyle: {fontWeight: "normal", fontSize: 14, color: Colors.grey}
+                            textStyle: {fontWeight: "normal", fontSize: 14, color:Colors.grey}
                         }
                     )}
                 </View>
@@ -177,14 +161,16 @@ class UnsaveSavingCell extends Component<Props2, State2> {
     }
 
     unsave(lineupId: Id) {
+        const {saving} = this.props;
+        let {id, pending} = saving;
 
-        //pending
-
-        //1st: save in goodshbox. and no more !
-        this.props.dispatch(unsaveDispatchee({
-            savingId: this.props.saving.id,
-            lineupId,
-        }));
+        if (pending) {
+            //this is kind of a hack. better would be to add another pending action and resolve the result afterwards
+            this.props.dispatch(SAVING_CREATION.undo(id));
+        }
+        else {
+            this.props.dispatch(SAVING_DELETION.pending({savingId: id,lineupId}, {id, lineupId}));
+        }
     }
 }
 
