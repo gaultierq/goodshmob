@@ -12,7 +12,9 @@ import {fetchActivity, unsave} from "../activity/actions";
 import {sendMessage} from "../../managers/Messenger";
 import {Colors} from "../colors"
 import {fetchItemCall, unsaveDispatchee} from "../lineup/actions";
-import {FETCH_ITEM} from "../lineup/actionTypes";
+import {FETCH_ITEM, SAVE_ITEM} from "../lineup/actionTypes";
+import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
+import {UNSAVE} from "../activity/actionTypes";
 
 type Props = {
     itemId: Id,
@@ -23,6 +25,8 @@ type Props = {
 type State = {
     fetch:? RequestState
 };
+
+type SavingForDeletion = {id: Id, lineupId: Id, pending?: boolean};
 
 @connect(state => ({
     data: state.data,
@@ -49,12 +53,27 @@ export default class UnsaveScreen extends Screen<Props, State> {
 
         //TODO: display loader
         if (!item) return null;
+
+        //persisted savings
         let savingIds = _.get(item, 'meta.mySavings', []);
+
+        // pending savings !
+
+
+        let savings = mergeItemsAndPendings(
+            savingIds.map(id => ({id})),
+            this.props.pending[SAVE_ITEM],
+            this.props.pending[UNSAVE],
+            pending => ({
+                lineupId: pending.payload.lineupId,
+                pending: true
+            })
+        );
 
         return (
             <View style={[styles.container]}>
                 <FlatList
-                    data={savingIds}
+                    data={savings}
                     renderItem={({item}) => this.renderItem(item)}
                     keyExtractor={id => id}
                 />
@@ -67,8 +86,8 @@ export default class UnsaveScreen extends Screen<Props, State> {
         return buildData(this.props.data, this.props.itemType, this.props.itemId);
     }
 
-    renderItem(savingId: Id) {
-        return (<UnsaveSavingCell savingId={savingId} />);
+    renderItem(saving: SavingForDeletion) {
+        return (<UnsaveSavingCell saving={saving} />);
     }
 
 }
@@ -79,7 +98,7 @@ type State2 = {
 };
 
 type Props2 = {
-    savingId: Id
+    saving: SavingForDeletion
 };
 
 //@logged
@@ -96,7 +115,7 @@ class UnsaveSavingCell extends Component<Props2, State2> {
     // it should not be the default behavior, and also, these Cells should be dumb component, and delegate the data
     // retrieval to some manager.
     componentDidMount() {
-        if (!this.getLineup(this.props.savingId)) {
+        if (!this.props.pending && !this.getLineupBySavingId(this.props.saving.id)) {
             Api.safeDispatchAction.call(
                 this,
                 this.props.dispatch,
@@ -104,16 +123,22 @@ class UnsaveSavingCell extends Component<Props2, State2> {
                 'fetch'
             )
         }
-
     }
 
     render() {
 
-        const {savingId} = this.props;
+        const {saving} = this.props;
+        let {id, lineupId, pending} = saving;
+        let lineup;
+        if (pending) {
+            lineup = buildData(this.props.data, 'lists', lineupId)
+        }
+        else {
+            lineup = this.getLineupBySavingId(id);
+        }
 
-        let lineup = this.getLineup(savingId);
 
-        let lineupId = lineup && lineup.id;
+        lineupId = lineup && lineup.id;
 
         const deleteStatus = this.state.delete;
         let enabled = (deleteStatus === 'idle' || deleteStatus === 'ko') && lineupId;
@@ -147,10 +172,8 @@ class UnsaveSavingCell extends Component<Props2, State2> {
     }
 
 
-    getLineup(savingId: Id) {
-        let saving : Saving = buildData(this.props.data, 'savings', savingId) || {id: savingId, type: 'savings'};
-        let lineup = saving.target;
-        return lineup;
+    getLineupBySavingId(savingId: Id) {
+        return _.get(buildData(this.props.data, 'savings', savingId), 'target');
     }
 
     unsave(lineupId: Id) {
@@ -159,23 +182,9 @@ class UnsaveSavingCell extends Component<Props2, State2> {
 
         //1st: save in goodshbox. and no more !
         this.props.dispatch(unsaveDispatchee({
-            savingId: this.props.savingId,
+            savingId: this.props.saving.id,
             lineupId,
         }));
-
-
-        //call
-        // let action = unsave(this.props.savingId, lineupId);
-        //
-        // Api.safeDispatchAction.call(
-        //     this,
-        //     this.props.dispatch,
-        //     action,
-        //     'delete'
-        // ).then(()=> {
-        //         sendMessage(i18n.t("activity_action_bar.goodsh_deleted"));
-        //     }
-        // );
     }
 }
 
