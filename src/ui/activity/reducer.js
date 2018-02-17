@@ -30,7 +30,7 @@ export default function reduce(state:any = initialState, action: any) {
             {
                 const resource = _.get(state, `savings.${id}.relationships.resource.data`, {});
 
-                state = updateDelete(state, `${resource.type}.${resource.id}.meta.mySavings`, it => it === lineupId);
+                state = updateDelete(state, `${resource.type}.${resource.id}.meta.mySavings`, it => it === id);
             }
 
             //decrement
