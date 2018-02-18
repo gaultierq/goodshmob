@@ -8,7 +8,6 @@ import {connect} from "react-redux";
 import {currentGoodshboxId, logged} from "../../../managers/CurrentUser"
 import * as activityAction from "../actions";
 import {unsave} from "../actions";
-import Snackbar from "react-native-snackbar"
 import {toUppercase} from "../../../helpers/StringUtils";
 import {buildData, buildNonNullData, sanitizeActivityType} from "../../../helpers/DataUtils";
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
@@ -16,8 +15,9 @@ import ActionRights, {getPendingLikeStatus} from "../../rights";
 import {CREATE_COMMENT} from "../../screens/comments";
 import GTouchable from "../../GTouchable";
 import * as Nav from "../../Nav";
-import {bookmarkDispatchee} from "../../lineup/actions";
-import {sendMessage} from "../../../managers/Messenger";
+import {bookmarkDispatchee, doUnsave} from "../../lineup/actions";
+import StoreManager from "../../../managers/StoreManager";
+import Messenger from "../../../managers/Messenger";
 
 export type ActivityActionType = 'comment'| 'like'| 'unlike'| 'share'| 'save'| 'unsave'| 'see'| 'buy'| 'answer';
 const ACTIONS = ['comment', 'like', 'unlike','share', 'save', 'unsave', 'see', 'buy', 'answer'];
@@ -61,7 +61,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                         this.renderTextButton(a, activity),
                         //$FlowFixMe
                         ()=>this['exec' + toUppercase(a)](activity),
-                        a === 'unlike'
+                        a === 'unlike' || a === 'unsave'
                     )
                 );
             }
@@ -121,7 +121,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
             case 'save':
                 return require('../../../img2/bookmarkIcon.png');
             case 'unsave':
-                return require('../../../img2/trashIcon.png');
+                return require('../../../img2/bookmarkIcon.png');
             case 'see':
                 return require('../../../img/save-icon.png');
             case 'buy':
@@ -239,67 +239,107 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
     }
 
+    // execUnsave(remoteSaving: Saving) {
+    //     let resource = remoteSaving.resource;
+    //     let savedIn = _.get(resource, 'meta.savedIn', []);
+    //     let saving, lineup;
+    //     //one of the list where this item is saved
+    //     let lineupId = _.head(savedIn);
+    //     if (lineupId) {
+    //         lineup = buildData(this.props.data, 'lists', lineupId);
+    //         if (lineup) {
+    //             if (lineup.savings) {
+    //
+    //                 if (lineup) {
+    //                     saving = _.head(lineup.savings.filter(s =>_.get(s, 'resource.id') ===  resource.id));
+    //                 }
+    //             }
+    //             else {
+    //                 console.warn(`No savings in this linenup: ${JSON.stringify(lineup)}`);
+    //             }
+    //         }
+    //         else {
+    //             console.warn(`lineup not in cache: ${lineupId}`);
+    //         }
+    //     }
+    //
+    //     if (!saving) {
+    //         sendMessage(i18n.t('common.api.generic_error'));
+    //         return;
+    //     }
+    //
+    //     Alert.alert(
+    //         i18n.t("alert.delete.title"),
+    //         i18n.t("alert.delete.label"),
+    //         [
+    //             {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+    //             {text: i18n.t("actions.ok"), onPress: () => {
+    //                 //console.log('OK Pressed');
+    //                 this.props.dispatch(unsave(saving.id, saving.target.id)).then(() => {
+    //                     //console.info(`saving ${saving.id} unsaved`)
+    //                     Snackbar.show({title: i18n.t("activity_action_bar.goodsh_deleted")});
+    //                 });
+    //             }
+    //             },
+    //         ],
+    //         { cancelable: true }
+    //     );
+    // }
+
     execUnsave(remoteSaving: Saving) {
         let resource = remoteSaving.resource;
-        let savedIn = _.get(resource, 'meta.savedIn', []);
-        let saving, lineup;
-        //one of the list where this item is saved
-        let lineupId = _.head(savedIn);
-        if (lineupId) {
-            lineup = buildData(this.props.data, 'lists', lineupId);
-            if (lineup) {
-                if (lineup.savings) {
+        let {id, type} = resource;
+        let savings = StoreManager.getMySavingsForItem(id, type);
+        if (_.size(savings) === 1) {
 
-                    if (lineup) {
-                        saving = _.head(lineup.savings.filter(s =>_.get(s, 'resource.id') ===  resource.id));
-                    }
-                }
-                else {
-                    console.warn(`No savings in this linenup: ${JSON.stringify(lineup)}`);
-                }
-            }
-            else {
-                console.warn(`lineup not in cache: ${lineupId}`);
-            }
+
+                Alert.alert(
+                    i18n.t("alert.delete.title"),
+                    i18n.t("alert.delete.label"),
+                    [
+                        {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                        {text: i18n.t("actions.ok"), onPress: () => {
+                            let saving = _.head(savings);
+                            let {id, lineupId, pending} = saving;
+                            let lineup;
+                            if (pending) {
+                                lineup = buildData(this.props.data, 'lists', lineupId)
+                            }
+                            else {
+                                lineup = _.get(buildData(this.props.data, 'savings', id), 'target');
+                            }
+                            lineupId = lineup && lineup.id;
+                            this.props.dispatch(doUnsave(saving.pending, saving.id, lineupId)).then(() => {
+                                //console.info(`saving ${saving.id} unsaved`)
+                                Messenger.sendMessage(i18n.t("activity_action_bar.goodsh_deleted"));
+                            });
+
+                            // //console.log('OK Pressed');
+                            // this.props.dispatch(unsave(saving.id, saving.target.id)).then(() => {
+                            //     //console.info(`saving ${saving.id} unsaved`)
+                            //     Snackbar.show({title: i18n.t("activity_action_bar.goodsh_deleted")});
+                            // });
+                        }
+                        },
+                    ],
+                    { cancelable: true }
+                );
+
+
         }
-
-        if (!saving) {
-            sendMessage(i18n.t('common.api.generic_error'));
-            return;
-        }
-
-        Alert.alert(
-            i18n.t("alert.delete.title"),
-            i18n.t("alert.delete.label"),
-            [
-                {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-                {text: i18n.t("actions.ok"), onPress: () => {
-                    //console.log('OK Pressed');
-                    this.props.dispatch(unsave(saving.id, saving.target.id)).then(() => {
-                        //console.info(`saving ${saving.id} unsaved`)
-                        Snackbar.show({title: i18n.t("activity_action_bar.goodsh_deleted")});
-                    });
-                }
+        else {
+            this.props.navigator.showModal({
+                screen: 'goodsh.UnsaveScreen',
+                title: i18n.t("actions.unsave"),
+                passProps: {
+                    itemId: resource.id,
+                    itemType: resource.type
                 },
-            ],
-            { cancelable: true }
-        );
+                navigatorButtons: Nav.CANCELABLE_MODAL,
+            });
+        }
 
 
-    }
-
-    execUnsave(remoteSaving: Saving) {
-        let resource = remoteSaving.resource;
-
-        this.props.navigator.showModal({
-            screen: 'goodsh.UnsaveScreen',
-            title: i18n.t("actions.unsave"),
-            passProps: {
-                itemId: resource.id,
-                itemType: resource.type
-            },
-            navigatorButtons: Nav.CANCELABLE_MODAL,
-        });
     }
 
 

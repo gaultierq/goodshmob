@@ -355,10 +355,18 @@ export function pendingActionWrapper<Payload>(
             }
         ),
         call: callFactory,
-        undo: (pendingId: Id) => ({
-            type: REMOVE_PENDING_ACTION,
-            pendingActionType: action,
-            id: pendingId
+        // undo: (pendingId: Id) => (dispatch: any) => dispatch({
+        //     type: REMOVE_PENDING_ACTION,
+        //     pendingActionType: action,
+        //     id: pendingId
+        // }),
+        undo: (pendingId: Id) => (dispatch: any) => new Promise((resolve, reject) => {
+            dispatch({
+                type: REMOVE_PENDING_ACTION,
+                pendingActionType: action,
+                id: pendingId
+            });
+            resolve();
         }),
         exec: (payload: Payload) => callFactory(payload).disptachForAction2(action)
     };
@@ -370,7 +378,7 @@ export interface PendingAction<T> {
 
     call: (payload: T) => Call;
 
-    undo: (pendingId: Id) => any;
+    undo: (pendingId: Id) => (dispatch: any) => Promise<T>;
 
 }
 

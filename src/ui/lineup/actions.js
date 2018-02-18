@@ -106,6 +106,10 @@ export function patchLineup(editedLineup: List) {
     return call.disptachForAction2(EDIT_LINEUP, {lineupId: editedLineup.id});
 }
 
+export function doUnsave(pending, id, lineupId) {
+    return pending ? SAVING_CREATION.undo(id) : SAVING_DELETION.pending({savingId: id, lineupId}, {id, lineupId});
+}
+
 
 
 

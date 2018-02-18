@@ -10,7 +10,7 @@ import {renderSimpleButton} from "../UIStyles";
 import * as Api from "../../managers/Api";
 import {fetchActivity} from "../activity/actions";
 import {Colors} from "../colors"
-import {fetchItemCall, SAVING_CREATION, SAVING_DELETION} from "../lineup/actions";
+import {doUnsave, fetchItemCall, SAVING_CREATION, SAVING_DELETION} from "../lineup/actions";
 import {FETCH_ITEM, SAVE_ITEM} from "../lineup/actionTypes";
 import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
 import {UNSAVE} from "../activity/actionTypes";
@@ -118,7 +118,7 @@ class UnsaveSavingCell extends Component<Props2, State2> {
             lineup = buildData(this.props.data, 'lists', lineupId)
         }
         else {
-            lineup = this.getLineupBySavingId(id);
+            lineup = _.get(buildData(this.props.data, 'savings', id), 'target');
         }
 
 
@@ -162,16 +162,9 @@ class UnsaveSavingCell extends Component<Props2, State2> {
 
     unsave(lineupId: Id) {
         const {saving} = this.props;
-        let {id, pending} = saving;
-
-        if (pending) {
-            //this is kind of a hack. better would be to add another pending action and resolve the result afterwards
-            this.props.dispatch(SAVING_CREATION.undo(id));
-        }
-        else {
-            this.props.dispatch(SAVING_DELETION.pending({savingId: id,lineupId}, {id, lineupId}));
-        }
+        this.props.dispatch(doUnsave(saving.pending, saving.id, lineupId));
     }
+
 }
 
 
