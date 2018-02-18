@@ -22,7 +22,7 @@ class _Messenger implements Messenger {
         switch (type) {
             case 'snack':
                 //TODO: something with priority
-                let {priority, reference, action} = others;
+                let {priority, reference, action, timeout = 2000} = others;
                 action = action && {...action, color: Colors.green};
 
                 if (!this.snackDismissTimeout) {
@@ -30,7 +30,7 @@ class _Messenger implements Messenger {
                         this.snackDismissTimeout = 0;
                         console.debug(`${this.toString()}: dismissing snack`);
                         Snackbar.dismiss();
-                    }, 2000);
+                    }, timeout);
 
                     Snackbar.show({
                         title: content,

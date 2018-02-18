@@ -220,43 +220,34 @@ export default class ActivityActionBar extends React.Component<Props, State> {
             Messenger.sendMessage(
                 //MagicString
                 i18n.t("activity_action_bar.goodsh_bookmarked", {lineup: "Goodshbox"}),
-                {action: {
-                    title: i18n.t('activity_action_bar.goodsh_bookmarked_change_lineup'),
-                    onPress: () => {
-                        //undo previous add
-                        SAVING_CREATION.undo(pendingId);
-                        let item = activity.resource;
+                {
+                    timeout: 4000,
+                    action: {
+                        title: i18n.t('activity_action_bar.goodsh_bookmarked_change_lineup'),
+                        onPress: () => {
+                            //undo previous add
+                            SAVING_CREATION.undo(pendingId);
+                            let item = activity.resource;
 
-                        // this.props.navigator.showModal({
-                        //     screen: 'goodsh.AddItemScreen', // unique ID registered with Navigation.registerScreen
-                        //     passProps: {
-                        //         itemId: item.id,
-                        //         itemType: item.type,
-                        //         defaultLineupId: currentGoodshboxId(),
-                        //         // onCancel: () => this.props.navigator.popToRoot(),
-                        //         // onAdded: () => this.props.navigator.popToRoot(),
-                        //     },
-                        // });
+                            let cancel = () => {
+                                this.props.navigator.dismissModal()
+                            };
+                            this.props.navigator.showModal({
+                                screen: 'goodsh.AddItemScreen',
+                                title: i18n.t("add_item_screen.title"),
+                                animationType: 'none',
+                                passProps: {
+                                    itemId: item.id,
+                                    itemType: item.type,
+                                    item,
+                                    defaultLineupId: currentGoodshboxId(),
+                                    onCancel: cancel,
+                                    onAdded: cancel,
+                                },
+                            });
 
-                        let cancel = () => {
-                            this.props.navigator.dismissModal()
-                        };
-                        this.props.navigator.showModal({
-                            screen: 'goodsh.AddItemScreen',
-                            title: i18n.t("add_item_screen.title"),
-                            animationType: 'none',
-                            passProps: {
-                                itemId: item.id,
-                                itemType: item.type,
-                                item,
-                                defaultLineupId: currentGoodshboxId(),
-                                onCancel: cancel,
-                                onAdded: cancel,
-                            },
-                        });
-
-                    },
-                }}
+                        },
+                    }}
             );
 
 
