@@ -10,10 +10,8 @@ import {renderSimpleButton} from "../UIStyles";
 import * as Api from "../../managers/Api";
 import {fetchActivity} from "../activity/actions";
 import {Colors} from "../colors"
-import {doUnsave, fetchItemCall, SAVING_CREATION, SAVING_DELETION} from "../lineup/actions";
-import {FETCH_ITEM, SAVE_ITEM} from "../lineup/actionTypes";
-import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
-import {UNSAVE} from "../activity/actionTypes";
+import {doUnsave, fetchItemCall} from "../lineup/actions";
+import {FETCH_ITEM} from "../lineup/actionTypes";
 import StoreManager from "../../managers/StoreManager";
 
 type Props = {
@@ -58,7 +56,7 @@ export default class UnsaveScreen extends Screen<Props, State> {
                 <FlatList
                     data={savings}
                     renderItem={({item}) => this.renderItem(item)}
-                    keyExtractor={id => id}
+                    keyExtractor={saving => saving.id}
                 />
 
             </View>
