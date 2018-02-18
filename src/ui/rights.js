@@ -5,6 +5,7 @@ import type {Activity} from "../types";
 import {sanitizeActivityType} from "../helpers/DataUtils";
 import {currentUserId} from "../managers/CurrentUser";
 import {CREATE_LIKE, DELETE_LIKE} from "./activity/actionTypes";
+import StoreManager from "../managers/StoreManager";
 
 export default class ActionRights {
 
@@ -31,7 +32,7 @@ export default class ActionRights {
 
     canUnsave() {
         if (!this.activity.resource) return false;
-        return this.isGoodshedByMe();
+        return this.isSavedByMe();
     }
 
     liked() {
@@ -51,19 +52,13 @@ export default class ActionRights {
         return this.activity.user.id === currentUserId();
     }
 
-    isGoodshedByMe() {
+    //TODO: or is pending
+    isSavedByMe() {
         let resource = this.activity.resource;
-
-        //savedIn = not only my lists... server fail
-        let savedIn = _.get(resource, 'meta.savedIn', []);
-        return !_.isEmpty(savedIn);
-
-        // let target = this.activity.target;
-        // let goodshed;
-        // if (target && target.type === 'lists') {
-        //     goodshed = _.indexOf(savedIn, target.id) > -1;
-        // }
-        // return goodshed;
+        // let mySavings = _.get(resource, 'meta.mySavings', []);
+        // if (!_.isEmpty(mySavings)) return true;
+        // if (StoreManager.isItemPendingAdd(resource.id)) return true;
+        return !_.isEmpty(StoreManager.getMySavingsForItem(resource.id, resource.type));
     }
 }
 

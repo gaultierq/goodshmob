@@ -355,10 +355,13 @@ export function pendingActionWrapper<Payload>(
             }
         ),
         call: callFactory,
-        undo: (pendingId: Id) => ({
-            type: REMOVE_PENDING_ACTION,
-            pendingActionType: action,
-            id: pendingId
+        undo: (pendingId: Id) => (dispatch: any) => new Promise((resolve, reject) => {
+            dispatch({
+                type: REMOVE_PENDING_ACTION,
+                pendingActionType: action,
+                id: pendingId
+            });
+            resolve();
         }),
         exec: (payload: Payload) => callFactory(payload).disptachForAction2(action)
     };
@@ -370,7 +373,7 @@ export interface PendingAction<T> {
 
     call: (payload: T) => Call;
 
-    undo: (pendingId: Id) => any;
+    undo: (pendingId: Id) => (dispatch: any) => Promise<T>;
 
 }
 
@@ -395,6 +398,8 @@ export function mergeItemsAndPendings<T>(
         })
     };
 
+
+    //this is crap
     if (afterI == null) addPendingCreate();
 
     for (let i = 0;; i++) {
@@ -403,7 +408,7 @@ export function mergeItemsAndPendings<T>(
         let l = _.get(syncedItems, i);
         if (!l) break;
 
-        //do not display list with pending deletion
+        //do not display items with pending deletion
         if (_.findIndex(pendingDelete, (o) => o.payload.lineupId === l.id) >= 0) continue;
 
         items.push(l);

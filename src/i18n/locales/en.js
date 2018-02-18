@@ -243,11 +243,21 @@ export default {
             label: "Are you sure?"
         }
     },
+    unsave_screen: {
+        unsave_button: {
+            idle: "Delete",
+            sending: "Deleting...",
+            ok: "Deleted",
+            ko: "Retry",
+        }
+    },
     empty: {
         lineup: "This list is empty, what a shame!"
     },
     activity_action_bar: {
         goodsh_deleted: "Goodsh deleted",
+        goodsh_bookmarked: "Goodsh added in %{lineup}",
+        goodsh_bookmarked_change_lineup: "Change",
         comment: {
             title: "Comments"
         },
@@ -291,7 +301,8 @@ export default {
         ask: "Ask my network",
         ask_button: "Ask",
         invite: "Invite a friend",
-        load_more: "Load more"
+        load_more: "Load more",
+        unsave: "Delete"
     },
     common: {
         empty_feed_generic: "If you love it, share it.\nWhy don't you invite some friends to goodsh?",

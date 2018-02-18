@@ -10,7 +10,6 @@ import * as Api from "../../managers/Api";
 import Feed from "../components/feed";
 import type {List, Saving} from "../../types";
 import {buildData, doDataMergeInState} from "../../helpers/DataUtils";
-import ApiAction from "../../helpers/ApiAction";
 import ActivityCell from "../activity/components/ActivityCell";
 import ActionButton from 'react-native-action-button';
 import {startAddItem} from "../Nav";
@@ -18,6 +17,8 @@ import {Colors} from "../colors";
 import Screen from "./../components/Screen";
 import {STYLES} from "../UIStyles";
 import {fullName} from "../../helpers/StringUtils";
+import {DELETE_SAVING, FETCH_LINEUP, FETCH_SAVINGS} from "../lineup/actions";
+import {UNSAVE} from "../activity/actionTypes";
 
 type Props = {
     lineupId: string,
@@ -29,9 +30,9 @@ type State = {
     titleSet: boolean
 };
 
-const FETCH_LINEUP = ApiAction.create("fetch_lineup");
-const FETCH_SAVINGS = ApiAction.create("fetch_savings");
-const DELETE_SAVING = ApiAction.create("delete_saving");
+
+
+
 
 @logged
 @connect((state, ownProps) => ({
@@ -173,7 +174,7 @@ const actions = {
             .withMethod('DELETE')
             .withRoute(`savings/${saving.id}`);
 
-        return call.disptachForAction2(DELETE_SAVING);
+        return call.disptachForAction2(UNSAVE);
     }
 };
 

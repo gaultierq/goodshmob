@@ -242,11 +242,21 @@ export default {
             label: "Êtes-vous sûr de vouloir vous déconnecter ?"
         }
     },
+    unsave_screen: {
+        unsave_button: {
+            idle: "Supprimer",
+            sending: "Suppression...",
+            ok: "Supprimé",
+            ko: "Ré-essayer",
+        }
+    },
     empty: {
         lineup: "Ach, cette liste est vide\n c'est bien dommage !"
     },
     activity_action_bar: {
         goodsh_deleted: "Goodsh supprimé",
+        goodsh_bookmarked: "Goodsh ajouté dans %{lineup}",
+        goodsh_bookmarked_change_lineup: "Changer",
         comment: {
             title: "Commentaires"
         },
@@ -287,7 +297,8 @@ export default {
         ask: "Demander à mon réseau",
         ask_button: "Ask",
         invite: "Inviter un ami",
-        load_more: "Charger la suite"
+        load_more: "Charger la suite",
+        unsave: "Supprimer"
 
     },
     common: {

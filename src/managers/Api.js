@@ -50,6 +50,7 @@ class Api {
         let handleConnection = isConnected => {
             console.log('Api: ' + (isConnected ? 'online' : 'offline'));
             this.isConnected = isConnected;
+
             this.execPendings();
         };
 

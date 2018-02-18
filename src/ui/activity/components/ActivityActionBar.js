@@ -8,7 +8,6 @@ import {connect} from "react-redux";
 import {currentGoodshboxId, logged} from "../../../managers/CurrentUser"
 import * as activityAction from "../actions";
 import {unsave} from "../actions";
-import Snackbar from "react-native-snackbar"
 import {toUppercase} from "../../../helpers/StringUtils";
 import {buildData, buildNonNullData, sanitizeActivityType} from "../../../helpers/DataUtils";
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
@@ -16,7 +15,9 @@ import ActionRights, {getPendingLikeStatus} from "../../rights";
 import {CREATE_COMMENT} from "../../screens/comments";
 import GTouchable from "../../GTouchable";
 import * as Nav from "../../Nav";
-import {sendMessage} from "../../../managers/Messenger";
+import {SAVING_CREATION, doUnsave} from "../../lineup/actions";
+import StoreManager from "../../../managers/StoreManager";
+import Messenger from "../../../managers/Messenger";
 
 export type ActivityActionType = 'comment'| 'like'| 'unlike'| 'share'| 'save'| 'unsave'| 'see'| 'buy'| 'answer';
 const ACTIONS = ['comment', 'like', 'unlike','share', 'save', 'unsave', 'see', 'buy', 'answer'];
@@ -48,7 +49,6 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
         //let activity: Model.Activity = this.props.activity;
 
-        //let goodshed = resource && resource.meta ? savedIn : false;
 
         const possibleActions = ['comment', 'like', 'unlike', 'share', 'save', 'unsave', 'see', 'answer'];
 
@@ -61,7 +61,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                         this.renderTextButton(a, activity),
                         //$FlowFixMe
                         ()=>this['exec' + toUppercase(a)](activity),
-                        a === 'unlike'
+                        a === 'unlike' || a === 'unsave'
                     )
                 );
             }
@@ -83,7 +83,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                 commentsCount += pendingCount;
 
                 return commentsCount > 0 ? commentsCount +'' : '';
-                // return i18n.t(`activity_item.buttons.${action}`,{count: commentsCount});
+            // return i18n.t(`activity_item.buttons.${action}`,{count: commentsCount});
             case 'like':
             case 'unlike':
                 let pendingLike = this.getPendingLikeStatus(activity);
@@ -121,7 +121,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
             case 'save':
                 return require('../../../img2/bookmarkIcon.png');
             case 'unsave':
-                return require('../../../img2/trashIcon.png');
+                return require('../../../img2/bookmarkIcon.png');
             case 'see':
                 return require('../../../img/save-icon.png');
             case 'buy':
@@ -193,20 +193,6 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     }
 
 
-    // byMe(activity: Activity) {
-    //     return activity.user.id === currentUserId();
-    // }
-    //
-    // isGoodshed2(activity: Activity) {
-    //     let resource = activity.resource;
-    //     let savedIn = _.get(resource, 'meta.saved-in', []);
-    //     let target = activity.target;
-    //     let goodshed;
-    //     if (target && target.type === 'lists') {
-    //         goodshed = _.indexOf(savedIn, target.id) > -1;
-    //     }
-    //     return goodshed;
-    // }
 
     renderButton(key: string, img: Url, text: string, handler: ()=>void, active:boolean = false) {
         let color = active ? Colors.green: Colors.greyishBrown;
@@ -223,70 +209,156 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
         let item = activity.resource;
 
-        const onFinished = () => this.props.navigator.dismissModal();
-        this.props.navigator.showModal({
-            screen: 'goodsh.AddItemScreen', // unique ID registered with Navigation.registerScreen
-            animationType: 'none',
-            title: i18n.t("actions.add"),
-            passProps: {
-                itemId: item.id,
-                itemType: item.type,
-                defaultLineupId: currentGoodshboxId(),
-                onCancel: onFinished,
-                onAdded: onFinished,
-            },
+        //1st: save in goodshbox. and no more !
+        this.props.dispatch(SAVING_CREATION.pending({
+            itemId: item.id,
+            lineupId: currentGoodshboxId(),
+            privacy: 0,
+            description: ''
+        })).then(pendingId => {
+            //console.info(`saving ${saving.id} unsaved`)
+            Messenger.sendMessage(
+                //MagicString
+                i18n.t("activity_action_bar.goodsh_bookmarked", {lineup: "Goodshbox"}),
+                {
+                    timeout: 4000,
+                    action: {
+                        title: i18n.t('activity_action_bar.goodsh_bookmarked_change_lineup'),
+                        onPress: () => {
+                            //undo previous add
+                            SAVING_CREATION.undo(pendingId);
+                            let item = activity.resource;
+
+                            let cancel = () => {
+                                this.props.navigator.dismissModal()
+                            };
+                            this.props.navigator.showModal({
+                                screen: 'goodsh.AddItemScreen',
+                                title: i18n.t("add_item_screen.title"),
+                                animationType: 'none',
+                                passProps: {
+                                    itemId: item.id,
+                                    itemType: item.type,
+                                    item,
+                                    defaultLineupId: currentGoodshboxId(),
+                                    onCancel: cancel,
+                                    onAdded: cancel,
+                                },
+                            });
+
+                        },
+                    }}
+            );
+
+
         });
 
+
     }
+
+    // execUnsave(remoteSaving: Saving) {
+    //     let resource = remoteSaving.resource;
+    //     let savedIn = _.get(resource, 'meta.savedIn', []);
+    //     let saving, lineup;
+    //     //one of the list where this item is saved
+    //     let lineupId = _.head(savedIn);
+    //     if (lineupId) {
+    //         lineup = buildData(this.props.data, 'lists', lineupId);
+    //         if (lineup) {
+    //             if (lineup.savings) {
+    //
+    //                 if (lineup) {
+    //                     saving = _.head(lineup.savings.filter(s =>_.get(s, 'resource.id') ===  resource.id));
+    //                 }
+    //             }
+    //             else {
+    //                 console.warn(`No savings in this linenup: ${JSON.stringify(lineup)}`);
+    //             }
+    //         }
+    //         else {
+    //             console.warn(`lineup not in cache: ${lineupId}`);
+    //         }
+    //     }
+    //
+    //     if (!saving) {
+    //         sendMessage(i18n.t('common.api.generic_error'));
+    //         return;
+    //     }
+    //
+    //     Alert.alert(
+    //         i18n.t("alert.delete.title"),
+    //         i18n.t("alert.delete.label"),
+    //         [
+    //             {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+    //             {text: i18n.t("actions.ok"), onPress: () => {
+    //                 //console.log('OK Pressed');
+    //                 this.props.dispatch(unsave(saving.id, saving.target.id)).then(() => {
+    //                     //console.info(`saving ${saving.id} unsaved`)
+    //                     Snackbar.show({title: i18n.t("activity_action_bar.goodsh_deleted")});
+    //                 });
+    //             }
+    //             },
+    //         ],
+    //         { cancelable: true }
+    //     );
+    // }
 
     execUnsave(remoteSaving: Saving) {
         let resource = remoteSaving.resource;
-        let savedIn = _.get(resource, 'meta.savedIn', []);
-        let saving, lineup;
-        //one of the list where this item is saved
-        let lineupId = _.head(savedIn);
-        if (lineupId) {
-            lineup = buildData(this.props.data, 'lists', lineupId);
-            if (lineup) {
-                if (lineup.savings) {
+        let {id, type} = resource;
+        let savings = StoreManager.getMySavingsForItem(id, type);
+        if (_.size(savings) === 1) {
 
-                    if (lineup) {
-                        saving = _.head(lineup.savings.filter(s =>_.get(s, 'resource.id') ===  resource.id));
+
+            Alert.alert(
+                i18n.t("alert.delete.title"),
+                i18n.t("alert.delete.label"),
+                [
+                    {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                    {text: i18n.t("actions.ok"), onPress: () => {
+                        let saving = _.head(savings);
+                        let {id, lineupId, pending} = saving;
+                        let lineup;
+                        if (pending) {
+                            lineup = buildData(this.props.data, 'lists', lineupId)
+                        }
+                        else {
+                            lineup = _.get(buildData(this.props.data, 'savings', id), 'target');
+                        }
+                        lineupId = lineup && lineup.id;
+                        this.props.dispatch(doUnsave(saving.pending, saving.id, lineupId)).then(() => {
+                            //console.info(`saving ${saving.id} unsaved`)
+                            Messenger.sendMessage(i18n.t("activity_action_bar.goodsh_deleted"));
+                        });
+
+                        // //console.log('OK Pressed');
+                        // this.props.dispatch(unsave(saving.id, saving.target.id)).then(() => {
+                        //     //console.info(`saving ${saving.id} unsaved`)
+                        //     Snackbar.show({title: i18n.t("activity_action_bar.goodsh_deleted")});
+                        // });
                     }
-                }
-                else {
-                    console.warn(`No savings in this linenup: ${JSON.stringify(lineup)}`);
-                }
-            }
-            else {
-                console.warn(`lineup not in cache: ${lineupId}`);
-            }
-        }
+                    },
+                ],
+                { cancelable: true }
+            );
 
-        if (!saving) {
-            sendMessage(i18n.t('common.api.generic_error'));
-            return;
-        }
 
-        Alert.alert(
-            i18n.t("alert.delete.title"),
-            i18n.t("alert.delete.label"),
-            [
-                {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-                {text: i18n.t("actions.ok"), onPress: () => {
-                    //console.log('OK Pressed');
-                    this.props.dispatch(unsave(saving.id, saving.target.id)).then(() => {
-                        //console.info(`saving ${saving.id} unsaved`)
-                        Snackbar.show({title: i18n.t("activity_action_bar.goodsh_deleted")});
-                    });
-                }
+        }
+        else {
+            this.props.navigator.showModal({
+                screen: 'goodsh.UnsaveScreen',
+                title: i18n.t("actions.unsave"),
+                passProps: {
+                    itemId: resource.id,
+                    itemType: resource.type
                 },
-            ],
-            { cancelable: true }
-        );
+                navigatorButtons: Nav.CANCELABLE_MODAL,
+            });
+        }
 
 
     }
+
 
     execComment(activity: Activity) {
         this.props.navigator.showModal({

@@ -26,11 +26,13 @@ export default function reduce(state:any = initialState, action: any) {
         case types.UNSAVE.success():{
             const {id, lineupId} = action.options;
 
+            if (!id || !lineupId) throw "please provide options to reducer";
+
             //update item saved-in
             {
                 const resource = _.get(state, `savings.${id}.relationships.resource.data`, {});
 
-                state = updateDelete(state, `${resource.type}.${resource.id}.meta.savedIn`, it => it === lineupId);
+                state = updateDelete(state, `${resource.type}.${resource.id}.meta.mySavings`, it => it === id);
             }
 
             //decrement

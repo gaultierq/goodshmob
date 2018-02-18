@@ -36,6 +36,7 @@ import Perf from 'ReactPerf';
 
 import React from 'react';
 import {View} from 'react-native';
+import UnsaveScreen from "./screens/unsave";
 
 
 function wrap(screenName,screenCreator,store,provider) {
@@ -90,4 +91,5 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.MyAvatar', () => MyAvatar, store, Provider);
     wrap('goodsh.UserSheetScreen', () => UserSheetScreen, store, Provider);
     wrap('goodsh.AddLineupSheet', () => AddLineupSheet, store, Provider);
+    wrap('goodsh.UnsaveScreen', () => UnsaveScreen, store, Provider);
 }

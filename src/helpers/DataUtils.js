@@ -116,8 +116,10 @@ export const dataStateToProps = (state, ownProps) => ({
 export function updateDelete(state, path, predicate) {
     let data = _.get(state, path, []);
     let indexToRemove = data.findIndex(predicate);
-    let obj = _.set({}, path, {$splice: [[indexToRemove, 1]]});
-    state = update(state, obj);
+    if (indexToRemove >= 0) {
+        let obj = _.set({}, path, {$splice: [[indexToRemove, 1]]});
+        state = update(state, obj);
+    }
     return state;
 }
 
