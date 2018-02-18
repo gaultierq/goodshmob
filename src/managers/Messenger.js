@@ -2,6 +2,7 @@
 import EventBus from 'eventbusjs'
 import {EVENT_MESSAGE} from "../events";
 import Snackbar from "react-native-snackbar"
+import {Colors} from "../ui/colors";
 
 class _Messenger implements Messenger {
     id = Math.random();
@@ -21,7 +22,8 @@ class _Messenger implements Messenger {
         switch (type) {
             case 'snack':
                 //TODO: something with priority
-                let {priority, reference} = others;
+                let {priority, reference, action} = others;
+                action = action && {...action, color: Colors.green};
 
                 if (!this.snackDismissTimeout) {
                     this.snackDismissTimeout = setTimeout(()=> {
@@ -32,6 +34,7 @@ class _Messenger implements Messenger {
 
                     Snackbar.show({
                         title: content,
+                        action,
                         duration: Snackbar.LENGTH_INDEFINITE,
                     });
 

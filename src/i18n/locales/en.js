@@ -256,6 +256,8 @@ export default {
     },
     activity_action_bar: {
         goodsh_deleted: "Goodsh deleted",
+        goodsh_bookmarked: "Goodsh added in %{lineup}",
+        goodsh_bookmarked_change_lineup: "Change",
         comment: {
             title: "Comments"
         },
