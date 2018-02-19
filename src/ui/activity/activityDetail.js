@@ -34,6 +34,7 @@ import FeedSeparator from "./components/FeedSeparator";
 import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
 import BackButton from "../components/BackButton";
 import Feed from "../components/feed";
+import {CLOSE_MODAL} from "../Nav";
 
 type Props = {
     activityId: Id,
@@ -56,13 +57,21 @@ class ActivityDetailScreen extends Screen<Props, State> {
     state = {};
 
     static navigatorStyle = {
-        navBarHidden: true
-        // drawUnderNavBar: true,
-        // navBarTransparent: true,
-        // navBarTranslucent: true,
-        // navBarBackgroundColor: Colors.dirtyWhite,
-        // statusBarBlur: true
-        // navBarButtonColor: 'transparent',
+        drawUnderNavBar: true,
+        navBarTransparent: true,
+        navBarTranslucent: true,
+        navBarBackgroundColor: Colors.dirtyWhite,
+    };
+
+    static navigatorButtons = {
+        leftButtons: [
+            {
+                id: CLOSE_MODAL,
+                icon: require('../../img2/circleBackArrow.png'),
+                disableIconTint: true,
+            }
+        ],
+        rightButtons: []
     };
 
     componentDidMount() {
@@ -85,7 +94,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
         let showLoader = !activity && this.state.isLoading;
 
-        const isAsk = sanitizeActivityType(activity.type) === 'asks';
+        const isAsk = activity && sanitizeActivityType(activity.type) === 'asks';
 
         return (
             <MainBackground>
@@ -156,13 +165,13 @@ class ActivityDetailScreen extends Screen<Props, State> {
                         }
                     </View>
                 </ScrollView>
-                <View style={styles.backButtonWrapper} >
-                    <BackButton onPress={() => {
-                        this.props.navigator.pop({
-                            animated: true, // does the pop have transition animation or does it happen immediately (optional)
-                        })
-                    }}/>
-                </View>
+                {/*<View style={styles.backButtonWrapper} >*/}
+                {/*<BackButton onPress={() => {*/}
+                {/*this.props.navigator.pop({*/}
+                {/*animated: true, // does the pop have transition animation or does it happen immediately (optional)*/}
+                {/*})*/}
+                {/*}}/>*/}
+                {/*</View>*/}
             </MainBackground>
         );
     }
