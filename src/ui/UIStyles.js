@@ -143,17 +143,17 @@ export function renderSimpleButton(
     onPress: ()=> void ,
     {disabled = false, loading = false, style = {}, textStyle = {}} : ButtonOptions = {}) {
 
-    let color = disabled ? Colors.greyish : Colors.black;
-
-    return (<Button
-        isLoading={loading}
-        isDisabled={disabled}
-        onPress={onPress}
-        style={[{marginBottom: 0}, STYLES.button, style]}
-        disabledStyle={STYLES.disabledButton}
-    >
-        <Text style={[{fontWeight: "bold", fontSize: 18}, textStyle, {color}]}>{text}</Text>
-    </Button>);
+    return (
+        <Button
+            isLoading={loading}
+            isDisabled={disabled}
+            onPress={onPress}
+            style={[{marginBottom: 0}, STYLES.button, style]}
+            disabledStyle={STYLES.disabledButton}
+        >
+            <Text style={[{fontWeight: "bold", fontSize: 18}, textStyle, ]}>{text}</Text>
+        </Button>
+    );
 }
 
 export function renderSimpleLink(
@@ -203,7 +203,8 @@ export const STYLES = StyleSheet.create({
         borderColor: "transparent",
     },
     disabledButton: {
-        borderColor: "transparent"
+        borderColor: "transparent",
+        opacity: .6
     },
     lightBorder: {
         borderWidth: StyleSheet.hairlineWidth,
