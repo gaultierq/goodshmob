@@ -25,21 +25,23 @@ class _Messenger implements Messenger {
                 let {priority, reference, action, timeout = 2000} = others;
                 action = action && {...action, color: Colors.green};
 
-                if (!this.snackDismissTimeout) {
-                    this.snackDismissTimeout = setTimeout(()=> {
-                        this.snackDismissTimeout = 0;
-                        console.debug(`${this.toString()}: dismissing snack`);
-                        Snackbar.dismiss();
-                    }, timeout);
 
-                    Snackbar.show({
-                        title: content,
-                        action,
-                        duration: Snackbar.LENGTH_INDEFINITE,
-                    });
+                if (this.snackDismissTimeout) clearTimeout(this.snackDismissTimeout);
+
+                this.snackDismissTimeout = setTimeout(()=> {
+                    this.snackDismissTimeout = 0;
+                    console.debug(`${this.toString()}: dismissing snack`);
+                    Snackbar.dismiss();
+                }, timeout);
+
+                Snackbar.show({
+                    title: content,
+                    action,
+                    duration: Snackbar.LENGTH_INDEFINITE,
+                });
 
 
-                }
+                // }
 
                 break;
             default:

@@ -168,6 +168,8 @@ export default class AddItemScreen extends Screen<Props, State> {
     renderListSelector(selectedLineupId: Id) {
         const lineup = buildData(this.props.data, 'lists', selectedLineupId);
 
+        console.debug(`DEBUG::::: selectedLineupId=${selectedLineupId} lineup=${JSON.stringify(lineup)}`)
+
         //QtoK: wrapping a child positioning in absolute is the only wa I found to have a component with the good width
         //other idea?
         const handler = () => {
@@ -192,10 +194,9 @@ export default class AddItemScreen extends Screen<Props, State> {
             {/*{renderTag(lineup.name, handler, {position: 'absolute'})}*/}
             <Text style={{marginRight: 5, marginTop: 2}}>{i18n.t('create_list_controller.add_to_list')} :</Text>
             <GTouchable onPress={handler}>
-                <Text style={[STYLES.tag, {position: 'absolute'}]}>
-                    {tag}
-                    <Text style={{color: Colors.brownishGrey, fontSize: 10, justifyContent: "flex-end", alignItems: "flex-end"}}>  ▼</Text>
-
+                <Text style={[STYLES.tag]}>
+                    {tag}{__IS_ANDROID__ && "  ▼"}
+                    {__IS_IOS__ && <Text style={{color: Colors.brownishGrey, fontSize: 10, justifyContent: "flex-end", alignItems: "flex-end"}}>  ▼</Text>}
                 </Text>
             </GTouchable>
         </View>);
