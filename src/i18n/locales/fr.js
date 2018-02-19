@@ -281,6 +281,8 @@ export default {
         delete: "Supprimer",
         change: "Modifier",
         change_title: "Modifier le titre",
+        edit_saving_menu: "Éditer ce goodsh",
+        change_description: "Modifier la description",
         change_name: "Changer le nom de cette liste",
         undo: "Annuler",
         cancel: "Annuler",
@@ -298,7 +300,8 @@ export default {
         ask_button: "Ask",
         invite: "Inviter un ami",
         load_more: "Charger la suite",
-        unsave: "Supprimer"
+        unsave: "Supprimer",
+        save: "Sauvegarder",
 
     },
     common: {
@@ -328,5 +331,8 @@ export default {
     dev: {
         label: "Dev mode",
         title: "DevMenu"
+    },
+    congrats: {
+        generic: "C'est fait!"
     }
 };

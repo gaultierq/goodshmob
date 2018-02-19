@@ -285,6 +285,8 @@ export default {
         delete: "Delete",
         change: "Change",
         change_title: "Change title",
+        edit_saving_menu: "Edit this goodsh",
+        change_description: "Change the description",
         change_name: "Rename this list",
         undo: "Undo",
         cancel: "Cancel",
@@ -302,7 +304,8 @@ export default {
         ask_button: "Ask",
         invite: "Invite a friend",
         load_more: "Load more",
-        unsave: "Delete"
+        unsave: "Delete",
+        save: "Save",
     },
     common: {
         empty_feed_generic: "If you love it, share it.\nWhy don't you invite some friends to goodsh?",
@@ -329,5 +332,8 @@ export default {
     dev: {
         label: "Dev mode",
         title: "DevMenu"
+    },
+    congrats: {
+        generic: "Done!"
     }
 };

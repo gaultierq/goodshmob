@@ -44,13 +44,15 @@ export default class Sheet extends React.Component<Props, State> {
         let height = _.get(this.props, 'children.props.style.height');
         return (
             <Modal
-            ref={modal=>this._modal = modal}
+                ref={modal=>this._modal = modal}
                 position={'bottom'}
-                   onClosed={this.onClose.bind(this)}
-                   onOpened={()=>this.setState({opened:true})}
-                   isOpen={true}
-                   backButtonClose={true}
-                   style={{height}}>{this.props.children}</Modal>
+                onClosed={this.onClose.bind(this)}
+                onOpened={()=>this.setState({opened:true})}
+                isOpen={true}
+                backButtonClose={true}
+                style={{height}}>
+                {this.props.children}
+            </Modal>
         );
     }
 

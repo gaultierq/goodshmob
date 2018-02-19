@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import * as actions from './actions'
 import {connect} from "react-redux";
-import {currentUser, logged} from "../../managers/CurrentUser"
+import {currentUser, currentUserId, logged} from "../../managers/CurrentUser"
 import ActivityBody from "./components/ActivityBody";
 import {buildData, getAskBackgroundColor, sanitizeActivityType} from "../../helpers/DataUtils";
 import {Avatar, MainBackground} from "../UIComponents";
@@ -32,6 +32,7 @@ import ActivityActionBar from "./components/ActivityActionBar";
 import FeedSeparator from "./components/FeedSeparator";
 import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
 import {CLOSE_MODAL} from "../Nav";
+import BottomSheet from 'react-native-bottomsheet';
 
 type Props = {
     activityId: Id,
@@ -43,6 +44,7 @@ type State = {
     isLoading?: boolean
 };
 
+const EDIT_SAVING = "EDIT_SAVING";
 
 @logged
 @connect((state, ownProps) => ({
@@ -71,18 +73,69 @@ class ActivityDetailScreen extends Screen<Props, State> {
         rightButtons: []
     };
 
+    constructor(props) {
+        super(props);
+        props.navigator.addOnNavigatorEvent((event) => {
+
+            let id = event.id;
+
+            if (event.type === 'NavBarButtonPress') {
+                if (event.id === EDIT_SAVING) {
+                    BottomSheet.showBottomSheetWithOptions({
+                        options: [i18n.t("actions.change_description")],
+                        title: i18n.t("actions.edit_saving_menu"),
+                        // destructiveButtonIndex: 1,
+                        // cancelButtonIndex: 1,
+                    }, (value) => {
+                        switch (value) {
+                            case 0:
+                                let activity = this.makeActivity();
+                                props.navigator.showModal({
+                                    screen: 'goodsh.ChangeDescriptionScreen',
+                                    animationType: 'none',
+                                    passProps: {
+                                        activityId: activity.id,
+                                        initialDescription: activity.description
+                                    }
+                                });
+                                break;
+                        }
+                    });
+                }
+            }
+        });
+    }
+
     componentDidMount() {
         this.load();
     }
 
     load() {
+
+        let activity = this.makeActivity();
+        if (activity) {
+            let isMine = activity.user && activity.user.id === currentUserId();
+            if (isMine) {
+                this.props.navigator.setButtons({
+                    ...ActivityDetailScreen.navigatorButtons,
+                    rightButtons: [{
+                        id: EDIT_SAVING,
+                        icon: require('../../img2/moreDotsGrey.png'),
+                        disableIconTint: true,
+                    }]
+                })
+            }
+        }
+
         if (this.state.isLoading) return;
         this.setState({isLoading: true});
         this.props.dispatch(
-            actions
-                .fetchActivity(this.props.activityId, this.props.activityType)
+            actions.fetchActivity(this.props.activityId, this.props.activityType)
         ).catch((err)=>console.log(err))
-            .then(this.setState({isLoading: false}))
+            .then(()=>{
+                this.setState({isLoading: false})
+            })
+
     }
 
 

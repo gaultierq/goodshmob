@@ -375,6 +375,7 @@ export interface PendingAction<T> {
 
     undo: (pendingId: Id) => (dispatch: any) => Promise<T>;
 
+    exec: (payload: T) => (dispatch: any) => Promise<T>;
 }
 
 export function mergeItemsAndPendings<T>(

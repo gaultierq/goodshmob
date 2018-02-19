@@ -143,7 +143,7 @@ export function renderSimpleButton(
     onPress: ()=> void ,
     {disabled = false, loading = false, style = {}, textStyle = {}} : ButtonOptions = {}) {
 
-    let color = disabled ? Colors.greyishBrown : Colors.black;
+    let color = disabled ? Colors.greyish : Colors.black;
 
     return (<Button
         isLoading={loading}
@@ -152,7 +152,7 @@ export function renderSimpleButton(
         style={[{marginBottom: 0}, STYLES.button, style]}
         disabledStyle={STYLES.disabledButton}
     >
-        <Text style={[{color, fontWeight: "bold", fontSize: 18}, textStyle]}>{text}</Text>
+        <Text style={[{fontWeight: "bold", fontSize: 18}, textStyle, {color}]}>{text}</Text>
     </Button>);
 }
 

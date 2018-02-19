@@ -652,7 +652,7 @@ class HomeScreen extends Screen<Props, State> {
         this.props.navigator.showModal({
             screen: 'goodsh.ActivityDetailScreen',
             passProps: {activityId: saving.id, activityType: saving.type},
-            navigatorButtons: Nav.CANCELABLE_MODAL,
+            // navigatorButtons: Nav.CANCELABLE_MODAL,
         });
     }
 

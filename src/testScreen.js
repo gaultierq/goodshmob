@@ -37,12 +37,12 @@ export const sendingDetail = {
     }
 };
 
-export const savingDetail = {
+export const mySavingDetail = {
     screen: {
         screen: 'goodsh.ActivityDetailScreen',
     },
     passProps: {
-        activityId: "c36bc6e3-1425-40af-a1d9-8e31c2dc2a69",
+        activityId: "917ff841-efe0-48e8-b9c7-72c723be0604",
         activityType: "savings"
     }
 };
