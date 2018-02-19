@@ -16,10 +16,9 @@ import * as actions from './actions'
 import {connect} from "react-redux";
 import {currentUser, logged} from "../../managers/CurrentUser"
 import ActivityBody from "./components/ActivityBody";
-import {buildData, sanitizeActivityType, getAskBackgroundColor} from "../../helpers/DataUtils";
+import {buildData, getAskBackgroundColor, sanitizeActivityType} from "../../helpers/DataUtils";
 import {Avatar, MainBackground} from "../UIComponents";
 import type {Activity, ActivityType, Id} from "../../types";
-import Icon from 'react-native-vector-icons/Entypo';
 import Screen from "../components/Screen";
 import {Colors} from "../colors";
 import GTouchable from "../GTouchable";
@@ -27,13 +26,11 @@ import ActivityStatus from "./components/ActivityStatus";
 import {component as CommentInput, CREATE_COMMENT} from '../components/CommentInput';
 import {userFirstName} from "../../helpers/StringUtils";
 import CommentCell from "../components/CommentCell";
-import {styleBorder, styleMargin, stylePadding} from "../UIStyles";
+import {styleMargin, stylePadding} from "../UIStyles";
 import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts";
 import ActivityActionBar from "./components/ActivityActionBar";
 import FeedSeparator from "./components/FeedSeparator";
 import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
-import BackButton from "../components/BackButton";
-import Feed from "../components/feed";
 import {CLOSE_MODAL} from "../Nav";
 
 type Props = {

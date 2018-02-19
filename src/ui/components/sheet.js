@@ -72,4 +72,8 @@ export default class Sheet extends React.Component<Props, State> {
     open() {
         this._modal.open();
     }
+
+    close() {
+        this._modal.close();
+    }
 }
