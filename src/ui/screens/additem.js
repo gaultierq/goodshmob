@@ -190,16 +190,20 @@ export default class AddItemScreen extends Screen<Props, State> {
         let tag = lineup.name;
         tag = tag || i18n.t('create_list_controller.choose_list');
 
-        return (<View style={{height: 35, paddingLeft: 8, flexDirection: 'row'}}>
-            {/*{renderTag(lineup.name, handler, {position: 'absolute'})}*/}
-            <Text style={{marginRight: 5, marginTop: 2}}>{i18n.t('create_list_controller.add_to_list')} :</Text>
+        return (
             <GTouchable onPress={handler}>
-                <Text style={[STYLES.tag]}>
-                    {tag}{__IS_ANDROID__ && "  ▼"}
-                    {__IS_IOS__ && <Text style={{color: Colors.brownishGrey, fontSize: 10, justifyContent: "flex-end", alignItems: "flex-end"}}>  ▼</Text>}
-                </Text>
+                <View style={{height: 35, paddingLeft: 8, flexDirection: 'row'}}>
+                    {/*{renderTag(lineup.name, handler, {position: 'absolute'})}*/}
+                    <Text style={{marginRight: 5, marginTop: 2}}>{i18n.t('create_list_controller.add_to_list')} :</Text>
+
+                    <Text style={[STYLES.tag]}>
+                        {tag}{__IS_ANDROID__ && "  ▼"}
+                        {__IS_IOS__ && <Text style={{color: Colors.brownishGrey, fontSize: 10, justifyContent: "flex-end", alignItems: "flex-end"}}>  ▼</Text>}
+                    </Text>
+
+                </View>
             </GTouchable>
-        </View>);
+        );
     }
 
     _doAdd = (lineupId: Id) => {
