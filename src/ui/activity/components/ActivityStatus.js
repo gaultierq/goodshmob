@@ -11,6 +11,7 @@ import GTouchable from "../../GTouchable";
 import {isSaving, isSending, timeSinceActivity} from "../../../helpers/DataUtils";
 import UserRowI from "./UserRowI";
 import {userFirstName} from "../../../helpers/StringUtils";
+import {currentUserId} from "../../../managers/CurrentUser";
 
 
 const styles = StyleSheet.create({
@@ -92,38 +93,58 @@ export default class ActivityStatus extends React.Component<Props, State> {
     }
 
     renderDescription(activity: Activity, children?: Node) {
-        return <View style={[{
+        return (
+            <GTouchable onPress={()=> {
+                if (activity.user && activity.user.id === currentUserId()) {
+                    //edit description
+                    this.props.navigator.showModal({
+                        screen: 'goodsh.ChangeDescriptionScreen',
+                        animationType: 'none',
+                        passProps: {
+                            activityId: activity.id,
+                            initialDescription: activity.description
+                        }
+                    });
+                }
+                else {
+                    //open comments
+                    this.props.navigator.showModal({
+                        screen: 'goodsh.CommentsScreen',
+                        title: i18n.t("activity_action_bar.comment.title"),
+                        passProps: {
+                            activityId: activity.id,
+                            activityType: activity.type,
+                            autoFocus: true
+                        },
+                        navigatorButtons: Nav.CANCELABLE_MODAL,
+                    });
+                }
+            }}>
+                <View style={[{
+                    marginLeft: 2,
+                }]}>
+                    <View style={[{
+                        flex: 1,
+                        flexDirection: 'row',
+                        backgroundColor: 'white',
+                        paddingHorizontal: 0,
+                        paddingTop: 10,
+                        // borderRadius: 6,
+                    }]}>
 
-            ...stylePadding(0, 0, 0, 0),
+                        <Octicons name="quote" size={10} color={Colors.brownishGrey} style={{alignSelf: 'flex-start'}}/>
+                        <Text numberOfLines={3} style={[styles.description, {
+                            flex: 1,
+                            alignItems: 'center',
+                            textAlignVertical: 'center',
+                            paddingHorizontal:2,
+                        }]}>{_.upperFirst(activity.description)}
+                        </Text>
+                    </View>
 
-            // borderLeftWidth: StyleSheet.hairlineWidth,
-            marginLeft: 2,
-
-
-        }]}>
-            <View style={[{
-                flex: 1,
-                flexDirection: 'row',
-                backgroundColor: 'white',
-                paddingHorizontal: 0,
-                paddingTop: 10,
-                // borderRadius: 6,
-            }]}>
-
-                <Octicons name="quote" size={10} color={Colors.brownishGrey} style={{alignSelf: 'flex-start'}}/>
-                <Text numberOfLines={3} style={[styles.description, {
-                    flex: 1,
-                    alignItems: 'center',
-                    textAlignVertical: 'center',
-                    paddingHorizontal:2,
-                }]}>{_.upperFirst(activity.description)}
-                </Text>
-            </View>
-
-            {/*{children}*/}
-
-
-        </View>;
+                </View>
+            </GTouchable>
+        );
     }
 
     renderSendTo() {

@@ -367,7 +367,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
             passProps: {
                 activityId: activity.id,
                 activityType: activity.type,
-                autofocus: true
+                autoFocus: true
             },
             navigatorButtons: Nav.CANCELABLE_MODAL,
         });

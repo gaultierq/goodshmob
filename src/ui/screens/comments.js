@@ -31,7 +31,7 @@ type Props = {
     activityId: Id,
     activityType: ActivityType,
     pending: any,
-    autofocus?:?boolean
+    autoFocus?:?boolean
 };
 
 type State = {
@@ -167,6 +167,7 @@ class CommentsScreen extends Screen<Props, State> {
                                 borderRadius: 1, borderWidth: StyleSheet.hairlineWidth,
                             }}
                             placeholder={"activity_comments_screen.add_comment_placeholder"}
+                            autoFocus={this.props.autoFocus}
                         />
 
                     </View>
