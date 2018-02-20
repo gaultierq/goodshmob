@@ -131,12 +131,12 @@ export default class ActivityStatus extends React.Component<Props, State> {
                 textAlign: 'center',
                 marginRight: 8,
                 fontFamily: SFP_TEXT_MEDIUM,
-                fontsize: 12,
+                fontSize: 12,
                 color: Colors.greyishBrown}}>{" " +i18n.t("activity_item.header.to")}
 
                 <Text style={{
                     fontFamily: SFP_TEXT_BOLD,
-                    fontsize: 12,
+                    fontSize: 12,
                     color: Colors.black}}>{" "+userFirstName(target)}</Text>
             </Text>
 

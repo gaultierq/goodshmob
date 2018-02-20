@@ -185,7 +185,7 @@ export default class ActivityCell extends React.Component<Props, State> {
     //                     textAlign: 'center',
     //                     marginRight: 8,
     //                     fontFamily: SFP_TEXT_MEDIUM,
-    //                     fontsize: 12,
+    //                     fontSize: 12,
     //                     color: Colors.greyishBrown}}>{i18n.t(key)}</Text>
     //                 {renderTag(targetName, press)}
     //             </View>
