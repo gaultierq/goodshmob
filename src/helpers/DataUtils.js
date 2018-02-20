@@ -49,6 +49,9 @@ export let sanitizeActivityType = activityType => {
         case "track":
         case "tracks":
             return "tracks";
+        case "album":
+        case "albums":
+            return "albums";
     }
     return activityType;
 };
