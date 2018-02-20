@@ -16,6 +16,7 @@ type Props = {
     noImage?: boolean,
     children?: Node,
     rightComponent?: Node,
+    rightText?: Node,
     small?: boolean,
     style?: any,
     navigator: *
@@ -27,7 +28,7 @@ type State = {
 export default class UserRowI extends React.Component<Props, State> {
 
     render() {
-        const {small, user, style, noImage, rightComponent} = this.props;
+        const {small, user, style, noImage, rightComponent, rightText} = this.props;
 
         let imageDim = small ? 20 : 30;
 
@@ -47,7 +48,10 @@ export default class UserRowI extends React.Component<Props, State> {
 
             <View style={{flex:1}}>
                 <View style={[styles.rightContainer]}>
-                    <Text style={styles.rightText}>{user && user.firstName}</Text>
+                    <Text style={styles.rightText}>
+                        {user && user.firstName}
+                        {rightText}
+                    </Text>
                     {rightComponent}
 
                 </View>

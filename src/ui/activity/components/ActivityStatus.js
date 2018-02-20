@@ -54,13 +54,16 @@ export default class ActivityStatus extends React.Component<Props, State> {
 
     render() {
         const {activity, skipLineup, style, cardStyle, children, navigator} = this.props;
-        let rightComponent;
+        let renderMethod;
         if (isSaving(activity) && !skipLineup) {
-            rightComponent = this.renderSavedInList();
+            renderMethod = this.renderSavedInList.bind(this);
         }
         else if (isSending(activity)) {
-            rightComponent = this.renderSendTo();
+            renderMethod = this.renderSendTo.bind(this);
         }
+
+
+        let {rightText, rightHandler} = renderMethod && renderMethod() || {};
         return (
             <View style={[styles.descriptionContainer, style]}>
                 <View style={[{
@@ -68,12 +71,12 @@ export default class ActivityStatus extends React.Component<Props, State> {
                     padding: 6,
                 },cardStyle
                 ]}>
-                    <GTouchable onPress={() => seeUser(this.props.navigator, activity.user)}>
+                    <GTouchable onPress={rightHandler}>
                         <UserRowI
                             // activityTime={activity.createdAt}
                             user={activity.user}
                             navigator={this.props.navigator}
-                            rightComponent={rightComponent}
+                            rightText={rightText}
                         >
                             <Text style={[styles.userText, {alignSelf: 'flex-start', ...stylePadding(0, 3)}]}>{timeSinceActivity(activity)}</Text>
 
@@ -126,7 +129,7 @@ export default class ActivityStatus extends React.Component<Props, State> {
     renderSendTo() {
         const {activity} = this.props;
         let target = activity.target;
-        return(
+        let rightText = (
             <Text style={{
                 textAlign: 'center',
                 marginRight: 8,
@@ -139,10 +142,9 @@ export default class ActivityStatus extends React.Component<Props, State> {
                     fontSize: 12,
                     color: Colors.black}}>{" "+userFirstName(target)}</Text>
             </Text>
-
-
-
-        )
+        );
+        let rightHandler = target && (() => seeUser(this.props.navigator, target));
+        return {rightText, rightHandler};
     }
 
     renderSavedInList() {
@@ -153,43 +155,29 @@ export default class ActivityStatus extends React.Component<Props, State> {
         let targetName = target && target.name;
         if (count) targetName += " (" + count + ")";
 
-        return(
-            <View style={{flex: 1, marginLeft: 4, paddingBottom: 1, alignItems: 'baseline', flexDirection: 'row'}}>
-                {/*<Avatar user={activity.user} style={{dim: 26, marginRight: 8, marginTop: 0}}/>*/}
-                <View style={{flex: 1, }}>
-                    <View style={styles.tag}>
+        let rightText = (
+            <Text style={{
+                textAlign: 'center',
+                marginRight: 8,
+                marginLeft: 6,
+                fontFamily: SFP_TEXT_MEDIUM,
+                fontSize: 12,
+                color: Colors.greyishBrown}}>
+                {" "} {i18n.t(!!target ? "activity_item.header.in" : "activity_item.header.added_somewhere")}
 
-                        <GTouchable
-                            disabled={!target}
-                            style={{}} onPress={() => seeList(this.props.navigator, target)}>
+                {target && <Text style={[{
+                    color: Colors.black,
+                    fontFamily: SFP_TEXT_BOLD,
+                    // fontSize: 12,
+                    // lineHeight: 12
 
+                }]}>{" " + targetName}</Text>
+                }
 
-                            <Text style={{
-                                textAlign: 'center',
-                                marginRight: 8,
-                                // marginLeft: 6,
-                                fontFamily: SFP_TEXT_MEDIUM,
-                                fontSize: 12,
-                                color: Colors.greyishBrown}}>
-                                {i18n.t(!!target ? "activity_item.header.in" : "activity_item.header.added_somewhere")}
+            </Text>
+        );
 
-                                {target && <Text style={[{
-                                    color: Colors.black,
-                                    fontFamily: SFP_TEXT_BOLD,
-                                    // fontSize: 12,
-                                    // lineHeight: 12
-
-                                }]}>{" " + targetName}</Text>
-                                }
-
-                            </Text>
-                        </GTouchable>
-                    </View>
-                </View>
-
-            </View>
-
-        )
+        return {rightText, rightHandler: target && (() => seeList(this.props.navigator, target))};
     }
 }
 
