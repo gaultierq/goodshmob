@@ -32,6 +32,7 @@ import Analytics from "./managers/Analytics";
 import * as appActions from "./auth/actions";
 import OnBoardingManager from "./managers/OnBoardingManager";
 import StoreManager from "./managers/StoreManager";
+import {currentUser} from "./managers/CurrentUser";
 
 
 type AppMode = 'idle' | 'init_cache' | 'logged' | 'unlogged' | 'upgrading_cache' | 'unknown'
@@ -341,8 +342,8 @@ export default class App {
                 else {
                     notification.load();
                     if (this.bugsnag) {
-                        //let {id, email, firstName, lastName} = currentUser();
-                        // this.bugsnag.setUser(id, firstName + " " + lastName, email);
+                        let {id, email, firstName, lastName} = currentUser(false) || {};
+                        this.bugsnag.setUser(id, firstName + " " + lastName, email);
                         this.bugsnag.setUser(currentUserId(), '', '');
                     }
                     DeviceManager.checkAndSendDiff();

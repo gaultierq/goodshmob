@@ -305,6 +305,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                     <CommentInput
                         activity={activity}
                         inputStyle={{fontSize: 13, }}
+                        height={28}
                         placeholder={"activity_screen.comments.no_comments"}
                     />
                 </View>

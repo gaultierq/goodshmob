@@ -157,7 +157,7 @@ class CommentsScreen extends Screen<Props, State> {
                                 marginBottom: 4, paddingTop: 40,
                                 paddingBottom: 75,
                                 backgroundColor: Colors.greying}}
-                            empty={<Text style={[STYLES.empty_message, {fontSize: 20, paddingBottom: 50}]}>{i18n.t('common.no_comments')}</Text>}
+                            empty={<Text style={[STYLES.empty_message, {fontSize: 20, paddingBottom: 50}]}>{i18n.t('activity_screen.comments.no_comments')}</Text>}
                         />
 
                         <CommentInput
