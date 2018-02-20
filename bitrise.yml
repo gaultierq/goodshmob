@@ -42,7 +42,9 @@ workflows:
             cd goodshmob-version
 
             _version=$(./script.sh resolveNextVersion -b $GOODSH_BUILD_BRANCH)
+            _versionCode=$(./script.sh resolveNextVersionCode -b $GOODSH_BUILD_BRANCH)
             envman add --key GOODSH_BUILD_VERSION --value $_version
+            envman add --key GOODSH_BUILD_VERSION_CODE --value $_versionCode
 
             if [ -z ${_version+x} ];
             then
@@ -103,7 +105,7 @@ workflows:
         inputs:
         - manifest_file: "$BITRISE_SOURCE_DIR/android/app/src/main/AndroidManifest.xml"
         - version_name: '$GOODSH_BUILD_VERSION'
-        - version_code: '$GOODSH_BUILD_VERSION'
+        - version_code: '$GOODSH_BUILD_VERSION_CODE'
     - gradle-runner@1.8.0:
         inputs:
         - gradle_file: "$GRADLE_BUILD_FILE_PATH"
