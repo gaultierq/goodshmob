@@ -14,6 +14,7 @@ import GTouchable from "../GTouchable";
 import Screen from "../components/Screen";
 import type {Item, RNNNavigator} from "../../types";
 import {Colors} from "../colors";
+import Geolocation from "../../managers/GeoLocation"
 
 type SearchCategory = "consumer_goods" | "places" | "musics" | "movies";
 type SearchToken = string;
@@ -63,14 +64,15 @@ class SearchItem extends Screen<Props, State> {
             //actions.searchFor(this.state.input, cat)
 
             //GeolocationManager
-            let {lat, lng} = {};
+            let {latitude, longitude} = category === 'places' && Geolocation.getPosition() || {};
+
 
             let call = new Api.Call()
                 .withMethod('GET')
                 .withRoute(`search/${category}`)
                 .addQuery({'search[term]': token})
-                .addQuery(lat && {'search[lat]': lat})
-                .addQuery(lng && {'search[lng]': lng})
+                .addQuery(latitude && {'search[lat]': latitude})
+                .addQuery(longitude && {'search[lng]': longitude})
             ;
 
             //maybe use redux here ?

@@ -9,36 +9,13 @@ class _GeoLocation implements GeoLocation {
 
     currentPosition: Position;
 
+
     getPosition() {
-        this.getPositionAndSaveIt()
-        return this.currentPosition
+        this.getPositionAndSaveIt();
+        console.log(`current position=${JSON.stringify(this.currentPosition)}`);
+        return this.currentPosition && this.currentPosition.coords;
     }
 
-    getPositionAndSaveIt = async () => {
-        const hasLocationPermission = await hasLocationPermission();
-
-        if (!hasLocationPermission) {
-            console.log('We do not have location permission')
-            this.currentPosition = null;
-        }
-
-        navigator.getCurrentPosition(
-            (position) => {
-                this.currentPosition = position
-                console.log(position);
-            },
-            (error) => {
-                console.log('Error requesting permission', error)
-                this.currentPosition = null
-            },
-            { enableHighAccuracy: false,
-                timeout: 15000,
-                maximumAge: 10000,
-                distanceFilter: 50
-            }
-        );
-
-    }
 
     hasLocationPermission = async () => {
         if (Platform.OS === 'ios' ||
@@ -65,12 +42,39 @@ class _GeoLocation implements GeoLocation {
         }
 
         return false;
-    }
+    };
+
+    getPositionAndSaveIt = async () => {
+        const hasLocationPermission = await this.hasLocationPermission();
+
+        if (!hasLocationPermission) {
+            console.log('We do not have location permission')
+            this.currentPosition = null;
+        }
+
+        navigator.geolocation.getCurrentPosition(position => {
+                this.currentPosition = position;
+                console.log(position);
+            },
+            (error) => {
+                console.log('Error requesting permission', error)
+                this.currentPosition = null
+            },
+            { enableHighAccuracy: false,
+                timeout: 15000,
+                maximumAge: 10000,
+                distanceFilter: 50
+            }
+        );
+
+    };
 
 
 
 }
 export interface GeoLocation {
+
+    init(): void;
 
     getPosition(): Position;
 }
