@@ -72,10 +72,10 @@ export default class DebugScreen extends Screen<Props, State> {
                         title="show build information"
                         onPress={this.showBuildInfo.bind(this)}
                     />
-                    <Button
-                        title="show device information"
-                        onPress={this.showDeviceInfo.bind(this)}
-                    />
+                    <Button title="show device information" onPress={this.showDeviceInfo.bind(this)}/>
+
+                    <Button title="crash app" onPress={() => {throw "debug crash"}}/>
+
                     <Text>{this.state.text}</Text>
                 </View>
             </ScrollView>
