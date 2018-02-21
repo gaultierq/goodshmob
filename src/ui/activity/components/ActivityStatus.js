@@ -5,7 +5,7 @@ import {Colors} from "../../colors";
 import {stylePadding} from "../../UIStyles";
 import type {Activity, RNNNavigator} from "../../../types";
 import Octicons from "react-native-vector-icons/Octicons";
-import {seeList, seeUser} from "../../Nav";
+import {CANCELABLE_MODAL, seeList, seeUser} from "../../Nav";
 import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "../../fonts";
 import GTouchable from "../../GTouchable";
 import {isSaving, isSending, timeSinceActivity} from "../../../helpers/DataUtils";
@@ -116,7 +116,7 @@ export default class ActivityStatus extends React.Component<Props, State> {
                             activityType: activity.type,
                             autoFocus: true
                         },
-                        navigatorButtons: Nav.CANCELABLE_MODAL,
+                        navigatorButtons: CANCELABLE_MODAL,
                     });
                 }
             }}>

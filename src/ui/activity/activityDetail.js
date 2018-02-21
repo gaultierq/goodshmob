@@ -321,6 +321,10 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
 
         const noCommentators = _.isEmpty(activity.commentators);
+        const othersCommentators = _.slice(
+            activity.commentators,
+            lastComment ? 1 : 0,
+            4);
         return (
             <GTouchable
                 onPress={()=> this.displayActivityComments(activity)}>
@@ -363,6 +367,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                         activity={activity}
                                         containerStyle={{marginLeft: 30}}
                                         inputStyle={{fontSize: 13, }}
+                                        height={28}
                                         placeholder={"activity_comments_screen.add_comment_placeholder"}
                                     />
 
@@ -371,13 +376,10 @@ class ActivityDetailScreen extends Screen<Props, State> {
                         </View>}
 
                     {
-                        !_.isEmpty(activity.commentators) && <View>
+                        !_.isEmpty(othersCommentators) && <View>
                             {separator()}
                             {
-                                this.renderOtherCommentators(_.slice(
-                                    activity.commentators,
-                                    lastComment ? 1 : 0,
-                                    4), !!lastComment)
+                                this.renderOtherCommentators(othersCommentators, !!lastComment)
                             }
                         </View>
                     }
