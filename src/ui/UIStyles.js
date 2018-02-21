@@ -77,10 +77,6 @@ export function styleMargin(left?: number, top?: number, right?: number, bottom?
     return styleLTRB(arguments, "margin");
 }
 
-export function styleBorder(left?: number, top?: number, right?: number, bottom?: number) {
-    return styleLTRB(arguments, direction=> "border" + toUppercase(direction) + "Width");
-}
-
 //TODO: convert to stylesheet
 export const TEXT_LIST = {fontSize: 14, color: Colors.blue};
 export const TEXT_LESS_IMPORTANT = {fontSize: 12, color: Colors.greyish};

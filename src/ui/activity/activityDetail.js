@@ -82,10 +82,10 @@ class ActivityDetailScreen extends Screen<Props, State> {
             if (event.type === 'NavBarButtonPress') {
                 if (event.id === EDIT_SAVING) {
                     BottomSheet.showBottomSheetWithOptions({
-                        options: [i18n.t("actions.change_description")],
+                        options: [i18n.t("actions.change_description"), i18n.t("actions.cancel")],
                         title: i18n.t("actions.edit_saving_menu"),
                         // destructiveButtonIndex: 1,
-                        // cancelButtonIndex: 1,
+                        cancelButtonIndex: 1,
                     }, (value) => {
                         switch (value) {
                             case 0:
