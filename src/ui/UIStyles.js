@@ -24,8 +24,6 @@ export const SearchStyles = {
 };
 
 
-
-
 //http://colormind.io/
 export const RandomColors = Object.freeze([
         '#83DB5E',
@@ -42,53 +40,6 @@ export const RandomColors = Object.freeze([
         '#F0D2D1',
     ]
 );
-
-
-export const CARD = (sideMargin: number = 12) => {
-    return CARD2();
-    // return {
-    //     backgroundColor: "white",
-    //     marginLeft: sideMargin,
-    //     marginRight: sideMargin,
-    //     shadowColor: "#000",
-    //     shadowOpacity: 0.3,
-    //     shadowOffset: {width: 2, height: 2},
-    //     borderRadius: 4,
-    //     shadowRadius: 2,
-    //     elevation: 2,
-    //     marginTop: 5,
-    //     marginBottom: 5
-    // }
-};
-
-export const CARD2 = (sideMargin: number = 0) => {
-    return {
-        backgroundColor: "white",
-        marginLeft: sideMargin,
-        marginRight: sideMargin,
-        // shadowColor: "#000",
-        // shadowOpacity: 0.3,
-        // shadowOffset: {width: 2, height: 2},
-        // borderRadius: 4,
-        // shadowRadius: 2,
-        // elevation: 2,
-        // marginTop: 5,
-        // marginBottom: 5
-    }
-};
-
-export const SIDE_MARGINS = (margin) => {
-    return {
-        marginLeft: margin,
-        marginRight: margin,
-    }
-};
-export const TP_MARGINS = (margin) => {
-    return {
-        marginTop: margin,
-        marginBottom: margin,
-    }
-};
 
 let styleLTRB = function (args, method) {
 
