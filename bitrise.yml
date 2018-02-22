@@ -36,24 +36,13 @@ workflows:
 
             cd goodshmob-build
 
-            _version=$(./script.sh resolveNextVersion -b $GOODSH_BUILD_BRANCH)
-            _versionCode=$(./script.sh resolveNextVersionCode -b $GOODSH_BUILD_BRANCH)
-            envman add --key GOODSH_BUILD_VERSION --value $_version
-            envman add --key GOODSH_BUILD_VERSION_CODE --value $_versionCode
+            echo build version:${GOODSH_BUILD_VERSION?version not found}
 
-            if [ -z ${_version+x} ];
-            then
-                echo "cannot find resolve next version"
-                exit 1
-            fi
+            ./prepare-env.sh setBuildStatus building
 
-            echo build version:$_version
-
-            ./script.sh setBuildStatus -b $GOODSH_BUILD_BRANCH -c $GOODSH_BUILD_COMMIT_SHA1 -v $_version -i $GOODSH_BUILD_ID -s building
-
-            git add build.history
-            git commit -m "increase history: -b $GOODSH_BUILD_BRANCH -c $GOODSH_BUILD_COMMIT_SHA1 -v $_version -i $GOODSH_BUILD_ID -s building"
-            git push
+#            git add build.history
+#            git commit -m "increase history: -b $GOODSH_BUILD_BRANCH -c $GOODSH_BUILD_COMMIT_SHA1 -v $_version -i $GOODSH_BUILD_ID -s building"
+#            git push
 
     - script@1.1.5:
         inputs:
@@ -65,11 +54,7 @@ workflows:
                 echo "creating .env file"
                 cp $GOODSH_BUILD_REACT_NATIVE_ENV_FILE .env
 
-                echo "BUILD_APP_VERSION=${GOODSH_BUILD_VERSION-unknown}" >> .env
-                echo "BUILD_COMMIT_SHA1=$GOODSH_BUILD_COMMIT_SHA1" >> .env
-                echo "BUILD_BRANCH=$GOODSH_BUILD_BRANCH" >> .env
-                echo "BUILD_ID=$BUILD_ID" >> .env
-                echo "BUILD_DATE=$(date)" >> .env
+                echo $GOODSH_BUILD_PRETTY_ENV >> .env
             fi
     - install-react-native@0.9.1: {}
     - yarn@0.0.4: {}
@@ -150,9 +135,8 @@ workflows:
     - script@1.1.5:
         inputs:
         - content: |2-
-            #!/usr/bin/env bash
-            set -e
-            
+            #!/usr/bin/env bash -ex
+
             cd goodshmob-build
 
             if [ $BITRISE_BUILD_STATUS == "0" ] ; then
@@ -161,14 +145,20 @@ workflows:
                 _status="fail"
             fi
 
-            ./script.sh setBuildStatus -b $GOODSH_BUILD_BRANCH -c $GOODSH_BUILD_COMMIT_SHA1 -v $GOODSH_BUILD_VERSION -i $GOODSH_BUILD_ID -s $_status
-
-            git add build.history
-            git commit -m "increase history: -b $GOODSH_BUILD_BRANCH -c $GOODSH_BUILD_COMMIT_SHA1 -v $GOODSH_BUILD_VERSION -i $GOODSH_BUILD_ID -s $_status"
-            git push
+            ./prepare-env.sh setBuildStatus $_status
 
             cd ..
             git checkout android/app/src/main/AndroidManifest.xml ios/goodshmob/Info.plist
+
+  _clean:
+    steps:
+    - script@1.1.5:
+        title: Clean
+        inputs:
+        - content: |2-
+            #!/usr/bin/env bash -ex
+            git checkout android/app/src/main/AndroidManifest.xml ios/goodshmob/Info.plist
+
   android:
     before_run:
     - _prepare
@@ -179,7 +169,7 @@ workflows:
     steps:
     - slack@2.6.3:
         inputs:
-        - message: 'Build SUCCESSFUL: [android] [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT'
+        - message: 'Build SUCCESSFUL: [android] [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT $GOODSH_BUILD_PRETTY_ENV'
         - message_on_error: "`Ah! Something went wrong \U0001F631 logs: $BITRISE_BUILD_URL/logs.json?&download=log"
         - webhook_url: "$SLACK_WEBHOOK_URL"
   ios:
@@ -192,7 +182,7 @@ workflows:
     steps:
     - slack@2.6.3:
         inputs:
-        - message: 'Build SUCCESSFUL: [ios] [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT'
+        - message: 'Build SUCCESSFUL: [ios] [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT $GOODSH_BUILD_PRETTY_ENV'
         - message_on_error: "Ah! Something went wrong \U0001F631 logs: $BITRISE_BUILD_URL/logs.json?&download=log"
         - webhook_url: "$SLACK_WEBHOOK_URL"
   build:
@@ -208,7 +198,7 @@ workflows:
     steps:
     - slack@2.6.3:
         inputs:
-        - message: 'Build SUCCESSFUL: [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT'
+        - message: 'Build SUCCESSFUL: [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT $GOODSH_BUILD_PRETTY_ENV'
         - message_on_error: 'Ah! Something went wrong \U0001F631 logs: ${BITRISE_BUILD_URL}'
         - webhook_url: "$SLACK_WEBHOOK_URL"
   build_test:
@@ -216,11 +206,11 @@ workflows:
     - _prepare
     # - _prepare-ios
     # - _prepare-android
-    - _build-android
-    - _build-ios
+#    - _build-android
+#    - _build-ios
     # - _deploy-ios
     # - _deploy-android
-    - _add_version
+#    - _add_version
     # steps:
     # - slack@2.6.3:
     #     inputs:
