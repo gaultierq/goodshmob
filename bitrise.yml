@@ -34,12 +34,12 @@ workflows:
             #!/usr/bin/env bash
             set -ex
             
-            if [ ! -d "goodshmob-version" ] ; then
-              git clone git@github.com:goodshopping/goodshmob-version
-            else
-                cd goodshmob-version && git pull origin master && cd -
-            fi
-            cd goodshmob-version
+#            if [ ! -d "goodshmob-version" ] ; then
+#              git clone git@github.com:goodshopping/goodshmob-version
+#            else
+#                cd goodshmob-version && git pull origin master && cd -
+#            fi
+            cd goodshmob-build
 
             _version=$(./script.sh resolveNextVersion -b $GOODSH_BUILD_BRANCH)
             _versionCode=$(./script.sh resolveNextVersionCode -b $GOODSH_BUILD_BRANCH)
@@ -158,12 +158,12 @@ workflows:
             #!/usr/bin/env bash
             set -e
             
-            if [ ! -d "goodshmob-version" ] ; then
-              git clone git@github.com:goodshopping/goodshmob-version
-            else
-                cd goodshmob-version && git pull origin master && cd -
-            fi
-            cd goodshmob-version
+#            if [ ! -d "goodshmob-version" ] ; then
+#              git clone git@github.com:goodshopping/goodshmob-version
+#            else
+#                cd goodshmob-version && git pull origin master && cd -
+#            fi
+            cd goodshmob-build
 
             if [ $BITRISE_BUILD_STATUS == "0" ] ; then
                 _status="success"
@@ -190,7 +190,7 @@ workflows:
     - slack@2.6.3:
         inputs:
         - message: 'Build SUCCESSFUL: [android] [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT'
-        - message_on_error: "Ah! Something went wrong \U0001F631 logs: $BITRISE_BUILD_URL/logs.json?&download=log"
+        - message_on_error: "`Ah! Something went wrong \U0001F631 logs: $BITRISE_BUILD_URL/logs.json?&download=log"
         - webhook_url: "$SLACK_WEBHOOK_URL"
   ios:
     before_run:
