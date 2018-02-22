@@ -58,7 +58,7 @@ export default {
         header: {
             in: "a ajouté dans",
             added_somewhere: "l'a ajouté",
-            to: "à envoyé à",
+            to: "a envoyé à",
             ask: "a besoin de recos !",
         },
         buttons:{
