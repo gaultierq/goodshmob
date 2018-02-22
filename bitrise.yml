@@ -33,12 +33,7 @@ workflows:
         - content: |2-
             #!/usr/bin/env bash
             set -ex
-            
-#            if [ ! -d "goodshmob-version" ] ; then
-#              git clone git@github.com:goodshopping/goodshmob-version
-#            else
-#                cd goodshmob-version && git pull origin master && cd -
-#            fi
+
             cd goodshmob-build
 
             _version=$(./script.sh resolveNextVersion -b $GOODSH_BUILD_BRANCH)
@@ -158,11 +153,6 @@ workflows:
             #!/usr/bin/env bash
             set -e
             
-#            if [ ! -d "goodshmob-version" ] ; then
-#              git clone git@github.com:goodshopping/goodshmob-version
-#            else
-#                cd goodshmob-version && git pull origin master && cd -
-#            fi
             cd goodshmob-build
 
             if [ $BITRISE_BUILD_STATUS == "0" ] ; then
