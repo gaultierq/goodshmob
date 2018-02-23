@@ -8,7 +8,7 @@ workflows:
     - activate-ssh-key@3.1.1:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone: {}
-    - slack@2.6.3:
+    - slack@2.7.1:
         inputs:
         - message: Building [$BITRISE_GIT_BRANCH]... $GIT_CLONE_COMMIT_MESSAGE_SUBJECT
         - webhook_url: "$SLACK_WEBHOOK_URL"
@@ -31,8 +31,7 @@ workflows:
         title: Resolve new version
         inputs:
         - content: |2-
-            #!/usr/bin/env bash
-            set -ex
+            #!/usr/bin/env bash -ex
 
             cd goodshmob-build
 
@@ -40,11 +39,8 @@ workflows:
 
             ./prepare-env.sh setBuildStatus building
 
-#            git add build.history
-#            git commit -m "increase history: -b $GOODSH_BUILD_BRANCH -c $GOODSH_BUILD_COMMIT_SHA1 -v $_version -i $GOODSH_BUILD_ID -s building"
-#            git push
-
     - script@1.1.5:
+        run_if: false
         inputs:
         - content: |-
             #!/usr/bin/env bash
@@ -159,6 +155,14 @@ workflows:
             #!/usr/bin/env bash -ex
             git checkout android/app/src/main/AndroidManifest.xml ios/goodshmob/Info.plist
 
+  _slack_end:
+    steps:
+    - slack@2.7.1:
+        inputs:
+        - message: "$GOODSH_BUILD_SLACK_MESSAGE_OK"
+        - message_on_error: "$GOODSH_BUILD_SLACK_MESSAGE_KO"
+        - webhook_url: "$SLACK_WEBHOOK_URL"
+
   android:
     before_run:
     - _prepare
@@ -166,12 +170,8 @@ workflows:
     - _build-android
     - _deploy-android
     - _add_version
-    steps:
-    - slack@2.6.3:
-        inputs:
-        - message: 'Build SUCCESSFUL: [android] [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT $GOODSH_BUILD_PRETTY_ENV'
-        - message_on_error: "`Ah! Something went wrong \U0001F631 logs: $BITRISE_BUILD_URL/logs.json?&download=log"
-        - webhook_url: "$SLACK_WEBHOOK_URL"
+    - _slack_end
+
   ios:
     before_run:
     - _prepare
@@ -179,12 +179,8 @@ workflows:
     - _build-ios
     - _deploy-ios
     - _add_version
-    steps:
-    - slack@2.6.3:
-        inputs:
-        - message: 'Build SUCCESSFUL: [ios] [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT $GOODSH_BUILD_PRETTY_ENV'
-        - message_on_error: "Ah! Something went wrong \U0001F631 logs: $BITRISE_BUILD_URL/logs.json?&download=log"
-        - webhook_url: "$SLACK_WEBHOOK_URL"
+    - _slack_end
+
   build:
     before_run:
     - _prepare
@@ -195,15 +191,12 @@ workflows:
     - _deploy-ios
     - _deploy-android
     - _add_version
-    steps:
-    - slack@2.6.3:
-        inputs:
-        - message: 'Build SUCCESSFUL: [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT $GOODSH_BUILD_PRETTY_ENV'
-        - message_on_error: 'Ah! Something went wrong \U0001F631 logs: ${BITRISE_BUILD_URL}'
-        - webhook_url: "$SLACK_WEBHOOK_URL"
+    - _slack_end
+
   build_test:
     before_run:
     - _prepare
+    - _slack_end
     # - _prepare-ios
     # - _prepare-android
 #    - _build-android
@@ -216,6 +209,7 @@ workflows:
     #     inputs:
     #     - message: 'Build SUCCESSFUL: [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT'
     #     - webhook_url: "$SLACK_WEBHOOK_URL"
+
 app:
   envs:
   - opts:
