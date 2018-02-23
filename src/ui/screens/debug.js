@@ -83,7 +83,7 @@ export default class DebugScreen extends Screen<Props, State> {
     }
 
     showBuildInfo() {
-        let text = _.keys(Config).filter(k=>k.startsWith("BUILD")).map(k=> `${k}=${Config[k]}`).join('\n');
+        let text = _.keys(Config).filter(k=>k.startsWith("GOODSH_BUILD")).map(k=> `${k}=${Config[k]}`).join('\n');
 
         this.setState({text});
     }
