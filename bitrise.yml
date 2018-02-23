@@ -10,7 +10,7 @@ workflows:
     - git-clone: {}
     - slack@2.6.3:
         inputs:
-        - message: Build started... branch=$BITRISE_GIT_BRANCH: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT
+        - message: Build started... on branch $BITRISE_GIT_BRANCH: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT
         - webhook_url: "$SLACK_WEBHOOK_URL"
     - git-clone:
         run_if: true
