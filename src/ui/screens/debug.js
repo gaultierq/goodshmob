@@ -13,11 +13,9 @@ import Config from 'react-native-config'
 import {Colors} from "../colors";
 
 type Props = {
-
 }
 
 type State = {
-
 }
 
 @logged
