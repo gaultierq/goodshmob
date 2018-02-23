@@ -8,9 +8,9 @@ workflows:
     - activate-ssh-key@3.1.1:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone: {}
-    - slack@2.7.1:
+    - slack@2.6.3:
         inputs:
-        - message: Building [$BITRISE_GIT_BRANCH]... $GIT_CLONE_COMMIT_MESSAGE_SUBJECT
+        - message: Build started... branch=$BITRISE_GIT_BRANCH: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT
         - webhook_url: "$SLACK_WEBHOOK_URL"
     - git-clone:
         run_if: true
@@ -24,8 +24,7 @@ workflows:
         inputs:
         - content: |2-
 
-            #!/usr/bin/env bash
-            set -ex
+            #!/usr/bin/env bash -ex
             ./goodshmob-build/prepare-env.sh
     - script@1.1.5:
         title: Resolve new version
@@ -42,15 +41,19 @@ workflows:
     - script@1.1.5:
         run_if: false
         inputs:
-        - content: |-
-            #!/usr/bin/env bash
-            set -ex
+        - content: |2-
+            #!/usr/bin/env bash -ex
 
             if [ ! -f .env ]; then
-                echo "creating .env file"
+                echo "Creating .env file"
                 cp $GOODSH_BUILD_REACT_NATIVE_ENV_FILE .env
 
-                echo $GOODSH_BUILD_PRETTY_ENV >> .env
+                echo "GOODSH_BUILD_VERSION=$GOODSH_BUILD_VERSION" >> .env
+                echo "GOODSH_BUILD_VERSION_CODE=$GOODSH_BUILD_VERSION_CODE" >> .env
+                echo "GOODSH_BUILD_BRANCH=$GOODSH_BUILD_BRANCH" >> .env
+                echo "GOODSH_BUILD_ID=$GOODSH_BUILD_ID" >> .env
+                echo "GOODSH_BUILD_COMMIT_SHA1=$GOODSH_BUILD_COMMIT_SHA1" >> .env
+                echo "GOODSH_BUILD_ENV=$GOODSH_BUILD_ENV" >> .env
             fi
     - install-react-native@0.9.1: {}
     - yarn@0.0.4: {}
