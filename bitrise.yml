@@ -26,35 +26,7 @@ workflows:
 
             #!/usr/bin/env bash -ex
             ./goodshmob-build/prepare-env.sh
-    - script@1.1.5:
-        title: Resolve new version
-        inputs:
-        - content: |2-
-            #!/usr/bin/env bash -ex
 
-            cd goodshmob-build
-
-            echo build version:${GOODSH_BUILD_VERSION?version not found}
-
-            ./prepare-env.sh setBuildStatus building
-
-    - script@1.1.5:
-        run_if: false
-        inputs:
-        - content: |2-
-            #!/usr/bin/env bash -ex
-
-            if [ ! -f .env ]; then
-                echo "Creating .env file"
-                cp $GOODSH_BUILD_REACT_NATIVE_ENV_FILE .env
-
-                echo "GOODSH_BUILD_VERSION=$GOODSH_BUILD_VERSION" >> .env
-                echo "GOODSH_BUILD_VERSION_CODE=$GOODSH_BUILD_VERSION_CODE" >> .env
-                echo "GOODSH_BUILD_BRANCH=$GOODSH_BUILD_BRANCH" >> .env
-                echo "GOODSH_BUILD_ID=$GOODSH_BUILD_ID" >> .env
-                echo "GOODSH_BUILD_COMMIT_SHA1=$GOODSH_BUILD_COMMIT_SHA1" >> .env
-                echo "GOODSH_BUILD_ENV=$GOODSH_BUILD_ENV" >> .env
-            fi
     - install-react-native@0.9.1: {}
     - yarn@0.0.4: {}
 
