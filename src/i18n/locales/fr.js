@@ -85,7 +85,7 @@ export default {
     },
     "activity_screen":{
         "comments":{
-            "no_comments":"Pas encore de commentaire. Donner son avis.",
+            "no_comments":"Un avis ? Une suggestion ? Une question ?",
             "user_answered":"a commenté",
             "has_commented": {
                 zero: "%{first} a commenté :",
