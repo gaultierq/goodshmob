@@ -301,7 +301,7 @@ export default {
         invite: "Inviter un ami",
         load_more: "Charger la suite",
         unsave: "Supprimer",
-        save: "Sauvegarder",
+        save: "Enregistrer",
 
     },
     common: {
@@ -333,6 +333,6 @@ export default {
         title: "DevMenu"
     },
     congrats: {
-        generic: "C'est fait!"
+        generic: "C'est fait ;)"
     }
 };

@@ -50,7 +50,7 @@ export default {
         by: "by",
     },
     "shared":{
-        "goodsh_saved":"Saved",
+        "goodsh_saved":"Saved",save
         "add":"Add",
         "link_copied":"Link copied ✓",
     },
@@ -334,6 +334,6 @@ export default {
         title: "DevMenu"
     },
     congrats: {
-        generic: "Done!"
+        generic: "Done;)"
     }
 };
