@@ -19,7 +19,7 @@ export default {
             empty: "No result",
         },
         filter: {
-            empty: "No result.Try launching a deep search.",
+            empty: "No result. Try launching a deep search.",
             deepsearch: "Deep search",
         },
         goodsh : {
@@ -50,7 +50,7 @@ export default {
         by: "by",
     },
     "shared":{
-        "goodsh_saved":"Saved",save
+        "goodsh_saved":"Saved",
         "add":"Add",
         "link_copied":"Link copied ✓",
     },
@@ -86,7 +86,7 @@ export default {
     },
     "activity_screen":{
         "comments":{
-            "no_comments":"No comment yet. Add a comment.",
+            "no_comments":"Any idea? Suggestion? Question?",
             "user_answered":"replied",
             "has_commented": {
                 zero: "%{first} commented:",
@@ -121,7 +121,7 @@ export default {
         "slider_intro_2": "Find your stuff whenever you need them, and share easily.",
         "slider_intro_3": "Request ideas, suggestions, reviews from your network.",
         "slider_intro_4": "Discover books, movies, music, restaurants, gift ideas, things to do, to visit...and buy in a blink of an eye.",
-        "credentials": "Made with love in Paris",
+        "credentials": "Handcrafted in 2018",
     },
     "profile_screen":{
         "title":"Feedback",
@@ -157,7 +157,7 @@ export default {
             "friends":"MY CONTACTS",
             "notifications":"NOTIFICATIONS",
         },
-        "empty_screen": "Your friends' goodsh are here.\nTap Ask for a specific request."
+        "empty_screen": "The goodsh of your friends are here.\nGo to MY CONTACTS to invite and connect."
     },
     "comments_screen":{
         "title": "Comments"
@@ -226,7 +226,7 @@ export default {
         }
     },
     loadmore: "Loading...",
-    send_message: "I found something for you:\n%{what}\n%{url}\nSpotted on Goodsh: https://goodsh.it/",
+    send_message: "%{what}\n%{url}\n\nSpotted on Goodsh:\nhttps://goodsh.it/",
     goodsh_url: "https:\/\/goodsh.it\/",
     friends: {
         empty_screen: "Fully enjoy Goodsh by inviting your friends.",

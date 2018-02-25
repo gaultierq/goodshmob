@@ -225,7 +225,7 @@ export default {
         }
     },
     loadmore: "Chargement...",
-    send_message: "From Goodsh with love ;)\n\n%{what}\n%{url}\n\nTrouvé grâce à Goodsh https://goodsh.it/",
+    send_message: "%{what}\n%{url}\n\nTrouvé grâce à Goodsh\nhttps://goodsh.it/",
     goodsh_url: "https:\/\/goodsh.it\/",
     friends: {
         empty_screen: "Profite pleinement de Goodsh et invite des proches.",
