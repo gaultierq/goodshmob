@@ -120,7 +120,7 @@ export default {
         "slider_intro_2": "Je retrouve mes recos quand j'en ai besoin.\nEt je peux les partager facilement.",
         "slider_intro_3": "Je demande des avis, des idées, des conseils à mon réseau.",
         "slider_intro_4": "Je découvre livres, films, musiques, restos, idées cadeau, choses à faire...et j'achète en un clin d'oeil.",
-        "credentials": "Fait avec amour à Paris",
+        "credentials": "Fait main en 2018",
     },
     "profile_screen":{
         "title":"Feedback",
