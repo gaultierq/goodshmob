@@ -20,7 +20,7 @@ export default {
         },
         search: {
             placeholder: "##Rechercher",
-            empty: "Ach, pas de résultat",
+            empty: "Ach, pas de résultat.",
         },
         goodsh : {
             title: "GoodshBox"
@@ -225,7 +225,7 @@ export default {
         }
     },
     loadmore: "Chargement...",
-    send_message: "Je pense que tu vas aimer :\n%{what}\n%{url}\nTrouvé grâce à Goodsh https://goodsh.it/",
+    send_message: "From Goodsh with love ;)\n\n%{what}\n%{url}\n\nTrouvé grâce à Goodsh https://goodsh.it/",
     goodsh_url: "https:\/\/goodsh.it\/",
     friends: {
         empty_screen: "Profite pleinement de Goodsh et invite des proches.",
@@ -282,7 +282,7 @@ export default {
         change: "Modifier",
         change_title: "Modifier le titre",
         edit_saving_menu: "Éditer ce goodsh",
-        change_description: "Modifier la description",
+        change_description: "Modifier",
         change_name: "Changer le nom de cette liste",
         undo: "Annuler",
         cancel: "Annuler",
