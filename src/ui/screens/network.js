@@ -205,7 +205,7 @@ class NetworkScreen extends Screen<Props, State> {
     }
 
     navToActivity(activity) {
-        this.props.navigator.push({
+        this.props.navigator.showModal({
             screen: 'goodsh.ActivityDetailScreen',
             passProps: {activityId: activity.id, activityType: activity.type},
         });
