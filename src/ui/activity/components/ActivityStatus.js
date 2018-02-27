@@ -133,7 +133,7 @@ export default class ActivityStatus extends React.Component<Props, State> {
                     }]}>
 
                         <Octicons name="quote" size={10} color={Colors.brownishGrey} style={{alignSelf: 'flex-start'}}/>
-                        <Text numberOfLines={3} style={[styles.description, {
+                        <Text numberOfLines={this.props.descriptionNumberOfLines} style={[styles.description, {
                             flex: 1,
                             alignItems: 'center',
                             textAlignVertical: 'center',
