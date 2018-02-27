@@ -52,6 +52,9 @@ export let sanitizeActivityType = activityType => {
         case "album":
         case "albums":
             return "albums";
+        case "artist":
+        case "artists":
+            return "artists";
     }
     return activityType;
 };
