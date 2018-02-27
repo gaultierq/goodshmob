@@ -91,6 +91,8 @@ export default class App {
         //const __USE_CACHE_LOCAL__ = false;
 
         this.prepareRedux();
+
+        this.registerScreens();
     };
 
     prepareUI() {
@@ -262,17 +264,20 @@ export default class App {
             }
         }
 
-        //delayed import
-        let registerScreens = require('./ui/allScreens').default;
-        registerScreens(this.store, Provider);
-
-
         this.prepareUI();
 
         console.info("== app initialized ==");
 
         this.initialized = true;
         this.initializing = false;
+    }
+
+    registerScreens() {
+        //delayed import.
+        // => Why ?? for perfs ? :D
+        let registerScreens = require('./ui/allScreens').default;
+        registerScreens(this.store, Provider);
+        
     }
 
     refreshAppMode() {
