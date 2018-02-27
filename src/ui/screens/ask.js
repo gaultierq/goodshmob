@@ -179,7 +179,7 @@ export default class AskScreen extends Component<Props, State> {
         if (this.state.isAsking) return;
         this.setState({isAsking: true});
 
-        this.props.dispatch(ASK_CREATION.pending({content}, undefined));
+        this.props.dispatch(ASK_CREATION.pending({content}, {}));
         Snackbar.show({
             title: i18n.t('ask.sent'),
         });

@@ -27,7 +27,7 @@ export const LINEUP_CREATION : PendingAction<LINEUP_CREATION_PAYLOAD> = pendingA
             "list": {
                 "name": payload.listName
             }
-        })
+        }),
 );
 
 
@@ -63,7 +63,7 @@ export function saveItem(itemId: Id, lineupId: Id, privacy = 0, description = ''
 //save
 export function bookmarkDispatchee(payload: SAVING_CREATION_PAYLOAD) {
 
-    return SAVING_CREATION.pending(payload, {});
+    return SAVING_CREATION.pending(payload, {scope: {itemId: payload.itemId}});
 }
 
 export type SAVING_CREATION_PAYLOAD = {itemId: Id, lineupId: Id, privacy: Visibility, description: string}
@@ -107,7 +107,7 @@ export function patchLineup(editedLineup: List) {
 }
 
 export function doUnsave(pending, id, lineupId) {
-    return pending ? SAVING_CREATION.undo(id) : SAVING_DELETION.pending({savingId: id, lineupId}, {id, lineupId});
+    return pending ? SAVING_CREATION.undo(id) : SAVING_DELETION.pending({savingId: id, lineupId}, {id, lineupId, scope: {activityId: id}});
 }
 
 

@@ -51,6 +51,7 @@ const AVATAR_DIM = 34;
 export default class ActivityCell extends React.Component<Props, State> {
 
     refKeys: any;
+    itemId: Id;
 
 
     renderDebugActivityInfo(activity: Activity) {
@@ -62,6 +63,7 @@ export default class ActivityCell extends React.Component<Props, State> {
     }
 
     render() {
+        console.debug("ActivityCell rendered");
         let activity = this.getActivity();
         this.refKeys = this.makeRefObject(this.props);
 
@@ -128,72 +130,6 @@ export default class ActivityCell extends React.Component<Props, State> {
     }
 
 
-    // renderActivity(activity) {
-    //
-    //     return <View>
-    //         <View style={{flex: 1, flexDirection: 'row', ...stylePadding(0, 14)}}>
-    //             <Avatar user={activity.user} style={{dim: 26, marginRight: 8, marginTop: 0}}/>
-    //             <View style={{flex: 1, marginTop: 3}}>
-    //                 {this.renderTags()}
-    //             </View>
-    //
-    //         </View>
-    //
-    //         <View style={{flex: 1, flexDirection: 'row',}}>
-    //             {activity.description &&
-    //             <Octicons name="quote" size={10} color={Colors.brownishGrey} style={{alignSelf: 'flex-start'}}/>}
-    //             {activity.description && <Text numberOfLines={3} style={[styles.description, {
-    //                 flex: 1,
-    //                 alignItems: 'center',
-    //                 textAlignVertical: 'center', ...stylePadding(6, 0)
-    //             }]}>{activity.description}</Text>}
-    //
-    //         </View>
-    //     </View>;
-    // }
-
-    // renderTags() {
-    //     let activity, target, targetName: string, key: i18Key, press: () => void;
-    //     if (!(activity = this.getActivity())) return null;
-    //     if (activity.type === 'asks') throw 'no ask';
-    //
-    //     // const {skipLineup, withFollowButton} = this.props;
-    //     // if (skipLineup) return null;
-    //
-    //
-    //     if (!(target = activity.target)) return null;
-    //
-    //     if (target.type === 'lists') {
-    //         let count = target.meta ? target.meta["savingsCount"] : 0;
-    //         targetName = target.name;
-    //         if (count) targetName += " (" + count + ")";
-    //
-    //         key = "activity_item.header.in";
-    //         press = () => seeList(this.props.navigator, target);
-    //     }
-    //     else if (target.type === 'users') {
-    //         // targetName = target.firstName + " " + target.lastName;
-    //         // key = "activity_item.header.to";
-    //         // press = () => seeUser(this.props.navigator, target);
-    //         //new spec. todo clean
-    //         return null;
-    //     }
-    //     if (!this.props.skipLineup) {
-    //         return(
-    //             <View style={styles.tag}>
-    //                 <Text style={{
-    //                     textAlign: 'center',
-    //                     marginRight: 8,
-    //                     fontFamily: SFP_TEXT_MEDIUM,
-    //                     fontSize: 12,
-    //                     color: Colors.greyishBrown}}>{i18n.t(key)}</Text>
-    //                 {renderTag(targetName, press)}
-    //             </View>
-    //         )
-    //     }
-    //     else  return null;
-    // }
-
 
     renderUserAvatar(user: User, styles?: *) {
         let navigator: RNNNavigator = this.props.navigator;
@@ -258,45 +194,65 @@ export default class ActivityCell extends React.Component<Props, State> {
             superLog('ActivityCell render saved');
             return false;
         }
+        superLog('ActivityCell render executed');
         return true;
     }
 
     hasChanged(nextProps:Props): boolean {
         let oldRefKeys = this.refKeys;
-        if (!oldRefKeys) return true;
-
         let nextRefKeys = this.makeRefObject(nextProps);
 
-        let refKeys = this.getRefKeys(nextProps);
-
-        for (let i = 0; i < refKeys.length; i++) {
-            let refKey = refKeys[i];
+        if (!oldRefKeys || _.size(nextRefKeys) !== _.size(oldRefKeys)) return true;
+        for (let i = nextRefKeys.length; i-- > 0;) {
+            // let refKey = refKeys[i];
             // $FlowFixMe
-            if (oldRefKeys[refKey] !== nextRefKeys[refKey]) return true;
+            if (oldRefKeys[i] !== nextRefKeys[i]) return true;
         }
         return false;
 
     }
 
-
     makeRefObject(nextProps:Props) {
-        let refKeys = this.getRefKeys(nextProps);
+        const activityId = nextProps.activityId;
 
-        return refKeys.reduce((res, key)=> {
-            // $FlowFixMe
-            res[key] = _.get(nextProps, key);
+        let result = this.getRefKeys(nextProps).map(k=>_.get(nextProps, k));
+        let allPendings = _.values(_.get(nextProps, 'pending', {}));
+        //[[create_ask1, create_ask2, ...], [create_comment1, create_comment2, ...], ...]
+
+        let scopedPendings = [];
+        _.reduce(allPendings, (res, pendingList) => {
+
+            let filteredPendingList = _.filter(pendingList, pending => {
+                const scope = _.get(pending, "options.scope");
+                if (!scope) return false;
+                return scope.activityId === activityId || scope.itemId === this.itemId;
+            });
+
+            res.push(...filteredPendingList);
             return res;
-        }, {});
+        }, scopedPendings);
+
+        // if (scopedPendings.length > 0) {
+        //     console.debug(`pending found for activity: ${activityId}: ${JSON.stringify(scopedPendings)}`);
+        // }
+        result.push(...scopedPendings);
+
+        return result;
     }
 
     getRefKeys(nextProps: Props) {
         let activityType = sanitizeActivityType(nextProps.activityType);
         let base = `data.${activityType}.${nextProps.activityId}`;
-        return [base, `${base}.meta`, 'pending'];
+        return [base, `${base}.meta`];
     }
 
     getActivity() {
-        return this.props.activity || buildNonNullData(this.props.data, this.props.activityType, this.props.activityId);
+        const result = this.props.activity || buildNonNullData(this.props.data, this.props.activityType, this.props.activityId);
+        if (result && result.resource) {
+            this.itemId = result.resource.id;
+        }
+
+        return result;
     }
 }
 

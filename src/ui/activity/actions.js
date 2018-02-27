@@ -42,11 +42,11 @@ export const LIKE_DELETION : PendingAction<LIKE_DELETION_PAYLOAD> = pendingActio
 
 
 export function like(activityId: string, activityType: string) {
-    return LIKE_CREATION.pending({activityId, activityType}, {id: activityId, type: activityType});
+    return LIKE_CREATION.pending({activityId, activityType}, {id: activityId, type: activityType, scope: {activityId}});
 }
 
 export function unlike(activityId: string, activityType: string) {
-    return LIKE_DELETION.pending({activityId, activityType}, {id: activityId, type: activityType});
+    return LIKE_DELETION.pending({activityId, activityType}, {id: activityId, type: activityType, scope: {activityId}});
 }
 
 export function unsave(savingId: Id, lineupId: Id) {

@@ -214,8 +214,8 @@ export default class ActivityActionBar extends React.Component<Props, State> {
             itemId: item.id,
             lineupId: currentGoodshboxId(),
             privacy: 0,
-            description: ''
-        })).then(pendingId => {
+            description: '',
+        }, {scope: {itemId: item.id}})).then(pendingId => {
             //console.info(`saving ${saving.id} unsaved`)
             Messenger.sendMessage(
                 //MagicString
@@ -249,8 +249,6 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                         },
                     }}
             );
-
-
         });
 
 

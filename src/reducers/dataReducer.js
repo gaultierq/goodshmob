@@ -55,8 +55,9 @@ export type PendingItem = {
     insertedAt: ms,
     dueAt: ms,
     state: PendingItemState,
-    payload: any, //type
+    payload: any, //TODO type
     pendingActionType: ApiActionName,
+    scope: *, //describe who might be interested in rendering updates. eg: {activityId: "123456789"}
     options: any
 }
 
@@ -74,7 +75,7 @@ export function pending(state = {}, action) {
                 pendingId,
                 payload,
                 pendingActionType,
-                options = {}
+                options = {},
             } = action;
 
 

@@ -47,7 +47,7 @@ class CommentInput extends Component<Props, State> {
         let content = newComment;
 
         let payload = {activityId, activityType, content};
-        let options = {delayMs, activityId, activityType};
+        let options = {delayMs, activityId, activityType, scope: {activityId}};
 
         return this.props.dispatch(COMMENT_CREATION.pending(payload, options))
     }

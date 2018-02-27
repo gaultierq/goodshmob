@@ -334,7 +334,8 @@ export class Merge<T, K> {
 
 export function pendingActionWrapper<Payload>(
     action: ApiAction,
-    callFactory: (payload: Payload) => Call) : PendingAction<Payload>  {
+    callFactory: (payload: Payload) => Call
+) : PendingAction<Payload>  {
 
     Api.registerCallFactory(action, callFactory);
 
@@ -349,7 +350,7 @@ export function pendingActionWrapper<Payload>(
                     pendingActionType: action,
                     payload,
                     options,
-                    pendingId
+                    pendingId,
                 });
                 resolve(pendingId);
             }
