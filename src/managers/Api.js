@@ -289,8 +289,9 @@ export class Call {
     //options.trigger = 0,1,2,3,4... 0 is an user action, 10 is from system
     // error management:
     // - no connectivity => sticky snack, do not display anything on screen
-    // - load more timeout => display some message on screen (with retry)
+    // - load more timeout => display some in-screen message on screen (with retry)
     // - default: temp. snack (ouch! ...)
+    // - item already in lineup: some alerts
     disptachForAction2(apiAction: ApiAction, options?: any = {}) {
         const call = this;
         const {trigger = TRIGGER_USER_DIRECT_ACTION} = options;
