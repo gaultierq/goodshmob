@@ -168,7 +168,8 @@ class UnsaveSavingCell extends Component<Props2, State2> {
 
 const styles = StyleSheet.create({
     container: {
-        paddingHorizontal: 16,
         flex: 1,
+        paddingHorizontal: 16,
+        backgroundColor: Colors.white,
     },
 });
