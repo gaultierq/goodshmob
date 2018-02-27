@@ -12,6 +12,7 @@ import {reducer as interaction} from '../ui/screens/interactions';
 import {statReducer as stat} from '../managers/Statistics';
 import {authReducer as auth, deviceReducer as device} from '../auth/reducer';
 import OnBoardingManager from "../managers/OnBoardingManager";
+import app from './app';
 
 function reduceReducers(...reducers) {
     return (previous, current) =>
@@ -36,6 +37,7 @@ let data = reduceReducers(
 const onBoarding = OnBoardingManager.createReducer();
 
 export {
+    app,
     data,
     network,
     peopleYouMayKnow,

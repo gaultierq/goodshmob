@@ -13,6 +13,7 @@ import {Statistics} from "./Statistics";
 import {REMOVE_PENDING_ACTION} from "../reducers/dataReducer";
 import {NetInfo} from "react-native";
 import {sendMessage} from "./Messenger";
+import {CONNECTIVITY_CHANGE} from "../reducers/app";
 
 export const API_DATA_REQUEST = 'API_DATA_REQUEST';
 export const API_DATA_SUCCESS = 'API_DATA_SUCCESS';
@@ -31,10 +32,10 @@ type CallFactory = (payload: any) => Call;
 
 class Api {
 
-    isConnected: boolean;
+    // isConnected: boolean;
     initialized: boolean;
     callFactory: Map<ApiAction, CallFactory> = new Map();
-
+    store: *;
 
     init(store) {
         this.store = store;
@@ -47,9 +48,10 @@ class Api {
     }
 
     listenConnectivity() {
-        let handleConnection = isConnected => {
-            console.log('Api: ' + (isConnected ? 'online' : 'offline'));
-            this.isConnected = isConnected;
+        let handleConnection = connected => {
+            console.log('Api: ' + (connected ? 'online' : 'offline'));
+            // this.isConnected = connected;
+            this.store.dispatch({type: CONNECTIVITY_CHANGE, connected});
 
             this.execPendings();
         };
@@ -62,11 +64,15 @@ class Api {
         this.execPendings();
     }
 
+    isConnected() {
+        return this.store.getState().app.connected;
+    }
+
     pendingAction;
 
     execPendings() {
 
-        if (!this.isConnected) {
+        if (!this.isConnected()) {
             console.debug('Api: exec pendings: no connection');
             return;
         }
@@ -182,33 +188,37 @@ class Api {
     submit(url, method, body, delay) {
         if (!this.initialized) throw "Api must be initialized before being used";
 
-
-        let timeout = __HTTP_TIMEOUT__;
-        let options = Object.assign({
-            method,
-            timeout,
-            headers: this.headers()
-        }, body ? {body: JSON.stringify(body)} : null);
-
-        console.debug(`%c sending request url=${url}, options: ${JSON.stringify(options)}`, 'background: #FCFCFC; color: #E36995');
         let auth = instance.auth();
 
         return new Promise((resolve, reject) => {
 
-            fetch(url, options)
-                .catch(err=> {
-                    reject(err);
-                })
-                .then(resp=> {
-                    setTimeout(()=> {
-                        if (instance.auth() === auth) {
-                            resolve(resp);
-                        }
-                        else {
-                            reject(new Error("User auth has changed. This response should not be saved or processed."));
-                        }
-                    }, _.isNumber(delay) ? delay : 0);
-                })
+            if (!this.isConnected()) {
+                reject(new Error("Error: not connected"));
+            }
+            else {
+                let options = Object.assign({
+                    method,
+                    timeout: __HTTP_TIMEOUT__,
+                    headers: this.headers()
+                }, body ? {body: JSON.stringify(body)} : null);
+
+                console.debug(`%c sending request url=${url}, options: ${JSON.stringify(options)}`, 'background: #FCFCFC; color: #E36995');
+                fetch(url, options)
+                    .catch(err=> {
+                        reject(err);
+                    })
+                    .then(resp=> {
+                        setTimeout(()=> {
+                            if (instance.auth() === auth) {
+                                resolve(resp);
+                            }
+                            else {
+                                reject(new Error("User auth has changed. This response should not be saved or processed."));
+                            }
+                        }, _.isNumber(delay) ? delay : 0);
+                    })
+            }
+
         });
 
 
@@ -277,6 +287,10 @@ export class Call {
     }
 
     //options.trigger = 0,1,2,3,4... 0 is an user action, 10 is from system
+    // error management:
+    // - no connectivity => sticky snack, do not display anything on screen
+    // - load more timeout => display some message on screen (with retry)
+    // - default: temp. snack (ouch! ...)
     disptachForAction2(apiAction: ApiAction, options?: any = {}) {
         const call = this;
         const {trigger = TRIGGER_USER_DIRECT_ACTION} = options;
@@ -314,14 +328,11 @@ export class Call {
                         },
                         //1., 2.
                         error => {
-                            let errMsg = error.message || `${error.status}! [${apiAction}]: ${JSON.stringify(error)}`;
-
-                            // let errorAction = dispatch({ type: API_DATA_FAILURE, error: errMsg, origin: apiAction});
 
                             if (trigger <= 2) {
                                 sendMessage(
                                     __IS_LOCAL__ ?
-                                        `#request failure: '${errMsg}'` :
+                                        `#request failure: '${(error.message || `${error.status}! [${apiAction}]: ${JSON.stringify(error)}`)}'` :
                                         i18n.t('common.api.generic_error')
                                 );
                             }

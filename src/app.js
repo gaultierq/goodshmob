@@ -154,17 +154,17 @@ export default class App {
     }
 
     prepareRedux() {
+        //
+        // const appReducer = (state = {}, action) => {
+        //     switch (action.type) {
+        //         case REHYDRATE:
+        //             return {...state, rehydrated: true};
+        //         //return state.merge({rehydrated: true})
+        //     }
+        //     return state;
+        // };
 
-        const appReducer = (state = {}, action) => {
-            switch (action.type) {
-                case REHYDRATE:
-                    return {...state, rehydrated: true};
-                //return state.merge({rehydrated: true})
-            }
-            return state;
-        };
-
-        let allReducers = combineReducers({...reducers, app: appReducer});
+        let allReducers = combineReducers({...reducers/*, app: appReducer*/});
         const reducer = createWithReducers(allReducers);
         this.store = createStore(
             reducer,
