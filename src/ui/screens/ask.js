@@ -18,6 +18,7 @@ import GTouchable from "../GTouchable";
 import type {PendingAction} from "../../helpers/ModelUtils";
 import {pendingActionWrapper} from "../../helpers/ModelUtils";
 import {Call} from "../../managers/Api";
+import {renderSimpleButton} from "../UIStyles";
 
 type Props = {
     itemId: Id,
@@ -54,25 +55,53 @@ export default class AskScreen extends Component<Props, State> {
         let askContent = this.state.askContent;
         let buttonDisabled = this.state.isAsking || !askContent;
         let notEditable = this.state.isAsking;
+        //TODO: this shouldnt not be platform specific...
         return (
-            <KeyboardAvoidingView
-                contentContainerStyle={{flex:1}}
+            <KeyboardAwareScrollView
+                contentContainerStyle={{flex: __IS_IOS__ ? 0 : 1}}
                 scrollEnabled={false}
-                extraScrollHeight={20}
                 keyboardShouldPersistTaps='always'
-                // style={{position: 'absolute', bottom:0, top: 0}}
             >
                 <Sheet
                     navigator={this.props.navigator}
                     ref={ref => this._sheet = ref}
                     onBeforeClose={this.onBeforeClose.bind(this)}
                 >
-                    <View style={{height: 800, backgroundColor: Colors.green, padding: 15}}>
+
+                    <View style={{height: 300, backgroundColor: Colors.green, padding: 15}}>
 
                         {/*<Text style={styles.header}>{i18n.t("actions.ask")}</Text>*/}
-                        <GTouchable onPress={()=>this._sheet && this._sheet.close()}>
-                            <Image source={require('../../img2/closeXWhite.png')}/>
-                        </GTouchable>
+
+
+                        <View style={{flexDirection: 'row'}}>
+                            <GTouchable onPress={()=>this._sheet && this._sheet.close()}>
+                                <Image source={require('../../img2/closeXWhite.png')}/>
+                            </GTouchable>
+                            <View style={{flex: 1, alignItems: 'flex-end'}}>
+                                {renderSimpleButton(
+                                    // i18n.t("actions.logout"),
+                                    i18n.t("actions.ask_button"),
+                                    ()=>this.createAsk(),
+                                    {
+                                        loading: this.state.isAsking,
+                                        style: {alignSelf: 'flex-end'},
+                                        disabled: buttonDisabled,
+                                        textStyle: {
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            borderWidth: 1,
+                                            borderColor: Colors.white,
+                                            borderRadius: 6,
+                                            padding: 4,
+                                            paddingHorizontal: 6
+                                        }
+                                    }
+                                )}
+
+                                {<Text style={{opacity: !!this.state.askContent ? 1 : 0, color: Colors.white, fontSize: 11,}}>{`${200 - (askContent || "").length}`}</Text>}
+                            </View>
+                        </View>
+
                         <TextInput
                             editable={!notEditable}
                             onSubmitEditing={this.createAsk.bind(this)}
@@ -94,51 +123,45 @@ export default class AskScreen extends Component<Props, State> {
                             ]}
                             returnKeyType={'send'}
                         />
-                        <View style={{flexDirection: 'row'}}>
-                            <View>
-                                <Text style={{color: Colors.white, fontSize: 15}}>{`${200 - (askContent || "").length}`}</Text>
-                            </View>
-                            <View style={{flex: 1, alignItems: 'flex-end'}}>
-                                <GTouchable
-                                    onPress={()=>this.createAsk()}
-                                    style={{backgroundColor: Colors.white, borderRadius: 6, padding: 4, paddingRight: 8, paddingLeft: 8}}>
-                                    <Text style={{color: Colors.green, fontSize: 14}}>
-                                        {i18n.t("actions.ask_button")}
-                                    </Text>
-                                </GTouchable>
-                            </View>
-                        </View>
+
 
                     </View>
 
+
                 </Sheet>
-            </KeyboardAvoidingView>
+            </KeyboardAwareScrollView>
+
         );
     }
 
 
-  onBeforeClose(proceed: ()=>void, interupt: ()=>void) {
+    onBeforeClose(proceed: ()=>void, interupt: ()=>void) {
 
-        if (!_.isEmpty(this.state.askContent)) {
+
+        if (_.isEmpty(this.state.askContent) || this.state.isAsking) {
+            proceed();
+        }
+        else {
 
             Alert.alert(
                 i18n.t('actions.cancel'),
                 i18n.t('ask.cancel'),
                 [
-                    {text: i18n.t('actions.cancel'), onPress: () => {
+                    {
+                        text: i18n.t('actions.cancel'), onPress: () => {
                         console.log('Cancel Pressed');
                         interupt();
 
-                    }, style: 'cancel'},
-                    {text: i18n.t('actions.ok'), onPress: () => {
+                    }, style: 'cancel'
+                    },
+                    {
+                        text: i18n.t('actions.ok'), onPress: () => {
                         proceed();
-                    }},
+                    }
+                    },
                 ],
-                { cancelable: true }
+                {cancelable: true}
             )
-        }
-        else {
-            proceed();
         }
 
     }
