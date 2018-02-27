@@ -20,6 +20,7 @@ import GTouchable from "../GTouchable";
 import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
 import {CREATE_ASK} from "./ask";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import ShareButton from "../components/ShareButton";
 
 type Props = NavigableProps;
 
@@ -186,7 +187,7 @@ class NetworkScreen extends Screen<Props, State> {
                     scrollUpOnBack={scrollUpOnBack}
                     cannotFetch={!super.isVisible()}
                     visibility={super.getVisibility()}
-                    empty={<Text style={STYLES.empty_message}>{i18n.t('community_screen.empty_screen')}</Text>}
+                    empty={<View><Text style={STYLES.empty_message}>{i18n.t('community_screen.empty_screen')}</Text><ShareButton text={i18n.t('actions.invite')}/></View>}
                     // ItemSeparatorComponent={TRANSPARENT_SPACER(50)}
                     // ListHeaderComponent={TRANSPARENT_SPACER(40)()}
                     // style={{backgroundColor: Colors.dirtyWhite}}

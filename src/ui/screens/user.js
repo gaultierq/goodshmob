@@ -11,6 +11,7 @@ import ActivityCell from "../activity/components/ActivityCell";
 import Screen from "../components/Screen";
 import {activityFeedProps, MainBackground} from "../UIComponents";
 import {STYLES} from "../UIStyles";
+import ShareButton from "../components/ShareButton";
 
 type Props = {
     userId: Id,
@@ -49,7 +50,7 @@ export default class UserScreen extends Screen<Props, State> {
                             options: {userId}
                         }}
                         hasMore={!network.hasNoMore}
-                        empty={<Text style={STYLES.empty_message}>{i18n.t('common.empty_feed_generic')}</Text>}
+                        empty={<View><Text style={STYLES.empty_message}>{i18n.t('common.empty_feed_generic')}</Text><ShareButton text={i18n.t('actions.invite')}/></View>}
                         {...activityFeedProps()}
                     />
                 </View>
