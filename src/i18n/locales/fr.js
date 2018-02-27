@@ -255,6 +255,7 @@ export default {
     },
     activity_action_bar: {
         goodsh_deleted: "Goodsh supprimé",
+        goodsh_deleted_undo: "Restaurer",
         goodsh_bookmarked: "Goodsh ajouté dans %{lineup}",
         goodsh_bookmarked_change_lineup: "Changer",
         comment: {

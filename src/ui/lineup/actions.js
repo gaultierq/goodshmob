@@ -2,7 +2,7 @@
 
 import * as Api from "../../managers/Api";
 import {Call} from "../../managers/Api";
-import type {Id, List} from "../../types";
+import type {Id, List, ms} from "../../types";
 import {CREATE_LINEUP, DELETE_LINEUP, EDIT_LINEUP, SAVE_ITEM} from "./actionTypes";
 import type {PendingAction} from "../../helpers/ModelUtils";
 import {pendingActionWrapper} from "../../helpers/ModelUtils";
@@ -10,11 +10,9 @@ import type {Visibility} from "../screens/additem";
 import ApiAction from "../../helpers/ApiAction";
 import {UNSAVE} from "../activity/actionTypes";
 
-
 export const FETCH_LINEUP = ApiAction.create("fetch_lineup");
 export const FETCH_SAVINGS = ApiAction.create("fetch_savings");
 export const DELETE_SAVING = UNSAVE;
-
 
 //defining lineup creation cycle
 type LINEUP_CREATION_PAYLOAD = {listName: string}
@@ -29,7 +27,6 @@ export const LINEUP_CREATION : PendingAction<LINEUP_CREATION_PAYLOAD> = pendingA
             }
         }),
 );
-
 
 type LINEUP_DELETION_PAYLOAD = {lineupId: Id}
 
@@ -77,7 +74,6 @@ export const SAVING_CREATION: PendingAction<SAVING_CREATION_PAYLOAD>  = pendingA
         .addQuery({'include': '*.*'})
 );
 
-
 export type SAVING_DELETION_PAYLOAD = {savingId: Id, lineupId: Id}
 
 export const SAVING_DELETION: PendingAction<SAVING_DELETION_PAYLOAD>  = pendingActionWrapper(
@@ -87,15 +83,12 @@ export const SAVING_DELETION: PendingAction<SAVING_DELETION_PAYLOAD>  = pendingA
         .withRoute(`savings/${savingId}`)
 );
 
-
 export function fetchItemCall(itemId: Id) {
     return new Api.Call()
         .withMethod('GET')
         .withRoute(`items/${itemId}`)
         .addQuery({'include': '*.*'});
 }
-
-
 
 export function patchLineup(editedLineup: List) {
     let call = new Api.Call()
@@ -106,11 +99,7 @@ export function patchLineup(editedLineup: List) {
     return call.disptachForAction2(EDIT_LINEUP, {lineupId: editedLineup.id});
 }
 
-export function doUnsave(pending, id, lineupId) {
-    return pending ? SAVING_CREATION.undo(id) : SAVING_DELETION.pending({savingId: id, lineupId}, {id, lineupId, scope: {activityId: id}});
+export function doUnsave(pending, id, lineupId, delayMs?: ms) {
+    return pending ? SAVING_CREATION.undo(id) : SAVING_DELETION.pending({savingId: id, lineupId}, {delayMs, id, lineupId, scope: {activityId: id}});
 }
-
-
-
-
 

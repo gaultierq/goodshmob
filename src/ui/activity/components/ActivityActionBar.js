@@ -15,7 +15,7 @@ import ActionRights, {getPendingLikeStatus} from "../../rights";
 import {CREATE_COMMENT} from "../../screens/comments";
 import GTouchable from "../../GTouchable";
 import * as Nav from "../../Nav";
-import {SAVING_CREATION, doUnsave} from "../../lineup/actions";
+import {SAVING_CREATION, doUnsave, SAVING_DELETION} from "../../lineup/actions";
 import StoreManager from "../../../managers/StoreManager";
 import Messenger from "../../../managers/Messenger";
 
@@ -324,16 +324,22 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                             lineup = _.get(buildData(this.props.data, 'savings', id), 'target');
                         }
                         lineupId = lineup && lineup.id;
-                        this.props.dispatch(doUnsave(saving.pending, saving.id, lineupId)).then(() => {
+                        const delayMs = 4000;
+                        this.props.dispatch(doUnsave(saving.pending, saving.id, lineupId, delayMs)).then((pendingId) => {
                             //console.info(`saving ${saving.id} unsaved`)
-                            Messenger.sendMessage(i18n.t("activity_action_bar.goodsh_deleted"));
+                            Messenger.sendMessage(
+                                i18n.t("activity_action_bar.goodsh_deleted"),
+                                {
+                                    timeout: delayMs,
+                                    action: !pending && {
+                                        title: i18n.t('activity_action_bar.goodsh_deleted_undo'),
+                                        onPress: () => {
+                                            //undo previous add
+                                            this.props.dispatch(SAVING_DELETION.undo(pendingId))
+                                        },
+                                    }}
+                            );
                         });
-
-                        // //console.log('OK Pressed');
-                        // this.props.dispatch(unsave(saving.id, saving.target.id)).then(() => {
-                        //     //console.info(`saving ${saving.id} unsaved`)
-                        //     Snackbar.show({title: i18n.t("activity_action_bar.goodsh_deleted")});
-                        // });
                     }
                     },
                 ],
