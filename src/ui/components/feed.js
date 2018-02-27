@@ -183,6 +183,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
         let firstEmptyLoader = this.isFirstEmptyLoader();
 
+        let allViews = [];
         if (nothingInterestingToDisplay) {
             if (this.manager.isFail('isFetchingFirst', this)) {
                 return this.renderFail(()=>this.tryFetchIt());
@@ -205,11 +206,6 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             keyboardShouldPersistTaps: 'always',
             ...attributes
         };
-
-
-        let list;
-
-        let allViews = [];
 
         const filter = this.props.filter;
         if (filter) {

@@ -1,6 +1,6 @@
 // @flow
 
-import type {Id, Item, RNNNavigator, User} from "../types";
+import type {Activity, Id, Item, RNNNavigator, User} from "../types";
 import {fullName} from "../helpers/StringUtils";
 import i18n from '../i18n/i18n';
 
@@ -61,7 +61,7 @@ export function startAddItem(navigator: *, defaultLineupId: Id) {
 
 
 
-export function seeList(navigator, lineup: List) {
+export function seeList(navigator: RNNNavigator, lineup: List) {
     navigator.push({
         screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
         passProps: {
@@ -70,12 +70,24 @@ export function seeList(navigator, lineup: List) {
     });
 }
 
-export function seeUser(navigator, user: User) {
+export function seeUser(navigator: RNNNavigator, user: User) {
     navigator.push({
         screen: 'goodsh.UserScreen', // unique ID registered with Navigation.registerScreen
         title: fullName(user),
         passProps: {
             userId: user.id,
+        },
+    });
+}
+
+export function seeComments(navigator: RNNNavigator, activity: Activity) {
+    navigator.push({
+        screen: 'goodsh.CommentsScreen', // unique ID registered with Navigation.registerScreen
+        // title: fullName(user),
+        passProps: {
+            activityId: activity.id,
+            activityType: activity.type,
+            autoFocus: true
         },
     });
 }

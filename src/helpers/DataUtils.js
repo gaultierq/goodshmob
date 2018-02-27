@@ -134,6 +134,9 @@ export function isSaving(activity: Activity) {
 export function isSending(activity: Activity) {
     return activity && activity.type &&  sanitizeActivityType(activity.type) === 'sendings';
 }
+export function isAsking(activity: Activity) {
+    return activity && activity.type &&  sanitizeActivityType(activity.type) === 'asks';
+}
 
 export function timeSinceActivity(activity: Activity) {
     return activity ? TimeUtils.timeSince(Date.parse(activity.updatedAt || activity.createdAt)):'';

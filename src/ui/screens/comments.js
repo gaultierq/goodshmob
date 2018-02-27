@@ -82,40 +82,11 @@ class CommentsScreen extends Screen<Props, State> {
             })
         );
 
-        const fullComments = comments.filter( c => c.built);
+        const fullComments = comments.filter( c => c.built || c.pending);
 
         return (
             <MainBackground>
 
-                {activity && <View style={
-                    {
-                        position: 'absolute',
-                        width: '100%',
-                        top: 0,
-                        backgroundColor:Colors.white,
-                        zIndex: 10,
-                    }
-                }>
-                    <ActivityStatus
-                        activity={activity}
-                        // skipLineup={this.props.skipLineup}
-                        navigator={this.props.navigator}
-                        descriptionNumberOfLines={8}
-                        style={{
-                            ...styleMargin(0, 0),
-                        }}
-                        cardStyle={{
-                            shadowColor: Colors.greyishBrown,
-                            shadowOffset: {width: 0, height: 4},
-                            shadowOpacity: 0.3,
-                            shadowRadius: 1,
-                            elevation: 3,
-                            marginBottom:3,
-                        }}
-                    />
-
-
-                </View>}
                 {activity && <KeyboardAwareScrollView
                     // style={{ backgroundColor: '#4c69a5' }}
                     // resetScrollToCoords={{ x: 0, y: 0 }}
@@ -129,14 +100,11 @@ class CommentsScreen extends Screen<Props, State> {
 
                         <Feed
                             inverted
-                            // data={comments}
-                            // renderItem={this.renderItem.bind(this)}
-                            // ItemSeparatorComponent={()=> <View style={{margin: 60}} />}
-
+                            ListFooterComponent={this.renderDescription(activity)}
                             sections={this.splitCommentsInSections(fullComments)}
                             keyExtractor={item => _.head(item).id}
                             SectionSeparatorComponent={()=> <View style={{margin: 4}} />}
-
+                            // style={{backgroundColor: 'red'}}
                             renderSectionFooter={({section}) => <Text
                                 style={{
                                     // alignItems: 'center',
@@ -154,10 +122,11 @@ class CommentsScreen extends Screen<Props, State> {
                                 options: {activityId: activity.id, activityType: activity.type}
                             }}
                             contentContainerStyle={{
-                                marginBottom: 4, paddingTop: 40,
-                                paddingBottom: 75,
+                                marginBottom: 4,
+                                paddingTop: 40,
+                                paddingBottom: 15,
                                 backgroundColor: Colors.greying}}
-                            empty={<Text style={[STYLES.empty_message, {fontSize: 20, paddingBottom: 50}]}>{i18n.t('activity_screen.comments.no_comments')}</Text>}
+                            // empty={<Text style={[STYLES.empty_message, {fontSize: 20, paddingBottom: 50}]}>{i18n.t('activity_screen.comments.no_comments')}</Text>}
                         />
 
                         <CommentInput
@@ -174,6 +143,35 @@ class CommentsScreen extends Screen<Props, State> {
                 </KeyboardAwareScrollView>}
             </MainBackground>
         );
+    }
+
+    renderDescription(activity) {
+        return <ActivityStatus
+            activity={activity}
+            // skipLineup={this.props.skipLineup}
+            navigator={this.props.navigator}
+            descriptionNumberOfLines={8}
+            style={{
+                ...styleMargin(0, 0),
+            }}
+            descriptionContainerStyle={{
+                backgroundColor: 'white',
+                borderRadius: 6,
+                padding: 6,
+                paddingHorizontal: 10,
+                marginLeft: 36,
+                marginRight: 4,
+                marginTop: 4,
+                marginBottom: 8,
+                flex: 0
+            }}
+            descriptionStyle={{
+                flex:0,
+            }}
+            cardStyle={{
+                backgroundColor: 'transparent',
+            }}
+        />;
     }
 
     splitCommentsInSections(comments: Array<Comment>) {

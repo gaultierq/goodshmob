@@ -5,10 +5,10 @@ import {Colors} from "../../colors";
 import {stylePadding} from "../../UIStyles";
 import type {Activity, RNNNavigator} from "../../../types";
 import Octicons from "react-native-vector-icons/Octicons";
-import {CANCELABLE_MODAL, seeList, seeUser} from "../../Nav";
+import {CANCELABLE_MODAL, seeComments, seeList, seeUser} from "../../Nav";
 import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "../../fonts";
 import GTouchable from "../../GTouchable";
-import {isSaving, isSending, timeSinceActivity} from "../../../helpers/DataUtils";
+import {isAsking, isSaving, isSending, timeSinceActivity} from "../../../helpers/DataUtils";
 import UserRowI from "./UserRowI";
 import {userFirstName} from "../../../helpers/StringUtils";
 import {currentUserId} from "../../../managers/CurrentUser";
@@ -17,7 +17,15 @@ import {currentUserId} from "../../../managers/CurrentUser";
 const styles = StyleSheet.create({
     description: {fontSize: 14, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey},
     tag: {flex:1, flexDirection:'row', alignItems: 'center'},
-    descriptionContainer: {backgroundColor: 'transparent'},
+    mainContainer: {backgroundColor: 'transparent'},
+    descriptionContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        backgroundColor: 'white',
+        paddingHorizontal: 0,
+        paddingTop: 10,
+        marginLeft: 2,
+    },
     description: {fontSize: 13, lineHeight: 18, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey},
     userText: {
         fontSize: 10,
@@ -39,6 +47,8 @@ type Props = {
     skipLineup?: boolean,
     style?: ?*,
     cardStyle?: ?*,
+    descriptionContainerStyle?: ?*,
+    descriptionStyle?: ?*,
     children?: ?Node,
     descriptionNumberOfLines?: number
 
@@ -56,17 +66,27 @@ export default class ActivityStatus extends React.Component<Props, State> {
     render() {
         const {activity, skipLineup, style, cardStyle, children, navigator} = this.props;
         let renderMethod;
+        let content;
+        let statusLineHandler;
         if (isSaving(activity) && !skipLineup) {
             renderMethod = this.renderSavedInList.bind(this);
+            content = activity.description;
+            statusLineHandler = () => this.statusLineHandler(activity)
         }
         else if (isSending(activity)) {
             renderMethod = this.renderSendTo.bind(this);
+            content = activity.description;
+                statusLineHandler = () => this.statusLineHandler(activity)
+        }
+        else if (isAsking(activity)) {
+            renderMethod = this.renderAsk.bind(this);
+            content = activity.content;
         }
 
 
         let {rightText, rightHandler} = renderMethod && renderMethod() || {};
         return (
-            <View style={[styles.descriptionContainer, style]}>
+            <View style={[styles.mainContainer, style]}>
                 <View style={[{
                     backgroundColor: 'white',
                     padding: 6,
@@ -84,7 +104,11 @@ export default class ActivityStatus extends React.Component<Props, State> {
                         </UserRowI>
 
                     </GTouchable>
-                    {!!activity.description && this.renderDescription(activity)}
+                    {!!content && (
+                        <GTouchable onPress={statusLineHandler}>
+                            {this.renderDescription2(content)}
+                        </GTouchable>
+                    )}
                 </View>
                 {children}
 
@@ -92,77 +116,59 @@ export default class ActivityStatus extends React.Component<Props, State> {
         )
     }
 
-    renderDescription(activity: Activity, children?: Node) {
-        return (
-            <GTouchable onPress={()=> {
-                if (activity.user && activity.user.id === currentUserId()) {
-                    //edit description
-                    this.props.navigator.showModal({
-                        screen: 'goodsh.ChangeDescriptionScreen',
-                        animationType: 'none',
-                        passProps: {
-                            activityId: activity.id,
-                            initialDescription: activity.description
-                        }
-                    });
+    statusLineHandler(activity) {
+        if (activity.user && activity.user.id === currentUserId()) {
+            //edit description
+            this.props.navigator.showModal({
+                screen: 'goodsh.ChangeDescriptionScreen',
+                animationType: 'none',
+                passProps: {
+                    activityId: activity.id,
+                    initialDescription: activity.description
                 }
-                else {
-                    //open comments
-                    this.props.navigator.showModal({
-                        screen: 'goodsh.CommentsScreen',
-                        title: i18n.t("activity_action_bar.comment.title"),
-                        passProps: {
-                            activityId: activity.id,
-                            activityType: activity.type,
-                            autoFocus: true
-                        },
-                        navigatorButtons: CANCELABLE_MODAL,
-                    });
-                }
-            }}>
-                <View style={[{
-                    marginLeft: 2,
-                }]}>
-                    <View style={[{
+            });
+        }
+        else {
+            //open comments
+            this.props.navigator.showModal({
+                screen: 'goodsh.CommentsScreen',
+                title: i18n.t("activity_action_bar.comment.title"),
+                passProps: {
+                    activityId: activity.id,
+                    activityType: activity.type,
+                    autoFocus: true
+                },
+                navigatorButtons: CANCELABLE_MODAL,
+            });
+        }
+    }
+
+    renderDescription2(content: string) {
+        return <View style={{flex: 1, flexDirection: 'row'}}>
+            <View style={[styles.descriptionContainer, this.props.descriptionContainerStyle]}>
+
+                <Octicons name="quote" size={10} color={Colors.brownishGrey} style={{alignSelf: 'flex-start'}}/>
+                <Text numberOfLines={this.props.descriptionNumberOfLines} style={[
+                    styles.description,
+                    {
                         flex: 1,
-                        flexDirection: 'row',
-                        backgroundColor: 'white',
-                        paddingHorizontal: 0,
-                        paddingTop: 10,
-                        // borderRadius: 6,
-                    }]}>
-
-                        <Octicons name="quote" size={10} color={Colors.brownishGrey} style={{alignSelf: 'flex-start'}}/>
-                        <Text numberOfLines={this.props.descriptionNumberOfLines} style={[styles.description, {
-                            flex: 1,
-                            alignItems: 'center',
-                            textAlignVertical: 'center',
-                            paddingHorizontal:2,
-                        }]}>{_.upperFirst(activity.description)}
-                        </Text>
-                    </View>
-
-                </View>
-            </GTouchable>
-        );
+                        alignItems: 'center',
+                        textAlignVertical: 'center',
+                        paddingHorizontal: 2,
+                    },
+                    this.props.descriptionStyle
+                ]}>{_.upperFirst(content)}
+                </Text>
+            </View>
+        </View>;
     }
 
     renderSendTo() {
         const {activity} = this.props;
         let target = activity.target;
-        let rightText = (
-            <Text style={{
-                textAlign: 'center',
-                marginRight: 8,
-                fontFamily: SFP_TEXT_MEDIUM,
-                fontSize: 12,
-                color: Colors.greyishBrown}}>{" " +i18n.t("activity_item.header.to")}
-
-                <Text style={{
-                    fontFamily: SFP_TEXT_BOLD,
-                    fontSize: 12,
-                    color: Colors.black}}>{" "+userFirstName(target)}</Text>
-            </Text>
+        let rightText = this.renderStatusLine(
+            i18n.t("activity_item.header.to"),
+            userFirstName(target)
         );
         let rightHandler = target && (() => seeUser(this.props.navigator, target));
         return {rightText, rightHandler};
@@ -176,7 +182,25 @@ export default class ActivityStatus extends React.Component<Props, State> {
         let targetName = target && target.name;
         if (count) targetName += " (" + count + ")";
 
-        let rightText = (
+        let rightText = this.renderStatusLine(
+            i18n.t(!!target ? "activity_item.header.in" : "activity_item.header.added_somewhere"),
+            targetName
+        );
+        return {rightText, rightHandler: target && (() => seeList(this.props.navigator, target))};
+    }
+
+    renderAsk() {
+        const {activity} = this.props;
+
+        let rightText = this.renderStatusLine(
+            i18n.t("activity_item.header.ask"),
+        );
+        return {rightText, rightHandler: (() => seeComments(this.props.navigator, activity))};
+    }
+
+    renderStatusLine(statusLine: string, statusTarget?: string) {
+
+        return (
             <Text style={{
                 textAlign: 'center',
                 marginRight: 8,
@@ -184,21 +208,17 @@ export default class ActivityStatus extends React.Component<Props, State> {
                 fontFamily: SFP_TEXT_MEDIUM,
                 fontSize: 12,
                 color: Colors.greyishBrown}}>
-                {" "} {i18n.t(!!target ? "activity_item.header.in" : "activity_item.header.added_somewhere")}
+                {" "} {statusLine}
 
-                {target && <Text style={[{
+                {statusTarget && <Text style={[{
                     color: Colors.black,
                     fontFamily: SFP_TEXT_BOLD,
-                    // fontSize: 12,
-                    // lineHeight: 12
-
-                }]}>{" " + targetName}</Text>
+                }]}>{" " + statusTarget}</Text>
                 }
 
             </Text>
         );
 
-        return {rightText, rightHandler: target && (() => seeList(this.props.navigator, target))};
     }
 }
 

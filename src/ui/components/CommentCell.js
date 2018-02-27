@@ -73,7 +73,6 @@ export default class CommentCell extends Component<Props, State> {
                                     paddingHorizontal: 12,
                                     paddingVertical: 4,
                                     backgroundColor: rightDisplay ? Colors.green : Colors.white,
-                                    // borderRadius: 12,
                                     ...borderStyle(i, 4),
                                     borderColor: Colors.greyish,
                                 }, textContainerStyle]}>
