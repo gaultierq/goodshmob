@@ -427,7 +427,7 @@ export function safeExecBlock(block, stateName: string) {
                 setRequestState('ok'),
                 err => {
                     setRequestState('ko')().then(()=> {
-                        console.error(err);
+                        console.warn(err);
                     });
                     throw err;
                 }
@@ -435,7 +435,7 @@ export function safeExecBlock(block, stateName: string) {
     }
     else {
         console.debug('exec block skipped');
-        return null;
+        return new Promise();
     }
 }
 

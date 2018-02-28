@@ -61,7 +61,7 @@ export default class ChangeDescriptionScreen extends Component<Props, State> {
 
 
     render() {
-        const {containerStyle, initialDescription, navigator} = this.props;
+        const {initialDescription, navigator} = this.props;
 
 
         return <ModalTextInput
@@ -97,20 +97,3 @@ export const UPDATE_ACTIVITY: PendingAction<ACTIVITY_UPDATE_PAYLOAD>  = pendingA
         .withRoute(`savings/${id}`)
         .withBody({saving: {description}})
 );
-
-const styles = StyleSheet.create({
-    input:{
-        fontSize: 18,
-        lineHeight: 25,
-        fontFamily: SFP_TEXT_REGULAR,
-        borderColor: Colors.greyishBrown,
-
-    },
-    header:{
-        fontSize: 16,
-        color: Colors.white
-    },
-    disabledButton: {
-        borderColor: Colors.greyishBrown,
-    }
-});

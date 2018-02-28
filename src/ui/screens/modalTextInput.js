@@ -21,6 +21,8 @@ import {SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "../fonts";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import GTouchable from "../GTouchable";
 import {renderSimpleButton} from "../UIStyles";
+import {safeExecBlock} from "../../managers/Api";
+import type {RequestState} from "../../types";
 
 type Props = {
     initialText: string,
@@ -31,7 +33,7 @@ type Props = {
 
 type State = {
     input: string,
-    isRequesting?: boolean
+    requestState: RequestState
 };
 
 const MAX_LENGTH = 500;
@@ -51,7 +53,7 @@ export default class ModalTextInput extends Component<Props, State> {
 
     constructor(props) {
         super(props);
-        this.state= {input: props.initialText || ''};
+        this.state= {input: props.initialText || '', requestState: 'idle'};
     }
 
 
@@ -59,8 +61,8 @@ export default class ModalTextInput extends Component<Props, State> {
         const {containerStyle, ...attributes} = this.props;
 
         let input = this.state.input;
-        let notEditable = !!this.state.isRequesting;
-        let updatable =  this.state.input !== this.props.initialText;
+        let notEditable = this.state.requestState === 'sending';
+        let updatable =  this.hasChanged();
 
 
         return (
@@ -72,6 +74,7 @@ export default class ModalTextInput extends Component<Props, State> {
                 style={{position: 'absolute', bottom:0, top: 0, left: 0, right: 0}}
             >
                 <Sheet
+                    onBeforeClose={this.onBeforeClose.bind(this)}
                     navigator={this.props.navigator}
                     ref={ref => this._sheet = ref}
                 >
@@ -117,7 +120,7 @@ export default class ModalTextInput extends Component<Props, State> {
                                         i18n.t('actions.save'),
                                         () => this.submit(),
                                         {
-                                            loading: this.state.isRequesting,
+                                            loading: this.state.requestState === 'sending',
                                             style: {alignSelf: 'flex-end'},
                                             disabled: !updatable,
                                             textStyle: {fontSize: 14, color:Colors.grey}
@@ -136,9 +139,13 @@ export default class ModalTextInput extends Component<Props, State> {
     }
 
 
+    hasChanged() {
+        return this.state.input !== this.props.initialText;
+    }
+
     onBeforeClose(proceed: ()=>void, interupt: ()=>void) {
 
-        if (!_.isEmpty(this.state.input)) {
+        if (this.hasChanged() && this.state.requestState !== 'ok') {
 
             Alert.alert(
                 i18n.t('actions.cancel'),
@@ -163,16 +170,10 @@ export default class ModalTextInput extends Component<Props, State> {
 
 
     submit() {
-
-        if (this.state.isRequesting) return;
-        this.setState({isRequesting: true});
-
-        this.props.requestAction(this.state.input)
-            // .catch(ex=> this.setState({isRequesting: false}))
+        safeExecBlock.call(this, () => this.props.requestAction(this.state.input), 'requestState')
             .then(()=> {
                 this._sheet && this._sheet.close();
-            }, ex=> this.setState({isRequesting: false}))
-        ;
+            }, ex=> this.setState({requestState: 'ko'}));
     }
 
 }
