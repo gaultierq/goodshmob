@@ -171,6 +171,9 @@ const styles = StyleSheet.create({
     },
     input:{
         fontSize: 18,
+        // TODO: why we need this ?
+        paddingTop:0,
+        alignSelf: 'center',
     },
     button: {
         // height: HEIGHT,
