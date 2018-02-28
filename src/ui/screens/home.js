@@ -238,7 +238,6 @@ class HomeScreen extends Screen<Props, State> {
                     renderSectionHeader={({section}) => this.renderSectionHeader(section)}
                     renderSectionFooter={()=> <View style={{height: 25, width: "100%"}} />}
                     ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
-                    feedId={"home list"}
                     filter={{
                         placeholder: 'search.in_feed',
                         onSearch: (searchToken: string) => {

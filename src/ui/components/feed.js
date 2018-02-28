@@ -31,7 +31,6 @@ export type FeedSource = {
 
 export type Props<T> = {
     data: Array<T>,
-    feedId?: string,
     renderItem: Function,
     fetchSrc: FeedSource,
     hasMore: boolean,
@@ -71,12 +70,6 @@ type State = {
 }))
 export default class Feed<T> extends Component<Props<T>, State>  {
 
-    state = {initialLoaderVisibility: 'idle', firstLoad: 'idle'};
-
-    createdAt: ms;
-    firstRenderAt: ms;
-    firstLoaderTimeout: number;
-
 
     static defaultProps = {
         visibility: 'unknown',
@@ -84,14 +77,13 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         initialLoaderDelay: 0
     };
 
+    state = {initialLoaderVisibility: 'idle', firstLoad: 'idle'};
+    createdAt: ms;
+    firstRenderAt: ms;
+    firstLoaderTimeout: number;
     _listener: ()=>boolean;
-
     lastFetchFail: number;
-
-    isFrenchLang: boolean;
-
     manager: RequestManager = new RequestManager();
-
     logger: *;
 
     constructor(props: Props<T>) {
@@ -99,12 +91,6 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         this.logger = props.displayName && createConsole(props.displayName) || console;
         this.createdAt = Date.now();
         this.postFetchFirst();
-        props.feedId &&this.logger.log(`constructing feed '${props.feedId}'`);
-        this.isFrenchLang = _.startsWith(i18n.locale, 'fr');
-        if (!this.props.fetchSrc) {
-            this.logger.warn("no fetch source provided");
-        }
-
     }
 
     componentWillReceiveProps(nextProps: Props<*>) {
@@ -187,7 +173,6 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             empty,
             ListHeaderComponent,
             ListFooterComponent,
-            feedId,
             renderSectionHeader,
             ...attributes
         } = this.props;
@@ -319,16 +304,16 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             textAlign: 'left',
         };
 
-        const color = Colors.grey142;
-        //TODO: adjust fr, en margins
-        //TODO: center placeholder ! https://github.com/agiletechvn/react-native-search-box
-        const placeholderConfig = {
-            placeholder: i18n.t(placeholder),
-            //TOREMOVE
-            placeholderCollapsedMargin: this.isFrenchLang ? 95 : 65,
-            //TOREMOVE
-            searchIconCollapsedMargin: this.isFrenchLang ? 110 : 80,
-        };
+        // const color = Colors.grey142;
+        // //TODO: adjust fr, en margins
+        // //TODO: center placeholder ! https://github.com/agiletechvn/react-native-search-box
+        // const placeholderConfig = {
+        //     placeholder: i18n.t(placeholder),
+        //     //TOREMOVE
+        //     placeholderCollapsedMargin: this.isFrenchLang ? 95 : 65,
+        //     //TOREMOVE
+        //     searchIconCollapsedMargin: this.isFrenchLang ? 110 : 80,
+        // };
 
         return (
             <View key={'searchbar_container'} style={[style]}>
