@@ -8,7 +8,7 @@ import type {i18Key, RequestState} from "../../types";
 
 import Button from 'apsl-react-native-button'
 import {Colors} from "../colors";
-import {stylePadding} from "../UIStyles";
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export type Props = {
     placeholder: i18Key,
@@ -40,7 +40,7 @@ export default class SmartInput extends React.Component<Props, State> {
     static defaultProps = {
         defaultValue: '',
         height: 40,
-        button: <Image source={require('../../img2/sendIcon.png')} resizeMode="contain"/>
+        button: <Icon name="send" size={20} color={Colors.greyishBrown}/>
     };
 
 
@@ -103,15 +103,16 @@ export default class SmartInput extends React.Component<Props, State> {
                     />
                 </View>
                 {
-                    this.showButton() && <View style={{flex: isFocus? 0: 1, flexDirection: 'row', alignItems: 'flex-start'}}><Button
-                        isLoading={this.isSending()}
-                        isDisabled={(!canSendDefault && this.isDefault()) || this.isSending()}
-                        onPress={this.exec.bind(this)}
-                        style={[styles.button, buttonStyle, {height, }]}
-                        disabledStyle={[styles.disabledButton, disabledButtonStyle]}
-                    >
-                        {button}
-                    </Button></View>
+                    this.showButton() && <View style={{flex: isFocus? 0: 1, flexDirection: 'row', alignItems: 'flex-start'}}>
+                        <Button
+                            isLoading={this.isSending()}
+                            isDisabled={(!canSendDefault && this.isDefault()) || this.isSending()}
+                            onPress={this.exec.bind(this)}
+                            style={[styles.button, buttonStyle, {height, }]}
+                            disabledStyle={[styles.disabledButton, disabledButtonStyle]}
+                        >
+                            {button}
+                        </Button></View>
 
                 }
             </View>
