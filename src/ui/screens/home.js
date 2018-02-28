@@ -225,105 +225,103 @@ class HomeScreen extends Screen<Props, State> {
         let onBoardingStep = OnBoardingManager.getPendingStep();
 
         return (
-            <View style={{flex:1, paddingBottom: 100}}>
-                <KeyboardAvoidingView behavior={ (Platform.OS === 'ios') ? 'padding' : null }
-                                      keyboardVerticalOffset={Platform.OS === 'ios' ? 120 : 0}>
-                    <LineupListScreen
-                        userId={currentUserId()}
-                        onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
-                        onSavingPressed={(saving) => this.onSavingPressed(saving)}
-                        navigator={this.props.navigator}
-                        //renderItem={(item)=>this.renderListItem(item, n, padding)}
-                        scrollUpOnBack={super.isVisible() ? ()=>false : null}
-                        cannotFetch={!super.isVisible()}
-                        visibility={super.getVisibility()}
-                        empty={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
-                        sectionMaker={(lineups)=> {
-                            const goodshbox = _.head(lineups);
-                            let savingCount = _.get(goodshbox, `meta.savingsCount`, null) || 0;
-                            return [
-                                {
-                                    data: goodshbox ? [goodshbox] : [],
-                                    title: i18n.t("lineups.goodsh.title"),
-                                    subtitle: ` (${savingCount})`,
-                                    onPress: () => this.seeLineup(goodshbox.id),
-                                    renderItem: ({item})=>this.renderListItem(item)
-                                },
-                                {
-                                    data: _.slice(lineups, 1),
-                                    title: i18n.t("lineups.mine.title"),
-                                    renderSectionHeaderChildren:() => <AddLineupComponent navigator={this.props.navigator}/>,
-                                    renderItem: ({item})=>this.renderListItem(item, {withMenuButton: true, withLineupTitle: true})
-                                },
-                            ];
-                        }}
-                        renderSectionHeader={({section}) => this.renderSectionHeader(section)}
-                        renderSectionFooter={()=> <View style={{height: 25, width: "100%"}} />}
-                        ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
-                        feedId={"home list"}
-                        filter={{
-                            placeholder: 'search.in_feed',
-                            onSearch: (searchToken: string) => {
-                                this.launchSearch(searchToken);
+            <View style={{flex:1}}>
+
+                <LineupListScreen
+                    userId={currentUserId()}
+                    onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
+                    onSavingPressed={(saving) => this.onSavingPressed(saving)}
+                    navigator={this.props.navigator}
+                    //renderItem={(item)=>this.renderListItem(item, n, padding)}
+                    scrollUpOnBack={super.isVisible() ? ()=>false : null}
+                    cannotFetch={!super.isVisible()}
+                    visibility={super.getVisibility()}
+                    empty={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
+                    sectionMaker={(lineups)=> {
+                        const goodshbox = _.head(lineups);
+                        let savingCount = _.get(goodshbox, `meta.savingsCount`, null) || 0;
+                        return [
+                            {
+                                data: goodshbox ? [goodshbox] : [],
+                                title: i18n.t("lineups.goodsh.title"),
+                                subtitle: ` (${savingCount})`,
+                                onPress: () => this.seeLineup(goodshbox.id),
+                                renderItem: ({item})=>this.renderListItem(item)
                             },
-                            emptyFilterResult: (searchToken: string) => (
-                                <View>
-                                    <Text style={STYLES.empty_message}>{i18n.t('lineups.filter.empty')}</Text>
-                                    {renderSimpleButton(i18n.t('lineups.filter.deepsearch'), () => this.launchSearch(searchToken))}
-                                </View>
-                            ),
-                            style: {
-                                backgroundColor: NavStyles.navBarBackgroundColor,
-                                paddingTop: 5,
-                                paddingBottom: 5,
-                                paddingLeft: 9,
-                                paddingRight: 9,
-                                borderBottomWidth: 1,
-                                borderBottomColor: Colors.grey3
+                            {
+                                data: _.slice(lineups, 1),
+                                title: i18n.t("lineups.mine.title"),
+                                renderSectionHeaderChildren:() => <AddLineupComponent navigator={this.props.navigator}/>,
+                                renderItem: ({item})=>this.renderListItem(item, {withMenuButton: true, withLineupTitle: true})
                             },
-                            applyFilter: (sections, filter) => {
-                                let contains = (container, token) => {
-                                    if (!container || !token) return false;
-                                    return container.toLowerCase().indexOf(token.toLowerCase()) >= 0;
-                                };
+                        ];
+                    }}
+                    renderSectionHeader={({section}) => this.renderSectionHeader(section)}
+                    renderSectionFooter={()=> <View style={{height: 25, width: "100%"}} />}
+                    ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
+                    feedId={"home list"}
+                    filter={{
+                        placeholder: 'search.in_feed',
+                        onSearch: (searchToken: string) => {
+                            this.launchSearch(searchToken);
+                        },
+                        emptyFilterResult: (searchToken: string) => (
+                            <View>
+                                <Text style={STYLES.empty_message}>{i18n.t('lineups.filter.empty')}</Text>
+                                {renderSimpleButton(i18n.t('lineups.filter.deepsearch'), () => this.launchSearch(searchToken))}
+                            </View>
+                        ),
+                        style: {
+                            backgroundColor: NavStyles.navBarBackgroundColor,
+                            paddingTop: 5,
+                            paddingBottom: 5,
+                            paddingLeft: 9,
+                            paddingRight: 9,
+                            borderBottomWidth: 1,
+                            borderBottomColor: Colors.grey3
+                        },
+                        applyFilter: (sections, filter) => {
+                            let contains = (container, token) => {
+                                if (!container || !token) return false;
+                                return container.toLowerCase().indexOf(token.toLowerCase()) >= 0;
+                            };
 
-                                let filterSavings = savings => {
-                                    return _.filter(savings, saving => saving && saving.resource && contains(saving.resource.title, filter))
-                                };
+                            let filterSavings = savings => {
+                                return _.filter(savings, saving => saving && saving.resource && contains(saving.resource.title, filter))
+                            };
 
-                                let filterLineup = lineups => {
-                                    let result = [];
-                                    _.forEach(lineups, lineup => {
-                                        if (contains(lineup.name, filter)) {
-                                            result.push(lineup);
-                                        }
-                                        else {
-                                            let savings = filterSavings(lineup.savings);
-                                            if (!_.isEmpty(savings)) {
-                                                result.push({...lineup, savings});
-                                            }
-                                        }
-                                    });
-                                    return result;
-                                };
-
-
+                            let filterLineup = lineups => {
                                 let result = [];
-                                sections.forEach(section => {
-
-                                    const filteredLineups = filterLineup(section.data);
-
-                                    if (!_.isEmpty(filteredLineups)) {
-                                        result.push({...section, data: filteredLineups});
+                                _.forEach(lineups, lineup => {
+                                    if (contains(lineup.name, filter)) {
+                                        result.push(lineup);
                                     }
-
+                                    else {
+                                        let savings = filterSavings(lineup.savings);
+                                        if (!_.isEmpty(savings)) {
+                                            result.push({...lineup, savings});
+                                        }
+                                    }
                                 });
                                 return result;
-                            }
-                        }}
-                    />
+                            };
 
-                </KeyboardAvoidingView>
+
+                            let result = [];
+                            sections.forEach(section => {
+
+                                const filteredLineups = filterLineup(section.data);
+
+                                if (!_.isEmpty(filteredLineups)) {
+                                    result.push({...section, data: filteredLineups});
+                                }
+
+                            });
+                            return result;
+                        }
+                    }}
+                />
+
 
                 {this.displayFloatingButton() && this.renderFloatingButton()}
 
