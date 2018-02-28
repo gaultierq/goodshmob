@@ -47,7 +47,7 @@ class LineupScreen extends Screen<Props, State> {
         let subtitle = () => {
             const user = _.get(lineup, 'user');
             //MagicString
-            return user && "Par " + fullName(user)
+            return user && "par " + fullName(user)
         };
 
         this.setNavigatorTitle(this.props.navigator, {title: _.get(lineup, 'name'), subtitle: subtitle()});

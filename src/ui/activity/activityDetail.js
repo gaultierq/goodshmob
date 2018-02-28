@@ -367,6 +367,13 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                         activity={activity}
                                         containerStyle={{marginLeft: 30}}
                                         inputStyle={{fontSize: 13, }}
+                                        inputContainerStyle={{
+                                            borderBottomWidth: 1,
+                                            borderTopWidth: 0,
+                                            borderLeftWidth: 0,
+                                            borderRightWidth: 0,
+                                            paddingHorizontal: 0,
+                                        }}
                                         height={28}
                                         placeholder={"activity_comments_screen.add_comment_placeholder"}
                                     />

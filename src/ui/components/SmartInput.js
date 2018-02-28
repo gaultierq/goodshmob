@@ -71,7 +71,8 @@ export default class SmartInput extends React.Component<Props, State> {
         const isFocus = extendable ? this.state.focus : true;
         return (
             <View style={[styles.container, containerStyle, {flex:1, flexDirection: 'row'}]}>
-                <View style={[styles.inputContainer,
+                <View style={[
+                    styles.inputContainer,
                     {flex:isFocus? 1: 0,
                         flexDirection: 'row',
                         minHeight: height,
@@ -80,6 +81,7 @@ export default class SmartInput extends React.Component<Props, State> {
                         borderRadius: height / 2,
                         paddingHorizontal: height / 2,
                     } : {paddingHorizontal: height / 4},
+
                     inputContainerStyle,
                 ]}>
                     <TextInput

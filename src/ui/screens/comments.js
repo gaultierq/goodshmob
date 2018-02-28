@@ -131,7 +131,7 @@ class CommentsScreen extends Screen<Props, State> {
 
                         <CommentInput
                             activity={activity}
-                            containerStyle={{position: 'absolute', bottom: 0, padding: 3, backgroundColor: Colors.greying}}
+                            containerStyle={{position: 'absolute', bottom: 0, padding: 0, backgroundColor: Colors.greying}}
                             inputContainerStyle={{
                                 borderRadius: 1, borderWidth: StyleSheet.hairlineWidth,
                             }}

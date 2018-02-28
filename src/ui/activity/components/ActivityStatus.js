@@ -15,7 +15,7 @@ import {currentUserId} from "../../../managers/CurrentUser";
 
 
 const styles = StyleSheet.create({
-    description: {fontSize: 14, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey},
+    // description: {fontSize: 14, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey},
     tag: {flex:1, flexDirection:'row', alignItems: 'center'},
     mainContainer: {backgroundColor: 'transparent'},
     descriptionContainer: {
@@ -26,7 +26,10 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         marginLeft: 2,
     },
-    description: {fontSize: 13, lineHeight: 18, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey},
+    description: {
+        fontSize: 13, lineHeight: 18,
+        fontFamily: SFP_TEXT_ITALIC,
+        color: Colors.brownishGrey},
     userText: {
         fontSize: 10,
         lineHeight: 10,
@@ -76,7 +79,7 @@ export default class ActivityStatus extends React.Component<Props, State> {
         else if (isSending(activity)) {
             renderMethod = this.renderSendTo.bind(this);
             content = activity.description;
-                statusLineHandler = () => this.statusLineHandler(activity)
+            statusLineHandler = () => this.statusLineHandler(activity)
         }
         else if (isAsking(activity)) {
             renderMethod = this.renderAsk.bind(this);
@@ -208,7 +211,7 @@ export default class ActivityStatus extends React.Component<Props, State> {
                 fontFamily: SFP_TEXT_MEDIUM,
                 fontSize: 12,
                 color: Colors.greyishBrown}}>
-                {" "} {statusLine}
+                {" " + statusLine}
 
                 {statusTarget && <Text style={[{
                     color: Colors.black,
