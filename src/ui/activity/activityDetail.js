@@ -353,6 +353,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                 <CommentCell
                                     comment={lastComment} user={lastComment.user}
                                     textContainerStyle={{backgroundColor: 'transparent', borderWidth: 0, paddingHorizontal: 0,}}
+                                    skipTime={true}
                                 />
                                 <View style={{
                                     flex: 1,

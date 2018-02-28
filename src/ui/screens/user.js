@@ -39,21 +39,19 @@ export default class UserScreen extends Screen<Props, State> {
 
         return (
             <MainBackground>
-                <View>
-                    <Feed
-                        data={activities}
-                        renderItem={this.renderItem.bind(this)}
-                        fetchSrc={{
-                            callFactory: ()=>fetchUserNetwork(userId),
-                            useLinks: true,
-                            action: FETCH_ACTIVITIES,
-                            options: {userId}
-                        }}
-                        hasMore={!network.hasNoMore}
-                        empty={<View><Text style={STYLES.empty_message}>{i18n.t('common.empty_feed_generic')}</Text><ShareButton text={i18n.t('actions.invite')}/></View>}
-                        {...activityFeedProps()}
-                    />
-                </View>
+                <Feed
+                    data={activities}
+                    renderItem={this.renderItem.bind(this)}
+                    fetchSrc={{
+                        callFactory: ()=>fetchUserNetwork(userId),
+                        useLinks: true,
+                        action: FETCH_ACTIVITIES,
+                        options: {userId}
+                    }}
+                    hasMore={!network.hasNoMore}
+                    empty={<View><Text style={STYLES.empty_message}>{i18n.t('common.empty_feed_generic')}</Text><ShareButton text={i18n.t('actions.invite')}/></View>}
+                    {...activityFeedProps()}
+                />
             </MainBackground>
         );
     }

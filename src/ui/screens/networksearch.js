@@ -25,6 +25,7 @@ import Config from 'react-native-config'
 import SearchScreen from "./search";
 import {Colors} from "../colors";
 import GTouchable from "../GTouchable";
+import {seeUser} from "../Nav";
 
 type Props = NavigableProps & {
 };
@@ -98,10 +99,12 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
 
         let renderUser = ({item}) => {
             return (
-                <UserConnectItem
-                    user={item}
-                    navigator={this.props.navigator}
-                />
+                <GTouchable onPress={() => seeUser(navigator, item)}>
+                    <UserConnectItem
+                        user={item}
+                        navigator={this.props.navigator}
+                    />
+                </GTouchable>
             );
         };
 

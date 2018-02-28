@@ -305,10 +305,6 @@ export class Call {
                 call.run()
                     .then(resp => {
                             let requestTime = Date.now() - tic;
-                            console.debug(`request time ms [${apiAction}] = ${requestTime}` );
-
-                            // let url2 = call.url.toString();
-                            /*dispatch({type: STAT_DURATION, path: `request.${url2}`, value: requestTime});*/
                             Statistics.recordTime(`request.${apiAction.name()}`, requestTime);
 
 
@@ -361,8 +357,6 @@ export class Call {
         return instance.submit(this.url.toString(), this.method, this.body, this.delay)
             .catch(err => {throw err})
             .then(resp => {
-
-                console.debug("api: response");
                 if (resp.ok) {
                     let contentType = resp.headers.get("content-type");
                     if (contentType && contentType.indexOf("application/json") !== -1) {

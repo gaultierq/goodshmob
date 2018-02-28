@@ -130,6 +130,8 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     postFetchFirst() {
+        if (this.notFetchable()) return;
+
         setTimeout(() => {
             let trigger = this.hasItems() ? TRIGGER_USER_INDIRECT_ACTION : TRIGGER_USER_DIRECT_ACTION;
             const options = {trigger};
@@ -159,8 +161,6 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
 
     render() {
-
-        this.logger.debug("rendering");
         assertUnique(this.getFlatItems());
 
         const {
@@ -238,6 +238,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             ref: "feed",
             renderItem,
             // keyExtractor: this.keyExtractor,
+            key: "feed-list",
             refreshControl: this.renderRefreshControl(),
             onEndReached: this.onEndReached.bind(this),
             onEndReachedThreshold: 0.1,
@@ -443,8 +444,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     canFetch(requestName: string = 'isFetchingFirst', options: * = {}): boolean {
         if (this.isFiltering()) return false;
 
-        if (this.props.cannotFetch || !this.props.fetchSrc) {
-            //console.log(requestName + " fetch prevented");
+        if (this.notFetchable()) {
             return false;
         }
         else if (this.manager.isSending(requestName, this)) {
@@ -473,6 +473,11 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             }
         }
         return true;
+    }
+
+    //doesnt depend on any state
+    notFetchable() {
+        return this.props.cannotFetch || !this.props.fetchSrc;
     }
 
     tryFetchIt(options?: any = {}) {

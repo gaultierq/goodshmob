@@ -63,6 +63,7 @@ class _Statistics {
 
     recordTime(category: StatisticCategory, duration: ms) {
         if (__WITH_STATS__) {
+            console.debug(`request time ms [${category}] = ${duration}` );
             this.time.push({category, duration});
             if (this.timeout) {
                 clearTimeout(this.timeout);
