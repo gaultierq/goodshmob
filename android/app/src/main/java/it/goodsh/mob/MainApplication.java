@@ -10,6 +10,7 @@ import android.app.Application;
 import android.content.Intent;
 
 import com.facebook.react.ReactApplication;
+import com.react.rnspinkit.RNSpinkitPackage;
 import com.horcrux.svg.SvgPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.clipsub.rnbottomsheet.RNBottomSheetPackage;
@@ -56,6 +57,7 @@ public class MainApplication extends NavigationApplication implements ReactAppli
   protected List<ReactPackage> getPackages() {
     return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new RNSpinkitPackage(),
             new SvgPackage(),
             new RNFetchBlobPackage(),
             new RNBottomSheetPackage(),

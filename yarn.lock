@@ -4937,6 +4937,12 @@ react-native-snackbar@^0.4.3:
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/react-native-snackbar/-/react-native-snackbar-0.4.4.tgz#46d35c171dd28189c60eab0998b88d1c37e9f14e"
 
+react-native-spinkit@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-spinkit/-/react-native-spinkit-1.1.1.tgz#3ae512f3978bc750b7c02639911e1710750d8539"
+  dependencies:
+    prop-types "^15.5.8"
+
 react-native-svg@5.4.1:
   version "5.4.1"
   resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-5.4.1.tgz#c46191c786adbe9d5007342b4279efd153db8839"

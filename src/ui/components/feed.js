@@ -19,6 +19,7 @@ import Fuse from 'fuse.js'
 import {getLanguages} from 'react-native-i18n'
 import {RequestManager} from "../../managers/request";
 import {createConsole} from "../../helpers/DebugUtils";
+import Spinner from 'react-native-spinkit';
 
 
 export type FeedSource = {
@@ -162,6 +163,14 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             }
         });
     }
+    // type = _.sample(['CircleFlip', 'Bounce', 'Wave', 'WanderingCubes', 'Pulse', 'ChasingDots', 'ThreeBounce', 'Circle', '9CubeGrid', 'WordPress', 'FadingCircle', 'FadingCircleAlt', 'Arc', 'ArcAlt']);
+    type = _.sample(['Bounce']);
+    // type = _.sample(['ChasingDots']);
+
+    // color = _.sample(['CircleFlip', 'Bounce', 'Wave', 'WanderingCubes', 'Pulse', 'ChasingDots', 'ThreeBounce', 'Circle', '9CubeGrid', 'WordPress', 'FadingCircle', 'FadingCircleAlt', 'Arc', 'ArcAlt']);
+    color = _.sample([Colors.greyish]);
+    color = _.sample([Colors.green]);
+
 
     render() {
 
@@ -200,14 +209,18 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                         this.forceUpdate();
                     }, this.props.initialLoaderDelay);
                 }
+
+
                 return <View style={{
-                    flex:1, width: "100%", height: "100%", justifyContent: 'center',
+                    flex:1, width: "100%", height: "100%", alignItems: 'center', justifyContent: 'center',
                     position: 'absolute', zIndex: 1000
                 }}>
-                    <ActivityIndicator
-                        animating={true}
-                        size="small"
-                    />
+                    <Spinner
+                        // style={styles.spinner}
+                        isVisible={true}
+                        size={__DEVICE_WIDTH__ / 3}
+                        type={this.type}
+                        color={this.color}/>
                 </View>
             }
         }
