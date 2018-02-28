@@ -22,7 +22,7 @@ import {LineupListScreen} from './lineuplist'
 import type {Id, RNNNavigator, Saving, SearchToken} from "../../types";
 import {List} from "../../types"
 import Snackbar from "react-native-snackbar"
-import {NavStyles, renderSimpleButton, stylePadding, STYLES} from "../UIStyles";
+import {FEED_INITIAL_LOADER_DURATION, NavStyles, renderSimpleButton, stylePadding, STYLES} from "../UIStyles";
 import {currentGoodshboxId, currentUserId, logged} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
@@ -203,6 +203,7 @@ class HomeScreen extends Screen<Props, State> {
             <View style={{flex:1}}>
 
                 <LineupListScreen
+                    displayName={"home feed"}
                     userId={currentUserId()}
                     onLineupPressed={(lineup) => this.onLineupPressed(lineup)}
                     onSavingPressed={(saving) => this.onSavingPressed(saving)}
@@ -212,6 +213,7 @@ class HomeScreen extends Screen<Props, State> {
                     cannotFetch={!super.isVisible()}
                     visibility={super.getVisibility()}
                     empty={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
+                    initialLoaderDelay={FEED_INITIAL_LOADER_DURATION}
                     sectionMaker={(lineups)=> {
                         const goodshbox = _.head(lineups);
                         let savingCount = _.get(goodshbox, `meta.savingsCount`, null) || 0;

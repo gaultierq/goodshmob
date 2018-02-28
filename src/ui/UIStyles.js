@@ -197,3 +197,5 @@ export const STYLES = StyleSheet.create({
 
     }
 });
+
+export const FEED_INITIAL_LOADER_DURATION = 1500;

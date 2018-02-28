@@ -10,19 +10,15 @@ import * as Api from "../../managers/Api";
 import {TRIGGER_USER_DIRECT_ACTION, TRIGGER_USER_INDIRECT_ACTION} from "../../managers/Api";
 import {isEmpty} from "lodash";
 import type {i18Key, ms, RequestState, Url} from "../../types";
-import {renderSimpleButton, STYLES} from "../UIStyles";
+import {NavStyles, renderSimpleButton} from "../UIStyles";
 import {SearchBar} from 'react-native-elements'
-import {NavStyles} from "../UIStyles";
 
 import type {ScreenVisibility} from "./Screen";
-import Search from 'react-native-search-box';
 import {Colors} from "../colors";
 import Fuse from 'fuse.js'
-import { getLanguages } from 'react-native-i18n'
-
-import {SFP_TEXT_REGULAR} from "../fonts"
+import {getLanguages} from 'react-native-i18n'
 import {RequestManager} from "../../managers/request";
-
+import {createConsole} from "../../helpers/DebugUtils";
 
 
 export type FeedSource = {
@@ -45,7 +41,9 @@ export type Props<T> = {
     scrollUpOnBack?: ()=>boolean,
     cannotFetch?: boolean,
     visibility: ScreenVisibility,
-    filter?: ?FilterConfig<T>
+    filter?: ?FilterConfig<T>,
+    initialLoaderDelay?: ?ms,
+    displayName?: string
 };
 
 export type FilterConfig<T> = {
@@ -55,8 +53,6 @@ export type FilterConfig<T> = {
     style: *,
     applyFilter: (Array<T>, string) => Array<T>
 };
-
-
 
 type State = {
     isFetchingFirst?: RequestState,
@@ -68,18 +64,23 @@ type State = {
     filter?:? string
 };
 
+
 @connect((state, ownProps) => ({
     config: state.config,
 }))
 export default class Feed<T> extends Component<Props<T>, State>  {
 
-    state = {firstLoad: 'idle'};
+    state = {initialLoaderVisibility: 'idle', firstLoad: 'idle'};
 
     createdAt: ms;
+    firstRenderAt: ms;
+    firstLoaderTimeout: number;
+
 
     static defaultProps = {
         visibility: 'unknown',
-        keyExtractor: item => item.id
+        keyExtractor: item => item.id,
+        initialLoaderDelay: 0
     };
 
     _listener: ()=>boolean;
@@ -90,25 +91,29 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
     manager: RequestManager = new RequestManager();
 
+   logger: *;
+    
     constructor(props: Props<T>) {
         super(props);
+        this.logger = props.displayName && createConsole(props.displayName) || console;
         this.createdAt = Date.now();
         this.postFetchFirst();
-        props.feedId && console.log(`constructing feed '${props.feedId}'`);
+        props.feedId &&this.logger.log(`constructing feed '${props.feedId}'`);
         this.isFrenchLang = _.startsWith(i18n.locale, 'fr');
         if (!this.props.fetchSrc) {
-            console.warn("no fetch source provided");
+           this.logger.warn("no fetch source provided");
         }
+
     }
 
     componentWillReceiveProps(nextProps: Props<*>) {
         if (__ENABLE_BACK_HANDLER__ && this.props.scrollUpOnBack !== nextProps.scrollUpOnBack) {
             let scrollUpOnBack = nextProps.scrollUpOnBack;
             if (scrollUpOnBack) {
-                console.info("Feed listening to back navigation");
+               this.logger.info("Feed listening to back navigation");
 
                 this._listener = () => {
-                    console.info("Feed onBackPressed");
+                   this.logger.info("Feed onBackPressed");
                     if (this.getScrollY() > 100) {
                         this.refs.feed.scrollToOffset({x: 0, y: 0, animated: true});
                         return true;
@@ -125,14 +130,13 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
         //hack: let the next props become the props
         this.postFetchFirst();
-
     }
 
 
     shouldComponentUpdate(nextProps, nextState) {
         if (!ENABLE_PERF_OPTIM) return true;
         if (nextProps.visibility === 'hidden') {
-            console.debug('feed component update saved');
+            this.logger.debug('feed component update saved');
             return false;
         }
         return true;
@@ -154,12 +158,14 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                 );
             }
             else {
-                console.debug(`postFetchFirst was not performed: canFetch=${canFetch}, firstLoad=${firstLoad}`);
+               this.logger.debug(`postFetchFirst was not performed: canFetch=${canFetch}, firstLoad=${firstLoad}`);
             }
         });
     }
 
     render() {
+
+        this.logger.debug("rendering");
         assertUnique(this.getFlatItems());
 
         const {
@@ -177,11 +183,34 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             ...attributes
         } = this.props;
 
+        if (!this.firstRenderAt) this.firstRenderAt = Date.now();
+
         let items = this.getItems();
 
         let nothingInterestingToDisplay = !this.hasItems() && this.manager.isSuccess('isFetchingFirst', this);
 
-        let firstEmptyLoader = this.isFirstEmptyLoader();
+        let firstEmptyLoader = (this.state.firstLoad === 'sending' || this.state.firstLoad === 'idle') && !this.hasItems();
+
+        if (this.props.initialLoaderDelay) {
+            if (this.firstRenderAt + this.props.initialLoaderDelay > Date.now()) {
+                if (this.props.visibility === 'visible' && !this.firstLoaderTimeout) {
+                    this.logger.debug("first timer force update posted");
+                    this.firstLoaderTimeout = setTimeout(() => {
+                        this.logger.debug("first timer force update triggered");
+                        this.forceUpdate();
+                    }, this.props.initialLoaderDelay);
+                }
+                return <View style={{
+                    flex:1, width: "100%", height: "100%", justifyContent: 'center',
+                    position: 'absolute', zIndex: 1000
+                }}>
+                    <ActivityIndicator
+                        animating={true}
+                        size="small"
+                    />
+                </View>
+            }
+        }
 
         let allViews = [];
         if (nothingInterestingToDisplay) {
@@ -189,6 +218,18 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                 return this.renderFail(()=>this.tryFetchIt());
             }
             if (empty) return this.renderEmpty();
+        }
+
+        const filter = this.props.filter;
+        if (filter) {
+            allViews.push(this.renderSearchBar(filter));
+            if (this.state.filter) {
+
+                items = filter.applyFilter(items, this.state.filter);
+                if (_.isEmpty(items)) {
+                    allViews.push(filter.emptyFilterResult(this.state.filter));
+                }
+            }
         }
 
         let params =  {
@@ -206,18 +247,6 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             keyboardShouldPersistTaps: 'always',
             ...attributes
         };
-
-        const filter = this.props.filter;
-        if (filter) {
-            allViews.push(this.renderSearchBar(filter));
-            if (this.state.filter) {
-
-                items = filter.applyFilter(items, this.state.filter);
-                if (_.isEmpty(items)) {
-                    allViews.push(filter.emptyFilterResult(this.state.filter));
-                }
-            }
-        }
 
         if (sections) {
             allViews.push(React.createElement(SectionList, {sections: items, ...params}));
@@ -307,9 +336,6 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
 
     //displayed when no data yet, and loading for the first time
-    isFirstEmptyLoader() {
-        return (this.state.firstLoad === 'sending' || this.state.firstLoad === 'idle') && !this.hasItems();
-    }
 
     hasItems(): boolean {
         return this.itemsLen() > 0;
@@ -390,7 +416,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
             if (remainingRows < 5) {
                 if (this.gentleFetchMore()) {
-                    console.debug("Only " + remainingRows + " left. Prefetching...");
+                   this.logger.debug("Only " + remainingRows + " left. Prefetching...");
                 }
             }
         }
@@ -398,7 +424,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
     onEndReached() {
         if (this.gentleFetchMore()) {
-            console.debug("onEndReached => fetching more");
+           this.logger.debug("onEndReached => fetching more");
         }
     }
 
@@ -407,7 +433,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             return this.fetchMore({trigger: TRIGGER_USER_INDIRECT_ACTION});
         }
         else {
-            console.debug("== end of feed ==");
+           this.logger.debug("== end of feed ==");
             return false;
         }
     }
@@ -420,7 +446,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             return false;
         }
         else if (this.manager.isSending(requestName, this)) {
-            console.log(`'${requestName}' prevented: is already running. state=${JSON.stringify(this.state)}`);
+           this.logger.log(`'${requestName}' prevented: is already running. state=${JSON.stringify(this.state)}`);
             return false;
         }
         else if (options.trigger === TRIGGER_USER_INDIRECT_ACTION) {
@@ -430,7 +456,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             {
                 let lastFail = _.last(events.filter(e=> e.status === 'ko'));
                 if (lastFail && Date.now() < lastFail.date + 30 * 1000) {
-                    console.debug("debounced fetch: recent failure");
+                   this.logger.debug("debounced fetch: recent failure");
                     return false;
                 }
             }
@@ -439,7 +465,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             {
                 let lastEmpty = _.last(events.filter(e=> _.get(e, 'options.emptyResult')));
                 if (lastEmpty && Date.now() < lastEmpty.date + 5 * 60 * 1000) {
-                    console.debug("debounced fetch: recent empty result");
+                   this.logger.debug("debounced fetch: recent empty result");
                     return false;
                 }
             }
@@ -494,7 +520,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             this.props
                 .dispatch(call.disptachForAction2(fetchSrc.action, {trigger, ...fetchSrc.options}))
                 .then(({data, links})=> {
-                    console.debug("disptachForAction3 " + JSON.stringify(this.props.fetchSrc.action));
+                   this.logger.debug("disptachForAction3 " + JSON.stringify(this.props.fetchSrc.action));
                     if (!data) {
                         reqTrack.fail();
                         // this.setState({[requestName]: 'ko'});
@@ -521,7 +547,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                     }
                     resolve(data);
                 }, err => {
-                    console.warn("feed error:" + err);
+                   this.logger.warn("feed error:" + err);
                     this.lastFetchFail = Date.now();
                     reqTrack.fail();
                     // this.setState({[requestName]: 'ko'});

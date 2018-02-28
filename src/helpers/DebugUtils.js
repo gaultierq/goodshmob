@@ -1,4 +1,4 @@
-
+//@flow
 
 
 export function superLog(msg: string) {
@@ -7,3 +7,14 @@ export function superLog(msg: string) {
 
     // superConsole = {...console};
 }
+
+export function createConsole(displayName: string) {
+
+    return {
+        log: (message: string) => console.log(`[${displayName}]: ${message}`),
+        debug: (message: string) => console.debug(`[${displayName}]: ${message}`),
+        info: (message: string) => console.info(`[${displayName}]: ${message}`),
+        warn: (message: string) => console.warn(`[${displayName}]: ${message}`),
+    }
+}
+

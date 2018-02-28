@@ -175,6 +175,7 @@ class NetworkScreen extends Screen<Props, State> {
         return (
             <View style={{flex:1}}>
                 <Feed
+                    displayName={"network feed"}
                     data={activities}
                     renderItem={this.renderItem.bind(this)}
                     fetchSrc={{

@@ -7,7 +7,7 @@ import User from "react-native-firebase/lib/modules/auth/user";
 import {CachedImage} from "react-native-img-cache";
 import GTouchable from "./GTouchable";
 import {SFP_TEXT_ITALIC} from "./fonts";
-import {STYLES} from "./UIStyles";
+import {FEED_INITIAL_LOADER_DURATION, STYLES} from "./UIStyles";
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
@@ -60,7 +60,8 @@ export function activityFeedProps() {
     return {
         ItemSeparatorComponent: TRANSPARENT_SPACER(20),
         ListHeaderComponent: TRANSPARENT_SPACER(0)(),
-        style: {backgroundColor: Colors.greying}
+        style: {backgroundColor: Colors.greying},
+        initialLoaderDelay: FEED_INITIAL_LOADER_DURATION
     };
 }
 
