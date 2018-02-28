@@ -199,6 +199,8 @@ class HomeScreen extends Screen<Props, State> {
 
         let onBoardingStep = OnBoardingManager.getPendingStep();
 
+        if (onBoardingStep === 'no_spam') return <NoSpamDialog/>;
+
         return (
             <View style={{flex:1}}>
 
@@ -301,10 +303,6 @@ class HomeScreen extends Screen<Props, State> {
 
 
                 {this.displayFloatingButton() && this.renderFloatingButton()}
-
-
-                {onBoardingStep === 'no_spam' && <NoSpamDialog/>}
-
             </View>
         );
     }

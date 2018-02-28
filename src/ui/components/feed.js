@@ -92,8 +92,8 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
     manager: RequestManager = new RequestManager();
 
-   logger: *;
-    
+    logger: *;
+
     constructor(props: Props<T>) {
         super(props);
         this.logger = props.displayName && createConsole(props.displayName) || console;
@@ -102,7 +102,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         props.feedId &&this.logger.log(`constructing feed '${props.feedId}'`);
         this.isFrenchLang = _.startsWith(i18n.locale, 'fr');
         if (!this.props.fetchSrc) {
-           this.logger.warn("no fetch source provided");
+            this.logger.warn("no fetch source provided");
         }
 
     }
@@ -111,10 +111,10 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         if (__ENABLE_BACK_HANDLER__ && this.props.scrollUpOnBack !== nextProps.scrollUpOnBack) {
             let scrollUpOnBack = nextProps.scrollUpOnBack;
             if (scrollUpOnBack) {
-               this.logger.info("Feed listening to back navigation");
+                this.logger.info("Feed listening to back navigation");
 
                 this._listener = () => {
-                   this.logger.info("Feed onBackPressed");
+                    this.logger.info("Feed onBackPressed");
                     if (this.getScrollY() > 100) {
                         this.refs.feed.scrollToOffset({x: 0, y: 0, animated: true});
                         return true;
@@ -159,7 +159,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                 );
             }
             else {
-               this.logger.debug(`postFetchFirst was not performed: canFetch=${canFetch}, firstLoad=${firstLoad}`);
+                this.logger.debug(`postFetchFirst was not performed: canFetch=${canFetch}, firstLoad=${firstLoad}`);
             }
         });
     }
@@ -200,30 +200,34 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
         let firstEmptyLoader = (this.state.firstLoad === 'sending' || this.state.firstLoad === 'idle') && !this.hasItems();
 
-        if (this.props.initialLoaderDelay) {
-            if (this.firstRenderAt + this.props.initialLoaderDelay > Date.now()) {
-                if (this.props.visibility === 'visible' && !this.firstLoaderTimeout) {
-                    this.logger.debug("first timer force update posted");
-                    this.firstLoaderTimeout = setTimeout(() => {
-                        this.logger.debug("first timer force update triggered");
-                        this.forceUpdate();
-                    }, this.props.initialLoaderDelay);
-                }
+        const isFirstRenderRecent = this.firstRenderAt + this.props.initialLoaderDelay > Date.now();
 
+        let displayFirstLoader = firstEmptyLoader || this.props.initialLoaderDelay && isFirstRenderRecent;
 
-                return <View style={{
-                    flex:1, width: "100%", height: "100%", alignItems: 'center', justifyContent: 'center',
-                    position: 'absolute', zIndex: 1000
-                }}>
-                    <Spinner
-                        // style={styles.spinner}
-                        isVisible={true}
-                        size={__DEVICE_WIDTH__ / 3}
-                        type={this.type}
-                        color={this.color}/>
-                </View>
+        if (this.props.initialLoaderDelay && isFirstRenderRecent) {
+            if (this.props.visibility === 'visible' && !this.firstLoaderTimeout) {
+                this.logger.debug("first timer force update posted");
+                this.firstLoaderTimeout = setTimeout(() => {
+                    this.logger.debug("first timer force update triggered");
+                    this.forceUpdate();
+                }, this.props.initialLoaderDelay);
             }
         }
+
+        if (displayFirstLoader) {
+            return <View style={{
+                flex:1, width: "100%", height: "100%", alignItems: 'center', justifyContent: 'center',
+                position: 'absolute', zIndex: 1000
+            }}>
+                <Spinner
+                    // style={styles.spinner}
+                    isVisible={true}
+                    size={__DEVICE_WIDTH__ / 3}
+                    type={this.type}
+                    color={this.color}/>
+            </View>
+        }
+
 
         let allViews = [];
         if (nothingInterestingToDisplay) {
@@ -429,7 +433,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
             if (remainingRows < 5) {
                 if (this.gentleFetchMore()) {
-                   this.logger.debug("Only " + remainingRows + " left. Prefetching...");
+                    this.logger.debug("Only " + remainingRows + " left. Prefetching...");
                 }
             }
         }
@@ -437,7 +441,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
     onEndReached() {
         if (this.gentleFetchMore()) {
-           this.logger.debug("onEndReached => fetching more");
+            this.logger.debug("onEndReached => fetching more");
         }
     }
 
@@ -446,7 +450,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             return this.fetchMore({trigger: TRIGGER_USER_INDIRECT_ACTION});
         }
         else {
-           this.logger.debug("== end of feed ==");
+            this.logger.debug("== end of feed ==");
             return false;
         }
     }
@@ -459,7 +463,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             return false;
         }
         else if (this.manager.isSending(requestName, this)) {
-           this.logger.log(`'${requestName}' prevented: is already running. state=${JSON.stringify(this.state)}`);
+            this.logger.log(`'${requestName}' prevented: is already running. state=${JSON.stringify(this.state)}`);
             return false;
         }
         else if (options.trigger === TRIGGER_USER_INDIRECT_ACTION) {
@@ -469,7 +473,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             {
                 let lastFail = _.last(events.filter(e=> e.status === 'ko'));
                 if (lastFail && Date.now() < lastFail.date + 30 * 1000) {
-                   this.logger.debug("debounced fetch: recent failure");
+                    this.logger.debug("debounced fetch: recent failure");
                     return false;
                 }
             }
@@ -478,7 +482,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             {
                 let lastEmpty = _.last(events.filter(e=> _.get(e, 'options.emptyResult')));
                 if (lastEmpty && Date.now() < lastEmpty.date + 5 * 60 * 1000) {
-                   this.logger.debug("debounced fetch: recent empty result");
+                    this.logger.debug("debounced fetch: recent empty result");
                     return false;
                 }
             }
@@ -533,7 +537,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             this.props
                 .dispatch(call.disptachForAction2(fetchSrc.action, {trigger, ...fetchSrc.options}))
                 .then(({data, links})=> {
-                   this.logger.debug("disptachForAction3 " + JSON.stringify(this.props.fetchSrc.action));
+                    this.logger.debug("disptachForAction3 " + JSON.stringify(this.props.fetchSrc.action));
                     if (!data) {
                         reqTrack.fail();
                         // this.setState({[requestName]: 'ko'});
@@ -560,7 +564,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                     }
                     resolve(data);
                 }, err => {
-                   this.logger.warn("feed error:" + err);
+                    this.logger.warn("feed error:" + err);
                     this.lastFetchFail = Date.now();
                     reqTrack.fail();
                     // this.setState({[requestName]: 'ko'});

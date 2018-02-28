@@ -64,8 +64,9 @@ class Api {
         this.execPendings();
     }
 
+    //TODO: this is a hack. logout should preserve 'app' store sub-state
     isConnected() {
-        return this.store.getState().app.connected;
+        return this.store.getState().app.connected !== false;
     }
 
     pendingAction;
