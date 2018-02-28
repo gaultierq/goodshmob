@@ -28,6 +28,7 @@ type Props = {
     initialText: string,
     navigator: any,
     containerStyle?:? any,
+    height: number,
     requestAction: string => Promise<*,*>
 };
 
@@ -35,8 +36,6 @@ type State = {
     input: string,
     requestState: RequestState
 };
-
-const MAX_LENGTH = 500;
 
 @connect()
 @logged
@@ -58,7 +57,7 @@ export default class ModalTextInput extends Component<Props, State> {
 
 
     render() {
-        const {containerStyle, ...attributes} = this.props;
+        const {containerStyle, height, ...attributes} = this.props;
 
         let input = this.state.input;
         let notEditable = this.state.requestState === 'sending';
@@ -78,7 +77,7 @@ export default class ModalTextInput extends Component<Props, State> {
                     navigator={this.props.navigator}
                     ref={ref => this._sheet = ref}
                 >
-                    <View style={{height: 600, padding: 15}}>
+                    <View style={{height, padding: 15}}>
 
                         <View style={{flexDirection: 'row'}}>
                             <GTouchable onPress={()=>this._sheet && this._sheet.close()}>
@@ -97,8 +96,6 @@ export default class ModalTextInput extends Component<Props, State> {
                             onSubmitEditing={this.submit.bind(this)}
                             value={input}
                             multiline={true}
-                            numberOfLines={6}
-                            maxLength={MAX_LENGTH}
                             blurOnSubmit
                             onChangeText={(input) => this.setState({input})}
                             placeholder={i18n.t("create_list_controller.add_description")}

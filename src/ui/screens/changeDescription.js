@@ -1,27 +1,12 @@
 // @flow
 import React, {Component} from 'react';
-import {
-    Alert,
-    Clipboard,
-    Dimensions,
-    Image,
-    KeyboardAvoidingView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
-} from 'react-native';
 import type {Id} from "../../types";
-import {CheckBox} from "react-native-elements";
 import {connect} from "react-redux";
 import {logged} from "../../managers/CurrentUser"
 import * as Api from "../../managers/Api";
 import ApiAction from "../../helpers/ApiAction";
 
 import Snackbar from "react-native-snackbar"
-import {Colors} from "../colors";
-import {SFP_TEXT_REGULAR} from "../fonts";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import type {PendingAction} from "../../helpers/ModelUtils";
 import {pendingActionWrapper} from "../../helpers/ModelUtils";
@@ -39,8 +24,6 @@ type State = {
     isUpdating?: boolean
 };
 
-const MAX_LENGTH = 500;
-
 @connect()
 @logged
 export default class ChangeDescriptionScreen extends Component<Props, State> {
@@ -51,8 +34,6 @@ export default class ChangeDescriptionScreen extends Component<Props, State> {
         modalPresentationStyle: 'overFullScreen',
         tapBackgroundToDismiss: true
     };
-
-    _sheet;
 
     constructor(props) {
         super(props);
@@ -69,6 +50,9 @@ export default class ChangeDescriptionScreen extends Component<Props, State> {
             navigator={navigator}
             requestAction={input=>this.updateDescription(input)}
             placeholder={i18n.t("create_list_controller.add_description")}
+            numberOfLines={6}
+            maxLength={500}
+            height={600}
         />
     }
 

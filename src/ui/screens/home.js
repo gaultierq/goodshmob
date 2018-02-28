@@ -44,10 +44,8 @@ import GTouchable from "../GTouchable";
 import AddLineupComponent from "../components/addlineup";
 import BottomSheet from 'react-native-bottomsheet';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import PopupDialog, {DialogButton, DialogTitle, ScaleAnimation,} from 'react-native-popup-dialog';
 import type {OnBoardingStep} from "../../managers/OnBoardingManager";
 import OnBoardingManager from "../../managers/OnBoardingManager";
-import Markdown from 'react-native-simple-markdown'
 import NoSpamDialog from "./NoSpamDialog";
 // $FlowFixMe
 import {AppTour, AppTourSequence, AppTourView} from "../../../vendors/taptarget";
@@ -62,7 +60,6 @@ type Props = {
 type State = {
     newLineupTitle?: string,
     newLineupPrivacy?: Visibility,
-    changeLinupTitleId?: {id:Id, name: string},
     filter?: ?string
 };
 
@@ -104,7 +101,6 @@ class HomeScreen extends Screen<Props, State> {
 
 
     appTourTargets = new Map();
-    scaleAnimationDialog;
 
 
     constructor(props: Props){
@@ -115,7 +111,6 @@ class HomeScreen extends Screen<Props, State> {
     componentWillAppear() {
         this.props.navigator.setDrawerEnabled({side: 'left', enabled: true});
         this.props.navigator.setDrawerEnabled({side: 'right', enabled: false});
-        this._appear = true;
     }
 
 
@@ -199,26 +194,6 @@ class HomeScreen extends Screen<Props, State> {
             }
         })
     }
-
-    onFilter(filter: string) {
-        console.debug(`onFilter:${filter}`);
-        this.setState({filter});
-    }
-
-    // render() {
-    //     return (
-    //         <View style={{ flex: 1, backgroundColor: 'blue' }}>
-    //             <View ref={ref=>{
-    //                 let appTourTarget = AppTourView.for(ref, {
-    //                     primaryText: 'This is a target button 1',
-    //                     secondaryText: 'We have the best targets, believe me'
-    //                 });
-    //                 this.appTourTargets.push(appTourTarget);
-    //             }}
-    //                   style={{ width: 100, height: 100,backgroundColor: 'red' }}/>
-    //         </View>
-    //     );
-    // }
 
     render() {
 
@@ -325,11 +300,6 @@ class HomeScreen extends Screen<Props, State> {
 
                 {this.displayFloatingButton() && this.renderFloatingButton()}
 
-                <View >
-                    {this.renderChangeTitleModal()}
-
-                </View>
-
 
                 {onBoardingStep === 'no_spam' && <NoSpamDialog/>}
 
@@ -403,47 +373,6 @@ class HomeScreen extends Screen<Props, State> {
                 {renderSectionHeaderChildren && renderSectionHeaderChildren()}
             </View>
         </GTouchable>);
-    }
-
-    _closeChangeNameModal = ()=> this.setState({changeLinupTitleId: null});
-
-    renderChangeTitleModal() {
-        let {id, name} = this.state.changeLinupTitleId || {};
-
-
-        let visible = !!id;
-
-        return <Modal
-            isVisible={visible}
-            avoidKeyboard={true}
-            backdropOpacity={0.3}
-            onBackButtonPress={()=> {this._closeChangeNameModal(); return true;}}
-            onBackdropPress={this._closeChangeNameModal}
-        >
-            <View style={{ alignItems: 'center'}}>
-                <View style={{ backgroundColor: "white", padding: 12, borderRadius: 6, width: '100%'}}>
-                    <Text style={{fontSize: 16, marginBottom: 12}}>{i18n.t("actions.change_name")}:</Text>
-                    <SmartInput
-                        execAction={(input: string) => this.requestChangeName(id, input)}
-                        placeholder={"create_list_controller.placeholder"}
-                        defaultValue={name}
-                        button={<Text>{i18n.t("actions.change")}</Text>}
-                        returnKeyType={'done'}
-                    />
-                </View>
-            </View>
-        </Modal>;
-    }
-
-    requestChangeName(lineupId: Id, name: string) {
-        let editedLineup = {id: lineupId, name};
-
-        return this.props.dispatch(patchLineup(editedLineup))
-            .then(()=> {
-                this.setState({changeLinupTitleId: null})
-            })
-            .then(()=> Snackbar.show({title: i18n.t("activity_item.buttons.modified_list")}))
-            ;
     }
 
     seeLineup(id: Id) {
@@ -535,32 +464,6 @@ class HomeScreen extends Screen<Props, State> {
         />
     }
 
-    // renderMenuButton2(item, padding) {
-    //     if (item.id === currentGoodshboxId()) return null;
-    //
-    //     // console.log("paddings:" + stylePadding(padding, 12));
-    //
-    //     return <View style={{position: "absolute", right: 0, margin: 0}}>
-    //         <Menu>
-    //             <MenuTrigger>
-    //                 {/*<Icon name="md-more" size={25} style={{...stylePadding(padding, 12)}}*/}
-    //                 {/*color={Colors.blue}/>*/}
-    //                 <View style={{...stylePadding(padding, 14)}}>
-    //                     <Image
-    //                         source={require('../../img2/moreDotsGrey.png')} resizeMode="contain"/>
-    //                 </View>
-    //
-    //             </MenuTrigger>
-    //             <MenuOptions>
-    //                 <MenuOption onSelect={() => setTimeout(()=>this.deleteLineup(item))} text={i18n.t("actions.change")}/>
-    //                 <MenuOption onSelect={() => setTimeout(() => this.changeTitle(item))} text={i18n.t("actions.change_title")}/>
-    //             </MenuOptions>
-    //         </Menu>
-    //     </View>;
-    // }
-
-
-
     renderMenuButton(item, padding) {
         if (item.id === currentGoodshboxId()) return null;
 
@@ -627,13 +530,21 @@ class HomeScreen extends Screen<Props, State> {
 
     changeTitle(lineup: List) {
         let {id, name} = lineup;
-        this.setState({changeLinupTitleId: {id, name}});
+
+
+        this.props.navigator.showModal({
+            screen: 'goodsh.ChangeLineupName',
+            animationType: 'none',
+            passProps: {
+                lineupId: id,
+                initialLineupName: name
+            }
+        });
     }
 
     displayFloatingButton() {
         return true;
     }
-
 
     onLineupPressed(lineup: List) {
         console.info("on linup pressed: " + JSON.stringify(lineup));
@@ -661,46 +572,5 @@ class HomeScreen extends Screen<Props, State> {
 
 const screen = HomeScreen;
 
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    dialogContentView: {
-        // padding: 20,
-        // paddingBottom: 0,
-    },
-    navigationBar: {
-        borderBottomColor: '#b5b5b5',
-        borderBottomWidth: 0.5,
-        backgroundColor: '#ffffff',
-    },
-    navigationTitle: {
-        padding: 10,
-    },
-    navigationButton: {
-        padding: 10,
-    },
-    navigationLeftButton: {
-        paddingLeft: 20,
-        paddingRight: 40,
-    },
-    navigator: {
-        flex: 1,
-        // backgroundColor: '#000000',
-    },
-});
-
-const markdownStyles = {
-    view: {
-        paddingRight: 20,
-        paddingLeft: 20,
-    },
-    listItemText: {
-        paddingTop: 6
-    }
-};
 
 export {screen};
