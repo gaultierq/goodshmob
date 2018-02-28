@@ -111,7 +111,11 @@ export default class ActivityCell extends React.Component<Props, State> {
                             liked={this.isLiked(activity)}
                             navigator={this.props.navigator}
                             skipLineup={this.props.skipLineup}
-                            bodyStyle={{padding: 23}}
+                            bodyStyle={{
+                                padding: 23,
+                                paddingTop: 12,
+
+                            }}
                         />
 
                     </GTouchable>

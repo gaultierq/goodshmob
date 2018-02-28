@@ -135,7 +135,7 @@ export default class ActivityBody extends React.Component<Props, State> {
             x:0,
             y:3,
             style:{marginVertical:5}
-        }
+        };
 
         return <View style={[styles.imageContainer,
             {height: imageHeight,
