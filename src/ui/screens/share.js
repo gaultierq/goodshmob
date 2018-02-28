@@ -137,14 +137,7 @@ class ShareScreen extends Component<Props, State> {
         navigator.showModal({
             screen: 'goodsh.SendScreen', // unique ID registered with Navigation.registerScreen
             title: i18n.t("actions.send") + ` ${item.title}`,
-            navigatorButtons: {
-                leftButtons: [
-                    {
-                        id: Nav.CLOSE_MODAL,
-                        title: i18n.t("actions.cancel")
-                    }
-                ],
-            },
+            navigatorButtons: Nav.CANCELABLE_MODAL,
             passProps: {
                 userId: currentUserId(),
                 itemId: item.id

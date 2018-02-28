@@ -405,7 +405,7 @@ export class SearchNavBar extends Component<NavProps, NavState> {
         },
         searchInput: {
             backgroundColor: Colors.steel12,//NavStyles.navBarBackgroundColor,
-            fontSize: 13,
+            fontSize: 15,
         },
     });
 
