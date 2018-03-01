@@ -41,7 +41,6 @@ export default class SmartInput extends React.Component<Props, State> {
     static defaultProps = {
         defaultValue: '',
         height: 40,
-        button: <Icon name="send" size={20} color={Colors.greyishBrown}/>
     };
 
 
@@ -68,6 +67,7 @@ export default class SmartInput extends React.Component<Props, State> {
         } = this.props;
 
         const {input} = this.state;
+        let buttonInternal = button || <Icon name="send" size={this.props.height / 2} color={Colors.greyishBrown}/>;
 
         const isFocus = extendable ? this.state.focus : true;
         return (
@@ -104,7 +104,7 @@ export default class SmartInput extends React.Component<Props, State> {
                     />
                 </View>
                 {
-                    this.showButton() && <View style={{flex: isFocus? 0: 1, flexDirection: 'row', alignItems: 'flex-start'}}>
+                    buttonInternal && this.showButton() && <View style={{flex: isFocus? 0: 1, flexDirection: 'row', alignItems: 'flex-start'}}>
                         <Button
                             isLoading={this.isSending()}
                             isDisabled={(!canSendDefault && this.isDefault()) || this.isSending()}
@@ -112,7 +112,7 @@ export default class SmartInput extends React.Component<Props, State> {
                             style={[STYLES.apslInit, styles.button, buttonStyle, {height, }]}
                             disabledStyle={[styles.disabledButton, buttonStyle, disabledButtonStyle]}
                         >
-                            {button}
+                            {buttonInternal}
                         </Button>
                     </View>
 

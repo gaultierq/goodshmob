@@ -399,7 +399,8 @@ class ActivityDetailScreen extends Screen<Props, State> {
                 paddingHorizontal: 0,
                 borderColor: Colors.greying,
                 borderWidth: 1,
-            }
+            },
+            buttonStyle: {paddingRight: 0}
         };
     }
 
