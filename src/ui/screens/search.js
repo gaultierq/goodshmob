@@ -16,6 +16,7 @@ import {NavStyles} from "../UIStyles";
 import {Navigation} from 'react-native-navigation';
 import update from "immutability-helper";
 import {Colors} from "../colors";
+import Spinner from 'react-native-spinkit';
 
 export type SearchCategoryType = string;
 
@@ -342,13 +343,25 @@ class SearchPage extends Component<PageProps, PageState> {
         let loadingFirst = isSearchRequesting && search.page === 0;
 
         return (
-            <View style={{flex: 1, width:"100%", height: "100%", backgroundColor: Colors.white}}>
+            <View style={{flex: 1, width:"100%", height: "100%",}}>
                 {
-                    loadingFirst && <ActivityIndicator
-                        animating={loadingFirst}
-                        size="small"
-                        style={{margin: 12}}
-                    />
+                    loadingFirst && (
+                        <View style={{
+                            flex:1,
+                            width: "100%",
+                            height: "100%",
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            position: 'absolute',
+                            zIndex: 1000
+                        }}>
+                            <Spinner
+                                isVisible={true}
+                                size={__DEVICE_WIDTH__ / 5}
+                                type={"WanderingCubes"}
+                                color={Colors.greying}/>
+                        </View>
+                    )
                 }
                 {
                     !emptySearchResult &&
