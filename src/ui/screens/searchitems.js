@@ -144,11 +144,11 @@ class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState>
             <View style={{backgroundColor: NavStyles.navBarBackgroundColor, padding: 12}}>
                 <CheckBox
                     right
-                    title={"#Autour de moi"}
+                    title={i18n.t("search_item_screen.search_options.around_me")}
                     // checkedTitle={i18n.t("create_list_controller.visible")}
                     iconRight
                     size={20}
-                    onPress={aroundMe=> {
+                    onPress={something=> {
                         this.setStateAndNotify({aroundMe: !this.state.aroundMe})
                     }}
                     checked={this.state.aroundMe}

@@ -174,6 +174,9 @@ export default {
             "places":"##City, Address...",
             "movies":"##Movies",
             "musics":"##Musics"
+        },
+        "search_options":  {
+            "around_me": "Around me"
         }
     },
     "activity_comments_screen":{

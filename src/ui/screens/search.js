@@ -138,6 +138,7 @@ export default class SearchScreen extends Component<Props, State> {
                             this.getCurrentSearchOptions(cat.type),
                             newOptions => {
                                 this.searchOptions[cat.type] = newOptions;
+                                this.performSearch(this.state.input, 0);
                             })
                     )
                 }
@@ -238,7 +239,8 @@ export default class SearchScreen extends Component<Props, State> {
 
     onSearchInputChange(input: string) {
         //this.setState({input});
-        this.setState({input}, () => this.performSearch(input, 0));
+        let debounceSearch = _.debounce(() => this.performSearch(input, 0), 500);
+        this.setState({input}, debounceSearch);
     }
 
 
@@ -253,12 +255,11 @@ export default class SearchScreen extends Component<Props, State> {
             return;
         }
 
-        let lastPage = _.get(this.state.searches, `${token}.${catType}.page`, -1);
-
-        if (lastPage >= page) {
-            console.log(`perform search aborted: lastPage>=page : ${lastPage} >= ${page}`);
-            return;
-        }
+        // let lastPage = _.get(this.state.searches, `${token}.${catType}.page`, -1);
+        // if (lastPage >= page) {
+        //     console.log(`perform search aborted: lastPage>=page : ${lastPage} >= ${page}`);
+        //     return;
+        // }
 
         //set searching
         this.setState({
@@ -274,12 +275,15 @@ export default class SearchScreen extends Component<Props, State> {
             }
         });
 
-
         this.props
             .searchEngine.search(token, catType, page, this.getCurrentSearchOptions(catType))
+            .catch(err=> {
+                console.warn("error while performing search");
+                this.setState(update(this.state, {searches: {[token]: {[catType]: {$merge: {searchState: 3}}}}},));
+            })
             .then((results: SearchResult) => {
 
-                const catType = this.getCurrentCategory().type;
+                //const catType = this.getCurrentCategory().type;
                 let result = results[catType];
                 if (result) {
                     let {page, nbPages} = result;
@@ -294,8 +298,6 @@ export default class SearchScreen extends Component<Props, State> {
                     this.setState(newState);
                 }
             });
-
-
     }
 
     getCurrentCategory() {

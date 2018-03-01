@@ -174,6 +174,9 @@ export default {
             "movies":"##Plein de films",
             "musics":"##Plein de sons"
         },
+        "search_options":  {
+            "around_me": "Autour de moi"
+        }
     },
     "activity_comments_screen":{
         "add_comment_placeholder":"Répondre"
