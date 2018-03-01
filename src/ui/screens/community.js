@@ -14,6 +14,7 @@ import Immutable from 'seamless-immutable';
 import {InteractionScreen} from "./interactions";
 import Screen from "../components/Screen";
 import {Colors} from "../colors";
+import {NavStyles} from "../UIStyles";
 
 type Props = {
     navigator:any,
@@ -31,6 +32,11 @@ const FETCH_PEOPLE_YOU_MAY_KNOW = ApiAction.create("people_you_may_know");
     data: state.data,
 }))
 export class CommunityScreen extends Screen<Props, State> {
+
+    static navigatorStyle = {
+        navBarNoBorder: true,
+        topBarElevationShadowEnabled: false
+    };
 
     state = {
         index: 0,
@@ -154,14 +160,13 @@ const styles = StyleSheet.create({
         color: '#000000',
     },
     tabbar: {
-        backgroundColor: Colors.white,
+        backgroundColor: NavStyles.navBarBackgroundColor,
     },
     indicator: {
         backgroundColor: Colors.green,
     },
     tab: {
         opacity: 1,
-        //width: 90,
     },
     label: {
         color: '#000000',
