@@ -197,7 +197,11 @@ export const STYLES = StyleSheet.create({
         fontFamily: SFP_TEXT_ITALIC,
         fontSize: 10,
         lineHeight: 10
-
+    },
+    apslInit: {
+        borderWidth: 0,
+        marginBottom: 0,
+        borderRadius: 0,
     }
 });
 

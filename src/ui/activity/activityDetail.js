@@ -304,9 +304,8 @@ class ActivityDetailScreen extends Screen<Props, State> {
                 }>
                     <CommentInput
                         activity={activity}
-                        inputStyle={{fontSize: 13, }}
-                        height={28}
                         placeholder={"activity_screen.comments.no_comments"}
+                        {...this.commentInputStyles()}
                     />
                 </View>
             );
@@ -364,19 +363,12 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
                                     {/*<Avatar user={currentUser()} style={{marginLeft: 0, dim: 22}}/>*/}
 
+
                                     <CommentInput
                                         activity={activity}
                                         containerStyle={{marginLeft: 30}}
-                                        inputStyle={{fontSize: 13, }}
-                                        inputContainerStyle={{
-                                            borderBottomWidth: 1,
-                                            borderTopWidth: 0,
-                                            borderLeftWidth: 0,
-                                            borderRightWidth: 0,
-                                            paddingHorizontal: 0,
-                                        }}
-                                        height={28}
                                         placeholder={"activity_comments_screen.add_comment_placeholder"}
+                                        {...this.commentInputStyles()}
                                     />
 
                                 </View>
@@ -393,6 +385,22 @@ class ActivityDetailScreen extends Screen<Props, State> {
                     }
                 </View>
             </GTouchable>);
+    }
+
+    commentInputStyles() {
+        return {
+            height:28,
+            inputStyle:{fontSize: 13},
+            inputContainerStyle: {
+                borderBottomWidth: 1,
+                borderTopWidth: 0,
+                borderLeftWidth: 0,
+                borderRightWidth: 0,
+                paddingHorizontal: 0,
+                borderColor: Colors.greying,
+                borderWidth: 1,
+            }
+        };
     }
 
     renderOtherCommentators(othersCommentators, asWell: boolean = true) {

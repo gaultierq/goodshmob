@@ -9,6 +9,7 @@ import type {i18Key, RequestState} from "../../types";
 import Button from 'apsl-react-native-button'
 import {Colors} from "../colors";
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {STYLES} from "../UIStyles";
 
 export type Props = {
     placeholder: i18Key,
@@ -108,11 +109,12 @@ export default class SmartInput extends React.Component<Props, State> {
                             isLoading={this.isSending()}
                             isDisabled={(!canSendDefault && this.isDefault()) || this.isSending()}
                             onPress={this.exec.bind(this)}
-                            style={[styles.button, buttonStyle, {height, }]}
-                            disabledStyle={[styles.disabledButton, disabledButtonStyle]}
+                            style={[STYLES.apslInit, styles.button, buttonStyle, {height, }]}
+                            disabledStyle={[styles.disabledButton, buttonStyle, disabledButtonStyle]}
                         >
                             {button}
-                        </Button></View>
+                        </Button>
+                    </View>
 
                 }
             </View>
@@ -166,25 +168,20 @@ const styles = StyleSheet.create({
         // alignItems: 'center',
     },
     inputContainer:{
-
         flex:1,
-        borderColor: Colors.greying,
-        borderWidth: 1,
-        backgroundColor: Colors.white,
     },
     input:{
         fontSize: 18,
         // TODO: why we need this ?
         paddingTop:0,
+
         alignSelf: 'center',
     },
     button: {
         // height: HEIGHT,
-        marginBottom: 0,
-        marginLeft: 8,
-        marginRight: 8,
-        borderWidth: 0,
-        // backgroundColor: 'blue',
+        paddingBottom: 0,
+        paddingLeft: 8,
+        paddingRight: 8,
     },
     disabledButton: {
         borderColor: "transparent",
