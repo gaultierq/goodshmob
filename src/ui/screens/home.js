@@ -162,7 +162,18 @@ class HomeScreen extends Screen<Props, State> {
                 onClickClose: () => navigator.dismissModal({animationType: 'none'}),
                 token
             },
-            navigatorButtons: Nav.CANCELABLE_SEARCH_MODAL(),
+            backButtonHidden: true,
+            navigatorButtons: {
+                leftButtons: [],
+                rightButtons: [
+                    {
+                        id: Nav.CLOSE_MODAL,
+                        title: i18n.t("actions.cancel")
+                    }
+                ],
+            },
+            //
+            // navigatorButtons: Nav.CANCELABLE_SEARCH_MODAL(),
         });
     }
 

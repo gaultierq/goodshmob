@@ -273,10 +273,11 @@ class NetworkScreen extends Screen<Props, State> {
         navigator.showModal({
             screen: 'goodsh.NetworkSearchScreen',
             animationType: 'none',
-            backButtonHidden: true,
+
             passProps:{
                 onClickClose: () => navigator.dismissModal({animationType: 'none'}),
             },
+            backButtonHidden: true,
             navigatorButtons: {
                 leftButtons: [],
                 rightButtons: [
