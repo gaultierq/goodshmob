@@ -33,6 +33,7 @@ import FeedSeparator from "./components/FeedSeparator";
 import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
 import {CLOSE_MODAL} from "../Nav";
 import BottomSheet from 'react-native-bottomsheet';
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
 type Props = {
     activityId: Id,
@@ -148,12 +149,17 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
         return (
             <MainBackground>
-                <ScrollView contentContainerStyle={{flexGrow: 1, paddingBottom: 20}}>
-                    {showLoader && <ActivityIndicator
-                        animating = {showLoader}
-                        size = "large"
-                        style={styles.loader}
-                    />}
+                <KeyboardAwareScrollView
+                    contentContainerStyle={{flexGrow: 1, paddingBottom: 20}}
+                >
+                    {
+                        showLoader && <ActivityIndicator
+                            animating = {showLoader}
+                            size = "large"
+                            style={styles.loader}
+                        />
+                    }
+
                     <View style={styles.container}>
 
                         { activity &&
@@ -214,14 +220,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                         </View>
                         }
                     </View>
-                </ScrollView>
-                {/*<View style={styles.backButtonWrapper} >*/}
-                {/*<BackButton onPress={() => {*/}
-                {/*this.props.navigator.pop({*/}
-                {/*animated: true, // does the pop have transition animation or does it happen immediately (optional)*/}
-                {/*})*/}
-                {/*}}/>*/}
-                {/*</View>*/}
+                </KeyboardAwareScrollView>
             </MainBackground>
         );
     }
@@ -234,23 +233,13 @@ class ActivityDetailScreen extends Screen<Props, State> {
             navigator={this.props.navigator}
             style={[style]}
             cardStyle={[{
-                // shadowColor: Colors.greyishBrown,
-                // shadowOffset: {width: 0, height: 4},
-                // shadowOpacity: 0.3,
-                // shadowRadius: 1,
                 elevation: 3,
-                // marginBottom:5,
                 paddingHorizontal: 16,
             }, cardStyle]}
         >
             <View style={{
-                // ...styleMargin(12),
                 ...stylePadding(padding, 0, padding, 12),
                 backgroundColor: Colors.white,
-                // ...styleBorder(StyleSheet.hairlineWidth, 0, StyleSheet.hairlineWidth, StyleSheet.hairlineWidth),
-                // borderBottomLeftRadius: 4,
-                // borderBottomRightRadius: 4,
-                // borderColor: Colors.greyish
             }}>
                 {this.renderActivityComments(activity)}
             </View>
