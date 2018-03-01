@@ -189,10 +189,8 @@ class NetworkScreen extends Screen<Props, State> {
                     cannotFetch={!super.isVisible()}
                     visibility={super.getVisibility()}
                     empty={<View><Text style={STYLES.empty_message}>{i18n.t('community_screen.empty_screen')}</Text><ShareButton text={i18n.t('actions.invite')}/></View>}
-                    // ItemSeparatorComponent={TRANSPARENT_SPACER(50)}
-                    // ListHeaderComponent={TRANSPARENT_SPACER(40)()}
-                    // style={{backgroundColor: Colors.dirtyWhite}}
                     {...activityFeedProps()}
+                    initialLoaderDelay: FEED_INITIAL_LOADER_DURATION
                 />
 
 

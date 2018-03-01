@@ -61,7 +61,6 @@ export function activityFeedProps() {
         ItemSeparatorComponent: TRANSPARENT_SPACER(20),
         ListHeaderComponent: TRANSPARENT_SPACER(0)(),
         style: {backgroundColor: Colors.greying},
-        initialLoaderDelay: FEED_INITIAL_LOADER_DURATION
     };
 }
 
