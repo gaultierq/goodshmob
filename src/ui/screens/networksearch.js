@@ -38,6 +38,11 @@ type State = {
 @logged
 export default class NetworkSearchScreen extends Screen<Props, State> {
 
+    static navigatorStyle = {
+        navBarNoBorder: true,
+        topBarElevationShadowEnabled: false
+    };
+
 
     static navigatorStyle = SearchStyles;
 

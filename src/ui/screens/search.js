@@ -213,16 +213,6 @@ export default class SearchScreen extends Component<Props, State> {
     }
 
 
-    //searches: { [SearchToken]: {[SearchCategoryType]: SearchState}},
-
-    // export type SearchState = {
-    //     searchState: number, //0,1,2,3
-    //     page: number,
-    //     nbPages: number,
-    //     data: Array<List|Saving>,
-    //     token: string
-    // };
-
     performSearch(token: SearchToken, page: number) {
 
         let catType = this.getCurrentCategory().type;
@@ -273,30 +263,6 @@ export default class SearchScreen extends Component<Props, State> {
                     newState = update(newState, {searches: {[token]: {[catType]: {data: {$push: newItems}}}}});
                     this.setState(newState);
                 }
-                //
-                // let res =  {};
-                // this.props.categories.reduce((obj, c, i) => {
-                //
-                //     let type = c.type;
-                //
-                //     let search /*: SearchState */ = this.state.searches[token][type];
-                //
-                //     let result = results[type];
-                //
-                //     if (result) {
-                //         if (!search.data) search.data = [];
-                //         search.data = search.data.concat(result.results);
-                //         search.searchState = 2;
-                //         search.page = result.page;
-                //         search.nbPages = result.nbPages;
-                //
-                //         obj[type] = search;
-                //     }
-                //
-                //     return obj;
-                // }, res);
-                //
-                // this.setState({searches: {...this.state.searches, [token]: {...res}}});
             });
 
 
@@ -510,7 +476,8 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.white,
     },
     tabbar: {
-        backgroundColor: Colors.white,
+        // backgroundColor: Colors.white,
+        backgroundColor: NavStyles.navBarBackgroundColor,
     },
     indicator: {
         backgroundColor: Colors.green,

@@ -31,6 +31,11 @@ type State = {
 
 class SearchItem extends Screen<Props, State> {
 
+    static navigatorStyle = {
+        navBarNoBorder: true,
+        topBarElevationShadowEnabled: false
+    };
+
     render() {
 
         let categories = SEARCH_CATEGORIES.map(categ=>{
