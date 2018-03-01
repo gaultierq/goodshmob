@@ -7,6 +7,8 @@ import {Colors} from "./colors";
 import {SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "./fonts";
 import GTouchable from "./GTouchable";
 
+export const BACKGROUND_COLOR = Colors.dirtyWhite2;
+
 export const NavStyles = {
     navBarButtonColor: Colors.greyishBrown,
     navBarBackgroundColor: Colors.dirtyWhite,
@@ -17,7 +19,9 @@ export const NavStyles = {
     navBarTitleFontSize: 17,
     navBarTextFontFamily: SFP_TEXT_MEDIUM,
     navBarTitleFontFamily: SFP_TEXT_MEDIUM,
-    navBarInputBackgroundColor: Colors.greying
+    navBarInputBackgroundColor: Colors.greying,
+    screenBackgroundColor: BACKGROUND_COLOR,
+    // screenBackgroundColor: '#AEAEAE'
 };
 
 export const SearchStyles = {

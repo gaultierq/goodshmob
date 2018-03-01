@@ -22,7 +22,10 @@ import {LineupListScreen} from './lineuplist'
 import type {Id, RNNNavigator, Saving, SearchToken} from "../../types";
 import {List} from "../../types"
 import Snackbar from "react-native-snackbar"
-import {FEED_INITIAL_LOADER_DURATION, NavStyles, renderSimpleButton, stylePadding, STYLES} from "../UIStyles";
+import {
+    BACKGROUND_COLOR, FEED_INITIAL_LOADER_DURATION, NavStyles, renderSimpleButton, stylePadding,
+    STYLES
+} from "../UIStyles";
 import {currentGoodshboxId, currentUserId, logged} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
@@ -49,7 +52,6 @@ import OnBoardingManager from "../../managers/OnBoardingManager";
 import NoSpamDialog from "./NoSpamDialog";
 // $FlowFixMe
 import {AppTour, AppTourSequence, AppTourView} from "../../../vendors/taptarget";
-
 
 
 type Props = {
@@ -319,6 +321,8 @@ class HomeScreen extends Screen<Props, State> {
         );
     }
 
+    // render() {return <View style={{width: 50, height: 50, backgroundColor: BACKGROUND_COLOR}}/>}
+
     _targetRef = (primaryText, secondaryText) => ref => {
         if (!ref) return;
 
@@ -367,7 +371,7 @@ class HomeScreen extends Screen<Props, State> {
             disabled={!onPress}
             onPress={onPress}>
             <View style={{
-                backgroundColor: Colors.white,
+                backgroundColor: BACKGROUND_COLOR,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 paddingLeft: 15,

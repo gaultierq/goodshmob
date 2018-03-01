@@ -1,13 +1,12 @@
 // @flow
 
 import React, {Component} from 'react';
-import {StyleSheet, Image, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import {Colors} from "./colors";
 import User from "react-native-firebase/lib/modules/auth/user";
 import {CachedImage} from "react-native-img-cache";
 import GTouchable from "./GTouchable";
-import {SFP_TEXT_ITALIC} from "./fonts";
-import {FEED_INITIAL_LOADER_DURATION, STYLES} from "./UIStyles";
+import {BACKGROUND_COLOR, STYLES} from "./UIStyles";
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
@@ -18,15 +17,19 @@ import {FEED_INITIAL_LOADER_DURATION, STYLES} from "./UIStyles";
 //             height: '100%',
 //         }}>{props.children}</ImageBackground>;
 
+
+
 export const MainBackground = (props) => <View
     style={{
         // flex: 1,
-        backgroundColor: Colors.dirtyWhite2,
+        backgroundColor: BACKGROUND_COLOR,
         position: 'absolute',
         width: '100%',
         height: '100%',
     }}>{props.children}
 </View>;
+
+
 
 type Props = {
     user: User,
