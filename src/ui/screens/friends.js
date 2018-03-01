@@ -104,14 +104,7 @@ export default class FriendsScreen extends Screen<Props, State> {
                     passProps: {
                         userId: user.id,
                     },
-                    navigatorButtons: {
-                        leftButtons: [
-                            {
-                                id: Nav.CLOSE_MODAL,
-                                title: i18n.t("actions.cancel")
-                            }
-                        ],
-                    },
+                    navigatorButtons: Nav.CANCELABLE_MODAL,
                 });
 
 

@@ -207,7 +207,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                 <Spinner
                     // style={styles.spinner}
                     isVisible={true}
-                    size={__DEVICE_WIDTH__ / 3}
+                    size={__DEVICE_WIDTH__ / 5}
                     type={this.type}
                     color={this.color}/>
             </View>
