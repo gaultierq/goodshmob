@@ -27,6 +27,7 @@ export type SearchCategory = {
     renderItem: (item: *) => Node,
     tabName: i18Key,
     placeholder: i18Key,
+    searchOptions: SearchOptions
 }
 
 export type SearchResult = {
@@ -35,6 +36,9 @@ export type SearchResult = {
         page: number,
         nbPages: number,
     }
+}
+export type SearchOptions = {
+    renderOptions: (any => void) => Node
 }
 
 export type SearchEngine = {search: (token: SearchToken, category: SearchCategoryType, page: number) => Promise<SearchResult>};
@@ -73,6 +77,8 @@ export default class SearchScreen extends Component<Props, State> {
 
     state : State;
 
+    searchOptions: { [SearchCategoryType]: *} = {};
+
     constructor(props: Props) {
         super(props);
 
@@ -104,6 +110,43 @@ export default class SearchScreen extends Component<Props, State> {
         this.setState({index}, () => this.performSearch(this.state.input, 0));
     }
 
+    render() {
+
+        let nCat = this.props.categories.length;
+        let hasSearched = !_.isEmpty(this.state.searches);
+
+        let cat = this.getCurrentCategory();
+
+        const showTabs = nCat > 1 && (hasSearched || true);
+        return (
+            <KeyboardAvoidingView behavior={ (Platform.OS === 'ios') ? 'padding' : null }
+                                  keyboardVerticalOffset={Platform.OS === 'ios' ? 50 : 0}
+                                  style={[{width:"100%", height: "100%", backgroundColor: "transparent"},this.props.style]}>
+
+                {
+                    cat && cat.searchOptions && cat.searchOptions.renderOptions(this.searchOptions[cat.type], newOptions => {
+                        this.searchOptions[cat.type] = newOptions;
+                    })
+                }
+
+                { showTabs && <TabViewAnimated
+                    style={styles.container}
+                    navigationState={this.state}
+                    renderScene={this.renderScene.bind(this)}
+                    renderHeader={this.renderHeader.bind(this)}
+                    onIndexChange={this.handleIndexChange.bind(this)}
+                    keyboardShouldPersistTaps='always'
+                />}
+
+                {
+                    nCat === 1 && this.renderSearchPage(this.props.categories[0])
+                }
+
+            </KeyboardAvoidingView>
+
+        );
+    }
+
     renderHeader(props: *) {
         return <TabBar {...props}
                        indicatorStyle={styles.indicator}
@@ -118,11 +161,7 @@ export default class SearchScreen extends Component<Props, State> {
 
     renderSearchPage(category: SearchCategory) {
         let forToken = this.state.searches[this.state.input];
-        let forType : SearchState = null
-
-        if (forToken) {
-            forType = forToken[category.type];
-        }
+        let forType : SearchState = forToken && forToken[category.type];
 
         return (
             <SearchPage
@@ -178,34 +217,7 @@ export default class SearchScreen extends Component<Props, State> {
         }
     }
 
-    render() {
 
-        let nCat = this.props.categories.length;
-        let hasSearched = !_.isEmpty(this.state.searches);
-
-        const showTabs = nCat > 1 && (hasSearched || true);
-        return (
-            <KeyboardAvoidingView behavior={ (Platform.OS === 'ios') ? 'padding' : null }
-                                  keyboardVerticalOffset={Platform.OS === 'ios' ? 50 : 0}
-                                  style={[{width:"100%", height: "100%", backgroundColor: "transparent"},this.props.style]}>
-
-                { showTabs && <TabViewAnimated
-                    style={styles.container}
-                    navigationState={this.state}
-                    renderScene={this.renderScene.bind(this)}
-                    renderHeader={this.renderHeader.bind(this)}
-                    onIndexChange={this.handleIndexChange.bind(this)}
-                    keyboardShouldPersistTaps='always'
-                />}
-
-                {
-                    nCat === 1 && this.renderSearchPage(this.props.categories[0])
-                }
-
-            </KeyboardAvoidingView>
-
-        );
-    }
 
     onSearchInputChange(input: string) {
         //this.setState({input});
