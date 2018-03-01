@@ -16,7 +16,7 @@ import * as actions from './actions'
 import {connect} from "react-redux";
 import {currentUser, currentUserId, logged} from "../../managers/CurrentUser"
 import ActivityBody from "./components/ActivityBody";
-import {buildData, getAskBackgroundColor, sanitizeActivityType} from "../../helpers/DataUtils";
+import {buildData, getAskBackgroundColor, sanitizeActivityType, timeSinceActivity} from "../../helpers/DataUtils";
 import {Avatar, MainBackground} from "../UIComponents";
 import type {Activity, ActivityType, Id} from "../../types";
 import Screen from "../components/Screen";
@@ -344,7 +344,11 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                     {
                                         first: userFirstName(lastComment.user),
                                         count: 0
-                                    })}
+                                    })
+                                }
+                                <Text style={[{color: Colors.greyish, fontSize: 11, alignSelf: 'flex-start'}]}>
+                                    {"\u00a0\u00a0•\u00a0\u00a0" + _.lowerFirst(timeSinceActivity(lastComment))}
+                                </Text>
                             </Text>
 
                             {/*comments bloc*/}

@@ -88,9 +88,9 @@ export default {
             "no_comments":"Un avis ? Une suggestion ? Une question ?",
             "user_answered":"a commenté",
             "has_commented": {
-                zero: "%{first} a commenté :",
-                one: "%{first} et %{second} ont commenté :",
-                other: "%{first} et %{count} autres ont commenté :"
+                zero: "%{first} a commenté",
+                one: "%{first} et %{second} ont commenté",
+                other: "%{first} et %{count} autres ont commenté"
             },
             "has_commented_this": {
                 zero: "%{first} a commenté",
