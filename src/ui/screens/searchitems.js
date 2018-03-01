@@ -75,7 +75,7 @@ class SearchItem extends Screen<Props, State> {
         />;
     }
 
-    search(token: SearchToken, category: SearchCategoryType, page: number): Promise<*> {
+    search(token: SearchToken, category: SearchCategoryType, page: number, options: ?any): Promise<*> {
 
         //searching
         console.log(`api: searching ${token}`);
@@ -84,18 +84,17 @@ class SearchItem extends Screen<Props, State> {
 
             //actions.searchFor(this.state.input, cat)
 
-            //GeolocationManager
-            let {latitude, longitude} = category === 'places' && Geolocation.getPosition() || {};
-
-
             let call = new Api.Call()
                 .withMethod('GET')
                 .withRoute(`search/${category}`)
-                .addQuery({'search[term]': token})
-                .addQuery(latitude && {'search[lat]': latitude})
-                .addQuery(longitude && {'search[lng]': longitude})
-            ;
+                .addQuery({'search[term]': token});
 
+
+            if (category === 'places' && options && options.aroundMe) {
+                let {latitude, longitude} = category === 'places' && Geolocation.getPosition() || {};
+                call.addQuery(latitude && {'search[lat]': latitude})
+                    .addQuery(longitude && {'search[lng]': longitude})
+            }
             //maybe use redux here ?
             call
                 .run()

@@ -38,10 +38,19 @@ export type SearchResult = {
     }
 }
 export type SearchOptions = {
-    renderOptions: (any => void) => Node
+    renderOptions: (any, any => void) => Node
 }
 
-export type SearchEngine = {search: (token: SearchToken, category: SearchCategoryType, page: number) => Promise<SearchResult>};
+export type SearchEngine = {
+    search:
+        (
+            token: SearchToken,
+            category: SearchCategoryType,
+            page: number,
+            searchOptions: ?any
+
+        ) => Promise<SearchResult>
+};
 
 export type Props = {
     categories: Array<SearchCategory>,
@@ -124,9 +133,13 @@ export default class SearchScreen extends Component<Props, State> {
                                   style={[{width:"100%", height: "100%", backgroundColor: "transparent"},this.props.style]}>
 
                 {
-                    cat && cat.searchOptions && cat.searchOptions.renderOptions(this.searchOptions[cat.type], newOptions => {
-                        this.searchOptions[cat.type] = newOptions;
-                    })
+                    cat && cat.searchOptions && (
+                        cat.searchOptions.renderOptions(
+                            this.getCurrentSearchOptions(cat.type),
+                            newOptions => {
+                                this.searchOptions[cat.type] = newOptions;
+                            })
+                    )
                 }
 
                 { showTabs && <TabViewAnimated
@@ -145,6 +158,10 @@ export default class SearchScreen extends Component<Props, State> {
             </KeyboardAvoidingView>
 
         );
+    }
+
+    getCurrentSearchOptions(catType: SearchCategoryType) {
+        return this.searchOptions[catType];
     }
 
     renderHeader(props: *) {
@@ -257,8 +274,9 @@ export default class SearchScreen extends Component<Props, State> {
             }
         });
 
+
         this.props
-            .searchEngine.search(token, catType, page)
+            .searchEngine.search(token, catType, page, this.getCurrentSearchOptions(catType))
             .then((results: SearchResult) => {
 
                 const catType = this.getCurrentCategory().type;
