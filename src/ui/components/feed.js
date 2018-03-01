@@ -563,6 +563,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                     this.logger.warn("feed error:" + err);
                     this.lastFetchFail = Date.now();
                     reqTrack.fail();
+                    reject(err);
                     // this.setState({[requestName]: 'ko'});
                 })
         });
