@@ -265,6 +265,7 @@ class HomeScreen extends Screen<Props, State> {
                             backgroundColor: NavStyles.navBarBackgroundColor,
                             paddingTop: 5,
                             paddingBottom: 5,
+                            elevation: 3,
                             paddingLeft: 9,
                             paddingRight: 9,
                             borderBottomWidth: 1,
