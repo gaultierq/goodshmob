@@ -14,7 +14,7 @@ import LineupCell from "../components/LineupCell";
 import {FETCH_ACTIVITIES, fetchMyNetwork} from "../networkActions";
 import * as Nav from "../Nav";
 import Screen from "../components/Screen";
-import {STYLES} from "../UIStyles";
+import {FEED_INITIAL_LOADER_DURATION, STYLES} from "../UIStyles";
 import {Colors} from "../colors";
 import GTouchable from "../GTouchable";
 import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
@@ -190,7 +190,7 @@ class NetworkScreen extends Screen<Props, State> {
                     visibility={super.getVisibility()}
                     empty={<View><Text style={STYLES.empty_message}>{i18n.t('community_screen.empty_screen')}</Text><ShareButton text={i18n.t('actions.invite')}/></View>}
                     {...activityFeedProps()}
-                    initialLoaderDelay: FEED_INITIAL_LOADER_DURATION
+                    initialLoaderDelay={FEED_INITIAL_LOADER_DURATION}
                 />
 
 
