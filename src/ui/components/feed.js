@@ -43,7 +43,8 @@ export type Props<T> = {
     visibility: ScreenVisibility,
     filter?: ?FilterConfig<T>,
     initialLoaderDelay?: ?ms,
-    displayName?: string
+    displayName?: string,
+    doNotDisplayFetchMoreLoader: ?boolean
 };
 
 export type FilterConfig<T> = {
@@ -64,6 +65,9 @@ type State = {
     filter?:? string
 };
 
+
+// const LAST_EMPTY_RESULT_WAIT_MS = 5 * 60 * 1000;
+const LAST_EMPTY_RESULT_WAIT_MS = 1000;
 
 @connect((state, ownProps) => ({
     config: state.config,
@@ -466,7 +470,9 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             //if recent (5min) result with no data, do not refetch now
             {
                 let lastEmpty = _.last(events.filter(e=> _.get(e, 'options.emptyResult')));
-                if (lastEmpty && Date.now() < lastEmpty.date + 5 * 60 * 1000) {
+
+
+                if (lastEmpty && Date.now() < lastEmpty.date + LAST_EMPTY_RESULT_WAIT_MS) {
                     this.logger.debug("debounced fetch: recent empty result");
                     return false;
                 }
@@ -598,14 +604,18 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         return (<View style={{backgroundColor: 'transparent'}}>
                 {ListFooterComponent}
                 {
-                    this.manager.isSending('isFetchingMore', this) && !recentlyCreated && (
-
-                        <View style={{flex:1, margin:12, justifyContent:'center'}}>
-                            <Text style={{fontSize: 10, alignSelf: "center", marginRight: 8}}>{i18n.t('loadmore')}</Text>
-                            <ActivityIndicator
-                                animating={this.isFetchingMore()}
-                                size="small"
-                            />
+                    this.manager.isSending('isFetchingMore', this) &&
+                    !recentlyCreated &&
+                    !this.props.doNotDisplayFetchMoreLoader &&
+                    (
+                        <View style={{flex:1, flexDirection: 'row',
+                            margin:12, justifyContent:'center', alignItems: 'flex-end'}}>
+                            <Text style={{fontSize: 10, marginRight: 2, alignSelf: "center"}}>{i18n.t('loadmore')}</Text>
+                            <Spinner
+                                isVisible={true}
+                                size={8}
+                                type={"ThreeBounce"}
+                                color={Colors.black}/>
                         </View>
                     )
                 }

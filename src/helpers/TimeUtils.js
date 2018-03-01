@@ -29,3 +29,8 @@ export function timeSince(lower, upper?) {
 }
 
 
+
+export function sleeper(ms) {
+    console.debug(`sleeeping ${ms}ms`);
+    return x =>new Promise(resolve => setTimeout(() => resolve(x), ms));
+}

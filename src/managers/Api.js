@@ -14,6 +14,7 @@ import {REMOVE_PENDING_ACTION} from "../reducers/dataReducer";
 import {NetInfo} from "react-native";
 import {sendMessage} from "./Messenger";
 import {CONNECTIVITY_CHANGE} from "../reducers/app";
+import {sleeper} from "../helpers/TimeUtils";
 
 export const API_DATA_REQUEST = 'API_DATA_REQUEST';
 export const API_DATA_SUCCESS = 'API_DATA_SUCCESS';
@@ -303,11 +304,17 @@ export class Call {
             //let {meta} = options;
             return new Promise((resolve, reject) => {
                 call.run()
-                    .then(resp => {
+                    .then(
+                        resp => {
                             let requestTime = Date.now() - tic;
                             Statistics.recordTime(`request.${apiAction.name()}`, requestTime);
-
-
+                            return resp;
+                        },
+                        err => {throw err}
+                    )
+                    .then(sleeper(Math.max(__MIN_REQUEST_TIME__ - (Date.now() - tic), 0)))
+                    // .then(sleeper(5000))
+                    .then(resp => {
                             let response = resp.json;
 
                             let data = normalize(response);

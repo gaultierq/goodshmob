@@ -228,7 +228,7 @@ export default {
             },
         }
     },
-    loadmore: "Loading...",
+    loadmore: "Loading",
     send_message: "%{what}\n%{url}\n\nSpotted on Goodsh:\nhttps://goodsh.it/",
     goodsh_url: "https:\/\/goodsh.it\/",
     friends: {

@@ -227,7 +227,7 @@ export default {
             },
         }
     },
-    loadmore: "Chargement...",
+    loadmore: "Chargement",
     send_message: "%{what}\n%{url}\n\nTrouvé grâce à Goodsh\nhttps://goodsh.it/",
     goodsh_url: "https:\/\/goodsh.it\/",
     friends: {

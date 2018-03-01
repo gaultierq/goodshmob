@@ -104,6 +104,7 @@ class CommentsScreen extends Screen<Props, State> {
                             ListFooterComponent={this.renderDescription(activity)}
                             sections={this.splitCommentsInSections(fullComments)}
                             keyExtractor={item => _.head(item).id}
+                            doNotDisplayFetchMoreLoader={true}
                             SectionSeparatorComponent={()=> <View style={{margin: 4}} />}
                             // style={{backgroundColor: 'red'}}
                             renderSectionFooter={({section}) => <Text
