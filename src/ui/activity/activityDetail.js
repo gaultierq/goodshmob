@@ -233,7 +233,6 @@ class ActivityDetailScreen extends Screen<Props, State> {
             navigator={this.props.navigator}
             style={[style]}
             cardStyle={[{
-                elevation: 3,
                 paddingHorizontal: 16,
             }, cardStyle]}
         >
