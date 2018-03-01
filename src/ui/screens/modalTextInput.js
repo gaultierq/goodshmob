@@ -26,6 +26,7 @@ import type {RequestState} from "../../types";
 
 type Props = {
     initialText: string,
+    title?: ?string,
     navigator: any,
     containerStyle?:? any,
     height: number,
@@ -89,7 +90,7 @@ export default class ModalTextInput extends Component<Props, State> {
                                 marginLeft: 20,
                                 textAlign: 'center',
                                 fontFamily: SFP_TEXT_MEDIUM,
-                            }}>{i18n.t("actions.change_description")}</Text>
+                            }}>{this.props.title}</Text>
                         </View>
                         <TextInput
                             editable={!notEditable}
@@ -137,7 +138,7 @@ export default class ModalTextInput extends Component<Props, State> {
 
 
     hasChanged() {
-        return this.state.input !== this.props.initialText;
+        return this.state.input != this.props.initialText;
     }
 
     onBeforeClose(proceed: ()=>void, interupt: ()=>void) {

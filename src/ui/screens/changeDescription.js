@@ -20,7 +20,6 @@ type Props = {
 };
 
 type State = {
-    description: string,
     isUpdating?: boolean
 };
 
@@ -53,6 +52,7 @@ export default class ChangeDescriptionScreen extends Component<Props, State> {
             numberOfLines={6}
             maxLength={500}
             height={600}
+            title={i18n.t("actions.change_description")}
         />
     }
 

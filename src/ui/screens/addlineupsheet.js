@@ -16,10 +16,15 @@ import Sheet from "../components/sheet";
 import {connect} from "react-redux";
 import {SFP_TEXT_REGULAR} from "../fonts";
 import GTouchable from "../GTouchable";
+import ModalTextInput from "./modalTextInput";
+import {sendMessage} from "../../managers/Messenger";
 
 type Props = {
     disableOffline?: ?boolean,
-    onFinished?:?()=>void
+    onFinished?:?()=>void,
+
+    initialLineupName: string,
+    navigator: any,
 };
 
 type State = {
@@ -34,6 +39,11 @@ export default class AddLineupSheet extends Component<Props, State> {
         screenBackgroundColor: 'transparent',
         modalPresentationStyle: 'overFullScreen',
         tapBackgroundToDismiss: true
+    };
+
+
+    static defaultProps = {
+        initialLineupName: '',
     };
 
     _sheet;
@@ -91,24 +101,43 @@ export default class AddLineupSheet extends Component<Props, State> {
     }
 
 
+
+    render() {
+        const {initialLineupName, navigator} = this.props;
+
+
+        return <ModalTextInput
+            initialText={initialLineupName}
+            navigator={navigator}
+            requestAction={input=>this.createLineup(input)}
+            placeholder={i18n.t("create_list_controller.placeholder")}
+            numberOfLines={1}
+            maxLength={50}
+            height={500}
+            title={i18n.t("create_list_controller.action")}
+        />
+    }
+
     createLineup(name: string) {
-        let delayMs = 3000;
+        let delayMs = 4000;
         return this.props.dispatch(LINEUP_CREATION[this.props.disableOffline ? 'exec' : 'pending']({listName: name}, {delayMs}))
             .then((pendingId)=> {
                 const onFinished = this.props.onFinished;
                 onFinished && onFinished();
-                Snackbar.show({
-                        title: i18n.t('create_list_controller.created'),
-                        duration: Snackbar.LENGTH_LONG,
+
+                sendMessage(
+                    //MagicString
+                    i18n.t('create_list_controller.created'),
+                    {
+                        timeout: delayMs,
                         action: {
                             title: i18n.t('actions.undo'),
-                            color: 'green',
                             onPress: () => {
                                 this.props.dispatch(LINEUP_CREATION.undo(pendingId))
                             },
-                        },
-                    }
+                        }}
                 );
+
             });
     }
 

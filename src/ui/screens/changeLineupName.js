@@ -50,6 +50,7 @@ export default class ChangeLineupName extends Component<Props, State> {
             numberOfLines={1}
             maxLength={100}
             height={200}
+            title={i18n.t("actions.change_description")}
         />
     }
 
