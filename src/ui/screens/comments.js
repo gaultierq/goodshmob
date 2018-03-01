@@ -99,6 +99,7 @@ class CommentsScreen extends Screen<Props, State> {
                     <View style={{flex:1, justifyContent: 'flex-end'}}>
 
                         <Feed
+                            style={{flex:1}}
                             inverted
                             ListFooterComponent={this.renderDescription(activity)}
                             sections={this.splitCommentsInSections(fullComments)}
