@@ -440,7 +440,7 @@ export default class App {
             },
             // passProps: {
             //     drawerRight: {
-            //         onScreen: true,
+            //         visible: true,
             //         style: {marginTop: 38},
             //     }
             // },
@@ -458,7 +458,7 @@ export default class App {
                 //     // enabled: false,
                 //     passProps: {
                 //         style: {marginTop: 38},
-                //         onScreen: true //with current RNN version there are no way to detect if drawer is opened yet
+                //         visible: true //with current RNN version there are no way to detect if drawer is opened yet
                 //     } // simple serializable object that will pass as props to all top screens (optional)
                 // },
                 style: { // ( iOS only )

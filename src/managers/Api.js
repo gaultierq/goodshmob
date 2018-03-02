@@ -67,7 +67,7 @@ class Api {
 
     //TODO: this is a hack. logout should preserve 'app' store sub-state
     isConnected() {
-        return true;
+        // return true;
         return this.store.getState().app.connected !== false;
     }
 

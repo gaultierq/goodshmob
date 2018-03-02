@@ -8,19 +8,19 @@ import * as Nav from "../Nav";
 export type ScreenVisibility = 'unknown' | 'visible' | 'hidden';
 
 export type ScreenState = {
-    onScreen: boolean,
+    visible: boolean,
     dirty: boolean
 }
 
 export type ScreenProps = NavigableProps & {
-    onScreen?: boolean, //when not a screen root, my parent screen can tell me I'm visible
+    visible?: boolean,
     onClickClose?: () => void
 }
 
-export default class Screen<P, S> extends Component<P & ScreenProps,  S> {
+export default class Screen<P, S> extends Component<P & ScreenProps,  ScreenState> {
 
 
-    state = {onSreen: false, dirty: false};
+    state = {visible: false, dirty: false};
 
     constructor(props:P) {
         super(props);
@@ -40,9 +40,9 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  S> {
                 // $FlowFixMe
                 if (this[method]) this[method]();
 
-                const didAppear = id === 'didAppear';
+                const didAppear: boolean = id === 'didAppear';
 
-                this.setState({onScreen: didAppear});
+                this.setState({visible: didAppear});
 
                 if (didAppear && this.state.dirty) {
                     //screen dirty, re-rendering
@@ -65,9 +65,9 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  S> {
     shouldComponentUpdate(nextProps, nextState) {
         if (!ENABLE_PERF_OPTIM) return true;
 
-        if (!this.isVisible()) {
+        if (!this.getVisible(nextProps, nextState)) {
             // this.askRenderOnVisible = true;
-            superLog("screen: shouldComponentUpdate skipped");
+            superLog(`[${this.constructor.name}]: shouldComponentUpdate skipped - ${JSON.stringify(this.state)}`);
             this.setState({dirty: true});
             return false;
         }
@@ -76,14 +76,14 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  S> {
 
 
     isVisible() {
-        return this.props.onScreen || this.state.onScreen;
+        return this.getVisible(this.props, this.state);
     }
 
-    getVisibility() : ScreenVisibility {
-        return this.isVisible() ? 'visible' : 'hidden';
+    getVisible(props, state) {
+        return props && props.visible || state && state.visible;
     }
 
-    //because when navigating back, a render may change the nav bar title. this is a flaw in wix nav
+//because when navigating back, a render may change the nav bar title. this is a flaw in wix nav
     setNavigatorTitle(navigator, {title, subtitle}) {
         if (this.isVisible()) {
             navigator.setTitle({title});

@@ -226,7 +226,7 @@ class HomeScreen extends Screen<Props, State> {
                     //renderItem={(item)=>this.renderListItem(item, n, padding)}
                     scrollUpOnBack={super.isVisible() ? ()=>false : null}
                     cannotFetch={!super.isVisible()}
-                    visibility={super.getVisibility()}
+                    visible={super.isVisible()}
                     empty={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
                     initialLoaderDelay={0}
                     sectionMaker={(lineups)=> {

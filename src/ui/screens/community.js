@@ -80,8 +80,8 @@ export class CommunityScreen extends Screen<Props, State> {
                 ListFooterComponent={this.renderFriendsSuggestion.bind(this)}
                 style={{backgroundColor: Colors.white}}
                 //bug: drawer passProps not working [https://github.com/wix/react-native-navigation/issues/663]
-                // onScreen={this.isVisible()}
-                onScreen={true}
+                // visible={this.isVisible()}
+                visible={true}
             />
         )
     }
@@ -91,9 +91,9 @@ export class CommunityScreen extends Screen<Props, State> {
         return (
             <InteractionScreen
                 navigator={navigator}
-                onScreen={true}
+                visible={true}
                 //bug: drawer passProps not working [https://github.com/wix/react-native-navigation/issues/663]
-                // onScreen={this.isVisible()}
+                // visible={this.isVisible()}
             />
         )
     }
