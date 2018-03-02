@@ -11,6 +11,7 @@ import codePush from "react-native-code-push";
 import Snackbar from "react-native-snackbar"
 import Config from 'react-native-config'
 import {Colors} from "../colors";
+import BugsnagManager from "../../managers/BugsnagManager";
 
 type Props = {
 }
@@ -70,9 +71,17 @@ export default class DebugScreen extends Screen<Props, State> {
                         title="show build information"
                         onPress={this.showBuildInfo.bind(this)}
                     />
+                    <Button
+                        title="show all config"
+                        onPress={this.showAllConfig.bind(this)}
+                    />
                     <Button title="show device information" onPress={this.showDeviceInfo.bind(this)}/>
 
-                    <Button title="crash app" onPress={() => {throw "debug crash"}}/>
+                    <Button title="crash app" onPress={() => {throw new Error("debug crash")}}/>
+
+                    <Button title="notify bugsnag" onPress={() => {
+                        BugsnagManager.notify(new Error("debug notify"))
+                    }}/>
 
                     <Text>{this.state.text}</Text>
                 </View>
@@ -82,6 +91,12 @@ export default class DebugScreen extends Screen<Props, State> {
 
     showBuildInfo() {
         let text = _.keys(Config).filter(k=>k.startsWith("GOODSH_BUILD")).map(k=> `${k}=${Config[k]}`).join('\n');
+
+        this.setState({text});
+    }
+
+    showAllConfig() {
+        let text = _.keys(Config).map(k=> `${k}=${Config[k]}`).join('\n');
 
         this.setState({text});
     }

@@ -70,9 +70,13 @@
   [[FBSDKApplicationDelegate sharedInstance] application:application
                            didFinishLaunchingWithOptions:launchOptions];
   
+//  if ([ReactNativeConfig envFor:@"WITH_BUGSNAG"]) {
+    [BugsnagReactNative start];
+//  }
   
-  [FIRApp configure];
-  [BugsnagReactNative start];
+  if ([ReactNativeConfig envFor:@"WITH_NOTIFICATIONS"]) {
+    [FIRApp configure];
+  }
   
   if ([ReactNativeConfig envFor:@"WITH_FABRIC"]) {
     [Fabric with:@[[Answers class], [Crashlytics class]]];

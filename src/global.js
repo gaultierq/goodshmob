@@ -34,6 +34,7 @@ const ALL_KEYS = [
     'TEST_SCREEN',
     'DEBUG_PENDING_DELAY',
     'MIN_REQUEST_TIME',
+    'WITH_NOTIFICATIONS',
 ];
 
 export function init(hotReload: boolean) {

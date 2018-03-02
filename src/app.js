@@ -13,7 +13,6 @@ import immutableTransform from './immutableTransform'
 import {REHYDRATE} from 'redux-persist/constants'
 import * as CurrentUser from './managers/CurrentUser'
 import {currentUserId} from './managers/CurrentUser'
-import {Client} from 'bugsnag-react-native';
 import * as globalProps from 'react-native-global-props';
 import * as notification from './managers/notification';
 import * as DeviceManager from "./managers/DeviceManager";
@@ -32,6 +31,7 @@ import Analytics from "./managers/Analytics";
 import * as appActions from "./auth/actions";
 import OnBoardingManager from "./managers/OnBoardingManager";
 import StoreManager from "./managers/StoreManager";
+import BugsnagManager from "./managers/BugsnagManager";
 import {currentUser} from "./managers/CurrentUser";
 
 
@@ -248,21 +248,22 @@ export default class App {
         NavManager.init();
         Analytics.init();
         OnBoardingManager.init(this.store);
+        BugsnagManager.init();
 
         //api in the end: we dont want to make any call during the app init
         Api.init(this.store);
 
 
-        if (__WITH_BUGSNAG__) {
-            this.bugsnag = new Client();
-
-            console.error = (err) => {
-                if (typeof err === 'string') {
-                    err = new Error(`Wrapped error: '${err}'` );
-                }
-                this.bugsnag.notify(err);
-            }
-        }
+        // if (__WITH_BUGSNAG__) {
+        //     this.bugsnag = new Client();
+        //
+        //     console.error = (err) => {
+        //         if (typeof err === 'string') {
+        //             err = new Error(`Wrapped error: '${err}'` );
+        //         }
+        //         this.bugsnag.notify(err);
+        //     }
+        // }
 
         this.prepareUI();
 
@@ -346,21 +347,17 @@ export default class App {
                 }
                 else {
                     notification.load();
-                    if (this.bugsnag) {
-                        let {id, email, firstName, lastName} = currentUser(false) || {};
-                        this.bugsnag.setUser(id, firstName + " " + lastName, email);
-                        this.bugsnag.setUser(currentUserId(), '', '');
-                    }
+
+                    BugsnagManager.setUser(currentUser(false) || {});
+
                     DeviceManager.checkAndSendDiff();
 
                     this.startLogged(navigatorStyle);
                 }
                 break;
             case 'unlogged':
-                //TODO: notification => stop listening
-                if (this.bugsnag) {
-                    this.bugsnag.clearUser();
-                }
+                BugsnagManager.clearUser();
+
                 this.startUnlogged(navigatorStyle);
                 break;
             case 'init_cache':

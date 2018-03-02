@@ -5,7 +5,9 @@ import {Navigation} from 'react-native-navigation';
 import NavManager from "./NavManager";
 import {isLogged} from "./CurrentUser";
 
+
 let handleNotif = function (notif) {
+    if (!__WITH_NOTIFICATIONS__) return;
     console.log("app opened from notification:" + JSON.stringify(notif));
     if (!notif) return;
 
@@ -15,6 +17,7 @@ let handleNotif = function (notif) {
 };
 
 export function requestPermissionsForLoggedUser() {
+    if (!__WITH_NOTIFICATIONS__) return;
     if (isLogged()) {
         RNFirebase.app().messaging().requestPermissions();
     }
@@ -22,6 +25,7 @@ export function requestPermissionsForLoggedUser() {
 }
 
 export function load() {
+    if (!__WITH_NOTIFICATIONS__) return;
     console.info("fcm:load");
     let firebase = RNFirebase.app();
 
