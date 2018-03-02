@@ -228,7 +228,7 @@ class HomeScreen extends Screen<Props, State> {
                     cannotFetch={!super.isVisible()}
                     visibility={super.getVisibility()}
                     empty={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
-                    initialLoaderDelay={FEED_INITIAL_LOADER_DURATION}
+                    initialLoaderDelay={0}
                     sectionMaker={(lineups)=> {
                         const goodshbox = _.head(lineups);
                         let savingCount = _.get(goodshbox, `meta.savingsCount`, null) || 0;
