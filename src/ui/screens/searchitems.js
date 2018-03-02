@@ -154,7 +154,7 @@ class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState>
                     checked={this.state.aroundMe}
                     style={{alignSelf: 'flex-end'}}
                     textStyle={{color: Colors.brownishGrey, fontSize: 14, fontFamily: SFP_TEXT_REGULAR, fontWeight: 'normal'}}
-                    containerStyle={{ backgroundColor: "transparent", borderWidth: 0, marginRight:0, padding: 0, flex: 1}}
+                    containerStyle={{ backgroundColor: "transparent", borderWidth: 0, marginRight:0, padding: 0}}
                     checkedIcon='map-marker'
                     uncheckedIcon='map-marker'
                     checkedColor={Colors.brownishGrey}
