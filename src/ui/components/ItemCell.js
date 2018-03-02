@@ -30,12 +30,15 @@ export default class ItemCell extends React.Component<Props, State> {
         return (
             <View style={styles.container}>
                 <View style={styles.containerInner}>
-                    {
-                        image && <CachedImage
-                        source={{uri: image}}
-                        resizeMode='cover'
-                        style={[styles.image, UI.STYLES.lightBorder]}/>
-                    }
+                    <View style={[styles.image, UI.STYLES.lightBorder, {backgroundColor: Colors.dirtyWhite}]}>
+                        {
+                            image && <CachedImage
+                                source={{uri: image}}
+                                resizeMode='cover'
+                                style={[styles.image, UI.STYLES.lightBorder]}/>
+
+                        }
+                    </View>
                     <View style={styles.containerText}>
                         <Text
                             style={styles.title}
