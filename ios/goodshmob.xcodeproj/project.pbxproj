@@ -2565,8 +2565,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = it.goodsh.mob;
 				PRODUCT_NAME = "goodshmob prod";
-				PROVISIONING_PROFILE = "c97ffad1-842f-411d-acc6-df77fbcb2223";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development it.goodsh.mob";
+				PROVISIONING_PROFILE = "83df9156-003a-43db-a0c3-0391f50448fc";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore it.goodsh.mob";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Prod;
