@@ -24,6 +24,7 @@ import {pendingActionWrapper} from "../../helpers/ModelUtils";
 
 type Props = {
     defaultLineupId: Id,
+    defaultDescription: Description,
     itemId: Id,
     itemType: ItemType,
     item?: Item,
@@ -69,7 +70,8 @@ export default class AddItemScreen extends Screen<Props, State> {
             visibility: 0,
             adding: false,
             selectedLineupId: props.defaultLineupId,
-            showLineupList: !props.defaultLineupId
+            showLineupList: !props.defaultLineupId,
+            description: props.defaultDescription
         };
     }
 

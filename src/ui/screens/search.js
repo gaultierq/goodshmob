@@ -235,12 +235,11 @@ export default class SearchScreen extends Component<Props, State> {
         }
     }
 
-
+    _debounceSearch = _.debounce(() => this.performSearch(this.state.input, 0), 500);
 
     onSearchInputChange(input: string) {
         //this.setState({input});
-        let debounceSearch = _.debounce(() => this.performSearch(input, 0), 500);
-        this.setState({input}, debounceSearch);
+        this.setState({input}, input => this._debounceSearch(input));
     }
 
 

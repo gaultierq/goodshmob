@@ -5,10 +5,10 @@ import React from 'react';
 import {Alert, Image, Linking, Platform, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import type {Activity, ActivityType, Id, Saving, Url} from "../../../types";
 import {connect} from "react-redux";
-import {currentGoodshboxId, logged} from "../../../managers/CurrentUser"
+import {currentGoodshboxId, isCurrentUser, logged} from "../../../managers/CurrentUser"
 import * as activityAction from "../actions";
 import {unsave} from "../actions";
-import {toUppercase} from "../../../helpers/StringUtils";
+import {fullName, toUppercase} from "../../../helpers/StringUtils";
 import {buildData, buildNonNullData, sanitizeActivityType} from "../../../helpers/DataUtils";
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
 import ActionRights, {getPendingLikeStatus} from "../../rights";
@@ -209,12 +209,15 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
         let item = activity.resource;
 
-        //1st: save in goodshbox. and no more !
+        const user = activity.user;
+
+        let description = isCurrentUser(user) ? "" : "via " +  fullName(user) + (activity.description && " - " + activity.description);
+
         this.props.dispatch(SAVING_CREATION.pending({
             itemId: item.id,
             lineupId: currentGoodshboxId(),
             privacy: 0,
-            description: '',
+            description,
         }, {scope: {itemId: item.id}})).then(pendingId => {
             //console.info(`saving ${saving.id} unsaved`)
             Messenger.sendMessage(
