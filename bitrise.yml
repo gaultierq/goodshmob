@@ -91,6 +91,10 @@ workflows:
         - configuration: "$GOODSH_BUILD_IOS_CONFIGURATION"
         - project_path: "$BITRISE_WORKSPACE_PATH"
         - output_tool: xcodebuild
+#        - force_team_id: "$GOODSH_BUILD_IOS_TEAM_ID"
+#        - force_code_sign_identity: "$GOODSH_BUILD_CODE_SIGN_IDENTITY"
+#        - force_provisioning_profile_specifier: "$GOODSH_PROVISIONING_PROFILE_SPECIFIER"
+#        - force_provisioning_profile: "$GOODSH_PROVISIONING_PROFILE"
 
   _deploy-ios:
     steps:
