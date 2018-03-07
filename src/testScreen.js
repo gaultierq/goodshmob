@@ -184,7 +184,6 @@ export const networkSearchScreen = {
 
 export const searchItemsScreen = {
     screen: {
-        label: 'test',
         screen: 'goodsh.SearchItemsScreen',
         title: 'Test SearchItemsScreen',
     },

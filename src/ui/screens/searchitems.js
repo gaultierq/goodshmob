@@ -16,7 +16,7 @@ import type {Item, RNNNavigator} from "../../types";
 import {Colors} from "../colors";
 import Geolocation from "../../managers/GeoLocation"
 import {SFP_TEXT_REGULAR} from "../fonts";
-import {NavStyles} from "../UIStyles";
+import {NavStyles, SEARCH_STYLES} from "../UIStyles";
 
 type SearchCategory = "consumer_goods" | "places" | "musics" | "movies";
 type SearchToken = string;
@@ -39,12 +39,13 @@ class SearchItem extends Screen<Props, State> {
     };
 
 
-    getSearchOptions(category: SearchCategoryType) {
+    renderSearchOptions(category: SearchCategoryType) {
         return category === 'places' && {
-            renderOptions: (currentOptions: any, onNewOptions: SearchPlacesProps) => (
+            renderOptions: (currentOptions: any, onNewOptions: SearchPlacesProps, onSearchSubmited: any) => (
                 <SearchPlacesOption
                     {...currentOptions}
                     onNewOptions={onNewOptions}
+                    onSearchSubmited={onSearchSubmited}
                 />
             ),
         };
@@ -61,7 +62,7 @@ class SearchItem extends Screen<Props, State> {
                 renderItem: ({item})=> <GTouchable onPress={() => this.props.onItemSelected(item, this.props.navigator)}>
                     <ItemCell item={item}/>
                 </GTouchable>,
-                searchOptions: this.getSearchOptions(categ)
+                searchOptions: this.renderSearchOptions(categ)
 
             }
         });
@@ -90,10 +91,18 @@ class SearchItem extends Screen<Props, State> {
                 .addQuery({'search[term]': token});
 
 
-            if (category === 'places' && options && options.aroundMe) {
-                let {latitude, longitude} = category === 'places' && Geolocation.getPosition() || {};
-                call.addQuery(latitude && {'search[lat]': latitude})
-                    .addQuery(longitude && {'search[lng]': longitude})
+            if (category === 'places') {
+                if (options) {
+                    if (!_.isEmpty(options.city)) {
+                        call.addQuery({'search[city]': options.city})
+                    }
+                    else {
+                        let {latitude, longitude} = Geolocation.getPosition() || {};
+                        call.addQuery(latitude && {'search[lat]': latitude})
+                            .addQuery(longitude && {'search[lng]': longitude})
+                    }
+                }
+
             }
             //maybe use redux here ?
             call
@@ -125,11 +134,14 @@ export {screen};
 
 type SearchPlacesProps = {
     aroundMe: ?boolean,
-    onNewOptions: any => void
+    onNewOptions: any => void,
+    onSearchSubmited: void => void
 };
 
 type SearchPlacesState = {
-    aroundMe: boolean
+    aroundMe: boolean,
+    city: string,
+    focus: boolean
 };
 
 class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState> {
@@ -142,24 +154,28 @@ class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState>
     render() {
         return (
             <View style={{backgroundColor: NavStyles.navBarBackgroundColor, padding: 12}}>
-                <CheckBox
-                    right
-                    title={i18n.t("search_item_screen.search_options.around_me")}
-                    // checkedTitle={i18n.t("create_list_controller.visible")}
-                    iconRight
-                    size={20}
-                    onPress={something=> {
-                        this.setStateAndNotify({aroundMe: !this.state.aroundMe})
+
+                <SearchBar
+                    // autoFocus
+                    lightTheme
+                    onChangeText={city=> {
+                        this.setStateAndNotify({city})
                     }}
-                    checked={this.state.aroundMe}
-                    style={{alignSelf: 'flex-end'}}
-                    textStyle={{color: Colors.brownishGrey, fontSize: 14, fontFamily: SFP_TEXT_REGULAR, fontWeight: 'normal'}}
-                    containerStyle={{ backgroundColor: "transparent", borderWidth: 0, marginRight:0, padding: 0}}
-                    checkedIcon='map-marker'
-                    uncheckedIcon='map-marker'
-                    checkedColor={Colors.brownishGrey}
-                    uncheckedColor={Colors.greyish}
+                    onSubmitEditing={() => this.props.onSearchSubmited()}
+                    onClearText={() => this.setStateAndNotify({city: ""})}
+                    placeholder={this.state.focus ? "Paris, London, New-York..." : i18n.t("search_item_screen.search_options.around_me")}
+                    clearIcon={!!this.state.input && {color: '#86939e'}}
+                    icon={{ type: 'font-awesome', name: 'gps-fixed' }}
+                    onFocus={()=>this.setState({focus:true})}
+                    onBlur={()=>this.setState({focus:false})}
+                    containerStyle={[SEARCH_STYLES.searchContainer]}
+                    inputStyle={{backgroundColor: Colors.dirtyWhite2}}
+                    autoCapitalize='none'
+                    autoCorrect={false}
+                    returnKeyType={'search'}
+                    value={this.state.city}
                 />
+
             </View>
         );
     }

@@ -17,6 +17,7 @@ import {Navigation} from 'react-native-navigation';
 import update from "immutability-helper";
 import {Colors} from "../colors";
 import Spinner from 'react-native-spinkit';
+import {SEARCH_STYLES} from "../UIStyles";
 
 export type SearchCategoryType = string;
 
@@ -38,7 +39,7 @@ export type SearchResult = {
     }
 }
 export type SearchOptions = {
-    renderOptions: (any, any => void) => Node
+    renderOptions: (any, any => void, void => void) => Node
 }
 
 export type SearchEngine = {
@@ -139,7 +140,9 @@ export default class SearchScreen extends Component<Props, State> {
                             newOptions => {
                                 this.searchOptions[cat.type] = newOptions;
                                 this.performSearch(this.state.input, 0);
-                            })
+                            },
+                            this._debounceSearch
+                            )
                     )
                 }
 
@@ -402,23 +405,6 @@ export class SearchNavBar extends Component<NavProps, NavState> {
         placeholder: 'what ?'
     };
 
-
-
-    static _styles = StyleSheet.create({
-        container: {
-            flex: 1,
-        },
-        //copied: rm useless
-        searchContainer: {
-            backgroundColor: NavStyles.navBarBackgroundColor,
-            borderTopColor: 'transparent',
-        },
-        searchInput: {
-            backgroundColor: Colors.steel12,//NavStyles.navBarBackgroundColor,
-            fontSize: 15,
-        },
-    });
-
     constructor(props) {
         super(props);
         this.state = {input: props.initialInput, placeholder: props.placeholder}
@@ -436,8 +422,8 @@ export class SearchNavBar extends Component<NavProps, NavState> {
                 onClearText={this.onClearText.bind(this)}
                 placeholder={this.state.placeholder}
                 clearIcon={!!this.state.input && {color: '#86939e'}}
-                containerStyle={SearchNavBar._styles.searchContainer}
-                inputStyle={SearchNavBar._styles.searchInput}
+                containerStyle={SEARCH_STYLES.searchContainer}
+                inputStyle={SEARCH_STYLES.searchInput}
                 autoCapitalize='none'
                 autoCorrect={false}
                 returnKeyType={'search'}

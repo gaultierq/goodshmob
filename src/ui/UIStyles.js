@@ -210,3 +210,19 @@ export const STYLES = StyleSheet.create({
 });
 
 export const FEED_INITIAL_LOADER_DURATION = 1500;
+
+
+export const SEARCH_STYLES = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    //copied: rm useless
+    searchContainer: {
+        backgroundColor: NavStyles.navBarBackgroundColor,
+        borderTopColor: 'transparent',
+    },
+    searchInput: {
+        backgroundColor: Colors.greying,//NavStyles.navBarBackgroundColor,
+        fontSize: 15,
+    },
+});
