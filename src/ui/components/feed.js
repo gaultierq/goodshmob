@@ -125,7 +125,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (!ENABLE_PERF_OPTIM) return true;
+        if (!__ENABLE_PERF_OPTIM__) return true;
         if (nextProps.visibility === 'hidden') {
             this.logger.debug('feed component update saved');
             return false;

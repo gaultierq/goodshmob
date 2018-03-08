@@ -192,7 +192,7 @@ export default class ActivityCell extends React.Component<Props, State> {
     }
 
     shouldComponentUpdate(nextProps: Props, nextState: State) {
-        if (!ENABLE_PERF_OPTIM) return true;
+        if (!__ENABLE_PERF_OPTIM__) return true;
 
         if (!this.hasChanged(nextProps)) {
             superLog('ActivityCell render saved');

@@ -116,7 +116,7 @@ class NetworkScreen extends Screen<Props, State> {
     hasBeenRenderedOnce = false;
 
     render() {
-        if (ENABLE_PERF_OPTIM) {
+        if (__ENABLE_PERF_OPTIM__) {
             if (!this.hasBeenRenderedOnce && !this.isVisible()) return null;
             this.hasBeenRenderedOnce = true;
         }

@@ -63,7 +63,7 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  ScreenStat
     // askRenderOnVisible: boolean;
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (!ENABLE_PERF_OPTIM) return true;
+        if (!__ENABLE_PERF_OPTIM__) return true;
 
         if (!this.getVisible(nextProps, nextState)) {
             // this.askRenderOnVisible = true;

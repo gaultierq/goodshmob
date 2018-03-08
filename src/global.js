@@ -11,7 +11,7 @@ import {Dimensions, Platform} from 'react-native';
 declare var i18n: any;
 declare var _: any;
 declare var superConsole: any;
-declare var ENABLE_PERF_OPTIM: boolean;
+// declare var ENABLE_PERF_OPTIM: boolean;
 declare var ensureNotNull: () => void;
 
 
@@ -35,13 +35,14 @@ const ALL_KEYS = [
     'DEBUG_PENDING_DELAY',
     'MIN_REQUEST_TIME',
     'WITH_NOTIFICATIONS',
+    'ENABLE_PERF_OPTIM',
 ];
 
 export function init(hotReload: boolean) {
     global._ = __;
     global.i18n = _i18n;
     global.superLog = _superLog;
-    global.ENABLE_PERF_OPTIM = true;
+    // global.ENABLE_PERF_OPTIM = true;
     // global.ENABLE_PERF_OPTIM = false;
 
     global.__ENABLE_BACK_HANDLER__ = false;
