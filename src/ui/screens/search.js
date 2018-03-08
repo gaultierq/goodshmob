@@ -5,7 +5,7 @@ import React, {Component} from 'react';
 import {ActivityIndicator, FlatList, StyleSheet, Text, Platform, TouchableOpacity, View, KeyboardAvoidingView} from 'react-native';
 import {connect} from "react-redux";
 import {logged} from "../../managers/CurrentUser"
-import {TabBar, TabViewAnimated} from 'react-native-tab-view';
+import {TabBar, TabViewAnimated, TabViewPagerPan} from 'react-native-tab-view';
 
 import {SearchBar} from 'react-native-elements'
 
@@ -116,9 +116,12 @@ export default class SearchScreen extends Component<Props, State> {
     }
 
     handleIndexChange(index: number) {
-        console.log('tab changed to' + index);
+        console.log(`tab changed to ${index}`);
         this.setState({index}, () => this.performSearch(this.state.input, 0));
     }
+
+    _renderPager = props => <TabViewPagerPan {...props} />;
+
 
     render() {
 
@@ -139,7 +142,7 @@ export default class SearchScreen extends Component<Props, State> {
                             this.getCurrentSearchOptions(cat.type),
                             newOptions => {
                                 this.searchOptions[cat.type] = newOptions;
-                                this.performSearch(this.state.input, 0);
+                                this._debounceSearch();
                             },
                             this._debounceSearch
                             )
@@ -153,6 +156,7 @@ export default class SearchScreen extends Component<Props, State> {
                     renderHeader={this.renderHeader.bind(this)}
                     onIndexChange={this.handleIndexChange.bind(this)}
                     keyboardShouldPersistTaps='always'
+                    renderPager={this._renderPager}
                 />}
 
                 {
@@ -264,7 +268,7 @@ export default class SearchScreen extends Component<Props, State> {
         // }
 
         //set searching
-        this.setState({
+        const debugState = {
             searches: {
                 ...this.state.searches,
                 [token]: {
@@ -274,13 +278,16 @@ export default class SearchScreen extends Component<Props, State> {
                         page, searchState: 1, token
                     }
                 }
-            }
+            },
+        };
+        this.setState(debugState, () => {
+            console.log(`index set within perform search=${this.state.index}`);
         });
 
         this.props
             .searchEngine.search(token, catType, page, this.getCurrentSearchOptions(catType))
             .catch(err=> {
-                console.warn("error while performing search");
+                console.warn(`error while performing search: ${err}`);
                 this.setState(update(this.state, {searches: {[token]: {[catType]: {$merge: {searchState: 3}}}}},));
             })
             .then((results: SearchResult) => {
@@ -297,7 +304,9 @@ export default class SearchScreen extends Component<Props, State> {
                     let newState = this.state;
                     newState = update(newState, {searches: {[token]: {[catType]: {$merge: merge}}}},);
                     newState = update(newState, {searches: {[token]: {[catType]: {data: {$push: newItems}}}}});
-                    this.setState(newState);
+                    this.setState(newState, () => {
+                        console.log(`index (2) set within perform search=${this.state.index}`);
+                    });
                 }
             });
     }

@@ -3,7 +3,6 @@
 import React, {Component} from 'react';
 import {ActivityIndicator, FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import * as Api from "../../managers/Api";
-import {TabBar, TabViewAnimated} from 'react-native-tab-view';
 import ItemCell from "../components/ItemCell";
 import {buildData} from "../../helpers/DataUtils";
 import {CheckBox, SearchBar} from 'react-native-elements'
@@ -79,7 +78,7 @@ class SearchItem extends Screen<Props, State> {
     search(token: SearchToken, category: SearchCategoryType, page: number, options: ?any): Promise<*> {
 
         //searching
-        console.log(`api: searching ${token}`);
+        console.debug(`api: searching: token='${token}', category='${category}', page=${page}, options=${options}`);
 
         return new Promise((resolve, reject) => {
 
