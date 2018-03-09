@@ -16,6 +16,7 @@ import {Colors} from "../colors";
 import Geolocation from "../../managers/GeoLocation"
 import {SFP_TEXT_REGULAR} from "../fonts";
 import {NavStyles, SEARCH_STYLES} from "../UIStyles";
+import {Call} from "../../managers/Api";
 
 type SearchCategory = "consumer_goods" | "places" | "musics" | "movies";
 type SearchToken = string;
@@ -90,39 +91,63 @@ class SearchItem extends Screen<Props, State> {
                 .addQuery({'search[term]': token});
 
 
-            if (category === 'places') {
-                if (options) {
-                    if (!_.isEmpty(options.city)) {
-                        call.addQuery({'search[city]': options.city})
-                    }
-                    else {
-                        let {latitude, longitude} = Geolocation.getPosition() || {};
-                        call.addQuery(latitude && {'search[lat]': latitude})
-                            .addQuery(longitude && {'search[lng]': longitude})
-                    }
+            // if (category === 'places') {
+            //     if (options) {
+            //         if (!_.isEmpty(options.city)) {
+            //             call.addQuery({'search[city]': options.city})
+            //         }
+            //         else {
+            //             let {latitude, longitude} = Geolocation.getPosition() || {};
+            //             call.addQuery(latitude && {'search[lat]': latitude})
+            //                 .addQuery(longitude && {'search[lng]': longitude})
+            //         }
+            //     }
+            // }
+            this.fillOptions(category, call, options)
+                .then(call=> {
+                //maybe use redux here ?
+                call
+                    .run()
+                    .then(response=>{
+                        console.log(response);
+                        let data = normalize(response.json);
+
+                        let results = response.json.data.map(d=>{
+                            return buildData(data, d.type, d.id);
+                        });
+
+                        resolve({
+                            [category]: {
+                                results, page, nbPages: 0
+                            }
+                        });
+                    }, err=> {
+                        //console.warn(err)
+                        reject(err);
+                    });
+            }, err => reject(err));
+        });
+    }
+
+    fillOptions(category: SearchCategoryType, call: Call, options: any) {
+        return new Promise((resolve, reject) => {
+            if (category === 'places' && options) {
+                if (!_.isEmpty(options.city)) {
+                    call.addQuery({'search[city]': options.city});
+                    resolve(call);
                 }
+                else {
+                    Geolocation.getPosition().then(({latitude, longitude}) => {
+                        call.addQuery(latitude && {'search[lat]': latitude})
+                            .addQuery(longitude && {'search[lng]': longitude});
+                        resolve(call);
+                    }, err => reject(err));
 
+                }
             }
-            //maybe use redux here ?
-            call
-                .run()
-                .then(response=>{
-                    console.log(response);
-                    let data = normalize(response.json);
-
-                    let results = response.json.data.map(d=>{
-                        return buildData(data, d.type, d.id);
-                    });
-
-                    resolve({
-                        [category]: {
-                            results, page, nbPages: 0
-                        }
-                    });
-                }, err=> {
-                    //console.warn(err)
-                    reject(err);
-                });
+            else {
+                resolve(call);
+            }
         });
     }
 
@@ -148,6 +173,7 @@ class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState>
     constructor(props) {
         super(props);
         this.state = {aroundMe: !!props.aroundMe};
+        props.onNewOptions(this.state);
     }
 
     render() {

@@ -7,13 +7,11 @@ import type {Position} from "../types";
 
 class _GeoLocation implements GeoLocation {
 
-    currentPosition: Position;
 
-
-    getPosition() {
-        this.getPositionAndSaveIt();
-        console.log(`current position=${JSON.stringify(this.currentPosition)}`);
-        return this.currentPosition && this.currentPosition.coords;
+    getPosition(): Promise<Position> {
+        return this.getPositionAndSaveIt().then(position => position.coords, err => {throw err});
+        // console.log(`current position=${JSON.stringify(this.currentPosition)}`);
+        // return this.currentPosition && this.currentPosition.coords;
     }
 
 
@@ -44,28 +42,32 @@ class _GeoLocation implements GeoLocation {
         return false;
     };
 
-    getPositionAndSaveIt = async () => {
-        const hasLocationPermission = await this.hasLocationPermission();
+    getPositionAndSaveIt = () => {
+        return new Promise(async (resolve, reject) => {
+            const hasLocationPermission = await this.hasLocationPermission();
 
-        if (!hasLocationPermission) {
-            console.log('We do not have location permission')
-            this.currentPosition = null;
-        }
+            if (hasLocationPermission) {
+                navigator.geolocation.getCurrentPosition(position => {
+                        console.log(position);
+                        resolve(position);
+                    },
+                    (error) => {
+                        console.log('Error requesting permission', error);
+                        reject(error);
+                    },
+                    {
+                        enableHighAccuracy: false,
+                        timeout: 15000,
+                        maximumAge: 10000,
+                        distanceFilter: 50
+                    }
+                );
+            } else {
+                reject('We do not have location permission');
 
-        navigator.geolocation.getCurrentPosition(position => {
-                this.currentPosition = position;
-                console.log(position);
-            },
-            (error) => {
-                console.log('Error requesting permission', error)
-                this.currentPosition = null
-            },
-            { enableHighAccuracy: false,
-                timeout: 15000,
-                maximumAge: 10000,
-                distanceFilter: 50
             }
-        );
+        });
+
 
     };
 
@@ -76,7 +78,7 @@ export interface GeoLocation {
 
     init(): void;
 
-    getPosition(): Position;
+    getPosition(): Promise<Position>;
 }
 
 module.exports = new _GeoLocation();
