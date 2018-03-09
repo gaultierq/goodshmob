@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import * as Api from "../../managers/Api";
 import ItemCell from "../components/ItemCell";
 import {buildData} from "../../helpers/DataUtils";
@@ -17,6 +17,7 @@ import Geolocation from "../../managers/GeoLocation"
 import {SFP_TEXT_REGULAR} from "../fonts";
 import {NavStyles, SEARCH_STYLES} from "../UIStyles";
 import {Call} from "../../managers/Api";
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 type SearchCategory = "consumer_goods" | "places" | "musics" | "movies";
 type SearchToken = string;
@@ -105,27 +106,27 @@ class SearchItem extends Screen<Props, State> {
             // }
             this.fillOptions(category, call, options)
                 .then(call=> {
-                //maybe use redux here ?
-                call
-                    .run()
-                    .then(response=>{
-                        console.log(response);
-                        let data = normalize(response.json);
+                    //maybe use redux here ?
+                    call
+                        .run()
+                        .then(response=>{
+                            console.log(response);
+                            let data = normalize(response.json);
 
-                        let results = response.json.data.map(d=>{
-                            return buildData(data, d.type, d.id);
-                        });
+                            let results = response.json.data.map(d=>{
+                                return buildData(data, d.type, d.id);
+                            });
 
-                        resolve({
-                            [category]: {
-                                results, page, nbPages: 0
-                            }
+                            resolve({
+                                [category]: {
+                                    results, page, nbPages: 0
+                                }
+                            });
+                        }, err=> {
+                            //console.warn(err)
+                            reject(err);
                         });
-                    }, err=> {
-                        //console.warn(err)
-                        reject(err);
-                    });
-            }, err => reject(err));
+                }, err => reject(err));
         });
     }
 
@@ -170,6 +171,8 @@ type SearchPlacesState = {
 
 class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState> {
 
+    input;
+
     constructor(props) {
         super(props);
         this.state = {aroundMe: !!props.aroundMe};
@@ -201,6 +204,109 @@ class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState>
                     value={this.state.city}
                 />
 
+
+
+            </View>
+        );
+    }
+
+
+    render() {
+
+        return (
+            <View style={{
+                backgroundColor: NavStyles.navBarBackgroundColor,
+                flex: 0,
+                flexDirection: 'row',
+                paddingHorizontal: 16,
+                paddingVertical: 8,
+            }}>
+
+                <View style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    backgroundColor: Colors.greying,
+                    borderRadius: 3,
+                    paddingHorizontal: 10,
+                }}>
+                    {/* input block */}
+                    <View style={{
+                        flex: this.state.aroundMe ? 0 : 1,
+                        flexDirection: 'row',
+                        marginHorizontal: this.state.aroundMe ? 0 : 8,
+                        // backgroundColor: 'green'
+                    }}>
+                        <TextInput
+                            ref={input=>this.input = input}
+                            onSubmitEditing={() => this.props.onSearchSubmited()}
+                            onClearText={() => this.setStateAndNotify({city: ""})}
+                            placeholder={"Paris, London, New-York..."}
+                            onFocus={()=>this.setState({focus:true})}
+                            onBlur={()=>this.setState({focus:false})}
+                            style={[{
+                                flex: 1,
+                                marginVertical: 4,
+                                // marginHorizontal: 8,
+
+                                fontSize: 15,
+                                backgroundColor: 'transparent',
+                                // backgroundColor: 'purple',
+
+                            },
+                                // SEARCH_STYLES.searchInput
+                            ]}
+                            autoCapitalize='none'
+                            autoCorrect={false}
+                            returnKeyType={'search'}
+                            value={this.state.city}
+                        />
+                    </View>
+
+                    <View style={{
+                        flex: this.state.aroundMe ? 1 : 0,
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        // backgroundColor: NavStyles.navBarBackgroundColor,
+                        // backgroundColor: 'red',
+
+
+
+                    }}>
+                        <GTouchable
+                            style={{
+                                // flex: 1,
+                                // margin: 5,
+                                // backgroundColor: 'yellow'
+                            }}
+                            onPress={()=>{
+                                this.setStateAndNotify({aroundMe: true});
+                            }}>
+                            <Icon name="gps-fixed" size={18} color={Colors.greyishBrown}/>
+                        </GTouchable>
+                        <Text style={{
+                            flex: 10,
+                            alignItems: 'center',
+                            marginLeft: 6,
+                        }}>{i18n.t("search_item_screen.search_options.around_me")}</Text>
+                        { this.state.aroundMe &&
+                        <GTouchable
+                            style={{
+                                // flex: 0.1,
+                                // padding: 5
+                                // backgroundColor: 'yellow'
+                            }}
+
+                            onPress={()=>{
+                                this.setStateAndNotify({aroundMe: false});
+                            }}>
+                            <Icon name="close" size={15} color={Colors.greyishBrown}
+                                // style={{flex:1}}
+                            />
+                        </GTouchable>
+                        }
+
+                    </View>
+                </View>
             </View>
         );
     }
