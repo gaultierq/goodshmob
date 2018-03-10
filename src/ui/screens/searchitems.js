@@ -133,17 +133,18 @@ class SearchItem extends Screen<Props, State> {
     fillOptions(category: SearchCategoryType, call: Call, options: any) {
         return new Promise((resolve, reject) => {
             if (category === 'places' && options) {
-                if (!_.isEmpty(options.city)) {
-                    call.addQuery({'search[city]': options.city});
-                    resolve(call);
-                }
-                else {
+                if (options.aroundMe) {
                     Geolocation.getPosition().then(({latitude, longitude}) => {
                         call.addQuery(latitude && {'search[lat]': latitude})
                             .addQuery(longitude && {'search[lng]': longitude});
                         resolve(call);
                     }, err => reject(err));
-
+                }
+                else {
+                    if (!_.isEmpty(options.city)) {
+                        call.addQuery({'search[city]': options.city});
+                    }
+                    resolve(call);
                 }
             }
             else {
