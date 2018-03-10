@@ -260,6 +260,9 @@ class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState>
                             autoCorrect={false}
                             returnKeyType={'search'}
                             value={this.state.city}
+                            onChangeText={city=> {
+                                this.setStateAndNotify({city})
+                            }}
                         />
                     </View>
 
