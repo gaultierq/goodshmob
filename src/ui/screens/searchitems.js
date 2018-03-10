@@ -217,14 +217,16 @@ class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState>
 
     render() {
 
-
+        const radius = 4;
         const inputFlex = this.animation.interpolate({inputRange: [0, 1], outputRange: [1, 0]});
-        const inputMargin = this.animation.interpolate({inputRange: [0, 1], outputRange: [8, 0]});
         const inputAroundMe = this.animation.interpolate({inputRange: [0, 1], outputRange: [0, 1]});
         const opacity = this.animation.interpolate({inputRange: [0, 1], outputRange: [0, 1]});
-        const paddingLeft = this.animation.interpolate({inputRange: [0, 1], outputRange: [10, 6]});
+        const paddingLeft = this.animation.interpolate({inputRange: [0, 1], outputRange: [10, 0]});
+        const color2 = this.animation.interpolate({inputRange: [0, 1], outputRange: ['rgba(235, 235, 235, 1)', 'rgba(235, 235, 235, 0)']});
+        const radius2 = this.animation.interpolate({inputRange: [0, 1], outputRange: [radius, 0]});
 
 
+        const backgroundColor = Colors.grey4;
 
         return (
             <View style={{
@@ -238,69 +240,95 @@ class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState>
                 <Animated.View style={{
                     flex: 1,
                     flexDirection: 'row',
-                    backgroundColor: Colors.greying,
-                    borderRadius: 3,
                     // paddingLeft,
-                    // paddingHorizontal: 10,
+                    // paddingHorizontal: 4,
                 }}>
                     {/* input block */}
                     <Animated.View style={{
                         flex: inputFlex,
                         flexDirection: 'row',
-                        // marginHorizontal: inputMargin,
-                        marginLeft: 8,
-                        // backgroundColor: 'green'
+
                     }}>
-                        <TextInput
-                            ref={input=>this.input = input}
-                            onSubmitEditing={() => this.props.onSearchSubmited()}
-                            onClearText={() => this.setStateAndNotify({city: ""})}
-                            placeholder={"Paris, London, New-York..."}
-                            onFocus={()=>this.setState({focus:true})}
-                            onBlur={()=>this.setState({focus:false})}
-                            style={[{
-                                flex: 1,
-                                marginVertical: 4,
-                                // marginHorizontal: 8,
 
-                                fontSize: 15,
-                                backgroundColor: 'transparent',
-                                // backgroundColor: 'purple',
+                        <Animated.View style={{
+                            flex: 1,
+                            paddingVertical: 4,
+                            backgroundColor: Colors.greying,
+                            borderTopLeftRadius: radius,
+                            borderBottomLeftRadius: radius,
+                            paddingHorizontal: paddingLeft,
+                        }}>
+                            <TextInput
+                                ref={input=>this.input = input}
+                                onSubmitEditing={() => this.props.onSearchSubmited()}
+                                onClearText={() => this.setStateAndNotify({city: ""})}
+                                placeholder={"Paris, London, New-York..."}
+                                onFocus={()=>this.setState({focus:true})}
+                                onBlur={()=>this.setState({focus:false})}
+                                style={[{
+                                    fontSize: 15,
+                                    backgroundColor: 'transparent',
+                                    // backgroundColor: Colors.greying,
+                                    // backgroundColor: 'purple',
 
-                            },
-                                // SEARCH_STYLES.searchInput
-                            ]}
-                            autoCapitalize='none'
-                            autoCorrect={false}
-                            returnKeyType={'search'}
-                            value={this.state.city}
-                            onChangeText={city=> {
-                                this.setStateAndNotify({city})
-                            }}
-                        />
+                                },
+                                    // SEARCH_STYLES.searchInput
+                                ]}
+                                autoCapitalize='none'
+                                autoCorrect={false}
+                                returnKeyType={'search'}
+                                value={this.state.city}
+                                onChangeText={city=> {
+                                    this.setStateAndNotify({city})
+                                }}
+                            />
+                        </Animated.View>
+
                     </Animated.View>
 
 
-                    <GTouchable
-                        style={{
-                            flex: 0,
+                    <Animated.View style={{
+                        // flex: 0,
+                        zIndex: 1,
+                        // flexDirection: 'row',
+                        alignItems: 'center',
+                        backgroundColor: color2,
+                        borderTopRightRadius: radius,
+                        borderBottomRightRadius: radius,
+                    }}>
+                        <Animated.View style={{
+                            flex: 1,
                             zIndex: 1,
                             flexDirection: 'row',
                             alignItems: 'center',
-                            marginRight: 8,
-                        }}
-                        onPress={()=>{
-                            this.toggleAroundMe(true);
-                        }}>
-                        <Icon name="gps-fixed" size={18} color={Colors.greyishBrown}/>
-                    </GTouchable>
+                            paddingHorizontal: 8,
+                            backgroundColor: backgroundColor,
+                            borderTopLeftRadius: radius,
+                            borderBottomLeftRadius: radius,
+                            borderRadius: radius2,
 
+                            // backgroundColor: 'pink',
+                        }}>
+                            <GTouchable
+
+                                onPress={()=>{
+                                    this.toggleAroundMe(true);
+                                }}>
+                                <Icon name="gps-fixed" size={18} color={Colors.greyishBrown}/>
+                            </GTouchable>
+
+                        </Animated.View>
+                    </Animated.View>
                     {/* text */}
                     <Animated.View style={{
                         flex: inputAroundMe,
                         flexDirection: 'row',
                         alignItems: 'center',
+                        backgroundColor: backgroundColor,
+                        // marginRight: 18,
                         // backgroundColor: 'red',
+                        borderTopRightRadius: radius,
+                        borderBottomRightRadius: radius,
                     }}>
 
 
@@ -308,8 +336,8 @@ class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState>
                             numberOfLines={1}
                             style={{
                                 flex: 1,
-                                // marginLeft: 6,
                                 singleLine: true,
+                                backgroundColor: 'transparent',
                             }}>{i18n.t("search_item_screen.search_options.around_me")}
 
                         </Text>
@@ -326,10 +354,11 @@ class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState>
                             right: 8,
                             zIndex: 0,
                             alignSelf: 'center',
-                            flexDirection: 'row',
+                            // flexDirection: 'row',
                             opacity,
                             // alignItems: 'center',
-                            // backgroundColor: 'yellow',
+                            backgroundColor: 'transparent',
+                            // backgroundColor: 'red',
                         }}
                     >
                         <GTouchable
@@ -355,7 +384,7 @@ class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState>
             this.animation,
             {
                 toValue: aroundMe ? 1 : 0,
-                duration: 1000,
+                duration: 400,
 
             }
         ).start();
