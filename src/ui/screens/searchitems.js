@@ -1,7 +1,8 @@
 // @flow
 
 import React, {Component} from 'react';
-import {Animated, ActivityIndicator, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {Animated, Easing,
+    ActivityIndicator, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import * as Api from "../../managers/Api";
 import ItemCell from "../components/ItemCell";
 import {buildData} from "../../helpers/DataUtils";
@@ -15,7 +16,7 @@ import type {Item, RNNNavigator} from "../../types";
 import {Colors, SEARCH_PLACEHOLDER_COLOR} from "../colors";
 import Geolocation from "../../managers/GeoLocation"
 import {SFP_TEXT_REGULAR} from "../fonts";
-import {NavStyles, SEARCH_STYLES} from "../UIStyles";
+import {NavStyles, SEARCH_INPUT_PROPS, SEARCH_INPUT_RADIUS, SEARCH_STYLES, SEARCH_STYLES_OBJ} from "../UIStyles";
 import {Call} from "../../managers/Api";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -183,41 +184,9 @@ class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState>
         props.onNewOptions(this.state);
     }
 
-    // render() {
-    //     return (
-    //         <View style={{backgroundColor: NavStyles.navBarBackgroundColor, padding: 12}}>
-    //
-    //             <SearchBar
-    //                 // autoFocus
-    //                 lightTheme
-    //                 onChangeText={city=> {
-    //                     this.setStateAndNotify({city})
-    //                 }}
-    //                 onSubmitEditing={() => this.props.onSearchSubmited()}
-    //                 onClearText={() => this.setStateAndNotify({city: ""})}
-    //                 placeholder={this.state.focus ? "Paris, London, New-York..." : i18n.t("search_item_screen.search_options.around_me")}
-    //                 clearIcon={!!this.state.input && {color: '#86939e'}}
-    //                 icon={{ type: 'font-awesome', name: 'gps-fixed' }}
-    //                 onFocus={()=>this.setState({focus:true})}
-    //                 onBlur={()=>this.setState({focus:false})}
-    //                 containerStyle={[SEARCH_STYLES.searchContainer]}
-    //                 inputStyle={{backgroundColor: Colors.dirtyWhite2}}
-    //                 autoCapitalize='none'
-    //                 autoCorrect={false}
-    //                 returnKeyType={'search'}
-    //                 value={this.state.city}
-    //             />
-    //
-    //
-    //
-    //         </View>
-    //     );
-    // }
-
-
     render() {
 
-        const radius = 4;
+        const radius = SEARCH_INPUT_RADIUS;
         const inputFlex = this.animation.interpolate({inputRange: [0, 1], outputRange: [1, 0]});
         const inputAroundMe = this.animation.interpolate({inputRange: [0, 1], outputRange: [0, 1]});
         const opacity = this.animation.interpolate({inputRange: [0, 1], outputRange: [0, 1]});
@@ -226,14 +195,17 @@ class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState>
         const radius2 = this.animation.interpolate({inputRange: [0, 1], outputRange: [radius, 0]});
 
 
-        const backgroundColor = Colors.grey4;
+        const darkerBackgroundColor = "#E1E1E1";
+        const lighterBackgroundColor = _.get(SEARCH_STYLES_OBJ, 'searchInput.backgroundColor') || Colors.greying;
+
 
         return (
             <View style={{
                 backgroundColor: NavStyles.navBarBackgroundColor,
                 flex: 0,
                 flexDirection: 'row',
-                paddingHorizontal: 16,
+                paddingLeft: __IS_IOS__ ? 16 : 80,
+                paddingRight: __IS_IOS__ ? 16 : 8,
                 paddingVertical: 8,
             }}>
 
@@ -253,7 +225,7 @@ class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState>
                         <Animated.View style={{
                             flex: 1,
                             // paddingVertical: 4,
-                            backgroundColor: Colors.greying,
+                            backgroundColor: lighterBackgroundColor,
                             borderTopLeftRadius: radius,
                             borderBottomLeftRadius: radius,
                             paddingHorizontal: paddingLeft,
@@ -265,13 +237,9 @@ class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState>
                                 placeholder={"Paris, London, New-York..."}
                                 onFocus={()=>this.setState({focus:true})}
                                 onBlur={()=>this.setState({focus:false})}
-                                placeholderTextColor={SEARCH_PLACEHOLDER_COLOR}
-                                style={[
-                                    SEARCH_STYLES.searchInput,
-                                ]}
-                                autoCapitalize='none'
-                                autoCorrect={false}
-                                returnKeyType={'search'}
+                                // placeholderTextColor={SEARCH_PLACEHOLDER_COLOR}
+                                {...SEARCH_INPUT_PROPS}
+                                style={[SEARCH_STYLES.searchInput,]}
                                 value={this.state.city}
                                 onChangeText={city=> {
                                     this.setStateAndNotify({city})
@@ -297,7 +265,7 @@ class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState>
                             flexDirection: 'row',
                             alignItems: 'center',
                             paddingHorizontal: 8,
-                            backgroundColor: backgroundColor,
+                            backgroundColor: darkerBackgroundColor,
                             borderTopLeftRadius: radius,
                             borderBottomLeftRadius: radius,
                             borderRadius: radius2,
@@ -319,7 +287,7 @@ class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState>
                         flex: inputAroundMe,
                         flexDirection: 'row',
                         alignItems: 'center',
-                        backgroundColor: backgroundColor,
+                        backgroundColor: darkerBackgroundColor,
                         // marginRight: 18,
                         // backgroundColor: 'red',
                         borderTopRightRadius: radius,
@@ -330,6 +298,7 @@ class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState>
                         <Text
                             numberOfLines={1}
                             style={{
+                                color: Colors.brownishGrey,
                                 flex: 1,
                                 singleLine: true,
                                 backgroundColor: 'transparent',
@@ -379,6 +348,7 @@ class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState>
             this.animation,
             {
                 toValue: aroundMe ? 1 : 0,
+                easing: Easing.cubic,
                 duration: 400,
 
             }

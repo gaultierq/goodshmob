@@ -3,7 +3,7 @@ import {Linking, StyleSheet, Text, TouchableOpacity, Platform} from 'react-nativ
 import Button from 'apsl-react-native-button'
 import * as React from "react";
 import {toUppercase} from "../helpers/StringUtils";
-import {Colors} from "./colors";
+import {Colors, SEARCH_PLACEHOLDER_COLOR} from "./colors";
 import {SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "./fonts";
 import GTouchable from "./GTouchable";
 
@@ -212,8 +212,9 @@ export const STYLES = StyleSheet.create({
 export const FEED_INITIAL_LOADER_DURATION = 1500;
 
 
+export const SEARCH_INPUT_RADIUS = 4;
 
-export const SEARCH_STYLES = StyleSheet.create({
+export const SEARCH_STYLES_OBJ = {
     container: {
         flex: 1,
     },
@@ -237,5 +238,17 @@ export const SEARCH_STYLES = StyleSheet.create({
             },
         }),
         color: Colors.brownishGrey,
+        borderRadius: SEARCH_INPUT_RADIUS,
     },
-});
+};
+
+export const SEARCH_STYLES = StyleSheet.create(SEARCH_STYLES_OBJ);
+
+
+export const SEARCH_INPUT_PROPS = {
+    placeholderTextColor: SEARCH_PLACEHOLDER_COLOR,
+    selectionColor: Colors.black,
+    autoCapitalize: 'none',
+    autoCorrect: false,
+    returnKeyType: 'search',
+};
