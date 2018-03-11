@@ -97,7 +97,7 @@ export default class SearchScreen extends Component<Props, State> {
 
         this.state = {
             searches: {},
-            index: 1,
+            index: 0,
             routes: props.categories.map((c, i) => ({key: `${i}`, title: c.tabName ? i18n.t(c.tabName) : null})),
         };
 
