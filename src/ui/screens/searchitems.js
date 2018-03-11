@@ -315,10 +315,11 @@ class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState>
                         style={{
                             // flex: 0,
                             position: 'absolute',
-                            right: 8,
+                            right: 0,
                             zIndex: 0,
                             alignSelf: 'center',
                             // flexDirection: 'row',
+
                             opacity,
                             // alignItems: 'center',
                             backgroundColor: 'transparent',
@@ -326,6 +327,9 @@ class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState>
                         }}
                     >
                         <GTouchable
+                            style={{
+                                padding: 12
+                            }}
                             onPress={()=>{
                                 this.toggleAroundMe(false);
                             }}>
