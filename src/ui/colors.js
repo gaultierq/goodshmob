@@ -19,3 +19,4 @@ export const Colors = Object.freeze({
 
 
 export const ACTIVITY_CELL_BACKGROUND = Colors.white;
+export const SEARCH_PLACEHOLDER_COLOR = Colors.grey3;

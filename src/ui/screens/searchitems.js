@@ -12,7 +12,7 @@ import normalize from 'json-api-normalizer';
 import GTouchable from "../GTouchable";
 import Screen from "../components/Screen";
 import type {Item, RNNNavigator} from "../../types";
-import {Colors} from "../colors";
+import {Colors, SEARCH_PLACEHOLDER_COLOR} from "../colors";
 import Geolocation from "../../managers/GeoLocation"
 import {SFP_TEXT_REGULAR} from "../fonts";
 import {NavStyles, SEARCH_STYLES} from "../UIStyles";
@@ -252,7 +252,7 @@ class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState>
 
                         <Animated.View style={{
                             flex: 1,
-                            paddingVertical: 4,
+                            // paddingVertical: 4,
                             backgroundColor: Colors.greying,
                             borderTopLeftRadius: radius,
                             borderBottomLeftRadius: radius,
@@ -265,14 +265,9 @@ class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState>
                                 placeholder={"Paris, London, New-York..."}
                                 onFocus={()=>this.setState({focus:true})}
                                 onBlur={()=>this.setState({focus:false})}
-                                style={[{
-                                    fontSize: 15,
-                                    backgroundColor: 'transparent',
-                                    // backgroundColor: Colors.greying,
-                                    // backgroundColor: 'purple',
-
-                                },
-                                    // SEARCH_STYLES.searchInput
+                                placeholderTextColor={SEARCH_PLACEHOLDER_COLOR}
+                                style={[
+                                    SEARCH_STYLES.searchInput,
                                 ]}
                                 autoCapitalize='none'
                                 autoCorrect={false}

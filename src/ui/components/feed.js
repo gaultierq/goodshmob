@@ -20,6 +20,7 @@ import {getLanguages} from 'react-native-i18n'
 import {RequestManager} from "../../managers/request";
 import {createConsole} from "../../helpers/DebugUtils";
 import Spinner from 'react-native-spinkit';
+import GSearchBar from "../GSearchBar";
 
 
 export type FeedSource = {
@@ -323,19 +324,20 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         return (
             <View key={'searchbar_container'} style={[style]}>
 
-                <SearchBar
-                    lightTheme
+                <GSearchBar
+                    // lightTheme
                     onChangeText={filter => this.setState({filter})}
                     onClearText={()=>this.setState({filter: null})}
                     placeholder={i18n.t(placeholder)}
-                    autoCapitalize='none'
+                    // autoCapitalize='none'
                     clearIcon={!!this.state.filter && {color: '#86939e'}}
-                    containerStyle={{backgroundColor: NavStyles.navBarBackgroundColor, marginTop:0 ,marginBottom: 0, borderBottomWidth: 0, borderTopWidth: 0,}}
-                    inputStyle={{backgroundColor: Colors.greying, textAlign: 'center', marginBottom: 5, fontSize: 15}}
-                    autoCorrect={false}
+                    // containerStyle={{backgroundColor: NavStyles.navBarBackgroundColor, marginTop:0 ,marginBottom: 0, borderBottomWidth: 0, borderTopWidth: 0,}}
+                    // inputStyle={{backgroundColor: Colors.greying, textAlign: 'center', marginBottom: 5, fontSize: 15}}
+                    // autoCorrect={false}
                     style={{margin: 0,}}
-                    returnKeyType={'search'}
+                    // returnKeyType={'search'}
                     value={this.state.filter}
+
                 />
             </View>
         );

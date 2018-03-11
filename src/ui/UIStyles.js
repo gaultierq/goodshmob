@@ -1,5 +1,5 @@
 //@flow
-import {Linking, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {Linking, StyleSheet, Text, TouchableOpacity, Platform} from 'react-native';
 import Button from 'apsl-react-native-button'
 import * as React from "react";
 import {toUppercase} from "../helpers/StringUtils";
@@ -212,6 +212,7 @@ export const STYLES = StyleSheet.create({
 export const FEED_INITIAL_LOADER_DURATION = 1500;
 
 
+
 export const SEARCH_STYLES = StyleSheet.create({
     container: {
         flex: 1,
@@ -223,6 +224,18 @@ export const SEARCH_STYLES = StyleSheet.create({
     },
     searchInput: {
         backgroundColor: Colors.greying,//NavStyles.navBarBackgroundColor,
+        // backgroundColor: 'red',//NavStyles.navBarBackgroundColor,
         fontSize: 15,
+        height: 40,
+        ...Platform.select({
+            ios: {
+                height: 30,
+
+            },
+            android: {
+                borderWidth: 0,
+            },
+        }),
+        color: Colors.brownishGrey,
     },
 });

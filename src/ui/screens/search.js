@@ -18,6 +18,7 @@ import update from "immutability-helper";
 import {Colors} from "../colors";
 import Spinner from 'react-native-spinkit';
 import {SEARCH_STYLES} from "../UIStyles";
+import GSearchBar from "../GSearchBar";
 
 export type SearchCategoryType = string;
 
@@ -423,19 +424,19 @@ export class SearchNavBar extends Component<NavProps, NavState> {
     render() {
 
         return (
-            <SearchBar
+            <GSearchBar
                 autoFocus
-                lightTheme
+                // lightTheme
                 onChangeText={this.onChangeText.bind(this)}
                 onSubmitEditing={this.submit.bind(this)}
                 onClearText={this.onClearText.bind(this)}
                 placeholder={this.state.placeholder}
                 clearIcon={!!this.state.input && {color: '#86939e'}}
-                containerStyle={SEARCH_STYLES.searchContainer}
-                inputStyle={SEARCH_STYLES.searchInput}
-                autoCapitalize='none'
-                autoCorrect={false}
-                returnKeyType={'search'}
+                // containerStyle={SEARCH_STYLES.searchContainer}
+                // inputStyle={SEARCH_STYLES.searchInput}
+                // autoCapitalize='none'
+                // autoCorrect={false}
+                // returnKeyType={'search'}
                 value={this.state.input}
             />
         );
