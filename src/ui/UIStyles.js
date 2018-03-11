@@ -222,6 +222,7 @@ export const SEARCH_STYLES_OBJ = {
     searchContainer: {
         backgroundColor: NavStyles.navBarBackgroundColor,
         borderTopColor: 'transparent',
+        borderBottomWidth: 0, borderTopWidth: 0,
     },
     searchInput: {
         backgroundColor: Colors.greying,//NavStyles.navBarBackgroundColor,
@@ -251,4 +252,5 @@ export const SEARCH_INPUT_PROPS = {
     autoCapitalize: 'none',
     autoCorrect: false,
     returnKeyType: 'search',
+    underlineColorAndroid: 'transparent'
 };
