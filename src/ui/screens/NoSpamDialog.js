@@ -39,7 +39,7 @@ export default class NoSpamDialog extends Component<Props, State> {
                 ref={(popupDialog) => {
                     this.scaleAnimationDialog = popupDialog;
                     if (this.scaleAnimationDialog && !this.timeout) {
-                        this.timeout = setTimeout(()=>{this.scaleAnimationDialog.show()}, 1000);
+                        this.timeout = setTimeout(()=>{this.scaleAnimationDialog.show()}, 100);
                     }
                 }}
                 dialogAnimation={new ScaleAnimation()}

@@ -179,40 +179,55 @@ class HomeScreen extends Screen<Props, State> {
         });
     }
 
-    componentDidMount() {
+    componentDidAppear() {
 
         //if a new onBoarding step is broadcasted, then display it
         OnBoardingManager.listenToStepChange({
             triggerOnListen: true,
             callback: (step?: ?OnBoardingStep) => {
-                if (step === 'focus_add' && this.isVisible()) {
+                const visible = this.isVisible();
+                console.debug(`OnBoardingManager:step=${step} visible=${visible}`);
+                if (step === 'focus_add' && visible) {
                     setTimeout(() => {
-                        if (this.appTourTargets.size > 0) {
-                            let appTourSequence = new AppTourSequence();
-                            this.appTourTargets.forEach((appTourTarget, view) => {
-                                appTourSequence.add(appTourTarget);
-                            });
-                            AppTour.ShowSequence(appTourSequence);
-
-
-                            //as we don't have a callback on when the tour is finished,
-                            // we are using a 10s timer, to go to the next onBoardingStep
-                            setTimeout(()=>{
-                                OnBoardingManager.onDisplayed('focus_add')
-                            }, 10000);
-
-                        }
+                        this.displayFocusAdd();
                     }, 1000);
                 }
             }
         })
     }
 
+    displayFocusAdd() {
+        if (!this.isVisible()) {
+            console.warn('home is not visible anymore. aborting');
+            return false;
+        }
+
+        if (this.appTourTargets.size > 0) {
+            let appTourSequence = new AppTourSequence();
+            this.appTourTargets.forEach((appTourTarget, view) => {
+                appTourSequence.add(appTourTarget);
+            });
+            AppTour.ShowSequence(appTourSequence);
+
+
+            //as we don't have a callback on when the tour is finished,
+            // we are using a 10s timer, to go to the next onBoardingStep
+            setTimeout(() => {
+                OnBoardingManager.onDisplayed('focus_add')
+            }, 10000);
+
+        }
+        else {
+            console.warn('appTourTargets.size === 0. aborting');
+        }
+        return true;
+    }
+
     render() {
 
         let onBoardingStep = OnBoardingManager.getPendingStep();
 
-        if (onBoardingStep === 'no_spam') return <NoSpamDialog/>
+        // if (onBoardingStep === 'no_spam') return <NoSpamDialog/>
 
         return (
             <View style={{flex:1}}>

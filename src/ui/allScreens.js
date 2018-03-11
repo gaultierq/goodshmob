@@ -39,6 +39,7 @@ import {View} from 'react-native';
 import UnsaveScreen from "./screens/unsave";
 import ChangeDescriptionScreen from "./screens/changeDescription";
 import ChangeLineupName from "./screens/changeLineupName";
+import NoSpamScreen from "./screens/NoSpamScreen";
 
 
 function wrap(screenName,screenCreator,store,provider) {
@@ -96,4 +97,5 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.UnsaveScreen', () => UnsaveScreen, store, Provider);
     wrap('goodsh.ChangeDescriptionScreen', () => ChangeDescriptionScreen, store, Provider);
     wrap('goodsh.ChangeLineupName', () => ChangeLineupName, store, Provider);
+    wrap('goodsh.NoSpamScreen', () => NoSpamScreen, store, Provider);
 }

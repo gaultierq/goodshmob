@@ -35,7 +35,7 @@ import BugsnagManager from "./managers/BugsnagManager";
 import {currentUser} from "./managers/CurrentUser";
 
 
-type AppMode = 'idle' | 'init_cache' | 'logged' | 'unlogged' | 'upgrading_cache' | 'unknown'
+type AppMode = 'idle' | 'init_cache' | 'nospam' | 'logged' | 'unlogged' | 'upgrading_cache' | 'unknown'
 
 
 export default class App {
@@ -209,8 +209,9 @@ export default class App {
             this.initialize();
         }
 
-
-        this.refreshAppMode();
+        setTimeout(() => {
+            this.refreshAppMode();
+        });
     }
 
     initialize() {
@@ -299,7 +300,9 @@ export default class App {
         }
         else {
             const {currentUserId} = this.store.getState().auth;
-            mode = currentUserId ? 'logged' : 'unlogged';
+            if (!currentUserId) mode = 'unlogged';
+            else if (OnBoardingManager.getPendingStep() === 'no_spam') mode = 'nospam';
+            else mode = 'logged';
         }
 
         //TODO: use navigation to resolve the current screen
@@ -338,6 +341,9 @@ export default class App {
 
         const cacheVersion = __CACHE_VERSION__;
         switch (this.mode) {
+            case 'nospam':
+                this.showNoSpamModal();
+                break;
             case 'idle':
                 break;
             case 'logged':
@@ -484,6 +490,13 @@ export default class App {
                     navBarHidden: true,
                 }
             }
+        });
+    }
+
+    showNoSpamModal() {
+        Navigation.showModal({
+            screen: 'goodsh.NoSpamScreen', // unique ID registered with Navigation.registerScreen
+            animationType: 'none' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
         });
     }
 }

@@ -16,6 +16,9 @@ type State = {
 export default class TestScreen extends Component<Props, State> {
 
 
+    static navigatorStyle = {
+        navBarHidden: true,
+    };
 
     render() {
         return <NoSpamDialog />
