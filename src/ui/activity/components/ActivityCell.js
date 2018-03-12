@@ -5,7 +5,7 @@ import React from 'react';
 import {Image, Linking, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
 import {logged} from "../../../managers/CurrentUser"
-import {buildNonNullData, sanitizeActivityType, getAskBackgroundColor} from "../../../helpers/DataUtils";
+import {buildNonNullData, getAskBackgroundColor, sanitizeActivityType} from "../../../helpers/DataUtils";
 import type {Activity, ActivityType, Id, RNNNavigator} from "../../../types"
 import ActivityBody from "./ActivityBody";
 import ActivityActionBar from "./ActivityActionBar";
@@ -21,7 +21,6 @@ import {stylePadding} from "../../UIStyles";
 import {firstName} from "../../../helpers/StringUtils";
 import ActivityStatus from "./ActivityStatus";
 import FeedSeparator from "./FeedSeparator";
-import {areEquals} from "../../../helpers/ArrayUtil";
 import {UpdateTracker} from "../../UpdateTracker";
 
 export type ActivityDisplayContext = {

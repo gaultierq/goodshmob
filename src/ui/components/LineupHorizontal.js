@@ -35,10 +35,12 @@ import LineupCellSaving from "../components/LineupCellSaving";
 import GTouchable from "../GTouchable";
 import BottomSheet from 'react-native-bottomsheet';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {UpdateTracker} from "../UpdateTracker";
+import {sanitizeActivityType} from "../../helpers/DataUtils";
 // $FlowFixMe
 type Props = {
     navigator: RNNNavigator,
-    list: List,
+    lineup: List,
     withMenuButton: boolean,
     withLineupTitle: boolean,
 };
@@ -47,23 +49,40 @@ type State = {
 };
 
 
-@connect()
+@connect((state, ownProps) => ({
+    data: state.data,
+}))
 @logged
 export default class LineupHorizontal extends Component<Props, State> {
 
+    updateTracker: UpdateTracker;
+
+    constructor(props: Props) {
+        super(props);
+        this.updateTracker = new UpdateTracker(
+            nextProps => this.makeRefObject(nextProps),
+            {
+                debugName: `LineupHorizontal`,
+                debugId: `${_.get(props, 'lineup.id')}`,
+            }
+        );
+    }
+
     render() {
-        const {withMenuButton, withLineupTitle, list} = this.props;
+        this.updateTracker.onRender(this.props);
+
+        const {withMenuButton, withLineupTitle, lineup} = this.props;
         return (
             <View>
                 {withLineupTitle && <GTouchable
-                    onPress={() => this.seeLineup(list.id)}>
+                    onPress={() => this.seeLineup(lineup.id)}>
 
                     <View style={{flexDirection:'row', paddingLeft: 15, paddingRight: 15}}>
-                        <LineupTitle lineup={list}/>
-                        {withMenuButton && this.renderMenuButton(list, 15)}
+                        <LineupTitle lineup={lineup}/>
+                        {withMenuButton && this.renderMenuButton(lineup, 15)}
                     </View>
                 </GTouchable>}
-                {this.renderList(list)}
+                {this.renderList(lineup)}
             </View>
 
         )
@@ -229,4 +248,42 @@ export default class LineupHorizontal extends Component<Props, State> {
             <View style={{flexDirection: 'row', paddingLeft: 15}}>{result}</View>
         </GTouchable>);
     }
+
+    makeRefObject(nextProps:Props) {
+        // return null;
+        const lineupId = _.get(nextProps, 'lineup.id');
+        if (!lineupId) return null;
+
+        let getRefKeys = () => {
+            let base = `data.lists.${lineupId}`;
+            return [base, `${base}.meta`];
+        };
+
+        let result = getRefKeys().map(k=>_.get(nextProps, k));
+
+        //TODO: deal with pendings
+        // let allPendings = _.values(_.get(nextProps, 'pending', {}));
+        // //[[create_ask1, create_ask2, ...], [create_comment1, create_comment2, ...], ...]
+        //
+        // let scopedPendings = [];
+        // _.reduce(allPendings, (res, pendingList) => {
+        //
+        //     let filteredPendingList = _.filter(pendingList, pending => {
+        //         const scope = _.get(pending, "options.scope");
+        //         if (!scope) return false;
+        //         return scope.activityId === activityId || scope.itemId === this.itemId;
+        //     });
+        //
+        //     res.push(...filteredPendingList);
+        //     return res;
+        // }, scopedPendings);
+        // result.push(...scopedPendings);
+
+        return result;
+    }
+
+    shouldComponentUpdate(nextProps: Props, nextState: State) {
+        return this.updateTracker.shouldComponentUpdate(nextProps);
+    }
+
 }

@@ -1,19 +1,32 @@
 
-import {areEquals} from "../helpers/ArrayUtil";
+import {areNotEquals} from "../helpers/ArrayUtil";
 
 export class UpdateTracker {
 
     refKeys;
+    debugName: string;
+    debugId: Id;
 
-    constructor(makeRefObject: nextProps => Array) {
+    constructor(makeRefObject: nextProps => Array, options: any = {}) {
         this.makeRefObject = makeRefObject;
+        this.debugName = options.debugName;
+        this.debugId = options.debugId;
     }
 
     onRender(props) {
         this.refKeys = this.makeRefObject(props);
+        if (this.debugName) {
+            console.debug(`${this.debugName} onRender`)
+        }
     }
 
     shouldComponentUpdate(nextProps) {
-        return __ENABLE_PERF_OPTIM__ || areEquals(this.refKeys, this.makeRefObject(nextProps));
+        const array1 = this.refKeys;
+        const array2 = this.makeRefObject(nextProps);
+        const result = !array1 || !array2 || areNotEquals(array1, array2);
+        if (this.debugName) {
+            console.debug(`${this.debugName} shouldComponentUpdate = ${result} ${this.debugId && result ? this.debugId : ""}`)
+        }
+        return __ENABLE_PERF_OPTIM__ || result;
     }
 }

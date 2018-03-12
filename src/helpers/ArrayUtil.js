@@ -7,7 +7,8 @@ export function isUnique(activities) {
 }
 
 
-export function areEquals(array1, array2) {
+export function areNotEquals(array1, array2) {
+    //TODO: check types
     if (!array1 || _.size(array2) !== _.size(array1)) return true;
     for (let i = array2.length; i-- > 0;) {
         // let refKey = refKeys[i];
