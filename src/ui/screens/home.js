@@ -52,6 +52,7 @@ import OnBoardingManager from "../../managers/OnBoardingManager";
 import NoSpamDialog from "./NoSpamDialog";
 // $FlowFixMe
 import {AppTour, AppTourSequence, AppTourView} from "../../../vendors/taptarget";
+import LineupHorizontal from "../components/LineupHorizontal";
 
 
 type Props = {
@@ -419,6 +420,14 @@ class HomeScreen extends Screen<Props, State> {
     renderListItem(item: List, options = {}) {
         const {withMenuButton, withLineupTitle} = options;
         return (
+            <LineupHorizontal
+                list={item}
+                navigator={this.props.navigator}
+                {...options}
+            />
+        );
+
+        return (
             <View>
                 {withLineupTitle && <GTouchable
                     onPress={() => this.seeLineup(item.id)}>
@@ -600,6 +609,8 @@ class HomeScreen extends Screen<Props, State> {
         startAddItem(this.props.navigator, currentGoodshboxId());
     }
 }
+
+
 
 const screen = HomeScreen;
 
