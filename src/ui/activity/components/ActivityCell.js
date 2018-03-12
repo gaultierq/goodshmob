@@ -21,6 +21,8 @@ import {stylePadding} from "../../UIStyles";
 import {firstName} from "../../../helpers/StringUtils";
 import ActivityStatus from "./ActivityStatus";
 import FeedSeparator from "./FeedSeparator";
+import {areEquals} from "../../../helpers/ArrayUtil";
+import {UpdateTracker} from "../../UpdateTracker";
 
 export type ActivityDisplayContext = {
 
@@ -50,22 +52,16 @@ const AVATAR_DIM = 34;
 }))
 export default class ActivityCell extends React.Component<Props, State> {
 
-    refKeys: any;
+    // refKeys: any;
     itemId: Id;
+    updateTracker: UpdateTracker = new UpdateTracker(nextProps => this.makeRefObject(nextProps));
 
-
-    renderDebugActivityInfo(activity: Activity) {
-        return (
-            <View>
-                {_.keys(activity).map(k => <Text style={{fontSize: 9}}>{`${k}=${activity[k]}`}</Text>)}
-            </View>
-        );
-    }
 
     render() {
         console.debug("ActivityCell rendered");
         let activity = this.getActivity();
-        this.refKeys = this.makeRefObject(this.props);
+        // this.refKeys = this.makeRefObject(this.props);
+        this.updateTracker.onRender(this.props);
 
         if (sanitizeActivityType(activity.type) === 'asks') {
             return (
@@ -134,6 +130,13 @@ export default class ActivityCell extends React.Component<Props, State> {
     }
 
 
+    renderDebugActivityInfo(activity: Activity) {
+        return (
+            <View>
+                {_.keys(activity).map(k => <Text style={{fontSize: 9}}>{`${k}=${activity[k]}`}</Text>)}
+            </View>
+        );
+    }
 
     renderUserAvatar(user: User, styles?: *) {
         let navigator: RNNNavigator = this.props.navigator;
@@ -191,35 +194,24 @@ export default class ActivityCell extends React.Component<Props, State> {
             : activity.meta && activity.meta["liked"];
     }
 
+    // shouldComponentUpdate(nextProps: Props, nextState: State) {
+    //     return __ENABLE_PERF_OPTIM__ || areEquals(this.refKeys, this.makeRefObject(nextProps));
+    // }
+
     shouldComponentUpdate(nextProps: Props, nextState: State) {
-        if (!__ENABLE_PERF_OPTIM__) return true;
-
-        if (!this.hasChanged(nextProps)) {
-            superLog('ActivityCell render saved');
-            return false;
-        }
-        superLog('ActivityCell render executed');
-        return true;
-    }
-
-    hasChanged(nextProps:Props): boolean {
-        let oldRefKeys = this.refKeys;
-        let nextRefKeys = this.makeRefObject(nextProps);
-
-        if (!oldRefKeys || _.size(nextRefKeys) !== _.size(oldRefKeys)) return true;
-        for (let i = nextRefKeys.length; i-- > 0;) {
-            // let refKey = refKeys[i];
-            // $FlowFixMe
-            if (oldRefKeys[i] !== nextRefKeys[i]) return true;
-        }
-        return false;
-
+        return this.updateTracker.shouldComponentUpdate(nextProps);
     }
 
     makeRefObject(nextProps:Props) {
         const activityId = nextProps.activityId;
 
-        let result = this.getRefKeys(nextProps).map(k=>_.get(nextProps, k));
+        let getRefKeys = (nextProps: Props) => {
+            let activityType = sanitizeActivityType(nextProps.activityType);
+            let base = `data.${activityType}.${nextProps.activityId}`;
+            return [base, `${base}.meta`];
+        };
+
+        let result = getRefKeys(nextProps).map(k=>_.get(nextProps, k));
         let allPendings = _.values(_.get(nextProps, 'pending', {}));
         //[[create_ask1, create_ask2, ...], [create_comment1, create_comment2, ...], ...]
 
@@ -244,11 +236,7 @@ export default class ActivityCell extends React.Component<Props, State> {
         return result;
     }
 
-    getRefKeys(nextProps: Props) {
-        let activityType = sanitizeActivityType(nextProps.activityType);
-        let base = `data.${activityType}.${nextProps.activityId}`;
-        return [base, `${base}.meta`];
-    }
+
 
     getActivity() {
         const result = this.props.activity || buildNonNullData(this.props.data, this.props.activityType, this.props.activityId);
