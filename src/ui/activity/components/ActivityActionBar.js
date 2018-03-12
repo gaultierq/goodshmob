@@ -213,12 +213,13 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
         let description = isCurrentUser(user) ? "" : "via " +  fullName(user) + (activity.description && " - " + activity.description);
 
+        const lineupId = currentGoodshboxId();
         this.props.dispatch(SAVING_CREATION.pending({
             itemId: item.id,
-            lineupId: currentGoodshboxId(),
+            lineupId,
             privacy: 0,
             description,
-        }, {scope: {itemId: item.id}})).then(pendingId => {
+        }, {scope: {itemId: item.id, lineupId}})).then(pendingId => {
             //console.info(`saving ${saving.id} unsaved`)
             Messenger.sendMessage(
                 //MagicString

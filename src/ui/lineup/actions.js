@@ -60,7 +60,7 @@ export function saveItem(itemId: Id, lineupId: Id, privacy = 0, description = ''
 //save
 export function bookmarkDispatchee(payload: SAVING_CREATION_PAYLOAD) {
 
-    return SAVING_CREATION.pending(payload, {scope: {itemId: payload.itemId}});
+    return SAVING_CREATION.pending(payload, {scope: {itemId: payload.itemId, lineupId: payload.lineupId}});
 }
 
 export type SAVING_CREATION_PAYLOAD = {itemId: Id, lineupId: Id, privacy: Visibility, description: string}
@@ -100,6 +100,8 @@ export function patchLineup(editedLineup: List) {
 }
 
 export function doUnsave(pending, id, lineupId, delayMs?: ms) {
-    return pending ? SAVING_CREATION.undo(id) : SAVING_DELETION.pending({savingId: id, lineupId}, {delayMs, id, lineupId, scope: {activityId: id}});
+    return pending ? SAVING_CREATION.undo(id) : SAVING_DELETION.pending(
+        {savingId: id, lineupId},
+        {delayMs, id, lineupId, scope: {activityId: id, lineupId}});
 }
 

@@ -48,9 +48,9 @@ type Props = {
 type State = {
 };
 
-
 @connect((state, ownProps) => ({
     data: state.data,
+    pending: state.pending,
 }))
 @logged
 export default class LineupHorizontal extends Component<Props, State> {
@@ -262,22 +262,22 @@ export default class LineupHorizontal extends Component<Props, State> {
         let result = getRefKeys().map(k=>_.get(nextProps, k));
 
         //TODO: deal with pendings
-        // let allPendings = _.values(_.get(nextProps, 'pending', {}));
+        let allPendings = _.values(_.get(nextProps, 'pending', {}));
         // //[[create_ask1, create_ask2, ...], [create_comment1, create_comment2, ...], ...]
         //
-        // let scopedPendings = [];
-        // _.reduce(allPendings, (res, pendingList) => {
-        //
-        //     let filteredPendingList = _.filter(pendingList, pending => {
-        //         const scope = _.get(pending, "options.scope");
-        //         if (!scope) return false;
-        //         return scope.activityId === activityId || scope.itemId === this.itemId;
-        //     });
-        //
-        //     res.push(...filteredPendingList);
-        //     return res;
-        // }, scopedPendings);
-        // result.push(...scopedPendings);
+        let scopedPendings = [];
+        _.reduce(allPendings, (res, pendingList) => {
+
+            let filteredPendingList = _.filter(pendingList, pending => {
+                const scope = _.get(pending, "options.scope");
+                if (!scope) return false;
+                return scope.lineupId === lineupId;
+            });
+
+            res.push(...filteredPendingList);
+            return res;
+        }, scopedPendings);
+        result.push(...scopedPendings);
 
         return result;
     }
