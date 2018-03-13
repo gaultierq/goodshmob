@@ -17,7 +17,6 @@ import {TabBar, TabViewAnimated, TabViewPagerPan} from 'react-native-tab-view';
 import {SearchBar} from 'react-native-elements'
 
 import type {Item, List} from "../../types";
-import {NavStyles} from "../UIStyles";
 import {Navigation} from 'react-native-navigation';
 import {Colors} from "../colors";
 import Spinner from 'react-native-spinkit';

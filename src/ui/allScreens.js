@@ -29,6 +29,7 @@ import UserSheetScreen from './screens/userSheet';
 import MyAvatar from './components/MyAvatar';
 import {InteractionScreen} from './screens/interactions';
 import AddLineupSheet from './screens/addlineupsheet';
+import PlacesAutocomplete from './screens/PlacesAutocomplete';
 
 
 import RnRenderPerfs from 'rn-render-perfs';
@@ -98,4 +99,5 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.ChangeDescriptionScreen', () => ChangeDescriptionScreen, store, Provider);
     wrap('goodsh.ChangeLineupName', () => ChangeLineupName, store, Provider);
     wrap('goodsh.NoSpamScreen', () => NoSpamScreen, store, Provider);
+    wrap('goodsh.PlacesAutocomplete', () => PlacesAutocomplete, store, Provider);
 }

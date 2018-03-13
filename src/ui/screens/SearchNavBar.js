@@ -14,9 +14,7 @@ import {TabBar, TabViewAnimated, TabViewPagerPan} from 'react-native-tab-view';
 import {SearchBar} from 'react-native-elements'
 
 import type {SearchToken} from "../../types";
-import {NavStyles} from "../UIStyles";
 import {Navigation} from 'react-native-navigation';
-import {Colors} from "../colors";
 import GSearchBar from "../GSearchBar";
 
 type NavProps = {
@@ -37,27 +35,29 @@ export const DEEPLINK_SEARCH_CLOSE = 'DEEPLINK_SEARCH_CLOSE';
 //connect -> redux
 export default class SearchNavBar extends Component<NavProps, NavState> {
 
+
+    static defaultProps = {autoFocus: true};
     state = {
         input: null,
-        placeholder: 'what ?'
     };
 
     constructor(props) {
         super(props);
-        this.state = {input: props.initialInput, placeholder: props.placeholder}
+        this.state = {input: props.initialInput}
     }
 
 
     render() {
+        const {...attr} = this.props;
 
         return (
             <GSearchBar
-                autoFocus
+                // autoFocus
                 // lightTheme
                 onChangeText={this.onChangeText.bind(this)}
                 onSubmitEditing={this.submit.bind(this)}
                 onClearText={this.onClearText.bind(this)}
-                placeholder={this.state.placeholder}
+
                 clearIcon={!!this.state.input && {color: '#86939e'}}
                 // containerStyle={SEARCH_STYLES.searchContainer}
                 // inputStyle={SEARCH_STYLES.searchInput}
@@ -65,6 +65,8 @@ export default class SearchNavBar extends Component<NavProps, NavState> {
                 // autoCorrect={false}
                 // returnKeyType={'search'}
                 value={this.state.input}
+                // placeholder={this.state.placeholder}
+                {...attr}
             />
         );
 

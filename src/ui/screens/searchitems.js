@@ -56,6 +56,7 @@ class SearchItem extends Screen<Props, State> {
                     {...currentOptions}
                     onNewOptions={onNewOptions}
                     onSearchSubmited={onSearchSubmited}
+                    navigator={this.props.navigator}
                 />
             ),
         };

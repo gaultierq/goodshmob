@@ -15,18 +15,29 @@ import GTouchable from "../GTouchable";
 import {Colors} from "../colors";
 import {NavStyles, SEARCH_INPUT_PROPS, SEARCH_INPUT_RADIUS, SEARCH_STYLES, SEARCH_STYLES_OBJ} from "../UIStyles";
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {Navigation} from 'react-native-navigation';
+import {CANCELABLE_SEARCH_MODAL} from "../Nav";
+import type {RNNNavigator} from "../../types";
 
 
 export type SearchPlacesProps = {
     aroundMe: ?boolean,
     onNewOptions: any => void,
-    onSearchSubmited: void => void
+    onSearchSubmited: void => void,
+    navigator: RNNNavigator
 };
 
 type SearchPlacesState = {
     aroundMe: boolean,
     city: string,
     focus: boolean
+};
+
+export const SEARCH_OPTIONS_PADDINGS = {
+
+    paddingLeft: __IS_IOS__ ? 16 : 80,
+    paddingRight: __IS_IOS__ ? 16 : 8,
+    paddingVertical: 8,
 };
 
 export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState> {
@@ -67,9 +78,8 @@ export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlace
                 backgroundColor: NavStyles.navBarBackgroundColor,
                 flex: 0,
                 flexDirection: 'row',
-                paddingLeft: __IS_IOS__ ? 16 : 80,
-                paddingRight: __IS_IOS__ ? 16 : 8,
-                paddingVertical: 8,
+
+                ...SEARCH_OPTIONS_PADDINGS
             }}>
 
                 <Animated.View style={{
@@ -93,21 +103,46 @@ export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlace
                             borderBottomLeftRadius: radius,
                             paddingHorizontal: paddingLeft,
                         }}>
-                            <TextInput
-                                ref={input=>this.input = input}
-                                onSubmitEditing={() => this.props.onSearchSubmited()}
-                                onClearText={() => this.setStateAndNotify({city: ""})}
-                                placeholder={"Paris, London, New-York..."}
-                                onFocus={()=>this.setState({focus:true})}
-                                onBlur={()=>this.setState({focus:false})}
-                                // placeholderTextColor={SEARCH_PLACEHOLDER_COLOR}
-                                {...SEARCH_INPUT_PROPS}
-                                style={[SEARCH_STYLES.searchInput,]}
-                                value={this.state.city}
-                                onChangeText={city=> {
-                                    this.setStateAndNotify({city})
-                                }}
-                            />
+                            <GTouchable
+                                // style={{backgroundColor:'red'}}
+                                onPress={()=>{
+                                    const navigator = this.props.navigator;
+                                    navigator.showModal({
+                                        screen: 'goodsh.PlacesAutocomplete',
+                                        navigatorButtons: CANCELABLE_SEARCH_MODAL(),
+                                        animationType: 'none',
+                                        passProps: {
+                                            onPlaceSelected: (data, details) => {
+                                                this.setStateAndNotify({city: data.description});
+                                                // Navigation.dismissModal({animationType: 'none',});
+                                                navigator.dismissModal({animationType: 'none'});
+                                            },
+                                            onClickClose: () => {
+                                                navigator.dismissModal({animationType: 'none'});
+                                            }
+                                        }
+                                    });
+                                }}>
+                                <View pointerEvents='none'>
+                                    <TextInput
+                                        editable={false}
+                                        ref={input=>this.input = input}
+                                        onSubmitEditing={() => this.props.onSearchSubmited()}
+                                        onClearText={() => this.setStateAndNotify({city: ""})}
+
+                                        onFocus={()=>this.setState({focus:true})}
+                                        onBlur={()=>this.setState({focus:false})}
+                                        // placeholderTextColor={SEARCH_PLACEHOLDER_COLOR}
+                                        placeholder={"Paris, London, New-York..."}
+                                        {...SEARCH_INPUT_PROPS}
+                                        style={[SEARCH_STYLES.searchInput,]}
+                                        value={this.state.city}
+                                        onChangeText={city=> {
+                                            this.setStateAndNotify({city})
+                                        }}
+                                    />
+                                </View>
+                            </GTouchable>
                         </Animated.View>
 
                     </Animated.View>
