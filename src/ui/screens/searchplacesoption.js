@@ -34,12 +34,17 @@ export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlace
     input;
     animation;
 
+    static defaultProps = {
+        aroundMe: true,
+    };
 
     constructor(props) {
         super(props);
-        this.state = {aroundMe: !!props.aroundMe};
+        const aroundMe = !!props.aroundMe;
+        this.state = {aroundMe};
         this.animation = new Animated.Value(0);
         props.onNewOptions(this.state);
+        this.toggleAroundMe(aroundMe);
     }
 
     render() {
