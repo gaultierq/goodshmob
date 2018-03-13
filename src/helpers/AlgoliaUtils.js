@@ -5,7 +5,7 @@ import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} f
 import {TabBar, TabViewAnimated} from 'react-native-tab-view';
 import {SearchBar} from 'react-native-elements'
 import type {SearchCategoryType} from "../ui/screens/search";
-import type {SearchToken} from "../types";
+import type {RNNNavigator, SearchToken} from "../types";
 import algoliasearch from 'algoliasearch/reactnative';
 import * as appActions from "../auth/actions";
 
@@ -64,7 +64,7 @@ const instance = new AlgoliaClient();
 
 export {instance as AlgoliaClient};
 
-export function makeAlgoliaSearch(categories, navigator) {
+export function makeAlgoliaSearchEngine(categories, navigator: RNNNavigator) {
 
     let search = (token: SearchToken, categoryType: SearchCategoryType, page: number): Promise<*> => {
 
@@ -136,7 +136,12 @@ export function makeAlgoliaSearch(categories, navigator) {
 
         });
     };
-    return search;
+    return {
+        search,
+        canSearch: (token: SearchToken, category: SearchCategoryType, searchOptions: ?any) => {
+            return !_.isEmpty(token);
+        }
+    };
 }
 
 

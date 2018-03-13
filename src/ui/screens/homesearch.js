@@ -16,7 +16,7 @@ import {currentUserId, logged} from "../../managers/CurrentUser"
 import type {Id, List, NavigableProps, Saving, SearchToken} from "../../types";
 import ItemCell from "../components/ItemCell";
 import LineupCell from "../components/LineupCell";
-import {AlgoliaClient, createResultFromHit, makeAlgoliaSearch} from "../../helpers/AlgoliaUtils";
+import {AlgoliaClient, createResultFromHit, makeAlgoliaSearchEngine} from "../../helpers/AlgoliaUtils";
 import Screen from "../components/Screen";
 import type {SearchCategory} from "./search";
 import SearchScreen from "./search";
@@ -122,11 +122,11 @@ export default class HomeSearchScreen extends Screen<Props, State> {
         //         navigator={navigator}
         //     />
         // );
-        let search = makeAlgoliaSearch(categories, navigator);
+        let search = makeAlgoliaSearchEngine(categories, navigator);
 
         return (
             <SearchScreen
-                searchEngine={{search}}
+                searchEngine={search}
                 categories={categories}
                 navigator={navigator}
                 token={this.props.token}

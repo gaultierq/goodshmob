@@ -16,7 +16,7 @@ import {currentUserId, logged} from "../../managers/CurrentUser"
 import type {Id, List, NavigableProps, Saving} from "../../types";
 import ItemCell from "../components/ItemCell";
 import LineupCell from "../components/LineupCell";
-import {AlgoliaClient, createResultFromHit, createResultFromHit2, makeAlgoliaSearch} from "../../helpers/AlgoliaUtils";
+import {AlgoliaClient, createResultFromHit, createResultFromHit2, makeAlgoliaSearchEngine} from "../../helpers/AlgoliaUtils";
 import UserConnectItem from "./userConnectItem";
 import UserRowI from "../activity/components/UserRowI";
 import {SearchStyles} from "../UIStyles";
@@ -166,10 +166,10 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
         //     />
         // );
 
-        let search = makeAlgoliaSearch(categories, navigator);
+        let search = makeAlgoliaSearchEngine(categories, navigator);
 
         return <SearchScreen
-            searchEngine={{search}}
+            searchEngine={search}
             categories={categories}
             navigator={navigator}
             placeholder={i18n.t('search.in_network')}

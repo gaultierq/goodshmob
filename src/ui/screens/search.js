@@ -51,7 +51,12 @@ export type SearchEngine = {
             page: number,
             searchOptions: ?any
 
-        ) => Promise<SearchResult>
+        ) => Promise<SearchResult>,
+    canSearch: (
+        token: SearchToken,
+        category: SearchCategoryType,
+        searchOptions: ?any) => boolean
+
 };
 
 export type Props = {
@@ -256,9 +261,12 @@ export default class SearchScreen extends Component<Props, State> {
         let catType = this.getCurrentCategory().type;
 
         console.log(`performSearch:token=${token} page=${page}`);
+        const {search, canSearch} = this.props.searchEngine;
+        const options = this.getCurrentSearchOptions(catType);
 
-        if (!token) {
-            console.log(`perform search aborted: no token to search`);
+
+        if (!canSearch(token, catType, options)) {
+            console.log(`perform search aborted: cannot search`);
             return;
         }
 
@@ -285,8 +293,9 @@ export default class SearchScreen extends Component<Props, State> {
             console.log(`index set within perform search=${this.state.index}`);
         });
 
-        this.props
-            .searchEngine.search(token, catType, page, this.getCurrentSearchOptions(catType))
+
+
+        search(token, catType, page, options)
             .catch(err=> {
                 console.warn(`error while performing search: ${err}`);
                 this.setState(update(this.state, {searches: {[token]: {[catType]: {$merge: {searchState: 3}}}}},));

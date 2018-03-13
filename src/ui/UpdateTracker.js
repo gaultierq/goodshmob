@@ -25,7 +25,7 @@ export class UpdateTracker {
         const array2 = this.makeRefObject(nextProps);
         const result = !array1 || !array2 || areNotEquals(array1, array2);
         if (this.debugName) {
-            console.debug(`${this.debugName} shouldComponentUpdate = ${result} ${this.debugId && result ? this.debugId : ""}`)
+            // console.debug(`${this.debugName} shouldComponentUpdate = ${result} ${this.debugId && result ? this.debugId : ""}`)
         }
         return __ENABLE_PERF_OPTIM__ || result;
     }
