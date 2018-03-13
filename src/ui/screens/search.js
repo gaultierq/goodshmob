@@ -137,6 +137,12 @@ export default class SearchScreen extends Component<Props, State> {
         let cat = this.getCurrentCategory();
 
         const showTabs = nCat > 1 && (hasSearched || true);
+
+        const onNewOptions = newOptions => {
+            this.searchOptions[cat.type] = newOptions;
+            this._debounceSearch();
+        };
+
         return (
             <KeyboardAvoidingView behavior={ (Platform.OS === 'ios') ? 'padding' : null }
                                   keyboardVerticalOffset={Platform.OS === 'ios' ? 50 : 0}
@@ -146,10 +152,7 @@ export default class SearchScreen extends Component<Props, State> {
                     cat && cat.searchOptions && (
                         cat.searchOptions.renderOptions(
                             this.getCurrentSearchOptions(cat.type),
-                            newOptions => {
-                                this.searchOptions[cat.type] = newOptions;
-                                this._debounceSearch();
-                            },
+                            onNewOptions,
                             this._debounceSearch
                             )
                     )
