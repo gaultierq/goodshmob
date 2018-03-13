@@ -109,6 +109,7 @@ export default class SearchScreen extends Component<Props, State> {
         props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 
         this.state = {
+            input: '',
             searches: {},
             index: 0,
             routes: props.categories.map((c, i) => ({key: `${i}`, title: c.tabName ? i18n.t(c.tabName) : null})),
@@ -308,7 +309,7 @@ export default class SearchScreen extends Component<Props, State> {
 
         search(token, catType, page, options)
             .catch(err=> {
-                console.warn(`error while performing search: ${err}`);
+                console.warn(`error while performing search:`, err);
                 this.setState(update(this.state, {searches: {[token]: {[catType]: {$merge: {searchState: 3}}}}},));
             })
             .then((results: SearchResult) => {

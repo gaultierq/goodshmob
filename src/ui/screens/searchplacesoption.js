@@ -29,7 +29,7 @@ export type SearchPlacesProps = {
 
 type SearchPlacesState = {
     aroundMe: boolean,
-    city: string,
+    place: string,
     focus: boolean
 };
 
@@ -53,7 +53,7 @@ export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlace
         super(props);
         const aroundMe = !!props.aroundMe;
         this.state = {aroundMe};
-        this.animation = new Animated.Value(0);
+        this.animation = new Animated.Value(1);
         props.onNewOptions(this.state);
         this.toggleAroundMe(aroundMe);
     }
@@ -113,7 +113,22 @@ export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlace
                                         animationType: 'none',
                                         passProps: {
                                             onPlaceSelected: (data, details) => {
-                                                this.setStateAndNotify({city: data.description});
+                                                const place = data.description;
+                                                if (place === 'Current location') {
+                                                    // this.setStateAndNotify({
+                                                    //     aroundMe: true,
+                                                    // });
+                                                    this.toggleAroundMe(true)
+                                                }
+                                                else {
+                                                    let {lat, lng} = _.get(details, 'geometry.location', {});
+
+                                                    this.setStateAndNotify({
+                                                        place: place,
+                                                        lat, lng
+                                                    });
+                                                }
+
                                                 // Navigation.dismissModal({animationType: 'none',});
                                                 navigator.dismissModal({animationType: 'none'});
                                             },
@@ -128,7 +143,7 @@ export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlace
                                         editable={false}
                                         ref={input=>this.input = input}
                                         onSubmitEditing={() => this.props.onSearchSubmited()}
-                                        onClearText={() => this.setStateAndNotify({city: ""})}
+                                        onClearText={() => this.setStateAndNotify({place: "", lat: "", lng: ""})}
 
                                         onFocus={()=>this.setState({focus:true})}
                                         onBlur={()=>this.setState({focus:false})}
@@ -136,9 +151,9 @@ export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlace
                                         placeholder={"Paris, London, New-York..."}
                                         {...SEARCH_INPUT_PROPS}
                                         style={[SEARCH_STYLES.searchInput,]}
-                                        value={this.state.city}
-                                        onChangeText={city=> {
-                                            this.setStateAndNotify({city})
+                                        value={this.state.place}
+                                        onChangeText={place=> {
+                                            this.setStateAndNotify({place})
                                         }}
                                     />
                                 </View>
@@ -246,6 +261,7 @@ export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlace
 
     toggleAroundMe(aroundMe: boolean) {
         this.setStateAndNotify({aroundMe});
+
         Animated.timing(
             this.animation,
             {

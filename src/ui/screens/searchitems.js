@@ -81,7 +81,7 @@ class SearchItem extends Screen<Props, State> {
         const searchEngine: SearchEngine = {
             search: this.search.bind(this),
             canSearch: (token: SearchToken, category: SearchCategoryType, searchOptions: ?any) => {
-                if (category === 'places' && searchOptions && searchOptions.aroundMe) return true;
+                if (category === 'places' && searchOptions && (searchOptions.aroundMe || searchOptions.place)) return true;
                 return !_.isEmpty(token);
             }
         };
@@ -97,7 +97,7 @@ class SearchItem extends Screen<Props, State> {
     search(token: SearchToken, category: SearchCategoryType, page: number, options: ?any): Promise<*> {
 
         //searching
-        console.debug(`api: searching: token='${token}', category='${category}', page=${page}, options=${options}`);
+        console.debug(`api: searching: token='${token}', category='${category}', page=${page}, options=`, options);
 
         return new Promise((resolve, reject) => {
 
@@ -105,8 +105,11 @@ class SearchItem extends Screen<Props, State> {
 
             let call = new Api.Call()
                 .withMethod('GET')
-                .withRoute(`search/${category}`)
-                .addQuery({'search[term]': token});
+                .withRoute(`search/${category}`);
+
+            if (!_.isEmpty(token)) {
+                call.addQuery({'search[term]': token});
+            }
 
 
             // if (category === 'places') {
@@ -147,22 +150,47 @@ class SearchItem extends Screen<Props, State> {
         });
     }
 
-    fillOptions(category: SearchCategoryType, call: Call, options: any) {
-        return new Promise((resolve, reject) => {
-            if (category === 'places' && options) {
-                if (options.aroundMe) {
-                    Geolocation.getPosition().then(({latitude, longitude}) => {
-                        call.addQuery(latitude && {'search[lat]': latitude})
-                            .addQuery(longitude && {'search[lng]': longitude});
-                        resolve(call);
-                    }, err => reject(err));
+    getPosition(options: any = {}) {
+        if (options.aroundMe) {
+            return Geolocation.getPosition();
+        }
+        else {
+            return new Promise((resolve, reject) => {
+                let {lat, lng} = options;
+                if (lat && lng) {
+                    resolve({latitude: lat, longitude: lng});
                 }
                 else {
-                    if (!_.isEmpty(options.city)) {
-                        call.addQuery({'search[city]': options.city});
-                    }
-                    resolve(call);
+                    resolve({});
                 }
+            });
+        }
+    }
+
+    fillOptions(category: SearchCategoryType, call: Call, options: any) {
+        return new Promise((resolve, reject) => {
+            if (category === 'places') {
+                this.getPosition(options).then(({latitude, longitude}) => {
+                    call.addQuery(latitude && {'search[lat]': latitude})
+                        .addQuery(longitude && {'search[lng]': longitude});
+                    resolve(call);
+                }, err => reject(err));
+
+                // if (options.aroundMe) {
+                //     Geolocation.getPosition().then(({latitude, longitude}) => {
+                //         call.addQuery(latitude && {'search[lat]': latitude})
+                //             .addQuery(longitude && {'search[lng]': longitude});
+                //         resolve(call);
+                //     }, err => reject(err));
+                // }
+                // else {
+                //     if (!_.isEmpty(options.lat)) {
+                //         // call.addQuery({'search[city]': options.city});
+                //         call.addQuery(latitude && {'search[lat]': options.lat})
+                //             .addQuery(longitude && {'search[lng]': options.lng});
+                //     }
+                //     resolve(call);
+                // }
             }
             else {
                 resolve(call);

@@ -6,6 +6,7 @@ import Config from 'react-native-config'
 import {NavStyles, SEARCH_INPUT_PROPS, SEARCH_STYLES, styleMargin, stylePadding} from "../UIStyles";
 import {SEARCH_OPTIONS_PADDINGS} from "./searchplacesoption";
 import * as UI from "../UIStyles";
+import {Colors} from "../colors";
 
 // const homePlace = { description: 'Home', geometry: { location: { lat: 48.8152937, lng: 2.4597668 } }};
 // const workPlace = { description: 'Work', geometry: { location: { lat: 48.8496818, lng: 2.2940881 } }};
@@ -78,7 +79,8 @@ export default class PlacesAutocomplete extends Screen<Props, State> {
                     // available options: https://developers.google.com/places/web-service/autocomplete
                     key: Config.GOOGLE_PLACES_API_KEY,
                     language: 'en', // language of the results
-                    types: '(cities)' // default: 'geocode'
+                    // types: '(cities)' // default: 'geocode'
+                    // types: '(address,cities)' // default: 'geocode'
                 }}
 
                 styles={{
@@ -97,25 +99,20 @@ export default class PlacesAutocomplete extends Screen<Props, State> {
                         // backgroundColor:'red',
                     },
                     textInput: [SEARCH_STYLES.searchInput, {
-                        // paddingTop: 0,
-                        // paddingBottom: 0,
-                        // paddingLeft: 0,
-                        // paddingRight: 0,
-                        // marginTop: 0,
                         ...styleMargin(0,0),
                         ...stylePadding(10,0),
                     }],
                     description: {
                         fontWeight: 'bold'
                     },
-                    // predefinedPlacesDescription: {
-                    //     color: '#1faadb'
-                    // }
+                    predefinedPlacesDescription: {
+                        color: Colors.black
+                    }
                 }}
 
-                // currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
-                // currentLocationLabel="Current location"
-                nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+                currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
+                currentLocationLabel="Current location"
+                nearbyPlacesAPI='None' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
                 GoogleReverseGeocodingQuery={{
                     // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
                 }}
