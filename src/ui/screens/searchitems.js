@@ -25,8 +25,8 @@ import Screen from "../components/Screen";
 import type {Item, RNNNavigator} from "../../types";
 import {Colors} from "../colors";
 import Geolocation from "../../managers/GeoLocation"
-import {SearchPlacesOption} from "./searchplacesoption";
 import type {SearchPlacesProps} from "./searchplacesoption";
+import {SearchPlacesOption} from "./searchplacesoption";
 
 type SearchCategory = "consumer_goods" | "places" | "musics" | "movies";
 type SearchToken = string;

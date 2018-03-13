@@ -3,7 +3,7 @@ import {Navigation} from 'react-native-navigation';
 import {screen as LoginScreen} from './screens/login';
 import {screen as NetworkScreen} from './screens/network';
 import {screen as SearchItemScreen} from './screens/searchitems';
-import {SearchNavBar} from './screens/search';
+import SearchNavBar from './screens/SearchNavBar';
 import DebugScreen from './screens/debug';
 
 import {screen as ActivityDetailScreen} from './activity/activityDetail';

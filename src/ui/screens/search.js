@@ -2,7 +2,16 @@
 
 import type {Node} from 'react';
 import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, Text, Platform, TouchableOpacity, View, KeyboardAvoidingView} from 'react-native';
+import {
+    ActivityIndicator,
+    FlatList,
+    KeyboardAvoidingView,
+    Platform,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
+} from 'react-native';
 import {connect} from "react-redux";
 import {logged} from "../../managers/CurrentUser"
 import {TabBar, TabViewAnimated, TabViewPagerPan} from 'react-native-tab-view';
@@ -12,13 +21,12 @@ import {SearchBar} from 'react-native-elements'
 import type {i18Key, Item, List, Saving, SearchToken} from "../../types";
 import Button from 'apsl-react-native-button'
 import * as UI from "../UIStyles";
-import {NavStyles} from "../UIStyles";
 import {Navigation} from 'react-native-navigation';
 import update from "immutability-helper";
 import {Colors} from "../colors";
 import Spinner from 'react-native-spinkit';
-import {SEARCH_STYLES} from "../UIStyles";
-import GSearchBar from "../GSearchBar";
+import {DEEPLINK_SEARCH_CLOSE, DEEPLINK_SEARCH_SUBMITED, DEEPLINK_SEARCH_TEXT_CHANGED} from "./SearchNavBar";
+import {NavStyles} from "../UIStyles";
 
 export type SearchCategoryType = string;
 
@@ -404,88 +412,6 @@ class SearchPage extends Component<PageProps, PageState> {
 }
 
 
-type NavProps = {
-    onChangeText: (token: string) => void,
-    initialInput?: ?SearchToken,
-    placeholder?: string,
-    navigator: any
-};
-
-type NavState = {
-    input:? string,
-};
-
-const DEEPLINK_SEARCH_TEXT_CHANGED = 'DEEPLINK_SEARCH_TEXT_CHANGED';
-const DEEPLINK_SEARCH_SUBMITED = 'DEEPLINK_SEARCH_SUBMITED';
-const DEEPLINK_SEARCH_CLOSE = 'DEEPLINK_SEARCH_CLOSE';
-
-//connect -> redux
-export class SearchNavBar extends Component<NavProps, NavState> {
-
-    state = {
-        input: null,
-        placeholder: 'what ?'
-    };
-
-    constructor(props) {
-        super(props);
-        this.state = {input: props.initialInput, placeholder: props.placeholder}
-    }
-
-
-    render() {
-
-        return (
-            <GSearchBar
-                autoFocus
-                // lightTheme
-                onChangeText={this.onChangeText.bind(this)}
-                onSubmitEditing={this.submit.bind(this)}
-                onClearText={this.onClearText.bind(this)}
-                placeholder={this.state.placeholder}
-                clearIcon={!!this.state.input && {color: '#86939e'}}
-                // containerStyle={SEARCH_STYLES.searchContainer}
-                // inputStyle={SEARCH_STYLES.searchInput}
-                // autoCapitalize='none'
-                // autoCorrect={false}
-                // returnKeyType={'search'}
-                value={this.state.input}
-            />
-        );
-
-    }
-
-    submit() {
-        Navigation.handleDeepLink({
-            link: DEEPLINK_SEARCH_SUBMITED,
-        });
-    }
-
-    onChangeText(input: string) {
-        this.setState({input});
-        //because function props are not currently allowed by RNN
-
-        //this.props.onChangeText(input);
-        //become->
-        Navigation.handleDeepLink({
-            link: DEEPLINK_SEARCH_TEXT_CHANGED,
-            payload: input
-        });
-    }
-
-    onClearText() {
-        Navigation.handleDeepLink({
-            link: DEEPLINK_SEARCH_CLOSE
-        });
-    }
-
-    isSearching() {
-        return this.state.isSearching;
-    }
-}
-
-
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -534,3 +460,4 @@ const styles = StyleSheet.create({
         color: '#000000',
     },
 });
+
