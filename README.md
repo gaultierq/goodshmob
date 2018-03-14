@@ -1,13 +1,15 @@
 # Goodsh mobile
 
-
 ## Setup
+
 Use the following versions:
+
 * node 9.3
 * npm 5.6.0
 * pod 1.4.0.rc.1
 
 ## Install
+
 ```
 git clone git@github.com:bennytac/goodshmob.git
 cd goodshmob
@@ -16,13 +18,35 @@ yarn
 pod install --project-directory=ios
 ```
 
+## Running
+
+### Android
+
+Depending on whether you are willing to use a physical or virtual device, below you will find the explanation on how to run the app on a physical device. If you are willing to use a virtual device take a look [here](https://developer.android.com/studio/run/managing-avds.html).
+
+If you are running the app for the first time, you will need to use the command line:
+
+```bash
+react-native run-android
+```
+
+Make sure your android device has the developer options enabled and the `USB debugging` as well as the `Install via USB` option enabled in order to authorize the installation the local app via USB.
+
+Then, once the previous command is completed, you should see a new app installed on your device.
+
+You are now ready to run the app anytime with the following command:
+
+```bash
+yarn start
+```
+
 ## Debugging
 
 The `.env` file contains plenty of options to configure your app.
-  
+
 - display console.logs:   
  `ENABLED_LOGS=log,debug,info,warn,error`
-   
+
 - show RN menu on android device:   
 `adb shell input keyevent 82`
 
@@ -35,6 +59,7 @@ dans `RCTDefines.h` set `RCT_DEV 1`
 `./node_modules/flow-bin/flow-osx-v0.57.3/flow check --show-all-errors | grep 'Error: src'`
 
 ## Troubleshooting
+
 1. On Android, when launching the app on emulator you may end up with error :
    ```
    BUILD SUCCESSFUL in 7s...
@@ -47,7 +72,7 @@ dans `RCTDefines.h` set `RCT_DEV 1`
 2. `java.io.IOException: Duplicate zip entry [classes.jar:com/google/android/gms/internal/zzfgf.class]`
 
     update app/build.gradle with latest google service version  
-    
+
     You can check before which version is resolved:  
     `./gradlew :app:dependencies | grep google | grep '>'`
 
