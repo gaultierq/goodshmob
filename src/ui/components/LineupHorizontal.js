@@ -24,7 +24,7 @@ import {stylePadding} from "../UIStyles";
 import {currentGoodshboxId, logged} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
-import {LINEUP_DELETION} from "../lineup/actions";
+import {CREATE_SAVING, LINEUP_DELETION} from "../lineup/actions";
 import * as Nav from "../Nav";
 import {startAddItem} from "../Nav";
 import {Colors} from "../colors";
@@ -36,11 +36,14 @@ import GTouchable from "../GTouchable";
 import BottomSheet from 'react-native-bottomsheet';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {UpdateTracker} from "../UpdateTracker";
-import {sanitizeActivityType} from "../../helpers/DataUtils";
+import {buildData, sanitizeActivityType} from "../../helpers/DataUtils";
+import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
+import StoreManager from "../../managers/StoreManager";
 // $FlowFixMe
 type Props = {
     navigator: RNNNavigator,
-    lineup: List,
+    // lineup: List,
+    lineupId: Id,
     withMenuButton: boolean,
     withLineupTitle: boolean,
 };
@@ -71,7 +74,26 @@ export default class LineupHorizontal extends Component<Props, State> {
     render() {
         this.updateTracker.onRender(this.props);
 
-        const {withMenuButton, withLineupTitle, lineup} = this.props;
+
+
+        const {withMenuButton, withLineupTitle, lineupId} = this.props;
+
+        // let lineup = buildData(this.props.data, 'lists', lineupId);
+
+        // //reconciliate pendings
+        // let savings = mergeItemsAndPendings(
+        //     lineup.savings,
+        //     this.props.pending[CREATE_SAVING],
+        //     this.props.pending[DELETE_SAVING],
+        //     (pending) => ({
+        //         id: pending.id,
+        //         itemId: pending.payload.itemId,
+        //         type: 'savings' //here ? or reducer ?
+        //     }),
+        //     {afterI: 0}
+        // );
+        let {lineup, savings} = StoreManager.getLineupSavings(lineupId);
+
         return (
             <View>
                 {withLineupTitle && <GTouchable
@@ -82,14 +104,13 @@ export default class LineupHorizontal extends Component<Props, State> {
                         {withMenuButton && this.renderMenuButton(lineup, 15)}
                     </View>
                 </GTouchable>}
-                {this.renderList(lineup)}
+                {this.renderList(lineup, savings)}
             </View>
 
         )
     }
 
-    renderList(list: List) {
-        let savings = list.savings;
+    renderList(list: List, savings: Array<Saving>) {
         if (_.isEmpty(savings)) {
             return this.renderEmptyList(list)
         }
@@ -98,7 +119,7 @@ export default class LineupHorizontal extends Component<Props, State> {
             data={savings}
             renderItem={({item}) => (
                 <GTouchable onPress={()=>{this.onSavingPressed(item)}}>
-                    <LineupCellSaving saving={item} style={{marginRight: 10}}/>
+                    <LineupCellSaving item={item.resource} style={{marginRight: 10}}/>
                 </GTouchable>)
             }
             // fetchSrc={{
@@ -251,7 +272,7 @@ export default class LineupHorizontal extends Component<Props, State> {
 
     makeRefObject(nextProps:Props) {
         // return null;
-        const lineupId = _.get(nextProps, 'lineup.id');
+        const lineupId = _.get(nextProps, 'lineupId');
         if (!lineupId) return null;
 
         let getRefKeys = () => {

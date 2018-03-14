@@ -15,7 +15,7 @@ import ActionRights, {getPendingLikeStatus} from "../../rights";
 import {CREATE_COMMENT} from "../../screens/comments";
 import GTouchable from "../../GTouchable";
 import * as Nav from "../../Nav";
-import {SAVING_CREATION, doUnsave, SAVING_DELETION} from "../../lineup/actions";
+import {CREATE_SAVING, doUnsave, SAVING_DELETION} from "../../lineup/actions";
 import StoreManager from "../../../managers/StoreManager";
 import Messenger from "../../../managers/Messenger";
 
@@ -214,8 +214,9 @@ export default class ActivityActionBar extends React.Component<Props, State> {
         let description = isCurrentUser(user) ? "" : "via " +  fullName(user) + (activity.description && " - " + activity.description);
 
         const lineupId = currentGoodshboxId();
-        this.props.dispatch(SAVING_CREATION.pending({
+        this.props.dispatch(CREATE_SAVING.pending({
             itemId: item.id,
+            itemType: item.type,
             lineupId,
             privacy: 0,
             description,
@@ -230,7 +231,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                         title: i18n.t('activity_action_bar.goodsh_bookmarked_change_lineup'),
                         onPress: () => {
                             //undo previous add
-                            SAVING_CREATION.undo(pendingId);
+                            CREATE_SAVING.undo(pendingId);
                             let item = activity.resource;
 
                             let cancel = () => {

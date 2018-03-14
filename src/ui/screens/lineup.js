@@ -17,7 +17,7 @@ import {Colors} from "../colors";
 import Screen from "./../components/Screen";
 import {STYLES} from "../UIStyles";
 import {fullName} from "../../helpers/StringUtils";
-import {DELETE_SAVING, FETCH_LINEUP, FETCH_SAVINGS} from "../lineup/actions";
+import {FETCH_LINEUP, FETCH_SAVINGS} from "../lineup/actions";
 import {UNSAVE} from "../activity/actionTypes";
 
 type Props = {

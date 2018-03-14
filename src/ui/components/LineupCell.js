@@ -5,12 +5,14 @@ import React from 'react';
 import {Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import * as UI from "../UIStyles";
 import {stylePadding} from "../UIStyles";
-import {assertUnique} from "../../helpers/DataUtils";
+import {assertUnique, buildData} from "../../helpers/DataUtils";
 import {isEmpty} from "lodash";
 import type {List, Saving} from "../../types";
 import {Colors} from "../colors";
 import LineupTitle from "./LineupTitle";
 import LineupCellSaving from "./LineupCellSaving";
+import {connect} from "react-redux";
+import {logged} from "../../managers/CurrentUser"
 //;
 
 type Props = {
@@ -29,6 +31,11 @@ type State = {
 
 const DIM = 60;
 
+@connect((state, ownProps) => ({
+    data: state.data,
+    pending: state.pending,
+}))
+@logged
 export default class LineupCell extends React.Component<Props, State> {
 
     static displayName = "LineupCell";
@@ -39,7 +46,10 @@ export default class LineupCell extends React.Component<Props, State> {
     }
 
     render() {
-        let lineup : List = this.props.lineup;
+        // let lineup : List = this.props.lineup;
+        let lineup = buildData(this.props.data, 'lists', this.props.lineupId);
+        if (!lineup) return;
+
         let savings: Saving[] = lineup.savings;
 
         assertUnique(savings);
@@ -96,7 +106,7 @@ export default class LineupCell extends React.Component<Props, State> {
     }
 
     renderItem({item, index}: {item: Saving}) {
-        return <LineupCellSaving saving={item}/>;
+        return <LineupCellSaving item={item.item}/>;
         // let image = item && item.resource && item.resource.image;
         // const dim = DIM;
         // const style = {

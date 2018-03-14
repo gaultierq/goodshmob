@@ -420,7 +420,7 @@ class HomeScreen extends Screen<Props, State> {
     renderListItem(item: List, options = {}) {
         return (
             <LineupHorizontal
-                lineup={item}
+                lineupId={item.id}
                 navigator={this.props.navigator}
                 {...options}
             />

@@ -3,13 +3,14 @@
 import React from 'react';
 import {Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {isEmpty} from "lodash";
-import type {Saving} from "../../types";
+import type {Item, Saving} from "../../types";
 import {Colors} from "../colors";
 import {CachedImage} from "react-native-img-cache";
 
 
 type Props = {
     saving: Saving,
+    item: Item,
     style?: *,
 };
 
@@ -19,7 +20,7 @@ type State = {
 
 const DIM = 70;
 
-export default class LineupCellSaving extends React.Component<Props, State> {
+export default class LineupCellSaving extends React.PureComponent<Props, State> {
 
     static displayName = "LineupCell";
 
@@ -33,8 +34,8 @@ export default class LineupCellSaving extends React.Component<Props, State> {
     });
 
     render() {
-        let item = this.props.saving;
-        let image = item && item.resource && item.resource.image;
+        let item = this.props.item;
+        let image = item && item.image;
 
         if (image) {
             return <CachedImage

@@ -12,6 +12,8 @@ class _StoreManager implements StoreManager {
 
     store: *;
 
+    //TODO: organise pending actions / time instead of ADD and thend DELETE
+
     init(store: *) {
         this.store = store;
     }
@@ -56,6 +58,51 @@ class _StoreManager implements StoreManager {
             return _.findIndex(storePending[UNSAVE], o => o.payload.savingId === saving.id) < 0;
         });
         return savings;
+    }
+
+    getLineupSavings(lineupId: Id) {
+        let savings = [];
+        let storeData = this.store.getState().data;
+        let storePending = this.store.getState().pending;
+        let lineup = buildData(storeData, 'lists', lineupId);
+        if (lineup) {
+            savings.push(...lineup.savings);
+        }
+
+        // pending savings
+        const predicate = pending => pending.payload.lineupId === lineupId;
+
+        //mergeItemsAndPendings2
+
+        const pendingCreation = _.filter(storePending[SAVE_ITEM], predicate);
+        savings = pendingCreation.map(pending => {
+            const result = {
+                id: pending.id,
+                lineupId: pending.payload.lineupId,
+                itemId: pending.payload.itemId,
+                pending: true
+            };
+
+            Object.defineProperty(
+                result,
+                'resource',
+                {
+                    get: () => {
+                        return buildData(storeData, pending.payload.itemType, pending.payload.itemId);
+                    },
+                },
+            );
+
+
+            return result
+            }
+        ).concat(savings);
+
+        savings = _.filter(savings, saving => {
+            return _.findIndex(storePending[UNSAVE], o => o.payload.savingId === saving.id) < 0;
+        });
+
+        return {lineup, savings};
     }
 
 }

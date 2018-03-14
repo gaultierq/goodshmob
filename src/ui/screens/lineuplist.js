@@ -124,15 +124,15 @@ export class LineupListScreen extends Screen<Props, State> {
 
 
 
-    renderItem({item}) {
+    renderItem(item) {
+        let list = item.item;
+        if (!(list.type === 'lists')) throw "unexpected type";
 
-        if (!(item.type === 'lists')) throw "unexpected type";
-
-        item = buildData(this.props.data, item.type, item.id) || item;
+        list = buildData(this.props.data, list.type, list.id) || list;
 
         let {renderItem, navigator} = this.props;
 
-        return (renderItem || renderSimpleListItem(navigator))(item);
+        return (renderItem || renderSimpleListItem(navigator))(list);
     }
 
 }
