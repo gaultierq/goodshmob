@@ -11,8 +11,8 @@ export function superLog(msg: string) {
 export function createConsole(displayName: string) {
 
     return {
-        log: (message: string) => console.log(`[${displayName}]: ${message}`),
-        debug: (message: string) => console.debug(`[${displayName}]: ${message}`),
+        log: (message: string, ...others) => console.log(`[${displayName}]: ${message}`, ...others),
+        debug: (message: string, ...others) => console.debug(`[${displayName}]: ${message}`, ...others),
         info: (message: string) => console.info(`[${displayName}]: ${message}`),
         warn: (message: string) => console.warn(`[${displayName}]: ${message}`),
     }

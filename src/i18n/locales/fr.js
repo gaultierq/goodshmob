@@ -28,6 +28,9 @@ export default {
         mine : {
             title: "Mes listes"
         },
+        others: {
+            title: "Autres listes"
+        },
         empty_screen: "Retrouve ici tous tes goodsh.\nTap '+' pour en ajouter un."
     },
     no_spam: {

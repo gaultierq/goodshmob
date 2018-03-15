@@ -44,8 +44,8 @@ type Props = {
     navigator: RNNNavigator,
     // lineup: List,
     lineupId: Id,
-    withMenuButton: boolean,
-    withLineupTitle: boolean,
+    withMenuButton?: boolean,
+    withLineupTitle?: boolean,
 };
 
 type State = {

@@ -39,6 +39,8 @@ export type List =  Base & {
     user: any,
 }
 
+export type Lineup = List;
+
 export type Base = {
 
     id: Id,

@@ -61,7 +61,7 @@ export default class FriendsScreen extends Screen<Props, State> {
         }
         else {
             friends = [];
-            callFactory = () => actions.getUser(userId);
+            callFactory = () => actions.getUserAndTheirLists(userId);
             action = actionTypes.GET_USER;
         }
 
@@ -134,7 +134,7 @@ const actions = (() => {
                     include: "creator"
                 });
         },
-        getUser: (userId): Api.Call => new Api.Call()
+        getUserAndTheirLists: (userId): Api.Call => new Api.Call()
             .withMethod('GET')
             .withRoute(`users/${userId}`)
             .addQuery({

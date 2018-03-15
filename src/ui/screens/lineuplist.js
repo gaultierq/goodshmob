@@ -76,22 +76,19 @@ export class LineupListScreen extends Screen<Props, State> {
         } = this.props;
 
         let user: User = buildData(this.props.data, "users", userId);
-        let lists, sections, fetchSrc;
-        if (user && user.lists) {
-            lists = user.lists;
-            fetchSrc = userId === currentUserId() ? {
-                callFactory: actions.fetchLineups,
-                action: FETCH_LINEUPS,
-                options: {userId}
-            } : null;
-        }
-        else {
-            lists = [];
-            fetchSrc = {
-                callFactory: () => actions.getUser(userId),
-                action: GET_USER_W_LISTS
-            };
-        }
+
+
+        const isCurrentUser = userId === currentUserId();
+        let lists = user && user.lists || [];
+
+        let fetchSrc =  isCurrentUser && !_.isEmpty() ? {
+            callFactory: actions.fetchLineups,
+            action: FETCH_LINEUPS,
+            options: {userId}
+        } : {
+            callFactory: () => actions.getUserAndTheirLists(userId),
+            action: GET_USER_W_LISTS
+        };
 
 
         //reconciliate pendings
@@ -108,13 +105,10 @@ export class LineupListScreen extends Screen<Props, State> {
             {afterI: 0}
         );
 
-        if (sectionMaker) sections = sectionMaker(items);
-
-
         return (
             <Feed
                 data={items}
-                sections={sections}
+                sections={sectionMaker && sectionMaker(items)}
                 renderItem={this.renderItem.bind(this)}
                 fetchSrc={fetchSrc}
                 {...attributes}
@@ -147,10 +141,9 @@ const actions = (() => {
         fetchLineups: () => new Api.Call()
             .withMethod('GET')
             .withRoute("lists")
-            // .delay(5000)
             .addQuery({include: "savings,savings.resource"}),
 
-        getUser: (userId): Api.Call => new Api.Call()
+        getUserAndTheirLists: (userId): Api.Call => new Api.Call()
             .withMethod('GET')
             .withRoute(`users/${userId}`)
             .addQuery({include: "lists,lists.savings,lists.savings.resource"}),

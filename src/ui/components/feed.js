@@ -135,7 +135,10 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     postFetchFirst() {
-        if (this.notFetchable()) return;
+        if (this.notFetchable()) {
+            this.logger.debug('cannot fetch. aborting', this.props);
+            return;
+        }
 
         setTimeout(() => {
             let trigger = this.hasItems() ? TRIGGER_USER_INDIRECT_ACTION : TRIGGER_USER_DIRECT_ACTION;

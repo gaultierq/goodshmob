@@ -28,6 +28,9 @@ export default {
         mine : {
             title: "My lists"
         },
+        others: {
+            title: "Other lists"
+        },
         empty_screen: "All your goodsh in one place.\nTap '+' to save a new one."
     },
     no_spam: {

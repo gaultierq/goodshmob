@@ -67,7 +67,7 @@ export default class Profile extends Component<Props, State> {
         let userId = currentUserId();
 
         if (!this.getUser(userId)) {
-            this.props.dispatch(actions.getUser(userId).disptachForAction2(GET_USER)).then(({data})=>{
+            this.props.dispatch(actions.getUserAndTheirLists(userId).disptachForAction2(GET_USER)).then(({data})=>{
                 //let user = this.getUser(userId);
                 //this.setState({user});
             });
@@ -270,7 +270,7 @@ const actions = (() => {
     const include = "";
 
     return {
-        getUser: (userId: Id) => new Api.Call()
+        getUserAndTheirLists: (userId: Id) => new Api.Call()
             .withMethod('GET')
             .withRoute(`users/${userId}`)
             .addQuery({include}),
