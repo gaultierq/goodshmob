@@ -42,8 +42,8 @@ export default {
     },
     home: {
         wizard: {
-            action_button_label : "Enregistrer un goodsh.",
-            action_button_body : "Tap '+' pour ton premier gooodsh.",
+            action_button_label : "Enregistrer une recommandation qu'on m'a faite.",
+            action_button_body : "Livre, film, série, resto, musique...",
         }
     },
     search: {
