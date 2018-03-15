@@ -103,12 +103,11 @@ project.ext.react = [
         // bundleInPaidRelease: true,
         // bundleInBeta: true,
 
-        // whether to disable dev mode in custom build variants (by default only disabled in release)
-        // for example: to disable dev mode in the staging build type (if configured)
-        devDisabledInStaging: true,
-        // The configuration property can be in the following formats
-        //         'devDisabledIn${productFlavor}${buildType}'
-        //         'devDisabledIn${buildType}'
+        // we are disabling the dev mode for the build types dev, preprod
+        // and prod
+        devDisabledInDev: true,
+        devDisabledInPreprod: true,
+        devDisabledInProd: true,
 
         // the root of your project, i.e. where "package.json" lives
         root: "../../",
