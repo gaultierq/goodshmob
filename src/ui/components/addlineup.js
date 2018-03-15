@@ -14,6 +14,7 @@ import GTouchable from "../GTouchable";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import type {RNNNavigator} from "../../types";
 
+import {analytics} from '../../managers';
 
 type Props = {
     navigator: RNNNavigator,
@@ -34,6 +35,8 @@ export default class AddLineupComponent extends Component<Props, State> {
 
     _openModal = () => {
         let {navigator} = this.props;
+
+        analytics.addLineup();
 
         navigator.showModal({
             screen: 'goodsh.AddLineupSheet',

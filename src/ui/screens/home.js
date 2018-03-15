@@ -57,6 +57,8 @@ import {seeList} from "../Nav";
 import {seeActivityDetails} from "../Nav";
 import UserLineups from "./userLineups";
 
+import {analytics} from '../../managers';
+
 
 type Props = {
     userId: Id,
@@ -399,6 +401,7 @@ class HomeScreen extends Screen<Props, State> {
     }
 
     onFloatingButtonPressed() {
+        analytics.addGoodsh();
         startAddItem(this.props.navigator, currentGoodshboxId());
     }
 }

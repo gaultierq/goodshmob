@@ -22,6 +22,8 @@ import {CREATE_ASK} from "./ask";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ShareButton from "../components/ShareButton";
 
+import {analytics} from '../../managers';
+
 type Props = NavigableProps;
 
 type State = {
@@ -104,7 +106,9 @@ class NetworkScreen extends Screen<Props, State> {
     showAsk() {
         let {navigator} = this.props;
 
-//TODO: rm platform specific rules when [1] is solved.
+        analytics.askMyNetwork();
+
+        //TODO: rm platform specific rules when [1] is solved.
         //1: https://github.com/wix/react-native-navigation/issues/1502
         navigator.showModal({
             screen: 'goodsh.AskScreen', // unique ID registered with Navigation.registerScreen

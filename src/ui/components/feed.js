@@ -208,17 +208,19 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         }
 
         if (displayFirstLoader) {
-            return <View style={{
-                flex:1, width: "100%", height: "100%", alignItems: 'center', justifyContent: 'center',
-                position: 'absolute', zIndex: 1000
-            }}>
-                <Spinner
-                    // style={styles.spinner}
-                    isVisible={true}
-                    size={__DEVICE_WIDTH__ / 5}
-                    type={this.type}
-                    color={this.color}/>
-            </View>
+            return (
+                <View style={{
+                    flex:1, width: "100%", height: "100%", alignItems: 'center', justifyContent: 'center',
+                    position: 'absolute', zIndex: 1000
+                }}>
+                    <Spinner
+                        // style={styles.spinner}
+                        isVisible={true}
+                        size={__DEVICE_WIDTH__ / 5}
+                        type={this.type}
+                        color={this.color}/>
+                </View>
+            )
         }
 
 
@@ -413,7 +415,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
     //fetching next elements if only 5 rows remaining
     prefetch() {
-//
+        //
         let scrollY = this.lastEvent.contentOffset.y;
         let height = this.lastEvent.layoutMeasurement.height;
         let totalSize = this.lastEvent.contentSize.height;

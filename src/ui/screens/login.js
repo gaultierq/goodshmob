@@ -14,6 +14,8 @@ import {Colors} from "../colors";
 import Swiper from 'react-native-swiper';
 import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts";
 
+import {analytics} from '../../managers';
+
 
 type Props = {
     initialIndex: number
@@ -174,6 +176,7 @@ class Login extends Component<Props, State> {
                     }
                     else {
                         console.log(`Login success with permissions: ${result.grantedPermissions ? result.grantedPermissions.toString() : 'null'}`);
+                        analytics.login(true);
 
                         AccessToken.getCurrentAccessToken().then(
                             (data) => {
@@ -193,6 +196,7 @@ class Login extends Component<Props, State> {
                 error => {
                     console.log('Login fail with error: ' + error);
                     reject('Login fail with error: ' + error);
+                    analytics.login(false);
                 }
             )
         ;
