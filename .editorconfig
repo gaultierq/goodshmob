@@ -3,6 +3,6 @@ root = true
 indent_style = space
 indent_size = 2
 
-[*.js]
+[*.{js,gradle}]
 indent_style = space
 indent_size = 4
