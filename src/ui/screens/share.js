@@ -1,7 +1,7 @@
 // @flow
 import React, {Component} from 'react';
 import {Clipboard, Dimensions, Image, Share, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import type {Id, Item, ItemType} from "../../types";
+import type {Id, Item, ItemType, Url} from "../../types";
 import {CheckBox} from "react-native-elements";
 import Snackbar from "react-native-snackbar"
 
@@ -20,7 +20,10 @@ type Props = {
     itemType: ItemType,
     navigator: any,
     containerStyle:? any,
-    onClickClose: () => void
+    onClickClose: () => void,
+
+    //this is a hack, whould be item url instead, but the backend is not ready
+    tempActivityUrl: Url
 };
 
 type State = {
@@ -111,8 +114,8 @@ class ShareScreen extends Component<Props, State> {
     }
 
     share(item:Item) {
-        const {title, subtitle, url} = item;
-
+        const {title, subtitle} = item;
+        let url = this.props.tempActivityUrl;
         let message = i18n.t('send_message', {what: title + '\n' + subtitle, url});
         message = message + " ";
         let intent = {

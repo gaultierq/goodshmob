@@ -18,6 +18,7 @@ import * as Nav from "../../Nav";
 import {CREATE_SAVING, doUnsave, SAVING_DELETION} from "../../lineup/actions";
 import StoreManager from "../../../managers/StoreManager";
 import Messenger from "../../../managers/Messenger";
+import Config from "react-native-config";
 
 export type ActivityActionType = 'comment'| 'like'| 'unlike'| 'share'| 'save'| 'unsave'| 'see'| 'buy'| 'answer';
 const ACTIONS = ['comment', 'like', 'unlike','share', 'save', 'unsave', 'see', 'buy', 'answer'];
@@ -411,7 +412,8 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                 itemId: resource.id,
                 itemType: resource.type,
                 containerStyle: {backgroundColor: __IS_IOS__ ? 'transparent' : Colors.white},
-                onClickClose: () => navigator.dismissModal({animationType: 'none',})
+                onClickClose: () => navigator.dismissModal({animationType: 'none',}),
+                tempActivityUrl: `${Config.SERVER_URL + sanitizeActivityType(activity.type)}/${activity.id}`
             },
             navigatorStyle: {navBarHidden: true},
         });
