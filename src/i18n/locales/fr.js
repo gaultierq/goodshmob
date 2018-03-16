@@ -331,8 +331,8 @@ export default {
     },
     alert: {
         delete: {
-            title: "Suppression",
-            label: "Confirmer la suppression ?"
+            title: "Enlever de mes listes",
+            label: "Confirmer ?"
         }
     },
     dev: {
