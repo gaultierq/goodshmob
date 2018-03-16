@@ -16,6 +16,8 @@ import {sendMessage} from "./Messenger";
 import {CONNECTIVITY_CHANGE} from "../reducers/app";
 import {sleeper} from "../helpers/TimeUtils";
 
+import analytics from './Analytics'
+
 export const API_DATA_REQUEST = 'API_DATA_REQUEST';
 export const API_DATA_SUCCESS = 'API_DATA_SUCCESS';
 export const API_DATA_FAILURE = 'API_DATA_FAILURE';
@@ -308,6 +310,13 @@ export class Call {
                         resp => {
                             let requestTime = Date.now() - tic;
                             Statistics.recordTime(`request.${apiAction.name()}`, requestTime);
+                            // we are calling logCustom here so we can record the action
+                            // description into the fabric events dashboard
+                            const { original: { status } } = resp
+                            analytics.logCustom(apiAction.description(), {
+                                requestTime,
+                                status,
+                            });
                             return resp;
                         },
                         err => {throw err}

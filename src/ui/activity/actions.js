@@ -40,7 +40,6 @@ export const LIKE_DELETION : PendingAction<LIKE_DELETION_PAYLOAD> = pendingActio
         .withRoute(`${sanitizeActivityType(activityType)}/${activityId}/likes`)
 );
 
-
 export function like(activityId: string, activityType: string) {
     return LIKE_CREATION.pending({activityId, activityType}, {id: activityId, type: activityType, scope: {activityId}});
 }
@@ -57,5 +56,3 @@ export function unsave(savingId: Id, lineupId: Id) {
             {id: savingId, lineupId}
         );
 }
-
-

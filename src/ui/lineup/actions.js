@@ -10,8 +10,8 @@ import type {Visibility} from "../screens/additem";
 import ApiAction from "../../helpers/ApiAction";
 import {UNSAVE} from "../activity/actionTypes";
 
-export const FETCH_LINEUP = ApiAction.create("fetch_lineup");
-export const FETCH_SAVINGS = ApiAction.create("fetch_savings");
+export const FETCH_LINEUP = ApiAction.create("fetch_lineup", "retrieve a lineup details");
+export const FETCH_SAVINGS = ApiAction.create("fetch_savings", "retrieve savings info");
 
 //defining lineup creation cycle
 type LINEUP_CREATION_PAYLOAD = {listName: string}
@@ -103,4 +103,3 @@ export function doUnsave(pending, id, lineupId, delayMs?: ms) {
         {savingId: id, lineupId},
         {delayMs, id, lineupId, scope: {activityId: id, lineupId}});
 }
-

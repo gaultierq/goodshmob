@@ -2,16 +2,20 @@
 
 
 export type ApiActionName = string;
+export type ApiActionDescription = string;
 
 export default class ApiAction {
 
     actionName: ApiActionName;
+    actionDescription: ApiActionDescription;
 
     static byName = {};
 
     //deprecated, use create
-    constructor(actionName:ApiActionName) {
+    constructor(actionName:ApiActionName, actionDescription:ApiActionDescription) {
         this.actionName = actionName;
+        // if no action description passed fallback to action name
+        this.actionDescription = actionDescription || actionName;
         if (ApiAction.byName[actionName]) throw actionName + " is already defined";
 
         ApiAction.byName[actionName] = this;
@@ -41,6 +45,10 @@ export default class ApiAction {
         return this.actionName;
     }
 
+    description() {
+        return this.actionDescription;
+    }
+
     toString() {
         return this.name();
     }
@@ -54,7 +62,7 @@ export default class ApiAction {
         return ApiAction.byName[actionName];
     }
 
-    static create(actionName: ApiActionName): ApiAction {
-        return ApiAction.byName[actionName] || new ApiAction(actionName);
+    static create(actionName: ApiActionName, actionDescription: ApiActionDescription): ApiAction {
+        return ApiAction.byName[actionName] || new ApiAction(actionName, actionDescription);
     }
 }

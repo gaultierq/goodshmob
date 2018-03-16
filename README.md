@@ -22,23 +22,23 @@ pod install --project-directory=ios
 
 ### Android
 
-Depending on whether you are willing to use a physical or virtual device, below you will find the explanation on how to run the app on a physical device. If you are willing to use a virtual device take a look [here](https://developer.android.com/studio/run/managing-avds.html).
-
-If you are running the app for the first time, you will need to use the command line:
+In order to build the app on your Android device (without running the packager), you can use the following command:
 
 ```bash
-react-native run-android
+react-native run-android --no-packager
 ```
 
 Make sure your android device has the developer options enabled and the `USB debugging` as well as the `Install via USB` option enabled in order to authorize the installation the local app via USB.
 
 Then, once the previous command is completed, you should see a new app installed on your device.
 
-You are now ready to run the app anytime with the following command:
+You are now ready to run the packager with the following command:
 
 ```bash
 yarn start
 ```
+
+If you want to know how to setup a virtual device, you can use [android studio](https://developer.android.com/studio/run/managing-avds.html) or install [genymotion](https://www.genymotion.com/download/).
 
 ## Debugging
 

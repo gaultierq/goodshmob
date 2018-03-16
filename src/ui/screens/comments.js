@@ -24,8 +24,8 @@ import CommentCell from "../components/CommentCell";
 import MultiMap from "multimap";
 
 
-const LOAD_COMMENTS = ApiAction.create("load_comments");
-export const CREATE_COMMENT = ApiAction.create("create_comment");
+const LOAD_COMMENTS = ApiAction.create("load_comments", "retrieve the comments of an item");
+export const CREATE_COMMENT = ApiAction.create("create_comment", "add a new comment");
 
 type Props = {
     activityId: Id,

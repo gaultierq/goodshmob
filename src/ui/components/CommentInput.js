@@ -15,7 +15,7 @@ import {pendingActionWrapper} from "../../helpers/ModelUtils";
 import {connect} from "react-redux";
 
 
-export const CREATE_COMMENT = ApiAction.create("create_comment");
+export const CREATE_COMMENT = ApiAction.create("create_comment", "add a comment");
 
 type Props = {
     activity: Activity,

@@ -132,8 +132,8 @@ export class LineupListScreen extends Screen<Props, State> {
 }
 
 
-const GET_USER_W_LISTS = ApiAction.create("get_user_w_lists");
-const FETCH_LINEUPS = ApiAction.create("fetch_lineups");
+const GET_USER_W_LISTS = ApiAction.create("get_user_w_lists", "get user lists of lineups");
+const FETCH_LINEUPS = ApiAction.create("fetch_lineups", "retrieve the user lineups details");
 
 const actions = (() => {
 
