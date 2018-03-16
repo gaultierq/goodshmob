@@ -72,6 +72,12 @@ class _Analytics implements Analytics {
         Answers.logCustom('rename lineup', { name });
     }
 
+    // log when deleting a lineup
+    deleteLineup(name: string) {
+        debug('deleteLineup()');
+        Answers.logCustom('delete lineup', { name });
+    }
+
     // log when inviting a friend
     inviteFriend() {
         debug('inviteFriend()');
@@ -101,7 +107,9 @@ export interface Analytics {
     // log when adding a lineup
     addLineup(): void;
     // log when renaming a lineup
-    renameLineup(lineup: string): void;
+    renameLineup(name: string): void;
+    // log when deleting a lineup
+    deleteLineup(name: string): void;
     // log when inviting a friend
     inviteFriend(): void;
     // log when asking my network
