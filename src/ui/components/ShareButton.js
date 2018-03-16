@@ -6,6 +6,8 @@ import Button from 'apsl-react-native-button'
 import {Colors} from "../colors";
 import {SFP_TEXT_MEDIUM} from "../fonts";
 
+import {analytics} from '../../managers';
+
 type Props = {
     text?: string
 };
@@ -36,6 +38,8 @@ export default class ShareButton extends React.Component<Props, State> {
             message,
             title
         };
+
+        analytics.inviteFriend();
 
         Share.share(intent, {
             dialogTitle: title,

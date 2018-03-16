@@ -3,6 +3,7 @@
 import * as __ from "lodash";
 import _i18n from './i18n/i18n'
 import Config from 'react-native-config'
+import debug from 'debug'
 import {superLog as _superLog} from './helpers/DebugUtils'
 
 import {Dimensions, Platform} from 'react-native';
@@ -80,6 +81,9 @@ export function init(hotReload: boolean) {
             throw "unexpected null object"
         }
     }
+
+    // enable debug module based on the pattern available in dotenv settings
+    Config.DEBUGGER_PATTERN && debug.enable(Config.DEBUGGER_PATTERN)
 }
 
 

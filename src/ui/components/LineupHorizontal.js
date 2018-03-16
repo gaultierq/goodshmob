@@ -39,6 +39,9 @@ import {UpdateTracker} from "../UpdateTracker";
 import {buildData, sanitizeActivityType} from "../../helpers/DataUtils";
 import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
 import StoreManager from "../../managers/StoreManager";
+
+import {analytics} from '../../managers';
+
 // $FlowFixMe
 type Props = {
     navigator: RNNNavigator,
@@ -180,6 +183,8 @@ export default class LineupHorizontal extends Component<Props, State> {
     }
 
     seeLineup(id: Id) {
+        analytics.seeLineupDetails(id);
+
         this.props.navigator.showModal({
             screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
             passProps: {
@@ -191,9 +196,13 @@ export default class LineupHorizontal extends Component<Props, State> {
 
 
     deleteLineup(lineup: List) {
+        const {id, name} = lineup;
+
+        analytics.deleteLineup(name);
+
         let delayMs = 3000;
         //deleteLineup(lineup.id, delayMs)
-        const lineupId = lineup.id;
+        const lineupId = id;
         return Alert.alert(
             i18n.t("alert.delete.title"),
             i18n.t("alert.delete.label"),
@@ -225,6 +234,7 @@ export default class LineupHorizontal extends Component<Props, State> {
     changeTitle(lineup: List) {
         let {id, name} = lineup;
 
+        analytics.renameLineup(name);
 
         this.props.navigator.showModal({
             screen: 'goodsh.ChangeLineupName',
