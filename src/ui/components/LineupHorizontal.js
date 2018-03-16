@@ -39,6 +39,9 @@ import {UpdateTracker} from "../UpdateTracker";
 import {buildData, sanitizeActivityType} from "../../helpers/DataUtils";
 import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
 import StoreManager from "../../managers/StoreManager";
+
+import {analytics} from '../../managers';
+
 // $FlowFixMe
 type Props = {
     navigator: RNNNavigator,
@@ -224,6 +227,7 @@ export default class LineupHorizontal extends Component<Props, State> {
     changeTitle(lineup: List) {
         let {id, name} = lineup;
 
+        analytics.renameLineup(name);
 
         this.props.navigator.showModal({
             screen: 'goodsh.ChangeLineupName',

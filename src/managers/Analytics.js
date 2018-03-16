@@ -67,9 +67,9 @@ class _Analytics implements Analytics {
     }
 
     // log when renaming a lineup
-    renameLineup(lineup: string) {
-        debug('addLineup()');
-        Answers.logCustom('add lineup', { lineup });
+    renameLineup(name: string) {
+        debug('renameLineup()');
+        Answers.logCustom('rename lineup', { name });
     }
 
     // log when inviting a friend
