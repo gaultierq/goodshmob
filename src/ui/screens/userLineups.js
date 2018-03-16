@@ -82,9 +82,7 @@ export default class UserLineups extends Screen<Props, State> {
     render() {
 
         // if (onBoardingStep === 'no_spam') return <NoSpamDialog/>
-        const {...attr} = this.props;
 
-        const userId = currentUserId();
         const navigator = this.props.navigator;
 
         return (
@@ -104,7 +102,7 @@ export default class UserLineups extends Screen<Props, State> {
 
                 filter={this.filter()}
 
-                {...attr}
+                {...this.props}
             />
 
         );

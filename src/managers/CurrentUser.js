@@ -115,5 +115,8 @@ export function isLogged() {
 export function isCurrentUser(user: User) {
     return instance.id() === (user && user.id);
 }
+export function isCurrentUserId(userId: Id) {
+    return instance.id() === userId;
+}
 
 export default instance;

@@ -46,6 +46,7 @@ type Props = {
     lineupId: Id,
     withMenuButton?: boolean,
     withLineupTitle?: boolean,
+    withAddInEmptyLineup?: boolean,
 };
 
 type State = {
@@ -238,31 +239,24 @@ export default class LineupHorizontal extends Component<Props, State> {
 
     renderEmptyList(list: List) {
         let result = [];
-        // first item render
-        result.push(<View key={`key-${0}`} style={[
-            LineupCellSaving.styles.cell,
-            {
-                backgroundColor: Colors.grey3,
-                marginRight: 10,
-                opacity: 1,
-                alignItems: 'center',
-                justifyContent:'center'
-            }
-        ]}>
-            <Icon name="plus" size={45} color={Colors.dirtyWhite}/>
-        </View>);
         //
-        for (let i = 1; i < 5; i++) {
+        for (let i = 0; i < 5; i++) {
             result.push(<View key={`key-${i}`} style={[
                 LineupCellSaving.styles.cell,
                 {
                     backgroundColor: Colors.grey3,
                     marginRight: 10,
-                    opacity: 1 - (0.2 * i)
+                    opacity: 1 - (0.2 * i),
+                    alignItems: 'center',
+                    justifyContent:'center'
                 }
-            ]}/>);
+            ]}>
+                { i === 0 && this.props.withAddInEmptyLineup && <Icon name="plus" size={45} color={Colors.dirtyWhite}/>}
+            </View>);
         }
-        return (<GTouchable onPress={() => {
+        return (<GTouchable
+            disabled={!this.props.withAddInEmptyLineup}
+            onPress={() => {
             startAddItem(this.props.navigator, list.id);
         }
         }>

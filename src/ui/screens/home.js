@@ -270,6 +270,7 @@ class HomeScreen extends Screen<Props, State> {
                                         navigator={this.props.navigator}
                                         withMenuButton={true}
                                         withLineupTitle={true}
+                                        withAddInEmptyLineup={true}
                                     />
                                 )
                             },

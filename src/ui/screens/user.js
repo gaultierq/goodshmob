@@ -4,7 +4,7 @@ import {Clipboard, Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpac
 import type {Id} from "../../types";
 import {CheckBox} from "react-native-elements";
 import {connect} from "react-redux";
-import {logged} from "../../managers/CurrentUser"
+import {isCurrentUserId, logged} from "../../managers/CurrentUser"
 import Feed from "../components/feed";
 import {FETCH_ACTIVITIES, fetchUserNetwork} from "../networkActions";
 import ActivityCell from "../activity/components/ActivityCell";
@@ -26,7 +26,6 @@ type State = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-    network: state.network,
 });
 
 @logged
@@ -36,8 +35,6 @@ export default class UserScreen extends Screen<Props, State> {
     render() {
 
         let userId = this.props.userId;
-        let network = this.props.network[userId] || {};
-        let activities = network.list;
 
 
         return (
@@ -75,7 +72,13 @@ export default class UserScreen extends Screen<Props, State> {
                             title:lineup.name,
                             subtitle: ` (${_.get(lineup, `meta.savingsCount`, null) || 0})`,
                             onPress: () => seeList(navigator, lineup.id),
-                            renderItem: ({item}) => (<LineupHorizontal lineupId={item.id} navigator={navigator} />)
+                            renderItem: ({item}) => (
+                                <LineupHorizontal
+                                    lineupId={item.id}
+                                    navigator={navigator}
+                                    withAddInEmptyLineup={isCurrentUserId(userId)}
+                                />
+                            )
                         }));
                         // return [
                         //     {

@@ -49,7 +49,7 @@ export default {
     search: {
         in_items: "Saisir le nom à enregistrer",
         in_network: "Rechercher dans mon réseau",
-        in_feed: "Rechercher dans mes listes",
+        in_feed: "Rechercher",
         by: "de"
     },
     "shared":{

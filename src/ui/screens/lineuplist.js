@@ -78,11 +78,10 @@ export class LineupListScreen extends Screen<Props, State> {
         let user: User = buildData(this.props.data, "users", userId);
 
 
-        const isCurrentUser = userId === currentUserId();
         let lists = user && user.lists || [];
 
-        let fetchSrc =  isCurrentUser && !_.isEmpty() ? {
-            callFactory: actions.fetchLineups,
+        let fetchSrc =  !_.isEmpty(lists) ? {
+            callFactory: () => actions.fetchLineups(userId),
             action: FETCH_LINEUPS,
             options: {userId}
         } : {
@@ -138,9 +137,9 @@ const FETCH_LINEUPS = ApiAction.create("fetch_lineups");
 const actions = (() => {
 
     return {
-        fetchLineups: () => new Api.Call()
+        fetchLineups: userId => new Api.Call()
             .withMethod('GET')
-            .withRoute("lists")
+            .withRoute(`users/${userId}/lists`)
             .addQuery({include: "savings,savings.resource"}),
 
         getUserAndTheirLists: (userId): Api.Call => new Api.Call()

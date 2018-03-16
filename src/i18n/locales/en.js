@@ -49,7 +49,7 @@ export default {
     search:{ 
         in_items: "What would you like to save?",
         in_network: "Search in my network",
-        in_feed: "Search in my lists",
+        in_feed: "Search",
         by: "by",
     },
     "shared":{
