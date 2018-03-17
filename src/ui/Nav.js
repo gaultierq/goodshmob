@@ -78,6 +78,7 @@ export function seeUser(navigator: RNNNavigator, user: User) {
         title: fullName(user),
         passProps: {
             userId: user.id,
+            user
         },
     });
 }

@@ -15,9 +15,11 @@ import ShareButton from "../components/ShareButton";
 import UserLineups from "./userLineups";
 import LineupHorizontal from "../components/LineupHorizontal";
 import {seeList} from "../Nav";
+import * as UI from "../UIStyles";
 
 type Props = {
     userId: Id,
+    user:? User,
     navigator: any,
     network: *
 };
@@ -26,33 +28,46 @@ type State = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
+    data: state.data,
 });
 
 @logged
 @connect(mapStateToProps)
 export default class UserScreen extends Screen<Props, State> {
 
+    constructor(props: Props) {
+        super(props);
+    }
+
+
     render() {
 
         let userId = this.props.userId;
-
+        if (this.isVisible() && this.props.user) {
+            this.props.navigator.setStyle({...UI.NavStyles,
+                navBarCustomView: 'goodsh.UserNav',
+                navBarCustomViewInitialProps: {
+                    user: this.props.user,
+                }
+            });
+        }
 
         return (
             <MainBackground>
 
 
                 {/*<Feed*/}
-                    {/*data={activities}*/}
-                    {/*renderItem={this.renderItem.bind(this)}*/}
-                    {/*fetchSrc={{*/}
-                        {/*callFactory: ()=>fetchUserNetwork(userId),*/}
-                        {/*useLinks: true,*/}
-                        {/*action: FETCH_ACTIVITIES,*/}
-                        {/*options: {userId}*/}
-                    {/*}}*/}
-                    {/*hasMore={!network.hasNoMore}*/}
-                    {/*empty={<View><Text style={STYLES.empty_message}>{i18n.t('common.empty_feed_generic')}</Text><ShareButton text={i18n.t('actions.invite')}/></View>}*/}
-                    {/*{...activityFeedProps()}*/}
+                {/*data={activities}*/}
+                {/*renderItem={this.renderItem.bind(this)}*/}
+                {/*fetchSrc={{*/}
+                {/*callFactory: ()=>fetchUserNetwork(userId),*/}
+                {/*useLinks: true,*/}
+                {/*action: FETCH_ACTIVITIES,*/}
+                {/*options: {userId}*/}
+                {/*}}*/}
+                {/*hasMore={!network.hasNoMore}*/}
+                {/*empty={<View><Text style={STYLES.empty_message}>{i18n.t('common.empty_feed_generic')}</Text><ShareButton text={i18n.t('actions.invite')}/></View>}*/}
+                {/*{...activityFeedProps()}*/}
                 {/*/>*/}
 
                 <UserLineups

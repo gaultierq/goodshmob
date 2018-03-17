@@ -103,6 +103,7 @@ export default class FriendsScreen extends Screen<Props, State> {
                     title: fullName(user),
                     passProps: {
                         userId: user.id,
+                        user
                     },
                     navigatorButtons: Nav.CANCELABLE_MODAL,
                 });

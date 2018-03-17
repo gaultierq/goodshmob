@@ -69,7 +69,10 @@ export default class UserRowI extends React.Component<Props, State> {
         navigator.push({
             screen: 'goodsh.UserScreen',
             title: fullName(user),
-            passProps: {userId: user.id}
+            passProps: {
+                userId: user.id,
+                user
+            }
         });
 
     }

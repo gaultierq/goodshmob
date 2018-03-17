@@ -65,7 +65,7 @@ class _StoreManager implements StoreManager {
         let storeData = this.store.getState().data;
         let storePending = this.store.getState().pending;
         let lineup = buildData(storeData, 'lists', lineupId);
-        if (lineup) {
+        if (lineup && lineup.savings) {
             savings.push(...lineup.savings);
         }
 

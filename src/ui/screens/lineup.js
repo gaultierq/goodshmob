@@ -19,6 +19,7 @@ import {STYLES} from "../UIStyles";
 import {fullName} from "../../helpers/StringUtils";
 import {FETCH_LINEUP, FETCH_SAVINGS} from "../lineup/actions";
 import {UNSAVE} from "../activity/actionTypes";
+import * as UI from "../UIStyles";
 
 type Props = {
     lineupId: string,
@@ -44,13 +45,25 @@ class LineupScreen extends Screen<Props, State> {
     render() {
         const lineup = this.getLineup();
 
-        let subtitle = () => {
-            const user = _.get(lineup, 'user');
-            //MagicString
-            return user && "par " + fullName(user)
-        };
+        // let subtitle = () => {
+        //     const user = _.get(lineup, 'user');
+        //     //MagicString
+        //     return user && "par " + fullName(user)
+        // };
 
-        this.setNavigatorTitle(this.props.navigator, {title: _.get(lineup, 'name'), subtitle: subtitle()});
+        // this.setNavigatorTitle(this.props.navigator, {title: _.get(lineup, 'name'), subtitle: subtitle()});
+
+        if (this.isVisible() && lineup) {
+            this.props.navigator.setStyle({
+                ...UI.NavStyles,
+                navBarCustomView: 'goodsh.LineupNav',
+                navBarCustomViewInitialProps: {
+                    user: lineup.user,
+                    lineupName: _.get(lineup, 'name'),
+                    lineupCount: _.get(lineup, `meta.savingsCount`, null)
+                }
+            });
+        }
 
 
         let savings, fetchSrc;

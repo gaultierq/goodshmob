@@ -26,12 +26,6 @@ export default class MyAvatar extends Component<Props, State> {
 
         return (
             <GTouchable onPress={()=>{
-                //this is bad
-                // this.props.navigator.toggleDrawer({
-                //     side: 'left',
-                //     animated: true
-                // });
-
 
                 Navigation.handleDeepLink({
                     link: PROFILE_CLICKED,
