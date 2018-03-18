@@ -23,6 +23,8 @@ import SearchScreen from "./search";
 import {SearchStyles} from "../UIStyles";
 import GTouchable from "../GTouchable";
 import Config from 'react-native-config'
+import LineupHorizontal from "../components/LineupHorizontal";
+import {seeActivityDetails, seeList} from "../Nav";
 
 type Props = NavigableProps & {
     token?: ?SearchToken,
@@ -53,12 +55,23 @@ export default class HomeSearchScreen extends Screen<Props, State> {
 
             if (isLineup) {
                 let lineup: List = item;
-                return (
+                /*
                     <GTouchable onPress={() => this.onLineupPressed(lineup)}>
-                        <View>
-                            <LineupCell lineup={lineup}/>
-                        </View>
-                    </GTouchable>
+                <View>
+                <LineupCell lineup={lineup}/>
+
+                </View>
+                </GTouchable>
+                 */
+                return (
+
+                    <LineupHorizontal
+                        lineupId={lineup.id}
+                        navigator={this.props.navigator}
+                        onSavingPressed={seeActivityDetails}
+                        onLineupPressed={seeList}
+                    />
+
                 )
             }
             else {

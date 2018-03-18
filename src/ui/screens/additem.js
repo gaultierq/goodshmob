@@ -154,7 +154,6 @@ export default class AddItemScreen extends Screen<Props, State> {
                                 multiline={true}
                             />
                         </ItemCell>
-                        {/*{selectedLineupId && <LineupCell style={{backgroundColor: Colors.white82, marginRight: 8, marginLeft: 8, borderRadius: 8}} lineup={buildNonNullData(this.props.data, 'lists', selectedLineupId)}/>}*/}
                         {this.renderListSelector(selectedLineupId)}
                         {renderSimpleButton(
                             i18n.t('shared.add'),
