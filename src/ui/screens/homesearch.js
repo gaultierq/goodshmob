@@ -25,20 +25,22 @@ import GTouchable from "../GTouchable";
 import Config from 'react-native-config'
 
 type Props = NavigableProps & {
-    token?: ?SearchToken
+    token?: ?SearchToken,
+    userId: Id
 };
 
 type State = {
-    connect: {[Id]: number}
 };
 
 @connect()
 @logged
 export default class HomeSearchScreen extends Screen<Props, State> {
 
-    state :State = {connect: {}};
-
     static navigatorStyle = SearchStyles;
+
+    static defaultProps = {
+        userId: currentUserId()
+    };
 
     render() {
         let renderItem = ({item})=> {
@@ -52,9 +54,7 @@ export default class HomeSearchScreen extends Screen<Props, State> {
             if (isLineup) {
                 let lineup: List = item;
                 return (
-                    <GTouchable
-                        onPress={() => this.onLineupPressed(lineup)}
-                    >
+                    <GTouchable onPress={() => this.onLineupPressed(lineup)}>
                         <View>
                             <LineupCell lineup={lineup}/>
                         </View>
@@ -95,7 +95,7 @@ export default class HomeSearchScreen extends Screen<Props, State> {
 
 
         let query = {
-            filters: `user_id:${currentUserId()}`,
+            filters: `user_id:${this.props.userId}`,
         };
 
         let categories : Array<SearchCategory> = [

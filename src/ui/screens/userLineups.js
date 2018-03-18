@@ -15,28 +15,20 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
-import ActionButton from 'react-native-action-button';
 import {LineupListScreen} from './lineuplist'
-import type {Id, RNNNavigator, Saving, SearchToken} from "../../types";
-import {List} from "../../types"
+import type {Id, RNNNavigator, SearchToken} from "../../types";
 import {BACKGROUND_COLOR, NavStyles, renderSimpleButton, STYLES} from "../UIStyles";
-import {currentGoodshboxId, currentUserId} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import type {Visibility} from "./additem";
 import * as Nav from "../Nav";
-import {seeActivityDetails, seeList, startAddItem} from "../Nav";
+import {seeActivityDetails, seeList} from "../Nav";
 import Screen from "../components/Screen";
 import {Colors} from "../colors";
-import {PROFILE_CLICKED} from "../components/MyAvatar";
 import {SFP_TEXT_MEDIUM} from "../fonts";
 
 import GTouchable from "../GTouchable";
-import AddLineupComponent from "../components/addlineup";
-import type {OnBoardingStep} from "../../managers/OnBoardingManager";
-import OnBoardingManager from "../../managers/OnBoardingManager";
 // $FlowFixMe
-import LineupHorizontal from "../components/LineupHorizontal";
 
 
 type Props = {
@@ -61,6 +53,7 @@ export default class UserLineups extends Screen<Props, State> {
             backButtonHidden: true,
             passProps: {
                 onClickClose: () => navigator.dismissModal({animationType: 'none'}),
+                userId: this.props.userId,
                 token
             },
             backButtonHidden: true,
