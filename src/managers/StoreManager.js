@@ -2,9 +2,10 @@
 import {Navigation} from 'react-native-navigation';
 import type {Id, ItemType, Saving} from "../types";
 import {mergeItemsAndPendings} from "../helpers/ModelUtils";
-import {SAVE_ITEM} from "../ui/lineup/actionTypes";
+import {CREATE_LINEUP, SAVE_ITEM} from "../ui/lineup/actionTypes";
 import {buildData} from "../helpers/DataUtils";
 import {UNSAVE} from "../ui/activity/actionTypes";
+import {isId} from "../helpers/StringUtils";
 
 // export const DEEPLINK_OPEN_SCREEN_IN_MODAL = 'DEEPLINK_OPEN_SCREEN_IN_MODAL';
 
@@ -60,11 +61,25 @@ class _StoreManager implements StoreManager {
         return savings;
     }
 
-    getLineupSavings(lineupId: Id) {
+    getLineupAndSavings(lineupId: Id) {
         let savings = [];
         let storeData = this.store.getState().data;
         let storePending = this.store.getState().pending;
-        let lineup = buildData(storeData, 'lists', lineupId);
+        let lineup;
+        if (isId(lineupId)) {
+            lineup = buildData(storeData, 'lists', lineupId);
+        }
+        else {
+            let pending = _.head(storePending[CREATE_LINEUP], pending => pending.id === lineupId);
+            if (pending) {
+                lineup = {
+                    name: pending.payload.listName,
+                    pending: true
+                }
+            }
+        }
+
+
         if (lineup && lineup.savings) {
             savings.push(...lineup.savings);
         }
