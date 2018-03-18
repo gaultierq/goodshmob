@@ -78,4 +78,6 @@ export default class GTouchable extends Component<Props, State>  {
     }
 }
 
-
+export function wrapGtouchable(children: Node, handler: () => void) {
+    return handler ? <GTouchable onPress={handler}>{children}</GTouchable> : children;
+}

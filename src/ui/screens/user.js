@@ -14,7 +14,7 @@ import {STYLES} from "../UIStyles";
 import ShareButton from "../components/ShareButton";
 import UserLineups from "./userLineups";
 import LineupHorizontal from "../components/LineupHorizontal";
-import {seeList} from "../Nav";
+import {seeActivityDetails, seeList} from "../Nav";
 import * as UI from "../UIStyles";
 
 type Props = {
@@ -92,32 +92,11 @@ export default class UserScreen extends Screen<Props, State> {
                                     lineupId={item.id}
                                     navigator={navigator}
                                     withAddInEmptyLineup={isCurrentUserId(userId)}
+                                    onSavingPressed={seeActivityDetails}
+                                    onLineupPressed={seeList}
                                 />
                             )
                         }));
-                        // return [
-                        //     {
-                        //         data: goodshbox ? [goodshbox] : [],
-                        //         title: i18n.t("lineups.goodsh.title"),
-                        //         subtitle: ` (${savingCount})`,
-                        //         onPress: () => seeList(navigator, goodshbox.id),
-                        //         renderItem: ({item}) => (
-                        //             <LineupHorizontal lineupId={item.id} navigator={this.props.navigator} />
-                        //         )
-                        //     },
-                        //     {
-                        //         data: _.slice(lineups, 1),
-                        //         title: i18n.t("lineups.other.title"),
-                        //         renderItem: ({item})=>(
-                        //             <LineupHorizontal
-                        //                 lineupId={item.id}
-                        //                 navigator={this.props.navigator}
-                        //                 // withMenuButton={true}
-                        //                 withLineupTitle={true}
-                        //             />
-                        //         )
-                        //     },
-                        // ];
                     }}
 
                 />

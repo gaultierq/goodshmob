@@ -10,6 +10,7 @@ import LineupCell from "../components/LineupCell";
 import GTouchable from "../GTouchable";
 import {currentUserId} from "../../managers/CurrentUser";
 import Screen from "../components/Screen";
+import LineupHorizontal from "../components/LineupHorizontal";
 
 type Props = LineupProps & {
     onListSelected: ()=>void
@@ -34,10 +35,14 @@ export default class AddInScreen extends Screen<Props, State> {
                     ListHeaderComponent={<AddLineupComponent disableOffline={true} navigator={this.props.navigator} style={{backgroundColor: Colors.green, padding: 10, marginTop: 15, marginRight: 15, marginLeft: 8, borderRadius:8}} styleText={{color: Colors.white, fontWeight: 'normal'}}/>}
                     {...otherProps}
                     userId={currentUserId()}
-                    renderItem={(item)=> (
-                        <GTouchable onPress={()=>onListSelected(item)}>
-                            <LineupCell lineup={item}/>
-                        </GTouchable>
+                    renderItem={lineup => (
+                        <LineupHorizontal
+                            lineupId={lineup.id}
+                            navigator={this.props.navigator}
+                            withLineupTitle={true}
+                            onSavingPressed={null}
+                            onLineupPressed={(navigator, lineup) => onListSelected(lineup)}
+                        />
                     )
                     }
                     navigator={navigator}

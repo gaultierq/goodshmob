@@ -255,9 +255,14 @@ class HomeScreen extends Screen<Props, State> {
                                 data: goodshbox ? [goodshbox] : [],
                                 title: i18n.t("lineups.goodsh.title"),
                                 subtitle: ` (${savingCount})`,
-                                onPress: () => seeList(navigator, goodshbox.id),
+                                onPress: () => seeList(navigator, goodshbox),
                                 renderItem: ({item}) => (
-                                    <LineupHorizontal lineupId={item.id} navigator={this.props.navigator} />
+                                    <LineupHorizontal
+                                        lineupId={item.id}
+                                        navigator={this.props.navigator}
+                                        onSavingPressed={seeActivityDetails}
+                                        onLineupPressed={seeList}
+                                    />
                                 )
                             },
                             {
@@ -271,6 +276,8 @@ class HomeScreen extends Screen<Props, State> {
                                         withMenuButton={true}
                                         withLineupTitle={true}
                                         withAddInEmptyLineup={true}
+                                        onSavingPressed={seeActivityDetails}
+                                        onLineupPressed={seeList}
                                     />
                                 )
                             },
@@ -326,51 +333,6 @@ class HomeScreen extends Screen<Props, State> {
                 }}
                 mainRef={this._targetRef(i18n.t("home.wizard.action_button_label"), i18n.t("home.wizard.action_button_body"))}
                 buttonTextStyle={{fontSize: 26, fontWeight: 'bold', marginTop: -5}}
-            />
-        );
-    }
-
-    renderSectionHeader({title, subtitle, onPress, renderSectionHeaderChildren}) {
-        return (<GTouchable
-            disabled={!onPress}
-            onPress={onPress}>
-            <View style={{
-                backgroundColor: BACKGROUND_COLOR,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                paddingLeft: 15,
-                paddingRight: 15,
-                paddingTop: 15,
-                paddingBottom: 10,
-            }}>
-                <Text style={{
-                    fontSize: 20,
-                    fontFamily: SFP_TEXT_MEDIUM
-                }}>
-                    {title}
-                    {subtitle && <Text style={{fontSize: 16, color: Colors.greyish}}>{subtitle}</Text>}
-                </Text>
-                {renderSectionHeaderChildren && renderSectionHeaderChildren()}
-            </View>
-        </GTouchable>);
-    }
-
-    seeLineup(id: Id) {
-        this.props.navigator.showModal({
-            screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
-            passProps: {
-                lineupId: id,
-            },
-            navigatorButtons: Nav.CANCELABLE_MODAL,
-        });
-    }
-
-    renderListItem(item: List, options = {}) {
-        return (
-            <LineupHorizontal
-                lineupId={item.id}
-                navigator={this.props.navigator}
-                {...options}
             />
         );
     }

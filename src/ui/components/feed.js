@@ -21,7 +21,7 @@ import {RequestManager} from "../../managers/request";
 import {createConsole} from "../../helpers/DebugUtils";
 import Spinner from 'react-native-spinkit';
 import GSearchBar from "../GSearchBar";
-
+import Config from "react-native-config"
 
 export type FeedSource = {
     callFactory: ()=>Api.Call,
@@ -68,7 +68,7 @@ type State = {
 
 
 // const LAST_EMPTY_RESULT_WAIT_MS = 5 * 60 * 1000;
-const LAST_EMPTY_RESULT_WAIT_MS = 1000;
+const LAST_EMPTY_RESULT_WAIT_MS = Config.LAST_EMPTY_RESULT_WAIT_MS;
 
 @connect((state, ownProps) => ({
     config: state.config,
@@ -95,7 +95,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         super(props);
         this.logger = props.displayName && createConsole(props.displayName) || console;
         this.createdAt = Date.now();
-        this.postFetchFirst();
+        // this.postFetchFirst();
     }
 
     componentWillReceiveProps(nextProps: Props<*>) {
@@ -135,18 +135,22 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     postFetchFirst() {
-        if (this.notFetchable()) {
-            this.logger.debug('cannot fetch. aborting', this.props);
-            return;
-        }
+        // if (this.notFetchable()) {
+        //     this.logger.debug('cannot fetch. aborting', this.props);
+        //     return;
+        // }
 
         setTimeout(() => {
+            if (this.state.firstLoad !== 'idle') {
+                this.logger.debug(`postFetchFirst was not performed, firstLoad=${this.state.firstLoad}`);
+                return;
+            }
             let trigger = this.hasItems() ? TRIGGER_USER_INDIRECT_ACTION : TRIGGER_USER_DIRECT_ACTION;
             const options = {trigger};
 
-            const canFetch = this.canFetch('isFetchingFirst', options);
-            const firstLoad = this.state.firstLoad;
-            if (canFetch && firstLoad === 'idle') {
+            const canotFetch = this.cannotFetchReason('isFetchingFirst', options);
+
+            if (canotFetch === null) {
 
                 Api.safeExecBlock.call(
                     this,
@@ -155,7 +159,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                 );
             }
             else {
-                this.logger.debug(`postFetchFirst was not performed: canFetch=${canFetch}, firstLoad=${firstLoad}`);
+                this.logger.debug(`postFetchFirst was not performed: reason=${canotFetch}`);
             }
         });
     }
@@ -451,24 +455,25 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     canFetch(requestName: string = 'isFetchingFirst', options: * = {}): boolean {
-        if (this.isFiltering()) return false;
+        return this.cannotFetchReason(requestName, options) === null;
+    }
 
-        if (this.notFetchable()) {
-            return false;
-        }
-        else if (this.manager.isSending(requestName, this)) {
-            this.logger.log(`'${requestName}' prevented: is already running. state=${JSON.stringify(this.state)}`);
-            return false;
-        }
-        else if (options.trigger === TRIGGER_USER_INDIRECT_ACTION) {
+
+    cannotFetchReason(requestName: string = 'isFetchingFirst', options: * = {}): string  | null {
+        if (this.isFiltering()) return "filtering list";
+
+        if (this.notFetchable()) return this.notFetchable();
+
+        if (this.manager.isSending(requestName, this)) return "already sending";
+        if (options.trigger === TRIGGER_USER_INDIRECT_ACTION) {
             let events = this.manager.getEvents(this, requestName);
 
             //if recent (30s) result is a failure, do not refetch now
             {
                 let lastFail = _.last(events.filter(e=> e.status === 'ko'));
                 if (lastFail && Date.now() < lastFail.date + 30 * 1000) {
-                    this.logger.debug("debounced fetch: recent failure");
-                    return false;
+                    // this.logger.debug("debounced fetch: recent failure");
+                    return "debounced: recent failure";
                 }
             }
 
@@ -478,17 +483,18 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
 
                 if (lastEmpty && Date.now() < lastEmpty.date + LAST_EMPTY_RESULT_WAIT_MS) {
-                    this.logger.debug("debounced fetch: recent empty result");
-                    return false;
+                    return "debounced: recent empty";
                 }
             }
         }
-        return true;
+        return null;
     }
 
     //doesnt depend on any state
     notFetchable() {
-        return this.props.cannotFetch || !this.props.fetchSrc;
+        if (this.props.cannotFetch) return "cannot fetch";
+        if (!this.props.fetchSrc) return "no fetch sources";
+        return null;
     }
 
     tryFetchIt(options?: any = {}) {
@@ -538,7 +544,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             this.props
                 .dispatch(call.disptachForAction2(fetchSrc.action, {trigger, ...fetchSrc.options}))
                 .then(({data, links})=> {
-                    this.logger.debug("disptachForAction3 " + JSON.stringify(this.props.fetchSrc.action));
+                    this.logger.debug("disptachForAction" + JSON.stringify(this.props.fetchSrc.action));
                     if (!data) {
                         reqTrack.fail();
                         // this.setState({[requestName]: 'ko'});

@@ -4,7 +4,7 @@ export type Url = string;
 
 export type Id = string;
 
-export type ActivityType = 'saving' | 'post' | 'sending';
+export type ActivityType = 'saving' | 'post' | 'sending' | 'ask';
 
 export type ItemType = 'movie' | 'place';
 

@@ -96,6 +96,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                     animationType: 'none',
                                     passProps: {
                                         activityId: activity.id,
+                                        activityType: activity.type,
                                         initialDescription: activity.description
                                     }
                                 });

@@ -115,8 +115,6 @@ export class LineupListScreen extends Screen<Props, State> {
         );
     }
 
-
-
     renderItem(item) {
         let list = item.item;
         if (!(list.type === 'lists')) throw "unexpected type";

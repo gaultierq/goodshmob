@@ -127,6 +127,7 @@ export default class ActivityStatus extends React.Component<Props, State> {
                 animationType: 'none',
                 passProps: {
                     activityId: activity.id,
+                    activityType: activity.type,
                     initialDescription: activity.description
                 }
             });

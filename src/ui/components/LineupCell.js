@@ -13,6 +13,7 @@ import LineupTitle from "./LineupTitle";
 import LineupCellSaving from "./LineupCellSaving";
 import {connect} from "react-redux";
 import {logged} from "../../managers/CurrentUser"
+import {isId} from "../../helpers/StringUtils";
 //;
 
 type Props = {
@@ -66,7 +67,7 @@ export default class LineupCell extends React.Component<Props, State> {
         return (
             <View style={[
                 {...stylePadding(padding, null, padding, padding)},
-                {backgroundColor: lineup.id.startsWith('pending') ? Colors.dirtyWhite : Colors.white}, style]}>
+                {backgroundColor: isId(lineup.id) ? Colors.white : Colors.dirtyWhite}, style]}>
 
                 <View style={{flexDirection: titleChildrenBelow ? 'column' : 'row'}}>
                     {<LineupTitle lineup={lineup}/>}
@@ -106,7 +107,7 @@ export default class LineupCell extends React.Component<Props, State> {
     }
 
     renderItem({item, index}: {item: Saving}) {
-        return <LineupCellSaving item={item.item}/>;
+        return <LineupCellSaving item={item}/>;
         // let image = item && item.resource && item.resource.image;
         // const dim = DIM;
         // const style = {

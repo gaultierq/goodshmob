@@ -1,6 +1,6 @@
 // @flow
 import React, {Component} from 'react';
-import type {Id} from "../../types";
+import type {ActivityType, Id} from "../../types";
 import {connect} from "react-redux";
 import {logged} from "../../managers/CurrentUser"
 import * as Api from "../../managers/Api";
@@ -11,9 +11,12 @@ import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import type {PendingAction} from "../../helpers/ModelUtils";
 import {pendingActionWrapper} from "../../helpers/ModelUtils";
 import ModalTextInput from "./modalTextInput";
+import {sanitizeActivityType} from "../../helpers/DataUtils";
 
 type Props = {
     activityId: Id,
+    activityType: ActivityType,
+
     initialDescription: string,
     navigator: any,
     containerStyle:? any,
@@ -56,9 +59,12 @@ export default class ChangeDescriptionScreen extends Component<Props, State> {
         />
     }
 
-    updateDescription(newDescription: string) {
+    updateDescription(description: string) {
 
-        return this.props.dispatch(UPDATE_ACTIVITY.exec({id: this.props.activityId, newDescription}))
+        return this.props.dispatch(UPDATE_ACTIVITY.exec({
+            id: this.props.activityId,
+            type: sanitizeActivityType(this.props.activityType),
+            description}))
             .then(()=> {
                 //TODO: Use Messenger
                 Snackbar.show({
@@ -72,12 +78,26 @@ export default class ChangeDescriptionScreen extends Component<Props, State> {
 export const ACTIVITY_UPDATE = ApiAction.create("activity_update");
 
 
-type ACTIVITY_UPDATE_PAYLOAD = {id: Id, description: string}
+type ACTIVITY_UPDATE_PAYLOAD = {id: Id, type: ActivityType, description: string}
+
+
+//ffs
+let makeUpdateBody = (type,description) => {
+    switch (sanitizeActivityType(type)) {
+        case 'savings':
+            return {saving: {description}};
+        case 'sendings':
+            return {sending: {description}};
+        case 'asks':
+            return {ask: {description}};
+    }
+    return null;
+};
 
 export const UPDATE_ACTIVITY: PendingAction<ACTIVITY_UPDATE_PAYLOAD>  = pendingActionWrapper(
     ACTIVITY_UPDATE,
-    ({id, description}: ACTIVITY_UPDATE_PAYLOAD) => new Api.Call()
+    ({id, type, description}: ACTIVITY_UPDATE_PAYLOAD) => new Api.Call()
         .withMethod('PUT')
-        .withRoute(`savings/${id}`)
-        .withBody({saving: {description}})
+        .withRoute(`${type}/${id}`)
+        .withBody(makeUpdateBody(type, description))
 );

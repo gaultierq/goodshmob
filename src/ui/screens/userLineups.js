@@ -199,13 +199,4 @@ export default class UserLineups extends Screen<Props, State> {
         </GTouchable>);
     }
 
-    renderListItem(item: List, options = {}) {
-        return (
-            <LineupHorizontal
-                lineupId={item.id}
-                navigator={this.props.navigator}
-                {...options}
-            />
-        );
-    }
 }

@@ -3,13 +3,12 @@
 import React from 'react';
 import {Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {isEmpty} from "lodash";
-import type {Item, Saving} from "../../types";
+import type {Item} from "../../types";
 import {Colors} from "../colors";
 import {CachedImage} from "react-native-img-cache";
 
 
 type Props = {
-    saving: Saving,
     item: Item,
     style?: *,
 };
