@@ -126,6 +126,53 @@ workflows:
 
             cd ..
             git checkout android/app/src/main/AndroidManifest.xml ios/goodshmob/Info.plist
+  _upload_sourcemap_ios:
+    steps:
+    - script@1.1.5:
+        title: Upload sourcemaps ios
+        inputs:
+        - content: |2-
+            #!/usr/bin/env bash -ex
+            npm install -g bugsnag-sourcemaps
+
+            react-native bundle \
+                --platform ios \
+                --dev false \
+                --entry-file index.ios.js \
+                --bundle-output ios-release.bundle \
+                --sourcemap-output ios-release.bundle.map
+
+            bugsnag-sourcemaps upload \
+                --api-key $GOODSH_BUILD_BUGSNAG_API_KEY \
+                --app-version $GOODSH_BUILD_VERSION \
+                --minified-file ios-release.bundle \
+                --source-map ios-release.bundle.map \
+                --minified-url main.jsbundle \
+                --upload-sources
+
+  _upload_sourcemap_android:
+    steps:
+    - script@1.1.5:
+        title: Upload sourcemaps android
+        inputs:
+        - content: |2-
+            #!/usr/bin/env bash -ex
+            npm install -g bugsnag-sourcemaps
+
+            react-native bundle \
+                --platform android \
+                --dev false \
+                --entry-file index.android.js \
+                --bundle-output android-release.bundle \
+                --sourcemap-output android-release.bundle.map
+
+            bugsnag-sourcemaps upload \
+                --api-key $GOODSH_BUILD_BUGSNAG_API_KEY \
+                --app-version $GOODSH_BUILD_VERSION \
+                --minified-file android-release.bundle \
+                --source-map android-release.bundle.map \
+                --minified-url index.android.bundle \
+                --upload-sources
 
   _clean:
     steps:
@@ -152,6 +199,7 @@ workflows:
     - _prepare
     - _prepare-android
     - _build-android
+    - _upload_sourcemap_android
     - _deploy-android
     - _add_version
     - _slack_end
@@ -161,6 +209,7 @@ workflows:
     - _prepare
     - _prepare-ios
     - _build-ios
+    - _upload_sourcemap_ios
     - _deploy-ios
     - _add_version
     - _slack_end
@@ -172,6 +221,8 @@ workflows:
     - _prepare-android
     - _build-android
     - _build-ios
+    - _upload_sourcemap_ios
+    - _upload_sourcemap_android
     - _deploy-ios
     - _deploy-android
     - _add_version
@@ -179,10 +230,11 @@ workflows:
 
   build_test:
     before_run:
-    - _prepare
-    - _slack_end
+    - _upload_sourcemap_android
+#    - _prepare
+    # - _slack_end
     # - _prepare-ios
-    # - _prepare-android
+#     - _prepare-android
 #    - _build-android
 #    - _build-ios
     # - _deploy-ios

@@ -71,3 +71,13 @@ gradle.deps
 env.js
 goodshmob-version/
 goodshmob-version
+
+
+android-release.bundle
+android-release.bundle.map
+android-release.bundle.meta
+
+ios-release.bundle
+ios-release.bundle.map
+ios-release.bundle.meta
+
