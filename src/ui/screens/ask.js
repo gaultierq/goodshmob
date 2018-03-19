@@ -199,7 +199,7 @@ export default class AskScreen extends Component<Props, State> {
 
 }
 
-export const CREATE_ASK = ApiAction.create("create_ask");
+export const CREATE_ASK = ApiAction.create("create_ask", "asked for network");
 
 // const actions = {
 //     createAsk: (ask: Ask): Api.Call => {

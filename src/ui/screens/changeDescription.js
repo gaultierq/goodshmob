@@ -75,7 +75,7 @@ export default class ChangeDescriptionScreen extends Component<Props, State> {
     }
 }
 
-export const ACTIVITY_UPDATE = ApiAction.create("activity_update");
+export const ACTIVITY_UPDATE = ApiAction.create("activity_update", "update an activity");
 
 
 type ACTIVITY_UPDATE_PAYLOAD = {id: Id, type: ActivityType, description: string}

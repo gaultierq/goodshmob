@@ -121,8 +121,8 @@ const styles = StyleSheet.create({
     }
 });
 
-export const CONNECT = ApiAction.create("connect");
-export const DISCONNECT = ApiAction.create("disconnect");
+export const CONNECT = ApiAction.create("connect", "add a friend");
+export const DISCONNECT = ApiAction.create("disconnect", "delete a friend");
 
 const actions = {
     createFriendship: (userId: string) => {

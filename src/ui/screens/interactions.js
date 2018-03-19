@@ -33,7 +33,7 @@ type State = {
 };
 
 
-const FETCH_INTERACTIONS = ApiAction.create("fetch_interactions");
+const FETCH_INTERACTIONS = ApiAction.create("fetch_interactions", "retrieve user notifications");
 
 const mapStateToProps = (state, ownProps) => ({
     interaction: state.interaction,

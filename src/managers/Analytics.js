@@ -39,6 +39,12 @@ class _Analytics implements Analytics {
         }
     }
 
+    // record logging on Answers
+    logCustom(description: string, attributes: { [string]: any } = {}) {
+        console.log(`Analytics:logCustom, description: ${description}, attributes: ${JSON.stringify(attributes, null, 2)}`);
+        Answers.logCustom(description, attributes);
+    }
+
     toString() {
         return "Analytics-" + this.id;
     }
@@ -48,6 +54,9 @@ export interface Analytics {
     init(): void;
 
     screen(screenName: string, param: any): void;
+
+    // record logging on Answers
+    logCustom(description: string, attributes: { [string]: any }): void;
 }
 
 module.exports = new _Analytics();

@@ -24,7 +24,7 @@ type Props = {
 type State = {
 };
 
-const FETCH_PEOPLE_YOU_MAY_KNOW = ApiAction.create("people_you_may_know");
+const FETCH_PEOPLE_YOU_MAY_KNOW = ApiAction.create("people_you_may_know", "retrieve the user network he might know");
 
 @logged
 @connect((state, ownProps) => ({

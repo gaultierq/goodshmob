@@ -280,7 +280,7 @@ export default class App {
         // => Why ?? for perfs ? :D
         let registerScreens = require('./ui/allScreens').default;
         registerScreens(this.store, Provider);
-        
+
     }
 
     refreshAppMode() {
