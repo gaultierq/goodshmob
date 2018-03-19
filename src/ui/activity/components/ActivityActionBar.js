@@ -213,26 +213,34 @@ export default class ActivityActionBar extends React.Component<Props, State> {
         const user = activity.user;
 
         let description = isCurrentUser(user) ? "" : "via " +  fullName(user) + (activity.description && " - " + activity.description);
+        const delayMs = 4000;
 
         const lineupId = currentGoodshboxId();
         this.props.dispatch(CREATE_SAVING.pending({
-            itemId: item.id,
-            itemType: item.type,
-            lineupId,
-            privacy: 0,
-            description,
-        }, {scope: {itemId: item.id, lineupId}})).then(pendingId => {
+                itemId: item.id,
+                itemType: item.type,
+                lineupId,
+                privacy: 0,
+                description,
+            }, {
+                scope: {itemId: item.id, lineupId},
+                delayMs: delayMs
+            }
+        )).then(pendingId => {
             //console.info(`saving ${saving.id} unsaved`)
+
             Messenger.sendMessage(
                 //MagicString
                 i18n.t("activity_action_bar.goodsh_bookmarked", {lineup: "Goodshbox"}),
                 {
-                    timeout: 4000,
+                    timeout: delayMs,
                     action: {
                         title: i18n.t('activity_action_bar.goodsh_bookmarked_change_lineup'),
                         onPress: () => {
                             //undo previous add
-                            CREATE_SAVING.undo(pendingId);
+                            console.info(`changing lineup: undo-ing pending=${pendingId}`);
+                            this.props.dispatch(CREATE_SAVING.undo(pendingId));
+
                             let item = activity.resource;
 
                             let cancel = () => {
