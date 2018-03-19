@@ -6,6 +6,7 @@ import {ActivityIndicator, Button, Image, ImageBackground, StyleSheet, Text, Vie
 import * as appActions from "../../auth/actions"
 import {connect} from 'react-redux';
 import {AccessToken, LoginManager} from 'react-native-fbsdk';
+import Config from 'react-native-config';
 
 import SmartButton from "../components/SmartButton";
 import SwiperNav from "../components/SwiperNav";
@@ -178,6 +179,10 @@ class Login extends Component<Props, State> {
                         AccessToken.getCurrentAccessToken().then(
                             (data) => {
                                 let token = data ? data.accessToken.toString() : '';
+                                if (Config.DEBUG_FACEBOOK_TOKEN) {
+                                    console.info("debug facebook token will be used:" + token);
+                                    token = Config.DEBUG_FACEBOOK_TOKEN;
+                                }
 
                                 console.info("facebook token:" + token);
                                 this.props
