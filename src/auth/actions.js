@@ -12,6 +12,7 @@ export function logoutOffline(dispatch) {
     FacebookLoginManager.logOut();
     ImageCache.get().clear();
     dispatch({type: SET_USER_NULL});
+
 }
 
 //if user lost auth, then offline logout

@@ -197,6 +197,7 @@ export default class App {
 
         this.getCurrentCacheVersion().then(cacheVersion => {
             this.cacheVersion = cacheVersion || 0;
+            console.info(`cache version=${this.cacheVersion}`);
         });
         // since react-redux only works on components, we need to subscribe this class manually
         this.store.subscribe(this.onStoreUpdate.bind(this));
@@ -295,7 +296,7 @@ export default class App {
         if (!cacheVersion) {
             mode = 'init_cache';
         }
-        else if (this.upgradingCache  || cacheVersion < __CACHE_VERSION__) {
+        else if (this.upgradingCache  || cacheVersion < Config.CACHE_VERSION) {
             mode = 'upgrading_cache';
         }
         else {
@@ -339,7 +340,7 @@ export default class App {
         }
         let navigatorStyle = {...UI.NavStyles};
 
-        const cacheVersion = __CACHE_VERSION__;
+        const cacheVersion = Config.CACHE_VERSION;
         switch (this.mode) {
             case 'nospam':
                 this.showNoSpamModal();
