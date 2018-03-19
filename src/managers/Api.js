@@ -304,12 +304,18 @@ export class Call {
             //let {meta} = options;
             return new Promise((resolve, reject) => {
                 call.run()
+                    .then(resp => {
+                        const debugError = this.debugFail(apiAction);
+                        if (debugError) throw debugError;
+                        return resp;
+                    })
                     .then(
                         resp => {
                             let requestTime = Date.now() - tic;
                             Statistics.recordTime(`request.${apiAction.name()}`, requestTime);
                             return resp;
                         },
+                        //useless
                         err => {throw err}
                     )
                     .then(sleeper(Math.max(__MIN_REQUEST_TIME__ - (Date.now() - tic), 0)))
@@ -383,8 +389,97 @@ export class Call {
     //     //if (!this.method) throw new Error("call need a method");
     //     return instance.submit(this.url.toString(), this.method, this.body);
     // }
+
+    debugFail(action: ApiAction) {
+        let conf = this.obtainDebugFailConfig();
+        return conf && conf.getFail(action);
+    }
+
+    debugFailObtained: boolean = false;
+    debugfailConfig: ?DebugFailConfig;
+
+    obtainDebugFailConfig(): ?DebugFailConfig {
+        if (!this.debugFailObtained) {
+            this.debugFailObtained = true;
+            if (Config.DEBUG_FAIL_CONFIG) {
+                try {
+                    let conf = JSON.parse(Config.DEBUG_FAIL_CONFIG);
+                    this.debugfailConfig = new DebugFailConfig(conf);
+                }
+                catch (e) {
+                    console.error(e);
+                }
+            }
+        }
+        return this.debugfailConfig;
+    }
 }
 const instance : Api = new Api();
+
+/*
+    rate: 0.1,
+    err: {httpCode: 500, message: "Generic error message"},
+    actions:
+        {
+            save_item:
+                {
+                    rate: 0.5,
+                    err: {httpCode: 422, message: "You cannot save an item in this list"}
+                }
+        }
+ */
+class DebugFailConfig {
+
+    globalConf: any; //TYPEME
+    confByAction = {};
+
+    constructor(jsonObj) {
+        this.globalConf = this.makeErr(jsonObj);
+        _.forIn(jsonObj.actions, (value, key) => {
+            this.confByAction[key] = this.makeErr(value)
+        });
+
+    }
+
+    makeErr(obj) {
+        let rate = _.get(obj, 'rate', 0);
+        let err = _.get(obj, 'err', {httpCode: 511, message: 'Fake error message'});
+        return {rate, err};
+    }
+
+    getFail(action: ApiAction) {
+        let errConf = this.confByAction[action.name()] || this.globalConf;
+        return errConf && Math.random() < errConf.rate && this.thrown(errConf);
+
+    }
+
+    thrown(errConf) {
+        return new FakeError(errConf.err.message, errConf.err.httpCode);
+    }
+}
+
+//https://stackoverflow.com/questions/31089801/extending-error-in-javascript-with-es6-syntax-babel
+class ExtendableError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = this.constructor.name;
+        if (typeof Error.captureStackTrace === 'function') {
+            Error.captureStackTrace(this, this.constructor);
+        } else {
+            this.stack = (new Error(message)).stack;
+        }
+    }
+}
+
+// now I can extend
+class FakeError extends ExtendableError {
+    status: number;
+
+    constructor(message: string, status: number) {
+        super(message);
+        this.status = status;
+    }
+}
 
 
 export function init(store) {
