@@ -36,6 +36,11 @@ const mapStateToProps = (state, ownProps) => ({
 @connect(mapStateToProps)
 export default class UserScreen extends Screen<Props, State> {
 
+    static navigatorStyle = {
+        navBarNoBorder: true,
+        topBarElevationShadowEnabled: false
+    };
+
     constructor(props: Props) {
         super(props);
     }
