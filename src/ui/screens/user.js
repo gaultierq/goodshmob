@@ -38,7 +38,10 @@ export default class UserScreen extends Screen<Props, State> {
 
     static navigatorStyle = {
         navBarNoBorder: true,
-        topBarElevationShadowEnabled: false
+        topBarElevationShadowEnabled: false,
+        // those props only affect Android
+        navBarTitleTextCentered: true,
+        navBarSubTitleTextCentered: true,
     };
 
     constructor(props: Props) {
