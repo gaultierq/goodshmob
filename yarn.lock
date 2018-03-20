@@ -4850,9 +4850,9 @@ react-native-easy-grid@^0.1.17:
   dependencies:
     lodash "^4.11.1"
 
-react-native-elements@^0.18.4:
-  version "0.18.5"
-  resolved "https://registry.yarnpkg.com/react-native-elements/-/react-native-elements-0.18.5.tgz#9d9a584395fea63f8cad7904fb21c1eac7cc63cf"
+react-native-elements@beta:
+  version "1.0.0-beta3"
+  resolved "https://registry.yarnpkg.com/react-native-elements/-/react-native-elements-1.0.0-beta3.tgz#3f1a4e9ef17981609366e002800036d193ece60e"
   dependencies:
     lodash.isempty "^4.4.0"
     lodash.times "^4.3.2"
