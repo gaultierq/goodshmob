@@ -7,8 +7,12 @@
 		"test": "jest --verbose",
 		"flow": "flow",
 		"flow-stop": "flow stop",
-		"postinstall": "react-native-schemes-manager all"
-	},
+		"postinstall": "react-native-schemes-manager all",
+		"build-android": "react-native run-android --no-packager",
+		"build-ios": "react-native run-ios --no-packager",
+		"ba": "yarn build-android",
+		"bi": "yarn build-ios"
+},
 	"xcodeSchemes": {
 		"Debug": [
 			"Debug"
