@@ -16,6 +16,7 @@ import UserLineups from "./userLineups";
 import LineupHorizontal from "../components/LineupHorizontal";
 import {seeActivityDetails, seeList} from "../Nav";
 import * as UI from "../UIStyles";
+import {fullName} from "../../helpers/StringUtils";
 
 type Props = {
     userId: Id,
@@ -43,13 +44,19 @@ export default class UserScreen extends Screen<Props, State> {
     render() {
 
         let userId = this.props.userId;
+        //FIXME: rm platform specific code, https://github.com/wix/react-native-navigation/issues/1871
         if (this.isVisible() && this.props.user) {
-            this.props.navigator.setStyle({...UI.NavStyles,
-                navBarCustomView: 'goodsh.UserNav',
-                navBarCustomViewInitialProps: {
-                    user: this.props.user,
-                }
-            });
+            if (__IS_IOS__) {
+                this.props.navigator.setStyle({...UI.NavStyles,
+                    navBarCustomView: 'goodsh.UserNav',
+                    navBarCustomViewInitialProps: {
+                        user: this.props.user,
+                    }
+                });
+            }
+            else {
+                this.setNavigatorTitle(this.props.navigator, {title: fullName(this.props.user)})
+            }
         }
 
         return (

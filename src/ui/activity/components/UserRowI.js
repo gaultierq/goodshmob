@@ -63,19 +63,6 @@ export default class UserRowI extends React.Component<Props, State> {
         </View>
     }
 
-    navigateToUser(user: User) {
-        let navigator = this.props.navigator;
-
-        navigator.push({
-            screen: 'goodsh.UserScreen',
-            title: fullName(user),
-            passProps: {
-                userId: user.id,
-                user
-            }
-        });
-
-    }
 }
 
 const styles = StyleSheet.create({

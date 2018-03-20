@@ -99,8 +99,8 @@ export default class FriendsScreen extends Screen<Props, State> {
                 // });
 
                 this.props.navigator.showModal({
-                    screen: 'goodsh.UserScreen', // unique ID registered with Navigation.registerScreen
-                    title: fullName(user),
+                    screen: 'goodsh.UserScreen',
+                    // title: fullName(user),
                     passProps: {
                         userId: user.id,
                         user

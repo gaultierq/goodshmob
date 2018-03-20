@@ -45,24 +45,28 @@ class LineupScreen extends Screen<Props, State> {
     render() {
         const lineup = this.getLineup();
 
-        // let subtitle = () => {
-        //     const user = _.get(lineup, 'user');
-        //     //MagicString
-        //     return user && "par " + fullName(user)
-        // };
-
         // this.setNavigatorTitle(this.props.navigator, {title: _.get(lineup, 'name'), subtitle: subtitle()});
-
+        //FIXME: rm platform specific code, https://github.com/wix/react-native-navigation/issues/1871
         if (this.isVisible() && lineup) {
-            this.props.navigator.setStyle({
-                ...UI.NavStyles,
-                navBarCustomView: 'goodsh.LineupNav',
-                navBarCustomViewInitialProps: {
-                    user: lineup.user,
-                    lineupName: _.get(lineup, 'name'),
-                    lineupCount: _.get(lineup, `meta.savingsCount`, null)
-                }
-            });
+            if (__IS_IOS__) {
+                this.props.navigator.setStyle({
+                    ...UI.NavStyles,
+                    navBarCustomView: 'goodsh.LineupNav',
+                    navBarCustomViewInitialProps: {
+                        user: lineup.user,
+                        lineupName: _.get(lineup, 'name'),
+                        lineupCount: _.get(lineup, `meta.savingsCount`, null)
+                    }
+                });
+            }
+            else {
+                let subtitle = () => {
+                    const user = _.get(lineup, 'user');
+                    //MagicString
+                    return user && "par " + fullName(user)
+                };
+                this.setNavigatorTitle(this.props.navigator, {title: _.get(lineup, 'name'), subtitle: subtitle()});
+            }
         }
 
 
