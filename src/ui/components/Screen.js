@@ -19,12 +19,6 @@ export type ScreenProps = NavigableProps & {
 
 export default class Screen<P, S> extends Component<P & ScreenProps,  ScreenState> {
 
-    static navigatorStyle = {
-        // those props only affect Android
-        navBarTitleTextCentered: true,
-        navBarSubTitleTextCentered: true,
-    };
-
     state = {visible: false, dirty: false};
 
     constructor(props:P) {
