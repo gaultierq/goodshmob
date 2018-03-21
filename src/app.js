@@ -488,7 +488,9 @@ export default class App {
                 screen: 'goodsh.LoginScreen',
                 navigatorStyle: {
                     ...navigatorStyle,
-                    navBarHidden: true,
+                    // we are not hidding the navbar since the skip button
+                    // has been moved there for now
+                    // navBarHidden: true,
                 },
             }
         });
