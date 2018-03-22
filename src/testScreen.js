@@ -101,6 +101,17 @@ export const commentsScreen3 = {
         activityType: "savings",
     }
 };
+//comments benoit
+export const commentsScreen4 = {
+    screen: {
+        label: 'test',
+        screen: 'goodsh.CommentsScreen',
+    },
+    passProps: {
+        activityId: "fcb40005-64f1-4f17-8347-61c52f803525",
+        activityType: "savings",
+    }
+};
 
 export const profileScreen = {
     screen: {
