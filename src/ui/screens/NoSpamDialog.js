@@ -12,6 +12,7 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
+    TouchableWithoutFeedback,
     View
 } from 'react-native';
 import {CheckBox, SearchBar} from 'react-native-elements'
@@ -34,8 +35,14 @@ export default class NoSpamDialog extends Component<Props, State> {
 
     scaleAnimationDialog;
 
+    // we want to dismiss the nospam dialog if we click anywhere in its content
+    handleOnDismissPress = () => {
+        this.scaleAnimationDialog.dismiss();
+    }
+
     render() {
-        return (<PopupDialog
+        return (
+            <PopupDialog
                 ref={(popupDialog) => {
                     this.scaleAnimationDialog = popupDialog;
                     if (this.scaleAnimationDialog && !this.timeout) {
@@ -57,9 +64,7 @@ export default class NoSpamDialog extends Component<Props, State> {
                     <DialogButton
                         text={i18n.t('no_spam.dialog_button')}
                         align={"right"}
-                        onPress={() => {
-                            this.scaleAnimationDialog.dismiss();
-                        }}
+                        onPress={this.handleOnDismissPress}
                         key="button-1"
                     />,
                 ]}
@@ -67,12 +72,11 @@ export default class NoSpamDialog extends Component<Props, State> {
                 height={400}
             >
 
-
-                <View style={{flex:1, paddingRight: 15}}>
-                    <Markdown style={{color:Colors.greyishBrown}} body={i18n.t('no_spam.dialog_body')}/>
-                </View>
-
-
+                <TouchableWithoutFeedback onPress={this.handleOnDismissPress}>
+                    <View style={{flex:1, paddingRight: 15}}>
+                        <Markdown style={{color:Colors.greyishBrown}} body={i18n.t('no_spam.dialog_body')}/>
+                    </View>
+                </TouchableWithoutFeedback>
 
             </PopupDialog>
         );
