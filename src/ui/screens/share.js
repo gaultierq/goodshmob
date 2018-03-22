@@ -131,6 +131,7 @@ class ShareScreen extends Component<Props, State> {
             // excludedActivityTypes: [
             //     'com.apple.UIKit.activity.PostToTwitter'
             // ]
+            subject: i18n.t('send_object', {what: title}),
         })
     }
 
