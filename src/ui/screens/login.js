@@ -9,6 +9,7 @@ import {AccessToken, LoginManager} from 'react-native-fbsdk';
 import Config from 'react-native-config';
 
 import SmartButton from "../components/SmartButton";
+import SwiperNav from "../components/SwiperNav";
 import {Colors} from "../colors";
 
 import Swiper from 'react-native-swiper';
@@ -24,51 +25,13 @@ type State = {
     index: number
 };
 
-const NAVIGATOR_BUTTONS = {
-    rightButtons: [
-        {
-            title: i18n.t("actions.skip"),
-            id: 'skip'
-        }
-    ],
-}
-
 @connect()
 class Login extends Component<Props, State> {
-
-    // we set a top right skip button (OK) to the navbar
-    static navigatorButtons = NAVIGATOR_BUTTONS
-
-    // we need to handle the skip button (OK) in order to move to the
-    // last slide
-    onNavigatorEvent = ({ type, id }) => {
-        if (type === 'NavBarButtonPress') {
-            if (id === 'skip') {
-                this.goLastSwiperView();
-            }
-        }
-    }
 
     constructor(props: Props) {
         super(props);
         this.state = {index: props.initialIndex || 0};
         this.goLastSwiperView = this.goLastSwiperView.bind(this);
-        // `onNavigatorEvent()` needs to be registered to be called
-        const { navigator } = this.props;
-        navigator.setOnNavigatorEvent(this.onNavigatorEvent);
-    }
-
-    // we need to check if we reached the last slide to hide the navbar
-    // skip button
-    handleOnIndexChanged = (index) => {
-        console.log('handleOnIndexChanged()')
-        this.setState({ index })
-        const { navigator } = this.props
-        if (index < 4) {
-            navigator.setButtons(NAVIGATOR_BUTTONS)
-        } else {
-            navigator.setButtons({ rightButtons: [] })
-        }
     }
 
     render() {
@@ -84,7 +47,7 @@ class Login extends Component<Props, State> {
                   // dotStyle={{backgroundColor: dotColor, width: 5, height: 5,borderRadius: 2.5, margin: 12}}
                   // activeDotStyle={{backgroundColor: dotColor, width: 8, height: 8, borderRadius: 4, margin: 12}}
                   renderPagination={(index, total, context) => this.renderPagination(index, total, context)}
-                  onIndexChanged={this.handleOnIndexChanged}
+                  onIndexChanged={(index)=>this.setState({index})}
               >
 
                   <View style={[styles.slide, {backgroundColor: Colors.green}]}>
@@ -156,6 +119,7 @@ class Login extends Component<Props, State> {
                       </View>
                   </View>
               </Swiper>
+              <SwiperNav index={this.state.index} color={this.getColorsByIndex()} onPressSkip={this.goLastSwiperView}/>
             </View>
         )
     }
