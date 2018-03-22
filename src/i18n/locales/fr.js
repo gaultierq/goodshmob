@@ -231,7 +231,8 @@ export default {
         }
     },
     loadmore: "Chargement",
-    send_message: "%{url}\n\nEnvoyé via Goodsh : l'app Mémo pour noter et toujours retrouver toutes les recommandations qu'on me fait.\nhttps://goodsh.it/",
+    send_message: "%{url}\n\nEnvoyé via Goodsh : l'app Mémo pour noter et toujours retrouver toutes les recommandations qu'on me fait.",
+    send_object: "te recommande %{what} - via Goodsh",
     goodsh_url: "https:\/\/goodsh.it\/",
     friends: {
         empty_screen: "Profite pleinement de Goodsh et invite des proches.",
