@@ -343,5 +343,9 @@ export default {
     },
     congrats: {
         generic: "Done;)"
-    }
+    },
+    content_actions: {
+        read_more: 'Read more',
+        hide: 'Hide',
+    },
 };

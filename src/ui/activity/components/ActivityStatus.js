@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
+import ReadMore from 'react-native-read-more-text'
 import {Colors} from "../../colors";
 import {stylePadding} from "../../UIStyles";
 import type {Activity, RNNNavigator} from "../../../types";
@@ -41,7 +42,11 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3,
         shadowRadius: 1,
         elevation: 3,
-    }
+    },
+    button: {
+        color: '#888',
+        marginTop: 5,
+    },
 });
 
 type Props = {
@@ -147,24 +152,47 @@ export default class ActivityStatus extends React.Component<Props, State> {
         }
     }
 
-    renderDescription2(content: string) {
-        return <View style={{flex: 1, flexDirection: 'row'}}>
-            <View style={[styles.descriptionContainer, this.props.descriptionContainerStyle]}>
+    renderTruncatedFooter = (handlePress) => (
+        <Text style={styles.button} onPress={handlePress}>
+            { i18n.t("content_actions.read_more") }
+        </Text>
+    )
 
-                <Octicons name="quote" size={10} color={Colors.brownishGrey} style={{alignSelf: 'flex-start'}}/>
-                <Text numberOfLines={this.props.descriptionNumberOfLines} style={[
-                    styles.description,
-                    {
-                        flex: 1,
-                        alignItems: 'center',
-                        textAlignVertical: 'center',
-                        paddingHorizontal: 2,
-                    },
-                    this.props.descriptionStyle
-                ]}>{_.upperFirst(content)}
-                </Text>
+    _renderRevealedFooter = (handlePress) => (
+        <Text style={styles.button} onPress={handlePress}>
+            { i18n.t("content_actions.hide") }
+        </Text>
+    )
+
+    renderDescription2(content: string) {
+        return (
+            <View style={{flex: 1, flexDirection: 'row'}}>
+                <View style={[styles.descriptionContainer, this.props.descriptionContainerStyle]}>
+
+                    <Octicons name="quote" size={10} color={Colors.brownishGrey} style={{alignSelf: 'flex-start'}}/>
+                    <ReadMore
+                        numberOfLines={this.props.descriptionNumberOfLines}
+                        renderTruncatedFooter={this._renderTruncatedFooter}
+                        renderRevealedFooter={this._renderRevealedFooter}
+                    >
+                        <Text
+                            style={[
+                                styles.description,
+                                {
+                                    flex: 1,
+                                    alignItems: 'center',
+                                    textAlignVertical: 'center',
+                                    paddingHorizontal: 2,
+                                },
+                                this.props.descriptionStyle,
+                            ]}
+                        >
+                            { _.upperFirst(content) }
+                        </Text>
+                    </ReadMore>
+                </View>
             </View>
-        </View>;
+        );
     }
 
     renderSendTo() {
@@ -225,7 +253,3 @@ export default class ActivityStatus extends React.Component<Props, State> {
 
     }
 }
-
-
-
-

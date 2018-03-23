@@ -342,5 +342,9 @@ export default {
     },
     congrats: {
         generic: "C'est fait ;)"
-    }
+    },
+    content_actions: {
+        read_more: 'Voir plus',
+        hide: 'Cacher',
+    },
 };
