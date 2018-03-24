@@ -70,7 +70,7 @@ export default class CommentCell extends Component<Props, State> {
                         {!rightDisplay && <Avatar user={user} style={{dim: 24, marginTop: 3}}/>}
                     </Col>
                     {/* comment content (firstname + messages) */}
-                    <Col>
+                    <Col style={{ justifyContent: 'flex-start'}}>
                         {/* firstname */}
                         <Row>
                             <Text style={styles.rightText}>
