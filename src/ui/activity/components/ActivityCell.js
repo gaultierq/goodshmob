@@ -57,7 +57,6 @@ export default class ActivityCell extends React.Component<Props, State> {
 
 
     render() {
-        console.debug("ActivityCell rendered");
         let activity = this.getActivity();
         // this.refKeys = this.makeRefObject(this.props);
         this.updateTracker.onRender(this.props);

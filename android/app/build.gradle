@@ -75,74 +75,74 @@ import com.android.build.OutputFile
 
 
 project.ext.react = [
-        // the name of the generated asset file containing your JS bundle
-        bundleAssetName: "index.android.bundle",
+    // the name of the generated asset file containing your JS bundle
+    bundleAssetName: "index.android.bundle",
 
-        // the entry file for bundle generation
-        entryFile: "index.android.js",
+    // the entry file for bundle generation
+    entryFile: "index.android.js",
 
-        // whether to bundle JS and assets in debug mode
-        bundleInDebug: false,
+    // whether to bundle JS and assets in debug mode
+    bundleInDebug: false,
 
-        // whether to bundle JS and assets in debug mode
-        bundleInDev: true,
+    // whether to bundle JS and assets in debug mode
+    bundleInDev: true,
 
-        bundleInPreprod: true,
+    bundleInPreprod: true,
 
-        bundleInProd: true,
+    bundleInProd: true,
 
-        // whether to bundle JS and assets in release mode
-        bundleInRelease: true,
+    // whether to bundle JS and assets in release mode
+    bundleInRelease: true,
 
-        // whether to bundle JS and assets in another build variant (if configured).
-        // See http://tools.android.com/tech-docs/new-build-system/user-guide#TOC-Build-Variants
-        // The configuration property can be in the following formats
-        //         'bundleIn${productFlavor}${buildType}'
-        //         'bundleIn${buildType}'
-        // bundleInFreeDebug: true,
-        // bundleInPaidRelease: true,
-        // bundleInBeta: true,
+    // whether to bundle JS and assets in another build variant (if configured).
+    // See http://tools.android.com/tech-docs/new-build-system/user-guide#TOC-Build-Variants
+    // The configuration property can be in the following formats
+    //         'bundleIn${productFlavor}${buildType}'
+    //         'bundleIn${buildType}'
+    // bundleInFreeDebug: true,
+    // bundleInPaidRelease: true,
+    // bundleInBeta: true,
 
-        // we are disabling the dev mode for the build types dev, preprod
-        // and prod
-        devDisabledInDev: true,
-        devDisabledInPreprod: true,
-        devDisabledInProd: true,
+    // we are disabling the dev mode for the build types dev, preprod
+    // and prod
+    devDisabledInDev: true,
+    devDisabledInPreprod: true,
+    devDisabledInProd: true,
 
-        // the root of your project, i.e. where "package.json" lives
-        root: "../../",
+    // the root of your project, i.e. where "package.json" lives
+    root: "../../",
 
-        // where to put the JS bundle asset in debug mode
-        jsBundleDirDebug: "$buildDir/intermediates/assets/debug",
+    // where to put the JS bundle asset in debug mode
+    jsBundleDirDebug: "$buildDir/intermediates/assets/debug",
 
-        // where to put the JS bundle asset in debug mode
-        jsBundleDirDev: "$buildDir/intermediates/assets/dev",
+    // where to put the JS bundle asset in debug mode
+    jsBundleDirDev: "$buildDir/intermediates/assets/dev",
 
-        // where to put the JS bundle asset in release mode
-        jsBundleDirRelease: "$buildDir/intermediates/assets/release",
+    // where to put the JS bundle asset in release mode
+    jsBundleDirRelease: "$buildDir/intermediates/assets/release",
 
-        // where to put drawable resources / React Native assets, e.g. the ones you use via
-        // require('./image.png')), in debug mode
-        resourcesDirDebug: "$buildDir/intermediates/res/merged/debug",
+    // where to put drawable resources / React Native assets, e.g. the ones you use via
+    // require('./image.png')), in debug mode
+    resourcesDirDebug: "$buildDir/intermediates/res/merged/debug",
 
-        resourcesDirDev: "$buildDir/intermediates/res/merged/dev",
+    resourcesDirDev: "$buildDir/intermediates/res/merged/dev",
 
-        // where to put drawable resources / React Native assets, e.g. the ones you use via
-        // require('./image.png')), in release mode
-        resourcesDirRelease: "$buildDir/intermediates/res/merged/release",
+    // where to put drawable resources / React Native assets, e.g. the ones you use via
+    // require('./image.png')), in release mode
+    resourcesDirRelease: "$buildDir/intermediates/res/merged/release",
 
-        // by default the gradle tasks are skipped if none of the JS files or assets change; this means
-        // that we don't look at files in android/ or ios/ to determine whether the tasks are up to
-        // date; if you have any other folders that you want to ignore for performance reasons (gradle
-        // indexes the entire tree), add them here. Alternatively, if you have JS files in android/
-        // for example, you might want to remove it from here.
-        inputExcludes: ["android/**", "ios/**"],
+    // by default the gradle tasks are skipped if none of the JS files or assets change; this means
+    // that we don't look at files in android/ or ios/ to determine whether the tasks are up to
+    // date; if you have any other folders that you want to ignore for performance reasons (gradle
+    // indexes the entire tree), add them here. Alternatively, if you have JS files in android/
+    // for example, you might want to remove it from here.
+    inputExcludes: ["android/**", "ios/**"],
 
-        // override which node gets called and with what additional arguments
-        nodeExecutableAndArgs: ["node"],
+    // override which node gets called and with what additional arguments
+    nodeExecutableAndArgs: ["node"],
 
-        // supply additional arguments to the packager
-        extraPackagerArgs: []
+    // supply additional arguments to the packager
+    extraPackagerArgs: []
 ]
 
 
@@ -170,6 +170,8 @@ android {
     buildToolsVersion '27.0.0'
 
     defaultConfig {
+        // avoid this error https://stackoverflow.com/questions/33717886/errorexecution-failed-for-task-apptransformclasseswithdexfordebug
+        multiDexEnabled true
         applicationId "it.goodsh.mob"
         minSdkVersion 16
         targetSdkVersion 22
@@ -230,14 +232,14 @@ android {
     buildTypes {
 
         debug {
-            minifyEnabled true
+            minifyEnabled enableProguardInReleaseBuilds
             useProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             applicationIdSuffix ".debug"
         }
 
         dev {
-            minifyEnabled true
+            minifyEnabled enableProguardInReleaseBuilds
             useProguard true
             signingConfig signingConfigs.dev
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
