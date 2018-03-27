@@ -80,7 +80,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string>Nous avons besoin de votre position pour vous proposer les lieux autour de vous</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
