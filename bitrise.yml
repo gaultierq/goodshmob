@@ -126,6 +126,8 @@ workflows:
 
             cd ..
             git checkout android/app/src/main/AndroidManifest.xml ios/goodshmob/Info.plist
+
+
   _upload_sourcemap_ios:
     steps:
     - script@1.1.5:
@@ -184,6 +186,8 @@ workflows:
             #!/usr/bin/env bash -ex
             git checkout android/app/src/main/AndroidManifest.xml ios/goodshmob/Info.plist
 
+            ./goodshmob-build/prepare-env.sh cleanup
+
   _slack_end:
     steps:
     - slack@2.7.1:
@@ -202,6 +206,7 @@ workflows:
     - _upload_sourcemap_android
     - _deploy-android
     - _add_version
+    - _clean
     - _slack_end
 
   ios:
@@ -212,6 +217,7 @@ workflows:
     - _upload_sourcemap_ios
     - _deploy-ios
     - _add_version
+    - _clean
     - _slack_end
 
   build:
@@ -226,6 +232,7 @@ workflows:
     - _deploy-ios
     - _deploy-android
     - _add_version
+    - _clean
     - _slack_end
 
   build_test:
