@@ -38,13 +38,6 @@ target 'goodshmob' do
 
   # pod 'RNDeviceInfo', path: '../node_modules/react-native-device-info'
 
-  
-
-  target 'goodshmobTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-
 end
 
 post_install do |installer|
