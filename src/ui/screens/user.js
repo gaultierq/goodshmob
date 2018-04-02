@@ -101,7 +101,7 @@ export default class UserScreen extends Screen<Props, State> {
                             data: [lineup],
                             title:lineup.name,
                             subtitle: ` (${_.get(lineup, `meta.savingsCount`, null) || 0})`,
-                            onPress: () => seeList(navigator, lineup.id),
+                            onPress: () => seeList(navigator, lineup),
                             renderItem: ({item}) => (
                                 <LineupHorizontal
                                     lineupId={item.id}
