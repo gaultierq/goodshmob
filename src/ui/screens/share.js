@@ -106,7 +106,9 @@ class ShareScreen extends Component<Props, State> {
     }
 
     copyToClipboard(item:Item) {
-        Clipboard.setString(item.url);
+        let url = this.props.tempActivityUrl;
+        // url = item.url;
+        Clipboard.setString(url);
 
         Snackbar.show({
             title: i18n.t('shared.link_copied'),
