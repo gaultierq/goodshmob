@@ -270,7 +270,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             allViews.push(React.createElement(FlatList, {data: items, ...params}));
         }
 
-        return <View style={this.props.style}>{allViews}</View>
+        return <View style={[this.props.style, {flex: 1}]}>{allViews}</View>
     }
 
     isFiltering() {

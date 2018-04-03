@@ -240,7 +240,7 @@ class HomeScreen extends Screen<Props, State> {
             // FIXME: workflow w/ padding bottom to fix the last cutted item
             // in the lineups list, a better solution might come with #371
             // 70 is the size of a lineup cell
-            <View style={{flex:1, paddingBottom: 70}}>
+            <View style={{flex:1}}>
 
                 <UserLineups
                     displayName={"home feed"}
