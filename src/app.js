@@ -1,4 +1,5 @@
 // @flow
+/* global ErrorUtils */
 
 import {applyMiddleware, combineReducers, compose, createStore} from "redux";
 import {Navigation} from 'react-native-navigation';
@@ -20,7 +21,7 @@ import * as UI from "./ui/UIStyles";
 import {init as initGlobal} from "./global";
 import {AlgoliaClient} from "./helpers/AlgoliaUtils";
 import {Statistics} from "./managers/Statistics";
-import {INIT_CACHE, UPGRADE_CACHE} from "./auth/actionTypes";
+import {CLEAR_CACHE, INIT_CACHE, UPGRADE_CACHE} from "./auth/actionTypes";
 import Config from 'react-native-config'
 import {Provider} from "react-redux";
 import {Messenger} from "./managers/Messenger"
@@ -251,6 +252,21 @@ export default class App {
         Analytics.init();
         OnBoardingManager.init(this.store);
         BugsnagManager.init();
+
+
+        if (ErrorUtils) {
+            const previousHandler = ErrorUtils.getGlobalHandler();
+
+            ErrorUtils.setGlobalHandler((error, isFatal) => {
+                try {
+                    this.store.dispatch({type: CLEAR_CACHE});
+                }
+                finally {
+                    previousHandler(error, isFatal)
+                }
+
+            })
+        }
 
         //api in the end: we dont want to make any call during the app init
         Api.init(this.store);
