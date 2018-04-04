@@ -11,8 +11,8 @@ export default function reduce(state:any = {}, action: any) {
         case types.MOVE_SAVING.success():
             let {savingId, originalLineupId, targetLineupId} = action.options;
 
-            state = unsave(savingId, originalLineupId, state);
-            state = save(savingId, targetLineupId, state);
+            state = saveOrUnsave(savingId, originalLineupId, state);
+            state = saveOrUnsave(savingId, targetLineupId, state, {id: savingId, type: 'savings'});
 
             break;
         case types.CREATE_LIKE.success():
@@ -31,7 +31,7 @@ export default function reduce(state:any = {}, action: any) {
         case types.UNSAVE.success():{
             const {id, lineupId} = action.options;
 
-            state = unsave(id, lineupId, state);
+            state = saveOrUnsave(id, lineupId, state);
 
 
             break;
@@ -40,30 +40,47 @@ export default function reduce(state:any = {}, action: any) {
     return state;
 }
 
-let unsave = (savingId, lineupId, state) => {
+let saveOrUnsave = (savingId, lineupId, state, newSaving = null) => {
     if (!savingId || !lineupId) throw "please provide options to reducer";
 
+
+    let isSave = !!newSaving;
     //update item saved-in
     {
         const resource = _.get(state, `savings.${savingId}.relationships.resource.data`, {});
 
         state = updateSplice0(state, `${resource.type}.${resource.id}.meta.mySavings`, {
-            deletePredicate: it => it === savingId
+            deletePredicate: mySavingId => mySavingId === savingId,
+            index: 0,
+            insert: isSave ? savingId : null,
         });
+    }
+
+    //remove savings from list
+    {
+        state = updateSplice0(state, `lists.${lineupId}.relationships.savings.data`,
+            {
+                deletePredicate: item => item.id === savingId,
+                index: 0,
+                insert: isSave ? newSaving : null,
+            }
+        );
     }
 
     //decrement saving count
     {
         let path = `lists.${lineupId}.meta.savings-count`;
         let count = _.get(state, path);
-        count = --count >= 0 ? count : 0;
+        if (isSave) {
+            count ++;
+        }
+        else {
+            count = --count >= 0 ? count : 0;
+        }
         let obj = _.set({}, path, {$set: count});
         state = update(state, obj);
     }
 
-    //remove savings from list
-    {
-        state = updateSplice0(state, `lists.${lineupId}.relationships.savings.data`, {deletePredicate: item => item.id === savingId});
-    }
+
     return state;
 };

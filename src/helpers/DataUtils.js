@@ -116,17 +116,31 @@ export function doDataMergeInState(state, path, newList, options?: MergeOpts) {
 
 
 export function updateSplice0(state: any, path: string, opts: any) {
-    const {deletePredicate} = opts;
+    const {deletePredicate, index, insert} = opts;
+
+    let ix = index;
+    let removeCount = 0;
+
     if (deletePredicate) {
-        let indexToRemove = _.get(state, path, []).findIndex(deletePredicate);
-        state = updateSplice3(state, path, indexToRemove, 1, null);
+        let indexToRemove =_.get(state, path, []).findIndex(deletePredicate);
+        if (indexToRemove >= 0) {
+            ix = indexToRemove;
+            removeCount = 1;
+        }
+    }
+    if (ix >= 0) {
+        state = updateSplice3(state, path, ix, removeCount, insert);
     }
     return state;
 }
 
 export function updateSplice3(state: any, path: string, index: number, removeCount: number, itemToAdd: any) {
     if (index >= 0) {
-        let obj = _.set({}, path, {$splice: [[index, removeCount, itemToAdd]]});
+
+        const args = [index, removeCount];
+        if (itemToAdd) args.push(itemToAdd);
+        
+        let obj = _.set({}, path, {$splice: [args]});
         state = update(state, obj);
     }
     return state;
