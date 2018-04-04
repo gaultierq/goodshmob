@@ -115,20 +115,22 @@ export function doDataMergeInState(state, path, newList, options?: MergeOpts) {
 }
 
 
-export const dataStateToProps = (state, ownProps) => ({
-    data: state.data,
-});
-
-export function updateDelete(state, path, predicate) {
-    let data = _.get(state, path, []);
-    let indexToRemove = data.findIndex(predicate);
-    if (indexToRemove >= 0) {
-        let obj = _.set({}, path, {$splice: [[indexToRemove, 1]]});
-        state = update(state, obj);
+export function updateSplice0(state: any, path: string, opts: any) {
+    const {deletePredicate} = opts;
+    if (deletePredicate) {
+        let indexToRemove = _.get(state, path, []).findIndex(deletePredicate);
+        state = updateSplice3(state, path, indexToRemove, 1, null);
     }
     return state;
 }
 
+export function updateSplice3(state: any, path: string, index: number, removeCount: number, itemToAdd: any) {
+    if (index >= 0) {
+        let obj = _.set({}, path, {$splice: [[index, removeCount, itemToAdd]]});
+        state = update(state, obj);
+    }
+    return state;
+}
 
 export function isSaving(activity: Activity) {
     return activity && activity.type &&  sanitizeActivityType(activity.type) === 'savings';

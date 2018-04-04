@@ -242,18 +242,7 @@ export default class App {
         //managers init rely on a ready store
         //singletons
 
-        StoreManager.init(this.store);
-        CurrentUser.init(this.store);
-        DeviceManager.init(this.store);
-        AlgoliaClient.init(this.store);
-        Statistics.init(this.store);
-        Messenger.init();
-        NavManager.init();
-        Analytics.init();
-        OnBoardingManager.init(this.store);
-        BugsnagManager.init();
-
-
+        
         if (ErrorUtils) {
             const previousHandler = ErrorUtils.getGlobalHandler();
 
@@ -267,6 +256,19 @@ export default class App {
 
             })
         }
+
+        StoreManager.init(this.store);
+        CurrentUser.init(this.store);
+        DeviceManager.init(this.store);
+        AlgoliaClient.init(this.store);
+        Statistics.init(this.store);
+        Messenger.init();
+        NavManager.init();
+        Analytics.init();
+        OnBoardingManager.init(this.store);
+        BugsnagManager.init();
+
+
 
         //api in the end: we dont want to make any call during the app init
         Api.init(this.store);

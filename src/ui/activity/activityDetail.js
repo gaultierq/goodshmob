@@ -31,7 +31,7 @@ import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts";
 import ActivityActionBar from "./components/ActivityActionBar";
 import FeedSeparator from "./components/FeedSeparator";
 import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
-import {CLOSE_MODAL} from "../Nav";
+import {CANCELABLE_MODAL, CLOSE_MODAL} from "../Nav";
 import BottomSheet from 'react-native-bottomsheet';
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
@@ -83,10 +83,14 @@ class ActivityDetailScreen extends Screen<Props, State> {
             if (event.type === 'NavBarButtonPress') {
                 if (event.id === EDIT_SAVING) {
                     BottomSheet.showBottomSheetWithOptions({
-                        options: [i18n.t("actions.change_description"), i18n.t("actions.cancel")],
+                        options: [
+                            i18n.t("actions.change_description"),
+                            '#move',
+                            i18n.t("actions.cancel")
+                        ],
                         title: i18n.t("actions.edit_saving_menu"),
                         // destructiveButtonIndex: 1,
-                        cancelButtonIndex: 1,
+                        cancelButtonIndex: 2,
                     }, (value) => {
                         switch (value) {
                             case 0:
@@ -99,6 +103,16 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                         activityType: activity.type,
                                         initialDescription: activity.description
                                     }
+                                });
+                                break;
+                            case 1:
+                                this.props.navigator.showModal({
+                                    screen: 'goodsh.MoveInScreen',
+                                    title: i18n.t('create_list_controller.choose_another_list'),
+                                    passProps: {
+                                        savingId: this.props.activityId,
+                                    },
+                                    navigatorButtons: CANCELABLE_MODAL,
                                 });
                                 break;
                         }

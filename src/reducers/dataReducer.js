@@ -3,7 +3,7 @@ import Immutable from 'seamless-immutable';
 import merge from 'deepmerge'
 import {Statistics} from "../managers/Statistics";
 import update from "immutability-helper";
-import {updateDelete} from "../helpers/DataUtils";
+import {updateSplice0} from "../helpers/DataUtils";
 import type {ApiActionName} from "../helpers/ApiAction";
 
 const initialState = Immutable({
@@ -67,7 +67,7 @@ export function pending(state = {}, action) {
     switch (action.type) {
         case REMOVE_PENDING_ACTION :{
             let {pendingActionType, id} = action;
-            state = updateDelete(state, `${pendingActionType}`, it => it.id === id);
+            state = updateSplice0(state, `${pendingActionType}`, {deletePredicate: it => it.id === id});
             break;
         }
         case CREATE_PENDING_ACTION: {

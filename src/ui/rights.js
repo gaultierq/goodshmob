@@ -12,6 +12,7 @@ export default class ActionRights {
     activity: Activity;
 
     constructor(activity: Activity) {
+        if (!activity) throw "invalid params";
         this.activity = activity;
     }
 
