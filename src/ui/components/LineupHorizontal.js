@@ -267,7 +267,7 @@ export type Props1 = {
     lineup: Lineup,
     navigator: RNNNavigator
 }
-export const LineupH1 = (props: Props1) => {
+export const LineupH1 = connect()((props: Props1) => {
     const {lineup, navigator, ...attr} = props;
     return <GTouchable onPress={()=>seeList(navigator, lineup)}>
         <LineupHorizontal
@@ -276,8 +276,8 @@ export const LineupH1 = (props: Props1) => {
             renderSaving={saving => (
                 <GTouchable
                     onPress={() => seeActivityDetails(navigator, saving)}
-                    onLongPress={()=> {
-                        displayActivityActions(navigator, saving.id)
+                    onLongPress={saving.pending ? null : ()=> {
+                        displayActivityActions(navigator, props.dispatch, saving.id, saving.type)
                     }}
                 >
                     <LineupCellSaving item={saving.resource} />
@@ -286,4 +286,4 @@ export const LineupH1 = (props: Props1) => {
             {...attr}
         />
     </GTouchable>
-};
+});

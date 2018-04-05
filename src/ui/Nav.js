@@ -2,8 +2,10 @@
 
 import type {Activity, ActivityType, Id, Item, Lineup, RNNNavigator, User} from "../types";
 import {fullName} from "../helpers/StringUtils";
+import StoreManager from "../managers/StoreManager";
 import i18n from '../i18n/i18n';
 import BottomSheet from 'react-native-bottomsheet';
+import {unsaveOnce} from "./activity/components/ActivityActionBar";
 
 export const CLOSE_MODAL = 'close_modal';
 
@@ -105,17 +107,18 @@ export function seeActivityDetails(navigator: RNNNavigator, activity: Activity) 
 }
 
 
-//FIXME: check rights. if activity not in cache, display something, request + loader
-export function displayActivityActions(navigator: RNNNavigator, activityId: Id, activityType: ActivityType) {
+//FIXME: check for rights (if activity not in cache, display something, request + loader)
+export function displayActivityActions(navigator: RNNNavigator, dispatch: *, activityId: Id, activityType: ActivityType) {
     BottomSheet.showBottomSheetWithOptions({
         options: [
             i18n.t("actions.change_description"),
             i18n.t("actions.move"),
+            i18n.t("actions.delete"),
             i18n.t("actions.cancel")
         ],
         title: i18n.t("actions.edit_saving_menu"),
-        // destructiveButtonIndex: 1,
-        cancelButtonIndex: 2,
+        destructiveButtonIndex: 2,
+        cancelButtonIndex: 3,
     }, (value) => {
         switch (value) {
             case 0:
@@ -138,6 +141,10 @@ export function displayActivityActions(navigator: RNNNavigator, activityId: Id, 
                     },
                     navigatorButtons: CANCELABLE_MODAL,
                 });
+                break;
+            case 2:
+                let activity = StoreManager.buildData(activityType, activityId);
+                unsaveOnce(activity, dispatch);
                 break;
         }
     });

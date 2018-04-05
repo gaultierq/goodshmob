@@ -79,7 +79,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
             if (event.type === 'NavBarButtonPress') {
                 if (event.id === EDIT_SAVING) {
-                    displayActivityActions(props.navigator, this.props.activityId, this.props.activityType);
+                    displayActivityActions(props.navigator, this.props.dispatch, this.props.activityId, this.props.activityType);
                 }
             }
         });
