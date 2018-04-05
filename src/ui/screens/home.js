@@ -263,7 +263,7 @@ class HomeScreen extends Screen<Props, State> {
                                     <LineupHorizontal
                                         lineupId={item.id}
                                         navigator={this.props.navigator}
-                                        onSavingPressed={seeActivityDetails}
+                                        renderSaving={saving => <GTouchable onPress={() => seeActivityDetails(this.props.navigator, saving)}><LineupCellSaving item={saving.resource} /></GTouchable>}
                                         onLineupPressed={seeList}
                                     />
                                 )
@@ -279,7 +279,7 @@ class HomeScreen extends Screen<Props, State> {
                                         withMenuButton={true}
                                         withLineupTitle={true}
                                         withAddInEmptyLineup={true}
-                                        onSavingPressed={seeActivityDetails}
+                                        renderSaving={saving => <GTouchable onPress={() => seeActivityDetails(this.props.navigator, saving)}><LineupCellSaving item={saving.resource} /></GTouchable>}
                                         onLineupPressed={seeList}
                                     />
                                 )

@@ -1,12 +1,16 @@
 //@flow
 
 import React, {Component} from 'react';
-import {TouchableNativeFeedback, TouchableOpacity,} from 'react-native';
+import {TouchableNativeFeedback, TouchableOpacity, View,} from 'react-native';
 import type {ms} from "../types";
 
 export type Props = {
+    onPress: () => void,
     noprotect?: boolean,
-    onDoublePress?: () => void
+    onDoublePress?: () => void,
+    deactivated?: boolean, //skip the gtouchable completely
+    disabledStyle?: *,
+    style?: *
 };
 
 type State = {
@@ -20,15 +24,26 @@ export default class GTouchable extends Component<Props, State>  {
     lastPress: ms = 0;
 
     lastExec: ms = 0;
-    pending: number;
+    pending:? number;
+
+    static defaultProps = {
+        disabledStyle: {opacity: .5}
+    };
 
     render() {
         const {
             noprotect,
             onPress,
             onDoublePress,
+            deactivated,
+            style,
+            disabledStyle,
             ...attributes
-        } = {...this.props};
+        } = this.props;
+
+
+        if (deactivated) return <View style={this.props.style}>{this.props.children}</View>;
+
 
         let _onPress;
         if (!noprotect || onDoublePress) {
@@ -61,9 +76,9 @@ export default class GTouchable extends Component<Props, State>  {
         else {
             _onPress = onPress;
         }
-
+        let _style = this.props.disabled && disabledStyle ? [style, disabledStyle] : style;
         // return React.createElement(__IS_IOS__ ? TouchableOpacity : TouchableNativeFeedback, {onPress: _onPress, ...attributes});
-        return React.createElement(TouchableOpacity, {onPress: _onPress, ...attributes});
+        return React.createElement(TouchableOpacity, {onPress: _onPress, style: _style, ...attributes});
     }
 
     execProtectedPress(now: ms, exec: ()=>void) {
@@ -78,6 +93,8 @@ export default class GTouchable extends Component<Props, State>  {
     }
 }
 
+//just wrap the children in a touchable if the handler is present.
+//TODO: rm this helper, and create state GTouchable unactive & deactive
 export function wrapGtouchable(children: Node, handler: () => void) {
     return handler ? <GTouchable onPress={handler}>{children}</GTouchable> : children;
 }

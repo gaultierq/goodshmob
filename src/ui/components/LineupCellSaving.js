@@ -10,7 +10,7 @@ import {CachedImage} from "react-native-img-cache";
 
 type Props = {
     item: Item,
-    style?: *,
+    style?: ?*,
 };
 
 type State = {
@@ -40,7 +40,7 @@ export default class LineupCellSaving extends React.PureComponent<Props, State> 
             return <CachedImage
                 source={{uri: image}}
                 resizeMode="cover"
-                style={[this.props.style, LineupCellSaving.styles.cell, {borderWidth: StyleSheet.hairlineWidth}]}
+                style={[LineupCellSaving.styles.cell, {borderWidth: StyleSheet.hairlineWidth},this.props.style, ]}
             />
         }
         else {

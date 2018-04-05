@@ -169,7 +169,7 @@ export default class UserLineups extends Screen<Props, State> {
 
     renderSectionHeader({title, subtitle, onPress, renderSectionHeaderChildren}) {
         return (<GTouchable
-            disabled={!onPress}
+            deactivated={!onPress}
             onPress={onPress}>
             <View style={{
                 backgroundColor: BACKGROUND_COLOR,

@@ -48,7 +48,9 @@ type Props = {
     withLineupTitle?: boolean, //TODO: invert the default condition
     withAddInEmptyLineup?: boolean,
     onSavingPressed?: ?(navigator: RNNNavigator, saving: Saving) => void,
+    renderSaving: (saving:Saving) => Node,
     onLineupPressed?: (navigator: RNNNavigator, saving: Saving) => void,
+    style?: *,
 };
 
 type State = {
@@ -60,11 +62,6 @@ type State = {
 }))
 @logged
 export default class LineupHorizontal extends Component<Props, State> {
-
-    static defaultProps = {
-        onSavingPressed: seeActivityDetails,
-        onLineupPressed: seeList,
-    };
 
     updateTracker: UpdateTracker;
 
@@ -90,7 +87,7 @@ export default class LineupHorizontal extends Component<Props, State> {
         const handler = !lineup.pending && this.props.onLineupPressed;
 
         return wrapGtouchable(
-            <View>
+            <View style={this.props.style}>
                 {
                     withLineupTitle &&
 
@@ -112,28 +109,17 @@ export default class LineupHorizontal extends Component<Props, State> {
 
         return <Feed
             data={savings}
-            renderItem={({item}) => this.renderSaving(item, !list.pending && this.props.onSavingPressed)}
-            // fetchSrc={{
-            //     callFactory: this.fetchInteractions.bind(this),
-            //     useLinks: true,
-            //     action: FETCH_INTERACTIONS,
-            // }}
+            renderItem={({item}) => this.props.renderSaving(item)}
             hasMore={false}
             horizontal={true}
-            // ItemSeparatorComponent={()=> <View style={{margin: 20}} />}
+            ItemSeparatorComponent={()=> <View style={{width: 10, height: 10}} />}
             contentContainerStyle={{paddingLeft: 15}}
             showsHorizontalScrollIndicator={false}
             // cannotFetch={!super.isVisible()}
         />
     }
 
-    renderSaving(saving: Saving, press) {
-        return wrapGtouchable(
-            <LineupCellSaving item={saving.resource} style={{marginRight: 10}}/>,
-            press ? () => {press(this.props.navigator, saving)} : null
-        );
-    }
-
+    //TODO: move out of LineupHorizontal
     renderMenuButton(item, padding) {
         if (!item) return null;
 
@@ -169,8 +155,7 @@ export default class LineupHorizontal extends Component<Props, State> {
         </View>);
     }
 
-
-
+    //TODO: move out of LineupHorizontal
     deleteLineup(lineup: List) {
         let delayMs = 3000;
         //deleteLineup(lineup.id, delayMs)
@@ -203,6 +188,7 @@ export default class LineupHorizontal extends Component<Props, State> {
         );
     }
 
+    //TODO: move out of LineupHorizontal
     changeTitle(lineup: List) {
         let {id, name} = lineup;
 
@@ -217,7 +203,7 @@ export default class LineupHorizontal extends Component<Props, State> {
         });
     }
 
-
+    //TODO: move out of LineupHorizontal, as a prop
     renderEmptyList(list: List) {
         let result = [];
         //

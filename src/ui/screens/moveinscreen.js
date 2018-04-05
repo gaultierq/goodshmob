@@ -12,10 +12,11 @@ import LineupHorizontal from "../components/LineupHorizontal";
 import type {Id, Lineup, RequestState, Saving} from "../../types";
 import {connect} from "react-redux";
 import * as Api from "../../managers/Api";
-import ApiAction from "../../helpers/ApiAction";
 import {buildData} from "../../helpers/DataUtils";
 import Spinner from 'react-native-spinkit';
 import {MOVE_SAVING} from "../activity/actionTypes";
+import LineupCellSaving from "../components/LineupCellSaving";
+import GTouchable from "../GTouchable";
 
 type Props = LineupProps & {
     // onListSelected: ()=>void
@@ -41,8 +42,9 @@ export default class MoveInScreen extends Screen<Props, State> {
         //TODO: handle saving retrieval
         const {navigator, savingId, ...otherProps} = this.props;
 
-        let saving = buildData(this.props.data, 'savings', savingId);
+        let saving = this.obtainSaving(savingId);
         let displayLoader = (!this.isValid(saving) && this.state.reqFetch === 'sending') || this.state.reqMove === 'sending';
+
 
         return (
             <View style={{flex:1}}>
@@ -57,32 +59,58 @@ export default class MoveInScreen extends Screen<Props, State> {
 
                     {...otherProps}
                     userId={currentUserId()}
-                    renderItem={lineup => (
-                        <LineupHorizontal
-                            lineupId={lineup.id}
-                            navigator={this.props.navigator}
-                            withLineupTitle={true}
-                            onSavingPressed={null}
-                            onLineupPressed={(navigator, lineup) => this.moveSaving(saving, lineup)}
-                        />
+                    renderItem={(lineup: Lineup) => (
+                        <GTouchable
+                            onPress={() => this.moveSaving(saving, lineup)}
+                            disabled={lineup.id === _.get(saving, 'target.id')}
+                        >
+                            <LineupHorizontal
+                                lineupId={lineup.id}
+                                navigator={this.props.navigator}
+                                withLineupTitle={true}
+                                renderSaving={(saving: Saving) => {
+                                    return <LineupCellSaving item={saving.resource} style={{
+                                        borderWidth: saving.id === this.props.savingId ? 1 : 0,
+                                        borderColor: 'black',
+                                        // transform: [
+                                        //     { scaleX: saving.id === this.props.savingId ? 1.5 : 1 },
+                                        //     { scaleY: saving.id === this.props.savingId ? 1.5 : 1},
+                                        //
+                                        // ],
+
+                                    }}/>
+                                }
+                                }
+                            />
+                        </GTouchable>
                     )
                     }
                     navigator={navigator}
                 />
                 {
-                    displayLoader && (<View style={{flex: 1,
-                        width: "100%", height: "100%", position: 'absolute', alignItems: 'center',
-                        opacity: 0.5, backgroundColor: 'white'}}>
+                    displayLoader && (<View style={{
+                        flex:1,
+                        width: "100%",
+                        height: "100%",
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        position: 'absolute',
+                        zIndex: 1000,
+                        backgroundColor: 'rgba(255, 255, 255, 0.65)'
+                    }}>
                         <Spinner
                             isVisible={true}
-                            size={30}
-                            type={"ThreeBounce"}
-                            color={Colors.black}
-                        />
+                            size={__DEVICE_WIDTH__ / 5}
+                            type={"WanderingCubes"}
+                            color={Colors.green}/>
                     </View>)
                 }
             </View>
         );
+    }
+
+    obtainSaving(savingId) {
+        return buildData(this.props.data, 'savings', savingId);
     }
 
     isValid(saving: Saving) {
@@ -96,11 +124,11 @@ export default class MoveInScreen extends Screen<Props, State> {
             this.props.dispatch,
             moveSaving(saving, lineup.id),
             'reqMove'
-        )
+        ).then(()=>{
+            this.props.navigator.dismissModal();
+        });
     }
 }
-
-
 
 export function moveSaving(saving: Saving, lineupId: Id) {
     if (!saving || !lineupId) throw "invalid params";
@@ -115,18 +143,3 @@ export function moveSaving(saving: Saving, lineupId: Id) {
         // .include(include)
         .disptachForAction2(MOVE_SAVING, {savingId: savingId, originalLineupId, targetLineupId: lineupId});
 }
-
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    searchContainer: {
-        backgroundColor: 'transparent',
-    },
-    searchInput: {
-        backgroundColor: Colors.white,
-        borderWidth: StyleSheet.hairlineWidth,
-        borderColor: Colors.greyishBrown
-    },
-});

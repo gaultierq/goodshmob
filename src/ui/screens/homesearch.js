@@ -68,8 +68,8 @@ export default class HomeSearchScreen extends Screen<Props, State> {
                     <LineupHorizontal
                         lineupId={lineup.id}
                         navigator={this.props.navigator}
-                        onSavingPressed={seeActivityDetails}
                         onLineupPressed={seeList}
+                        renderSaving={saving => <GTouchable onPress={() => seeActivityDetails(this.props.navigator, saving)}><LineupCellSaving item={saving.resource} /></GTouchable>}
                     />
 
                 )

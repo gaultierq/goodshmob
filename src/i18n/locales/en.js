@@ -295,6 +295,7 @@ export default {
         change_title: "Change title",
         edit_saving_menu: "Edit this goodsh",
         change_description: "Change the description",
+        move: "Change list",
         change_name: "Rename this list",
         undo: "Undo",
         cancel: "Cancel",

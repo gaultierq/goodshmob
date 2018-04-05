@@ -85,7 +85,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                     BottomSheet.showBottomSheetWithOptions({
                         options: [
                             i18n.t("actions.change_description"),
-                            '#move',
+                            i18n.t("actions.move"),
                             i18n.t("actions.cancel")
                         ],
                         title: i18n.t("actions.edit_saving_menu"),

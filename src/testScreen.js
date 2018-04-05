@@ -229,7 +229,14 @@ export const friendScreen = {
         userId: currentUserId()
     }
 };
-
+export const moveInScreen = {
+    screen: {
+        screen: 'goodsh.MoveInScreen',
+    },
+    passProps: {
+        savingId: "ff4efcaf-19f4-49f1-9525-d49b42dc0803",
+    },
+};
 
 export const test = {
     screen: {
