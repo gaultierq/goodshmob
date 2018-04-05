@@ -103,13 +103,10 @@ export default class UserScreen extends Screen<Props, State> {
                             subtitle: ` (${_.get(lineup, `meta.savingsCount`, null) || 0})`,
                             onPress: () => seeList(navigator, lineup),
                             renderItem: ({item}) => (
-                                <LineupHorizontal
-                                    lineupId={item.id}
+                                <LineupH1
+                                    lineup={item}
                                     navigator={navigator}
-                                    withAddInEmptyLineup={isCurrentUserId(userId)}
-                                    renderSaving={saving => <GTouchable onPress={() => seeActivityDetails(this.props.navigator, saving)}><LineupCellSaving item={saving.resource} /></GTouchable>}
-                                    onLineupPressed={seeList}
-                                />
+                                    withAddInEmptyLineup={isCurrentUserId(userId)} />
                             )
                         }));
                     }}

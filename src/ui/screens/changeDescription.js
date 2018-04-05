@@ -11,23 +11,27 @@ import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import type {PendingAction} from "../../helpers/ModelUtils";
 import {pendingActionWrapper} from "../../helpers/ModelUtils";
 import ModalTextInput from "./modalTextInput";
-import {sanitizeActivityType} from "../../helpers/DataUtils";
+import {buildData, sanitizeActivityType} from "../../helpers/DataUtils";
 
 type Props = {
     activityId: Id,
     activityType: ActivityType,
 
-    initialDescription: string,
+    // initialDescription: string,
     navigator: any,
     containerStyle:? any,
+    data:? any,
 };
 
 type State = {
     isUpdating?: boolean
 };
 
-@connect()
+
 @logged
+@connect((state, ownProps) => ({
+    data: state.data,
+}))
 export default class ChangeDescriptionScreen extends Component<Props, State> {
 
     static navigatorStyle = {
@@ -37,18 +41,23 @@ export default class ChangeDescriptionScreen extends Component<Props, State> {
         tapBackgroundToDismiss: true
     };
 
-    constructor(props) {
+    initialDescription:? string;
+
+    constructor(props: Props) {
         super(props);
         this.state= {description: props.initialDescription || ''};
     }
 
 
     render() {
-        const {initialDescription, navigator} = this.props;
-
+        const {navigator, data, activityType, activityId} = this.props;
+        let activity = buildData(data, activityType, activityId);
+        if (this.initialDescription === undefined && activity) {
+            this.initialDescription = activity.description || "";
+        }
 
         return <ModalTextInput
-            initialText={initialDescription}
+            initialText={this.initialDescription}
             navigator={navigator}
             requestAction={input=>this.updateDescription(input)}
             placeholder={i18n.t("create_list_controller.add_description")}

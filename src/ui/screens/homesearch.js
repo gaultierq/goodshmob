@@ -55,22 +55,15 @@ export default class HomeSearchScreen extends Screen<Props, State> {
 
             if (isLineup) {
                 let lineup: List = item;
-                /*
-                    <GTouchable onPress={() => this.onLineupPressed(lineup)}>
-                <View>
-                <LineupCell lineup={lineup}/>
-
-                </View>
-                </GTouchable>
-                 */
                 return (
 
-                    <LineupHorizontal
-                        lineupId={lineup.id}
-                        navigator={this.props.navigator}
-                        onLineupPressed={seeList}
-                        renderSaving={saving => <GTouchable onPress={() => seeActivityDetails(this.props.navigator, saving)}><LineupCellSaving item={saving.resource} /></GTouchable>}
-                    />
+                    <GTouchable onPress={()=>seeList(this.props.navigator, lineup)}>
+                        <LineupHorizontal
+                            lineupId={lineup.id}
+                            navigator={this.props.navigator}
+                            renderSaving={saving => <GTouchable onPress={() => seeActivityDetails(this.props.navigator, saving)}><LineupCellSaving item={saving.resource} /></GTouchable>}
+                        />
+                    </GTouchable>
 
                 )
             }
@@ -152,15 +145,6 @@ export default class HomeSearchScreen extends Screen<Props, State> {
         this.props.navigator.push({
             screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
             passProps: {activityId: saving.id, activityType: saving.type}, // Object that will be passed as props to the pushed screen (optional)
-        });
-    }
-
-    onLineupPressed(lineup: List) {
-        this.props.navigator.push({
-            screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
-            passProps: {
-                lineupId: lineup.id,
-            },
         });
     }
 }

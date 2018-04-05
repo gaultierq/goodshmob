@@ -18,7 +18,7 @@ import {currentUser, currentUserId, logged} from "../../managers/CurrentUser"
 import ActivityBody from "./components/ActivityBody";
 import {buildData, getAskBackgroundColor, sanitizeActivityType, timeSinceActivity} from "../../helpers/DataUtils";
 import {Avatar, MainBackground} from "../UIComponents";
-import type {Activity, ActivityType, Id} from "../../types";
+import type {Activity, ActivityType, Id, RNNNavigator} from "../../types";
 import Screen from "../components/Screen";
 import {Colors} from "../colors";
 import GTouchable from "../GTouchable";
@@ -31,9 +31,8 @@ import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts";
 import ActivityActionBar from "./components/ActivityActionBar";
 import FeedSeparator from "./components/FeedSeparator";
 import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
-import {CANCELABLE_MODAL, CLOSE_MODAL} from "../Nav";
-import BottomSheet from 'react-native-bottomsheet';
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import {CLOSE_MODAL, displayActivityActions} from "../Nav";
 
 type Props = {
     activityId: Id,
@@ -78,49 +77,14 @@ class ActivityDetailScreen extends Screen<Props, State> {
         super(props);
         props.navigator.addOnNavigatorEvent((event) => {
 
-            let id = event.id;
-
             if (event.type === 'NavBarButtonPress') {
                 if (event.id === EDIT_SAVING) {
-                    BottomSheet.showBottomSheetWithOptions({
-                        options: [
-                            i18n.t("actions.change_description"),
-                            i18n.t("actions.move"),
-                            i18n.t("actions.cancel")
-                        ],
-                        title: i18n.t("actions.edit_saving_menu"),
-                        // destructiveButtonIndex: 1,
-                        cancelButtonIndex: 2,
-                    }, (value) => {
-                        switch (value) {
-                            case 0:
-                                let activity = this.makeActivity();
-                                props.navigator.showModal({
-                                    screen: 'goodsh.ChangeDescriptionScreen',
-                                    animationType: 'none',
-                                    passProps: {
-                                        activityId: activity.id,
-                                        activityType: activity.type,
-                                        initialDescription: activity.description
-                                    }
-                                });
-                                break;
-                            case 1:
-                                this.props.navigator.showModal({
-                                    screen: 'goodsh.MoveInScreen',
-                                    title: i18n.t('create_list_controller.choose_another_list'),
-                                    passProps: {
-                                        savingId: this.props.activityId,
-                                    },
-                                    navigatorButtons: CANCELABLE_MODAL,
-                                });
-                                break;
-                        }
-                    });
+                    displayActivityActions(props.navigator, this.props.activityId, this.props.activityType);
                 }
             }
         });
     }
+
 
     componentDidMount() {
         this.load();

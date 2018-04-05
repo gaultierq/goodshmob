@@ -1,8 +1,9 @@
 // @flow
 
-import type {Activity, Id, Item, Lineup, RNNNavigator, User} from "../types";
+import type {Activity, ActivityType, Id, Item, Lineup, RNNNavigator, User} from "../types";
 import {fullName} from "../helpers/StringUtils";
 import i18n from '../i18n/i18n';
+import BottomSheet from 'react-native-bottomsheet';
 
 export const CLOSE_MODAL = 'close_modal';
 
@@ -100,5 +101,44 @@ export function seeActivityDetails(navigator: RNNNavigator, activity: Activity) 
         screen: 'goodsh.ActivityDetailScreen',
         passProps: {activityId: activity.id, activityType: activity.type},
         // navigatorButtons: Nav.CANCELABLE_MODAL,
+    });
+}
+
+
+//FIXME: check rights. if activity not in cache, display something, request + loader
+export function displayActivityActions(navigator: RNNNavigator, activityId: Id, activityType: ActivityType) {
+    BottomSheet.showBottomSheetWithOptions({
+        options: [
+            i18n.t("actions.change_description"),
+            i18n.t("actions.move"),
+            i18n.t("actions.cancel")
+        ],
+        title: i18n.t("actions.edit_saving_menu"),
+        // destructiveButtonIndex: 1,
+        cancelButtonIndex: 2,
+    }, (value) => {
+        switch (value) {
+            case 0:
+
+                navigator.showModal({
+                    screen: 'goodsh.ChangeDescriptionScreen',
+                    animationType: 'none',
+                    passProps: {
+                        activityId,
+                        activityType,
+                    }
+                });
+                break;
+            case 1:
+                navigator.showModal({
+                    screen: 'goodsh.MoveInScreen',
+                    title: i18n.t('create_list_controller.choose_another_list'),
+                    passProps: {
+                        savingId: activityId,
+                    },
+                    navigatorButtons: CANCELABLE_MODAL,
+                });
+                break;
+        }
     });
 }
