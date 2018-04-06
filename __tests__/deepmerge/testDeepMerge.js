@@ -58,8 +58,10 @@ test('test my merge 4', () => {
     const target = {a: 1, b: 2, c: [3, 4, 5]};
     {
         const merged = mymerge(target, {c: [3, 4, 5, 6]});
-        expect(merged).toEqual({a: 1, b: 2, c: [3, 4, 5, 6]});
         expect(merged === target).toBeFalsy();
+        expect(merged).toEqual({a: 1, b: 2, c: [3, 4, 5, 6]});
+
+
     }
 });
 test('test my merge 5', () => {

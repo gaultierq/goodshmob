@@ -58,13 +58,22 @@ test('emptying merge', () => {
     ).toEqual([]);
 });
 
-test('same object merge', () => {
+test('same reference: same', () => {
     const target = [4, 6, 5, 7, 9];
     const result = doMerge(target, [4, 6, 5, 7, 9],
         {
             hasLess: false
         });
     expect(result === target).toBeTruthy();
+});
+test('same reference: add', () => {
+    const target = [4, 6, 5, 7, 9];
+    const result = doMerge(target, [4, 6, 5, 7, 9, 10],
+        {
+            hasLess: false
+        });
+    expect(result === target).toBeFalsy();
+    expect(result).toEqual([4, 6, 5, 7, 9, 10]);
 });
 
 function doMerge(mergeInto, mergeMe, options) {

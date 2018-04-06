@@ -205,7 +205,7 @@ export class Merge<T, K> {
     mutated = false;
 
     constructor(mergeInto: Array<T>, mergeMe: Array<T>) {
-        this.mergeInto = mergeInto.slice();
+        this.mergeInto = mergeInto;
         this.mergeMe = mergeMe.slice();
     }
 
@@ -241,6 +241,7 @@ export class Merge<T, K> {
         return this;
     }
 
+    //TODO: rm ref to this.*
     getSegment() {
         let mergeIds: Array<K> = this.getIds(this.mergeInto);
         let addIds: Array<K> = this.getIds(this.mergeMe);
@@ -281,10 +282,13 @@ export class Merge<T, K> {
     merge(): Array<T> {
 
         this.processOptions();
+        let mutated = false;
+
+        let target = this.mergeInto.slice();
 
         if (this.reverse) {
             this.afterId = this.beforeId;
-            this.mergeInto.reverse();
+            target.reverse();
         }
 
         //console.log(`merging ${JSON.stringify(this.mergeMe)} into ${JSON.stringify(this.mergeInto)}`);
@@ -295,17 +299,20 @@ export class Merge<T, K> {
         }
 
 
-        let mergeIds : Array<K> = this.getIds(this.mergeInto);
+        let mergeIds : Array<K> = this.getIds(target);
 
         let resRemoved:? { [K]: T } = null;
+        let resRemovedArr:? Array<T>;
         //merge=removing long segment, and adding the new items right after
         if (segment !== null) {
             resRemoved = {};
             //removing the segment
             for (let i = segment.to; i >= segment.from; i--) {
-                let removed : T = this.mergeInto.splice(i, 1)[0];
+                let removed : T = target.splice(i, 1)[0];
                 let key: K = this.getKey(removed);
                 resRemoved[key] = removed;
+                if (!resRemovedArr) resRemovedArr = [];
+                resRemovedArr.unshift(removed);
                 mergeIds.splice(mergeIds.indexOf(key), 1);
             }
         }
@@ -323,6 +330,7 @@ export class Merge<T, K> {
         if (insertAt === null) insertAt = mergeIds.length;
 
         let i = insertAt;
+
         this.mergeMe.forEach((d: T) => {
             if (resRemoved !== null) {
                 let old = resRemoved[this.getKey(d)];
@@ -330,14 +338,25 @@ export class Merge<T, K> {
                     d = this.mergeItem(old, d);
                 }
             }
-            this.mergeInto.splice(i++, 0, d);
+
+            target.splice(i++, 0, d);
+
+            mutated = mutated || !resRemovedArr || resRemovedArr.shift() !== d;
         });
+        console.info(`mutated=${mutated}`);
+        if (resRemovedArr && resRemovedArr.length > 0) {
+            mutated = true;
+        }
+
+        if (!mutated) {
+            return this.mergeInto;
+        }
 
         if (this.reverse) {
-            this.mergeInto.reverse();
+            target.reverse();
         }
         //onMerged();
-        return this.mergeInto;
+        return target;
     }
 
     //TODO: make 'idAccessor' mandatory, in constructor, name it keyAccessor, and rm d['id']

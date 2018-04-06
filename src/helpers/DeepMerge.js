@@ -14,9 +14,7 @@ const defaultAccessor = obj=> obj['id'];
 function defaultArrayMerge(target, source, optionsArgument) {
     const accessor = optionsArgument && optionsArgument.keyAccessor ||  defaultAccessor;
 
-    let result = target.slice();
-
-    new Merge(result, source)
+    return new Merge(target, source)
         .withKeyAccessor(accessor)
         .withItemMerger((oldItem, newItem) => {
             if (isMergeableObject(newItem)) {
@@ -27,11 +25,4 @@ function defaultArrayMerge(target, source, optionsArgument) {
         })
         .withHasLess(false)
         .merge();
-
-    //temp
-    if (_.isEqual(result, target)) {
-        return target;
-    }
-
-    return result;
 }
