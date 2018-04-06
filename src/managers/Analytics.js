@@ -1,6 +1,6 @@
 // @flow
 import {ScreenVisibilityListener as RNNScreenVisibilityListener} from 'react-native-navigation';
-import {Answers} from 'react-native-fabric';
+let Answers;
 
 class _Analytics implements Analytics {
     id = Math.random();
@@ -29,6 +29,7 @@ class _Analytics implements Analytics {
         if (__WITH_FABRIC__) {
             //initialized in  native code
             this.fabricInitialized = true;
+            Answers = require('react-native-fabric');
         }
     }
 
