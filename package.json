@@ -12,7 +12,7 @@
 		"build-ios": "react-native run-ios --no-packager",
 		"ba": "yarn build-android",
 		"bi": "yarn build-ios"
-},
+	},
 	"xcodeSchemes": {
 		"Debug": [
 			"Debug"
@@ -39,6 +39,7 @@
 		"fuse.js": "^3.2.0",
 		"hoist-non-react-statics": "^2.3.1",
 		"immutability-helper": "^2.5.1",
+		"is-mergeable-object": "^1.1.0",
 		"json-api-normalizer": "^0.4.5",
 		"lodash": "^4.17.4",
 		"multimap": "^1.0.2",
