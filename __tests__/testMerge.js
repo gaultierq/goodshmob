@@ -50,6 +50,14 @@ test('reverse merge: prepend after', () => {
     ).toEqual([4, 6, 77, 13, 8, 5, 7, 9]);
 });
 
+test('emptying merge', () => {
+    expect(doMerge([4], [],
+        {
+            hasLess: false
+        })
+    ).toEqual([]);
+});
+
 function doMerge(into, add, options) {
     console.log(`merging [${add}] into [${into}] with options=${JSON.stringify(options)}`);
     let mergeInto = makeList(into);

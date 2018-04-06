@@ -197,6 +197,13 @@ export class Merge<T, K> {
 
     reverse:? boolean;
 
+    keyAccessor:? T => K;
+
+    itemMerger:? (T, T) => T;
+
+    //determine if the merge did have an effect on the target array
+    mutated = false;
+
     constructor(mergeInto: Array<T>, mergeMe: Array<T>) {
         this.mergeInto = mergeInto;
         this.mergeMe = mergeMe.slice();
@@ -216,6 +223,16 @@ export class Merge<T, K> {
     //!\\ do *not* rely on DataList#hasLess
     withHasLess(hasLess: boolean): Merge<T, K> {
         this.hasLess = hasLess;
+        return this;
+    }
+
+    withKeyAccessor(accessor: any => any): Merge<T, K> {
+        this.keyAccessor = accessor;
+        return this;
+    }
+
+    withItemMerger(itemMerger: (T,T) => T): Merge<T, K> {
+        this.itemMerger = itemMerger;
         return this;
     }
 
@@ -254,13 +271,16 @@ export class Merge<T, K> {
         return arr.map(e => this.getKey(e));
     }
 
-    checkOptions() {
-
+    processOptions() {
+        if (this.hasLess === false && this.mergeMe.length === 0) {
+            // I think this make sense
+            this.hasMore = false;
+        }
     }
 
     merge(): void {
 
-        this.checkOptions();
+        this.processOptions();
 
         if (this.reverse) {
             this.afterId = this.beforeId;
@@ -268,8 +288,6 @@ export class Merge<T, K> {
         }
 
         //console.log(`merging ${JSON.stringify(this.mergeMe)} into ${JSON.stringify(this.mergeInto)}`);
-        let result = [];
-
         //(start, end)
         let segment = this.getSegment();
         if (segment) {
@@ -321,13 +339,22 @@ export class Merge<T, K> {
         //onMerged();
     }
 
+    //TODO: make 'idAccessor' mandatory, in constructor, name it keyAccessor, and rm d['id']
     getKey(d: T): K {
         // $FlowFixMe
-        return d['id'];
+        return this.keyAccessor ? this.keyAccessor(d) : d['id'];
     }
 
 
-    mergeItem(old: T, newItem: T): T {
+    mergeItem(oldItem: T, newItem: T): T {
+        if (this.itemMerger) {
+            const mergedItem = this.itemMerger(oldItem, newItem);
+            if (mergedItem !== oldItem) {
+                this.mutated = true;
+            }
+
+            return mergedItem;
+        }
         return newItem;
     }
 }

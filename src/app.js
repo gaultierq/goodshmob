@@ -211,6 +211,8 @@ export default class App {
             this.initialize();
         }
 
+        console.log('app store update :)');
+
         setTimeout(() => {
             this.refreshAppMode();
         });

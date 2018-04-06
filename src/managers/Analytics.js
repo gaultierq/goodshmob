@@ -42,8 +42,10 @@ class _Analytics implements Analytics {
 
     // record logging on Answers
     logCustom(description: string, attributes: { [string]: any } = {}) {
-        console.log(`Analytics:logCustom, description: ${description}, attributes: ${JSON.stringify(attributes, null, 2)}`);
-        Answers.logCustom(description, attributes);
+        if (this.fabricInitialized) {
+            console.log(`Analytics:logCustom, description: ${description}, attributes: ${JSON.stringify(attributes, null, 2)}`);
+            Answers.logCustom(description, attributes);
+        }
     }
 
     toString() {
