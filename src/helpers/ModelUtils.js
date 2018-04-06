@@ -282,7 +282,6 @@ export class Merge<T, K> {
     merge(): Array<T> {
 
         this.processOptions();
-        let mutated = false;
 
         let target = this.mergeInto.slice();
 
@@ -341,20 +340,20 @@ export class Merge<T, K> {
 
             target.splice(i++, 0, d);
 
-            mutated = mutated || !resRemovedArr || resRemovedArr.shift() !== d;
+            this.mutated = this.mutated || !resRemovedArr || resRemovedArr.shift() !== d;
         });
-        console.info(`mutated=${mutated}`);
+        console.info(`mutated=${this.mutated}`);
         if (resRemovedArr && resRemovedArr.length > 0) {
-            mutated = true;
+            this.mutated = true;
         }
 
-        if (!mutated) {
+        if (!this.mutated) {
             return this.mergeInto;
         }
 
-        if (this.reverse) {
-            target.reverse();
-        }
+        if (this.reverse) target.reverse();
+
+        console.debug(`target=${JSON.stringify(target)} vs source=${JSON.stringify(this.mergeInto)}`);
         //onMerged();
         return target;
     }
