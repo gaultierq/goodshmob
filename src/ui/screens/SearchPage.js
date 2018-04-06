@@ -87,7 +87,7 @@ export default class SearchPage extends Component<PageProps, PageState> {
                         renderItem={this.props.renderItem}
                         keyExtractor={(item) => item.id}
                         ListFooterComponent={this.props.ListFooterComponent}
-                        onScrollBeginDrag={() => Keyboard.dismiss()}
+                        onScrollBeginDrag={Keyboard.dismiss}
                         keyboardShouldPersistTaps='always'
                     />
                 }

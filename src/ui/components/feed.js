@@ -2,7 +2,7 @@
 
 import type {Node} from 'react';
 import React, {Component} from 'react';
-import {ActivityIndicator, BackHandler, FlatList, RefreshControl, SectionList, Text, View} from 'react-native';
+import {ActivityIndicator, BackHandler, FlatList, RefreshControl, SectionList, Text, View, Keyboard} from 'react-native';
 import {connect} from "react-redux";
 import {assertUnique} from "../../helpers/DataUtils";
 import ApiAction from "../../helpers/ApiAction";
@@ -259,6 +259,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             ListHeaderComponent: !firstEmptyLoader && ListHeaderComponent,
             renderSectionHeader: !firstEmptyLoader && renderSectionHeader,
             onScroll: this._handleScroll,
+            onScrollBeginDrag: Keyboard.dismiss,
             keyboardShouldPersistTaps: 'always',
             ...attributes
         };
