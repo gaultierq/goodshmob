@@ -177,7 +177,7 @@ export type MergeOptions<K> = {
 export function mergeLists<T, K>(mergeInto: Array<T>, mergeMe: Array<T>, options?: MergeOptions<K>) {
     let merge : Merge<T,K> = new Merge(mergeInto, mergeMe);
 
-    merge.withOptions(options)
+    return merge.withOptions(options)
         .merge();
 }
 
@@ -205,7 +205,7 @@ export class Merge<T, K> {
     mutated = false;
 
     constructor(mergeInto: Array<T>, mergeMe: Array<T>) {
-        this.mergeInto = mergeInto;
+        this.mergeInto = mergeInto.slice();
         this.mergeMe = mergeMe.slice();
     }
 
@@ -278,7 +278,7 @@ export class Merge<T, K> {
         }
     }
 
-    merge(): void {
+    merge(): Array<T> {
 
         this.processOptions();
 
@@ -337,6 +337,7 @@ export class Merge<T, K> {
             this.mergeInto.reverse();
         }
         //onMerged();
+        return this.mergeInto;
     }
 
     //TODO: make 'idAccessor' mandatory, in constructor, name it keyAccessor, and rm d['id']

@@ -1,11 +1,10 @@
 import {API_DATA_SUCCESS} from '../managers/Api';
 import Immutable from 'seamless-immutable';
-import merge from '../../vendors/deepmerge'
 import {Statistics} from "../managers/Statistics";
 import update from "immutability-helper";
 import {updateSplice0} from "../helpers/DataUtils";
 import type {ApiActionName} from "../helpers/ApiAction";
-import {Merge} from "../helpers/ModelUtils";
+import merge from "../helpers/DeepMerge"
 
 const initialState = Immutable({
     meta: {},
@@ -41,26 +40,12 @@ export function data(state = initialState, action) {
             //1. data.hash ?
             //2. background thread ?
             let now = Date.now();
-            state = merge(state, action.data, {arrayMerge: defaultArrayMerge});
+            state = merge(state, action.data);
             Statistics.recordTime(`mergeData.${action.origin}`, Date.now() - now);
             return state;
         default:
             return state;
     }
-}
-
-//TODO 1: getSegment, remove, addAll
-//TODO 2: optim: if merge has no effect, return target itself
-function defaultArrayMerge(target, source, optionsArgument) {
-    target = target.slice();
-    new Merge(target, source)
-        .withKeyAccessor(obj=> obj['id'])
-        .withItemMerger((oldItem, newItem) => {
-            return merge(oldItem, newItem, optionsArgument);
-        })
-        .withHasLess(false)
-        .merge();
-    return target;
 }
 
 type PendingItemState = 'pending' | 'tg';

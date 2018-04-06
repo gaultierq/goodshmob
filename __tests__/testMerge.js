@@ -58,22 +58,18 @@ test('emptying merge', () => {
     ).toEqual([]);
 });
 
-function doMerge(into, add, options) {
-    console.log(`merging [${add}] into [${into}] with options=${JSON.stringify(options)}`);
-    let mergeInto = makeList(into);
-    let mergeMe = makeList(add);
+test('same object merge', () => {
+    const target = [4, 6, 5, 7, 9];
+    const result = doMerge(target, [4, 6, 5, 7, 9],
+        {
+            hasLess: false
+        });
+    expect(result === target).toBeTruthy();
+});
 
-    mergeLists(mergeInto, mergeMe, options);
+function doMerge(mergeInto, mergeMe, options) {
 
-    return mergeInto.map((e) => e.id);
+    return mergeLists(mergeInto, mergeMe, {keyAccessor: v => v, ...options});
 }
-
-function makeList(baseIndex: number[]) {
-
-    return baseIndex.map((id) => {
-        return {id: id, value: new Date()};
-    });
-}
-
 
 

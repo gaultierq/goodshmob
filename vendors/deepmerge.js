@@ -9,6 +9,7 @@ function cloneIfNecessary(value, optionsArgument) {
     return (clone && isMergeableObject(value)) ? deepmerge(emptyTarget(value), value, optionsArgument) : value
 }
 
+//TODO: add option to return the same array
 function defaultArrayMerge(target, source, optionsArgument) {
     var destination = target.slice()
     source.forEach(function(e, i) {
@@ -25,19 +26,28 @@ function defaultArrayMerge(target, source, optionsArgument) {
 
 function mergeObject(target, source, optionsArgument) {
     var destination = {}
+
+    //clone the target
     if (isMergeableObject(target)) {
         Object.keys(target).forEach(function(key) {
             destination[key] = cloneIfNecessary(target[key], optionsArgument)
         })
     }
+    let mutated = false;
+    //target <- source
     Object.keys(source).forEach(function(key) {
-        if (!isMergeableObject(source[key]) || !target[key]) {
-            destination[key] = cloneIfNecessary(source[key], optionsArgument)
+        var c
+        if (isMergeableObject(source[key]) && target[key]) {
+            c = deepmerge(target[key], source[key], optionsArgument)
+
         } else {
-            destination[key] = deepmerge(target[key], source[key], optionsArgument)
+            c = cloneIfNecessary(source[key], optionsArgument)
         }
+        mutated = mutated || target[key] !== c;
+        destination[key] = c;
     })
-    return destination
+
+    return mutated && destination || target
 }
 
 function deepmerge(target, source, optionsArgument) {
@@ -45,7 +55,6 @@ function deepmerge(target, source, optionsArgument) {
     var targetIsArray = Array.isArray(target)
     var options = optionsArgument || { arrayMerge: defaultArrayMerge }
     var sourceAndTargetTypesMatch = sourceIsArray === targetIsArray
-
     if (!sourceAndTargetTypesMatch) {
         return cloneIfNecessary(source, optionsArgument)
     } else if (sourceIsArray) {
