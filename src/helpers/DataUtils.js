@@ -106,12 +106,12 @@ export function doDataMergeInState(state, path, newList, options?: MergeOpts) {
 
     //3. merge state
     //new Util.Merge(currentList, newItems).merge();
-    mergeLists(currentList, newItems, options);
+    let merged = mergeLists(currentList, newItems, options);
 
-    let newState = dotprop.set(state, path, currentList);
+    if (merged === currentList) return state;
+    console.log("doDataMergeInState: update");
+    return dotprop.set(state, path, merged);
 
-    if (state === newState) throw "immutability violation";
-    return newState;
 }
 
 

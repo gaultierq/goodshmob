@@ -183,9 +183,9 @@ export function mergeLists<T, K>(mergeInto: Array<T>, mergeMe: Array<T>, options
 
 export class Merge<T, K> {
 
-    mergeInto: Array<T>;
+    target: Array<T>;
 
-    mergeMe: Array<T>;
+    source: Array<T>;
 
     afterId:? K;
 
@@ -204,9 +204,9 @@ export class Merge<T, K> {
     //determine if the merge did have an effect on the target array
     mutated = false;
 
-    constructor(mergeInto: Array<T>, mergeMe: Array<T>) {
-        this.mergeInto = mergeInto;
-        this.mergeMe = mergeMe.slice();
+    constructor(target: Array<T>, source: Array<T>) {
+        this.target = target;
+        this.source = source.slice();
     }
 
     setAfterKey(afterId: K): Merge<T, K> {
@@ -243,8 +243,8 @@ export class Merge<T, K> {
 
     //TODO: rm ref to this.*
     getSegment() {
-        let mergeIds: Array<K> = this.getIds(this.mergeInto);
-        let addIds: Array<K> = this.getIds(this.mergeMe);
+        let mergeIds: Array<K> = this.getIds(this.target);
+        let addIds: Array<K> = this.getIds(this.source);
 
         let from = null, to = null;
         addIds.forEach((id) => {
@@ -261,7 +261,7 @@ export class Merge<T, K> {
         });
 
         if (this.hasLess === false) from = 0;
-        if (this.hasMore === false) to = this.mergeInto.length - 1;
+        if (this.hasMore === false) to = this.target.length - 1;
 
         if (from !== null && to !== null) return {from, to};
         return null;
@@ -273,7 +273,7 @@ export class Merge<T, K> {
     }
 
     processOptions() {
-        if (this.hasLess === false && this.mergeMe.length === 0) {
+        if (this.hasLess === false && this.source.length === 0) {
             // I think this make sense
             this.hasMore = false;
         }
@@ -283,22 +283,23 @@ export class Merge<T, K> {
 
         this.processOptions();
 
-        let target = this.mergeInto.slice();
+        let result = this.target.slice();
 
         if (this.reverse) {
             this.afterId = this.beforeId;
-            target.reverse();
+            result.reverse();
         }
 
         //console.log(`merging ${JSON.stringify(this.mergeMe)} into ${JSON.stringify(this.mergeInto)}`);
         //(start, end)
         let segment = this.getSegment();
         if (segment) {
-            console.debug(`merge: segment=${JSON.stringify(segment)}`);
+            //this log is useless as it fires when the source and target are the same
+            // console.debug(`merge: segment=${JSON.stringify(segment)}`);
         }
 
 
-        let mergeIds : Array<K> = this.getIds(target);
+        let mergeIds : Array<K> = this.getIds(result);
 
         let resRemoved:? { [K]: T } = null;
         let resRemovedArr:? Array<T>;
@@ -307,7 +308,7 @@ export class Merge<T, K> {
             resRemoved = {};
             //removing the segment
             for (let i = segment.to; i >= segment.from; i--) {
-                let removed : T = target.splice(i, 1)[0];
+                let removed : T = result.splice(i, 1)[0];
                 let key: K = this.getKey(removed);
                 resRemoved[key] = removed;
                 if (!resRemovedArr) resRemovedArr = [];
@@ -330,38 +331,67 @@ export class Merge<T, K> {
 
         let i = insertAt;
 
-        this.mergeMe.forEach((d: T) => {
-            if (resRemoved !== null) {
-                let old = resRemoved[this.getKey(d)];
-                if (old !== null) {
-                    d = this.mergeItem(old, d);
+        this.source.forEach(
+            (d: T) => {
+
+                if (resRemoved !== null) {
+                    let old = resRemoved[this.getKey(d)];
+                    if (old !== null) {
+                        d = this.mergeItem(old, d);
+                    }
                 }
-            }
 
-            target.splice(i++, 0, d);
+                result.splice(i++, 0, d);
 
-            this.mutated = this.mutated || !resRemovedArr || resRemovedArr.shift() !== d;
-        });
-        console.info(`mutated=${this.mutated}`);
+
+                if (!resRemovedArr) {
+                    console.debug("mutation: 2");
+                    this.mutated = true;
+                }
+                else {
+                    const shift = resRemovedArr.shift();
+                    if (shift !== d) {
+                        console.debug(`mutation: shifted=${JSON.stringify(shift)} result=${JSON.stringify(d)}` );
+                        this.mutated = true;
+                    }
+                }
+
+
+            });
+
         if (resRemovedArr && resRemovedArr.length > 0) {
+            console.debug("mutation: items leftovers "+ JSON.stringify(resRemovedArr));
             this.mutated = true;
         }
 
         if (!this.mutated) {
-            return this.mergeInto;
+            return this.target;
         }
 
-        if (this.reverse) target.reverse();
+        console.debug(`merge mutation: 
+        target=${JSON.stringify(this.target)}\n
+        source=${JSON.stringify(this.source)}\n
+        result=${JSON.stringify(result)}\n
+        `
+        );
 
-        console.debug(`target=${JSON.stringify(target)} vs source=${JSON.stringify(this.mergeInto)}`);
+        if (this.reverse) result.reverse();
+
+
         //onMerged();
-        return target;
+        return result;
     }
 
     //TODO: make 'idAccessor' mandatory, in constructor, name it keyAccessor, and rm d['id']
     getKey(d: T): K {
-        // $FlowFixMe
-        return this.keyAccessor ? this.keyAccessor(d) : d['id'];
+        let key = undefined;
+        if (this.keyAccessor) key = this.keyAccessor(d);
+        //shit
+        if (key === undefined && (typeof d === 'string'||typeof d === 'number')) key = d;
+        //shit
+        if (key === undefined) key = d['id'];
+        if (key === undefined) throw "NoKeyException";
+        return key;
     }
 
 
@@ -374,8 +404,24 @@ export class Merge<T, K> {
 
             return mergedItem;
         }
+        if (areEqualShallow(oldItem, newItem)) return oldItem;
         return newItem;
     }
+}
+
+// $FlowFixMe
+function areEqualShallow(a, b) {
+    for(var key in a) {
+        if(!(key in b) || a[key] !== b[key]) {
+            return false;
+        }
+    }
+    for(var key in b) {
+        if(!(key in a) || a[key] !== b[key]) {
+            return false;
+        }
+    }
+    return true;
 }
 
 export function pendingActionWrapper<Payload>(

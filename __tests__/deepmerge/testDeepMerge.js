@@ -1,7 +1,7 @@
 import mymerge1 from "../../src/helpers/DeepMerge"
 import merge from 'deepmerge'
 
-const mymerge = (target, source) => mymerge1(target, source, {keyAccessor: a => a});
+const mymerge = (target, source, opt) => mymerge1(target, source, {keyAccessor: a => a, ...opt});
 
 
 test('dummy test merge', () => {
@@ -68,6 +68,22 @@ test('test my merge 5', () => {
     const target = {a: 1, b: 2, c: [3, 4, 5]};
     {
         const merged = mymerge(target, {c: [3, 4, 5]});
+        expect(merged).toEqual(target);
+        expect(merged === target).toBeTruthy();
+    }
+});
+test('test my merge 6', () => {
+    const target = {a: 1, b: 2, c: [3, 4, 5]};
+    {
+        const merged = mymerge(target, {c: [3, 4, 5]}, {keyAccessor: v=>v.id});
+        expect(merged).toEqual(target);
+        expect(merged === target).toBeTruthy();
+    }
+});
+test('test my merge 7', () => {
+    const target = {a: 1, b: 2, c: [3, 4, 5]};
+    {
+        const merged = mymerge(target, {c: [3, 4]}, {keyAccessor: v=>v.id});
         expect(merged).toEqual(target);
         expect(merged === target).toBeTruthy();
     }

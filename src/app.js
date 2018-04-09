@@ -201,6 +201,7 @@ export default class App {
             console.info(`cache version=${this.cacheVersion}`);
         });
         // since react-redux only works on components, we need to subscribe this class manually
+        // FIXME: we should listen only part of the store, not all dispatchs
         this.store.subscribe(this.onStoreUpdate.bind(this));
     }
 

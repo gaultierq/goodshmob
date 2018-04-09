@@ -40,9 +40,12 @@ export function data(state = initialState, action) {
             //1. data.hash ?
             //2. background thread ?
             let now = Date.now();
-            state = merge(state, action.data);
+            let result = merge(state, action.data);
             Statistics.recordTime(`mergeData.${action.origin}`, Date.now() - now);
-            return state;
+            if (result !== state) {
+                console.debug('data:success:: update')
+            }
+            return result;
         default:
             return state;
     }
