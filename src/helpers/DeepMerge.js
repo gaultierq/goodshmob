@@ -17,7 +17,7 @@ function defaultArrayMerge(target, source, optionsArgument) {
     return new Merge(target, source)
         .withKeyAccessor(accessor)
         .withItemMerger((oldItem, newItem) => {
-            if (isMergeableObject(newItem)) {
+            if (!_.isNil(oldItem) && isMergeableObject(newItem)) {
                 return merge(oldItem, newItem, optionsArgument);
             }
             return newItem;

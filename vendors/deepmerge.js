@@ -51,6 +51,10 @@ function mergeObject(target, source, optionsArgument) {
 }
 
 function deepmerge(target, source, optionsArgument) {
+    if (!target) {
+        console.error("null target, source=" + JSON.stringify(source));
+        return;
+    }
     var sourceIsArray = Array.isArray(source)
     var targetIsArray = Array.isArray(target)
     var options = optionsArgument || { arrayMerge: defaultArrayMerge }
