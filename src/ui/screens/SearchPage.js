@@ -21,6 +21,7 @@ import {Navigation} from 'react-native-navigation';
 import {Colors} from "../colors";
 import Spinner from 'react-native-spinkit';
 import type {SearchCategory, SearchState} from "./search";
+import {FullScreenLoader} from "../UIComponents";
 
 
 type PageProps = {
@@ -61,23 +62,24 @@ export default class SearchPage extends Component<PageProps, PageState> {
         return (
             <View style={{flex: 1, width:"100%", height: "100%",}}>
                 {
-                    loadingFirst && (
-                        <View style={{
-                            flex:1,
-                            width: "100%",
-                            height: "100%",
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            position: 'absolute',
-                            zIndex: 1000
-                        }}>
-                            <Spinner
-                                isVisible={true}
-                                size={__DEVICE_WIDTH__ / 5}
-                                type={"WanderingCubes"}
-                                color={Colors.greying}/>
-                        </View>
-                    )
+                    loadingFirst && <FullScreenLoader/>
+                    // (
+                    //     <View style={{
+                    //         flex:1,
+                    //         width: "100%",
+                    //         height: "100%",
+                    //         alignItems: 'center',
+                    //         justifyContent: 'center',
+                    //         position: 'absolute',
+                    //         zIndex: 1000
+                    //     }}>
+                    //         <Spinner
+                    //             isVisible={true}
+                    //             size={__DEVICE_WIDTH__ / 5}
+                    //             type={"WanderingCubes"}
+                    //             color={Colors.greying}/>
+                    //     </View>
+                    // )
                 }
                 {
                     !emptySearchResult &&

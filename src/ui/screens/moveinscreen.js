@@ -17,6 +17,7 @@ import Spinner from 'react-native-spinkit';
 import {MOVE_SAVING} from "../activity/actionTypes";
 import LineupCellSaving from "../components/LineupCellSaving";
 import GTouchable from "../GTouchable";
+import {FullScreenLoader} from "../UIComponents";
 
 type Props = LineupProps & {
     // onListSelected: ()=>void
@@ -88,22 +89,23 @@ export default class MoveInScreen extends Screen<Props, State> {
                     navigator={navigator}
                 />
                 {
-                    displayLoader && (<View style={{
-                        flex:1,
-                        width: "100%",
-                        height: "100%",
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        position: 'absolute',
-                        zIndex: 1000,
-                        backgroundColor: 'rgba(255, 255, 255, 0.65)'
-                    }}>
-                        <Spinner
-                            isVisible={true}
-                            size={__DEVICE_WIDTH__ / 5}
-                            type={"WanderingCubes"}
-                            color={Colors.green}/>
-                    </View>)
+                    displayLoader && <FullScreenLoader/>
+                    // (<View style={{
+                    //     flex:1,
+                    //     width: "100%",
+                    //     height: "100%",
+                    //     alignItems: 'center',
+                    //     justifyContent: 'center',
+                    //     position: 'absolute',
+                    //     zIndex: 1000,
+                    //     backgroundColor: 'rgba(255, 255, 255, 0.65)'
+                    // }}>
+                    //     <Spinner
+                    //         isVisible={true}
+                    //         size={__DEVICE_WIDTH__ / 5}
+                    //         type={"WanderingCubes"}
+                    //         color={Colors.green}/>
+                    // </View>)
                 }
             </View>
         );
