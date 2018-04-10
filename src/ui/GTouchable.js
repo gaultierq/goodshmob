@@ -5,7 +5,7 @@ import {TouchableNativeFeedback, TouchableOpacity, View,} from 'react-native';
 import type {ms} from "../types";
 
 export type Props = {
-    onPress: () => void,
+    onPress?: () => void,
     noprotect?: boolean,
     onDoublePress?: () => void,
     deactivated?: boolean, //skip the gtouchable completely

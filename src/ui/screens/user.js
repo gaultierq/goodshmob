@@ -13,7 +13,7 @@ import {activityFeedProps, MainBackground} from "../UIComponents";
 import {STYLES} from "../UIStyles";
 import ShareButton from "../components/ShareButton";
 import UserLineups from "./userLineups";
-import LineupHorizontal from "../components/LineupHorizontal";
+import LineupHorizontal, {LineupH1} from "../components/LineupHorizontal";
 import {seeActivityDetails, seeList} from "../Nav";
 import * as UI from "../UIStyles";
 import {fullName} from "../../helpers/StringUtils";

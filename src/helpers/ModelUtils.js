@@ -411,6 +411,7 @@ export class Merge<T, K> {
 
 // $FlowFixMe
 function areEqualShallow(a, b) {
+    if (typeof a === 'undefined' || typeof b === 'undefined') return a === b;
     for(var key in a) {
         if(!(key in b) || a[key] !== b[key]) {
             return false;

@@ -103,8 +103,8 @@ export default class ActivityStatus extends React.Component<Props, State> {
                     <GTouchable onPress={rightHandler}>
                         <UserRowI
                             // activityTime={activity.createdAt}
+                            onPressAvatar={()=> seeUser(this.props.navigator, activity.user)}
                             user={activity.user}
-                            navigator={this.props.navigator}
                             rightText={rightText}
                         >
                             <Text style={[styles.userText, {alignSelf: 'flex-start', ...stylePadding(0, 3)}]}>{timeSinceActivity(activity)}</Text>
