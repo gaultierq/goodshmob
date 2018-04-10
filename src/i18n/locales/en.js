@@ -232,7 +232,7 @@ export default {
         }
     },
     loadmore: "Loading",
-    send_message: "%{url}\n\nSend via Goodsh: The bucketlist app to store and never forget a good stuff someone advised me to do.",
+    send_message: "Send via Goodsh: The bucketlist app to store and never forget a good stuff someone advised me to do.",
     send_object: "recommend you %{what} - via Goodsh",
     goodsh_url: "https:\/\/goodsh.it\/",
     friends: {

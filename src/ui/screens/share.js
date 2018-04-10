@@ -116,25 +116,29 @@ class ShareScreen extends Component<Props, State> {
     }
 
     share(item:Item) {
-        const {title, subtitle} = item;
-        let url = this.props.tempActivityUrl;
-        let message = i18n.t('send_message', {what: title + '\n' + subtitle, url});
-        message = message + " ";
-        let intent = {
-            message,
-            title
-        };
-        if (url) intent = {...intent, url};
+        const {title} = item;
 
-        Share.share(intent, {
+        let url = this.props.tempActivityUrl;
+        let intent = this.prepareShareIntent(title, url);
+
+        const options = {
             // Android only:
             dialogTitle: title,
-            // iOS only:
-            // excludedActivityTypes: [
-            //     'com.apple.UIKit.activity.PostToTwitter'
-            // ]
+            //IOS only
             subject: i18n.t('send_object', {what: title}),
-        })
+        };
+        Share.share(intent, options)
+    }
+
+    prepareShareIntent(title, url) {
+        let intent = {
+            title
+        };
+        let message = i18n.t('send_message');
+        if (__IS_ANDROID__) message = url + '\n\n' + message;
+        if (__IS_IOS__) intent.url = url;
+        intent.message = message;
+        return intent;
     }
 
     send(item:Item) {
