@@ -567,7 +567,7 @@ export const reduceList = (state, action, desc, optionalExtractor?) => {
                 return {id, type, ...options};
             });
 
-            new Util.Merge(currentList, newList)
+            currentList = new Util.Merge(currentList, newList)
                 .withHasLess(true)
                 .merge();
 

@@ -96,17 +96,32 @@ export function assertUnique(data: Array<>) {
 
 
 export function doDataMergeInState(state, path, newList, options?: MergeOpts) {
+
+    return doDataMergeInState2(state, path, newList.map((c) => {
+        let {id, type} = c;
+        return {id, type};
+    }), options);
+    // let currentList = _.get(state, path, []);
+    // currentList = currentList.slice();
+    //
+    // //3. merge state
+    // //new Util.Merge(currentList, newItems).merge();
+    // let merged = mergeLists(currentList, newItems, options);
+    //
+    // if (merged === currentList) return state;
+    // console.log("doDataMergeInState: update");
+    // return dotprop.set(state, path, merged);
+
+}
+
+export function doDataMergeInState2(state, path, newList, options?: MergeOpts) {
+
     let currentList = _.get(state, path, []);
     currentList = currentList.slice();
 
-    let newItems = newList.map((c) => {
-        let {id, type} = c;
-        return {id, type};
-    });
-
     //3. merge state
     //new Util.Merge(currentList, newItems).merge();
-    let merged = mergeLists(currentList, newItems, options);
+    let merged = mergeLists(currentList, newList, options);
 
     if (merged === currentList) return state;
     console.log("doDataMergeInState: update");
