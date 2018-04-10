@@ -29,7 +29,7 @@ class _Analytics implements Analytics {
         if (__WITH_FABRIC__) {
             //initialized in  native code
             this.fabricInitialized = true;
-            Answers = require('react-native-fabric');
+            Answers = require('react-native-fabric').Answers;
         }
     }
 
