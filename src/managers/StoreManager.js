@@ -120,6 +120,11 @@ class _StoreManager implements StoreManager {
         return {lineup, savings};
     }
 
+    buildData(type: string, id: Id): Saving {
+        let storeData = this.store.getState().data;
+        return buildData(storeData, type, id);
+    }
+
 }
 
 export interface StoreManager {
@@ -129,6 +134,8 @@ export interface StoreManager {
     isItemPendingAdd(itemId: Id): boolean;
 
     getMySavingsForItem(itemId: Id, itemType: ItemType): Saving[];
+
+    buildData(type: string, id: Id): Saving;
 
 }
 

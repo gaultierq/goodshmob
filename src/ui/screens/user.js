@@ -13,7 +13,7 @@ import {activityFeedProps, MainBackground} from "../UIComponents";
 import {STYLES} from "../UIStyles";
 import ShareButton from "../components/ShareButton";
 import UserLineups from "./userLineups";
-import LineupHorizontal from "../components/LineupHorizontal";
+import LineupHorizontal, {LineupH1} from "../components/LineupHorizontal";
 import {seeActivityDetails, seeList} from "../Nav";
 import * as UI from "../UIStyles";
 import {fullName} from "../../helpers/StringUtils";
@@ -35,6 +35,14 @@ const mapStateToProps = (state, ownProps) => ({
 @logged
 @connect(mapStateToProps)
 export default class UserScreen extends Screen<Props, State> {
+
+    static navigatorStyle = {
+        navBarNoBorder: true,
+        topBarElevationShadowEnabled: false,
+        // those props only affect Android
+        navBarTitleTextCentered: true,
+        navBarSubTitleTextCentered: true,
+    };
 
     constructor(props: Props) {
         super(props);
@@ -93,15 +101,12 @@ export default class UserScreen extends Screen<Props, State> {
                             data: [lineup],
                             title:lineup.name,
                             subtitle: ` (${_.get(lineup, `meta.savingsCount`, null) || 0})`,
-                            onPress: () => seeList(navigator, lineup.id),
+                            onPress: () => seeList(navigator, lineup),
                             renderItem: ({item}) => (
-                                <LineupHorizontal
-                                    lineupId={item.id}
+                                <LineupH1
+                                    lineup={item}
                                     navigator={navigator}
-                                    withAddInEmptyLineup={isCurrentUserId(userId)}
-                                    onSavingPressed={seeActivityDetails}
-                                    onLineupPressed={seeList}
-                                />
+                                    withAddInEmptyLineup={isCurrentUserId(userId)} />
                             )
                         }));
                     }}

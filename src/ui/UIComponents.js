@@ -7,6 +7,7 @@ import User from "react-native-firebase/lib/modules/auth/user";
 import {CachedImage} from "react-native-img-cache";
 import GTouchable from "./GTouchable";
 import {BACKGROUND_COLOR, STYLES} from "./UIStyles";
+import Spinner from 'react-native-spinkit';
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
@@ -73,3 +74,21 @@ export function renderTag(tag: string, onPress: () => void, style?:?*) {
         <Text style={[STYLES.tag, style]}>{tag}</Text>
     </GTouchable>);
 }
+
+
+export const FullScreenLoader = props => (<View style={{
+    flex:1,
+    width: "100%",
+    height: "100%",
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    zIndex: 1000,
+    backgroundColor: 'rgba(255, 255, 255, 0.65)'
+}}>
+    <Spinner
+        isVisible={true}
+        size={__DEVICE_WIDTH__ / 5}
+        type={"WanderingCubes"}
+        color={Colors.green}/>
+</View>);

@@ -45,14 +45,12 @@ import LineupCellSaving from "../components/LineupCellSaving";
 
 import GTouchable from "../GTouchable";
 import AddLineupComponent from "../components/addlineup";
-import BottomSheet from 'react-native-bottomsheet';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import type {OnBoardingStep} from "../../managers/OnBoardingManager";
 import OnBoardingManager from "../../managers/OnBoardingManager";
 import NoSpamDialog from "./NoSpamDialog";
 // $FlowFixMe
 import {AppTour, AppTourSequence, AppTourView} from "../../../vendors/taptarget";
-import LineupHorizontal from "../components/LineupHorizontal";
+import LineupHorizontal, {LineupH1} from "../components/LineupHorizontal";
 import {seeList} from "../Nav";
 import {seeActivityDetails} from "../Nav";
 import UserLineups from "./userLineups";
@@ -64,9 +62,7 @@ type Props = {
 };
 
 type State = {
-    newLineupTitle?: string,
-    newLineupPrivacy?: Visibility,
-    filter?: ?string
+    focusedSaving?: Saving
 };
 
 @logged
@@ -102,9 +98,6 @@ class HomeScreen extends Screen<Props, State> {
         navBarNoBorder: true,
         topBarElevationShadowEnabled: false
     };
-
-    state : State = {};
-
 
     appTourTargets = new Map();
 
@@ -229,14 +222,13 @@ class HomeScreen extends Screen<Props, State> {
 
     render() {
 
-        let onBoardingStep = OnBoardingManager.getPendingStep();
-
-        // if (onBoardingStep === 'no_spam') return <NoSpamDialog/>
-
         const userId = currentUserId();
         const navigator = this.props.navigator;
 
         return (
+            // FIXME: workflow w/ padding bottom to fix the last cutted item
+            // in the lineups list, a better solution might come with #371
+            // 70 is the size of a lineup cell
             <View style={{flex:1}}>
 
                 <UserLineups
@@ -256,28 +248,17 @@ class HomeScreen extends Screen<Props, State> {
                                 title: i18n.t("lineups.goodsh.title"),
                                 subtitle: ` (${savingCount})`,
                                 onPress: () => seeList(navigator, goodshbox),
-                                renderItem: ({item}) => (
-                                    <LineupHorizontal
-                                        lineupId={item.id}
-                                        navigator={this.props.navigator}
-                                        onSavingPressed={seeActivityDetails}
-                                        onLineupPressed={seeList}
-                                    />
-                                )
+                                renderItem: ({item}) => <LineupH1 lineup={item} navigator={navigator}/>
                             },
                             {
                                 data: _.slice(lineups, 1),
                                 title: i18n.t("lineups.mine.title"),
                                 renderSectionHeaderChildren:() => <AddLineupComponent navigator={this.props.navigator}/>,
                                 renderItem: ({item})=>(
-                                    <LineupHorizontal
-                                        lineupId={item.id}
-                                        navigator={this.props.navigator}
-                                        withMenuButton={true}
-                                        withLineupTitle={true}
-                                        withAddInEmptyLineup={true}
-                                        onSavingPressed={seeActivityDetails}
-                                        onLineupPressed={seeList}
+                                    <LineupH1 lineup={item} navigator={navigator}
+                                              withMenuButton={true}
+                                              withLineupTitle={true}
+                                              withAddInEmptyLineup={true}
                                     />
                                 )
                             },
@@ -289,6 +270,16 @@ class HomeScreen extends Screen<Props, State> {
 
                 {this.displayFloatingButton() && this.renderFloatingButton()}
             </View>
+        );
+    }
+
+    renderSaving(saving: Saving) {
+        return (
+            <GTouchable
+                onPress={() => seeActivityDetails(this.props.navigator, saving)}
+            >
+                <LineupCellSaving item={saving.resource} />
+            </GTouchable>
         );
     }
 
@@ -342,24 +333,6 @@ class HomeScreen extends Screen<Props, State> {
         return true;
     }
 
-    onLineupPressed(lineup: List) {
-        console.info("on linup pressed: " + JSON.stringify(lineup));
-        this.props.navigator.showModal({
-            screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
-            passProps: {
-                lineupId: lineup.id,
-            },
-            navigatorButtons: Nav.CANCELABLE_MODAL
-        });
-    }
-
-    onSavingPressed(saving: Saving) {
-        this.props.navigator.showModal({
-            screen: 'goodsh.ActivityDetailScreen',
-            passProps: {activityId: saving.id, activityType: saving.type},
-            // navigatorButtons: Nav.CANCELABLE_MODAL,
-        });
-    }
 
     onFloatingButtonPressed() {
         startAddItem(this.props.navigator, currentGoodshboxId());

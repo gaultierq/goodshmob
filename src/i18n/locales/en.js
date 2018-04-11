@@ -46,7 +46,7 @@ export default {
             action_button_body : "Tap '+' for your first goodsh.",
         }
     },
-    search:{ 
+    search:{
         in_items: "What would you like to save?",
         in_network: "Search in my network",
         in_feed: "Search",
@@ -232,7 +232,8 @@ export default {
         }
     },
     loadmore: "Loading",
-    send_message: "%{url}\n\nSend via Goodsh: The bucketlist app to store and never forget a good stuff someone advised me to do.\nhttps://goodsh.it/",
+    send_message: "Send via Goodsh: The bucketlist app to store and never forget a good stuff someone advised me to do.",
+    send_object: "recommend you %{what} - via Goodsh",
     goodsh_url: "https:\/\/goodsh.it\/",
     friends: {
         empty_screen: "Fully enjoy Goodsh by inviting your friends.",
@@ -294,6 +295,7 @@ export default {
         change_title: "Change title",
         edit_saving_menu: "Edit this goodsh",
         change_description: "Change the description",
+        move: "Change list",
         change_name: "Rename this list",
         undo: "Undo",
         cancel: "Cancel",
@@ -342,5 +344,9 @@ export default {
     },
     congrats: {
         generic: "Done;)"
-    }
+    },
+    content_actions: {
+        read_more: 'Read more',
+        hide: 'Hide',
+    },
 };

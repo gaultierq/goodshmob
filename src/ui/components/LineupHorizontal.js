@@ -25,20 +25,17 @@ import {currentGoodshboxId, logged} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import {LINEUP_DELETION} from "../lineup/actions";
-import * as Nav from "../Nav";
-import {startAddItem} from "../Nav";
+import {displayActivityActions, seeActivityDetails, seeList, startAddItem} from "../Nav";
 import {Colors} from "../colors";
 import LineupTitle from "../components/LineupTitle";
 import Feed from "../components/feed";
 import LineupCellSaving from "../components/LineupCellSaving";
 
-import GTouchable, {wrapGtouchable} from "../GTouchable";
+import GTouchable from "../GTouchable";
 import BottomSheet from 'react-native-bottomsheet';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {UpdateTracker} from "../UpdateTracker";
 import StoreManager from "../../managers/StoreManager";
-import {seeActivityDetails} from "../Nav";
-import {seeList} from "../Nav";
 // $FlowFixMe
 type Props = {
     navigator: RNNNavigator,
@@ -48,7 +45,8 @@ type Props = {
     withLineupTitle?: boolean, //TODO: invert the default condition
     withAddInEmptyLineup?: boolean,
     onSavingPressed?: ?(navigator: RNNNavigator, saving: Saving) => void,
-    onLineupPressed?: (navigator: RNNNavigator, saving: Saving) => void,
+    renderSaving: (saving:Saving) => Node,
+    style?: *,
 };
 
 type State = {
@@ -60,11 +58,6 @@ type State = {
 }))
 @logged
 export default class LineupHorizontal extends Component<Props, State> {
-
-    static defaultProps = {
-        onSavingPressed: seeActivityDetails,
-        onLineupPressed: seeList,
-    };
 
     updateTracker: UpdateTracker;
 
@@ -87,10 +80,8 @@ export default class LineupHorizontal extends Component<Props, State> {
         let {lineup, savings} = StoreManager.getLineupAndSavings(lineupId);
         if (!lineup) return null;
 
-        const handler = !lineup.pending && this.props.onLineupPressed;
-
-        return wrapGtouchable(
-            <View>
+        return (
+            <View style={this.props.style}>
                 {
                     withLineupTitle &&
 
@@ -100,9 +91,8 @@ export default class LineupHorizontal extends Component<Props, State> {
                     </View>
                 }
                 {this.renderList(lineup, savings)}
-            </View>,
-            handler ? () => {handler(this.props.navigator, lineup)} : null
-        );
+            </View>
+        )
     }
 
     renderList(list: Lineup, savings: Array<Saving>) {
@@ -112,28 +102,17 @@ export default class LineupHorizontal extends Component<Props, State> {
 
         return <Feed
             data={savings}
-            renderItem={({item}) => this.renderSaving(item, !list.pending && this.props.onSavingPressed)}
-            // fetchSrc={{
-            //     callFactory: this.fetchInteractions.bind(this),
-            //     useLinks: true,
-            //     action: FETCH_INTERACTIONS,
-            // }}
+            renderItem={({item}) => this.props.renderSaving(item)}
             hasMore={false}
             horizontal={true}
-            // ItemSeparatorComponent={()=> <View style={{margin: 20}} />}
+            ItemSeparatorComponent={()=> <View style={{width: 10, height: 10}} />}
             contentContainerStyle={{paddingLeft: 15}}
             showsHorizontalScrollIndicator={false}
             // cannotFetch={!super.isVisible()}
         />
     }
 
-    renderSaving(saving: Saving, press) {
-        return wrapGtouchable(
-            <LineupCellSaving item={saving.resource} style={{marginRight: 10}}/>,
-            press ? () => {press(this.props.navigator, saving)} : null
-        );
-    }
-
+    //TODO: move out of LineupHorizontal
     renderMenuButton(item, padding) {
         if (!item) return null;
 
@@ -169,8 +148,7 @@ export default class LineupHorizontal extends Component<Props, State> {
         </View>);
     }
 
-
-
+    //TODO: move out of LineupHorizontal
     deleteLineup(lineup: List) {
         let delayMs = 3000;
         //deleteLineup(lineup.id, delayMs)
@@ -203,6 +181,7 @@ export default class LineupHorizontal extends Component<Props, State> {
         );
     }
 
+    //TODO: move out of LineupHorizontal
     changeTitle(lineup: List) {
         let {id, name} = lineup;
 
@@ -217,7 +196,7 @@ export default class LineupHorizontal extends Component<Props, State> {
         });
     }
 
-
+    //TODO: move out of LineupHorizontal, as a prop
     renderEmptyList(list: List) {
         let result = [];
         //
@@ -283,3 +262,28 @@ export default class LineupHorizontal extends Component<Props, State> {
     }
 
 }
+
+export type Props1 = {
+    lineup: Lineup,
+    navigator: RNNNavigator
+}
+export const LineupH1 = connect()((props: Props1) => {
+    const {lineup, navigator, ...attr} = props;
+    return <GTouchable onPress={()=>seeList(navigator, lineup)}>
+        <LineupHorizontal
+            lineupId={lineup.id}
+            navigator={navigator}
+            renderSaving={saving => (
+                <GTouchable
+                    onPress={() => seeActivityDetails(navigator, saving)}
+                    onLongPress={saving.pending ? null : ()=> {
+                        displayActivityActions(navigator, props.dispatch, saving.id, saving.type)
+                    }}
+                >
+                    <LineupCellSaving item={saving.resource} />
+                </GTouchable>
+            )}
+            {...attr}
+        />
+    </GTouchable>
+});

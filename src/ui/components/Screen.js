@@ -19,7 +19,6 @@ export type ScreenProps = NavigableProps & {
 
 export default class Screen<P, S> extends Component<P & ScreenProps,  ScreenState> {
 
-
     state = {visible: false, dirty: false};
 
     constructor(props:P) {

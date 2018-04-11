@@ -101,6 +101,17 @@ export const commentsScreen3 = {
         activityType: "savings",
     }
 };
+//comments benoit
+export const commentsScreen4 = {
+    screen: {
+        label: 'test',
+        screen: 'goodsh.CommentsScreen',
+    },
+    passProps: {
+        activityId: "fcb40005-64f1-4f17-8347-61c52f803525",
+        activityType: "savings",
+    }
+};
 
 export const profileScreen = {
     screen: {
@@ -218,7 +229,14 @@ export const friendScreen = {
         userId: currentUserId()
     }
 };
-
+export const moveInScreen = {
+    screen: {
+        screen: 'goodsh.MoveInScreen',
+    },
+    passProps: {
+        savingId: "ff4efcaf-19f4-49f1-9525-d49b42dc0803",
+    },
+};
 
 export const test = {
     screen: {

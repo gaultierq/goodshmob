@@ -15,6 +15,7 @@ import {Colors} from "../colors";
 import Swiper from 'react-native-swiper';
 import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts";
 
+import i18n from '../../i18n'
 
 type Props = {
     initialIndex: number
@@ -124,8 +125,8 @@ class Login extends Component<Props, State> {
     }
 
     goLastSwiperView() {
-      const indexEnd = (this.state.index) ? (4 - this.state.index) : 4;
-      this.refs["homeSwiper"].scrollBy(indexEnd, true);
+        const indexEnd = (this.state.index) ? (4 - this.state.index) : 4;
+        this.refs["homeSwiper"].scrollBy(indexEnd, true);
     }
 
 

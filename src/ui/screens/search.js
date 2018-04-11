@@ -315,6 +315,11 @@ export default class SearchScreen extends Component<Props, State> {
             .then((results: SearchResult) => {
 
                 //const catType = this.getCurrentCategory().type;
+                if (!results) {
+                    // TODO: set state error
+                    return;
+                }
+
                 let result = results[catType];
                 if (result) {
                     let {page, nbPages} = result;

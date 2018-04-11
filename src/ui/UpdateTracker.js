@@ -27,6 +27,6 @@ export class UpdateTracker {
         if (this.debugName) {
             // console.debug(`${this.debugName} shouldComponentUpdate = ${result} ${this.debugId && result ? this.debugId : ""}`)
         }
-        return __ENABLE_PERF_OPTIM__ || result;
+        return !__ENABLE_PERF_OPTIM__ || result;
     }
 }

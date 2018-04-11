@@ -1,4 +1,5 @@
 // @flow
+/* global ErrorUtils */
 
 import {applyMiddleware, combineReducers, compose, createStore} from "redux";
 import {Navigation} from 'react-native-navigation';
@@ -20,7 +21,7 @@ import * as UI from "./ui/UIStyles";
 import {init as initGlobal} from "./global";
 import {AlgoliaClient} from "./helpers/AlgoliaUtils";
 import {Statistics} from "./managers/Statistics";
-import {INIT_CACHE, UPGRADE_CACHE} from "./auth/actionTypes";
+import {CLEAR_CACHE, INIT_CACHE, UPGRADE_CACHE} from "./auth/actionTypes";
 import Config from 'react-native-config'
 import {Provider} from "react-redux";
 import {Messenger} from "./managers/Messenger"
@@ -200,6 +201,7 @@ export default class App {
             console.info(`cache version=${this.cacheVersion}`);
         });
         // since react-redux only works on components, we need to subscribe this class manually
+        // FIXME: we should listen only part of the store, not all dispatchs
         this.store.subscribe(this.onStoreUpdate.bind(this));
     }
 
@@ -209,6 +211,8 @@ export default class App {
         if (!this.initialized) {
             this.initialize();
         }
+
+        console.log('app store update :)');
 
         setTimeout(() => {
             this.refreshAppMode();
@@ -241,6 +245,21 @@ export default class App {
         //managers init rely on a ready store
         //singletons
 
+        
+        if (ErrorUtils) {
+            const previousHandler = ErrorUtils.getGlobalHandler();
+
+            ErrorUtils.setGlobalHandler((error, isFatal) => {
+                try {
+                    this.store.dispatch({type: CLEAR_CACHE});
+                }
+                finally {
+                    previousHandler(error, isFatal)
+                }
+
+            })
+        }
+
         StoreManager.init(this.store);
         CurrentUser.init(this.store);
         DeviceManager.init(this.store);
@@ -251,6 +270,8 @@ export default class App {
         Analytics.init();
         OnBoardingManager.init(this.store);
         BugsnagManager.init();
+
+
 
         //api in the end: we dont want to make any call during the app init
         Api.init(this.store);
@@ -489,7 +510,7 @@ export default class App {
                 navigatorStyle: {
                     ...navigatorStyle,
                     navBarHidden: true,
-                }
+                },
             }
         });
     }

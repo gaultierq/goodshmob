@@ -41,6 +41,11 @@ type State = {
 }))
 class LineupScreen extends Screen<Props, State> {
 
+    static navigatorStyle = {
+        // those props only affect Android
+        navBarTitleTextCentered: true,
+        navBarSubTitleTextCentered: true,
+    };
 
     render() {
         const lineup = this.getLineup();

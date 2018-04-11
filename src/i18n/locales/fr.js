@@ -231,7 +231,8 @@ export default {
         }
     },
     loadmore: "Chargement",
-    send_message: "%{url}\n\nEnvoyé via Goodsh : l'app Mémo pour noter et toujours retrouver toutes les recommandations qu'on me fait.\nhttps://goodsh.it/",
+    send_message: "Envoyé via Goodsh : l'app Mémo pour noter et toujours retrouver toutes les recommandations qu'on me fait.",
+    send_object: "te recommande %{what} - via Goodsh",
     goodsh_url: "https:\/\/goodsh.it\/",
     friends: {
         empty_screen: "Profite pleinement de Goodsh et invite des proches.",
@@ -289,7 +290,8 @@ export default {
         change: "Modifier",
         change_title: "Modifier le titre",
         edit_saving_menu: "Éditer ce goodsh",
-        change_description: "Modifier",
+        change_description: "Modifier la description",
+        move: "Déplacer",
         change_name: "Changer le nom de cette liste",
         undo: "Annuler",
         cancel: "Annuler",
@@ -341,5 +343,9 @@ export default {
     },
     congrats: {
         generic: "C'est fait ;)"
-    }
+    },
+    content_actions: {
+        read_more: 'Voir plus',
+        hide: 'Cacher',
+    },
 };

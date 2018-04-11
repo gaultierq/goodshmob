@@ -321,44 +321,10 @@ export default class ActivityActionBar extends React.Component<Props, State> {
         let savings = StoreManager.getMySavingsForItem(id, type);
         if (_.size(savings) === 1) {
 
+            let saving = _.head(savings);
+            const dispatch = this.props.dispatch;
 
-            Alert.alert(
-                i18n.t("alert.delete.title"),
-                i18n.t("alert.delete.label"),
-                [
-                    {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-                    {text: i18n.t("actions.ok"), onPress: () => {
-                        let saving = _.head(savings);
-                        let {id, lineupId, pending} = saving;
-                        let lineup;
-                        if (pending) {
-                            lineup = buildData(this.props.data, 'lists', lineupId)
-                        }
-                        else {
-                            lineup = _.get(buildData(this.props.data, 'savings', id), 'target');
-                        }
-                        lineupId = lineup && lineup.id;
-                        const delayMs = 4000;
-                        this.props.dispatch(doUnsave(saving.pending, saving.id, lineupId, delayMs)).then((pendingId) => {
-                            //console.info(`saving ${saving.id} unsaved`)
-                            Messenger.sendMessage(
-                                i18n.t("activity_action_bar.goodsh_deleted"),
-                                {
-                                    timeout: delayMs,
-                                    action: !pending && {
-                                        title: i18n.t('activity_action_bar.goodsh_deleted_undo'),
-                                        onPress: () => {
-                                            //undo previous add
-                                            this.props.dispatch(SAVING_DELETION.undo(pendingId))
-                                        },
-                                    }}
-                            );
-                        });
-                    }
-                    },
-                ],
-                { cancelable: true }
-            );
+            unsaveOnce(saving, dispatch);
 
 
         }
@@ -449,6 +415,50 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     }
 
 
+}
+
+
+
+export function unsaveOnce(saving: Saving, dispatch: *) {
+    Alert.alert(
+        i18n.t("alert.delete.title"),
+        i18n.t("alert.delete.label"),
+        [
+            {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+            {
+                text: i18n.t("actions.ok"), onPress: () => {
+                let {id, lineupId, pending} = saving;
+                let lineup;
+                if (pending) {
+                    lineup = StoreManager.buildData('lists', lineupId)
+                }
+                else {
+                    lineup = _.get(StoreManager.buildData('savings', id), 'target');
+                }
+                lineupId = lineup && lineup.id;
+                const delayMs = 4000;
+
+                dispatch(doUnsave(saving.pending, saving.id, lineupId, delayMs)).then((pendingId) => {
+                    //console.info(`saving ${saving.id} unsaved`)
+                    Messenger.sendMessage(
+                        i18n.t("activity_action_bar.goodsh_deleted"),
+                        {
+                            timeout: delayMs,
+                            action: !pending && {
+                                title: i18n.t('activity_action_bar.goodsh_deleted_undo'),
+                                onPress: () => {
+                                    //undo previous add
+                                    dispatch(SAVING_DELETION.undo(pendingId))
+                                },
+                            }
+                        }
+                    );
+                });
+            }
+            },
+        ],
+        {cancelable: true}
+    );
 }
 
 

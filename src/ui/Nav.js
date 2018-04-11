@@ -1,8 +1,11 @@
 // @flow
 
-import type {Activity, Id, Item, Lineup, RNNNavigator, User} from "../types";
+import type {Activity, ActivityType, Id, Item, Lineup, RNNNavigator, User} from "../types";
 import {fullName} from "../helpers/StringUtils";
+import StoreManager from "../managers/StoreManager";
 import i18n from '../i18n/i18n';
+import BottomSheet from 'react-native-bottomsheet';
+import {unsaveOnce} from "./activity/components/ActivityActionBar";
 
 export const CLOSE_MODAL = 'close_modal';
 
@@ -73,13 +76,14 @@ export function seeList(navigator: RNNNavigator, lineup: Lineup) {
 }
 
 export function seeUser(navigator: RNNNavigator, user: User) {
-    navigator.push({
+    navigator.showModal({
         screen: 'goodsh.UserScreen', // unique ID registered with Navigation.registerScreen
         title: fullName(user),
         passProps: {
             userId: user.id,
             user
         },
+        navigatorButtons: CANCELABLE_MODAL
     });
 }
 
@@ -100,5 +104,49 @@ export function seeActivityDetails(navigator: RNNNavigator, activity: Activity) 
         screen: 'goodsh.ActivityDetailScreen',
         passProps: {activityId: activity.id, activityType: activity.type},
         // navigatorButtons: Nav.CANCELABLE_MODAL,
+    });
+}
+
+
+//FIXME: check for rights (if activity not in cache, display something, request + loader)
+export function displayActivityActions(navigator: RNNNavigator, dispatch: *, activityId: Id, activityType: ActivityType) {
+    BottomSheet.showBottomSheetWithOptions({
+        options: [
+            i18n.t("actions.change_description"),
+            i18n.t("actions.move"),
+            i18n.t("actions.delete"),
+            i18n.t("actions.cancel")
+        ],
+        title: i18n.t("actions.edit_saving_menu"),
+        destructiveButtonIndex: 2,
+        cancelButtonIndex: 3,
+    }, (value) => {
+        switch (value) {
+            case 0:
+
+                navigator.showModal({
+                    screen: 'goodsh.ChangeDescriptionScreen',
+                    animationType: 'none',
+                    passProps: {
+                        activityId,
+                        activityType,
+                    }
+                });
+                break;
+            case 1:
+                navigator.showModal({
+                    screen: 'goodsh.MoveInScreen',
+                    title: i18n.t('create_list_controller.choose_another_list'),
+                    passProps: {
+                        savingId: activityId,
+                    },
+                    navigatorButtons: CANCELABLE_MODAL,
+                });
+                break;
+            case 2:
+                let activity = StoreManager.buildData(activityType, activityId);
+                unsaveOnce(activity, dispatch);
+                break;
+        }
     });
 }

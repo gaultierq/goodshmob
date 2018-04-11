@@ -5,6 +5,7 @@ import Snackbar from "react-native-snackbar"
 import {Colors} from "../ui/colors";
 
 class _Messenger implements Messenger {
+
     id = Math.random();
     snackDismissTimeout: number;
 

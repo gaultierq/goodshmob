@@ -43,6 +43,7 @@ import UnsaveScreen from "./screens/unsave";
 import ChangeDescriptionScreen from "./screens/changeDescription";
 import ChangeLineupName from "./screens/changeLineupName";
 import NoSpamScreen from "./screens/NoSpamScreen";
+import MoveInScreen from "./screens/moveinscreen";
 
 
 function wrap(screenName,screenCreator,store,provider) {
@@ -104,4 +105,5 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.ChangeLineupName', () => ChangeLineupName, store, Provider);
     wrap('goodsh.NoSpamScreen', () => NoSpamScreen, store, Provider);
     wrap('goodsh.PlacesAutocomplete', () => PlacesAutocomplete, store, Provider);
+    wrap('goodsh.MoveInScreen', () => MoveInScreen, store, Provider);
 }

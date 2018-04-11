@@ -96,39 +96,70 @@ export function assertUnique(data: Array<>) {
 
 
 export function doDataMergeInState(state, path, newList, options?: MergeOpts) {
+
+    return doDataMergeInState2(state, path, newList.map((c) => {
+        let {id, type} = c;
+        return {id, type};
+    }), options);
+    // let currentList = _.get(state, path, []);
+    // currentList = currentList.slice();
+    //
+    // //3. merge state
+    // //new Util.Merge(currentList, newItems).merge();
+    // let merged = mergeLists(currentList, newItems, options);
+    //
+    // if (merged === currentList) return state;
+    // console.log("doDataMergeInState: update");
+    // return dotprop.set(state, path, merged);
+
+}
+
+export function doDataMergeInState2(state, path, newList, options?: MergeOpts) {
+
     let currentList = _.get(state, path, []);
     currentList = currentList.slice();
 
-    let newItems = newList.map((c) => {
-        let {id, type} = c;
-        return {id, type};
-    });
-
     //3. merge state
     //new Util.Merge(currentList, newItems).merge();
-    mergeLists(currentList, newItems, options);
+    let merged = mergeLists(currentList, newList, options);
 
-    let newState = dotprop.set(state, path, currentList);
+    if (merged === currentList) return state;
+    console.log("doDataMergeInState: update");
+    return dotprop.set(state, path, merged);
 
-    if (state === newState) throw "immutability violation";
-    return newState;
 }
 
 
-export const dataStateToProps = (state, ownProps) => ({
-    data: state.data,
-});
+export function updateSplice0(state: any, path: string, opts: any) {
+    const {deletePredicate, index, insert} = opts;
 
-export function updateDelete(state, path, predicate) {
-    let data = _.get(state, path, []);
-    let indexToRemove = data.findIndex(predicate);
-    if (indexToRemove >= 0) {
-        let obj = _.set({}, path, {$splice: [[indexToRemove, 1]]});
-        state = update(state, obj);
+    let ix = index;
+    let removeCount = 0;
+
+    if (deletePredicate) {
+        let indexToRemove =_.get(state, path, []).findIndex(deletePredicate);
+        if (indexToRemove >= 0) {
+            ix = indexToRemove;
+            removeCount = 1;
+        }
+    }
+    if (ix >= 0) {
+        state = updateSplice3(state, path, ix, removeCount, insert);
     }
     return state;
 }
 
+export function updateSplice3(state: any, path: string, index: number, removeCount: number, itemToAdd: any) {
+    if (index >= 0) {
+
+        const args = [index, removeCount];
+        if (itemToAdd) args.push(itemToAdd);
+        
+        let obj = _.set({}, path, {$splice: [args]});
+        state = update(state, obj);
+    }
+    return state;
+}
 
 export function isSaving(activity: Activity) {
     return activity && activity.type &&  sanitizeActivityType(activity.type) === 'savings';

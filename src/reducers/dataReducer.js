@@ -1,10 +1,10 @@
 import {API_DATA_SUCCESS} from '../managers/Api';
 import Immutable from 'seamless-immutable';
-import merge from 'deepmerge'
 import {Statistics} from "../managers/Statistics";
 import update from "immutability-helper";
-import {updateDelete} from "../helpers/DataUtils";
+import {updateSplice0} from "../helpers/DataUtils";
 import type {ApiActionName} from "../helpers/ApiAction";
+import merge from "../helpers/DeepMerge"
 
 const initialState = Immutable({
     meta: {},
@@ -42,14 +42,17 @@ export function data(state = initialState, action) {
             let now = Date.now();
             let result = merge(state, action.data);
             Statistics.recordTime(`mergeData.${action.origin}`, Date.now() - now);
+            if (result !== state) {
+                console.debug('data:success:: update')
+            }
             return result;
         default:
             return state;
     }
 }
 
-
 type PendingItemState = 'pending' | 'tg';
+
 export type PendingItem = {
     id: Id,
     insertedAt: ms,
@@ -67,7 +70,7 @@ export function pending(state = {}, action) {
     switch (action.type) {
         case REMOVE_PENDING_ACTION :{
             let {pendingActionType, id} = action;
-            state = updateDelete(state, `${pendingActionType}`, it => it.id === id);
+            state = updateSplice0(state, `${pendingActionType}`, {deletePredicate: it => it.id === id});
             break;
         }
         case CREATE_PENDING_ACTION: {

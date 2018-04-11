@@ -10,6 +10,8 @@ import {Colors} from "../colors";
 import {SFP_TEXT_REGULAR} from "../fonts";
 import {Col, Grid, Row} from "react-native-easy-grid";
 
+import {SFP_TEXT_BOLD} from "../fonts";
+
 type Props = {
     comment: Comment | Array<Comment>,
     user: User,
@@ -61,43 +63,61 @@ export default class CommentCell extends Component<Props, State> {
 
         return (
             <Grid>
-                <Row style={{ }}>
+                {/* comment */}
+                <Row>
+                    {/* avatar */}
                     <Col style={{ width: dimension, justifyContent: 'flex-start'}}>
                         {!rightDisplay && <Avatar user={user} style={{dim: 24, marginTop: 3}}/>}
                     </Col>
-                    <Col style={{ alignItems: rightDisplay ? 'flex-end': 'flex-start', }}>
-                        {comments.map((comment: Comment, i) => <Row style={{marginTop: !!i ? 4 : 0}} key={comment.id}>
-                            <View style={{flexDirection: "row"}}>
-                                <View style={[{
-                                    // ...stylePadding(12, 4),
-                                    paddingHorizontal: 12,
-                                    paddingVertical: 4,
-                                    backgroundColor: rightDisplay ? Colors.green : Colors.white,
-                                    ...borderStyle(i, 4),
-                                    borderColor: Colors.greyish,
-                                }, textContainerStyle]}>
-
-                                    <Text style={{
-                                        fontSize: 13,
-                                        lineHeight: 23,
-                                        fontFamily: SFP_TEXT_REGULAR,
-                                        color: rightDisplay ? Colors.white : Colors.brownishGrey,
-                                    }}>{comment.content}
-                                    </Text>
-                                </View>
-                            </View>
-                        </Row>)}
-                    </Col>
-                </Row>
-                {!skipTime &&
-                <Row>
-                    <Col style={{width: dimension}}/>
+                    {/* comment content (firstname + messages) */}
                     <Col>
-                        <Text
-                            style={[styles.timeSince, {alignSelf: 'flex-start', ...styleMargin(0, 4)}]}>{timeSinceActivity(comment)}</Text>
+                        {/* firstname */}
+                        <Row>
+                            <Text style={styles.rightText}>
+                                {user && user.firstName}
+                            </Text>
+                        </Row>
+                        {/* comment messages */}
+                        <Row>
+                            <Col style={{ alignItems: rightDisplay ? 'flex-end': 'flex-start', }}>
+                                { comments.map((comment: Comment, i) => (
+                                    <Row
+                                        style={{marginTop: !!i ? 4 : 0}} key={comment.id}
+                                    >
+                                        <View style={{flexDirection: "row"}}>
+                                            <View style={[{
+                                                // ...stylePadding(12, 4),
+                                                paddingHorizontal: 12,
+                                                paddingVertical: 4,
+                                                backgroundColor: rightDisplay ? Colors.green : Colors.white,
+                                                ...borderStyle(i, 4),
+                                                borderColor: Colors.greyish,
+                                            }, textContainerStyle]}>
+                                                <Text style={{
+                                                    fontSize: 13,
+                                                    lineHeight: 23,
+                                                    fontFamily: SFP_TEXT_REGULAR,
+                                                    color: rightDisplay ? Colors.white : Colors.brownishGrey,
+                                                }}>
+                                                    {comment.content}
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    </Row>
+                                )) }
+                            </Col>
+                        </Row>
                     </Col>
                 </Row>
-                }
+                { !skipTime && (
+                    <Row>
+                        <Col style={{width: dimension}}/>
+                        <Col>
+                            <Text
+                                style={[styles.timeSince, {alignSelf: 'flex-start', ...styleMargin(0, 4)}]}>{timeSinceActivity(comment)}</Text>
+                        </Col>
+                    </Row>
+                ) }
             </Grid>
         );
     }
@@ -111,5 +131,11 @@ const styles = StyleSheet.create({
         lineHeight: 10,
         color: Colors.greyish,
     },
+    rightText: {
+        alignSelf: 'center',
+        fontSize: 13,
+        color: Colors.black,
+        fontFamily: SFP_TEXT_BOLD,
+        marginBottom: 5,
+    },
 });
-

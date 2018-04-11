@@ -6,7 +6,13 @@ Use the following versions:
 
 * node 9.3
 * npm 5.6.0
-* pod 1.4.0.rc.1
+* cocoapods 1.4.0
+
+To install `cocoapods` you might need to run the command:
+
+```bash
+sudo gem install cocoapods
+```
 
 ## Install
 
