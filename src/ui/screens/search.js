@@ -72,7 +72,8 @@ export type Props = {
     navigator: *,
     searchEngine: SearchEngine,
     token?: ?SearchToken,
-    style?: ? *
+    style?: ? *,
+    index: number,
 
 };
 
@@ -83,7 +84,7 @@ export type SearchState = {
     page: number,
     nbPages: number,
     data: Array<List|Saving>,
-    token: string
+    token: string,
 };
 
 
@@ -103,6 +104,8 @@ export default class SearchScreen extends Component<Props, State> {
 
     searchOptions: { [SearchCategoryType]: *} = {};
 
+    static defaultProps = {index: 0};
+
     constructor(props: Props) {
         super(props);
 
@@ -111,7 +114,7 @@ export default class SearchScreen extends Component<Props, State> {
         this.state = {
             input: '',
             searches: {},
-            index: 0,
+            index: props.index,
             routes: props.categories.map((c, i) => ({key: `${i}`, title: c.tabName ? i18n.t(c.tabName) : null})),
         };
 

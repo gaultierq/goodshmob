@@ -174,7 +174,10 @@ class SearchItem extends Screen<Props, State> {
                     call.addQuery(latitude && {'search[lat]': latitude})
                         .addQuery(longitude && {'search[lng]': longitude});
                     resolve(call);
-                }, err => reject(err));
+                }, err => {
+                    alert(err.message);
+                    reject(err)
+                });
 
                 // if (options.aroundMe) {
                 //     Geolocation.getPosition().then(({latitude, longitude}) => {

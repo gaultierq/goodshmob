@@ -198,6 +198,9 @@ export const searchItemsScreen = {
         screen: 'goodsh.SearchItemsScreen',
         title: 'Test SearchItemsScreen',
     },
+    passProps: {
+        index: 1,
+    }
 };
 
 export const homeSearchItemsScreen = {
