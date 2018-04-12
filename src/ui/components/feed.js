@@ -2,7 +2,7 @@
 
 import type {Node} from 'react';
 import React, {Component} from 'react';
-import {ActivityIndicator, BackHandler, FlatList, RefreshControl, SectionList, Text, View} from 'react-native';
+import {ActivityIndicator, TouchableWithoutFeedback, BackHandler, FlatList, RefreshControl, SectionList, Text, View} from 'react-native';
 import {connect} from "react-redux";
 import {assertUnique} from "../../helpers/DataUtils";
 import ApiAction from "../../helpers/ApiAction";
@@ -23,6 +23,7 @@ import Spinner from 'react-native-spinkit';
 import GSearchBar from "../GSearchBar";
 import Config from "react-native-config"
 import {FullScreenLoader} from "../UIComponents";
+import GTouchable from "../GTouchable";
 
 export type FeedSource = {
     callFactory: ()=>Api.Call,
@@ -91,6 +92,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     lastFetchFail: number;
     manager: RequestManager = new RequestManager();
     logger: *;
+    filterNode;
 
     constructor(props: Props<T>) {
         super(props);
@@ -248,6 +250,12 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             }
         }
 
+        const style1 = [style];
+        if (firstEmptyLoader) style1.push({minHeight: 150});
+        // if (filter
+        //     && _.isEmpty(this.state.filter) && this.state.isFilterFocused) {
+        //     style1.push({opacity: 0.4})
+        // }
         let params =  {
             ref: "feed",
             renderItem,
@@ -257,7 +265,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             onEndReached: this.onEndReached.bind(this),
             onEndReachedThreshold: 0.1,
             ListFooterComponent: !firstEmptyLoader && this.renderFetchMoreLoader(ListFooterComponent),
-            style: [{...style}, firstEmptyLoader ? {minHeight: 150} : {}],
+            style: style1,
             ListHeaderComponent: !firstEmptyLoader && ListHeaderComponent,
             renderSectionHeader: !firstEmptyLoader && renderSectionHeader,
             onScroll: this._handleScroll,
@@ -265,14 +273,31 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             ...attributes
         };
 
+        let listNode;
         if (sections) {
-            allViews.push(React.createElement(SectionList, {sections: items, ...params}));
+            // allViews.push(React.createElement(SectionList, {sections: items, ...params}));
+            listNode = React.createElement(SectionList, {sections: items, ...params});
         }
         else {
-            allViews.push(React.createElement(FlatList, {data: items, ...params}));
+            // allViews.push(React.createElement(FlatList, {data: items, ...params}));
+            listNode = React.createElement(FlatList, {data: items, ...params});
         }
+        allViews.push(<View style={{flex:1}}>
+            {listNode}
+            {filter && _.isEmpty(this.state.filter) && this.state.isFilterFocused && this.renderSearchOverlay()}
+        </View>);
+
 
         return <View style={[this.props.style, {flex: 1}]}>{allViews}</View>
+    }
+
+    renderSearchOverlay() {
+        return (<TouchableWithoutFeedback onPress={() => this.filterNode.blur()}>
+                <View style={{
+                    position: 'absolute', width: '100%', height: '100%', opacity: 0.4,
+                    backgroundColor: Colors.black, zIndex: 50,}} />
+            </TouchableWithoutFeedback>
+        );
     }
 
     isFiltering() {
@@ -334,6 +359,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             <View key={'searchbar_container'} style={[style]}>
 
                 <GSearchBar
+                    textInputRef={r=>this.filterNode = r}
                     // lightTheme
                     onChangeText={filter => this.setState({filter})}
                     onClearText={()=>this.setState({filter: null})}
@@ -345,7 +371,12 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                     // autoCorrect={false}
                     style={{margin: 0,}}
                     // returnKeyType={'search'}
+                    onClearText={() => {
+                        this.filterNode.blur();
+                    }}
                     value={this.state.filter}
+                    onFocus={()=>this.setState({isFilterFocused:true})}
+                    onBlur={()=>this.setState({isFilterFocused:false})}
 
                 />
             </View>
