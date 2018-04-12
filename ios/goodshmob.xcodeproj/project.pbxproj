@@ -1810,7 +1810,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 656VNMF77V;
 				FACEBOOK_APP_ID = 857429951037660;
 				FACEBOOK_DISPLAY_NAME = "release - Goodsh";
 				FACEBOOK_LOGIN_URL_SCHEME = fb857429951037660;
@@ -1853,7 +1853,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = it.goodsh.mob;
 				PRODUCT_NAME = goodshmob;
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "6aaccdd5-3ac5-4a8b-a62c-e6d7c0dfe84b";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development it.goodsh.mob";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -2221,7 +2222,7 @@
 				BUGSNAG_API_KEY = 40d9f8b35e4216c738e694e92a9a57d6;
 				BUNDLE_DISPLAY_NAME = Goodsh;
 				CODE_SIGN_ENTITLEMENTS = goodshmob/goodshmob.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Benoit Taconet (656VNMF77V)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 656VNMF77V;
@@ -2267,8 +2268,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = it.goodsh.mob;
 				PRODUCT_NAME = "goodshmob prod";
-				PROVISIONING_PROFILE = "83df9156-003a-43db-a0c3-0391f50448fc";
-				PROVISIONING_PROFILE_SPECIFIER = "match AppStore it.goodsh.mob";
+				PROVISIONING_PROFILE = "6aaccdd5-3ac5-4a8b-a62c-e6d7c0dfe84b";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development it.goodsh.mob";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Prod;
