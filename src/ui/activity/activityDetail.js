@@ -9,6 +9,7 @@ import {
     ScrollView,
     StyleSheet,
     Text,
+    Keyboard,
     TouchableOpacity,
     View
 } from 'react-native';
@@ -187,6 +188,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                     {style: {...styleMargin(0, 0)}, cardStyle: {paddingTop: 8}}
                                 )}
                                 keyExtractor={(item, index) => item.id}
+                                onScrollBeginDrag={Keyboard.dismiss}
                                 ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
                                 ListHeaderComponent={<Text style={{
                                     fontSize: 17,
