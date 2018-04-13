@@ -39,6 +39,7 @@
 		4EA38ED1EE6A4B26AFB1095C /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 962A94A2853341EDA162D07E /* Entypo.ttf */; };
 		575390B4B4614EE283AD332F /* Thonburi.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 019FA73C5E51402495A9E804 /* Thonburi.ttf */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
+		67407E6B229D482EB5E7BAB6 /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BBC72598DBE64535A4569727 /* libReactNativePermissions.a */; };
 		6FF146881FB94C1F86D374AE /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C6CC50C5AB94623BCD20FC3 /* libCodePush.a */; };
 		7263AFFB12BD424BB585C3C7 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A06B53324C984EC6B5BCC7E7 /* MaterialCommunityIcons.ttf */; };
 		72AA6A5500F047B28F3CAF40 /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B85D4761E40747519C6E5BB1 /* libRNSVG.a */; };
@@ -352,6 +353,13 @@
 			remoteGlobalIDString = E72EC1401F7ABB5A0001BC90;
 			remoteInfo = "RNDeviceInfo-tvOS";
 		};
+		D0C86CDB20810D2500F56D52 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 616378B260A74D168CC8786F /* ReactNativePermissions.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9D23B34F1C767B80008B4819;
+			remoteInfo = ReactNativePermissions;
+		};
 		D0C8F9CB1F64027400E264D4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 533444B06DC74E6F8D46DC36 /* RNI18n.xcodeproj */;
@@ -514,6 +522,7 @@
 		5C6CC50C5AB94623BCD20FC3 /* libCodePush.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libCodePush.a; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		5FF07B820F6D4DC6A0AB5289 /* libRNSpinkit.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSpinkit.a; sourceTree = "<group>"; };
+		616378B260A74D168CC8786F /* ReactNativePermissions.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ReactNativePermissions.xcodeproj; path = "../node_modules/react-native-permissions/ios/ReactNativePermissions.xcodeproj"; sourceTree = "<group>"; };
 		6188D449445D78E5D77BDD1D /* Pods-goodshmobTests.preprod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-goodshmobTests.preprod.xcconfig"; path = "Pods/Target Support Files/Pods-goodshmobTests/Pods-goodshmobTests.preprod.xcconfig"; sourceTree = "<group>"; };
 		61E1F585D8914B64BA2ED4CE /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		678FD9CE4201E629E6B7C3D1 /* libPods-goodshmobTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-goodshmobTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -542,6 +551,7 @@
 		B85D4761E40747519C6E5BB1 /* libRNSVG.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSVG.a; sourceTree = "<group>"; };
 		B90F481194EA4DD7BAA6DFA3 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		BACB85B5C915456898EE135D /* libRNMaterialShowcase.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNMaterialShowcase.a; sourceTree = "<group>"; };
+		BBC72598DBE64535A4569727 /* libReactNativePermissions.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativePermissions.a; sourceTree = "<group>"; };
 		C07AEF4AB2404ECD99E4CD2B /* Thonburi-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Thonburi-Light.ttf"; path = "../src/assets/fonts/Thonburi-Light.ttf"; sourceTree = "<group>"; };
 		C63D42D189554451A0C2113F /* SFProText-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProText-Medium.otf"; path = "../src/assets/fonts/SFProText-Medium.otf"; sourceTree = "<group>"; };
 		C86A610E451340DDB95B0EDF /* CodePush.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = CodePush.xcodeproj; path = "../node_modules/react-native-code-push/ios/CodePush.xcodeproj"; sourceTree = "<group>"; };
@@ -609,6 +619,7 @@
 				95025F9D983C4013B67F611E /* libRNFetchBlob.a in Frameworks */,
 				72AA6A5500F047B28F3CAF40 /* libRNSVG.a in Frameworks */,
 				E7C39EC7370041DC87851EE9 /* libRNSpinkit.a in Frameworks */,
+				67407E6B229D482EB5E7BAB6 /* libReactNativePermissions.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -774,6 +785,7 @@
 				EFC06FE802CC4765911E6132 /* RNFetchBlob.xcodeproj */,
 				04388142985F47AB8EF61A0D /* RNSVG.xcodeproj */,
 				8CE21DE565504438A9B350F6 /* RNSpinkit.xcodeproj */,
+				616378B260A74D168CC8786F /* ReactNativePermissions.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -869,6 +881,7 @@
 				35C24F0535F74219B08A8897 /* libRNFetchBlob.a */,
 				B85D4761E40747519C6E5BB1 /* libRNSVG.a */,
 				5FF07B820F6D4DC6A0AB5289 /* libRNSpinkit.a */,
+				BBC72598DBE64535A4569727 /* libReactNativePermissions.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -944,6 +957,14 @@
 			isa = PBXGroup;
 			children = (
 				D087DD311FF363740052651C /* MaterialShowcase.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D0C86CD820810D2400F56D52 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D0C86CDC20810D2500F56D52 /* libReactNativePermissions.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1168,6 +1189,10 @@
 				{
 					ProductGroup = D0D9D9601F5E8FAF003772C8 /* Products */;
 					ProjectRef = D0D9D95F1F5E8FAF003772C8 /* ReactNativeNavigation.xcodeproj */;
+				},
+				{
+					ProductGroup = D0C86CD820810D2400F56D52 /* Products */;
+					ProjectRef = 616378B260A74D168CC8786F /* ReactNativePermissions.xcodeproj */;
 				},
 				{
 					ProductGroup = D0DF62B31FB58C0A0000AD5E /* Products */;
@@ -1484,6 +1509,13 @@
 			remoteRef = D08C61E11FD172FA00E209D4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		D0C86CDC20810D2500F56D52 /* libReactNativePermissions.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libReactNativePermissions.a;
+			remoteRef = D0C86CDB20810D2500F56D52 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		D0C8F9CC1F64027400E264D4 /* libRNI18n.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1638,7 +1670,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\nexport DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(Debug|Debug)\"\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh";
+			shellScript = "export DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(Debug|Debug)\"\nexport NODE_BINARY=node\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh";
 		};
 		6C3FEE3CEEEA2E495DADA8B9 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1774,6 +1806,7 @@
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-spinkit/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 				);
 				INFOPLIST_FILE = goodshmob/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1784,6 +1817,7 @@
 					"\"$PODS_CONFIGURATION_BUILD_DIR/React\"",
 					"\"$PODS_CONFIGURATION_BUILD_DIR/Yoga\"",
 					"\"$PODS_CONFIGURATION_BUILD_DIR/nanopb\"",
+					"\"$(SRCROOT)/goodshmob debug\"",
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1835,6 +1869,7 @@
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-spinkit/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 				);
 				INFOPLIST_FILE = goodshmob/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2038,6 +2073,7 @@
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-spinkit/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 				);
 				INFOPLIST_FILE = goodshmob/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2144,6 +2180,7 @@
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-spinkit/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 				);
 				INFOPLIST_FILE = goodshmob/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2250,6 +2287,7 @@
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-spinkit/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 				);
 				INFOPLIST_FILE = goodshmob/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

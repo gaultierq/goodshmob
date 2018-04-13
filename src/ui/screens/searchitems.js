@@ -2,15 +2,16 @@
 
 import React from 'react';
 import {
-    ActivityIndicator,
-    Animated,
+    ActivityIndicator, Alert,
+    Animated, Linking,
     Easing,
     FlatList,
     StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
-    View
+    View,
+
 } from 'react-native';
 import * as Api from "../../managers/Api";
 import {Call} from "../../managers/Api";
@@ -27,6 +28,9 @@ import {Colors} from "../colors";
 import Geolocation from "../../managers/GeoLocation"
 import type {SearchPlacesProps} from "./searchplacesoption";
 import {SearchPlacesOption} from "./searchplacesoption";
+import Permissions from 'react-native-permissions'
+
+
 
 type SearchCategory = "consumer_goods" | "places" | "musics" | "movies";
 type SearchToken = string;
@@ -175,7 +179,25 @@ class SearchItem extends Screen<Props, State> {
                         .addQuery(longitude && {'search[lng]': longitude});
                     resolve(call);
                 }, err => {
-                    alert(err.message);
+                    console.debug("error detected", err);
+                    // if (__IS_ANDROID__ err.msg === 'No location provider available.') {
+                    // if (__IS_IOS__ && err.msg === 'User denied access to location services.') {
+                    Alert.alert(
+                        i18n.t("alert.position.title"),
+                        i18n.t("alert.position.message"),
+                        [
+                            {
+                                text: i18n.t('alert.position.button'),
+                                onPress: () => {
+                                    Permissions.openSettings();
+                                },
+                            },
+
+                        ],
+                        { cancelable: true }
+                    );
+
+
                     reject(err)
                 });
 

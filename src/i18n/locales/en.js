@@ -336,6 +336,11 @@ export default {
         delete: {
             title: "Delete",
             label: "Are you sure?"
+        },
+        position: {
+            title: "Places around me",
+            message: "To find the places around you, activate your location",
+            button: "Activate"
         }
     },
     dev: {

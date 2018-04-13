@@ -335,6 +335,11 @@ export default {
         delete: {
             title: "Enlever de mes listes",
             label: "Confirmer ?"
+        },
+        position: {
+            title: "Lieux autour de moi",
+            message: "Pour trouver les lieux autour de vous, activer la localisation",
+            button: "Activer"
         }
     },
     dev: {
