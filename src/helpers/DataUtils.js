@@ -114,8 +114,13 @@ export function doDataMergeInState(state, path, newList, options?: MergeOpts) {
 
 }
 
-export function doDataMergeInState2(state, path, newList, options?: MergeOpts) {
+export function doDataMergeInState2(state, path, newList, opt?: MergeOpts) {
 
+    const {drop, ...options} = opt;
+    if (drop) {
+        console.debug("droping data");
+        state = dotprop.set(state, path, []);
+    }
     let currentList = _.get(state, path, []);
     currentList = currentList.slice();
 
@@ -154,7 +159,7 @@ export function updateSplice3(state: any, path: string, index: number, removeCou
 
         const args = [index, removeCount];
         if (itemToAdd) args.push(itemToAdd);
-        
+
         let obj = _.set({}, path, {$splice: [args]});
         state = update(state, obj);
     }

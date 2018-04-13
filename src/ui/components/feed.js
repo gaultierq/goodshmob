@@ -542,7 +542,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     fetchIt(options?: any = {}) {
-        let {afterId, trigger} = options;
+        let {afterId, trigger, drop} = options;
         let requestName = afterId ? 'isFetchingMore' : 'isFetchingFirst';
 
         // $FlowFixMe
@@ -576,7 +576,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             }
 
             this.props
-                .dispatch(call.disptachForAction2(fetchSrc.action, {trigger, ...fetchSrc.options}))
+                .dispatch(call.disptachForAction2(fetchSrc.action, {trigger, ...fetchSrc.options, mergeOptions: {drop}}))
                 .then(({data, links})=> {
                     this.logger.debug("disptachForAction" + JSON.stringify(this.props.fetchSrc.action));
                     if (!data) {
@@ -629,7 +629,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         this.setState({isPulling: true});
 
         if (this.canFetch()) {
-            this.fetchIt()
+            this.fetchIt({drop: true})
                 .catch(err=>{console.warn("error while fetching:" + err)})
                 .then(()=>this.setState({isPulling: false}));
         }

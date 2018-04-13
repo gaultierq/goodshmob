@@ -209,9 +209,9 @@ const reducer = (() => {
 
         switch (action.type) {
             case FETCH_SAVINGS.success(): {
-                let {listId} = action.options;
+                let {listId, mergeOptions} = action.options;
                 let path = `lists.${listId}.relationships.savings.data`;
-                state = doDataMergeInState(state, path, action.payload.data);
+                state = doDataMergeInState(state, path, action.payload.data, mergeOptions);
                 break;
             }
         }

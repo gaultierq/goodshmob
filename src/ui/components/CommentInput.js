@@ -73,10 +73,10 @@ const reducer = (() => {
             case CREATE_COMMENT.success(): {
 
                 let {id, type} = action.payload.data;
-                let {activityId, activityType} = action.options;
+                let {activityId, activityType, mergeOptions} = action.options;
                 activityType = sanitizeActivityType(activityType);
                 let path = `${activityType}.${activityId}.relationships.comments.data`;
-                state = doDataMergeInState(state, path, [{id, type}], {reverse: true});
+                state = doDataMergeInState(state, path, [{id, type}], {reverse: true, ...mergeOptions});
                 break;
             }
         }

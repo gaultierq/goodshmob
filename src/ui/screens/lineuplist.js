@@ -31,6 +31,7 @@ import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
 import {STYLES} from "../UIStyles";
 import GTouchable from "../GTouchable";
 import Screen from "../components/Screen";
+import dotprop from "dot-prop-immutable"
 
 export type Props = FeedProps<List> & {
     userId: Id,
@@ -151,15 +152,16 @@ const actions = (() => {
 const reducer = (() => {
     const initialState = Immutable(Api.initialListState());
 
+    let getPath = userId => `users.${userId}.relationships.lists.data`;
+
     return (state = initialState, action = {}) => {
         switch (action.type) {
             case FETCH_LINEUPS.success(): {
-                let {userId} = action.options;
-                let path = `users.${userId}.relationships.lists.data`;
-                state = doDataMergeInState(state, path, action.payload.data);
+                let {userId, mergeOptions} = action.options;
+                let path = getPath(userId);
+                state = doDataMergeInState(state, path, action.payload.data, mergeOptions);
                 break;
             }
-
         }
 
         return state;

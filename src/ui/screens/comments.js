@@ -308,11 +308,11 @@ const reducer = (() => {
 
         switch (action.type) {
             case LOAD_COMMENTS.success(): {
-                let {activityId, activityType} = action.options;
+                let {activityId, activityType, mergeOptions} = action.options;
                 activityType = sanitizeActivityType(activityType);
                 let path = `${activityType}.${activityId}.relationships.comments.data`;
 
-                state = doDataMergeInState(state, path, action.payload.data);
+                state = doDataMergeInState(state, path, action.payload.data, mergeOptions);
                 break;
             }
 

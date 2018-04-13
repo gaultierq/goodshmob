@@ -149,9 +149,9 @@ export const reducer =  (state = {}, action = {}) => {
 
     switch (action.type) {
         case actionTypes.LOAD_FRIENDS.success(): {
-            let {userId} = action.options;
+            let {userId, mergeOptions} = action.options;
             let path = `users.${userId}.relationships.friends.data`;
-            state = doDataMergeInState(state, path, action.payload.data);
+            state = doDataMergeInState(state, path, action.payload.data, mergeOptions);
             break;
         }
     }
