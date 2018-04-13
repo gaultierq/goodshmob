@@ -10,6 +10,7 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
+    Keyboard,
     View
 } from 'react-native';
 import {TabBar, TabViewAnimated, TabViewPagerPan} from 'react-native-tab-view';
@@ -88,6 +89,7 @@ export default class SearchPage extends Component<PageProps, PageState> {
                         renderItem={this.props.renderItem}
                         keyExtractor={(item) => item.id}
                         ListFooterComponent={this.props.ListFooterComponent}
+                        onScrollBeginDrag={Keyboard.dismiss}
                         keyboardShouldPersistTaps='always'
                     />
                 }
