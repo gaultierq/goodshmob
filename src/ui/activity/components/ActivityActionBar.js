@@ -255,6 +255,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                                     itemType: item.type,
                                     item,
                                     defaultLineupId: currentGoodshboxId(),
+                                    defaultDescription: description,
                                     onCancel: cancel,
                                     onAdded: cancel,
                                 },
