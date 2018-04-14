@@ -136,6 +136,8 @@ export default class App {
         //     return DEFAULT_PROPS;
         // };
         // Getting rid of that ugly line on Android and adding some custom style to all TextInput components.
+
+
         const customTextInputProps = {
             underlineColorAndroid: 'rgba(0,0,0,0)',
             style: {
@@ -288,7 +290,7 @@ export default class App {
         //     }
         // }
 
-        this.prepareUI();
+        //this.prepareUI();
 
         console.info("== app initialized ==");
 
