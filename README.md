@@ -28,6 +28,8 @@ pod install --project-directory=ios
 
 ### Android
 
+Once I had to add local.properties in ./android with : `sdk.dir=/Users/qg/Library/Android/sdk` not sure why...
+
 In order to build the app on your Android device (without running the packager), you can use the following command:
 
 ```bash
