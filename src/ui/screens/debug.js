@@ -7,7 +7,7 @@ import {currentUser, logged} from "../../managers/CurrentUser"
 import {CheckBox} from "react-native-elements";
 import {CONFIG_SET} from "../../reducers/dataReducer";
 import Screen from "../components/Screen";
-import codePush from "react-native-code-push";
+// import codePush from "react-native-code-push";
 import Snackbar from "react-native-snackbar"
 import Config from 'react-native-config'
 import {Colors} from "../colors";
@@ -63,10 +63,7 @@ export default class DebugScreen extends Screen<Props, State> {
                         title="send storage"
                         onPress={this.copyStorage.bind(this)}
                     />
-                    <Button
-                        title="sync codepush"
-                        onPress={this.syncCodepush.bind(this)}
-                    />
+                    
                     <Button
                         title="show build information"
                         onPress={this.showBuildInfo.bind(this)}
@@ -107,16 +104,16 @@ export default class DebugScreen extends Screen<Props, State> {
         this.setState({text});
     }
 
-    syncCodepush() {
-        codePush.sync({
-                updateDialog: true,
-                installMode: codePush.InstallMode.IMMEDIATE
-            },
-            (status) => {
-                this.setState({text: `Codepush:status=${status}`});
-            }
-        );
-    }
+    // syncCodepush() {
+    //     codePush.sync({
+    //             updateDialog: true,
+    //             installMode: codePush.InstallMode.IMMEDIATE
+    //         },
+    //         (status) => {
+    //             this.setState({text: `Codepush:status=${status}`});
+    //         }
+    //     );
+    // }
 
     copyStorage() {
         this.getStorage().then(storage=> {

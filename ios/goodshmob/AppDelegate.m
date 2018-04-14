@@ -1,5 +1,4 @@
 #import "AppDelegate.h"
-#import <CodePush/CodePush.h>
 #import <React/RCTBundleURLProvider.h>
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
@@ -26,12 +25,6 @@
 {
   NSURL *jsCodeLocation;
 #ifdef DEBUG
-  //  
-#ifdef DEBUG
-    jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=true"];
-#else
-    jsCodeLocation = [CodePush bundleURL];
-#endif
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
 #else
   jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];

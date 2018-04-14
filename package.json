@@ -51,7 +51,6 @@
 		"react-native": "0.55.2",
 		"react-native-action-button": "github:gaultierq/react-native-action-button",
 		"react-native-bottomsheet": "^1.8.1",
-		"react-native-code-push": "^5.1.0-beta",
 		"react-native-config": "^0.9.1",
 		"react-native-device-info": "^0.12.1",
 		"react-native-easy-grid": "^0.1.17",
