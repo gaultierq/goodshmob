@@ -28,7 +28,8 @@ import {Colors} from "../colors";
 import Geolocation from "../../managers/GeoLocation"
 import type {SearchPlacesProps} from "./searchplacesoption";
 import {SearchPlacesOption} from "./searchplacesoption";
-import Permissions from 'react-native-permissions'
+import OpenAppSettings from 'react-native-app-settings'
+
 
 
 
@@ -189,7 +190,7 @@ class SearchItem extends Screen<Props, State> {
                             {
                                 text: i18n.t('alert.position.button'),
                                 onPress: () => {
-                                    Permissions.openSettings();
+                                    OpenAppSettings.open()
                                 },
                             },
 

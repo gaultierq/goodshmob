@@ -5406,6 +5406,10 @@ react-native-animatable@^1.2.3:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-app-settings@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-app-settings/-/react-native-app-settings-2.0.0.tgz#d2dbcf88dbb40d7261599fc373b35bd0f9fd886e"
+
 react-native-bottomsheet@^1.8.1:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/react-native-bottomsheet/-/react-native-bottomsheet-1.8.1.tgz#cf842e867863b9a35024b461f43a6b0ba5d255bb"
@@ -5536,10 +5540,6 @@ react-native-navigation@1.1.411:
   resolved "https://registry.yarnpkg.com/react-native-navigation/-/react-native-navigation-1.1.411.tgz#f31f75b4dd8860c82aee48f9f2268cb23109a8be"
   dependencies:
     lodash "4.x.x"
-
-react-native-permissions@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-1.1.1.tgz#4876004681ff8556454613d85249b01baff9b35b"
 
 react-native-popup-dialog@^0.11.46:
   version "0.11.46"
