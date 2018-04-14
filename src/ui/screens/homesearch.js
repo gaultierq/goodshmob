@@ -25,6 +25,7 @@ import GTouchable from "../GTouchable";
 import Config from 'react-native-config'
 import LineupHorizontal from "../components/LineupHorizontal";
 import {seeActivityDetails, seeList} from "../Nav";
+import LineupCellSaving from "../components/LineupCellSaving";
 
 type Props = NavigableProps & {
     token?: ?SearchToken,
