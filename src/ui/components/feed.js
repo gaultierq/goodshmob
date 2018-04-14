@@ -628,6 +628,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         if (this.state.isPulling) return;
         this.setState({isPulling: true});
 
+        this.manager.clearEvents();
         if (this.canFetch()) {
             this.fetchIt({drop: true})
                 .catch(err=>{console.warn("error while fetching:" + err)})
