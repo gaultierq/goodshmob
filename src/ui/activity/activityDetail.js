@@ -61,6 +61,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
         navBarTransparent: true,
         navBarTranslucent: true,
         navBarBackgroundColor: Colors.dirtyWhite,
+        topBarElevationShadowEnabled: false
     };
 
     static navigatorButtons = {
