@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -838,7 +839,6 @@
 				17E0B663F753463295EFB4FD /* libRNI18n.a */,
 				E175974E856F403FB8526D08 /* libRCTFBSDK.a */,
 				11ABCE0FDBAC43E2A06EB3E4 /* libRNVectorIcons.a */,
-				5C6CC50C5AB94623BCD20FC3 /* libCodePush.a */,
 				EFE82430CC8C4D96B3BE95E5 /* libRNSnackbar.a */,
 				831176C802EA4E0FBDA5CC5C /* libBugsnagReactNative.a */,
 				0F79D97351B445FE8CF44CB5 /* libRCTActionSheet.a */,
@@ -1019,8 +1019,6 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				7C18B1A907446F3764AE66C1 /* [CP] Embed Pods Frameworks */,
-				6C3FEE3CEEEA2E495DADA8B9 /* [CP] Copy Pods Resources */,
 				D087DD361FF363A20052651C /* Embed Frameworks */,
 				D0DBBED91FF5F3ED00ABBCAB /* ShellScript */,
 			);
@@ -1593,21 +1591,6 @@
 			shellPath = /bin/sh;
 			shellScript = "export DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(Debug|Debug)\"\nexport NODE_BINARY=node\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh";
 		};
-		6C3FEE3CEEEA2E495DADA8B9 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-goodshmob/Pods-goodshmob-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		6E22ED90F7CE417D00C048D7 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1624,21 +1607,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		7C18B1A907446F3764AE66C1 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-goodshmob/Pods-goodshmob-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		D0DBBED91FF5F3ED00ABBCAB /* ShellScript */ = {

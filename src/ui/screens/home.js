@@ -239,6 +239,23 @@ class HomeScreen extends Screen<Props, State> {
                     empty={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
                     initialLoaderDelay={0}
 
+                    onScroll={(e) => {
+                      const { listOffset = 0 } = this;
+                      const currentOffSetY = e.nativeEvent.contentOffset.y;
+                      const diff = currentOffSetY - listOffset;
+                      if(Math.abs(diff) > 5) {
+                        this.setState({
+                          showFloatingButton: ( diff < 0 ? true : false ),
+                         });
+                      }
+                      this.listOffset = currentOffSetY;
+                    }}
+                    onMomentumScrollEnd={(e) =>{
+                      this.setState({
+                        showFloatingButton: true,
+                       });
+                    }}
+
                     sectionMaker={(lineups)=> {
                         const goodshbox = _.head(lineups);
                         let savingCount = _.get(goodshbox, `meta.savingsCount`, null) || 0;
@@ -330,7 +347,9 @@ class HomeScreen extends Screen<Props, State> {
 
 
     displayFloatingButton() {
-        return true;
+      const { showFloatingButton = true } = this.state;
+      return showFloatingButton;
+      //return true;
     }
 
 
