@@ -183,7 +183,12 @@ export default class AskScreen extends Component<Props, State> {
         Snackbar.show({
             title: i18n.t('ask.sent'),
         });
-        this._sheet.close();
+
+        //hack: on bundled android, no timeout will crash the app
+        setTimeout(()=> {
+            this._sheet.close();
+        }, 1000)
+
         // this.props
         //     .dispatch(actions.createAsk({content}).disptachForAction2(CREATE_ASK))
         //     .then(()=> {
