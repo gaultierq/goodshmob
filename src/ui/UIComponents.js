@@ -1,13 +1,15 @@
 // @flow
 
 import React, {Component} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, LayoutAnimation, StyleSheet, Text, View} from 'react-native';
 import {Colors} from "./colors";
 import User from "react-native-firebase/lib/modules/auth/user";
 import {CachedImage} from "react-native-img-cache";
 import GTouchable from "./GTouchable";
 import {BACKGROUND_COLOR, STYLES} from "./UIStyles";
 import Spinner from 'react-native-spinkit';
+import type {RequestState} from "../types";
+
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
@@ -92,3 +94,42 @@ export const FullScreenLoader = props => (<View style={{
         type={"WanderingCubes"}
         color={Colors.green}/>
 </View>);
+
+
+
+export function floatingButtonScrollListener() {
+    if (typeof this.state.isActionButtonVisible !== 'boolean') throw "bad usage";
+    let that = this;
+    return function() {
+        if (that.floatingButtonScrollListener) return that.floatingButtonScrollListener;
+        var _listViewOffset;
+        return (that.floatingButtonScrollListener = function(event)  {
+
+            // Check if the user is scrolling up or down by confronting the new scroll position with your own one
+            const currentOffset = event.nativeEvent.contentOffset.y
+
+            const diff = currentOffset - _listViewOffset;
+            if (Math.abs(diff) < 100) return;
+
+            const direction = (currentOffset > 0 && diff > 0) ? 'down' : 'up'
+
+            // Simple fade-in / fade-out animation
+            const CustomLayoutLinear = {
+                duration: 200,
+                create: { type: LayoutAnimation.Types.linear, property: LayoutAnimation.Properties.opacity },
+                update: { type: LayoutAnimation.Types.linear, property: LayoutAnimation.Properties.opacity },
+                delete: { type: LayoutAnimation.Types.linear, property: LayoutAnimation.Properties.opacity }
+            }
+
+            // If the user is scrolling down (and the action-button is still visible) hide it
+            const isActionButtonVisible = direction === 'up'
+            if (isActionButtonVisible !== that.state.isActionButtonVisible) {
+                LayoutAnimation.configureNext(CustomLayoutLinear)
+                that.setState({ isActionButtonVisible })
+            }
+            // Update your scroll position
+            _listViewOffset = currentOffset
+        })
+    }();
+
+}

@@ -5,7 +5,7 @@ import {ActivityIndicator, FlatList, Platform, RefreshControl, TouchableOpacity,
 import {connect} from "react-redux";
 import {currentUser, currentUserId, logged} from "../../managers/CurrentUser"
 import ActivityCell from "../activity/components/ActivityCell";
-import {activityFeedProps} from "../UIComponents"
+import {activityFeedProps, floatingButtonScrollListener} from "../UIComponents"
 import Feed from "../components/feed"
 import type {List, NavigableProps} from "../../types";
 import ActionButton from 'react-native-action-button';
@@ -25,9 +25,7 @@ import ShareButton from "../components/ShareButton";
 type Props = NavigableProps;
 
 type State = {
-    isFetchingFirst?: boolean,
-    isFetchingMore?: boolean,
-    isPulling?: boolean
+    isActionButtonVisible: boolean
 };
 
 @logged
@@ -61,7 +59,9 @@ class NetworkScreen extends Screen<Props, State> {
         navBarBackgroundColor: Colors.blue
     };
 
-    state = {};
+    state = {
+        isActionButtonVisible: true
+    };
 
     constructor(props){
         super(props);
@@ -191,14 +191,15 @@ class NetworkScreen extends Screen<Props, State> {
                     empty={<View><Text style={STYLES.empty_message}>{i18n.t('community_screen.empty_screen')}</Text><ShareButton text={i18n.t('actions.invite')}/></View>}
                     {...activityFeedProps()}
                     initialLoaderDelay={FEED_INITIAL_LOADER_DURATION}
+                    onScroll={floatingButtonScrollListener.call(this)}
                 />
 
 
-                <ActionButton
+                {this.state.isActionButtonVisible && <ActionButton
                     icon={<Icon name="comment-question-outline" size={30} color={Colors.white} style={{paddingTop: 5}}/>}
                     buttonColor={Colors.green}
                     onPress={() => { this.onFloatingButtonPressed() }}
-                />
+                />}
 
             </View>
         );

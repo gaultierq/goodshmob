@@ -441,6 +441,9 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     _handleScroll = (event: Object) => {
+        if (this.props.onScroll) {
+            this.props.onScroll(event)
+        }
         let lastEvent = event.nativeEvent;
         this.lastEvent = lastEvent;
 

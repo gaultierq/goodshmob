@@ -13,7 +13,7 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    View
+    View,
 } from 'react-native';
 
 import {connect} from "react-redux";
@@ -54,6 +54,7 @@ import LineupHorizontal, {LineupH1} from "../components/LineupHorizontal";
 import {seeList} from "../Nav";
 import {seeActivityDetails} from "../Nav";
 import UserLineups from "./userLineups";
+import {floatingButtonScrollListener} from "../UIComponents";
 
 
 type Props = {
@@ -62,7 +63,8 @@ type Props = {
 };
 
 type State = {
-    focusedSaving?: Saving
+    focusedSaving?: Saving,
+    isActionButtonVisible: boolean
 };
 
 @logged
@@ -93,6 +95,11 @@ class HomeScreen extends Screen<Props, State> {
             // }
         ],
     };
+
+    state = {
+        focusedSaving: false,
+        isActionButtonVisible: true
+    }
 
     static navigatorStyle = {
         navBarNoBorder: true,
@@ -220,6 +227,8 @@ class HomeScreen extends Screen<Props, State> {
         return true;
     }
 
+    // _onScroll = floatingButtonScrollListener.call(this);
+
     render() {
 
         const userId = currentUserId();
@@ -238,6 +247,7 @@ class HomeScreen extends Screen<Props, State> {
                     navigator={navigator}
                     empty={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
                     initialLoaderDelay={0}
+                    onScroll={floatingButtonScrollListener.call(this)}
 
                     sectionMaker={(lineups)=> {
                         const goodshbox = _.head(lineups);
@@ -268,7 +278,9 @@ class HomeScreen extends Screen<Props, State> {
                 />
 
 
-                {this.displayFloatingButton() && this.renderFloatingButton()}
+
+
+                {this.state.isActionButtonVisible && this.renderFloatingButton()}
             </View>
         );
     }
@@ -326,11 +338,6 @@ class HomeScreen extends Screen<Props, State> {
                 buttonTextStyle={{fontSize: 26, fontWeight: 'bold', marginTop: -5}}
             />
         );
-    }
-
-
-    displayFloatingButton() {
-        return true;
     }
 
 
