@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react';
-import {Image, LayoutAnimation, StyleSheet, Text, View} from 'react-native';
+import {Image, LayoutAnimation, StyleSheet, Text, View, UIManager} from 'react-native';
 import {Colors} from "./colors";
 import User from "react-native-firebase/lib/modules/auth/user";
 import {CachedImage} from "react-native-img-cache";
@@ -103,6 +103,11 @@ export function floatingButtonScrollListener() {
     return function() {
         if (that.floatingButtonScrollListener) return that.floatingButtonScrollListener;
         var _listViewOffset;
+
+        if (__IS_ANDROID__) {
+            UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+        }
+
         return (that.floatingButtonScrollListener = function(event)  {
 
             // Check if the user is scrolling up or down by confronting the new scroll position with your own one
