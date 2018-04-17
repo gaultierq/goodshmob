@@ -3,7 +3,7 @@
 import React, {Component} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {Colors} from "./colors";
-import User from "react-native-firebase/lib/modules/auth/User";
+import User from "react-native-firebase/lib/modules/auth/user";
 import {CachedImage} from "react-native-img-cache";
 import GTouchable from "./GTouchable";
 import {BACKGROUND_COLOR, STYLES} from "./UIStyles";
