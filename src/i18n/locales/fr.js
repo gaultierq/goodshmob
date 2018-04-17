@@ -20,10 +20,10 @@ export default {
         },
         search: {
             placeholder: "##Rechercher",
-            empty: "Ach, pas de résultat.",
+            empty: "Pas de résultat.",
         },
         goodsh : {
-            title: "GoodshBox"
+            title: "A ranger plus tard"
         },
         mine : {
             title: "Mes listes"
@@ -42,7 +42,7 @@ export default {
     },
     home: {
         wizard: {
-            action_button_label : "Enregistrer une recommandation qu'on m'a faite.",
+            action_button_label : "Ajouter un coup de coeur ou une envie.",
             action_button_body : "Livre, film, série, resto, musique...",
         }
     },
@@ -231,7 +231,7 @@ export default {
         }
     },
     loadmore: "Chargement",
-    send_message: "Envoyé via Goodsh : l'app Mémo pour noter et toujours retrouver toutes les recommandations qu'on me fait.",
+    send_message: "Envoyé via Goodsh : l'app où tu stockes tout ce que tu aimes.",
     send_object: "te recommande %{what} - via Goodsh",
     goodsh_url: "https:\/\/goodsh.it\/",
     friends: {
@@ -258,7 +258,7 @@ export default {
         }
     },
     empty: {
-        lineup: "Ach, cette liste est vide\n c'est bien dommage !"
+        lineup: "Cette liste est vide\n c'est bien dommage !"
     },
     activity_action_bar: {
         goodsh_deleted: "Goodsh supprimé",
