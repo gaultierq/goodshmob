@@ -39,7 +39,6 @@
 		54A221EE91544867BE2B7451 /* libRNOpenAppSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F2001FE082D1450CB20A698F /* libRNOpenAppSettings.a */; };
 		575390B4B4614EE283AD332F /* Thonburi.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 019FA73C5E51402495A9E804 /* Thonburi.ttf */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
-		6FF146881FB94C1F86D374AE /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C6CC50C5AB94623BCD20FC3 /* libCodePush.a */; };
 		7263AFFB12BD424BB585C3C7 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A06B53324C984EC6B5BCC7E7 /* MaterialCommunityIcons.ttf */; };
 		72AA6A5500F047B28F3CAF40 /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B85D4761E40747519C6E5BB1 /* libRNSVG.a */; };
 		7AA511ECD6604F458AF7A3BD /* SFProText-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = FF95AED0484E442B85B9D1D0 /* SFProText-LightItalic.otf */; };
@@ -253,20 +252,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
-		};
-		D00140BF1FAD8D3C002D9A3C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C86A610E451340DDB95B0EDF /* CodePush.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 134814201AA4EA6300B7C361;
-			remoteInfo = CodePush;
-		};
-		D00140C11FAD8D3C002D9A3C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C86A610E451340DDB95B0EDF /* CodePush.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F886647B1F4ADB500036D01B;
-			remoteInfo = "CodePush-tvOS";
 		};
 		D00140C41FAD8D3C002D9A3C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -518,7 +503,6 @@
 		533444B06DC74E6F8D46DC36 /* RNI18n.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNI18n.xcodeproj; path = "../node_modules/react-native-i18n/ios/RNI18n.xcodeproj"; sourceTree = "<group>"; };
 		535177D01D674E02A0CCBA0F /* Chivo-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Chivo-Bold.otf"; path = "../src/assets/fonts/Chivo-Bold.otf"; sourceTree = "<group>"; };
 		55991D2F28CB438AB5DCC92F /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
-		5C6CC50C5AB94623BCD20FC3 /* libCodePush.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libCodePush.a; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		5FF07B820F6D4DC6A0AB5289 /* libRNSpinkit.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSpinkit.a; sourceTree = "<group>"; };
 		6188D449445D78E5D77BDD1D /* Pods-goodshmobTests.preprod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-goodshmobTests.preprod.xcconfig"; path = "Pods/Target Support Files/Pods-goodshmobTests/Pods-goodshmobTests.preprod.xcconfig"; sourceTree = "<group>"; };
@@ -551,7 +535,6 @@
 		BACB85B5C915456898EE135D /* libRNMaterialShowcase.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNMaterialShowcase.a; sourceTree = "<group>"; };
 		C07AEF4AB2404ECD99E4CD2B /* Thonburi-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Thonburi-Light.ttf"; path = "../src/assets/fonts/Thonburi-Light.ttf"; sourceTree = "<group>"; };
 		C63D42D189554451A0C2113F /* SFProText-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProText-Medium.otf"; path = "../src/assets/fonts/SFProText-Medium.otf"; sourceTree = "<group>"; };
-		C86A610E451340DDB95B0EDF /* CodePush.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = CodePush.xcodeproj; path = "../node_modules/react-native-code-push/ios/CodePush.xcodeproj"; sourceTree = "<group>"; };
 		C9005B048F024717B4913BB2 /* RCTFBSDK.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTFBSDK.xcodeproj; path = "../node_modules/react-native-fbsdk/ios/RCTFBSDK.xcodeproj"; sourceTree = "<group>"; };
 		CB77874F92F7495C904FBF9C /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
 		CBBBED14AB462FFD29D4AEC4 /* Pods-goodshmob.dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-goodshmob.dev.xcconfig"; path = "Pods/Target Support Files/Pods-goodshmob/Pods-goodshmob.dev.xcconfig"; sourceTree = "<group>"; };
@@ -604,7 +587,6 @@
 				0B84AF2526274756A819CC20 /* libRCTFBSDK.a in Frameworks */,
 				1D3F9667D1C64B33906D46B8 /* libRNVectorIcons.a in Frameworks */,
 				D0DBC26E1FF6019F00ABBCAB /* Crashlytics.framework in Frameworks */,
-				6FF146881FB94C1F86D374AE /* libCodePush.a in Frameworks */,
 				31EA5D451C2A4277A2EB86C6 /* libz.tbd in Frameworks */,
 				39C744EDF9934CF689082349 /* libRNSnackbar.a in Frameworks */,
 				3FB44BA04C984F16A6C431B6 /* libBugsnagReactNative.a in Frameworks */,
@@ -774,7 +756,6 @@
 				533444B06DC74E6F8D46DC36 /* RNI18n.xcodeproj */,
 				C9005B048F024717B4913BB2 /* RCTFBSDK.xcodeproj */,
 				CB77874F92F7495C904FBF9C /* RNVectorIcons.xcodeproj */,
-				C86A610E451340DDB95B0EDF /* CodePush.xcodeproj */,
 				982B8A7E4D3D47A0B8DEBDC1 /* RNSnackbar.xcodeproj */,
 				4E59DEDEF5C84813A783DED1 /* BugsnagReactNative.xcodeproj */,
 				0D6221C6705E42CF9C555171 /* ReactNativeGlobalProps.xcodeproj */,
@@ -890,15 +871,6 @@
 			isa = PBXGroup;
 			children = (
 				D00140C51FAD8D3C002D9A3C /* libRNSnackbar.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		D00140BB1FAD8D3C002D9A3C /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				D00140C01FAD8D3C002D9A3C /* libCodePush.a */,
-				D00140C21FAD8D3C002D9A3C /* libCodePush.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1125,10 +1097,6 @@
 				{
 					ProductGroup = D00140DA1FAD8D3C002D9A3C /* Products */;
 					ProjectRef = 4E59DEDEF5C84813A783DED1 /* BugsnagReactNative.xcodeproj */;
-				},
-				{
-					ProductGroup = D00140BB1FAD8D3C002D9A3C /* Products */;
-					ProjectRef = C86A610E451340DDB95B0EDF /* CodePush.xcodeproj */;
 				},
 				{
 					ProductGroup = D087DD2D1FF363740052651C /* Products */;
@@ -1416,20 +1384,6 @@
 			fileType = archive.ar;
 			path = libRCTText.a;
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D00140C01FAD8D3C002D9A3C /* libCodePush.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libCodePush.a;
-			remoteRef = D00140BF1FAD8D3C002D9A3C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D00140C21FAD8D3C002D9A3C /* libCodePush.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libCodePush.a;
-			remoteRef = D00140C11FAD8D3C002D9A3C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		D00140C51FAD8D3C002D9A3C /* libRNSnackbar.a */ = {
@@ -1794,7 +1748,6 @@
 					"$(SRCROOT)/../node_modules/react-native-i18n/ios",
 					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
-					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 					"$(SRCROOT)/../node_modules/react-native-snackbar/ios",
 					"$(SRCROOT)/../node_modules/bugsnag-react-native/cocoa/**",
 					"$(SRCROOT)/../node_modules/react-native-global-props/ios/ReactNativeGlobalProps/**",
@@ -1856,7 +1809,6 @@
 					"$(SRCROOT)/../node_modules/react-native-i18n/ios",
 					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
-					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 					"$(SRCROOT)/../node_modules/react-native-snackbar/ios",
 					"$(SRCROOT)/../node_modules/bugsnag-react-native/cocoa/**",
 					"$(SRCROOT)/../node_modules/react-native-global-props/ios/ReactNativeGlobalProps/**",
@@ -2060,7 +2012,6 @@
 					"$(SRCROOT)/../node_modules/react-native-i18n/ios",
 					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
-					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 					"$(SRCROOT)/../node_modules/react-native-snackbar/ios",
 					"$(SRCROOT)/../node_modules/bugsnag-react-native/cocoa/**",
 					"$(SRCROOT)/../node_modules/react-native-global-props/ios/ReactNativeGlobalProps/**",
@@ -2167,7 +2118,6 @@
 					"$(SRCROOT)/../node_modules/react-native-i18n/ios",
 					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
-					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 					"$(SRCROOT)/../node_modules/react-native-snackbar/ios",
 					"$(SRCROOT)/../node_modules/bugsnag-react-native/cocoa/**",
 					"$(SRCROOT)/../node_modules/react-native-global-props/ios/ReactNativeGlobalProps/**",
@@ -2274,7 +2224,6 @@
 					"$(SRCROOT)/../node_modules/react-native-i18n/ios",
 					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
-					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 					"$(SRCROOT)/../node_modules/react-native-snackbar/ios",
 					"$(SRCROOT)/../node_modules/bugsnag-react-native/cocoa/**",
 					"$(SRCROOT)/../node_modules/react-native-global-props/ios/ReactNativeGlobalProps/**",

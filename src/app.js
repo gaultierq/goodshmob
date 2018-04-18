@@ -109,11 +109,11 @@ export default class App {
             }
         });
 
-        globalProps.setCustomView({
-            style: {
-                backgroundColor: 'transparent'
-            }
-        });
+        // globalProps.setCustomView({
+        //     style: {
+        //         backgroundColor: 'transparent'
+        //     }
+        // });
 
         globalProps.setCustomTouchableOpacity({
             activeOpacity: 0.8
@@ -136,6 +136,8 @@ export default class App {
         //     return DEFAULT_PROPS;
         // };
         // Getting rid of that ugly line on Android and adding some custom style to all TextInput components.
+
+
         const customTextInputProps = {
             underlineColorAndroid: 'rgba(0,0,0,0)',
             style: {

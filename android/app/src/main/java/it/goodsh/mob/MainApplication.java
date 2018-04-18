@@ -26,7 +26,6 @@ import ui.taptargetview.RNTapTargetViewPackage;
 
 import com.bugsnag.BugsnagReactNative;
 import com.azendoo.reactnativesnackbar.SnackbarPackage;
-import com.microsoft.codepush.react.CodePush;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
@@ -71,7 +70,6 @@ public class MainApplication extends NavigationApplication implements ReactAppli
             new RNFirebaseMessagingPackage(),
             BugsnagReactNative.getPackage(),
             new SnackbarPackage(),
-            new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey), getApplicationContext(), BuildConfig.DEBUG),
             new VectorIconsPackage(),
             new RNI18nPackage(),
             new FBSDKPackage(mCallbackManager)
@@ -83,10 +81,10 @@ public class MainApplication extends NavigationApplication implements ReactAppli
 //    return mReactNativeHost;
 //  }
 
-  @Override
-  public String getJSBundleFile() {
-    return CodePush.getJSBundleFile();
-  }
+//  @Override
+//  public String getJSBundleFile() {
+//    return CodePush.getJSBundleFile();
+//  }
 
   @Override
   public void onCreate() {
