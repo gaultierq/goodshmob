@@ -6,6 +6,7 @@ import NavManager from "./NavManager";
 import {isLogged} from "./CurrentUser";
 import type { Notification, NotificationOpen } from 'react-native-firebase';
 
+
 let handleNotif = function (notif) {
     if (!__WITH_NOTIFICATIONS__) return;
     if (!notif) return
@@ -61,6 +62,14 @@ export async function load() {
     //android: receiving notification when app in foreground
     firebase.notifications().onNotification((notification: Notification) => {
         console.log('onNotification', notification)
+        Navigation.showInAppNotification({
+            screen: "goodsh.InAppNotif", // unique ID registered with Navigation.registerScreen
+            passProps: {
+                text: _.get(notification, '_title'),
+                deeplink: _.get(notification, '_data.deeplink')
+            }, // simple serializable object that will pass as props to the in-app notification (optional)
+            autoDismissTimerSec: 3 // auto dismiss notification in seconds
+        })
         //handleNotif(notification)
     });
 
