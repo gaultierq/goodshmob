@@ -21,6 +21,7 @@ import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import io.fabric.sdk.android.Fabric;
 import io.invertase.firebase.RNFirebasePackage;
+import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import ui.taptargetview.RNTapTargetViewPackage;
 
@@ -67,6 +68,7 @@ public class MainApplication extends NavigationApplication implements ReactAppli
             new ReactNativeConfigPackage(),
             new RNDeviceInfo(),
             new RNFirebasePackage(),
+            new RNFirebaseNotificationsPackage(),
             new RNFirebaseMessagingPackage(),
             BugsnagReactNative.getPackage(),
             new SnackbarPackage(),

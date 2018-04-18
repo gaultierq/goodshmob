@@ -41,19 +41,16 @@
           <meta-data android:name="com.bugsnag.android.API_KEY"
              android:value="@string/bugsnag_api_key"/>
 
-        <service
-            android:name="io.invertase.firebase.messaging.MessagingService"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-        <service android:name="io.invertase.firebase.messaging.InstanceIdService" android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-            </intent-filter>
-        </service>
+          <service android:name="io.invertase.firebase.messaging.RNFirebaseMessagingService">
+    <intent-filter>
+      <action android:name="com.google.firebase.MESSAGING_EVENT" />
+    </intent-filter>
+  </service>
+  <service android:name="io.invertase.firebase.messaging.RNFirebaseInstanceIdService">
+    <intent-filter>
+      <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+    </intent-filter>
+  </service>
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="f32b1bdd9c41d0afb6bba08dd6085586ac9fee12" />

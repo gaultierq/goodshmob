@@ -545,10 +545,6 @@ amdefine@>=0.0.4:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
 
-andlog@^1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/andlog/-/andlog-1.0.1.tgz#afc6512b6e809f5bba63c6646d8685ccead19f11"
-
 ansi-escapes@^1.1.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/ansi-escapes/-/ansi-escapes-1.4.0.tgz#d3a8a83b319aa67793662b13e761c7911422306e"
@@ -1606,12 +1602,6 @@ boom@5.x.x:
   resolved "https://registry.yarnpkg.com/boom/-/boom-5.2.0.tgz#5dd9da6ee3a5f302077436290cb717d3f4a54e02"
   dependencies:
     hoek "4.x.x"
-
-bows@^1.6.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/bows/-/bows-1.7.0.tgz#a3598ed9cef61a7a0cab1a7240f291654865ec76"
-  dependencies:
-    andlog "^1.0.0"
 
 bplist-creator@0.0.7:
   version "0.0.7"
@@ -5236,6 +5226,10 @@ posix-character-classes@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/posix-character-classes/-/posix-character-classes-0.1.1.tgz#01eac0fe3b5af71a2a6c02feabb8c1fef7e00eab"
 
+postinstall-build@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/postinstall-build/-/postinstall-build-5.0.1.tgz#b917a9079b26178d9a24af5a5cd8cb4a991d11b9"
+
 prelude-ls@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.1.2.tgz#21932a549f5e52ffd9a827f570e04be62a97da54"
@@ -5295,7 +5289,7 @@ prop-types@15.5.10:
     fbjs "^0.8.9"
     loose-envify "^1.3.1"
 
-prop-types@^15.5.10, prop-types@^15.5.8, prop-types@^15.6.0:
+prop-types@^15.5.10, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.1:
   version "15.6.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.1.tgz#36644453564255ddda391191fb3a125cbdf654ca"
   dependencies:
@@ -5456,13 +5450,13 @@ react-native-fetch-polyfill@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/react-native-fetch-polyfill/-/react-native-fetch-polyfill-1.1.2.tgz#256b5a0abd78cc4992f7a7cf82543da2f2124a73"
 
-react-native-firebase@3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/react-native-firebase/-/react-native-firebase-3.1.0.tgz#0391b7bd6ca5c9b68e5a54a9e87ad5ea5c8dd089"
+react-native-firebase@^4.0.4:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-firebase/-/react-native-firebase-4.0.4.tgz#09f142bcb229ab7cb0c8a706974123ee850f0e09"
   dependencies:
-    bows "^1.6.0"
     opencollective "^1.0.3"
-    prop-types "^15.6.0"
+    postinstall-build "^5.0.1"
+    prop-types "^15.6.1"
 
 react-native-global-props@^1.1.3:
   version "1.1.3"

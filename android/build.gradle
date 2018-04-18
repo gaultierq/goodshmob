@@ -3,9 +3,10 @@
 buildscript {
     repositories {
         jcenter()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.1.0'
         classpath 'com.google.gms:google-services:3.1.1'
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -30,14 +31,14 @@ allprojects {
     }
 }
 
-//https://github.com/oblador/react-native-keychain/issues/68#issuecomment-304836725
-subprojects {
-    afterEvaluate {project ->
-        if (project.hasProperty("android")) {
-            android {
-                compileSdkVersion 25
-                buildToolsVersion '25.0.1'
-            }
-        }
-    }
-}
+// //https://github.com/oblador/react-native-keychain/issues/68#issuecomment-304836725
+// subprojects {
+//     afterEvaluate {project ->
+//         if (project.hasProperty("android")) {
+//             android {
+//                 compileSdkVersion 25
+//                 buildToolsVersion '25.0.1'
+//             }
+//         }
+//     }
+// }

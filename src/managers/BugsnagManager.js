@@ -1,6 +1,6 @@
 // @flow
 import {Navigation} from 'react-native-navigation';
-import User from "react-native-firebase/lib/modules/auth/user";
+import User from "react-native-firebase/lib/modules/auth/User";
 import {Client} from 'bugsnag-react-native';
 
 // export const DEEPLINK_OPEN_SCREEN_IN_MODAL = 'DEEPLINK_OPEN_SCREEN_IN_MODAL';
