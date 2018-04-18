@@ -5541,10 +5541,6 @@ react-native-popup-menu@^0.9.0:
   version "0.9.1"
   resolved "https://registry.yarnpkg.com/react-native-popup-menu/-/react-native-popup-menu-0.9.1.tgz#9d6e3619aff437718e6baa9c48a277577bbeea00"
 
-react-native-read-more-text@^1.x:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/react-native-read-more-text/-/react-native-read-more-text-1.0.0.tgz#467c1e72bb5607c6881a5f480ccad46d9bc27a43"
-
 react-native-root-siblings@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/react-native-root-siblings/-/react-native-root-siblings-2.2.0.tgz#57bb2f7b0a5399c48e14b36d5f3ae7015cd3fb95"
