@@ -8,8 +8,17 @@ import type { Notification, NotificationOpen } from 'react-native-firebase';
 
 let handleNotif = function (notif) {
     if (!__WITH_NOTIFICATIONS__) return;
-    console.log("app opened from notification:" + JSON.stringify(notif));
-    if (!notif) return;
+    if (!notif) return
+    if (!notif._data) {
+        console.warn("no data found on notification", notif)
+        return
+    }
+    if (notif._data.deeplink) {
+        NavManager.goToDeeplink(notif._data.deeplink);
+    }
+    else {
+        console.warn("no deeplink found on notification", notif)
+    }
 
     // let deeplink = notif.deeplink;
     //test
@@ -33,7 +42,7 @@ export async function load() {
         return
     }
     console.info("fcm:load");
-    
+
 
     let messaging = firebase.messaging();
 
@@ -41,17 +50,18 @@ export async function load() {
         console.info("fcm:token="+token);
     }, (err) => console.log(err));
 
-    messaging.onMessage((message)=>console.log("message received from fcm: "+ JSON.stringify(message)));
+    //messaging.onMessage((message)=>console.log("message received from fcm: "+ JSON.stringify(message)));
 
 
     firebase.notifications().getInitialNotification().then((notificationOpen: NotificationOpen)=> {
         console.log('getInitialNotification', notificationOpen)
     })
-    
+
 
     //android: receiving notification when app in foreground
     firebase.notifications().onNotification((notification: Notification) => {
         console.log('onNotification', notification)
+        //handleNotif(notification)
     });
 
     firebase.notifications().onNotificationDisplayed((notification: Notification) => {
@@ -60,11 +70,11 @@ export async function load() {
 
     //android: triggered when app opening from notification
     firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
-        // // Get the action triggered by the notification being opened
-        // const action = notificationOpen.action;
-        // // Get information about the notification that was opened
-        // const notification: Notification = notificationOpen.notification;
         console.log('onNotificationOpened', notificationOpen)
+        if (notificationOpen) {
+            let notif = notificationOpen.notification
+            handleNotif(notif)
+        }
     });
 
 
@@ -76,4 +86,30 @@ export async function load() {
     //     handleNotif({deeplink: "http://goodshit.io/lists/37e67b05-c86c-4aeb-b3af-bf1c34862cd0"});
     // }, 2000);
 }
+
+
+let onNotificationOpenedExample = { action: 'android.intent.action.VIEW',
+    notification:
+        {
+            _android:
+                { _notification: '[Circular]',
+                    _actions: [],
+                    _people: [],
+                    _smallIcon: { icon: 'ic_launcher' }
+                },
+            _ios: { _notification: '[Circular]', _attachments: [] },
+            _body: undefined,
+            _data:
+                { comment_content: 'Weess',
+                    deeplink: 'https://goodshitapp-staging.herokuapp.com/savings/7af4395f-048d-49a5-8b74-26c6b377c8fc/comments',
+                    sender_full_name: 'Benoit Taconet',
+                    item_title: 'Règlement de comptes à O.K. Corral [Blu-ray]'
+                },
+            _notificationId: '0:1524059133511218%54aee52c54aee52c',
+            _sound: undefined,
+            _subtitle: undefined,
+            _title: undefined
+        },
+    results: undefined
+};
 
