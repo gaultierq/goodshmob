@@ -11,14 +11,14 @@ export function fetchMyNetwork() {
     return new Api.Call()
         .withMethod('GET')
         .withRoute("activities")
-        .addQuery({include: "user,resource,target"});
+        .addQuery({include: "user,resource,target,comments"});
 }
 
 export function fetchUserNetwork(userId: Id) {
     return new Api.Call()
         .withMethod('GET')
         .withRoute(`users/${userId}/activities`)
-        .addQuery({include: "user,resource,target"});
+        .addQuery({include: "user,resource,target,comments"});
 }
 
 export const reducer = (() => {

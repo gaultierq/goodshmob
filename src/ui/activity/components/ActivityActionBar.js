@@ -78,7 +78,8 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
         switch(action) {
             case 'comment':
-                let commentsCount = activity.comments ? activity.comments.length : 0;
+                // let commentsCount = activity.comments ? activity.comments.length : 0;
+                let commentsCount = _.get(activity, 'meta.commentsCount',  0);
                 let pendingCount = _.filter(this.props.pending[CREATE_COMMENT], (o) => o.payload.activityId === activity.id).length;
 
                 commentsCount += pendingCount;
