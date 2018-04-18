@@ -27,8 +27,9 @@ export default class LineupCellSaving extends React.PureComponent<Props, State> 
         cell: {
             height: DIM,
             width: DIM,
-            borderColor: Colors.greyish,
+
             borderRadius: 4,
+            borderWidth: StyleSheet.hairlineWidth
         }
     });
 
@@ -40,12 +41,12 @@ export default class LineupCellSaving extends React.PureComponent<Props, State> 
             return <CachedImage
                 source={{uri: image}}
                 resizeMode="cover"
-                style={[LineupCellSaving.styles.cell, {borderWidth: StyleSheet.hairlineWidth},this.props.style, ]}
+                style={[LineupCellSaving.styles.cell, {borderColor: Colors.greyish}, this.props.style, ]}
             />
         }
         else {
             return (
-                <View style={[LineupCellSaving.styles.cell, {opacity: 0.3, backgroundColor: Colors.grey3/*this.state.colors[index]*/}]}/>
+                <View style={[LineupCellSaving.styles.cell, {opacity: 0.3, backgroundColor: Colors.grey3, borderColor: Colors.brownishGrey}]}/>
             )
         }
     }
