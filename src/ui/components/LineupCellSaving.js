@@ -29,7 +29,6 @@ export default class LineupCellSaving extends React.PureComponent<Props, State> 
             width: DIM,
             borderColor: Colors.greyish,
             borderRadius: 4,
-            marginRight: 10, //FIXME: replace with ItemSepartor when fixed by react
         }
     });
 
