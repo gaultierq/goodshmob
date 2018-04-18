@@ -150,16 +150,18 @@ class CommentsScreen extends Screen<Props, State> {
             // skipLineup={this.props.skipLineup}
             navigator={this.props.navigator}
             descriptionNumberOfLines={8}
-            style={{
-                ...styleMargin(0, 0),
-            }}
+            // style={{
+                // ...styleMargin(0, 0),
+                // backgroundColor: 'green'
+            // }}
             descriptionContainerStyle={{
                 backgroundColor: 'white',
                 borderRadius: 6,
                 padding: 6,
+                paddingRight: 18,
                 paddingHorizontal: 10,
                 marginLeft: 36,
-                marginRight: 4,
+                marginRight: 14,
                 marginTop: 4,
                 marginBottom: 8,
                 flex: 0
