@@ -109,11 +109,11 @@ export default class App {
             }
         });
 
-        globalProps.setCustomView({
-            style: {
-                backgroundColor: 'transparent'
-            }
-        });
+        // globalProps.setCustomView({
+        //     style: {
+        //         backgroundColor: 'transparent'
+        //     }
+        // });
 
         globalProps.setCustomTouchableOpacity({
             activeOpacity: 0.8
@@ -290,7 +290,7 @@ export default class App {
         //     }
         // }
 
-        //this.prepareUI();
+        this.prepareUI();
 
         console.info("== app initialized ==");
 
