@@ -39,7 +39,7 @@ export default class TestScreen extends Component<Props, State> {
                 this.props.navigator.showInAppNotification({
                     screen: "goodsh.InAppNotif", // unique ID registered with Navigation.registerScreen
                     passProps: {
-                        text: 'hi there! hi there!hi there!hi there!hi there!hi there!hi there!hi there!hi there!hi there!'
+                        text: 'hi there!'
                     }, // simple serializable object that will pass as props to the in-app notification (optional)
                     autoDismissTimerSec: 30 // auto dismiss notification in seconds
                 })
