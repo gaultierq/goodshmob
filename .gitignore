@@ -82,3 +82,4 @@ ios-release.bundle.map
 ios-release.bundle.meta
 
 .env.old
+ios/goodshmob/GoogleService-Info.plist
