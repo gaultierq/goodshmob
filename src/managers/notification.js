@@ -56,6 +56,7 @@ export async function load() {
 
     firebase.notifications().getInitialNotification().then((notificationOpen: NotificationOpen)=> {
         console.log('getInitialNotification', notificationOpen)
+        if (notificationOpen) handleNotif(notificationOpen.notification)
     })
 
 
@@ -80,10 +81,7 @@ export async function load() {
     //android: triggered when app opening from notification
     firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
         console.log('onNotificationOpened', notificationOpen)
-        if (notificationOpen) {
-            let notif = notificationOpen.notification
-            handleNotif(notif)
-        }
+        if (notificationOpen) handleNotif(notificationOpen.notification)
     });
 
 
