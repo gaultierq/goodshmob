@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -581,6 +582,8 @@
 		CB77874F92F7495C904FBF9C /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
 		CBBBED14AB462FFD29D4AEC4 /* Pods-goodshmob.dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-goodshmob.dev.xcconfig"; path = "Pods/Target Support Files/Pods-goodshmob/Pods-goodshmob.dev.xcconfig"; sourceTree = "<group>"; };
 		D087DD2C1FF363740052651C /* MaterialShowcase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MaterialShowcase.xcodeproj; path = "../node_modules/react-native-material-showcase-ios/ios/material-showcase-ios/MaterialShowcase.xcodeproj"; sourceTree = "<group>"; };
+		D09DAD952088F1F200A80322 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		D09DAD982088F1F200A80322 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D0D9D95F1F5E8FAF003772C8 /* ReactNativeNavigation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeNavigation.xcodeproj; path = "../node_modules/react-native-navigation/ios/ReactNativeNavigation.xcodeproj"; sourceTree = "<group>"; };
 		D0DBBF2A1FF5F4F700ABBCAB /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		D0DBC26D1FF6019F00ABBCAB /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
@@ -830,6 +833,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				D09DAD932088F1F200A80322 /* Firebase */,
 				D0DBC26D1FF6019F00ABBCAB /* Crashlytics.framework */,
 				D0DBBF2A1FF5F4F700ABBCAB /* Fabric.framework */,
 				D087DD2C1FF363740052651C /* MaterialShowcase.xcodeproj */,
@@ -979,6 +983,40 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		D09DAD932088F1F200A80322 /* Firebase */ = {
+			isa = PBXGroup;
+			children = (
+				D09DAD942088F1F200A80322 /* Dev */,
+				D09DAD962088F1F200A80322 /* Preprod */,
+				D09DAD972088F1F200A80322 /* Prod */,
+			);
+			name = Firebase;
+			path = goodshmob/Firebase;
+			sourceTree = "<group>";
+		};
+		D09DAD942088F1F200A80322 /* Dev */ = {
+			isa = PBXGroup;
+			children = (
+				D09DAD952088F1F200A80322 /* GoogleService-Info.plist */,
+			);
+			path = Dev;
+			sourceTree = "<group>";
+		};
+		D09DAD962088F1F200A80322 /* Preprod */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Preprod;
+			sourceTree = "<group>";
+		};
+		D09DAD972088F1F200A80322 /* Prod */ = {
+			isa = PBXGroup;
+			children = (
+				D09DAD982088F1F200A80322 /* GoogleService-Info.plist */,
+			);
+			path = Prod;
+			sourceTree = "<group>";
+		};
 		D0C8722D2081BC1500F56D52 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1085,6 +1123,7 @@
 				6E22ED90F7CE417D00C048D7 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
+				D09DADD22088F24200A80322 /* Setup Firebase Environment GoogleService-Info.plist */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				7C18B1A907446F3764AE66C1 /* [CP] Embed Pods Frameworks */,
@@ -1761,6 +1800,20 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-goodshmob/Pods-goodshmob-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		D09DADD22088F24200A80322 /* Setup Firebase Environment GoogleService-Info.plist */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Setup Firebase Environment GoogleService-Info.plist";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Name of the resource we're selectively copying\nGOOGLESERVICE_INFO_PLIST=GoogleService-Info.plist\n\n# Get references to dev and prod versions of the GoogleService-Info.plist\n# NOTE: These should only live on the file system and should NOT be part of the target (since we'll be adding them to the target manually)\nGOOGLESERVICE_INFO_DEV=${PROJECT_DIR}/${TARGET_NAME}/Firebase/Dev/${GOOGLESERVICE_INFO_PLIST}\nGOOGLESERVICE_INFO_PROD=${PROJECT_DIR}/${TARGET_NAME}/Firebase/Prod/${GOOGLESERVICE_INFO_PLIST}\n\n# Make sure the dev version of GoogleService-Info.plist exists\necho \"Looking for ${GOOGLESERVICE_INFO_PLIST} in ${GOOGLESERVICE_INFO_DEV}\"\nif [ ! -f $GOOGLESERVICE_INFO_DEV ]\nthen\necho \"No Development GoogleService-Info.plist found. Please ensure it's in the proper directory.\"\nexit 1\nfi\n\n# Make sure the prod version of GoogleService-Info.plist exists\necho \"Looking for ${GOOGLESERVICE_INFO_PLIST} in ${GOOGLESERVICE_INFO_PROD}\"\nif [ ! -f $GOOGLESERVICE_INFO_PROD ]\nthen\necho \"No Production GoogleService-Info.plist found. Please ensure it's in the proper directory.\"\nexit 1\nfi\n\n# Get a reference to the destination location for the GoogleService-Info.plist\nPLIST_DESTINATION=${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app\necho \"Will copy ${GOOGLESERVICE_INFO_PLIST} to final destination: ${PLIST_DESTINATION}\"\n\n# Copy over the prod GoogleService-Info.plist for Release builds\nif [ \"${CONFIGURATION}\" == \"Prod\" ]\nthen\necho \"Using ${GOOGLESERVICE_INFO_PROD}\"\ncp -v \"${GOOGLESERVICE_INFO_PROD}\" \"${PLIST_DESTINATION}\"\ncp -v \"${GOOGLESERVICE_INFO_PROD}\" \"${PROJECT_DIR}/${TARGET_NAME}\"\nelse\necho \"Using ${GOOGLESERVICE_INFO_DEV}\"\ncp -v \"${GOOGLESERVICE_INFO_DEV}\" \"${PLIST_DESTINATION}\"\ncp -v \"${GOOGLESERVICE_INFO_DEV}\" \"${PROJECT_DIR}/${TARGET_NAME}\"\nfi\necho \"Displaying result of copy\"\nls \"${PLIST_DESTINATION}\"";
 		};
 		D0DBBED91FF5F3ED00ABBCAB /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
