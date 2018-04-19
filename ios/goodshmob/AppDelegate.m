@@ -8,6 +8,8 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <BugsnagReactNative/BugsnagReactNative.h>
 #import "ReactNativeConfig.h"
+#import "RNFirebaseNotifications.h"
+#import "RNFirebaseMessaging.h"
 
 // **********************************************
 // *** DON'T MISS: THE NEXT LINE IS IMPORTANT ***
@@ -69,6 +71,7 @@
   
   if ([ReactNativeConfig envFor:@"WITH_NOTIFICATIONS"]) {
     [FIRApp configure];
+    [RNFirebaseNotifications configure];
   }
   
   if ([ReactNativeConfig envFor:@"WITH_FABRIC"]) {
@@ -88,8 +91,28 @@
                                                      annotation:annotation];
 }
 
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
+  [[RNFirebaseNotifications instance] didReceiveLocalNotification:notification];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo
+                                                       fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler{
+  [[RNFirebaseNotifications instance] didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
+}
+
+- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
+  [[RNFirebaseMessaging instance] didRegisterUserNotificationSettings:notificationSettings];
+}
+
 - (void)applicationDidBecomeActive:(UIApplication *)application {
   [FBSDKAppEvents activateApp];
+}
+
+- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+  NSString *token = [[deviceToken description] stringByTrimmingCharactersInSet: [NSCharacterSet characterSetWithCharactersInString:@"<>"]];
+  token = [token stringByReplacingOccurrencesOfString:@" " withString:@""];
+  NSLog(@"content---%@", token);
 }
 
 @end
