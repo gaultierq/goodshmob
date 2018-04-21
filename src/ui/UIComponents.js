@@ -82,9 +82,9 @@ export function renderTag(tag: string, onPress: () => void, style?:?*) {
 export const FullScreenLoader = props => (<View style={STYLES.FULL_SCREEN}>
     <Spinner
         isVisible={true}
-        size={__DEVICE_WIDTH__ / 8}
+        size={__DEVICE_WIDTH__ / 10}
         type={"WanderingCubes"}
-        color={Colors.greyish}/>
+        color={Colors.grey3}/>
 </View>);
 
 export const Http404 = props => (<View style={STYLES.FULL_SCREEN}>

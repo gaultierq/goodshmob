@@ -3,7 +3,7 @@ import React from 'react';
 import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
 import {connect} from "react-redux";
 import {currentUser, isCurrentUser, logged} from "../../managers/CurrentUser"
-import {FullScreenLoader, MainBackground, TRANSPARENT_SPACER} from "../UIComponents";
+import {FullScreenLoader, Http404, MainBackground} from "../UIComponents";
 import Immutable from 'seamless-immutable';
 import * as Api from "../../managers/Api";
 import {Call} from "../../managers/Api";
@@ -13,17 +13,13 @@ import ApiAction from "../../helpers/ApiAction";
 import {buildData, doDataMergeInState, sanitizeActivityType} from "../../helpers/DataUtils";
 import {fetchActivity} from "../activity/actions";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-import type {PendingAction} from "../../helpers/ModelUtils";
-import {mergeItemsAndPendings, pendingActionWrapper} from "../../helpers/ModelUtils";
+import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
 import {Colors} from "../colors";
 import Screen from "../components/Screen";
 import {component as CommentInput} from "../components/CommentInput"
-import {styleMargin, STYLES} from "../UIStyles";
 import ActivityStatus from "../activity/components/ActivityStatus";
 import CommentCell from "../components/CommentCell";
 import MultiMap from "multimap";
-import {fetchItemCall} from "../lineup/actions";
-import {FETCH_ITEM} from "../lineup/actionTypes";
 
 
 const LOAD_COMMENTS = ApiAction.create("load_comments", "retrieve the comments of an item");
@@ -84,6 +80,11 @@ class CommentsScreen extends Screen<Props, State> {
         );
 
         const fullComments = comments.filter( c => c.built || c.pending);
+
+        this.setNavigatorTitle(this.props.navigator, {
+            title: i18n.t('comments_screen.title'),
+            subtitle: _.get(activity, 'resource.title')
+        })
 
         return (
             <MainBackground>
