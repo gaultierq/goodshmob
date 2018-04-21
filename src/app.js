@@ -9,7 +9,7 @@ import thunk from "redux-thunk";
 
 import * as Api from './managers/Api';
 import {autoRehydrate, createTransform, persistStore} from 'redux-persist'
-import {Alert, AsyncStorage, Dimensions, StyleSheet, TouchableOpacity} from 'react-native'
+import {Alert, AsyncStorage, Dimensions, Linking, StyleSheet, TouchableOpacity} from 'react-native'
 import immutableTransform from './immutableTransform'
 import {REHYDRATE} from 'redux-persist/constants'
 import * as CurrentUser from './managers/CurrentUser'
@@ -94,6 +94,21 @@ export default class App {
         this.prepareRedux();
 
         this.registerScreens();
+
+        //FIXME: find a better way of delaying this Linking init
+        setTimeout(()=> {
+            Linking.addEventListener('url', url => {
+                console.log('url event: with url: ' + url);
+            })
+
+            Linking.getInitialURL().then((url) => {
+                if (url) {
+                    console.log('Linking:Initial url is: ' + url);
+                    NavManager.goToDeeplink(url);
+
+                }
+            }).catch(err => console.error('Linking:An error occurred', err));
+        }, 1000)
     };
 
     prepareUI() {

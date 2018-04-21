@@ -65,10 +65,10 @@ export default class LineupHorizontal extends Component<Props, State> {
         super(props);
         this.updateTracker = new UpdateTracker(
             nextProps => this.makeRefObject(nextProps),
-            {
-                debugName: `LineupHorizontal`,
-                debugId: `${_.get(props, 'lineup.id')}`,
-            }
+            // {
+            //     debugName: `LineupHorizontal`,
+            //     debugId: `${_.get(props, 'lineup.id')}`,
+            // }
         );
     }
 

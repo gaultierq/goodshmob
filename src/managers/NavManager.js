@@ -85,8 +85,8 @@ class _NavManager implements NavManager {
 
     showModal(modal: any) {
         Navigation.showModal({
-            navigatorButtons: Nav.CANCELABLE_MODAL,
             ...modal,
+            navigatorButtons: Nav.CANCELABLE_MODAL,
         })
     }
 

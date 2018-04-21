@@ -1,5 +1,6 @@
 // @flow
 
+import {Linking} from 'react-native'
 import RNFirebase from 'react-native-firebase'
 import {Navigation} from 'react-native-navigation';
 import NavManager from "./NavManager";
@@ -50,9 +51,6 @@ export async function load() {
     messaging.getToken().then((token)=>{
         console.info("fcm:token="+token);
     }, (err) => console.log(err));
-
-    //messaging.onMessage((message)=>console.log("message received from fcm: "+ JSON.stringify(message)));
-
 
     firebase.notifications().getInitialNotification().then((notificationOpen: NotificationOpen)=> {
         console.log('getInitialNotification', notificationOpen)
