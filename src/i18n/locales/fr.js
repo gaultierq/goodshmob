@@ -348,5 +348,8 @@ export default {
     },
     congrats: {
         generic: "C'est fait ;)"
+    },
+    errors: {
+        unavailable: 'Le contenu n\'est pas disponible',
     }
 };

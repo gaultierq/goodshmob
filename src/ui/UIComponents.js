@@ -1,4 +1,5 @@
 // @flow
+// @flow
 
 import React, {Component} from 'react';
 import {Image, LayoutAnimation, StyleSheet, Text, View, UIManager} from 'react-native';
@@ -78,21 +79,16 @@ export function renderTag(tag: string, onPress: () => void, style?:?*) {
 }
 
 
-export const FullScreenLoader = props => (<View style={{
-    flex:1,
-    width: "100%",
-    height: "100%",
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-    zIndex: 1000,
-    backgroundColor: 'rgba(255, 255, 255, 0.65)'
-}}>
+export const FullScreenLoader = props => (<View style={STYLES.FULL_SCREEN}>
     <Spinner
         isVisible={true}
-        size={__DEVICE_WIDTH__ / 5}
+        size={__DEVICE_WIDTH__ / 8}
         type={"WanderingCubes"}
-        color={Colors.green}/>
+        color={Colors.greyish}/>
+</View>);
+
+export const Http404 = props => (<View style={STYLES.FULL_SCREEN}>
+    <Text>{i18n.t('errors.unavailable')}</Text>
 </View>);
 
 

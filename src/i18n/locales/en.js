@@ -349,5 +349,8 @@ export default {
     },
     congrats: {
         generic: "Done;)"
+    },
+    errors: {
+        unavailable: 'Content not available',
     }
 };

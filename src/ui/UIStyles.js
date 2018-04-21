@@ -206,6 +206,16 @@ export const STYLES = StyleSheet.create({
         borderWidth: 0,
         marginBottom: 0,
         borderRadius: 0,
+    },
+    FULL_SCREEN: {
+        flex:1,
+        width: "100%",
+        height: "100%",
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'absolute',
+        zIndex: 1000,
+        backgroundColor: 'rgba(255, 255, 255, 0.65)'
     }
 });
 

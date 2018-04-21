@@ -3,12 +3,12 @@ import React from 'react';
 import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
 import {connect} from "react-redux";
 import {currentUser, isCurrentUser, logged} from "../../managers/CurrentUser"
-import {MainBackground, TRANSPARENT_SPACER} from "../UIComponents";
+import {FullScreenLoader, MainBackground, TRANSPARENT_SPACER} from "../UIComponents";
 import Immutable from 'seamless-immutable';
 import * as Api from "../../managers/Api";
 import {Call} from "../../managers/Api";
 import Feed from "../components/feed";
-import type {Activity, ActivityType, Comment, Id} from "../../types";
+import type {Activity, ActivityType, Comment, Id, RequestState} from "../../types";
 import ApiAction from "../../helpers/ApiAction";
 import {buildData, doDataMergeInState, sanitizeActivityType} from "../../helpers/DataUtils";
 import {fetchActivity} from "../activity/actions";
@@ -22,6 +22,8 @@ import {styleMargin, STYLES} from "../UIStyles";
 import ActivityStatus from "../activity/components/ActivityStatus";
 import CommentCell from "../components/CommentCell";
 import MultiMap from "multimap";
+import {fetchItemCall} from "../lineup/actions";
+import {FETCH_ITEM} from "../lineup/actionTypes";
 
 
 const LOAD_COMMENTS = ApiAction.create("load_comments", "retrieve the comments of an item");
@@ -37,7 +39,7 @@ type Props = {
 type State = {
     newComment?: string,
     isAddingComment?: boolean,
-    isFetchingActivity?: boolean
+    reqFetchActivity?: RequestState
 };
 
 @logged
@@ -51,22 +53,21 @@ class CommentsScreen extends Screen<Props, State> {
 
 
     componentDidMount() {
-        this.load();
+        Api.safeDispatchAction.call(
+            this,
+            this.props.dispatch,
+            fetchActivity(this.props.activityId, this.props.activityType, {include: "comments"}),
+            'reqFetchActivity'
+        )
     }
-
-    //use Api.safeDispatchAction
-    load() {
-        if (this.state.isFetchingActivity) return;
-        this.setState({isFetchingActivity: true});
-        this.props.dispatch(fetchActivity(this.props.activityId, this.props.activityType, {include: "comments"}))
-            .catch((err)=>console.log(err))
-            .then(this.setState({isFetchingActivity: false}))
-    }
-
 
     render() {
         let activity = this.getActivity();
 
+        if (!activity) {
+            if (this.state.reqFetchActivity === 'sending') return <FullScreenLoader/>
+            if (this.state.reqFetchActivity === 'ko') return <Http404/>
+        }
         let comments = mergeItemsAndPendings(
             activity ? activity.comments : [],
             this.props.pending[CREATE_COMMENT],
@@ -330,7 +331,8 @@ export {reducer, screen, actions};
 const styles = StyleSheet.create({
     container: {
         flex:1,
-        backgroundColor: Colors.greying
+        backgroundColor: Colors.greying,
+        // backgroundColor: Colors.greying,
     },
     input:{
         height: 40,

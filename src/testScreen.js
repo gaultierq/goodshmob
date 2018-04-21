@@ -70,7 +70,6 @@ export const ebauchoirDetail = {
 //1 comment
 export const commentsScreen = {
     screen: {
-        label: 'test',
         screen: 'goodsh.CommentsScreen',
     },
     passProps: {

@@ -18,7 +18,7 @@ import {connect} from "react-redux";
 import {currentUser, currentUserId, logged} from "../../managers/CurrentUser"
 import ActivityBody from "./components/ActivityBody";
 import {buildData, getAskBackgroundColor, sanitizeActivityType, timeSinceActivity} from "../../helpers/DataUtils";
-import {Avatar, MainBackground} from "../UIComponents";
+import {Avatar, FullScreenLoader, MainBackground} from "../UIComponents";
 import type {Activity, ActivityType, Id, RNNNavigator} from "../../types";
 import Screen from "../components/Screen";
 import {Colors} from "../colors";
@@ -124,23 +124,15 @@ class ActivityDetailScreen extends Screen<Props, State> {
     render() {
         let activity = this.makeActivity();
 
-        let showLoader = !activity && this.state.isLoading;
-
         const isAsk = activity && sanitizeActivityType(activity.type) === 'asks';
+
+        if (!activity && this.state.isLoading) return <FullScreenLoader/>;
 
         return (
             <MainBackground>
                 <KeyboardAwareScrollView
                     contentContainerStyle={{flexGrow: 1, paddingBottom: 20}}
                 >
-                    {
-                        showLoader && <ActivityIndicator
-                            animating = {showLoader}
-                            size = "large"
-                            style={styles.loader}
-                        />
-                    }
-
                     <View style={styles.container}>
 
                         { activity &&
