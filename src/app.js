@@ -95,20 +95,18 @@ export default class App {
 
         this.registerScreens();
 
-        //FIXME: find a better way of delaying this Linking init
+        //TODO: find a better way of delaying this Linking init
         setTimeout(()=> {
-            Linking.addEventListener('url', url => {
-                console.log('url event: with url: ' + url);
+            Linking.addEventListener('url', ({url}) => {
+                if (url) console.log('Linking: url event: ', url);
+                NavManager.goToDeeplink(url);
             })
 
-            Linking.getInitialURL().then((url) => {
-                if (url) {
-                    console.log('Linking:Initial url is: ' + url);
-                    NavManager.goToDeeplink(url);
-
-                }
+            Linking.getInitialURL().then(url => {
+                if (url) console.log('Linking:Initial url is: ', url);
+                NavManager.goToDeeplink(url);
             }).catch(err => console.error('Linking:An error occurred', err));
-        }, 1000)
+        }, 500)
     };
 
     prepareUI() {
@@ -262,7 +260,7 @@ export default class App {
         //managers init rely on a ready store
         //singletons
 
-        
+
         if (ErrorUtils) {
             const previousHandler = ErrorUtils.getGlobalHandler();
 
