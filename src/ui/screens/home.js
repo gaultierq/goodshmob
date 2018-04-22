@@ -26,7 +26,7 @@ import {
     BACKGROUND_COLOR, FEED_INITIAL_LOADER_DURATION, NavStyles, renderSimpleButton, stylePadding,
     STYLES
 } from "../UIStyles";
-import {currentGoodshboxId, currentUserId, logged} from "../../managers/CurrentUser"
+import {currentGoodshboxId, currentUserId, isCurrentUserId, logged} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import Modal from 'react-native-modal'
@@ -270,7 +270,7 @@ class HomeScreen extends Screen<Props, State> {
                                     <LineupH1 lineup={item} navigator={navigator}
                                               withMenuButton={true}
                                               withLineupTitle={true}
-                                              withAddInEmptyLineup={true}
+                                              onPressEmptyLineup={()=>startAddItem(navigator, item.id)}
                                               renderMenuButton={() => {
                                                   //TODO: dubious 15
                                                   return this.renderMenuButton(item, 15)

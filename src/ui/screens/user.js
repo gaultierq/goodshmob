@@ -14,7 +14,7 @@ import {STYLES} from "../UIStyles";
 import ShareButton from "../components/ShareButton";
 import UserLineups from "./userLineups";
 import LineupHorizontal, {LineupH1} from "../components/LineupHorizontal";
-import {seeActivityDetails, seeList} from "../Nav";
+import {seeActivityDetails, seeList, startAddItem} from "../Nav";
 import * as UI from "../UIStyles";
 import {fullName} from "../../helpers/StringUtils";
 
@@ -106,7 +106,7 @@ export default class UserScreen extends Screen<Props, State> {
                                 <LineupH1
                                     lineup={item}
                                     navigator={navigator}
-                                    withAddInEmptyLineup={isCurrentUserId(userId)} />
+                                    onPressEmptyLineup={isCurrentUserId(userId) ? ()=>startAddItem(navigator, item.id): null } />
                             )
                         }));
                     }}

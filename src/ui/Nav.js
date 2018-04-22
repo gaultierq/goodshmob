@@ -194,7 +194,7 @@ export function displayShareLineup(navigator: RNNNavigator, lineup: Lineup) {
     let lineupId = _.get(lineup, 'id');
     if (!userId || !lineupId) return; //TODO: error
 
-    const url = `${Config.SERVER_URL}${userId}/${lineupId}`;
+    const url = `${Config.SERVER_URL}lists/${lineupId}`;
 
     const params = {
         renderSharedObject: () => (<LineupHorizontal
