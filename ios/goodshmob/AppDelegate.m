@@ -10,6 +10,7 @@
 #import "ReactNativeConfig.h"
 #import "RNFirebaseNotifications.h"
 #import "RNFirebaseMessaging.h"
+#import <React/RCTLinkingManager.h>
 
 // **********************************************
 // *** DON'T MISS: THE NEXT LINE IS IMPORTANT ***
@@ -113,6 +114,21 @@
   NSString *token = [[deviceToken description] stringByTrimmingCharactersInSet: [NSCharacterSet characterSetWithCharactersInString:@"<>"]];
   token = [token stringByReplacingOccurrencesOfString:@" " withString:@""];
   NSLog(@"content---%@", token);
+}
+
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+  return [RCTLinkingManager application:application openURL:url options:options];
+}
+
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity
+ restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler
+{
+  return [RCTLinkingManager application:application
+                   continueUserActivity:userActivity
+                     restorationHandler:restorationHandler];
 }
 
 @end
