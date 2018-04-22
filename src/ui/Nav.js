@@ -225,7 +225,6 @@ export function displayShareLineup(navigator: RNNNavigator, lineup: Lineup) {
             renderSharedObject: () => (
                 <LineupHorizontal
                     lineupId={lineup.id}
-                    withLineupTitle={true}
                     style={{flex: 1}} //TODO: why do we need this ? //TODO: design
                     renderSaving={saving => <LineupCellSaving item={saving.resource} />}
                 />),

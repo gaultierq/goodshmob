@@ -39,10 +39,11 @@ type Props = {
     // lineup: List,
     lineupId: Id,
     renderMenuButton?: () => Node,
-    withLineupTitle?: boolean, //TODO: invert the default condition
+    skipLineupTitle: boolean,
     onPressEmptyLineup?: () => void,
     onSavingPressed?: ?(navigator: RNNNavigator, saving: Saving) => void,
     renderSaving: (saving:Saving) => Node,
+    renderTitle: (lineup: Lineup) => Node,
     style?: *,
 };
 
@@ -58,6 +59,11 @@ export default class LineupHorizontal extends Component<Props, State> {
 
     updateTracker: UpdateTracker;
 
+    static defaultProps = {
+        skipLineupTitle: false,
+        renderTitle: (lineup: Lineup) => <LineupTitle lineup={lineup}/>
+    }
+
     constructor(props: Props) {
         super(props);
         this.updateTracker = new UpdateTracker(
@@ -68,7 +74,7 @@ export default class LineupHorizontal extends Component<Props, State> {
     render() {
         this.updateTracker.onRender(this.props);
 
-        const {renderMenuButton, withLineupTitle, lineupId} = this.props;
+        const {renderTitle, renderMenuButton, skipLineupTitle, lineupId} = this.props;
 
         let {lineup, savings} = StoreManager.getLineupAndSavings(lineupId);
         if (!lineup) return null;
@@ -76,10 +82,10 @@ export default class LineupHorizontal extends Component<Props, State> {
         return (
             <View style={this.props.style}>
                 {
-                    withLineupTitle &&
+                    !skipLineupTitle &&
 
                     <View style={{flexDirection:'row', paddingLeft: 15, paddingRight: 15}}>
-                        <LineupTitle lineup={lineup}/>
+                        {renderTitle(lineup)}
                         {renderMenuButton && renderMenuButton()}
                     </View>
                 }

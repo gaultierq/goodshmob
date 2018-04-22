@@ -67,7 +67,6 @@ export default class MoveInScreen extends Screen<Props, State> {
                         >
                             <LineupHorizontal
                                 lineupId={lineup.id}
-                                withLineupTitle={true}
                                 renderSaving={(saving: Saving) => {
                                     return <LineupCellSaving item={saving.resource} style={{
                                         borderWidth: saving.id === this.props.savingId ? 1 : 0,

@@ -260,7 +260,11 @@ class HomeScreen extends Screen<Props, State> {
                                 title: i18n.t("lineups.goodsh.title"),
                                 subtitle: ` (${savingCount})`,
                                 onPress: () => seeList(navigator, goodshbox),
-                                renderItem: ({item}) => <LineupH1 lineup={item} navigator={navigator}/>
+                                renderItem: ({item}) => <LineupH1
+                                    lineup={item}
+                                    navigator={navigator}
+                                    skipLineupTitle={true}
+                                />
                             },
                             {
                                 data: _.slice(lineups, 1),
@@ -269,7 +273,6 @@ class HomeScreen extends Screen<Props, State> {
                                 renderItem: ({item})=>(
                                     <LineupH1 lineup={item} navigator={navigator}
                                               withMenuButton={true}
-                                              withLineupTitle={true}
                                               onPressEmptyLineup={()=>startAddItem(navigator, item.id)}
                                               renderMenuButton={() => {
                                                   //TODO: dubious 15
