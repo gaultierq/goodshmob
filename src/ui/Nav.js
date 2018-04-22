@@ -162,31 +162,55 @@ export function displayActivityActions(navigator: RNNNavigator, dispatch: *, act
     });
 }
 
-export function displayShareItem(navigator: RNNNavigator, activity: Activity) {
-
-    const {resource} = activity;
-
-
-    const url = `${Config.SERVER_URL + sanitizeActivityType(activity.type)}/${activity.id}`;
-
-    const params = {
-        renderSharedObject: ()=>(<View style={{height: 100, }}><ItemCell item={resource}/></View>),
-        sendAction: (friend: User, description?: string) => {
-            sendItem(resource.itemId, friend, description).disptachForAction2(SEND_ITEM)
-        },
-        createShareIntent: () => this.createShareIntent(resource, url),
-        urlForClipboard: ()=> url,
+let createShareIntent = (what, url) => {
+    let prepareIntentContent = (title, url) => {
+        let intent = {title};
+        let message = i18n.t('send_message');
+        if (__IS_ANDROID__) message = url + '\n\n' + message;
+        if (__IS_IOS__) intent.url = url;
+        intent.message = message;
+        return intent;
     }
 
+    const content: any = prepareIntentContent(what, url);
+
+    const options = {
+        // Android only:
+        dialogTitle: what,
+        //IOS only
+        subject: i18n.t('send_object', {what}),
+    };
+    return {content, options};
+}
+
+let showShareScreen = (navigator, params) => {
     navigator.showModal({
         screen: 'goodsh.ShareScreen', // unique ID registered with Navigation.registerScreen
         animationType: 'none',
-        passProps:{
+        passProps: {
             onClickClose: () => navigator.dismissModal({animationType: 'none',}),
             ...params,
         },
         navigatorStyle: {navBarHidden: true},
     });
+};
+
+export function displayShareItem(navigator: RNNNavigator, activity: Activity) {
+
+    const {resource} = activity;
+
+    const url = `${Config.SERVER_URL + sanitizeActivityType(activity.type)}/${activity.id}`;
+
+    showShareScreen(navigator,
+        {
+            renderSharedObject: ()=>(<View style={{height: 100, }}><ItemCell item={resource}/></View>),
+            sendAction: (friend: User, description?: string) => {
+                sendItem(resource.itemId, friend, description).disptachForAction2(SEND_ITEM)
+            },
+            createShareIntent: () => createShareIntent(resource.title, url),
+            urlForClipboard: ()=> url,
+        }
+    );
 }
 
 export function displayShareLineup(navigator: RNNNavigator, lineup: Lineup) {
@@ -196,28 +220,20 @@ export function displayShareLineup(navigator: RNNNavigator, lineup: Lineup) {
 
     const url = `${Config.SERVER_URL}lists/${lineupId}`;
 
-    const params = {
-        renderSharedObject: () => (<LineupHorizontal
-            lineupId={lineup.id}
-            navigator={navigator}
-            withLineupTitle={true}
-            style={{flex: 1}} //TODO: why do we need this ? //TODO: design
-            renderSaving={saving => <LineupCellSaving item={saving.resource} />}
-        />),
-        sendAction: null,
-        createShareIntent: null/*() => this.createShareIntent(resource, url)*/,
-        urlForClipboard: ()=> url,
-    }
-
-    navigator.showModal({
-        screen: 'goodsh.ShareScreen', // unique ID registered with Navigation.registerScreen
-        animationType: 'none',
-        passProps:{
-            onClickClose: () => navigator.dismissModal({animationType: 'none',}),
-            ...params,
-        },
-        navigatorStyle: {navBarHidden: true},
-    });
+    showShareScreen(navigator,
+        {
+            renderSharedObject: () => (
+                <LineupHorizontal
+                    lineupId={lineup.id}
+                    withLineupTitle={true}
+                    style={{flex: 1}} //TODO: why do we need this ? //TODO: design
+                    renderSaving={saving => <LineupCellSaving item={saving.resource} />}
+                />),
+            sendAction: null,
+            createShareIntent: () => createShareIntent(lineup.name, url),
+            urlForClipboard: ()=> url,
+        }
+    );
 }
 
 //TODO: move this somewhere
@@ -239,4 +255,6 @@ function sendItem(itemId: Id, user: User, description?: Description = "", privac
             include: "*.*"
         });
 };
+
+
 

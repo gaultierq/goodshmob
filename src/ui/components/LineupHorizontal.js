@@ -182,7 +182,6 @@ export const LineupH1 = connect()((props: Props1) => {
     return <GTouchable onPress={()=>seeList(navigator, lineup)}>
         <LineupHorizontal
             lineupId={lineup.id}
-            navigator={navigator}
             renderSaving={saving => (
                 <GTouchable
                     onPress={() => seeActivityDetails(navigator, saving)}
