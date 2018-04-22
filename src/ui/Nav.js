@@ -17,6 +17,7 @@ import React from "react";
 import {LineupH1} from "./components/LineupHorizontal";
 import LineupHorizontal from "./components/LineupHorizontal";
 import LineupCellSaving from "./components/LineupCellSaving";
+import LineupTitle from "./components/LineupTitle";
 
 export const CLOSE_MODAL = 'close_modal';
 
@@ -227,6 +228,7 @@ export function displayShareLineup(navigator: RNNNavigator, lineup: Lineup) {
                     lineupId={lineup.id}
                     style={{flex: 1}} //TODO: why do we need this ? //TODO: design
                     renderSaving={saving => <LineupCellSaving item={saving.resource} />}
+                    renderTitle={(lineup: Lineup) => <LineupTitle style={{fontSize: 24}} lineup={lineup} skipChevron={true}/>}
                 />),
             sendAction: null,
             createShareIntent: () => createShareIntent(lineup.name, url),

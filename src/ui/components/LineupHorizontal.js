@@ -35,8 +35,6 @@ import {UpdateTracker} from "../UpdateTracker";
 import StoreManager from "../../managers/StoreManager";
 // $FlowFixMe
 type Props = {
-    navigator: RNNNavigator,
-    // lineup: List,
     lineupId: Id,
     renderMenuButton?: () => Node,
     skipLineupTitle: boolean,
