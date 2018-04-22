@@ -11,7 +11,6 @@ class GAction {
     actionName: string;
 
     constructor(name: string) {
-        super()
         this.actionName = name;
     }
 

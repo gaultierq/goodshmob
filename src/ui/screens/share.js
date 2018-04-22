@@ -19,7 +19,7 @@ type Props = {
     containerStyle:? any,
     onClickClose: () => void,
 
-    renderedSharedObject: Node,
+    renderSharedObject: ()=>Node,
 
     //return the url to copy
     urlForClipboard: ? () => Url,
@@ -53,7 +53,7 @@ class ShareScreen extends Component<Props, State> {
     render() {
         const {
             sendAction,
-            renderedSharedObject,
+            renderSharedObject,
             urlForClipboard,
             createShareIntent,
         } = this.props;
@@ -65,13 +65,13 @@ class ShareScreen extends Component<Props, State> {
                     height: 375,
                     backgroundColor: 'rgba(255,255,255,1)',
                 }}>
-                    {renderedSharedObject}
+                    {renderSharedObject && renderSharedObject()}
 
                     <View style={{margin: 16, flexDirection: 'row', justifyContent: 'space-around'}}>
                         <GTouchable
                             style={styles.button}
                             onPress={()=>this.copyToClipboard()}
-                            deactivated={!urlForClipboard}
+                            disabled={!urlForClipboard}
                         >
                             <Image source={require('../../img2/copyLink.png')}
                                    resizeMode="contain"
@@ -81,7 +81,7 @@ class ShareScreen extends Component<Props, State> {
                         <GTouchable
                             style={styles.button}
                             onPress={()=>this.send()}
-                            deactivated={!sendAction}
+                            disabled={!sendAction}
                         >
                             <Image source={require('../../img2/sendToOther.png')}
                                    resizeMode="contain"
@@ -91,7 +91,7 @@ class ShareScreen extends Component<Props, State> {
                         <GTouchable
                             style={styles.button}
                             onPress={()=>this.share()}
-                            deactivated={!createShareIntent}
+                            disabled={!createShareIntent}
                         >
                             <Image source={require('../../img2/share.png')}
                                    resizeMode="contain"

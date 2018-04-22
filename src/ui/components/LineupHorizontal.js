@@ -1,6 +1,7 @@
 // @flow
 
 import React, {Component} from 'react';
+import type {Node} from 'react';
 import {
     Alert,
     BackHandler,
@@ -52,7 +53,7 @@ type Props = {
 type State = {
 };
 
-@connect((state, ownProps) => ({
+@connect(state => ({
     data: state.data,
     pending: state.pending,
 }))
@@ -65,10 +66,6 @@ export default class LineupHorizontal extends Component<Props, State> {
         super(props);
         this.updateTracker = new UpdateTracker(
             nextProps => this.makeRefObject(nextProps),
-            // {
-            //     debugName: `LineupHorizontal`,
-            //     debugId: `${_.get(props, 'lineup.id')}`,
-            // }
         );
     }
 

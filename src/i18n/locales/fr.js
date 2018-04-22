@@ -290,6 +290,7 @@ export default {
         change: "Modifier",
         change_title: "Modifier le titre",
         edit_saving_menu: "Éditer ce goodsh",
+        share_list: "Partager cette liste",
         change_description: "Modifier la description",
         move: "Déplacer",
         change_name: "Changer le nom de cette liste",

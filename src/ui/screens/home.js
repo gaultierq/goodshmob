@@ -56,6 +56,7 @@ import {seeActivityDetails} from "../Nav";
 import UserLineups from "./userLineups";
 import {floatingButtonScrollListener} from "../UIComponents";
 import BottomSheet from "react-native-bottomsheet";
+import {displayShareLineup} from "../Nav";
 
 
 type Props = {
@@ -271,6 +272,7 @@ class HomeScreen extends Screen<Props, State> {
                                               withLineupTitle={true}
                                               withAddInEmptyLineup={true}
                                               renderMenuButton={() => {
+                                                  //TODO: dubious 15
                                                   return this.renderMenuButton(item, 15)
                                               }}
                                     />
@@ -289,29 +291,38 @@ class HomeScreen extends Screen<Props, State> {
         );
     }
 
-    //TODO: create right manager
+    //TODO: use right manager
     renderMenuButton(item: Lineup, padding: number) {
         if (!item) return null;
 
-        //TODO: this shouldnt be here
+        //TODO: use right manager
         if (item.id === currentGoodshboxId()) return null;
 
         // console.log("paddings:" + stylePadding(padding, 12));
         let handler = () => {
             BottomSheet.showBottomSheetWithOptions({
-                options: [i18n.t("actions.change_title"), i18n.t("actions.delete"), i18n.t("actions.cancel")],
+                options: [
+                    i18n.t("actions.change_title"),
+                    i18n.t("actions.share_list"),
+                    i18n.t("actions.delete"),
+                    i18n.t("actions.cancel")
+                ],
                 title: item.name,
                 dark: true,
-                destructiveButtonIndex: 1,
-                cancelButtonIndex: 2,
+                destructiveButtonIndex: 2,
+                cancelButtonIndex: 3,
             }, (value) => {
                 switch (value) {
-                    case 1:
-                        this.deleteLineup(item);
-                        break;
                     case 0:
                         this.changeTitle(item);
                         break;
+                    case 1:
+                        displayShareLineup(this.props.navigator, item)
+                        break;
+                    case 2:
+                        this.deleteLineup(item);
+                        break;
+
                 }
             });
         };
