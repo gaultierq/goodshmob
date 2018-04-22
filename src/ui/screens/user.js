@@ -106,6 +106,7 @@ export default class UserScreen extends Screen<Props, State> {
                                 <LineupH1
                                     lineup={item}
                                     navigator={navigator}
+                                    skipLineupTitle={true}
                                     onPressEmptyLineup={isCurrentUserId(userId) ? ()=>startAddItem(navigator, item.id): null } />
                             )
                         }));

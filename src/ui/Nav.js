@@ -18,6 +18,7 @@ import {LineupH1} from "./components/LineupHorizontal";
 import LineupHorizontal from "./components/LineupHorizontal";
 import LineupCellSaving from "./components/LineupCellSaving";
 import LineupTitle from "./components/LineupTitle";
+import {Colors} from "./colors";
 
 export const CLOSE_MODAL = 'close_modal';
 
@@ -115,7 +116,6 @@ export function seeActivityDetails(navigator: RNNNavigator, activity: Activity) 
     navigator.showModal({
         screen: 'goodsh.ActivityDetailScreen',
         passProps: {activityId: activity.id, activityType: activity.type},
-        // navigatorButtons: Nav.CANCELABLE_MODAL,
     });
 }
 
@@ -226,7 +226,7 @@ export function displayShareLineup(navigator: RNNNavigator, lineup: Lineup) {
             renderSharedObject: () => (
                 <LineupHorizontal
                     lineupId={lineup.id}
-                    style={{flex: 1}} //TODO: why do we need this ? //TODO: design
+                    style={{height: 100}}
                     renderSaving={saving => <LineupCellSaving item={saving.resource} />}
                     renderTitle={(lineup: Lineup) => <LineupTitle style={{fontSize: 24}} lineup={lineup} skipChevron={true}/>}
                 />),
