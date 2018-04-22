@@ -17,7 +17,7 @@ import {connect} from "react-redux";
 import {logged} from "../../../managers/CurrentUser"
 import type {Activity} from "../../../types"
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
-import ActionRights from "../../rights";
+import ActionRights, {canPerformAction, A_BUY} from "../../rights";
 import Button from 'apsl-react-native-button';
 import {SFP_TEXT_ITALIC} from "../../fonts";
 import {CachedImage} from "react-native-img-cache";
@@ -76,7 +76,7 @@ export default class ActivityBody extends React.Component<Props, State> {
 
 
     renderBuyButton(activity:Activity) {
-        return new ActionRights(activity).canBuy() && <Button
+        return canPerformAction(A_BUY, {activity}) /*new ActionRights(activity).canBuy()*/ && <Button
             onPress={() => {
                 this.execBuy(activity)
             }}

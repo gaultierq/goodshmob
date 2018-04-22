@@ -1,7 +1,7 @@
 // @flow
 import React, {Component} from 'react';
 import {Clipboard, Dimensions, Image, Share, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import type {Id, Item, ItemType, Url} from "../../types";
+import type {Dispatchee, Id, Item, ItemType, Url, User} from "../../types";
 import {CheckBox} from "react-native-elements";
 import Snackbar from "react-native-snackbar"
 
@@ -13,23 +13,28 @@ import * as Nav from "../Nav";
 import {Colors} from "../colors";
 import GTouchable from "../GTouchable";
 import Sheet from "../components/sheet";
-import ItemCell from "../components/ItemCell";
 
 type Props = {
-    itemId: Id,
-    itemType: ItemType,
     navigator: any,
     containerStyle:? any,
     onClickClose: () => void,
 
-    //this is a hack, whould be item url instead, but the backend is not ready
-    tempActivityUrl: Url
+    renderedSharedObject: Node,
+
+    //return the url to copy
+    urlForClipboard: ? () => Url,
+
+    //for send screen
+    sendAction: ?(friend: User, description?: string) => Dispatchee,
+
+    //return the intent for the share
+    createShareIntent:? () => {content: any, options: any},
 };
 
 type State = {
 };
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = state => ({
     data: state.data,
 });
 
@@ -45,10 +50,13 @@ class ShareScreen extends Component<Props, State> {
         tapBackgroundToDismiss: true
     };
 
-
     render() {
-        const {containerStyle, itemType, itemId, onClickClose} = this.props;
-        const item = buildNonNullData(this.props.data, itemType, itemId);
+        const {
+            sendAction,
+            renderedSharedObject,
+            urlForClipboard,
+            createShareIntent,
+        } = this.props;
 
         return (
             <Sheet navigator={this.props.navigator}>
@@ -57,14 +65,14 @@ class ShareScreen extends Component<Props, State> {
                     height: 375,
                     backgroundColor: 'rgba(255,255,255,1)',
                 }}>
-                    <View style={{height: 100, }}>
-                        <ItemCell item={item}/>
-                    </View>
+                    {renderedSharedObject}
 
                     <View style={{margin: 16, flexDirection: 'row', justifyContent: 'space-around'}}>
                         <GTouchable
                             style={styles.button}
-                            onPress={()=>this.copyToClipboard(item)}>
+                            onPress={()=>this.copyToClipboard()}
+                            deactivated={!urlForClipboard}
+                        >
                             <Image source={require('../../img2/copyLink.png')}
                                    resizeMode="contain"
                                    style={styles.image}/>
@@ -72,7 +80,9 @@ class ShareScreen extends Component<Props, State> {
                         </GTouchable>
                         <GTouchable
                             style={styles.button}
-                            onPress={()=>this.send(item)}>
+                            onPress={()=>this.send()}
+                            deactivated={!sendAction}
+                        >
                             <Image source={require('../../img2/sendToOther.png')}
                                    resizeMode="contain"
                                    style={styles.image}/>
@@ -80,7 +90,9 @@ class ShareScreen extends Component<Props, State> {
                         </GTouchable>
                         <GTouchable
                             style={styles.button}
-                            onPress={()=>this.share(item)}>
+                            onPress={()=>this.share()}
+                            deactivated={!createShareIntent}
+                        >
                             <Image source={require('../../img2/share.png')}
                                    resizeMode="contain"
                                    style={styles.image}/>
@@ -105,52 +117,30 @@ class ShareScreen extends Component<Props, State> {
         return <Icon key={iconName} name={iconName} color={Colors.black} size={16} style={styles.community} />;
     }
 
-    copyToClipboard(item:Item) {
-        let url = this.props.tempActivityUrl;
-        // url = item.url;
-        Clipboard.setString(url);
-
-        Snackbar.show({
-            title: i18n.t('shared.link_copied'),
-        });
+    copyToClipboard() {
+        const urlForClipboard = this.props.urlForClipboard;
+        if (!urlForClipboard) return;
+        Clipboard.setString(urlForClipboard());
+        Snackbar.show({title: i18n.t('shared.link_copied')});
     }
 
-    share(item:Item) {
-        const {title} = item;
-
-        let url = this.props.tempActivityUrl;
-        let intent = this.prepareShareIntent(title, url);
-
-        const options = {
-            // Android only:
-            dialogTitle: title,
-            //IOS only
-            subject: i18n.t('send_object', {what: title}),
-        };
-        Share.share(intent, options)
+    share() {
+        const shareIntent = this.props.createShareIntent;
+        if (!shareIntent) return;
+        const {content, options} = shareIntent();
+        Share.share(content, options)
     }
 
-    prepareShareIntent(title, url) {
-        let intent = {
-            title
-        };
-        let message = i18n.t('send_message');
-        if (__IS_ANDROID__) message = url + '\n\n' + message;
-        if (__IS_IOS__) intent.url = url;
-        intent.message = message;
-        return intent;
-    }
-
-    send(item:Item) {
+    send() {
         //const {item} = this.props;
         let navigator = this.props.navigator;
         navigator.showModal({
             screen: 'goodsh.SendScreen', // unique ID registered with Navigation.registerScreen
-            title: i18n.t("actions.send") + ` ${item.title}`,
+            title: i18n.t("actions.send"),
             navigatorButtons: Nav.CANCELABLE_MODAL,
             passProps: {
                 userId: currentUserId(),
-                itemId: item.id
+                sendAction: this.props.sendAction
             },
         });
     }

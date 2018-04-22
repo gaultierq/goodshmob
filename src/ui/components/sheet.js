@@ -19,7 +19,7 @@ import Modal from 'react-native-modalbox';
 type Props = {
     children: Node,
     // If onBeforeClose is undefined, the sheet will close
-    onBeforeClose: (acceptClosing: ()=>void, cancelClosing: ()=>void) => void,
+    onBeforeClose:? (acceptClosing: ()=>void, cancelClosing: ()=>void) => void,
 
 };
 

@@ -3,7 +3,7 @@
 import React from 'react';
 
 import {Alert, Image, Linking, Platform, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import type {Activity, ActivityType, Id, Saving, Url} from "../../../types";
+import type {Activity, ActivityType, Id, Item, Saving, Url, User} from "../../../types";
 import {connect} from "react-redux";
 import {currentGoodshboxId, isCurrentUser, logged} from "../../../managers/CurrentUser"
 import * as activityAction from "../actions";
@@ -11,7 +11,7 @@ import {unsave} from "../actions";
 import {fullName, toUppercase} from "../../../helpers/StringUtils";
 import {buildData, buildNonNullData, sanitizeActivityType} from "../../../helpers/DataUtils";
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
-import ActionRights, {getPendingLikeStatus} from "../../rights";
+import {canPerformAction, getPendingLikeStatus, A_BUY, A_SAVE, A_UNLIKE, A_UNSAVE} from "../../rights";
 import {CREATE_COMMENT} from "../../screens/comments";
 import GTouchable from "../../GTouchable";
 import * as Nav from "../../Nav";
@@ -19,6 +19,10 @@ import {CREATE_SAVING, doUnsave, SAVING_DELETION} from "../../lineup/actions";
 import StoreManager from "../../../managers/StoreManager";
 import Messenger from "../../../managers/Messenger";
 import Config from "react-native-config";
+import ItemCell from "../../components/ItemCell";
+import type {Description, Visibility} from "../../screens/save";
+import * as Api from "../../../managers/Api";
+import ApiAction from "../../../helpers/ApiAction";
 
 export type ActivityActionType = 'comment'| 'like'| 'unlike'| 'share'| 'save'| 'unsave'| 'see'| 'buy'| 'answer';
 const ACTIONS = ['comment', 'like', 'unlike','share', 'save', 'unsave', 'see', 'buy', 'answer'];
@@ -170,28 +174,25 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     }
 
     canUnsave(activity: Activity) {
-        return new ActionRights(activity).canUnsave();
+        return canPerformAction(A_UNSAVE, {activity})
     }
 
     canSave(activity: Activity) {
-        return new ActionRights(activity).canSave();
+        return canPerformAction(A_SAVE, {activity})
     }
 
     canLike(activity: Activity) {
         let pendingLike = this.getPendingLikeStatus(activity);
-        return pendingLike ? pendingLike === -1 : new ActionRights(activity).canLike();
+        return pendingLike ? pendingLike === -1 : canPerformAction(A_LIKE, {activity})
     }
 
     canUnlike(activity: Activity) {
         let pendingLike = this.getPendingLikeStatus(activity);
-        return pendingLike ? pendingLike === 1 : new ActionRights(activity).canUnlike();
+        return pendingLike ? pendingLike === 1 : canPerformAction(A_UNLIKE, {activity})
     }
 
     canBuy(activity: Activity) {
-        return new ActionRights(activity).canBuy();
-        // let resource = activity.resource;
-        // return resource && sanitizeActivityType(resource.type) === 'creativeWorks';
-        //return _.get(activity, 'resource.type') === 'creativeWorks';
+        return canPerformAction(A_BUY, {activity})
     }
 
 
@@ -375,25 +376,53 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
         let navigator = this.props.navigator;
 
-        //TODO: rm platform specific rules when [1] is solved.
-        //1: https://github.com/wix/react-native-navigation/issues/1502
+        const url = `${Config.SERVER_URL + sanitizeActivityType(activity.type)}/${activity.id}`;
         navigator.showModal({
             screen: 'goodsh.ShareScreen', // unique ID registered with Navigation.registerScreen
             animationType: 'none',
-            style: {
-                backgroundBlur: "light", // 'dark' / 'light' / 'xlight' / 'none' - the type of blur on the background
-                tapBackgroundToDismiss: true // dismisses LightBox on background taps (optional)
-            },
             passProps:{
                 itemId: resource.id,
                 itemType: resource.type,
-                containerStyle: {backgroundColor: __IS_IOS__ ? 'transparent' : Colors.white},
                 onClickClose: () => navigator.dismissModal({animationType: 'none',}),
-                tempActivityUrl: `${Config.SERVER_URL + sanitizeActivityType(activity.type)}/${activity.id}`
+                tempActivityUrl: url,
+                renderedSharedObject: (<View style={{height: 100, }}><ItemCell item={resource}/></View>),
+                sendAction: (friend: User, description?: string) => {
+                    sendItem(resource.itemId, friend, description).disptachForAction2(SEND_ITEM)
+                },
+                createShareIntent: () => this.createShareIntent(resource, url),
+                urlForClipboard: ()=> url
+
             },
             navigatorStyle: {navBarHidden: true},
         });
     }
+
+
+    //TODO: move me
+    createShareIntent(item: Item, url: Url) {
+        const {title} = item;
+
+        const content = this.prepareShareIntent(title, url);
+
+        const options = {
+            // Android only:
+            dialogTitle: title,
+            //IOS only
+            subject: i18n.t('send_object', {what: title}),
+        };
+        return {content, options};
+    }
+
+    //TODO: move me
+    prepareShareIntent(title:string, url: Url) {
+        let intent = {title};
+        let message = i18n.t('send_message');
+        if (__IS_ANDROID__) message = url + '\n\n' + message;
+        if (__IS_IOS__) intent.url = url;
+        intent.message = message;
+        return intent;
+    }
+
 
     execBuy(activity: Activity) {
         let url = _.get(activity, 'resource.url');
@@ -415,9 +444,29 @@ export default class ActivityActionBar extends React.Component<Props, State> {
         let {id, type} = activity;
         this.props.dispatch(activityAction.unlike(id, type));
     }
-
-
 }
+
+//TODO: move this somewhere
+const SEND_ITEM = ApiAction.create("send_item", "add a note to an item");
+function sendItem(itemId: Id, user: User, description?: Description = "", privacy?: Visibility = 0){
+
+    let body = {
+        sending: {
+            receiver_id: user.id,
+            description,
+            privacy
+        }
+    };
+
+    return new Api.Call().withMethod('POST')
+        .withRoute(`items/${itemId}/sendings`)
+        .withBody(body)
+        .addQuery({
+            include: "*.*"
+        });
+};
+
+
 
 
 
@@ -429,34 +478,34 @@ export function unsaveOnce(saving: Saving, dispatch: *) {
             {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
             {
                 text: i18n.t("actions.ok"), onPress: () => {
-                let {id, lineupId, pending} = saving;
-                let lineup;
-                if (pending) {
-                    lineup = StoreManager.buildData('lists', lineupId)
-                }
-                else {
-                    lineup = _.get(StoreManager.buildData('savings', id), 'target');
-                }
-                lineupId = lineup && lineup.id;
-                const delayMs = 4000;
+                    let {id, lineupId, pending} = saving;
+                    let lineup;
+                    if (pending) {
+                        lineup = StoreManager.buildData('lists', lineupId)
+                    }
+                    else {
+                        lineup = _.get(StoreManager.buildData('savings', id), 'target');
+                    }
+                    lineupId = lineup && lineup.id;
+                    const delayMs = 4000;
 
-                dispatch(doUnsave(saving.pending, saving.id, lineupId, delayMs)).then((pendingId) => {
-                    //console.info(`saving ${saving.id} unsaved`)
-                    Messenger.sendMessage(
-                        i18n.t("activity_action_bar.goodsh_deleted"),
-                        {
-                            timeout: delayMs,
-                            action: !pending && {
-                                title: i18n.t('activity_action_bar.goodsh_deleted_undo'),
-                                onPress: () => {
-                                    //undo previous add
-                                    dispatch(SAVING_DELETION.undo(pendingId))
-                                },
+                    dispatch(doUnsave(saving.pending, saving.id, lineupId, delayMs)).then((pendingId) => {
+                        //console.info(`saving ${saving.id} unsaved`)
+                        Messenger.sendMessage(
+                            i18n.t("activity_action_bar.goodsh_deleted"),
+                            {
+                                timeout: delayMs,
+                                action: !pending && {
+                                    title: i18n.t('activity_action_bar.goodsh_deleted_undo'),
+                                    onPress: () => {
+                                        //undo previous add
+                                        dispatch(SAVING_DELETION.undo(pendingId))
+                                    },
+                                }
                             }
-                        }
-                    );
-                });
-            }
+                        );
+                    });
+                }
             },
         ],
         {cancelable: true}

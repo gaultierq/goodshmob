@@ -41,7 +41,7 @@ type Props = {
     navigator: RNNNavigator,
     // lineup: List,
     lineupId: Id,
-    withMenuButton?: boolean,
+    renderMenuButton?: () => Node,
     withLineupTitle?: boolean, //TODO: invert the default condition
     withAddInEmptyLineup?: boolean,
     onSavingPressed?: ?(navigator: RNNNavigator, saving: Saving) => void,
@@ -75,7 +75,7 @@ export default class LineupHorizontal extends Component<Props, State> {
     render() {
         this.updateTracker.onRender(this.props);
 
-        const {withMenuButton, withLineupTitle, lineupId} = this.props;
+        const {renderMenuButton, withLineupTitle, lineupId} = this.props;
 
         let {lineup, savings} = StoreManager.getLineupAndSavings(lineupId);
         if (!lineup) return null;
@@ -87,7 +87,7 @@ export default class LineupHorizontal extends Component<Props, State> {
 
                     <View style={{flexDirection:'row', paddingLeft: 15, paddingRight: 15}}>
                         <LineupTitle lineup={lineup}/>
-                        {withMenuButton && this.renderMenuButton(lineup, 15)}
+                        {renderMenuButton && renderMenuButton()}
                     </View>
                 }
                 {this.renderList(lineup, savings)}
@@ -113,88 +113,88 @@ export default class LineupHorizontal extends Component<Props, State> {
     }
 
     //TODO: move out of LineupHorizontal
-    renderMenuButton(item, padding) {
-        if (!item) return null;
-
-        //TODO: this shouldnt be here
-        if (item.id === currentGoodshboxId()) return null;
-
-        // console.log("paddings:" + stylePadding(padding, 12));
-        let handler = () => {
-            BottomSheet.showBottomSheetWithOptions({
-                options: [i18n.t("actions.change_title"), i18n.t("actions.delete"), i18n.t("actions.cancel")],
-                title: item.name,
-                dark: true,
-                destructiveButtonIndex: 1,
-                cancelButtonIndex: 2,
-            }, (value) => {
-                switch (value) {
-                    case 1:
-                        this.deleteLineup(item);
-                        break;
-                    case 0:
-                        this.changeTitle(item);
-                        break;
-                }
-            });
-        };
-        return (<View style={{position: "absolute", right: 0, margin: 0}}>
-            <GTouchable onPress={handler}>
-                <View style={{...stylePadding(padding, 14)}}>
-                    <Image
-                        source={require('../../img2/moreDotsGrey.png')} resizeMode="contain"/>
-                </View>
-            </GTouchable>
-        </View>);
-    }
-
-    //TODO: move out of LineupHorizontal
-    deleteLineup(lineup: List) {
-        let delayMs = 3000;
-        //deleteLineup(lineup.id, delayMs)
-        const lineupId = lineup.id;
-        return Alert.alert(
-            i18n.t("alert.delete.title"),
-            i18n.t("alert.delete.label"),
-            [
-                {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-                {text: i18n.t("actions.ok"), onPress: () => {
-                    this.props.dispatch(LINEUP_DELETION.pending({lineupId}, {delayMs, lineupId}))
-                        .then(pendingId => {
-                            Snackbar.show({
-                                    title: i18n.t("activity_item.buttons.deleted_list"),
-                                    duration: Snackbar.LENGTH_LONG,
-                                    action: {
-                                        title: i18n.t("actions.undo"),
-                                        color: 'green',
-                                        onPress: () => {
-                                            this.props.dispatch(LINEUP_DELETION.undo(pendingId))
-                                        },
-                                    },
-                                }
-                            );
-                        });
-                }
-                },
-            ],
-            { cancelable: true }
-        );
-    }
+    // renderMenuButton(item, padding) {
+    //     if (!item) return null;
+    //
+    //     //TODO: this shouldnt be here
+    //     if (item.id === currentGoodshboxId()) return null;
+    //
+    //     // console.log("paddings:" + stylePadding(padding, 12));
+    //     let handler = () => {
+    //         BottomSheet.showBottomSheetWithOptions({
+    //             options: [i18n.t("actions.change_title"), i18n.t("actions.delete"), i18n.t("actions.cancel")],
+    //             title: item.name,
+    //             dark: true,
+    //             destructiveButtonIndex: 1,
+    //             cancelButtonIndex: 2,
+    //         }, (value) => {
+    //             switch (value) {
+    //                 case 1:
+    //                     this.deleteLineup(item);
+    //                     break;
+    //                 case 0:
+    //                     this.changeTitle(item);
+    //                     break;
+    //             }
+    //         });
+    //     };
+    //     return (<View style={{position: "absolute", right: 0, margin: 0}}>
+    //         <GTouchable onPress={handler}>
+    //             <View style={{...stylePadding(padding, 14)}}>
+    //                 <Image
+    //                     source={require('../../img2/moreDotsGrey.png')} resizeMode="contain"/>
+    //             </View>
+    //         </GTouchable>
+    //     </View>);
+    // }
 
     //TODO: move out of LineupHorizontal
-    changeTitle(lineup: List) {
-        let {id, name} = lineup;
+    // deleteLineup(lineup: List) {
+    //     let delayMs = 3000;
+    //     //deleteLineup(lineup.id, delayMs)
+    //     const lineupId = lineup.id;
+    //     return Alert.alert(
+    //         i18n.t("alert.delete.title"),
+    //         i18n.t("alert.delete.label"),
+    //         [
+    //             {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+    //             {text: i18n.t("actions.ok"), onPress: () => {
+    //                 this.props.dispatch(LINEUP_DELETION.pending({lineupId}, {delayMs, lineupId}))
+    //                     .then(pendingId => {
+    //                         Snackbar.show({
+    //                                 title: i18n.t("activity_item.buttons.deleted_list"),
+    //                                 duration: Snackbar.LENGTH_LONG,
+    //                                 action: {
+    //                                     title: i18n.t("actions.undo"),
+    //                                     color: 'green',
+    //                                     onPress: () => {
+    //                                         this.props.dispatch(LINEUP_DELETION.undo(pendingId))
+    //                                     },
+    //                                 },
+    //                             }
+    //                         );
+    //                     });
+    //             }
+    //             },
+    //         ],
+    //         { cancelable: true }
+    //     );
+    // }
 
-
-        this.props.navigator.showModal({
-            screen: 'goodsh.ChangeLineupName',
-            animationType: 'none',
-            passProps: {
-                lineupId: id,
-                initialLineupName: name
-            }
-        });
-    }
+    //TODO: move out of LineupHorizontal
+    // changeTitle(lineup: List) {
+    //     let {id, name} = lineup;
+    //
+    //
+    //     this.props.navigator.showModal({
+    //         screen: 'goodsh.ChangeLineupName',
+    //         animationType: 'none',
+    //         passProps: {
+    //             lineupId: id,
+    //             initialLineupName: name
+    //         }
+    //     });
+    // }
 
     //TODO: move out of LineupHorizontal, as a prop
     renderEmptyList(list: List) {
