@@ -250,6 +250,8 @@ class HomeScreen extends Screen<Props, State> {
                     empty={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
                     initialLoaderDelay={0}
                     onScroll={floatingButtonScrollListener.call(this)}
+                    // ItemSeparatorComponent={() => <View style={{height: StyleSheet.hairlineWidth, backgroundColor: Colors.white}} />}
+                    ItemSeparatorComponent={() => null}
 
                     sectionMaker={(lineups)=> {
                         const goodshbox = _.head(lineups);
@@ -260,7 +262,7 @@ class HomeScreen extends Screen<Props, State> {
                                 title: i18n.t("lineups.goodsh.title"),
                                 subtitle: ` (${savingCount})`,
                                 onPress: () => seeList(navigator, goodshbox),
-                                renderItem: ({item}) => <LineupH1
+                                renderItem: ({item, index}) => <LineupH1
                                     lineup={item}
                                     navigator={navigator}
                                     skipLineupTitle={true}
@@ -270,14 +272,19 @@ class HomeScreen extends Screen<Props, State> {
                                 data: _.slice(lineups, 1),
                                 title: i18n.t("lineups.mine.title"),
                                 renderSectionHeaderChildren:() => <AddLineupComponent navigator={this.props.navigator}/>,
-                                renderItem: ({item})=>(
+                                renderItem: ({item, index})=>(
                                     <LineupH1 lineup={item} navigator={navigator}
                                               withMenuButton={true}
-                                              onPressEmptyLineup={()=>startAddItem(navigator, item.id)}
+                                              onPressEmptyLineup={() => startAddItem(navigator, item.id)}
                                               renderMenuButton={() => {
                                                   //TODO: dubious 15
                                                   return this.renderMenuButton(item, 15)
                                               }}
+                                              renderTitle={(lineup: Lineup) => <LineupTitle lineup={lineup} style={{marginBottom: 10,}}/>}
+                                              style={[
+                                                  {paddingTop: 8, paddingBottom: 12},
+                                                  {backgroundColor: index % 2 === 1 ? 'transparent' : 'rgba(255, 255, 255, 0.3)'}
+                                                  ]}
                                     />
                                 )
                             },

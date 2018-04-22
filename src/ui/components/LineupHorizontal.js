@@ -59,7 +59,7 @@ export default class LineupHorizontal extends Component<Props, State> {
 
     static defaultProps = {
         skipLineupTitle: false,
-        renderTitle: (lineup: Lineup) => <LineupTitle lineup={lineup}/>
+        renderTitle: (lineup: Lineup) => <LineupTitle lineup={lineup} style={{marginVertical: 6,}}/>
     }
 
     constructor(props: Props) {
@@ -72,17 +72,17 @@ export default class LineupHorizontal extends Component<Props, State> {
     render() {
         this.updateTracker.onRender(this.props);
 
-        const {renderTitle, renderMenuButton, skipLineupTitle, lineupId} = this.props;
+        const {renderTitle, renderMenuButton, skipLineupTitle, lineupId, style} = this.props;
 
         let {lineup, savings} = StoreManager.getLineupAndSavings(lineupId);
         if (!lineup) return null;
 
         return (
-            <View style={this.props.style}>
+            <View style={[style]}>
                 {
                     !skipLineupTitle &&
 
-                    <View style={{flexDirection:'row', paddingLeft: 15, paddingRight: 15}}>
+                    <View style={{flexDirection:'row', paddingHorizontal: 15}}>
                         {renderTitle(lineup)}
                         {renderMenuButton && renderMenuButton()}
                     </View>

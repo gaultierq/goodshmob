@@ -9,7 +9,7 @@ import Icon from 'react-native-vector-icons/Entypo';
 
 type Props = {
     lineup: List,
-    skipChevron:?boolean,
+    skipChevron?: boolean,
     style?: *,
 };
 
@@ -35,7 +35,7 @@ export default class LineupTitle extends React.Component<Props, State> {
                     style={{color: Colors.grey3}}
                 >{` id=(#${lineup.id.substr(0, 5)})`}</Text>}
             </Text>
-            {!skipChevron && <Icon name="chevron-right" size={16} color={Colors.greyishBrown}/>}
+            {/*{!skipChevron && <Icon name="chevron-right" size={16} color={Colors.greyishBrown}/>}*/}
         </Text>;
     }
 }
@@ -43,7 +43,5 @@ export default class LineupTitle extends React.Component<Props, State> {
 const styles = StyleSheet.create({
     lineupTitle: {
         fontSize: 17,
-        marginTop: 6,
-        marginBottom: 7,
     }
 });
