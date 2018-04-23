@@ -28,6 +28,7 @@ import {Colors} from "../colors";
 import {SFP_TEXT_MEDIUM} from "../fonts";
 
 import GTouchable from "../GTouchable";
+import GSearchBar from "../GSearchBar";
 // $FlowFixMe
 
 
@@ -81,28 +82,60 @@ export default class UserLineups extends Screen<Props, State> {
         return (
 
             <LineupListScreen
-
                 onLineupPressed={(lineup) => seeList(navigator, lineup)}
                 onSavingPressed={(saving) => seeActivityDetails(navigator, saving)}
                 scrollUpOnBack={super.isVisible() ? ()=>false : null}
-
                 cannotFetch={false}
                 visible={true}
-
                 renderSectionHeader={({section}) => this.renderSectionHeader(section)}
                 renderSectionFooter={()=> <View style={{height: 25, width: "100%"}} />}
                 ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
-
+                ListHeaderComponent={this.renderFilter()}
                 filter={this.filter()}
-
                 {...this.props}
             />
 
         );
     }
 
+    renderFilter() {
+        let style = {
+            backgroundColor: NavStyles.navBarBackgroundColor,
+            paddingTop: 5,
+            paddingBottom: 5,
+            elevation: 3,
+            paddingLeft: 9,
+            paddingRight: 9,
+            borderBottomWidth: 1,
+            borderBottomColor: Colors.grey3
+        };
+
+        
+        return (
+            <View key={'searchbar_container'} style={[style]}>
+
+                <GSearchBar
+                    // textInputRef={r=>this.filterNode = r}
+                    onChangeText={filter => this.setState({filter})}
+                    onClearText={()=>this.setState({filter: null})}
+                    placeholder={i18n.t('search.in_feed')}
+                    clearIcon={!!this.state.filter && {color: '#86939e'}}
+                    style={{margin: 0,}}
+                    // onClearText={() => {
+                    //     this.filterNode.blur();
+                    // }}
+                    value={this.state.filter}
+                    // onFocus={()=>this.setState({isFilterFocused:true})}
+                    // onBlur={()=>this.setState({isFilterFocused:false})}
+
+                />
+            </View>
+        )}
+
     filter() {
+
         return {
+            token: this.state.filter, //used just to re-render the children. todo: find a better way
             placeholder: 'search.in_feed',
             onSearch: (searchToken: string) => {
                 this.launchSearch(searchToken);
@@ -113,17 +146,10 @@ export default class UserLineups extends Screen<Props, State> {
                     {renderSimpleButton(i18n.t('lineups.filter.deepsearch'), () => this.launchSearch(searchToken))}
                 </View>
             ),
-            style: {
-                backgroundColor: NavStyles.navBarBackgroundColor,
-                paddingTop: 5,
-                paddingBottom: 5,
-                elevation: 3,
-                paddingLeft: 9,
-                paddingRight: 9,
-                borderBottomWidth: 1,
-                borderBottomColor: Colors.grey3
-            },
-            applyFilter: (sections, filter) => {
+            applyFilter: (sections) => {
+                const filter: string = this.state.filter;
+                if (!filter) return sections;
+
                 let contains = (container, token) => {
                     if (!container || !token) return false;
                     return container.toLowerCase().indexOf(token.toLowerCase()) >= 0;
@@ -164,6 +190,8 @@ export default class UserLineups extends Screen<Props, State> {
             }
         };
     }
+
+
 
 // render() {return <View style={{width: 50, height: 50, backgroundColor: BACKGROUND_COLOR}}/>}
 

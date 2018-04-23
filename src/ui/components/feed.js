@@ -2,7 +2,17 @@
 
 import type {Node} from 'react';
 import React, {Component} from 'react';
-import {ActivityIndicator, TouchableWithoutFeedback, BackHandler, FlatList, RefreshControl, SectionList, Text, View, Keyboard} from 'react-native';
+import {
+    ActivityIndicator,
+    BackHandler,
+    FlatList,
+    Keyboard,
+    RefreshControl,
+    SectionList,
+    Text,
+    TouchableWithoutFeedback,
+    View
+} from 'react-native';
 import {connect} from "react-redux";
 import {assertUnique} from "../../helpers/DataUtils";
 import ApiAction from "../../helpers/ApiAction";
@@ -10,7 +20,7 @@ import * as Api from "../../managers/Api";
 import {TRIGGER_USER_DIRECT_ACTION, TRIGGER_USER_INDIRECT_ACTION} from "../../managers/Api";
 import {isEmpty} from "lodash";
 import type {i18Key, ms, RequestState, Url} from "../../types";
-import {NavStyles, renderSimpleButton} from "../UIStyles";
+import {renderSimpleButton} from "../UIStyles";
 import {SearchBar} from 'react-native-elements'
 
 import type {ScreenVisibility} from "./Screen";
@@ -23,7 +33,6 @@ import Spinner from 'react-native-spinkit';
 import GSearchBar from "../GSearchBar";
 import Config from "react-native-config"
 import {FullScreenLoader} from "../UIComponents";
-import GTouchable from "../GTouchable";
 
 export type FeedSource = {
     callFactory: ()=>Api.Call,
@@ -52,10 +61,11 @@ export type Props<T> = {
 
 export type FilterConfig<T> = {
     placeholder: i18Key,
+    renderFilter: () => Node,
     onSearch: string => void,
     emptyFilterResult: string => Node,
     style: *,
-    applyFilter: (Array<T>, string) => Array<T>
+    applyFilter: (Array<T>) => Array<T>
 };
 
 type State = {
@@ -65,6 +75,7 @@ type State = {
     isPulling?: boolean,
     lastEmptyResultMs?: number,
     moreLink?: Url,
+
     filter?:? string
 };
 
@@ -240,13 +251,12 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
         const filter = this.props.filter;
         if (filter) {
-            allViews.push(this.renderSearchBar(filter));
-            if (this.state.filter) {
+            // allViews.push(this.renderSearchBar(filter));
+            // allViews.push(filter.renderFilter());
 
-                items = filter.applyFilter(items, this.state.filter);
-                if (_.isEmpty(items)) {
-                    allViews.push(filter.emptyFilterResult(this.state.filter));
-                }
+            items = filter.applyFilter(items);
+            if (_.isEmpty(items)) {
+                allViews.push(filter.emptyFilterResult(this.state.filter));
             }
         }
 
@@ -302,88 +312,12 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     isFiltering() {
-        return !!this.state.filter;
+        return !!_.get(this, 'props.filter.token');
     }
 
     debugOnlyEmptyFeeds() {
         return this.props.config && !!this.props.config.onlyEmptyFeeds;
     }
-
-    applyFilter(data, isSection: boolean = false) {
-        if (this.state.filter) {
-
-            let searchIn = data;
-
-            let fuse = new Fuse(searchIn, {
-                keys: [
-                    {
-                        name: 'name',
-                        weight: 0.6
-                    },
-                    {
-                        name: 'title',
-                        weight: 0.4
-                    }],
-                // keys: ['name', 'title'],
-                sort: true,
-                threshold: 0.6
-            });
-            data = fuse.search(this.state.filter);
-        }
-
-
-        return data;
-    }
-
-    renderSearchBar(filter: FilterConfig<T>){
-
-        let {onSearch, style, placeholder} = filter;
-
-        let font = {
-            fontSize: 16,
-            lineHeight: 22,
-            textAlign: 'left',
-        };
-
-        // const color = Colors.grey142;
-        // //TODO: adjust fr, en margins
-        // //TODO: center placeholder ! https://github.com/agiletechvn/react-native-search-box
-        // const placeholderConfig = {
-        //     placeholder: i18n.t(placeholder),
-        //     //TOREMOVE
-        //     placeholderCollapsedMargin: this.isFrenchLang ? 95 : 65,
-        //     //TOREMOVE
-        //     searchIconCollapsedMargin: this.isFrenchLang ? 110 : 80,
-        // };
-
-        return (
-            <View key={'searchbar_container'} style={[style]}>
-
-                <GSearchBar
-                    textInputRef={r=>this.filterNode = r}
-                    // lightTheme
-                    onChangeText={filter => this.setState({filter})}
-                    onClearText={()=>this.setState({filter: null})}
-                    placeholder={i18n.t(placeholder)}
-                    // autoCapitalize='none'
-                    clearIcon={!!this.state.filter && {color: '#86939e'}}
-                    // containerStyle={{backgroundColor: NavStyles.navBarBackgroundColor, marginTop:0 ,marginBottom: 0, borderBottomWidth: 0, borderTopWidth: 0,}}
-                    // inputStyle={{backgroundColor: Colors.greying, textAlign: 'center', marginBottom: 5, fontSize: 15}}
-                    // autoCorrect={false}
-                    style={{margin: 0,}}
-                    // returnKeyType={'search'}
-                    onClearText={() => {
-                        this.filterNode.blur();
-                    }}
-                    value={this.state.filter}
-                    onFocus={()=>this.setState({isFilterFocused:true})}
-                    onBlur={()=>this.setState({isFilterFocused:false})}
-
-                />
-            </View>
-        );
-    }
-
 
     //displayed when no data yet, and loading for the first time
 
