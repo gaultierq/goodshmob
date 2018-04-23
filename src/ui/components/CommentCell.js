@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import {Avatar} from "../UIComponents";
-import type {User} from "../../types";
+import type {User, Comment} from "../../types";
 import {styleMargin, stylePadding} from "../UIStyles";
 import {timeSinceActivity} from "../../helpers/DataUtils";
 import {Colors} from "../colors";
