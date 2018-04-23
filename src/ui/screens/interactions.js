@@ -1,7 +1,8 @@
 // @flow
 
 import React from 'react';
-import {ScrollView, StyleSheet, Text, TouchableOpacity, View, Share} from 'react-native';
+
+import {ScrollView, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
 import {logged} from "../../managers/CurrentUser"
 import Immutable from 'seamless-immutable';
@@ -17,11 +18,8 @@ import Screen from "../components/Screen";
 import NavManager from "../../managers/NavManager";
 import GTouchable from "../GTouchable";
 import ShareButton from "../components/ShareButton";
-
-import {Colors} from "../colors";
-import Button from 'apsl-react-native-button'
-import {SFP_TEXT_MEDIUM} from "../fonts";
 import {STYLES} from "../UIStyles";
+import Config from 'react-native-config';
 
 type Props = {
     navigator: *,
@@ -127,14 +125,14 @@ export class InteractionScreen extends Screen<Props, State> {
 
                 if (resource) {
                     let {id, type} = resource;
-                    return `https://goodsh.it/${sanitizeActivityType(type)}/${id}/comments`
+                    return `${Config.SERVER_URL}${sanitizeActivityType(type)}/${id}/comments`
                 }
                 break;
             }
             default:
                 if (resource) {
                     let {id, type} = resource;
-                    return `https://goodsh.it/${sanitizeActivityType(type)}/${id}`
+                    return `${Config.SERVER_URL}${sanitizeActivityType(type)}/${id}`
                 }
         }
     }
