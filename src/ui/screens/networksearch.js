@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import {connect} from "react-redux";
 import {currentUserId, logged} from "../../managers/CurrentUser"
-import type {Id, List, NavigableProps, Saving} from "../../types";
+import type {Id, Lineup, List, NavigableProps, Saving} from "../../types";
 import ItemCell from "../components/ItemCell";
 import LineupCell from "../components/LineupCell";
 import {AlgoliaClient, createResultFromHit, createResultFromHit2, makeAlgoliaSearchEngine} from "../../helpers/AlgoliaUtils";
@@ -25,7 +25,9 @@ import Config from 'react-native-config'
 import SearchScreen from "./search";
 import {Colors} from "../colors";
 import GTouchable from "../GTouchable";
-import {seeUser} from "../Nav";
+import {seeActivityDetails, seeList, seeUser} from "../Nav";
+import LineupHorizontal, {LineupH1} from "../components/LineupHorizontal";
+import LineupTitle from "../components/LineupTitle";
 
 type Props = NavigableProps & {
 };
@@ -50,68 +52,9 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
 
     render() {
 
+        let navigator = this.props.navigator;
 
-        let renderItem = ({item})=> {
-
-            let isLineup = item.type === 'lists';
-
-
-            if (isLineup) {
-                let user = item.user;
-
-
-                let userXml = (
-                    <View  style={{flex:1}}>
-                        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', marginBottom: 8}}>
-                            <Text style={{fontSize: 12, color: Colors.greyishBrown, marginLeft: 8, marginRight: 3}}>{i18n.t('search.by')}</Text>
-                            <UserRowI
-                                user={item.user}
-                                navigator={this.props.navigator}
-                                noImage={true}
-                            />
-                        </View>
-                    </View>
-                );
-
-                return (
-                    <GTouchable
-                        onPress={() => this.onLineupPressed(item)}>
-                        <View>
-                            <LineupCell
-                                lineup={item}
-                                titleChildren={userXml}
-                                titleChildrenBelow={true}
-                            />
-                        </View>
-                    </GTouchable>
-                )
-            }
-            else {
-                let saving = item;
-
-                let resource = saving.resource;
-
-                //TODO: this is hack
-                if (!resource) return null;
-
-                return (
-                    <GTouchable onPress={()=>this.onSavingPressed(saving)}>
-                        <ItemCell item={resource}/>
-                    </GTouchable>
-                )
-            }
-        };
-
-        let renderUser = ({item}) => {
-            return (
-                <GTouchable onPress={() => seeUser(navigator, item)}>
-                    <UserConnectItem
-                        user={item}
-                        navigator={this.props.navigator}
-                    />
-                </GTouchable>
-            );
-        };
+        let {renderItem, renderUser} = itemRenderer(navigator);
 
         let index = new Promise(resolve => {
             AlgoliaClient.createAlgoliaIndex(Config.ALGOLIA_SAVING_INDEX).then(index => {
@@ -158,7 +101,7 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
 
         ];
 
-        let navigator = this.props.navigator;
+
         // return (
         //     <AlgoliaSearchScreen
         //         categories={categories}
@@ -193,3 +136,88 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
         });
     }
 }
+
+
+
+let itemRenderer = navigator => {
+    let renderItem = ({item}) => {
+
+        let isLineup = item.type === 'lists';
+
+
+        if (isLineup) {
+            let user = item.user;
+
+
+            let userXml = (
+
+
+                <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    flex: 0,
+                    // backgroundColor: 'yellow'
+                }}>
+                    <Text style={{
+                        fontSize: 12,
+                        color: Colors.greyishBrown,
+                        marginLeft: 8,
+                        marginRight: 3,
+                        flex: 0,
+
+                    }}>{i18n.t('search.by')}</Text>
+                    <UserRowI
+                        user={user}
+                        navigator={navigator}
+                        noImage={true}
+                        style={{flex:0}} //TODO: rm when removed in UserRowI
+                    />
+                </View>
+            );
+
+            return (
+                <GTouchable
+                    onPress={() => seeList(navigator, item)}>
+
+                    <LineupHorizontal
+                        lineupId={item.id}
+                        dataResolver={ () => ({lineup:item, savings: item.savings})}
+                        style={{paddingBottom: 10}}
+                        renderTitle={(lineup: Lineup) => (
+                            <View style={{flexDirection: 'row'}}>
+                                <LineupTitle lineup={lineup} style={{marginVertical: 6,}}/>
+                                {userXml}
+                            </View>
+                        )}
+                    />
+                </GTouchable>
+            )
+        }
+        else {
+            let saving = item;
+
+            let resource = saving.resource;
+
+            //TODO: this is hack
+            if (!resource) return null;
+
+            return (
+                <GTouchable onPress={() => seeActivityDetails(navigator, saving)}>
+                    <ItemCell item={resource}/>
+                </GTouchable>
+            )
+        }
+    };
+
+    let renderUser = ({item}) => {
+        return (
+            <GTouchable onPress={() => seeUser(navigator, item)}>
+                <UserConnectItem
+                    user={item}
+                    navigator={navigator}
+                />
+            </GTouchable>
+        );
+    };
+    return {renderItem, renderUser};
+};

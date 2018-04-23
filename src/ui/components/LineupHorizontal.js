@@ -36,13 +36,14 @@ import StoreManager from "../../managers/StoreManager";
 // $FlowFixMe
 type Props = {
     lineupId: Id,
+    dataResolver: Id => {lineup: Lineup, savings: Array<Saving>},
     renderMenuButton?: () => Node,
-    skipLineupTitle: boolean,
+    skipLineupTitle?: boolean,
     onPressEmptyLineup?: () => void,
     onSavingPressed?: ?(navigator: RNNNavigator, saving: Saving) => void,
-    renderSaving: (saving:Saving) => Node,
+    renderSaving?: (saving:Saving) => Node,
     renderTitle: (lineup: Lineup) => Node,
-    style?: *,
+    style?: any,
 };
 
 type State = {
@@ -59,7 +60,9 @@ export default class LineupHorizontal extends Component<Props, State> {
 
     static defaultProps = {
         skipLineupTitle: false,
-        renderTitle: (lineup: Lineup) => <LineupTitle lineup={lineup} style={{marginVertical: 6,}}/>
+        renderTitle: (lineup: Lineup) => <LineupTitle lineup={lineup} style={{marginVertical: 6,}}/>,
+        renderSaving: saving => <LineupCellSaving item={saving.resource} />,
+        dataResolver: lineupId => StoreManager.getLineupAndSavings(lineupId)
     }
 
     constructor(props: Props) {
@@ -74,8 +77,11 @@ export default class LineupHorizontal extends Component<Props, State> {
 
         const {renderTitle, renderMenuButton, skipLineupTitle, lineupId, style} = this.props;
 
-        let {lineup, savings} = StoreManager.getLineupAndSavings(lineupId);
-        if (!lineup) return null;
+        let {lineup, savings} = this.props.dataResolver(lineupId);
+        if (!lineup) {
+            console.warn('lineup not found for id', lineupId)
+            return null;
+        }
 
         return (
             <View style={[style]}>

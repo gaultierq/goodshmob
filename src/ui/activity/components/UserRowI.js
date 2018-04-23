@@ -33,6 +33,8 @@ export default class UserRowI extends React.Component<Props, State> {
         let imageDim = small ? 20 : 30;
 
         let uri = user ? user.image: "";
+
+        //FIXME: rm flex: 1 ?
         return <View style={[{flex:1, }, style, styles.userContainer]}>
             {
                 !!uri &&

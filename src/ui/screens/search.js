@@ -316,7 +316,7 @@ export default class SearchScreen extends Component<Props, State> {
                 this.setState(update(this.state, {searches: {[token]: {[catType]: {$merge: {searchState: 3}}}}},));
             })
             .then((results: SearchResult) => {
-
+                console.debug('search results', results)
                 //const catType = this.getCurrentCategory().type;
                 if (!results) {
                     // TODO: set state error

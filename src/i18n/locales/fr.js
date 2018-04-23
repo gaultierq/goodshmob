@@ -50,7 +50,7 @@ export default {
         in_items: "Saisir le nom à enregistrer",
         in_network: "Rechercher dans mon réseau",
         in_feed: "Rechercher",
-        by: "de"
+        by: "par"
     },
     "shared":{
         "goodsh_saved":"Enregistré",
