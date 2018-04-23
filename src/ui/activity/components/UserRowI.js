@@ -10,6 +10,7 @@ import {Colors} from "../../colors";
 import {CachedImage} from "react-native-img-cache";
 import {SFP_TEXT_BOLD} from "../../fonts";
 import GTouchable from "../../GTouchable";
+import {fullName} from "../../../helpers/StringUtils";
 
 type Props = {
     user: User,
@@ -58,7 +59,7 @@ export default class UserRowI extends React.Component<Props, State> {
             <View style={{flex:1}}>
                 <View style={[styles.rightContainer]}>
                     <Text style={styles.rightText}>
-                        {user && user.firstName}
+                        {user && fullName(user)}
                         {rightText}
                     </Text>
                     {rightComponent}
