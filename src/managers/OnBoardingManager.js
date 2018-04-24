@@ -29,7 +29,7 @@ class _OnBoardingManager implements OnBoardingManager {
         this.store = store;
 
         this.ALL_STEPS = ['focus_add'];
-        if (__WITH_NOTIFICATIONS__) {
+        if (__WITH_NOTIFICATIONS__ && __IS_IOS__) {
             this.ALL_STEPS.push('notification')
         }
         this.ALL_STEPS.push('privacy', 'noise', 'private')
