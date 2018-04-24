@@ -165,13 +165,13 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "it.goodsh.mob"
-        minSdkVersion 16
-        targetSdkVersion 22
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         // versionCode 1
         // versionName "1.0"
         ndk {
@@ -309,12 +309,16 @@ dependencies {
     implementation project(':react-native-fabric')
     implementation project(':react-native-taptargetview')
     implementation project(':react-native-config')
+//    implementation(project(':react-native-device-info')) {
+//        exclude group: 'com.google.android.gms', module: 'play-services-gcm'
+//    }
+
     implementation project(':react-native-device-info')
 
     // Firebase dependencies
-    implementation "com.google.android.gms:play-services-base:15.0.0"
-    implementation "com.google.firebase:firebase-core:15.0.0"
-    implementation "com.google.firebase:firebase-messaging:15.0.0"
+    implementation("com.google.android.gms:play-services-base:${rootProject.ext.googlePlayServicesVersion}")
+    implementation "com.google.firebase:firebase-core:${rootProject.ext.googlePlayServicesVersion}"
+    implementation "com.google.firebase:firebase-messaging:${rootProject.ext.googlePlayServicesVersion}"
     implementation 'me.leolin:ShortcutBadger:1.1.21@aar' // <-- Add this line if you wish to use badge on Android
 
 
@@ -332,7 +336,7 @@ dependencies {
     implementation project(':react-native-i18n')
     implementation project(':react-native-fbsdk')
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:23.0.1'
+    implementation 'com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}'
 //    compile 'com.android.support:support-annotations:27.0.0'
     implementation 'com.facebook.react:react-native:+'
     // From node_modules

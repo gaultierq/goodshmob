@@ -31,6 +31,15 @@ allprojects {
     }
 }
 
+ext {
+    compileSdkVersion = 26
+    buildToolsVersion = '27.0.1'
+    targetSdkVersion = 22
+    minSdkVersion = 16
+    supportLibVersion = "23.0.1"
+    googlePlayServicesVersion = "12.0.0"
+}
+
 // //https://github.com/oblador/react-native-keychain/issues/68#issuecomment-304836725
 // subprojects {
 //     afterEvaluate {project ->

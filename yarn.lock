@@ -5412,9 +5412,9 @@ react-native-config@^0.9.1:
   version "0.9.1"
   resolved "https://registry.yarnpkg.com/react-native-config/-/react-native-config-0.9.1.tgz#6cf1c680c0e2ac99115cb83c508c161fa950c210"
 
-react-native-device-info@^0.12.1:
-  version "0.12.1"
-  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-0.12.1.tgz#659ed145caa5a86a4815904381b25e9ebe0c24f6"
+react-native-device-info@^0.21.5:
+  version "0.21.5"
+  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-0.21.5.tgz#99478a2d68182e012297f2d63f2bd1b788106dee"
 
 react-native-easy-grid@^0.1.17:
   version "0.1.17"
@@ -5450,9 +5450,9 @@ react-native-fetch-polyfill@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/react-native-fetch-polyfill/-/react-native-fetch-polyfill-1.1.2.tgz#256b5a0abd78cc4992f7a7cf82543da2f2124a73"
 
-react-native-firebase@^4.0.4:
-  version "4.0.4"
-  resolved "https://registry.yarnpkg.com/react-native-firebase/-/react-native-firebase-4.0.4.tgz#09f142bcb229ab7cb0c8a706974123ee850f0e09"
+react-native-firebase@^4.0.5:
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/react-native-firebase/-/react-native-firebase-4.0.5.tgz#2db6da987b08bf45d6d31aacfca572210c59856d"
   dependencies:
     opencollective "^1.0.3"
     postinstall-build "^5.0.1"
