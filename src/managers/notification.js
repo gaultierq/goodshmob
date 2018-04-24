@@ -29,6 +29,7 @@ let handleNotif = function (notif) {
 
 export async function requestPermissionsForLoggedUser() {
     if (!__WITH_NOTIFICATIONS__) return;
+    console.info('requestPermissionsForLoggedUser')
     if (isLogged()) {
         RNFirebase.app().messaging().requestPermission();
     }

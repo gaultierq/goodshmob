@@ -19,7 +19,7 @@ import {
 import {connect} from "react-redux";
 import ActionButton from 'react-native-action-button';
 import {LineupListScreen} from './lineuplist'
-import type {Id, Lineup, RNNNavigator, Saving, SearchToken} from "../../types";
+import type {i18Key, Id, Lineup, RNNNavigator, Saving, SearchToken} from "../../types";
 import {List} from "../../types"
 import Snackbar from "react-native-snackbar"
 import {
@@ -54,9 +54,10 @@ import LineupHorizontal, {LineupH1} from "../components/LineupHorizontal";
 import {seeList} from "../Nav";
 import {seeActivityDetails} from "../Nav";
 import UserLineups from "./userLineups";
-import {floatingButtonScrollListener} from "../UIComponents";
+import {floatingButtonScrollListener, registerLayoutAnimation} from "../UIComponents";
 import BottomSheet from "react-native-bottomsheet";
 import {displayShareLineup} from "../Nav";
+import {Tip, TipConfig} from "../components/Tip";
 
 
 type Props = {
@@ -66,8 +67,29 @@ type Props = {
 
 type State = {
     focusedSaving?: Saving,
-    isActionButtonVisible: boolean
+    isActionButtonVisible: boolean,
+    currentTip?: TipConfig
 };
+
+const TIP_PRIVACY: TipConfig = {
+    type: 'visibility',
+    keys: 'tips.visibility',
+    materialIcon: 'lock',
+}
+const TIP_NOISE: TipConfig = {
+    type: 'noise',
+    keys: 'tips.noise',
+    materialIcon: 'notifications-off',
+}
+const TIP_FULL_PRIVATE: TipConfig = {
+    type: 'full_private',
+    keys: 'tips.full_private',
+    materialIcon: 'lock',
+}
+
+const TEST_TIP = TIP_NOISE;
+// const TEST_TIP = TIP_PRIVACY;
+// const TEST_TIP = TIP_PRIVACY;
 
 @logged
 @connect(state=>({
@@ -100,7 +122,8 @@ class HomeScreen extends Screen<Props, State> {
 
     state = {
         focusedSaving: false,
-        isActionButtonVisible: true
+        isActionButtonVisible: true,
+        // currentTip: TEST_TIP
     }
 
     static navigatorStyle = {
@@ -193,11 +216,30 @@ class HomeScreen extends Screen<Props, State> {
             callback: (step?: ?OnBoardingStep) => {
                 const visible = this.isVisible();
                 console.debug(`OnBoardingManager:step=${step} visible=${visible}`);
-                if (step === 'focus_add' && visible) {
-                    setTimeout(() => {
-                        this.displayFocusAdd();
-                    }, 1000);
+                if (!visible) return;
+                let oldTip = this.state.currentTip;
+                let newTip = null;
+                switch (step) {
+                    case 'focus_add':
+                        setTimeout(() => {
+                            this.displayFocusAdd();
+                        }, 1000);
+                        break;
+                    case 'privacy':
+                        newTip = TIP_PRIVACY;
+                        break
+                    case 'noise':
+                        newTip = TIP_NOISE;
+                        break
+                    case 'private':
+                        newTip = TIP_FULL_PRIVATE;
+                        break
                 }
+                if (newTip !== oldTip) {
+                    registerLayoutAnimation("opacity")
+                    this.setState({currentTip: newTip})
+                }
+
             }
         })
     }
@@ -252,6 +294,9 @@ class HomeScreen extends Screen<Props, State> {
                     onScroll={floatingButtonScrollListener.call(this)}
                     // ItemSeparatorComponent={() => <View style={{height: StyleSheet.hairlineWidth, backgroundColor: Colors.white}} />}
                     ItemSeparatorComponent={() => null}
+                    ListHeaderComponent={
+                        this.state.currentTip && this.renderTip()
+                    }
 
                     sectionMaker={(lineups)=> {
                         const goodshbox = _.head(lineups);
@@ -301,7 +346,29 @@ class HomeScreen extends Screen<Props, State> {
         );
     }
 
-    //TODO: use right manager
+    renderTip() {
+        const currentTip = this.state.currentTip;
+        let keys = currentTip.keys;
+        let res = {};
+        ['title', 'text', 'button'].forEach(k=> {
+            res[k] = i18n.t(`${keys}.${k}`)
+        })
+
+        ;
+        return <Tip
+            {...res}
+            materialIcon={currentTip.materialIcon}
+            style={{margin: 10}}
+            onClickClose={() => {
+                // registerLayoutAnimation("opacity")
+                // this.setState({currentTip: null})
+                OnBoardingManager.onDisplayed(currentTip.type)
+            }}
+
+        />;
+    }
+
+//TODO: use right manager
     renderMenuButton(item: Lineup, padding: number) {
         if (!item) return null;
 

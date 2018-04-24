@@ -40,6 +40,23 @@ export default {
         "- For a fully private goodsh, tap the lock\n\n",
         dialog_button: 'OK',
     },
+    tips: {
+        visibility: {
+            title: "Visibility",
+            text: "Your goodsh are only visible by you and your friends",
+            button: "OK"
+        },
+        noise: {
+            title: "Notification",
+            text: "When you save a goodsh, we don't notify your contacts",
+            button: "OK"
+        },
+        full_private: {
+            title: "Privacy",
+            text: "For a fully private goodsh, tap the lock",
+            button: "OK"
+        },
+    },
     home: {
         wizard: {
             action_button_label : "Save a goodsh.",

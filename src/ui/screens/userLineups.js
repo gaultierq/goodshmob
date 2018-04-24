@@ -91,7 +91,6 @@ export default class UserLineups extends Screen<Props, State> {
                     renderSectionHeader={({section}) => this.renderSectionHeader(section)}
                     renderSectionFooter={()=> <View style={{height: 25, width: "100%"}} />}
                     ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
-                    // ListHeaderComponent={this.renderFilter()}
                     filter={this.filter()}
                     {...this.props}
                 />

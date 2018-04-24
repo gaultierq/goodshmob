@@ -40,6 +40,23 @@ export default {
         "- Pour un goodsh **COMPLÈTEMENT** privé, active le cadenas",
         dialog_button: 'OK',
     },
+    tips: {
+        visibility: {
+            title: "Visibilité",
+            text: "Tes goodsh ne sont visibles que par toi et ton réseau",
+            button: "OK"
+        },
+        noise: {
+            title: "Notification",
+            text: "Quand tu enregistres un goodsh, tes contacts ne sont pas notifiés",
+            button: "OK"
+        },
+        full_private: {
+            title: "Privé",
+            text: "Pour un goodsh complètement privé, active le cadenas",
+            button: "OK"
+        },
+    },
     home: {
         wizard: {
             action_button_label : "Ajouter un coup de coeur ou une envie.",

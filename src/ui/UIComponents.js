@@ -92,6 +92,17 @@ export const Http404 = props => (<View style={STYLES.FULL_SCREEN}>
 </View>);
 
 
+export const registerLayoutAnimation = (type: 'opacity' | 'scaleXY', duration = 400) => {
+// Simple fade-in / fade-out animation
+    const animType = LayoutAnimation.Properties[type];
+    const CustomLayoutLinear = {
+        duration,
+        create: {type: LayoutAnimation.Types.linear, property: animType},
+        update: {type: LayoutAnimation.Types.linear, property: animType},
+        delete: {type: LayoutAnimation.Types.linear, property: animType}
+    }
+    LayoutAnimation.configureNext(CustomLayoutLinear)
+};
 
 export function floatingButtonScrollListener() {
     if (typeof this.state.isActionButtonVisible !== 'boolean') throw "bad usage";
@@ -114,18 +125,12 @@ export function floatingButtonScrollListener() {
 
             const direction = (currentOffset > 0 && diff > 0) ? 'down' : 'up'
 
-            // Simple fade-in / fade-out animation
-            const CustomLayoutLinear = {
-                duration: 200,
-                create: { type: LayoutAnimation.Types.linear, property: LayoutAnimation.Properties.opacity },
-                update: { type: LayoutAnimation.Types.linear, property: LayoutAnimation.Properties.opacity },
-                delete: { type: LayoutAnimation.Types.linear, property: LayoutAnimation.Properties.opacity }
-            }
+
 
             // If the user is scrolling down (and the action-button is still visible) hide it
             const isActionButtonVisible = direction === 'up'
             if (isActionButtonVisible !== that.state.isActionButtonVisible) {
-                LayoutAnimation.configureNext(CustomLayoutLinear)
+                registerLayoutAnimation('opacity', 200);
                 that.setState({ isActionButtonVisible })
             }
             // Update your scroll position
