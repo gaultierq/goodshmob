@@ -55,7 +55,7 @@
 		"react-native-config": "^0.9.1",
 		"react-native-device-info": "^0.12.1",
 		"react-native-easy-grid": "^0.1.17",
-		"react-native-elements": "^0.18.4",
+		"react-native-elements": "^0.19.1",
 		"react-native-fabric": "^0.5.1",
 		"react-native-fbsdk": "github:facebook/react-native-fbsdk#065507a",
 		"react-native-fetch-blob": "^0.10.8",

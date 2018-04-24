@@ -6,6 +6,7 @@ import Markdown from "react-native-showdown";
 import NoSpamDialog from "./NoSpamDialog";
 import {Navigation} from "react-native-navigation";
 import GTouchable from "../GTouchable";
+import GSearchBar from "../GSearchBar";
 
 
 type Props = {
@@ -47,6 +48,7 @@ export default class TestScreen extends Component<Props, State> {
             }>
                 <Text style={{marginTop: 400}}>press me</Text>
             </GTouchable>
+            <GSearchBar/>
         </View>
         // return <NoSpamDialog />
         // return null;

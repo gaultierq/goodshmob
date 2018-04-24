@@ -51,23 +51,36 @@ export default class SearchNavBar extends Component<NavProps, NavState> {
         const {...attr} = this.props;
 
         return (
-            <GSearchBar
-                // autoFocus
-                // lightTheme
-                onChangeText={this.onChangeText.bind(this)}
-                onSubmitEditing={this.submit.bind(this)}
-                onClearText={this.onClearText.bind(this)}
 
-                clearIcon={!!this.state.input && {color: '#86939e'}}
-                // containerStyle={SEARCH_STYLES.searchContainer}
-                // inputStyle={SEARCH_STYLES.searchInput}
-                // autoCapitalize='none'
-                // autoCorrect={false}
-                // returnKeyType={'search'}
-                value={this.state.input}
-                // placeholder={this.state.placeholder}
-                {...attr}
-            />
+            //FIXME: this is a hack, due to a regression introduced when upgrading react native
+            <View style={{
+                // width: __IS_IOS__ ? __DEVICE_WIDTH__ - 20 : __DEVICE_WIDTH__ /2,
+                backgroundColor: 'red',
+                ...Platform.select({
+                    ios: {
+                        width: __DEVICE_WIDTH__ - 20,
+
+                    },
+                }),
+            }} >
+                <GSearchBar
+                    // autoFocus
+                    // lightTheme
+                    onChangeText={this.onChangeText.bind(this)}
+                    onSubmitEditing={this.submit.bind(this)}
+                    onClearText={this.onClearText.bind(this)}
+
+                    clearIcon={!!this.state.input && {color: '#86939e'}}
+                    // containerStyle={SEARCH_STYLES.searchContainer}
+                    // inputStyle={SEARCH_STYLES.searchInput}
+                    // autoCapitalize='none'
+                    // autoCorrect={false}
+                    // returnKeyType={'search'}
+                    value={this.state.input}
+                    // placeholder={this.state.placeholder}
+                    {...attr}
+                />
+            </View>
         );
 
     }
