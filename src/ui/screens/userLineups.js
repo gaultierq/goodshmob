@@ -80,21 +80,22 @@ export default class UserLineups extends Screen<Props, State> {
         const navigator = this.props.navigator;
 
         return (
-
-            <LineupListScreen
-                onLineupPressed={(lineup) => seeList(navigator, lineup)}
-                onSavingPressed={(saving) => seeActivityDetails(navigator, saving)}
-                scrollUpOnBack={super.isVisible() ? ()=>false : null}
-                cannotFetch={false}
-                visible={true}
-                renderSectionHeader={({section}) => this.renderSectionHeader(section)}
-                renderSectionFooter={()=> <View style={{height: 25, width: "100%"}} />}
-                ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
-                ListHeaderComponent={this.renderFilter()}
-                filter={this.filter()}
-                {...this.props}
-            />
-
+            <View style={{flex:1}}>
+                {this.renderFilter()}
+                <LineupListScreen
+                    onLineupPressed={(lineup) => seeList(navigator, lineup)}
+                    onSavingPressed={(saving) => seeActivityDetails(navigator, saving)}
+                    scrollUpOnBack={super.isVisible() ? ()=>false : null}
+                    cannotFetch={false}
+                    visible={true}
+                    renderSectionHeader={({section}) => this.renderSectionHeader(section)}
+                    renderSectionFooter={()=> <View style={{height: 25, width: "100%"}} />}
+                    ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
+                    // ListHeaderComponent={this.renderFilter()}
+                    filter={this.filter()}
+                    {...this.props}
+                />
+            </View>
         );
     }
 
@@ -110,7 +111,7 @@ export default class UserLineups extends Screen<Props, State> {
             borderBottomColor: Colors.grey3
         };
 
-        
+
         return (
             <View key={'searchbar_container'} style={[style]}>
 
