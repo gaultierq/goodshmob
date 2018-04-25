@@ -67,11 +67,7 @@ export default class FriendsScreen extends Screen<Props, State> {
 
         return (
             <View style={styles.container}>
-                <View style={{height: 70}}>
-                    <ShareButton text={i18n.t('actions.invite')}/>
-                </View>
                 <Feed
-                    style={{paddingBottom: 70}}
                     data={friends}
                     renderItem={({item}) => (renderItem||this.renderItem.bind(this))(item)}
                     fetchSrc={{
@@ -80,6 +76,7 @@ export default class FriendsScreen extends Screen<Props, State> {
                         options: {userId}
                     }}
                     empty={<Text style={STYLES.empty_message}>{i18n.t('friends.empty_screen')}</Text>}
+                    ListHeaderComponent={<ShareButton text={i18n.t('actions.invite')}/>}
                     // cannotFetch={!super.isVisible()}
                 />
         </View>);

@@ -206,7 +206,7 @@ export function displayShareItem(navigator: RNNNavigator, activity: Activity) {
         {
             renderSharedObject: ()=>(<View style={{height: 100, }}><ItemCell item={resource}/></View>),
             sendAction: (friend: User, description?: string) => {
-                sendItem(resource.itemId, friend, description).disptachForAction2(SEND_ITEM)
+                return sendItem(resource.id, friend, description).disptachForAction2(SEND_ITEM)
             },
             createShareIntent: () => createShareIntent(resource.title, url),
             urlForClipboard: ()=> url,

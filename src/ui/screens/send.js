@@ -91,7 +91,7 @@ export default class SendScreen extends Component<Props, State> {
                     containerStyle={{padding: 6}}
                     inputStyle={{fontSize: 15}}
                     inputContainerStyle={{borderRadius: 1}}
-                    execAction={(input: string) => this.props.sendAction(friend, input)}
+                    execAction={(input: string) => this.props.dispatch(this.props.sendAction(friend, input))}
                     placeholder={"send_screen.add_description_placeholder"}
                     multiline
                     height={30}

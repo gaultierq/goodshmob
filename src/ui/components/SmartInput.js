@@ -144,7 +144,8 @@ export default class SmartInput extends React.Component<Props, State> {
         };
         setReqState('sending');
 
-        this.props.execAction(this.state.input)
+        const promise = this.props.execAction(this.state.input);
+        promise
             .then(()=> {
                 setReqState('ok');
                 this.setState({input: ''})

@@ -68,7 +68,6 @@ public class MainApplication extends NavigationApplication implements ReactAppli
             new FabricPackage(),
             new RNTapTargetViewPackage(),
             new ReactNativeConfigPackage(),
-            new RNDeviceInfo(),
             new RNFirebasePackage(),
             new RNFirebaseNotificationsPackage(),
             new RNFirebaseMessagingPackage(),
