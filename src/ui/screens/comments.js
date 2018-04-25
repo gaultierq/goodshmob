@@ -298,7 +298,7 @@ const actions = (() => {
                 .withRoute(`${activityType}/${activityId}/comments`)
                 .addQuery({include: "user"})
                 .withBody({comment: {content: content}})
-                .disptachForAction2(CREATE_COMMENT, {activityId, activityType})
+                .createActionDispatchee(CREATE_COMMENT, {activityId, activityType})
                 ;
         }
     };

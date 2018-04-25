@@ -84,7 +84,7 @@ export default class AddItemScreen extends Screen<Props, State> {
             safeDispatchAction.call(
                 this,
                 this.props.dispatch,
-                fetchItemCall(this.props.itemId).include('*').disptachForAction2(FETCH_ITEM),
+                fetchItemCall(this.props.itemId).include('*').createActionDispatchee(FETCH_ITEM),
                 'reqFetch'
             );
         }

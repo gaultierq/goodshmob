@@ -141,5 +141,5 @@ export function moveSaving(saving: Saving, lineupId: Id) {
         .withRoute(`savings/${savingId}/move`)
         .addQuery({"list_id": lineupId})
         // .include(include)
-        .disptachForAction2(MOVE_SAVING, {savingId: savingId, originalLineupId, targetLineupId: lineupId});
+        .createActionDispatchee(MOVE_SAVING, {savingId: savingId, originalLineupId, targetLineupId: lineupId});
 }

@@ -38,7 +38,7 @@ export default class UnsaveScreen extends Screen<Props, State> {
             Api.safeDispatchAction.call(
                 this,
                 this.props.dispatch,
-                fetchItemCall(this.props.itemId).disptachForAction2(FETCH_ITEM),
+                fetchItemCall(this.props.itemId).createActionDispatchee(FETCH_ITEM),
                 'fetch'
             )
         }

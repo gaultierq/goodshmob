@@ -17,7 +17,7 @@ export function fetchActivity(activityId: Id, activityType: ActivityType, option
         .withMethod('GET')
         .withRoute(`${type}/${activityId}`)
         .include(include)
-        .disptachForAction2(types.FETCH_ACTIVITY,
+        .createActionDispatchee(types.FETCH_ACTIVITY,
             {id: activityId, type: activityType}
         );
 }
@@ -52,7 +52,7 @@ export function unsave(savingId: Id, lineupId: Id) {
     return new Api.Call()
         .withMethod('DELETE')
         .withRoute(`savings/${savingId}`)
-        .disptachForAction2(types.UNSAVE,
+        .createActionDispatchee(types.UNSAVE,
             {id: savingId, lineupId}
         );
 }

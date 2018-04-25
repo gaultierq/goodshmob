@@ -196,7 +196,7 @@ const actions = {
             .withMethod('DELETE')
             .withRoute(`savings/${saving.id}`);
 
-        return call.disptachForAction2(UNSAVE);
+        return call.createActionDispatchee(UNSAVE);
     }
 };
 

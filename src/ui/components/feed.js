@@ -513,7 +513,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             }
 
             this.props
-                .dispatch(call.disptachForAction2(fetchSrc.action, {trigger, ...fetchSrc.options, mergeOptions: {drop}}))
+                .dispatch(call.createActionDispatchee(fetchSrc.action, {trigger, ...fetchSrc.options, mergeOptions: {drop}}))
                 .then(({data, links})=> {
                     this.logger.debug("disptachForAction" + JSON.stringify(this.props.fetchSrc.action));
                     if (!data) {

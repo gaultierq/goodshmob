@@ -7,7 +7,7 @@ import normalize from 'json-api-normalizer';
 import {logoutOffline} from "../auth/actions";
 import ApiAction from "../helpers/ApiAction";
 import fetch from 'react-native-fetch-polyfill';
-import type {ms, RequestState} from "../types";
+import type {Dispatchee, ms, RequestState} from "../types";
 import Config from 'react-native-config'
 import {Statistics} from "./Statistics";
 import {REMOVE_PENDING_ACTION} from "../reducers/dataReducer";
@@ -150,7 +150,7 @@ class Api {
 
             if (call && name) {
                 let options =  this.pendingAction.options;
-                this.store.dispatch(call.disptachForAction2(ApiAction.create(name), options))
+                this.store.dispatch(call.createActionDispatchee(ApiAction.create(name), options))
                     .then(() => finish(), err => {
                         console.warn(err);
                         finish();
@@ -297,7 +297,7 @@ export class Call {
     // - load more timeout => display some in-screen message on screen (with retry)
     // - default: temp. snack (ouch! ...)
     // - item already in lineup: some alerts
-    disptachForAction2(apiAction: ApiAction, options?: any = {}) {
+    createActionDispatchee(apiAction: ApiAction, options?: any = {}): Dispatchee {
         const call = this;
         const {trigger = TRIGGER_USER_DIRECT_ACTION} = options;
 
