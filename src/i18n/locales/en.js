@@ -203,7 +203,7 @@ export default {
         "add_comment_placeholder":"Reply"
     },
     "send_screen":{
-        "add_description_placeholder":"Add a note (visible only to the recipient).",
+        "add_description_placeholder":"Add a note to %{recipient}",
         "sent": "Sent"
     },
     "interactions":{

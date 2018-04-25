@@ -357,16 +357,16 @@ class ActivityDetailScreen extends Screen<Props, State> {
         return {
             height:28,
             inputStyle:{fontSize: 13},
-            inputContainerStyle: {
-                borderBottomWidth: 1,
-                borderTopWidth: 0,
-                borderLeftWidth: 0,
-                borderRightWidth: 0,
-                paddingHorizontal: 0,
-                borderColor: Colors.greying,
-                borderWidth: 1,
-            },
-            buttonStyle: {paddingRight: 0}
+            // inputContainerStyle: {
+                // borderBottomWidth: 0,
+                // borderTopWidth: 0,
+                // borderLeftWidth: 0,
+                // borderRightWidth: 0,
+                // paddingHorizontal: 0,
+                // borderColor: Colors.greying,
+                // borderWidth: 1,
+            // },
+            // buttonStyle: {paddingRight: 0}
         };
     }
 

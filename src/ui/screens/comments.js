@@ -92,16 +92,30 @@ class CommentsScreen extends Screen<Props, State> {
                 {activity && <KeyboardAwareScrollView
                     // style={{ backgroundColor: '#4c69a5' }}
                     // resetScrollToCoords={{ x: 0, y: 0 }}
-                    contentContainerStyle={styles.container}
-                    extraScrollHeight={20}
+                    contentContainerStyle={[
+                        // styles.container,
+                        {
+                            flex:1,
+                            justifyContent: 'flex-end',
+                            // backgroundColor: 'pink',
+                        }
+                    ]}
+                    style={{
+                        //    backgroundColor: 'pink',
+                    }}
+                    // extraScrollHeight={20}
                     scrollEnabled={false}
                     keyboardShouldPersistTaps='always'
                 >
 
-                    <View style={{flex:1, justifyContent: 'flex-end'}}>
+                    <View style={{
+                        flex:1,
+                        // justifyContent: 'flex-end',
+                        //    backgroundColor: 'brown'
+                    }}>
 
                         <Feed
-                            style={{flex:1}}
+                            // style={{flex:1}}
                             inverted
                             ListFooterComponent={this.renderDescription(activity)}
                             sections={this.splitCommentsInSections(fullComments)}
@@ -127,18 +141,35 @@ class CommentsScreen extends Screen<Props, State> {
                             }}
                             contentContainerStyle={{
                                 marginBottom: 4,
-                                paddingTop: 40,
-                                paddingBottom: 15,
-                                backgroundColor: Colors.greying}}
+                                // paddingTop: 40,
+                                paddingVertical: 15,
+                                // backgroundColor: Colors.greying
+                            }}
                             // empty={<Text style={[STYLES.empty_message, {fontSize: 20, paddingBottom: 50}]}>{i18n.t('activity_screen.comments.no_comments')}</Text>}
                         />
 
-                        <CommentInput
-                            activity={activity}
-                            containerStyle={{position: 'absolute', bottom: 0, padding: 0, backgroundColor: Colors.white}}
-                            placeholder={"activity_comments_screen.add_comment_placeholder"}
-                            autoFocus={this.props.autoFocus}
-                        />
+                        <View style={{height: 60, flex:0, backgroundColor: 'blue'}}>
+                            <CommentInput
+                                activity={activity}
+                                underlineColorAndroid={'transparent'}
+                                containerStyle={{
+                                    // position: 'absolute',
+                                    // bottom: 0,
+                                    // padding: 0,
+                                    flex: 0,
+                                    paddingHorizontal: 8,
+                                    backgroundColor: Colors.white,
+                                    // backgroundColor: 'orange',
+                                }}
+                                inputStyle={{
+                                    paddingBottom: 0,
+                                    marginBottom: 0,
+                                }}
+                                height={60}
+                                placeholder={"activity_comments_screen.add_comment_placeholder"}
+                                autoFocus={this.props.autoFocus}
+                            />
+                        </View>
 
                     </View>
                 </KeyboardAwareScrollView>}
@@ -153,11 +184,11 @@ class CommentsScreen extends Screen<Props, State> {
             navigator={this.props.navigator}
             descriptionNumberOfLines={8}
             // style={{
-                // ...styleMargin(0, 0),
-                // backgroundColor: 'green'
+            // ...styleMargin(0, 0),
+            // backgroundColor: 'green'
             // }}
             descriptionContainerStyle={{
-                backgroundColor: 'white',
+                //    backgroundColor: 'white',
                 borderRadius: 6,
                 padding: 6,
                 paddingRight: 18,
@@ -328,30 +359,3 @@ const reducer = (() => {
 let screen = CommentsScreen;
 
 export {reducer, screen, actions};
-
-const styles = StyleSheet.create({
-    container: {
-        flex:1,
-        backgroundColor: Colors.greying,
-        // backgroundColor: Colors.greying,
-    },
-    input:{
-        height: 40,
-    },
-    inputContainer:{
-        // height: 40,
-        borderColor: Colors.greyishBrown,
-        borderWidth: StyleSheet.hairlineWidth,
-        borderRadius: 20,
-        paddingLeft: 14,
-        paddingRight: 14,
-        margin: 10,
-        marginTop: 0,
-        backgroundColor: Colors.white
-    },
-    comment: {
-        marginLeft: 38,
-        marginTop: -4,
-        color: Colors.brownishGrey
-    }
-});

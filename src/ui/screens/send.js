@@ -13,6 +13,7 @@ import SmartInput from "../components/SmartInput";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import {MainBackground} from "../UIComponents";
 import GTouchable from "../GTouchable";
+import {userFirstName} from "../../helpers/StringUtils";
 
 type Props = {
     data?: any,
@@ -89,12 +90,15 @@ export default class SendScreen extends Component<Props, State> {
             <View style={{flex: 1}}>
                 <SmartInput
                     containerStyle={{padding: 6}}
-                    inputStyle={{fontSize: 15}}
+                    inputStyle={{
+                        fontSize: 15
+                    }}
                     inputContainerStyle={{borderRadius: 1}}
                     execAction={(input: string) => this.props.dispatch(this.props.sendAction(friend, input))}
-                    placeholder={"send_screen.add_description_placeholder"}
-                    multiline
-                    height={30}
+                    placeholder={i18n.t("send_screen.add_description_placeholder", {who: userFirstName(friend)})}
+                    // multiline
+                    height={35}
+                    numberOfLines={1}
                     canSendDefault={true}
                     returnKeyType={'send'}
                 />

@@ -202,7 +202,7 @@ export default {
         "add_comment_placeholder":"Répondre"
     },
     "send_screen":{
-        "add_description_placeholder":"Ajouter un petit mot (visible uniquement par le destinataire).",
+        "add_description_placeholder":"Adresser un petit mot à %{recipient}",
         "sent": "Envoyé"
     },
     "interactions":{

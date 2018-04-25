@@ -2,24 +2,23 @@
 
 import type {Node} from 'react';
 import React from 'react';
-import {Image, StyleSheet, Text, TextInput, View} from 'react-native';
+import {Image, Platform, StyleSheet, Text, TextInput, View} from 'react-native';
 import {isEmpty} from "lodash";
 import type {i18Key, RequestState} from "../../types";
-
-import Button from 'apsl-react-native-button'
 import {Colors} from "../colors";
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {STYLES} from "../UIStyles";
+import GTouchable from "../GTouchable";
+import Spinner from 'react-native-spinkit';
 
 export type Props = {
-    placeholder: i18Key,
+    placeholder: string,
     execAction: (input: string) => Promise<*>,
     defaultValue?: string,
     canSendDefault?: boolean,
     containerStyle?: *,
     inputContainerStyle?: *,
     inputStyle?: *,
-    height?: number,
+    height: number,
     buttonStyle?: *,
     disabledButtonStyle?: *,
     extendable?: boolean,
@@ -29,25 +28,27 @@ export type Props = {
 type State = {
     input?: string,
     requestState?: RequestState,
-    focus?: boolean,
+    focus: boolean,
     rounded?: boolean
 };
 
 
 export default class SmartInput extends React.Component<Props, State> {
 
-    state = {};
 
     static defaultProps = {
         defaultValue: '',
         height: 40,
+        placeholderTextColor: Colors.grey3
     };
-
-
 
     constructor(props: Props) {
         super(props);
-        this.state = {input: props.defaultValue}
+        if (_.get(props, "style.height")) throw "invalid parameter style.height. use props"
+        this.state = {
+            focus: false,
+            input: props.defaultValue
+        }
     }
 
     render() {
@@ -63,64 +64,119 @@ export default class SmartInput extends React.Component<Props, State> {
             height,
             extendable,
             rounded,
+            underlineColorAndroid,
+            placeholderTextColor,
             ...attributes
         } = this.props;
 
         const {input} = this.state;
-        let buttonInternal = button || <Icon name="send" size={this.props.height / 2} color={Colors.greyishBrown}/>;
+        let buttonInternal = button || <Icon name="send" size={height / 2} color={Colors.greyishBrown} style={{
+            // backgroundColor: 'red',
+        }} />;
+
 
         const isFocus = extendable ? this.state.focus : true;
+        const computedUnderlineColorAndroid = underlineColorAndroid || placeholderTextColor || Colors.greyish;
+
         return (
             <View style={[styles.container, containerStyle, {flex:1, flexDirection: 'row'}]}>
                 <View style={[
                     styles.inputContainer,
-                    {flex:isFocus? 1: 0,
+                    {
+                        flex: isFocus? 1: 0,
                         flexDirection: 'row',
                         minHeight: height,
                     },
-                    rounded ? {
-                        borderRadius: height / 2,
-                        paddingHorizontal: height / 2,
-                    } : {paddingHorizontal: height / 4},
+                    // rounded ? {
+                    //         borderRadius: height / 2,
+                    //         paddingHorizontal: height / 2,
+                    //     } :
+                    //     {paddingHorizontal: height / 4},
 
                     inputContainerStyle,
                 ]}>
                     <TextInput
                         editable={!this.isSending()}
-                        style={[styles.input, inputStyle, {
-                            flex: isFocus ? 1: 0,
-                            color: this.isSending() ? Colors.greyishBrown : Colors.black,
-                        }]}
+
                         onSubmitEditing={this.exec.bind(this)}
                         value={input}
                         onFocus={()=>this.setState({focus:true})}
                         onBlur={()=>this.setState({focus:false})}
                         onChangeText={input => this.setState({input})}
-                        placeholder={i18n.t(placeholder)}
-                        multiline={true}
-                        maxHeight={70}
-                        placeholderTextColor={Colors.grey3}
+                        underlineColorAndroid={computedUnderlineColorAndroid}
+                        // multiline={true}
+                        //why ? restore if something broken
+                        // maxHeight={70}
+                        placeholderTextColor={placeholderTextColor}
                         {...attributes}
+                        style={
+                            [
+                                styles.input,
+                                Platform.select({
+                                    android: {
+                                        paddingBottom: this.isTransparent(computedUnderlineColorAndroid) ? 0 : height / 12
+                                        // marginBottom: 0,
+                                        // paddingBottom: 0
+                                    },
+                                }),
+                                inputStyle,
+                                {
+                                    flex: isFocus ? 1: 0,
+                                    opacity: this.isSending() ? 0.5 : 1,
+                                    height,
+                                    textAlignVertical: 'center',
+                                    // textAlign: 'center', aligne le texte horizontalement
+                                    // backgroundColor: 'purple', //RMME
+
+                                }
+                            ]}
                     />
                 </View>
                 {
-                    buttonInternal && this.showButton() && <View style={{flex: isFocus? 0: 1, flexDirection: 'row', alignItems: 'flex-start'}}>
-                        <Button
-                            isLoading={this.isSending()}
-                            isDisabled={(!canSendDefault && this.isDefault()) || this.isSending()}
-                            onPress={this.exec.bind(this)}
-                            style={[STYLES.apslInit, styles.button, buttonStyle, {height, }]}
-                            disabledStyle={[styles.disabledButton, buttonStyle, disabledButtonStyle]}
-                        >
-                            {buttonInternal}
-                        </Button>
-                    </View>
+                    buttonInternal && this.showButton() && this.renderButton(isFocus, canSendDefault, buttonStyle, disabledButtonStyle, buttonInternal)
 
                 }
             </View>
 
 
         );
+    }
+
+    //TODO: better check
+    isTransparent(computedUnderlineColorAndroid) {
+        return computedUnderlineColorAndroid === 'transparent' || computedUnderlineColorAndroid === 'rgba(0,0,0,0)';
+    }
+
+    renderButton(isFocus, canSendDefault, buttonStyle, disabledButtonStyle, buttonInternal) {
+        return (<View style={{
+            flex: isFocus ? 0 : 1,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            // backgroundColor: 'yellow',
+        }}>
+
+            {
+                this.isSending()
+                    ? <Spinner isVisible={true} size={10} type={"WanderingCubes"} color={Colors.grey3}/>
+                    : <GTouchable
+                        disabled={(!canSendDefault && this.isDefault()) || this.isSending()}
+                        disabledStyle={[styles.disabledButton, buttonStyle, disabledButtonStyle]}
+                        onPress={this.exec.bind(this)}>
+                        {buttonInternal}
+                    </GTouchable>
+
+            }
+            {/*<Button*/}
+            {/*isLoading={this.isSending()}*/}
+            {/*isDisabled={(!canSendDefault && this.isDefault()) || this.isSending()}*/}
+            {/*onPress={this.exec.bind(this)}*/}
+            {/*style={[STYLES.apslInit, styles.button, buttonStyle, {height, backgroundColor: 'blue'}]}*/}
+            {/*disabledStyle={[styles.disabledButton, buttonStyle, disabledButtonStyle]}*/}
+            {/*>*/}
+            {/*{buttonInternal}*/}
+            {/*</Button>*/}
+        </View>);
     }
 
     isDefault() {
@@ -175,15 +231,14 @@ const styles = StyleSheet.create({
         fontSize: 18,
         // TODO: why we need this ?
         paddingTop:0,
-
-        alignSelf: 'center',
+        textAlignVertical: 'center', //android only
+        // alignSelf: 'center',
     },
-    button: {
-        // height: HEIGHT,
-        paddingBottom: 0,
-        paddingLeft: 8,
-        paddingRight: 8,
-    },
+    // button: {
+    //     paddingBottom: 0,
+    //     paddingLeft: 8,
+    //     paddingRight: 8,
+    // },
     disabledButton: {
         borderColor: "transparent",
         opacity: 0.5

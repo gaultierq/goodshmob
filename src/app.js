@@ -151,16 +151,17 @@ export default class App {
         // Getting rid of that ugly line on Android and adding some custom style to all TextInput components.
 
 
-        const customTextInputProps = {
-            underlineColorAndroid: 'rgba(0,0,0,0)',
-            style: {
-                // paddingVertical: 5,
-                // paddingHorizontal: 8,
-                backgroundColor: 'white'
-            }
-        };
-
-        globalProps.setCustomTextInput(customTextInputProps);
+        // const customTextInputProps = {
+        //     underlineColorAndroid: Colors.greyish,
+            // style: {
+            //     // paddingVertical: 5,
+            //     // paddingHorizontal: 8,
+            //     paddingBottom: 0,
+            //     marginBottom: 0,
+            //     backgroundColor: 'white'
+            // }
+        // };
+        // globalProps.setCustomTextInput(customTextInputProps);
 
 
         // Component.setState.prototype = function setState(imconpleteState, callback) {
