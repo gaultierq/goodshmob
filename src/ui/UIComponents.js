@@ -37,26 +37,31 @@ export const MainBackground = (props) => <View
 
 type Props = {
     user: User,
-    style: any
+    size?: number,
+    style?: any
 }
 type State = {}
 
 export class Avatar extends Component<Props, State> {
 
+
+    static defaultProps = {
+        size: 40
+    }
     render() {
-        const {user, style} = this.props;
+        const {user, style, size, ...attributes} = this.props;
 
-        const {dim, ...otherStyles} = style;
+        //TODO: image placeholder
+        return (<CachedImage
+            source={{uri: user && user.image}}
+            style={[{
+                height: size,
+                width: size,
+                borderRadius: size / 2,
 
-        return <CachedImage
-            source={{uri: user.image}}
-            style={[otherStyles, {
-                height: dim,
-                width: dim,
-                borderRadius: dim / 2,
-
-            }]}
-        />
+            }, style]}
+            {...attributes}
+        />)
     }
 }
 

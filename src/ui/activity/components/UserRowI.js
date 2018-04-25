@@ -11,6 +11,7 @@ import {CachedImage} from "react-native-img-cache";
 import {SFP_TEXT_BOLD} from "../../fonts";
 import GTouchable from "../../GTouchable";
 import {fullName} from "../../../helpers/StringUtils";
+import {Avatar} from "../../UIComponents";
 
 type Props = {
     user: User,
@@ -44,15 +45,7 @@ export default class UserRowI extends React.Component<Props, State> {
                 <GTouchable
                     deactivated={!onPressAvatar}
                     onPress={onPressAvatar}>
-                    <CachedImage
-                        source={{uri}}
-                        style={{
-                            height: imageDim,
-                            width: imageDim,
-                            borderRadius: imageDim / 2,
-                            marginRight: 8
-                        }}
-                    />
+                    <Avatar user={user} size={imageDim} style={{marginRight: 8}}/>
                 </GTouchable>
             }
 

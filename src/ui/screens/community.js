@@ -77,6 +77,7 @@ export class CommunityScreen extends Screen<Props, State> {
                 userId={currentUserId()}
                 navigator={navigator}
                 //renderItem={(item) => this.renderItem(item)}
+                ListHeaderComponent={<ShareButton text={i18n.t('actions.invite')}/>}
                 ListFooterComponent={this.renderFriendsSuggestion.bind(this)}
                 style={{backgroundColor: Colors.white}}
                 //bug: drawer passProps not working [https://github.com/wix/react-native-navigation/issues/663]

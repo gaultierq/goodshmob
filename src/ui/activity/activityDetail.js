@@ -266,7 +266,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                 }>
                     <CommentInput
                         activity={activity}
-                        placeholder={"activity_screen.comments.no_comments"}
+                        placeholder={i18n.t("activity_screen.comments.no_comments")}
                         {...this.commentInputStyles()}
                     />
                 </View>
@@ -333,7 +333,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                     <CommentInput
                                         activity={activity}
                                         containerStyle={{marginLeft: 30}}
-                                        placeholder={"activity_comments_screen.add_comment_placeholder"}
+                                        placeholder={i18n.t("activity_comments_screen.add_comment_placeholder")}
                                         {...this.commentInputStyles()}
                                     />
 
@@ -403,8 +403,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
         const width  = dim + (dim * shift) * Math.max(n-1, 0) + 5;
         return <View style={{width, height: 18}}>
             {
-                othersCommentators.map((user, i) => user && <Avatar user={user} style={{
-                    dim: dim,
+                othersCommentators.map((user, i) => user && <Avatar user={user} size={dim} style={{
                     position: 'absolute',
                     left: dim * shift * i,
                     zIndex: (10 - i),

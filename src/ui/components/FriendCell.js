@@ -4,12 +4,14 @@ import React from 'react';
 import {Button, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import type {User} from "../../types";
 import {CachedImage} from "react-native-img-cache";
+import {Avatar} from "../UIComponents";
 
 
 type Props = {
     friend: User,
     children?: Node,
-    childrenBelow?: boolean
+    childrenBelow?: boolean,
+    containerStyle?: any
 
 };
 
@@ -19,19 +21,20 @@ type State = {
 export default class FriendCell extends React.Component<Props, State> {
 
     render() {
-        const {friend, children, childrenBelow} = this.props;
+
+
+
+        const {friend, children, childrenBelow, containerStyle} = this.props;
         if (!friend) {
             console.warn("trying to display friend cell without a friend");
             return null;
         }
 
         return (
-            <View style={styles.friendContainer}>
+            <View style={[styles.friendContainer, containerStyle]}>
                 <View style={styles.friend}>
-                    <CachedImage
-                        source={{uri: friend.image}}
-                        style={styles.image}
-                    />
+                    <Avatar user={friend} style={{marginRight: 10}}/>
+
                     <View style={childrenBelow ? {flex: 1}: {}}>
                         <Text>{`${friend.firstName} ${friend.lastName}`}</Text>
                         {childrenBelow && children}
@@ -50,20 +53,20 @@ const styles = StyleSheet.create({
         height: 40,
         width: 40,
         borderRadius: 20,
-        marginRight: 10
+        // marginRight: 10
     },
     friend: {
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: "transparent",
-        margin: 10,
+        // margin: 10,
     },
     friendContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: "transparent",
         justifyContent: 'space-between',
-        margin: 10
+        // margin: 10
     }
 });

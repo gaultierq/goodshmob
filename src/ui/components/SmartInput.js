@@ -53,7 +53,6 @@ export default class SmartInput extends React.Component<Props, State> {
 
     render() {
         const {
-            placeholder,
             buttonStyle,
             disabledButtonStyle,
             containerStyle,
@@ -78,6 +77,7 @@ export default class SmartInput extends React.Component<Props, State> {
         const isFocus = extendable ? this.state.focus : true;
         const computedUnderlineColorAndroid = underlineColorAndroid || placeholderTextColor || Colors.greyish;
 
+        const transparentUnderlined = this.isTransparent(computedUnderlineColorAndroid);
         return (
             <View style={[styles.container, containerStyle, {flex:1, flexDirection: 'row'}]}>
                 <View style={[
@@ -114,7 +114,8 @@ export default class SmartInput extends React.Component<Props, State> {
                                 styles.input,
                                 Platform.select({
                                     android: {
-                                        paddingBottom: this.isTransparent(computedUnderlineColorAndroid) ? 0 : height / 12
+                                        paddingBottom: transparentUnderlined ? 0 : height / 12,
+                                        paddingLeft: transparentUnderlined ? 0 : 2,
                                         // marginBottom: 0,
                                         // paddingBottom: 0
                                     },
@@ -231,6 +232,10 @@ const styles = StyleSheet.create({
         fontSize: 18,
         // TODO: why we need this ?
         paddingTop:0,
+        paddingLeft: 0,
+        paddingRight: 0,
+        paddingBottom: 0,
+
         textAlignVertical: 'center', //android only
         // alignSelf: 'center',
     },

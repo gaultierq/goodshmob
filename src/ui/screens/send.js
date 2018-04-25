@@ -11,7 +11,7 @@ import FriendCell from "../components/FriendCell";
 import * as UI from "../UIStyles";
 import SmartInput from "../components/SmartInput";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-import {MainBackground} from "../UIComponents";
+import {MainBackground, TRANSPARENT_SPACER} from "../UIComponents";
 import GTouchable from "../GTouchable";
 import {userFirstName} from "../../helpers/StringUtils";
 
@@ -52,6 +52,7 @@ export default class SendScreen extends Component<Props, State> {
                         userId={currentUserId()}
                         navigator={navigator}
                         renderItem={(friend) => this.renderItem(friend)}
+                        ItemSeparatorComponent={TRANSPARENT_SPACER(16)}
                     />
 
                 </KeyboardAwareScrollView>
@@ -67,20 +68,19 @@ export default class SendScreen extends Component<Props, State> {
 
         let isSelected = id === this.state.selected;
         return (
-            <View>
-                <GTouchable
-                    disabled={sent}
-                    onPress={()=>this.setState({selected: isSelected ? null : id})}>
-                    <FriendCell
-                        friend={friend}
-                        childrenBelow={!sent}
-                    >
-                        {
-                            this.renderChildren(isSelected, sent, friend)
-                        }
-                    </FriendCell>
-                </GTouchable>
-            </View>
+            <GTouchable
+                disabled={sent}
+                onPress={()=>this.setState({selected: isSelected ? null : id})}>
+                <FriendCell
+                    containerStyle={{padding: 16}}
+                    friend={friend}
+                    childrenBelow={!sent}
+                >
+                    {
+                        this.renderChildren(isSelected, sent, friend)
+                    }
+                </FriendCell>
+            </GTouchable>
         )
     }
 
@@ -89,14 +89,17 @@ export default class SendScreen extends Component<Props, State> {
         return isSelected &&
             <View style={{flex: 1}}>
                 <SmartInput
-                    containerStyle={{padding: 6}}
+                    containerStyle={{
+                        paddingVertical: 6,
+                        // backgroundColor: 'red'
+                    }}
                     inputStyle={{
                         fontSize: 15
                     }}
-                    inputContainerStyle={{borderRadius: 1}}
+                    // inputContainerStyle={{borderRadius: 1}}
                     execAction={(input: string) => this.props.dispatch(this.props.sendAction(friend, input))}
-                    placeholder={i18n.t("send_screen.add_description_placeholder", {who: userFirstName(friend)})}
-                    // multiline
+                    placeholder={i18n.t("send_screen.add_description_placeholder", {recipient: userFirstName(friend)})}
+                    autoFocus
                     height={35}
                     numberOfLines={1}
                     canSendDefault={true}

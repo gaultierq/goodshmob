@@ -36,18 +36,25 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  ScreenStat
 
                 console.debug(`Screen ${this.constructor.name} visib event ${id}`);
 
-                let callback = () => {
+                let visible: boolean;
+                switch (id) {
+                    case 'didAppear':
+                        visible = true
+                        break;
+                    case 'didDisappear':
+                        visible = false
+                        break;
+                    default: return
+                }
+
+
+                this.setState({visible}, () => {
                     let method = 'component' + toUppercase(id);
                     // $FlowFixMe
                     if (this[method]) this[method]();
-                };
+                });
 
-
-                const didAppear: boolean = id === 'didAppear';
-
-                this.setState({visible: didAppear}, callback);
-
-                if (didAppear && this.state.dirty) {
+                if (visible && this.state.dirty) {
                     //screen dirty, re-rendering
                     superLog("screen dirty, re-rendering");
                     this.setState({dirty: false});

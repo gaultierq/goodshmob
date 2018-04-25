@@ -2,7 +2,7 @@
 
 import type {Node} from 'react';
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View, Share} from 'react-native';
+import {Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
 import {logged} from "../../managers/CurrentUser"
 import FriendCell from "../components/FriendCell";
@@ -14,13 +14,10 @@ import type {Id, Item, User} from "../../types";
 import {buildData, doDataMergeInState} from "../../helpers/DataUtils";
 import Screen from "../components/Screen";
 import GTouchable from "../GTouchable";
-import {fullName} from "../../helpers/StringUtils";
 import * as Nav from "../Nav";
-;
-import {Colors} from "../colors";
-import Button from 'apsl-react-native-button'
-import {SFP_TEXT_MEDIUM} from "../fonts";
 import {STYLES} from "../UIStyles";
+
+;
 
 type Props = {
     userId: Id,
@@ -47,7 +44,8 @@ export default class FriendsScreen extends Screen<Props, State> {
         const {
             userId,
             renderItem,
-            ...attributes
+            ItemSeparatorComponent,
+            ...attributes //not accepted...
         } = this.props;
 
 
@@ -66,7 +64,6 @@ export default class FriendsScreen extends Screen<Props, State> {
         }
 
         return (
-            <View style={styles.container}>
                 <Feed
                     data={friends}
                     renderItem={({item}) => (renderItem||this.renderItem.bind(this))(item)}
@@ -76,10 +73,10 @@ export default class FriendsScreen extends Screen<Props, State> {
                         options: {userId}
                     }}
                     empty={<Text style={STYLES.empty_message}>{i18n.t('friends.empty_screen')}</Text>}
-                    ListHeaderComponent={<ShareButton text={i18n.t('actions.invite')}/>}
+                    ItemSeparatorComponent={ItemSeparatorComponent}
                     // cannotFetch={!super.isVisible()}
                 />
-        </View>);
+        );
     }
 
     renderItem(item: Item) : Node {
@@ -158,6 +155,6 @@ export const reducer =  (state = {}, action = {}) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.white,
+        // backgroundColor: Colors.white,
     }
 });

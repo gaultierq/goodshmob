@@ -63,7 +63,7 @@ export default class CommentCell extends Component<Props, State> {
             <Grid>
                 <Row style={{ }}>
                     <Col style={{ width: dimension, justifyContent: 'flex-start'}}>
-                        {!rightDisplay && <Avatar user={user} style={{dim: 24, marginTop: 3}}/>}
+                        {!rightDisplay && <Avatar user={user} size={24} style={{marginTop: 3}}/>}
                     </Col>
                     <Col style={{ alignItems: rightDisplay ? 'flex-end': 'flex-start', }}>
                         {comments.map((comment: Comment, i) => <Row style={{marginTop: !!i ? 4 : 0}} key={comment.id}>
