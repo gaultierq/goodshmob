@@ -10,6 +10,7 @@ import android.app.Application;
 import android.content.Intent;
 
 import com.facebook.react.ReactApplication;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.krazylabs.OpenAppSettingsPackage;
 import com.react.rnspinkit.RNSpinkitPackage;
 import com.horcrux.svg.SvgPackage;
@@ -58,6 +59,7 @@ public class MainApplication extends NavigationApplication implements ReactAppli
   protected List<ReactPackage> getPackages() {
     return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new RNDeviceInfo(),
             new OpenAppSettingsPackage(),
             new RNSpinkitPackage(),
             new SvgPackage(),
