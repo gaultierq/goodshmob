@@ -15,6 +15,7 @@ import {InteractionScreen} from "./interactions";
 import Screen from "../components/Screen";
 import {Colors} from "../colors";
 import {NavStyles} from "../UIStyles";
+import ShareButton from "../components/ShareButton";
 
 type Props = {
     navigator:any,
