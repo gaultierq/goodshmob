@@ -16,6 +16,7 @@ import Screen from "../components/Screen";
 import GTouchable from "../GTouchable";
 import * as Nav from "../Nav";
 import {STYLES} from "../UIStyles";
+import {seeUser} from "../Nav";
 
 ;
 
@@ -82,29 +83,8 @@ export default class FriendsScreen extends Screen<Props, State> {
     renderItem(item: Item) : Node {
         let user = buildData(this.props.data, "users", item.id);
         return (
-            <GTouchable onPress={()=> {
-
-                // this.props.navigator.showModal({
-                //     screen: 'goodsh.UserSheetScreen', // unique ID registered with Navigation.registerScreen
-                //     animationType: 'none',
-                //     passProps: {
-                //         userId: user.id,
-                //     },
-                // });
-
-                this.props.navigator.showModal({
-                    screen: 'goodsh.UserScreen',
-                    // title: fullName(user),
-                    passProps: {
-                        userId: user.id,
-                        user
-                    },
-                    navigatorButtons: Nav.CANCELABLE_MODAL,
-                });
-
-
-            }}>
-                <FriendCell friend={user}/>
+            <GTouchable onPress={()=> {seeUser(this.props.navigator, user)}}>
+                <FriendCell friend={user} containerStyle={{padding: 16}}/>
             </GTouchable>
         )
     }

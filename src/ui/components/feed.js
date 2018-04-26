@@ -295,20 +295,10 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         }
         allViews.push(<View style={{flex:1}}>
             {listNode}
-            {filter && _.isEmpty(this.state.filter) && this.state.isFilterFocused && this.renderSearchOverlay()}
         </View>);
 
 
         return <View style={[this.props.style, {flex: 1}]}>{allViews}</View>
-    }
-
-    renderSearchOverlay() {
-        return (<TouchableWithoutFeedback onPress={() => this.filterNode.blur()}>
-                <View style={{
-                    position: 'absolute', width: '100%', height: '100%', opacity: 0.4,
-                    backgroundColor: Colors.black, zIndex: 50,}} />
-            </TouchableWithoutFeedback>
-        );
     }
 
     isFiltering() {

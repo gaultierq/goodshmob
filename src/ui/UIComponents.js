@@ -97,6 +97,11 @@ export const Http404 = props => (<View style={STYLES.FULL_SCREEN}>
 </View>);
 
 
+export const scheduleOpacityAnimation = () => {
+    registerLayoutAnimation('opacity');
+}
+
+
 export const registerLayoutAnimation = (type: 'opacity' | 'scaleXY', duration = 400) => {
 // Simple fade-in / fade-out animation
     const animType = LayoutAnimation.Properties[type];

@@ -297,6 +297,7 @@ class HomeScreen extends Screen<Props, State> {
                     ListHeaderComponent={
                         this.state.currentTip && this.renderTip()
                     }
+                    onFilterFocusChange={focused => this.setState({isActionButtonVisible: !focused})}
 
                     sectionMaker={(lineups)=> {
                         const goodshbox = _.head(lineups);

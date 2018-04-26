@@ -12,7 +12,7 @@ import {
     StyleSheet,
     Text,
     TextInput,
-    TouchableOpacity,
+    TouchableOpacity, TouchableWithoutFeedback,
     View
 } from 'react-native';
 import {LineupListScreen} from './lineuplist'
@@ -29,6 +29,7 @@ import {SFP_TEXT_MEDIUM} from "../fonts";
 
 import GTouchable from "../GTouchable";
 import GSearchBar from "../GSearchBar";
+import {scheduleOpacityAnimation} from "../UIComponents";
 // $FlowFixMe
 
 
@@ -44,6 +45,9 @@ type State = {
 };
 
 export default class UserLineups extends Screen<Props, State> {
+
+
+    filterNode: Node;
 
     launchSearch(token?: SearchToken) {
         let navigator = this.props.navigator;
@@ -82,18 +86,21 @@ export default class UserLineups extends Screen<Props, State> {
         return (
             <View style={{flex:1}}>
                 {this.renderFilter()}
-                <LineupListScreen
-                    onLineupPressed={(lineup) => seeList(navigator, lineup)}
-                    onSavingPressed={(saving) => seeActivityDetails(navigator, saving)}
-                    scrollUpOnBack={super.isVisible() ? ()=>false : null}
-                    cannotFetch={false}
-                    visible={true}
-                    renderSectionHeader={({section}) => this.renderSectionHeader(section)}
-                    renderSectionFooter={()=> <View style={{height: 25, width: "100%"}} />}
-                    ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
-                    filter={this.filter()}
-                    {...this.props}
-                />
+                <View style={{flex:1}}>
+                    {_.isEmpty(this.state.filter) && this.state.isFilterFocused && this.renderSearchOverlay()}
+                    <LineupListScreen
+                        onLineupPressed={(lineup) => seeList(navigator, lineup)}
+                        onSavingPressed={(saving) => seeActivityDetails(navigator, saving)}
+                        scrollUpOnBack={super.isVisible() ? ()=>false : null}
+                        cannotFetch={false}
+                        visible={true}
+                        renderSectionHeader={({section}) => this.renderSectionHeader(section)}
+                        renderSectionFooter={()=> <View style={{height: 25, width: "100%"}} />}
+                        ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
+                        filter={this.filter()}
+                        {...this.props}
+                    />
+                </View>
             </View>
         );
     }
@@ -115,22 +122,40 @@ export default class UserLineups extends Screen<Props, State> {
             <View key={'searchbar_container'} style={[style]}>
 
                 <GSearchBar
-                    // textInputRef={r=>this.filterNode = r}
+                    textInputRef={r=>this.filterNode = r}
                     onChangeText={filter => this.setState({filter})}
                     onClearText={()=>this.setState({filter: null})}
                     placeholder={i18n.t('search.in_feed')}
                     clearIcon={!!this.state.filter && {color: '#86939e'}}
                     style={{margin: 0,}}
-                    // onClearText={() => {
-                    //     this.filterNode.blur();
-                    // }}
+                    onClearText={() => {
+                        this.filterNode && this.filterNode.blur();
+                    }}
                     value={this.state.filter}
-                    // onFocus={()=>this.setState({isFilterFocused:true})}
-                    // onBlur={()=>this.setState({isFilterFocused:false})}
+                    onFocus={()=>this.onFilterFocusChange(true)}
+                    onBlur={()=>this.onFilterFocusChange(false)}
 
                 />
             </View>
-        )}
+        )
+    }
+
+    onFilterFocusChange(focused: boolean) {
+        scheduleOpacityAnimation()
+        this.setState({isFilterFocused: focused})
+        if (this.props.onFilterFocusChange) this.props.onFilterFocusChange(focused)
+    }
+
+
+    renderSearchOverlay() {
+        return (<TouchableWithoutFeedback onPress={() => this.filterNode.blur()}>
+                <View style={{
+                    position: 'absolute', width: '100%', height: '100%', opacity: 0.4,
+                    backgroundColor: Colors.black, zIndex: 50,}} />
+            </TouchableWithoutFeedback>
+        );
+    }
+
 
     filter() {
 
