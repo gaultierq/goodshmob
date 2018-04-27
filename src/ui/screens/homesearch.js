@@ -15,7 +15,6 @@ import {connect} from "react-redux";
 import {currentUserId, logged} from "../../managers/CurrentUser"
 import type {Id, List, NavigableProps, Saving, SearchToken} from "../../types";
 import ItemCell from "../components/ItemCell";
-import LineupCell from "../components/LineupCell";
 import {AlgoliaClient, createResultFromHit, makeAlgoliaSearchEngine} from "../../helpers/AlgoliaUtils";
 import Screen from "../components/Screen";
 import type {SearchCategory} from "./search";
@@ -23,9 +22,7 @@ import SearchScreen from "./search";
 import {SearchStyles} from "../UIStyles";
 import GTouchable from "../GTouchable";
 import Config from 'react-native-config'
-import LineupHorizontal from "../components/LineupHorizontal";
-import {seeActivityDetails, seeList} from "../Nav";
-import LineupCellSaving from "../components/LineupCellSaving";
+import {renderLineupFromAlgolia} from "./networksearch";
 
 type Props = NavigableProps & {
     token?: ?SearchToken,
@@ -55,18 +52,20 @@ export default class HomeSearchScreen extends Screen<Props, State> {
             //if (!item) return null;
 
             if (isLineup) {
+
                 let lineup: List = item;
-                return (
-
-                    <GTouchable onPress={()=>seeList(this.props.navigator, lineup)}>
-                        <LineupHorizontal
-                            skipLineupTitle={true}
-                            lineupId={lineup.id}
-                            renderSaving={saving => <GTouchable onPress={() => seeActivityDetails(this.props.navigator, saving)}><LineupCellSaving item={saving.resource} /></GTouchable>}
-                        />
-                    </GTouchable>
-
-                )
+                return renderLineupFromAlgolia(this.props.navigator, lineup)
+                // return (
+                //
+                //     <GTouchable onPress={()=>seeList(this.props.navigator, lineup)}>
+                //         <LineupHorizontal
+                //             skipLineupTitle={true}
+                //             lineupId={lineup.id}
+                //             renderSaving={saving => <GTouchable onPress={() => seeActivityDetails(this.props.navigator, saving)}><LineupCellSaving item={saving.resource} /></GTouchable>}
+                //         />
+                //     </GTouchable>
+                //
+                // )
             }
             else {
                 let saving = item;

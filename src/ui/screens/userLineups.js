@@ -126,7 +126,6 @@ export default class UserLineups extends Screen<Props, State> {
                 <GSearchBar
                     textInputRef={r=>this.filterNode = r}
                     onChangeText={filter => this.setState({filter})}
-                    onClearText={()=>this.setState({filter: null})}
                     placeholder={i18n.t('search.in_feed')}
                     clearIcon={!!this.state.filter && {color: '#86939e'}}
                     style={{
@@ -139,6 +138,7 @@ export default class UserLineups extends Screen<Props, State> {
                     value={this.state.filter}
                     onFocus={()=>this.onFilterFocusChange(true)}
                     onBlur={()=>this.onFilterFocusChange(false)}
+                    onSubmitEditing={() => this.launchSearch(this.state.filter)}
 
                 />
             </View>
@@ -170,9 +170,6 @@ export default class UserLineups extends Screen<Props, State> {
         return {
             token: this.state.filter, //used just to re-render the children. todo: find a better way
             placeholder: 'search.in_feed',
-            onSearch: (searchToken: string) => {
-                this.launchSearch(searchToken);
-            },
             emptyFilterResult: (searchToken: string) => (
                 <View>
                     <Text style={STYLES.empty_message}>{i18n.t('lineups.filter.empty')}</Text>

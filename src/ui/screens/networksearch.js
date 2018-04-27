@@ -138,7 +138,54 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
 }
 
 
+//TODO: move
+export let renderLineupFromAlgolia = (navigator, item) => {
+    let user = item.user;
 
+
+    let userXml = (
+
+
+        <View style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            flex: 0,
+            // backgroundColor: 'yellow'
+        }}>
+            <Text style={{
+                fontSize: 12,
+                color: Colors.greyishBrown,
+                marginLeft: 8,
+                marginRight: 3,
+                flex: 0,
+
+            }}>{i18n.t('search.by')}</Text>
+            <UserRowI
+                user={user}
+                navigator={navigator}
+                noImage={true}
+                style={{flex: 0}} //TODO: rm when removed in UserRowI
+            />
+        </View>
+    );
+
+    const newVar = <GTouchable
+        onPress={() => seeList(navigator, item)}>
+
+        <LineupHorizontal
+            lineupId={item.id}
+            dataResolver={() => ({lineup: item, savings: item.savings})}
+            style={{paddingBottom: 10}}
+            renderTitle={(lineup: Lineup) => (
+                <View style={{flexDirection: 'row'}}>
+                    <LineupTitle lineup={lineup} style={{marginVertical: 6,}}/>
+                    {userXml}
+                </View>
+            )}
+        />
+    </GTouchable>;
+    return newVar;
+};
 let itemRenderer = navigator => {
     let renderItem = ({item}) => {
 
@@ -146,52 +193,7 @@ let itemRenderer = navigator => {
 
 
         if (isLineup) {
-            let user = item.user;
-
-
-            let userXml = (
-
-
-                <View style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    flex: 0,
-                    // backgroundColor: 'yellow'
-                }}>
-                    <Text style={{
-                        fontSize: 12,
-                        color: Colors.greyishBrown,
-                        marginLeft: 8,
-                        marginRight: 3,
-                        flex: 0,
-
-                    }}>{i18n.t('search.by')}</Text>
-                    <UserRowI
-                        user={user}
-                        navigator={navigator}
-                        noImage={true}
-                        style={{flex:0}} //TODO: rm when removed in UserRowI
-                    />
-                </View>
-            );
-
-            return (
-                <GTouchable
-                    onPress={() => seeList(navigator, item)}>
-
-                    <LineupHorizontal
-                        lineupId={item.id}
-                        dataResolver={ () => ({lineup:item, savings: item.savings})}
-                        style={{paddingBottom: 10}}
-                        renderTitle={(lineup: Lineup) => (
-                            <View style={{flexDirection: 'row'}}>
-                                <LineupTitle lineup={lineup} style={{marginVertical: 6,}}/>
-                                {userXml}
-                            </View>
-                        )}
-                    />
-                </GTouchable>
-            )
+            return renderLineupFromAlgolia(navigator, item)
         }
         else {
             let saving = item;

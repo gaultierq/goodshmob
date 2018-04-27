@@ -62,7 +62,6 @@ export type Props<T> = {
 export type FilterConfig<T> = {
     placeholder: i18Key,
     renderFilter: () => Node,
-    onSearch: string => void,
     emptyFilterResult: string => Node,
     style: *,
     applyFilter: (Array<T>) => Array<T>
