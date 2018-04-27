@@ -152,6 +152,7 @@ export default class AddItemScreen extends Screen<Props, State> {
                                 returnKeyType={selectedLineupId ? 'go' : 'next'}
                                 onSubmitEditing={() => {selectedLineupId && this._doAdd(selectedLineupId)}}
                                 multiline={true}
+                                autoFocus={true}
                             />
                         </ItemCell>
                         {this.renderListSelector(selectedLineupId)}
