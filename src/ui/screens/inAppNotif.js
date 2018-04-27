@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
-import {Text, View} from 'react-native';
+import {Platform, StyleSheet, Text, View} from 'react-native';
 import GTouchable from "../GTouchable";
 import {Colors} from "../colors";
-import {SFP_TEXT_MEDIUM} from "../fonts";
+import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "../fonts";
 import type {Deeplink} from "../../types";
 import NavManager from "../../managers/NavManager";
 
@@ -15,17 +15,24 @@ type Props = {
 type State = {
 };
 
+const PADDING = 10
+const radius = 10
 export default class InAppNotif extends React.Component<Props, State> {
 
     render() {
+        const {title, subtitle} = this.props;
+
         return (
             <View style={{
-                width: __DEVICE_WIDTH__,
-                height: 40,
+                // width: __DEVICE_WIDTH__,
+                // height: 140,
                 // backgroundColor: 'red',
-                justifyContent: 'center'
+                // marginTop: 64,
+                justifyContent: 'center',
+                alignItems: 'center',
             }}>
                 <GTouchable onPress={() => {
+
                     if (NavManager.goToDeeplink(this.props.deeplink)) {
                         console.info('went to deeplink')
                         //TODO: dismiss inAppNotif
@@ -34,27 +41,49 @@ export default class InAppNotif extends React.Component<Props, State> {
                     // backgroundColor: 'blue'
                 }}>
                     <View style={{
-                        width: __DEVICE_WIDTH__,
+                        width: __DEVICE_WIDTH__ - 2 * PADDING,
                         // flex: 1,
                         // marginTop: 58,
-                        height: 40,
-                        alignItems: 'center',
+                        // height: 40,
+                        // alignItems: 'center',
+                        paddingVertical: 16,
+                        ...Platform.select({
+                            ios: {
+                                paddingTop: 40,
+                            },
+                        }),
+                        paddingHorizontal: 20,
                         backgroundColor: Colors.green,
+                        borderBottomLeftRadius: radius,
+                        borderBottomRightRadius: radius,
+
 
                     }}>
                         <Text numberOfLines={1} style={{
-                            fontSize: 16,
+                            fontSize: 19,
                             fontFamily: SFP_TEXT_MEDIUM,
-                            alignItems: 'center',
                             textAlignVertical: 'center',
-                            paddingHorizontal: 20,
-                            color: 'white'
-                        }}>{this.props.title}</Text>
+                            color: Colors.white,
+                        }}>{title}</Text>
+                        {!!subtitle && <Text style={{
+                            fontSize: 15,
+                            fontFamily: SFP_TEXT_REGULAR,
+                            textAlignVertical: 'center',
+                            color: Colors.white,
+                            marginTop: 10,
+                        }}>{subtitle}</Text>}
+                        <Text style={{
+                            fontSize: 20,
+                            marginTop: 20,
+                            alignSelf:'flex-end',
+                            fontFamily: SFP_TEXT_BOLD,
+                            textAlignVertical: 'center',
+                            color: Colors.white,
+                        }}>VOIR</Text>
+
                     </View>
                 </GTouchable>
             </View>
         );
     }
-
 }
-

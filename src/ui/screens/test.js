@@ -23,26 +23,14 @@ export default class TestScreen extends Component<Props, State> {
     //     navBarHidden: true,
     // };
 
-    constructor() {
-        super()
-        setTimeout(()=>{
-            this.props.navigator.showInAppNotification({
-                screen: "goodsh.InAppNotif", // unique ID registered with Navigation.registerScreen
-                passProps: {
-                    text: 'ceci est du texte'
-                }, // simple serializable object that will pass as props to the in-app notification (optional)
-                autoDismissTimerSec: 30 // auto dismiss notification in seconds
-            })
-        }, 3000)
-    }
-
     render() {
         return <View style={{width: '100%', height: '100%', backgroundColor: 'transparent'}} >
             <GTouchable onPress={()=>{
                 this.props.navigator.showInAppNotification({
                     screen: "goodsh.InAppNotif", // unique ID registered with Navigation.registerScreen
                     passProps: {
-                        text: 'hi there!'
+                        title: 'ceci est un titre',
+                        subtitle: 'ceci est du contenu, ceci est du contenu, ceci est du contenu, ceci est du contenu, ceci est du contenu, ',
                     }, // simple serializable object that will pass as props to the in-app notification (optional)
                     autoDismissTimerSec: 30 // auto dismiss notification in seconds
                 })
@@ -50,7 +38,7 @@ export default class TestScreen extends Component<Props, State> {
             }>
                 <Text style={{marginTop: 400}}>press me</Text>
             </GTouchable>
-            <GSearchBar/>
+            {/*<GSearchBar/>*/}
         </View>
         // return <NoSpamDialog />
         // return null;
