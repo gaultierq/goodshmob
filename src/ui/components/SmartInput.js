@@ -76,8 +76,9 @@ export default class SmartInput extends React.Component<Props, State> {
 
         const isFocus = extendable ? this.state.focus : true;
         const computedUnderlineColorAndroid = underlineColorAndroid || placeholderTextColor || Colors.greyish;
-
         const transparentUnderlined = this.isTransparent(computedUnderlineColorAndroid);
+
+
         return (
             <View style={[styles.container, containerStyle, {flex:1, flexDirection: 'row'}]}>
                 <View style={[
@@ -116,9 +117,10 @@ export default class SmartInput extends React.Component<Props, State> {
                                     android: {
                                         paddingBottom: transparentUnderlined ? 0 : height / 3,
                                         paddingLeft: transparentUnderlined ? 0 : 2,
-                                        // marginBottom: 0,
-                                        // paddingBottom: 0
                                     },
+                                    ios: {
+                                        borderBottomWidth: StyleSheet.hairlineWidth
+                                    }
                                 }),
                                 inputStyle,
                                 {
@@ -154,6 +156,7 @@ export default class SmartInput extends React.Component<Props, State> {
             flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
+            paddingHorizontal: 15,
             // backgroundColor: 'yellow',
         }}>
 
