@@ -176,7 +176,7 @@ export function renderSimpleListItem(navigator: *) {
 
     return (item: List) => (<GTouchable
         onPress={() => {
-            navigator.push({
+            navigator.showModal({
                 screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
                 passProps: {
                     lineupId: item.id,
