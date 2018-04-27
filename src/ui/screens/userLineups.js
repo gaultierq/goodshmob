@@ -87,7 +87,7 @@ export default class UserLineups extends Screen<Props, State> {
             <View style={{flex:1}}>
                 {this.renderFilter()}
                 <View style={{flex:1}}>
-                    {_.isEmpty(this.state.filter) && this.state.isFilterFocused && this.renderSearchOverlay()}
+
                     <LineupListScreen
                         onLineupPressed={(lineup) => seeList(navigator, lineup)}
                         onSavingPressed={(saving) => seeActivityDetails(navigator, saving)}
@@ -100,13 +100,15 @@ export default class UserLineups extends Screen<Props, State> {
                         filter={this.filter()}
                         {...this.props}
                     />
+                    {_.isEmpty(this.state.filter) && this.state.isFilterFocused && this.renderSearchOverlay()}
                 </View>
             </View>
         );
     }
 
     renderFilter() {
-        const paddingVertical = this.state.isFilterFocused ? 8 : 5;
+        // const paddingVertical = this.state.isFilterFocused ? 8 : 5;
+        const paddingVertical = 5;
         let style = {
             backgroundColor: NavStyles.navBarBackgroundColor,
             paddingVertical: paddingVertical,
@@ -157,7 +159,7 @@ export default class UserLineups extends Screen<Props, State> {
         return (<TouchableWithoutFeedback onPress={() => this.filterNode.blur()}>
                 <View style={{
                     position: 'absolute', width: '100%', height: '100%', opacity: 0.4,
-                    backgroundColor: Colors.black, zIndex: 50,}} />
+                    backgroundColor: Colors.black, zIndex: 50000,}} />
             </TouchableWithoutFeedback>
         );
     }
