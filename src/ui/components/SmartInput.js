@@ -114,7 +114,7 @@ export default class SmartInput extends React.Component<Props, State> {
                                 styles.input,
                                 Platform.select({
                                     android: {
-                                        paddingBottom: transparentUnderlined ? 0 : height / 12,
+                                        paddingBottom: transparentUnderlined ? 0 : height / 3,
                                         paddingLeft: transparentUnderlined ? 0 : 2,
                                         // marginBottom: 0,
                                         // paddingBottom: 0
