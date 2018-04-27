@@ -19,21 +19,28 @@ export default class InAppNotif extends React.Component<Props, State> {
 
     render() {
         return (
-            <View style={{width: __DEVICE_WIDTH__, backgroundColor: 'transparent'}}>
+            <View style={{
+                width: __DEVICE_WIDTH__,
+                height: 40,
+                // backgroundColor: 'red',
+                justifyContent: 'center'
+            }}>
                 <GTouchable onPress={() => {
                     if (NavManager.goToDeeplink(this.props.deeplink)) {
                         console.info('went to deeplink')
                         //TODO: dismiss inAppNotif
                     }
+                }} style={{
+                    // backgroundColor: 'blue'
                 }}>
                     <View style={{
-                        width: "100%",
-                        flex: 1,
-                        marginTop: 58,
-                        height: 40,
-                        backgroundColor: Colors.green,
+                        width: __DEVICE_WIDTH__,
+                        // flex: 1,
+                        // marginTop: 58,
+                        // height: 40,
                         alignItems: 'center',
-                        justifyContent: 'center'
+                        backgroundColor: Colors.green,
+
                     }}>
                         <Text numberOfLines={1} style={{
                             fontSize: 16,
