@@ -9,6 +9,7 @@ import NavManager from "../../managers/NavManager";
 
 type Props = {
     title: string,
+    body?: string,
     deeplink: ?Deeplink
 };
 
@@ -20,7 +21,7 @@ const radius = 10
 export default class InAppNotif extends React.Component<Props, State> {
 
     render() {
-        const {title, subtitle} = this.props;
+        const {title, body} = this.props;
 
         return (
             <View style={{
@@ -65,13 +66,13 @@ export default class InAppNotif extends React.Component<Props, State> {
                             textAlignVertical: 'center',
                             color: Colors.white,
                         }}>{title}</Text>
-                        {!!subtitle && <Text style={{
+                        {!!body && <Text style={{
                             fontSize: 15,
                             fontFamily: SFP_TEXT_REGULAR,
                             textAlignVertical: 'center',
                             color: Colors.white,
                             marginTop: 10,
-                        }}>{subtitle}</Text>}
+                        }}>{body}</Text>}
                         <Text style={{
                             fontSize: 20,
                             marginTop: 20,

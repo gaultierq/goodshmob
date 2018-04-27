@@ -66,7 +66,7 @@ export async function load() {
             screen: "goodsh.InAppNotif", // unique ID registered with Navigation.registerScreen
             passProps: {
                 title: _.get(notification, '_title'),
-                subtitle: _.get(notification, '_subtitle'),
+                body: _.get(notification, '_body'),
                 deeplink: _.get(notification, '_data.deeplink')
             }, // simple serializable object that will pass as props to the in-app notification (optional)
             autoDismissTimerSec: 3 // auto dismiss notification in seconds
