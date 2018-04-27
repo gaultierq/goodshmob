@@ -101,7 +101,7 @@ export function seeUser(navigator: RNNNavigator, user: User) {
 }
 
 export function seeComments(navigator: RNNNavigator, activity: Activity) {
-    navigator.push({
+    navigator.showModal({
         screen: 'goodsh.CommentsScreen', // unique ID registered with Navigation.registerScreen
         // title: fullName(user),
         passProps: {
