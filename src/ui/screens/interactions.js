@@ -97,7 +97,7 @@ export class InteractionScreen extends Screen<Props, State> {
         return (
             <GTouchable
                 onPress={() => {
-                    NavManager.goToDeeplink(this.localDeeplink(activity));
+                    NavManager.goToDeeplink(NavManager.localDeeplink(activity));
                 }}>
                 <UserActivity
                     activityTime={createdAt}
@@ -113,39 +113,37 @@ export class InteractionScreen extends Screen<Props, State> {
         )
     }
 
-    //temporary: should be provided by the backend
-    localDeeplink(activity: Activity): Deeplink {
-        let deeplink;
-        const activityType = sanitizeActivityType(activity.type);
-        if (!activityType) return null;
-        let resource = activity.resource;
 
-        switch (activityType) {
-            case 'comments': {
+    /*
+    activity: {
+        type:
+        user: {
+            firstName:
+            lastName:
+        }
+        resource: {
+            type:
+            content: (if Ask)
 
-                if (resource) {
-                    let {id, type} = resource;
-                    return `${Config.SERVER_URL}${sanitizeActivityType(type)}/${id}/comments`
-                }
-                break;
+            resource: {
+                title:
             }
-            default:
-                if (resource) {
-                    let {id, type} = resource;
-                    return `${Config.SERVER_URL}${sanitizeActivityType(type)}/${id}`
-                }
         }
     }
-
+    */
     renderContentByType(activity:Activity) {
         if (!activity) return null;
         let type = activity.type.toLowerCase();
         const resource = activity.resource;
+
+        const user = activity.user;
+
         const isAsk = sanitizeActivityType(resource.type) === 'asks';
 
         let build = (key) => {
 
-            let username = activity.user.firstName + " " + activity.user.lastName;
+
+            let username = user.firstName + " " + user.lastName;
 
             if (!resource) {
                 console.warn(`say QG no resource found on activityId=${activity.id} type=${activity.type}`);

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="green">#01DEB1</color>
     <color name="outerCircleColorPrimary">#54A4E9</color>
     <color name="outerCircleColorSecondary">#ffffff</color>
 </resources>

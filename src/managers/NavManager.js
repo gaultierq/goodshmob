@@ -1,10 +1,11 @@
 // @flow
 import {Navigation} from 'react-native-navigation';
-import type {Deeplink} from "../types";
+import type {Activity, Deeplink} from "../types";
 import {isId} from "../helpers/StringUtils";
-import {isActivityType} from "../helpers/DataUtils";
+import {isActivityType, sanitizeActivityType} from "../helpers/DataUtils";
 import * as Nav from "../ui/Nav";
 import URL from "url-parse"
+import Config from 'react-native-config';
 
 // export const DEEPLINK_OPEN_SCREEN_IN_MODAL = 'DEEPLINK_OPEN_SCREEN_IN_MODAL';
 
@@ -91,6 +92,29 @@ class _NavManager implements NavManager {
     }
 
 
+    //temporary: should be provided by the backend
+    localDeeplink(activity: Activity): Deeplink {
+        const activityType = sanitizeActivityType(activity.type);
+        if (!activityType) return null;
+        let resource = activity.resource;
+
+        switch (activityType) {
+            case 'comments': {
+                if (resource) {
+                    let {id, type} = resource;
+                    return `${Config.SERVER_URL}${sanitizeActivityType(type)}/${id}/comments`
+                }
+                break;
+            }
+            default:
+                if (resource) {
+                    let {id, type} = resource;
+                    return `${Config.SERVER_URL}${sanitizeActivityType(type)}/${id}`
+                }
+        }
+    }
+
+
 }
 
 export interface NavManager {
@@ -98,6 +122,8 @@ export interface NavManager {
     init(): void;
 
     goToDeeplink(url: Deeplink): boolean;
+
+    localDeeplink(activity: activity): Deeplink;
 }
 
 module.exports = new _NavManager();

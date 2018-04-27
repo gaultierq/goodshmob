@@ -8,7 +8,7 @@ import type {Deeplink} from "../../types";
 import NavManager from "../../managers/NavManager";
 
 type Props = {
-    text: string,
+    title: string,
     deeplink: ?Deeplink
 };
 
@@ -37,7 +37,7 @@ export default class InAppNotif extends React.Component<Props, State> {
                         width: __DEVICE_WIDTH__,
                         // flex: 1,
                         // marginTop: 58,
-                        // height: 40,
+                        height: 40,
                         alignItems: 'center',
                         backgroundColor: Colors.green,
 
@@ -49,7 +49,7 @@ export default class InAppNotif extends React.Component<Props, State> {
                             textAlignVertical: 'center',
                             paddingHorizontal: 20,
                             color: 'white'
-                        }}>{this.props.text}</Text>
+                        }}>{this.props.title}</Text>
                     </View>
                 </GTouchable>
             </View>
