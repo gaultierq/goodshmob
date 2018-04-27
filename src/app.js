@@ -153,13 +153,13 @@ export default class App {
 
         // const customTextInputProps = {
         //     underlineColorAndroid: Colors.greyish,
-            // style: {
-            //     // paddingVertical: 5,
-            //     // paddingHorizontal: 8,
-            //     paddingBottom: 0,
-            //     marginBottom: 0,
-            //     backgroundColor: 'white'
-            // }
+        // style: {
+        //     // paddingVertical: 5,
+        //     // paddingHorizontal: 8,
+        //     paddingBottom: 0,
+        //     marginBottom: 0,
+        //     backgroundColor: 'white'
+        // }
         // };
         // globalProps.setCustomTextInput(customTextInputProps);
 
@@ -368,11 +368,13 @@ export default class App {
         console.debug(`mode changed: new mode=${this.mode} (old mode=${oldMode})`);
 
         let testScreen;
+        let testScreenName = (__IS_IOS__ ? __TEST_SCREEN_IOS__ : __TEST_SCREEN_ANDROID__)
+        if (!testScreenName) testScreenName = __TEST_SCREEN__
 
-        if (__TEST_SCREEN__) {
-            testScreen = require("./testScreen")[__TEST_SCREEN__];
+        if (testScreenName) {
+            testScreen = require("./testScreen")[testScreenName];
             if (!testScreen) {
-                console.warn(`test screen not found${__TEST_SCREEN__}`);
+                console.warn(`test screen not found${testScreenName}`);
             }
         }
         let navigatorStyle = {...UI.NavStyles};
