@@ -106,10 +106,10 @@ export default class UserLineups extends Screen<Props, State> {
     }
 
     renderFilter() {
+        const paddingVertical = this.state.isFilterFocused ? 8 : 5;
         let style = {
             backgroundColor: NavStyles.navBarBackgroundColor,
-            paddingTop: 5,
-            paddingBottom: 5,
+            paddingVertical: paddingVertical,
             elevation: 3,
             paddingLeft: 9,
             paddingRight: 9,
@@ -127,7 +127,10 @@ export default class UserLineups extends Screen<Props, State> {
                     onClearText={()=>this.setState({filter: null})}
                     placeholder={i18n.t('search.in_feed')}
                     clearIcon={!!this.state.filter && {color: '#86939e'}}
-                    style={{margin: 0,}}
+                    style={{
+                        margin: 0,
+                    }}
+                    // inputStyle={this.state.isFilterFocused && {height: 10}}
                     onClearText={() => {
                         this.filterNode && this.filterNode.blur();
                     }}
@@ -141,9 +144,12 @@ export default class UserLineups extends Screen<Props, State> {
     }
 
     onFilterFocusChange(focused: boolean) {
-        scheduleOpacityAnimation()
-        this.setState({isFilterFocused: focused})
-        if (this.props.onFilterFocusChange) this.props.onFilterFocusChange(focused)
+        if (this.props.onFilterFocusChange) {
+            this.props.onFilterFocusChange(focused).then(()=>{
+                scheduleOpacityAnimation()
+                this.setState({isFilterFocused: focused})
+            })
+        }
     }
 
 

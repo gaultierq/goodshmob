@@ -16,11 +16,11 @@ export default class GSearchBar extends Component<Props, State>  {
 
 
     render() {
-        const {...attr} = this.props;
+        const {inputStyle, containerStyle, ...attr} = this.props;
         return (
             <SearchBar
-                containerStyle={SEARCH_STYLES.searchContainer}
-                inputStyle={SEARCH_STYLES.searchInput}
+                containerStyle={[SEARCH_STYLES.searchContainer, containerStyle]}
+                inputStyle={[SEARCH_STYLES.searchInput, inputStyle]}
                 {...SEARCH_INPUT_PROPS}
                 {...attr}
             />

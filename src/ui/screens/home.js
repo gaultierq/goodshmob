@@ -68,6 +68,7 @@ type Props = {
 type State = {
     focusedSaving?: Saving,
     isActionButtonVisible: boolean,
+    filterFocused?: boolean,
     currentTip?: TipConfig
 };
 
@@ -295,9 +296,12 @@ class HomeScreen extends Screen<Props, State> {
                     // ItemSeparatorComponent={() => <View style={{height: StyleSheet.hairlineWidth, backgroundColor: Colors.white}} />}
                     ItemSeparatorComponent={() => null}
                     ListHeaderComponent={
-                        this.state.currentTip && this.renderTip()
+                        !this.state.filterFocused && this.state.currentTip && this.renderTip()
                     }
-                    onFilterFocusChange={focused => this.setState({isActionButtonVisible: !focused})}
+                    onFilterFocusChange={focused => new Promise(resolved => {
+                            this.setState({filterFocused: focused}, resolved())
+                        })
+                    }
 
                     sectionMaker={(lineups)=> {
                         const goodshbox = _.head(lineups);
@@ -342,7 +346,7 @@ class HomeScreen extends Screen<Props, State> {
 
 
 
-                {this.state.isActionButtonVisible && this.renderFloatingButton()}
+                {!this.state.filterFocused && this.renderFloatingButton()}
             </View>
         );
     }
