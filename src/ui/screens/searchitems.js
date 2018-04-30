@@ -105,7 +105,10 @@ class SearchItem extends Screen<Props, State> {
                         <SearchPage
                             search={results}
                             renderItem={({item})=> (
-                                <GTouchable onPress={() => this.props.onItemSelected(item, this.props.navigator)}>
+                                <GTouchable
+                                    onPress={() => this.props.onItemSelected(item, this.props.navigator)}
+                                    disabled={!this.props.onItemSelected}
+                                >
                                     <ItemCell item={item}/>
                                 </GTouchable>
                             )}
