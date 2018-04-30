@@ -164,7 +164,7 @@ export const searchItemsScreen = {
         title: 'Test SearchItemsScreen',
     },
     passProps: {
-        index: 1,
+        // index: 1,
     }
 };
 

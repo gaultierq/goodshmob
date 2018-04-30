@@ -167,3 +167,5 @@ export type Position = {
 
 
 export type Dispatchee = any;
+
+export type Color = string
