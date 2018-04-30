@@ -17,7 +17,7 @@ type State = {
 };
 
 
-const DIM = 70;
+export const ITEM_DIM = 70;
 
 export default class LineupCellSaving extends React.PureComponent<Props, State> {
 
@@ -25,11 +25,12 @@ export default class LineupCellSaving extends React.PureComponent<Props, State> 
 
     static styles = StyleSheet.create({
         cell: {
-            height: DIM,
-            width: DIM,
+            height: ITEM_DIM,
+            width: ITEM_DIM,
 
             borderRadius: 4,
-            borderWidth: StyleSheet.hairlineWidth
+            borderWidth: StyleSheet.hairlineWidth,
+            borderColor: Colors.greyish
         }
     });
 
@@ -41,14 +42,32 @@ export default class LineupCellSaving extends React.PureComponent<Props, State> 
             return <CachedImage
                 source={{uri: image}}
                 resizeMode="cover"
-                style={[LineupCellSaving.styles.cell, {borderColor: Colors.greyish}, this.props.style, ]}
+                style={[LineupCellSaving.styles.cell, this.props.style, ]}
             />
         }
         else {
             return (
-                <View style={[LineupCellSaving.styles.cell, {opacity: 0.3, backgroundColor: Colors.grey3, borderColor: Colors.brownishGrey}]}/>
+                <View style={[LineupCellSaving.styles.cell, {opacity: 0.3, backgroundColor: Colors.grey3}]}/>
             )
         }
     }
 }
+
+export const EmptyCell = props => {
+    let {children, style, ...attr} = props;
+    return <View {...attr} style={[
+        LineupCellSaving.styles.cell,
+        {
+            backgroundColor: Colors.grey3,
+            // marginRight: 10,
+            // opacity: 1 - (0.2 * i),
+            alignItems: 'center',
+            justifyContent:'center'
+        }, style
+    ]}>
+        {children}
+        {/*{ i === 0 && onPressEmptyLineup && <Icon name="plus" size={45} color={Colors.dirtyWhite}/>}*/}
+    </View>
+};
+
 

@@ -51,7 +51,7 @@ type State = {
 
 
 @logged
-@connect((state, ownProps) => ({
+@connect(state => ({
     data: state.data,
     pending: state.pending
 }))

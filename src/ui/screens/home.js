@@ -33,7 +33,7 @@ import Screen from "../components/Screen";
 import {Colors} from "../colors";
 import {PROFILE_CLICKED} from "../components/MyAvatar";
 import LineupTitle from "../components/LineupTitle";
-import LineupCellSaving from "../components/LineupCellSaving";
+import LineupCellSaving, {ITEM_DIM} from "../components/LineupCellSaving";
 
 import GTouchable from "../GTouchable";
 import AddLineupComponent from "../components/addlineup";
@@ -41,7 +41,7 @@ import type {OnBoardingStep} from "../../managers/OnBoardingManager";
 import OnBoardingManager from "../../managers/OnBoardingManager";
 // $FlowFixMe
 import {AppTour, AppTourSequence, AppTourView} from "../../../vendors/taptarget";
-import LineupHorizontal, {LineupH1} from "../components/LineupHorizontal";
+import LineupHorizontal, {ITEM_SEP, LineupH1} from "../components/LineupHorizontal";
 import {seeList} from "../Nav";
 import {seeActivityDetails} from "../Nav";
 import UserLineups from "./userLineups";
@@ -289,8 +289,8 @@ class HomeScreen extends Screen<Props, State> {
                         !this.state.filterFocused && this.state.currentTip && this.renderTip()
                     }
                     onFilterFocusChange={focused => new Promise(resolved => {
-                            this.setState({filterFocused: focused}, resolved())
-                        })
+                        this.setState({filterFocused: focused}, resolved())
+                    })
                     }
 
                     sectionMaker={(lineups)=> {
@@ -302,11 +302,13 @@ class HomeScreen extends Screen<Props, State> {
                                 title: i18n.t("lineups.goodsh.title"),
                                 subtitle: ` (${savingCount})`,
                                 onPress: () => seeList(navigator, goodshbox),
-                                renderItem: ({item, index}) => <LineupH1
-                                    lineup={item}
-                                    navigator={navigator}
-                                    skipLineupTitle={true}
-                                />
+                                renderItem: ({item, index}) => (
+                                    <LineupH1
+                                        lineup={item}
+                                        navigator={navigator}
+                                        skipLineupTitle={true}
+                                    />
+                                )
                             },
                             {
                                 data: _.slice(lineups, 1),
@@ -316,6 +318,36 @@ class HomeScreen extends Screen<Props, State> {
                                     <LineupH1 lineup={item} navigator={navigator}
                                               withMenuButton={true}
                                               onPressEmptyLineup={() => startAddItem(navigator, item.id)}
+                                              renderEmpty={(list: Lineup) => (
+                                                  <GTouchable
+                                                      onPress={() => startAddItem(navigator, item.id)}
+                                                      deactivated={item.pending}
+                                                  >
+                                                      {
+                                                          LineupHorizontal.defaultRenderEmpty(true)
+                                                      }
+                                                  </GTouchable>
+                                              )}
+                                              // TODO: watch https://github.com/facebook/react-native/issues/13202
+                                              // ListHeaderComponent={
+                                              //     () => <GTouchable
+                                              //         onPress={() => startAddItem(navigator, item.id)}
+                                              //         deactivated={item.pending}
+                                              //     >
+                                              //         {
+                                              //             LineupHorizontal.renderEmptyCell(0, true)
+                                              //         }
+                                              //     </GTouchable>
+                                              //
+                                              // }
+                                              // initialScrollIndex={1}
+                                              // initialNumToRender={6}
+                                              // getItemLayout={(data, index) => (
+                                              //     {length: ITEM_DIM, offset: (ITEM_DIM + ITEM_SEP)* index, index}
+                                              // )}
+                                              // onScrollToIndexFailed={err=>{console.warn('onScrollToIndexFailed',err)}}
+                                              // contentOffset={{y: ITEM_DIM + ITEM_SEP, x: ITEM_DIM + ITEM_SEP}}
+                                              // contentOffset={{x: 30, y: 10, }}
                                               renderMenuButton={() => {
                                                   //TODO: dubious 15
                                                   return this.renderMenuButton(item, 15)
@@ -324,7 +356,7 @@ class HomeScreen extends Screen<Props, State> {
                                               style={[
                                                   {paddingTop: 8, paddingBottom: 12},
                                                   {backgroundColor: index % 2 === 1 ? 'transparent' : 'rgba(255, 255, 255, 0.3)'}
-                                                  ]}
+                                              ]}
                                     />
                                 )
                             },

@@ -33,6 +33,7 @@ import GTouchable from "../GTouchable";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {UpdateTracker} from "../UpdateTracker";
 import StoreManager from "../../managers/StoreManager";
+import {EmptyCell, ITEM_DIM} from "./LineupCellSaving";
 // $FlowFixMe
 type Props = {
     lineupId: Id,
@@ -44,10 +45,13 @@ type Props = {
     renderSaving?: (saving:Saving) => Node,
     renderTitle: (lineup: Lineup) => Node,
     style?: any,
+    renderEmpty: (list: Lineup) => Node,
 };
 
 type State = {
 };
+
+export const ITEM_SEP = 10
 
 @connect(state => ({
     data: state.data,
@@ -62,7 +66,8 @@ export default class LineupHorizontal extends Component<Props, State> {
         skipLineupTitle: false,
         renderTitle: (lineup: Lineup) => <LineupTitle lineup={lineup} style={{marginVertical: 6,}}/>,
         renderSaving: saving => <LineupCellSaving item={saving.resource} />,
-        dataResolver: lineupId => StoreManager.getLineupAndSavings(lineupId)
+        dataResolver: lineupId => StoreManager.getLineupAndSavings(lineupId),
+        renderEmpty: (list: Lineup) => LineupHorizontal.defaultRenderEmpty()
     }
 
     constructor(props: Props) {
@@ -75,7 +80,7 @@ export default class LineupHorizontal extends Component<Props, State> {
     render() {
         this.updateTracker.onRender(this.props);
 
-        const {renderTitle, renderMenuButton, skipLineupTitle, lineupId, style} = this.props;
+        const {renderTitle, renderMenuButton, skipLineupTitle, lineupId, style, data, ...attributes} = this.props;
 
         let {lineup, savings} = this.props.dataResolver(lineupId);
         if (!lineup) {
@@ -93,55 +98,74 @@ export default class LineupHorizontal extends Component<Props, State> {
                         {renderMenuButton && renderMenuButton()}
                     </View>
                 }
-                {this.renderList(lineup, savings)}
+                {/*{this.renderList(lineup, savings)}*/}
+                {_.isEmpty(savings) ? this.props.renderEmpty(lineup) :
+                    <Feed
+                        data={savings}
+                        renderItem={({item}) => this.props.renderSaving(item)}
+                        hasMore={false}
+                        horizontal={true}
+                        ItemSeparatorComponent={()=> <View style={{width: ITEM_SEP}} />}
+                        contentContainerStyle={{paddingLeft: 15}}
+                        showsHorizontalScrollIndicator={false}
+                        {...attributes}
+                        // cannotFetch={!super.isVisible()}
+                    />
+                }
             </View>
         )
     }
 
-    renderList(list: Lineup, savings: Array<Saving>) {
-        if (_.isEmpty(savings)) {
-            return this.renderEmptyList(list)
-        }
 
-        return <Feed
-            data={savings}
-            renderItem={({item}) => this.props.renderSaving(item)}
-            hasMore={false}
-            horizontal={true}
-            ItemSeparatorComponent={()=> <View style={{width: 10, height: 10}} />}
-            contentContainerStyle={{paddingLeft: 15}}
-            showsHorizontalScrollIndicator={false}
-            // cannotFetch={!super.isVisible()}
-        />
+    static defaultRenderEmpty(renderFirstAsPlus: boolean = false) {
+        return (
+            <View style={{flexDirection: 'row', paddingLeft: 15}}>{
+                [0,1,2,3,4].map((o, i) => (
+                        this.renderEmptyCell(i, renderFirstAsPlus)
+                    )
+                )
+            }</View>
+        )
     }
 
-    //TODO: move out of LineupHorizontal, as a prop
-    renderEmptyList(list: List) {
-        let result = [];
-        //
-        const onPressEmptyLineup = this.props.onPressEmptyLineup;
-        for (let i = 0; i < 5; i++) {
-            result.push(<View key={`key-${i}`} style={[
-                LineupCellSaving.styles.cell,
-                {
-                    backgroundColor: Colors.grey3,
-                    marginRight: 10,
-                    opacity: 1 - (0.2 * i),
-                    alignItems: 'center',
-                    justifyContent:'center'
-                }
-            ]}>
-                { i === 0 && onPressEmptyLineup && <Icon name="plus" size={45} color={Colors.dirtyWhite}/>}
-            </View>);
-        }
-        return (<GTouchable
-            disabled={!onPressEmptyLineup || list.pending}
-            onPress={() => {
-                onPressEmptyLineup && onPressEmptyLineup()
-            }
+    static renderEmptyCell(i: number, renderFirstAsPlus: boolean = false) {
+        return (
+            <EmptyCell key={`key-${i}`} style={
+                [
+                    {
+                        marginRight: 10,
+                        backgroundColor: `rgba(200,200,200,${0.2 * i})`,
+                    },
+                    i === 0 && {borderWidth: 0}
+                ]
             }>
-            <View style={{flexDirection: 'row', paddingLeft: 15}}>{result}</View>
-        </GTouchable>);
+                {i === 0 && renderFirstAsPlus && this.renderPlus(Colors.greyishBrown)}
+            </EmptyCell>
+        )
+    }
+
+    static renderPlus(plusColor) {
+        const size = '90%';
+        const plusThickness = '3%'
+        return <View style={{
+            position: 'absolute',
+            width: size,
+            height: size,
+            alignItems: 'center',
+            justifyContent: 'center',
+        }}>
+            <View style={{
+                width: plusThickness,
+                height: size,
+                backgroundColor: plusColor,
+            }}/>
+            <View style={{
+                height: plusThickness,
+                width: size,
+                backgroundColor: plusColor,
+                position: 'absolute',
+            }}/>
+        </View>;
     }
 
     makeRefObject(nextProps:Props) {
