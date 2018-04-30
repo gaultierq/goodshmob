@@ -18,26 +18,29 @@ import {Call} from "../../managers/Api";
 import ItemCell from "../components/ItemCell";
 import {buildData} from "../../helpers/DataUtils";
 import {CheckBox, SearchBar} from 'react-native-elements'
-import type {SearchCategoryType, SearchEngine, SearchState} from "./search";
+import type {SearchCategoryType, SearchEngine, SearchQuery, SearchState} from "./search";
 import SearchScreen from "./search";
 import normalize from 'json-api-normalizer';
 import GTouchable from "../GTouchable";
 import Screen from "../components/Screen";
-import type {Item, RNNNavigator} from "../../types";
+import type {Color, Item, RNNNavigator} from "../../types";
 import {Colors} from "../colors";
 import Geolocation from "../../managers/GeoLocation"
 import type {SearchPlacesProps} from "./searchplacesoption";
 import {SearchPlacesOption} from "./searchplacesoption";
 import OpenAppSettings from 'react-native-app-settings'
 import SearchPage from "./SearchPage";
+import {SFP_TEXT_MEDIUM} from "../fonts";
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
 
 
-
-type SearchCategory = "consumer_goods" | "places" | "musics" | "movies";
+type SearchItemCategoryType = "consumer_goods" | "places" | "musics" | "movies";
 type SearchToken = string;
 
-const SEARCH_CATEGORIES : Array<SearchCategory> = [ "consumer_goods", "places", "musics", "movies"];
+const SEARCH_CATEGORIES : Array<SearchItemCategoryType> = [ "consumer_goods", "places", "musics", "movies"];
 
 
 type Props = {
@@ -65,16 +68,49 @@ class SearchItem extends Screen<Props, State> {
                 placeholder: "search_item_screen.placeholder." + categ,
 
                 searchOptions: this.renderSearchOptions(categ),
-                renderResults: (searchResults: SearchState) => (
-                    <SearchPage
-                        search={searchResults}
-                        renderItem={({item})=> (
-                            <GTouchable onPress={() => this.props.onItemSelected(item, this.props.navigator)}>
-                                <ItemCell item={item}/>
-                            </GTouchable>
-                        )}
-                    />
-                )
+                renderResults: ({query, results}) => {
+
+                    if (this.displayBlank(query, results)) {
+                        const color = Colors.brownishGrey;
+                        return (
+                            <KeyboardAwareScrollView
+                                contentContainerStyle={{flex:1}}
+                                scrollEnabled={false}
+                                keyboardShouldPersistTaps='always'
+                                // style={{position: 'absolute', bottom:0, top: 0}}
+                            >
+                                <View style={{
+                                    flex:1,
+                                    alignItems:'center',
+                                    alignSelf: 'center',
+                                    justifyContent:'center',
+
+                                }}>
+                                    {
+                                        this.renderBlankIcon(categ, 50, color)
+                                    }
+                                    <Text style={{
+                                        fontSize: 17,
+                                        margin: 15,
+                                        fontFamily: SFP_TEXT_MEDIUM,
+                                        color: color
+
+                                    }}>{i18n.t("search_item_screen.placeholder." + categ)}</Text>
+                                </View>
+                            </KeyboardAwareScrollView>
+                        )
+                    }
+                    return (
+
+                        <SearchPage
+                            search={results}
+                            renderItem={({item})=> (
+                                <GTouchable onPress={() => this.props.onItemSelected(item, this.props.navigator)}>
+                                    <ItemCell item={item}/>
+                                </GTouchable>
+                            )}
+                        />
+                    )},
 
             }
         });
@@ -93,6 +129,41 @@ class SearchItem extends Screen<Props, State> {
             {...this.props}
             style={{backgroundColor: Colors.white}}
         />;
+    }
+
+    renderBlankIcon(category: SearchItemCategoryType, size: number, color: Color) {
+
+        switch (category) {
+            case 'places':
+                return <MaterialIcons name="restaurant" size={size} color={color}/>;
+            case 'musics':
+                return <MaterialIcons name="library-music" size={size} color={color}/>;
+            case 'consumer_goods':
+                return <SimpleLineIcons name="present" size={size} color={color}/>;
+            case 'movies':
+                return <MaterialIcons name="movie" size={size} color={color}/>;
+        }
+    }
+
+
+    displayBlank(query: SearchQuery, results: SearchResult) {
+        const {
+            token,
+            categoryType,
+            options,
+
+        } = query;
+        switch (categoryType) {
+            case 'places':
+                if (options && options.aroundMe) {
+                    return !results || results.state === 0
+                }
+                return _.isEmpty(token) ;
+            default:
+                return _.isEmpty(token);
+        }
+
+
     }
 
     renderSearchOptions(category: SearchCategoryType) {

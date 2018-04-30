@@ -26,7 +26,6 @@ import {Navigation} from 'react-native-navigation';
 import update from "immutability-helper";
 import {Colors} from "../colors";
 import {DEEPLINK_SEARCH_CLOSE, DEEPLINK_SEARCH_SUBMITED, DEEPLINK_SEARCH_TEXT_CHANGED} from "./SearchNavBar";
-import SearchPage from "./SearchPage";
 
 export type SearchCategoryType = string;
 
@@ -39,7 +38,8 @@ export type SearchCategory = {
     placeholder: i18Key,
     onItemSelected?: () => void,
     searchOptions: SearchOptions,
-    renderResults: (searchResults: SearchState) => Node,
+    renderResults: ({query: SearchQuery, results: SearchState}) => Node,
+    renderBlank?: () => Node,
 }
 
 export type SearchResult = {
@@ -51,6 +51,14 @@ export type SearchResult = {
 }
 export type SearchOptions = {
     renderOptions: (any, any => void, void => void) => Node
+}
+
+
+
+export type SearchQuery = {
+    token: SearchToken,
+    categoryType: SearchCategoryType,
+    options?: any
 }
 
 export type SearchEngine = {
@@ -69,14 +77,6 @@ export type SearchEngine = {
 
 };
 
-export type Props = {
-    categories: Array<SearchCategory>,
-    navigator: *,
-    searchEngine: SearchEngine,
-    token?: ?SearchToken,
-    style?: ? *,
-    index: number,
-};
 
 
 //token -> {data, hasMore, isSearching}
@@ -88,7 +88,8 @@ export type SearchState = {
     token: string,
 };
 
-
+//search query KEY: token x category x options
+//options: page x location? x
 export type State = {
     input?: SearchToken,
     routes: Array<*>,
@@ -96,6 +97,15 @@ export type State = {
     index: number
 };
 
+
+export type Props = {
+    categories: Array<SearchCategory>,
+    navigator: *,
+    searchEngine: SearchEngine,
+    token?: ?SearchToken,
+    style?: ? *,
+    index: number,
+};
 
 @connect()
 @logged
@@ -105,7 +115,7 @@ export default class SearchScreen extends Component<Props, State> {
 
     searchOptions: { [SearchCategoryType]: *} = {};
 
-    static defaultProps = {index: 0};
+    static defaultProps = {index: 0, autoSearch: true};
 
     constructor(props: Props) {
         super(props);
@@ -128,6 +138,7 @@ export default class SearchScreen extends Component<Props, State> {
             const token = props.token;
             //weak
             this.state.input = token;
+
             setTimeout(()=> {
                 this.performSearch(token, 0);
             });
@@ -164,7 +175,7 @@ export default class SearchScreen extends Component<Props, State> {
                 {
                     cat && cat.searchOptions && (
                         cat.searchOptions.renderOptions(
-                            this.getCurrentSearchOptions(cat.type),
+                            this.getSearchOptions(cat.type),
                             onNewOptions,
                             this._debounceSearch
                             )
@@ -190,7 +201,7 @@ export default class SearchScreen extends Component<Props, State> {
         );
     }
 
-    getCurrentSearchOptions(catType: SearchCategoryType) {
+    getSearchOptions(catType: SearchCategoryType) {
         return this.searchOptions[catType];
     }
 
@@ -208,20 +219,16 @@ export default class SearchScreen extends Component<Props, State> {
 
     renderSearchPage(category: SearchCategory) {
         let forToken = this.state.searches[this.state.input];
-        let forType : SearchState = forToken && forToken[category.type];
+        const categoryType = category.type;
+        let results : SearchState = forToken && forToken[categoryType];
+        let query: SearchQuery = {
+            token: this.state.input,
+            categoryType,
+            options: this.getSearchOptions(categoryType)
+        }
 
         //FIXME: restore loadmore
-        if (category.renderResults) {
-            return category.renderResults(forType)
-        }
-        throw "deprecated:" + category.type
-        // return (
-        //     <SearchPage
-        //         search={forType}
-        //         renderItem={category.renderItem}
-        //         ListFooterComponent={this.renderSearchFooter(forType)}
-        //     />
-        // );
+        return category.renderResults({query, results})
     }
 
 
@@ -282,7 +289,7 @@ export default class SearchScreen extends Component<Props, State> {
 
         console.log(`performSearch:token=${token} page=${page}`);
         const {search, canSearch} = this.props.searchEngine;
-        const options = this.getCurrentSearchOptions(catType);
+        const options = this.getSearchOptions(catType);
 
 
         if (!canSearch(token, catType, options)) {

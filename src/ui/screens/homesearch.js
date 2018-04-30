@@ -18,7 +18,7 @@ import ItemCell from "../components/ItemCell";
 import {AlgoliaClient, createResultFromHit, makeAlgoliaSearchEngine} from "../../helpers/AlgoliaUtils";
 import Screen from "../components/Screen";
 import type {SearchCategory, SearchState} from "./search";
-import SearchScreen from "./search";
+import SearchScreen, {SearchQuery} from "./search";
 import {SearchStyles} from "../UIStyles";
 import GTouchable from "../GTouchable";
 import Config from 'react-native-config'
@@ -112,7 +112,7 @@ export default class HomeSearchScreen extends Screen<Props, State> {
                 query,
                 placeholder: "search_bar.me_placeholder",
                 parseResponse: createResultFromHit,
-                renderResults: (searchResults: SearchState) => (
+                renderResults: ({query: SearchQuery, searchResults: SearchState}) => (
                     <SearchPage
                         search={searchResults}
                         renderItem={renderItem}

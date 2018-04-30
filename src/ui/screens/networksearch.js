@@ -86,7 +86,7 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                 tabName: "network_search_tabs.savings",
                 placeholder: "search_bar.network_placeholder",
                 parseResponse: createResultFromHit,
-                renderResults: (searchResults: SearchState) => (
+                renderResults: ({query: SearchQuery, searchResults: SearchState}) => (
                     <SearchPage
                         search={searchResults}
                         renderItem={renderItem}
@@ -103,9 +103,9 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                 tabName: "network_search_tabs.users",
                 placeholder: "search_bar.network_placeholder",
                 parseResponse: createResultFromHit2,
-                renderResults: (searchResults: SearchState) => (
+                renderResults: ({query, results}) => (
                     <SearchPage
-                        search={searchResults}
+                        search={results}
                         renderItem={renderUser}
                     />
                 )

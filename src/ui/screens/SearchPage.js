@@ -27,6 +27,7 @@ type PageProps = {
     renderItem: (item: *) => Node,
     search: SearchState,
     ListFooterComponent?: Node
+
 };
 
 type PageState = {
@@ -44,35 +45,20 @@ export default class SearchPage extends Component<PageProps, PageState> {
 
 
         let searchResult: Array<Item|List> = (search && search.data) || [];
-        let hasSearchResult = search && search.data && search.data.length > 0;
-
         let isSearchRequesting = search && search.searchState === 1;
-
-        let emptySearchResult = search && !isSearchRequesting && !hasSearchResult;
-
-
+        let emptySearchResult = search && !isSearchRequesting && searchResult.length === 0;
         let loadingFirst = isSearchRequesting && search.page === 0;
 
-        return (
-            <View style={{flex: 1, width:"100%", height: "100%",}}>
-                {
-                    loadingFirst && <FullScreenLoader/>
-                }
-                {
-                    !emptySearchResult &&
-                    <FlatList
-                        data={searchResult}
-                        renderItem={this.props.renderItem}
-                        keyExtractor={(item) => item.id}
-                        ListFooterComponent={this.props.ListFooterComponent}
-                        onScrollBeginDrag={Keyboard.dismiss}
-                        keyboardShouldPersistTaps='always'
-                    />
-                }
-                {emptySearchResult && <Text style={{alignSelf: "center", marginTop: 20}}>{i18n.t('lineups.search.empty')}</Text>}
+        if (loadingFirst) return <FullScreenLoader/>
+        if (emptySearchResult) return <Text style={{alignSelf: "center", marginTop: 20}}>{i18n.t('lineups.search.empty')}</Text>
 
-            </View>
-
-        );
+        return (<FlatList
+            data={searchResult}
+            renderItem={this.props.renderItem}
+            keyExtractor={(item) => item.id}
+            ListFooterComponent={this.props.ListFooterComponent}
+            onScrollBeginDrag={Keyboard.dismiss}
+            keyboardShouldPersistTaps='always'
+        />)
     }
 }
