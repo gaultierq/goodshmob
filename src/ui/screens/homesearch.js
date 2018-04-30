@@ -112,9 +112,10 @@ export default class HomeSearchScreen extends Screen<Props, State> {
                 query,
                 placeholder: "search_bar.me_placeholder",
                 parseResponse: createResultFromHit,
-                renderResults: ({query: SearchQuery, searchResults: SearchState}) => (
+                renderResults: ({query, results}) => (
                     <SearchPage
-                        search={searchResults}
+                        query={query}
+                        search={results}
                         renderItem={renderItem}
                     />
                 )

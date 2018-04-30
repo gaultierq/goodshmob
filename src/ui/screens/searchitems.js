@@ -18,7 +18,7 @@ import {Call} from "../../managers/Api";
 import ItemCell from "../components/ItemCell";
 import {buildData} from "../../helpers/DataUtils";
 import {CheckBox, SearchBar} from 'react-native-elements'
-import type {SearchCategoryType, SearchEngine, SearchQuery, SearchState} from "./search";
+import type {SearchCategoryType, SearchEngine, SearchQuery, SearchState, SearchTrigger} from "./search";
 import SearchScreen from "./search";
 import normalize from 'json-api-normalizer';
 import GTouchable from "../GTouchable";
@@ -118,10 +118,18 @@ class SearchItem extends Screen<Props, State> {
             }
         });
 
+
         const searchEngine: SearchEngine = {
             search: this.search.bind(this),
-            canSearch: (token: SearchToken, category: SearchCategoryType, searchOptions: ?any) => {
-                if (category === 'places' && searchOptions && (searchOptions.aroundMe || searchOptions.place)) return true;
+            canSearch: (token: SearchToken, category: SearchCategoryType, trigger: SearchTrigger, searchOptions: ?any) => {
+                //if search places, do not auto search if tab change
+                if (category === 'places' && searchOptions && (searchOptions.aroundMe || searchOptions.place)) {
+                    if (searchOptions) {
+                        let {aroundMe, place} = searchOptions
+                        return aroundMe || place
+                    }
+
+                }
                 return !_.isEmpty(token);
             }
         };

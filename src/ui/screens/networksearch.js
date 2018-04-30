@@ -113,14 +113,6 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
 
         ];
 
-
-        // return (
-        //     <AlgoliaSearchScreen
-        //         categories={categories}
-        //         navigator={navigator}
-        //     />
-        // );
-
         let search = makeAlgoliaSearchEngine(categories, navigator);
 
         return <SearchScreen
