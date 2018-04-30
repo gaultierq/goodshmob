@@ -15,7 +15,7 @@ import {REHYDRATE} from 'redux-persist/constants'
 import * as CurrentUser from './managers/CurrentUser'
 import {currentUserId} from './managers/CurrentUser'
 import * as globalProps from 'react-native-global-props';
-import * as notification from './managers/notification';
+import * as notification from './managers/NotificationManager';
 import * as DeviceManager from "./managers/DeviceManager";
 import * as UI from "./ui/UIStyles";
 import {init as initGlobal} from "./global";
@@ -33,7 +33,11 @@ import * as appActions from "./auth/actions";
 import OnBoardingManager from "./managers/OnBoardingManager";
 import StoreManager from "./managers/StoreManager";
 import BugsnagManager from "./managers/BugsnagManager";
+import NotificationManager from "./managers/NotificationManager";
 import {currentUser} from "./managers/CurrentUser";
+import type {OnBoardingStep} from "./managers/OnBoardingManager";
+import {registerLayoutAnimation} from "./ui/UIComponents";
+import {isLogged} from "./managers/CurrentUser";
 
 
 type AppMode = 'idle' | 'init_cache' | 'nospam' | 'logged' | 'unlogged' | 'upgrading_cache' | 'unknown'
@@ -292,24 +296,33 @@ export default class App {
         //api in the end: we dont want to make any call during the app init
         Api.init(this.store);
 
-
-        // if (__WITH_BUGSNAG__) {
-        //     this.bugsnag = new Client();
-        //
-        //     console.error = (err) => {
-        //         if (typeof err === 'string') {
-        //             err = new Error(`Wrapped error: '${err}'` );
-        //         }
-        //         this.bugsnag.notify(err);
-        //     }
-        // }
-
         this.prepareUI();
 
         console.info("== app initialized ==");
 
         this.initialized = true;
         this.initializing = false;
+
+        this.onAppReady()
+    }
+
+    onAppReady() {
+        OnBoardingManager.listenToStepChange({
+            triggerOnListen: true,
+            callback: (step?: ?OnBoardingStep) => {
+                if (step === 'notification') {
+                    if (isLogged()) {
+                        let callback = () => {
+                            OnBoardingManager.onDisplayed('notification')
+                        }
+                        NotificationManager.requestPermissionsForLoggedUser()
+                            .catch(callback)
+                            .then(callback)
+                    }
+
+                }
+            }
+        })
     }
 
     registerScreens() {
@@ -392,9 +405,10 @@ export default class App {
                     Navigation.startSingleScreenApp(testScreen);
                 }
                 else {
-                    notification.load();
+                    //TODO: move
+                    NotificationManager.init();
 
-                    BugsnagManager.setUser(currentUser(false) || {});
+                    BugsnagManager.setUser(currentUser(false));
 
                     DeviceManager.checkAndSendDiff();
 

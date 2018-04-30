@@ -87,8 +87,6 @@ const TIP_FULL_PRIVATE: TipConfig = {
     keys: 'tips.full_private',
     materialIcon: 'lock',
 }
-
-const TEST_TIP = TIP_NOISE;
 // const TEST_TIP = TIP_PRIVACY;
 // const TEST_TIP = TIP_PRIVACY;
 
@@ -343,9 +341,6 @@ class HomeScreen extends Screen<Props, State> {
 
                 />
 
-
-
-
                 {!this.state.filterFocused && this.renderFloatingButton()}
             </View>
         );
@@ -455,7 +450,6 @@ class HomeScreen extends Screen<Props, State> {
     //TODO: move out of home
     changeTitle(lineup: List) {
         let {id, name} = lineup;
-
 
         this.props.navigator.showModal({
             screen: 'goodsh.ChangeLineupName',

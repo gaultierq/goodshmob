@@ -1,11 +1,10 @@
 // @flow
 
-import {requestPermissionsForLoggedUser} from "./notification";
+import {requestPermissionsForLoggedUser} from "./NotificationManager";
 import {listenToUserChange} from "./CurrentUser";
 import CurrentUser from "./CurrentUser";
 import watch from 'redux-watch'
 import EventBus from 'eventbusjs'
-import Config from 'react-native-config'
 
 const NEXT_STEP = 'NEXT_STEP';
 const SET_STEP = 'SET_STEP';

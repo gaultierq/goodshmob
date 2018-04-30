@@ -1,7 +1,7 @@
 // @flow
 import {Navigation} from 'react-native-navigation';
-import User from "react-native-firebase/lib/modules/auth/User";
 import {Client} from 'bugsnag-react-native';
+import type {User} from "../types";
 
 // export const DEEPLINK_OPEN_SCREEN_IN_MODAL = 'DEEPLINK_OPEN_SCREEN_IN_MODAL';
 
@@ -24,7 +24,8 @@ class _BugsnagManager implements BugsnagManager {
 
     setUser(user: User): void {
         if (!__WITH_BUGSNAG__) return;
-        console.info(`BugsnagManager:setUser: ${user}`);
+        user = user || {}
+        console.info(`BugsnagManager:setUser`, user);
         let {id, email, firstName, lastName} = user;
         this.bugsnag.setUser(id, firstName + " " + lastName, email);
     }
