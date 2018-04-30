@@ -28,6 +28,8 @@ import GTouchable from "../GTouchable";
 import {seeActivityDetails, seeList, seeUser} from "../Nav";
 import LineupHorizontal, {LineupH1} from "../components/LineupHorizontal";
 import LineupTitle from "../components/LineupTitle";
+import type {SearchState} from "./search";
+import SearchPage from "./SearchPage";
 
 type Props = NavigableProps & {
 };
@@ -84,7 +86,12 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                 tabName: "network_search_tabs.savings",
                 placeholder: "search_bar.network_placeholder",
                 parseResponse: createResultFromHit,
-                renderItem,
+                renderResults: (searchResults: SearchState) => (
+                    <SearchPage
+                        search={searchResults}
+                        renderItem={renderItem}
+                    />
+                )
             },
             {
                 type: "users",
@@ -96,7 +103,12 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                 tabName: "network_search_tabs.users",
                 placeholder: "search_bar.network_placeholder",
                 parseResponse: createResultFromHit2,
-                renderItem: renderUser,
+                renderResults: (searchResults: SearchState) => (
+                    <SearchPage
+                        search={searchResults}
+                        renderItem={renderUser}
+                    />
+                )
             },
 
         ];

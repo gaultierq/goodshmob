@@ -37,7 +37,9 @@ export type SearchCategory = {
     renderItem: (item: *) => Node,
     tabName: i18Key,
     placeholder: i18Key,
-    searchOptions: SearchOptions
+    onItemSelected?: () => void,
+    searchOptions: SearchOptions,
+    renderResults: (searchResults: SearchState) => Node,
 }
 
 export type SearchResult = {
@@ -74,7 +76,6 @@ export type Props = {
     token?: ?SearchToken,
     style?: ? *,
     index: number,
-
 };
 
 
@@ -209,14 +210,18 @@ export default class SearchScreen extends Component<Props, State> {
         let forToken = this.state.searches[this.state.input];
         let forType : SearchState = forToken && forToken[category.type];
 
-        return (
-            <SearchPage
-                search={forType}
-                renderItem={category.renderItem}
-                onItemSelected={this.props.onItemSelected}
-                ListFooterComponent={this.renderSearchFooter(forType)}
-            />
-        );
+        //FIXME: restore loadmore
+        if (category.renderResults) {
+            return category.renderResults(forType)
+        }
+        throw "deprecated:" + category.type
+        // return (
+        //     <SearchPage
+        //         search={forType}
+        //         renderItem={category.renderItem}
+        //         ListFooterComponent={this.renderSearchFooter(forType)}
+        //     />
+        // );
     }
 
 

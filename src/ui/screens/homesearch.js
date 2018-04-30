@@ -17,12 +17,13 @@ import type {Id, List, NavigableProps, Saving, SearchToken} from "../../types";
 import ItemCell from "../components/ItemCell";
 import {AlgoliaClient, createResultFromHit, makeAlgoliaSearchEngine} from "../../helpers/AlgoliaUtils";
 import Screen from "../components/Screen";
-import type {SearchCategory} from "./search";
+import type {SearchCategory, SearchState} from "./search";
 import SearchScreen from "./search";
 import {SearchStyles} from "../UIStyles";
 import GTouchable from "../GTouchable";
 import Config from 'react-native-config'
 import {renderLineupFromAlgolia} from "./networksearch";
+import SearchPage from "./SearchPage";
 
 type Props = NavigableProps & {
     token?: ?SearchToken,
@@ -108,16 +109,15 @@ export default class HomeSearchScreen extends Screen<Props, State> {
             {
                 type: "savings",
                 index,
-                query/*: {
-                    indexName: 'Saving_staging',
-                    params: {
-                        facets: "[\"list_name\"]",
-                        filters: 'user_id:' + currentUserId(),
-                    }
-                }*/,
+                query,
                 placeholder: "search_bar.me_placeholder",
                 parseResponse: createResultFromHit,
-                renderItem,
+                renderResults: (searchResults: SearchState) => (
+                    <SearchPage
+                        search={searchResults}
+                        renderItem={renderItem}
+                    />
+                )
             }
         ];
 

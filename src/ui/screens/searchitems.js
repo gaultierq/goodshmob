@@ -18,7 +18,7 @@ import {Call} from "../../managers/Api";
 import ItemCell from "../components/ItemCell";
 import {buildData} from "../../helpers/DataUtils";
 import {CheckBox, SearchBar} from 'react-native-elements'
-import type {SearchCategoryType, SearchEngine} from "./search";
+import type {SearchCategoryType, SearchEngine, SearchState} from "./search";
 import SearchScreen from "./search";
 import normalize from 'json-api-normalizer';
 import GTouchable from "../GTouchable";
@@ -29,6 +29,7 @@ import Geolocation from "../../managers/GeoLocation"
 import type {SearchPlacesProps} from "./searchplacesoption";
 import {SearchPlacesOption} from "./searchplacesoption";
 import OpenAppSettings from 'react-native-app-settings'
+import SearchPage from "./SearchPage";
 
 
 
@@ -54,19 +55,6 @@ class SearchItem extends Screen<Props, State> {
     };
 
 
-    renderSearchOptions(category: SearchCategoryType) {
-        return category === 'places' && {
-            renderOptions: (currentOptions: any, onNewOptions: SearchPlacesProps, onSearchSubmited: any) => (
-                <SearchPlacesOption
-                    {...currentOptions}
-                    onNewOptions={onNewOptions}
-                    onSearchSubmited={onSearchSubmited}
-                    navigator={this.props.navigator}
-                />
-            ),
-        };
-
-    }
 
     render() {
 
@@ -75,10 +63,18 @@ class SearchItem extends Screen<Props, State> {
                 type: categ,
                 tabName: "search_item_screen.tabs." + categ,
                 placeholder: "search_item_screen.placeholder." + categ,
-                renderItem: ({item})=> <GTouchable onPress={() => this.props.onItemSelected(item, this.props.navigator)}>
-                    <ItemCell item={item}/>
-                </GTouchable>,
-                searchOptions: this.renderSearchOptions(categ)
+
+                searchOptions: this.renderSearchOptions(categ),
+                renderResults: (searchResults: SearchState) => (
+                    <SearchPage
+                        search={searchResults}
+                        renderItem={({item})=> (
+                            <GTouchable onPress={() => this.props.onItemSelected(item, this.props.navigator)}>
+                                <ItemCell item={item}/>
+                            </GTouchable>
+                        )}
+                    />
+                )
 
             }
         });
@@ -97,6 +93,20 @@ class SearchItem extends Screen<Props, State> {
             {...this.props}
             style={{backgroundColor: Colors.white}}
         />;
+    }
+
+    renderSearchOptions(category: SearchCategoryType) {
+        return category === 'places' && {
+            renderOptions: (currentOptions: any, onNewOptions: SearchPlacesProps, onSearchSubmited: any) => (
+                <SearchPlacesOption
+                    {...currentOptions}
+                    onNewOptions={onNewOptions}
+                    onSearchSubmited={onSearchSubmited}
+                    navigator={this.props.navigator}
+                />
+            ),
+        };
+
     }
 
     search(token: SearchToken, category: SearchCategoryType, page: number, options: ?any): Promise<*> {
