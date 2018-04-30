@@ -22,7 +22,7 @@ class _NavManager implements NavManager {
         //
         //         switch (event.link) {
         //             case DEEPLINK_OPEN_SCREEN_IN_MODAL:
-        //                 console.info('deeplink received:' + JSON.stringify(event));
+        //                 console.info('deeplink received:' , event);
         //                 this.goToDeeplink(payload.target);
         //                 break;
         //         }

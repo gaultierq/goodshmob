@@ -51,7 +51,7 @@ class DeviceManager {
 
                             this.obtainDeviceDiff().then(({diff}) => {
                                 if (!_.isEmpty(diff)) {
-                                    console.warn("Device not properly saved: remaining diff=" + JSON.stringify(diff));
+                                    console.warn("Device not properly saved: remaining diff=" , diff);
                                     console.warn(device);
                                 }
                             });

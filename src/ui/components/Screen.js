@@ -26,7 +26,7 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  ScreenStat
         let navigator = props.navigator;
         if (!navigator) throw "please provide navigator";
         navigator.addOnNavigatorEvent((event) => {
-            //console.debug("home:onNavigatorEvent" + JSON.stringify(event));
+            //console.debug("home:onNavigatorEvent" , event);
 
             let id = event.id;
 

@@ -159,7 +159,7 @@ export class InteractionScreen extends Screen<Props, State> {
                 else {
                     let innerResource = resource.resource;
                     if (!innerResource) {
-                        console.warn("No resource for " + JSON.stringify(activity));
+                        console.warn("No resource for " , activity);
                         return null;
                     }
                     let item_title = _.toUpper(innerResource.title);

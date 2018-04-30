@@ -78,7 +78,7 @@ class NetworkScreen extends Screen<Props, State> {
     }
 
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
-        console.debug("network:onNavigatorEvent" + JSON.stringify(event));
+        console.debug("network:onNavigatorEvent" , event);
         let navigator = this.props.navigator;
 
 
