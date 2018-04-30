@@ -46,6 +46,7 @@ export default class FriendsScreen extends Screen<Props, State> {
             userId,
             renderItem,
             ItemSeparatorComponent,
+            data,
             ...attributes //not accepted...
         } = this.props;
 
@@ -75,6 +76,7 @@ export default class FriendsScreen extends Screen<Props, State> {
                     }}
                     empty={<Text style={STYLES.empty_message}>{i18n.t('friends.empty_screen')}</Text>}
                     ItemSeparatorComponent={ItemSeparatorComponent}
+                    {...attributes}
                     // cannotFetch={!super.isVisible()}
                 />
         );
@@ -131,10 +133,3 @@ export const reducer =  (state = {}, action = {}) => {
     }
     return state;
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        // backgroundColor: Colors.white,
-    }
-});
