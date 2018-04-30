@@ -14,40 +14,31 @@ import {
     TextInput,
     TouchableOpacity,
     View,
+    Keyboard,
 } from 'react-native';
 
 import {connect} from "react-redux";
 import ActionButton from 'react-native-action-button';
-import {LineupListScreen} from './lineuplist'
-import type {i18Key, Id, Lineup, RNNNavigator, Saving, SearchToken} from "../../types";
+import type {Id, Lineup, RNNNavigator, Saving, SearchToken} from "../../types";
 import {List} from "../../types"
 import Snackbar from "react-native-snackbar"
-import {
-    BACKGROUND_COLOR, FEED_INITIAL_LOADER_DURATION, NavStyles, renderSimpleButton, stylePadding,
-    STYLES
-} from "../UIStyles";
+import {stylePadding, STYLES} from "../UIStyles";
 import {currentGoodshboxId, currentUserId, isCurrentUserId, logged} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
-import Modal from 'react-native-modal'
-import type {Visibility} from "./additem";
 import {LINEUP_DELETION, patchLineup} from "../lineup/actions";
 import * as Nav from "../Nav";
 import {startAddItem} from "../Nav";
-import SmartInput from "../components/SmartInput";
 import Screen from "../components/Screen";
 import {Colors} from "../colors";
 import {PROFILE_CLICKED} from "../components/MyAvatar";
-import {SFP_TEXT_MEDIUM} from "../fonts";
 import LineupTitle from "../components/LineupTitle";
-import Feed from "../components/feed";
 import LineupCellSaving from "../components/LineupCellSaving";
 
 import GTouchable from "../GTouchable";
 import AddLineupComponent from "../components/addlineup";
 import type {OnBoardingStep} from "../../managers/OnBoardingManager";
 import OnBoardingManager from "../../managers/OnBoardingManager";
-import NoSpamDialog from "./NoSpamDialog";
 // $FlowFixMe
 import {AppTour, AppTourSequence, AppTourView} from "../../../vendors/taptarget";
 import LineupHorizontal, {LineupH1} from "../components/LineupHorizontal";
@@ -156,6 +147,7 @@ class HomeScreen extends Screen<Props, State> {
         if (event.type === 'DeepLink') {
             switch (event.link) {
                 case PROFILE_CLICKED:
+                    Keyboard.dismiss();
                     this.props.navigator.toggleDrawer({
                         side: 'left',
                         animated: true
