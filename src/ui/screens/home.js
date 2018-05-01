@@ -365,7 +365,7 @@ class HomeScreen extends Screen<Props, State> {
 
                 />
 
-                {!this.state.filterFocused && this.renderFloatingButton()}
+                {!this.state.filterFocused && this.state.isActionButtonVisible && this.renderFloatingButton()}
             </View>
         );
     }
