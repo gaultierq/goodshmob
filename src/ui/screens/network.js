@@ -187,10 +187,11 @@ class NetworkScreen extends Screen<Props, State> {
                     hasMore={!network.hasNoMore}
                     scrollUpOnBack={scrollUpOnBack}
                     cannotFetch={!super.isVisible()}
-                    visibile={super.isVisible()}
+                    visibility={super.getVisibility()}
                     empty={<View><Text style={STYLES.empty_message}>{i18n.t('community_screen.empty_screen')}</Text><ShareButton text={i18n.t('actions.invite')}/></View>}
                     {...activityFeedProps()}
-                    initialLoaderDelay={FEED_INITIAL_LOADER_DURATION}
+                    // initialLoaderDelay={FEED_INITIAL_LOADER_DURATION}
+                    initialNumToRender={3}
                     onScroll={floatingButtonScrollListener.call(this)}
                 />
 

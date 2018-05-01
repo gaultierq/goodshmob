@@ -95,6 +95,10 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  ScreenStat
         return props && props.visible || state && state.visible;
     }
 
+    getVisibility() {
+        return this.isVisible() ? 'visible' : 'hidden'
+    }
+
 //because when navigating back, a render may change the nav bar title. this is a flaw in wix nav
     setNavigatorTitle(navigator, {title, subtitle}) {
         if (this.isVisible()) {

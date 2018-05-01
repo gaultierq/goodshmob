@@ -219,7 +219,7 @@ export const STYLES = StyleSheet.create({
     }
 });
 
-export const FEED_INITIAL_LOADER_DURATION = 1500;
+export const FEED_INITIAL_LOADER_DURATION = 400;
 
 
 export const SEARCH_INPUT_RADIUS = 4;
