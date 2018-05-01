@@ -109,6 +109,7 @@ export function seeComments(navigator: RNNNavigator, activity: Activity) {
             activityType: activity.type,
             autoFocus: true
         },
+        navigatorButtons: CANCELABLE_MODAL
     });
 }
 
