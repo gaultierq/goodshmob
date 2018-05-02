@@ -214,7 +214,7 @@ class HomeScreen extends Screen<Props, State> {
                     case 'focus_add':
                         setTimeout(() => {
                             this.displayFocusAdd();
-                        }, 1000);
+                        }, 2000);
                         break;
                     case 'privacy':
                         newTip = TIP_PRIVACY;
@@ -307,6 +307,7 @@ class HomeScreen extends Screen<Props, State> {
                                         lineup={item}
                                         navigator={navigator}
                                         skipLineupTitle={true}
+                                        renderEmpty={this.renderEmptyLineup(navigator, item)}
                                     />
                                 )
                             },
@@ -318,16 +319,7 @@ class HomeScreen extends Screen<Props, State> {
                                     <LineupH1 lineup={item} navigator={navigator}
                                               withMenuButton={true}
                                               onPressEmptyLineup={() => startAddItem(navigator, item.id)}
-                                              renderEmpty={(list: Lineup) => (
-                                                  <GTouchable
-                                                      onPress={() => startAddItem(navigator, item.id)}
-                                                      deactivated={item.pending}
-                                                  >
-                                                      {
-                                                          LineupHorizontal.defaultRenderEmpty(true)
-                                                      }
-                                                  </GTouchable>
-                                              )}
+                                              renderEmpty={this.renderEmptyLineup(navigator, item)}
                                               // TODO: watch https://github.com/facebook/react-native/issues/13202
                                               // ListHeaderComponent={
                                               //     () => <GTouchable
@@ -367,6 +359,19 @@ class HomeScreen extends Screen<Props, State> {
 
                 {!this.state.filterFocused && this.state.isActionButtonVisible && this.renderFloatingButton()}
             </View>
+        );
+    }
+
+    renderEmptyLineup(navigator, item) {
+        return (list: Lineup) => (
+            <GTouchable
+                onPress={() => startAddItem(navigator, item.id)}
+                deactivated={item.pending}
+            >
+                {
+                    LineupHorizontal.defaultRenderEmpty(true)
+                }
+            </GTouchable>
         );
     }
 
