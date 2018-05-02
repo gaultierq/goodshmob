@@ -68,13 +68,13 @@ dans `RCTDefines.h` set `RCT_DEV 1`
 
 - Deeplinking
 
--- ios
+ios:
 ```
 xcrun simctl openurl booted https://goodshitapp-staging.herokuapp.com/lists/eb124127-5ec7-428c-bb7c-1c82f994ddc2
 ```
 
 
---android
+android:
 ```
 adb shell am start \
         -W -a android.intent.action.VIEW \
