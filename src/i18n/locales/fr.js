@@ -190,7 +190,7 @@ export default {
         },
         "placeholder": {
             "consumer_goods":"Plein de trucs : livres, cadeaux, gadgets, chaussures, vin, jouets, produits, ...",
-            "places":"Plein d'adresses : restaurants, cafés, boutiques, hôtels, musées, villes, plages, lieux à visiter, docteurs, plombier...",
+            "places":"Plein d'adresses : restaurants, cafés, boutiques, hôtels, musées, villes, plages, lieux à visiter, docteurs, plombiers...",
             "movies":"Plein de films, séries, documentaires, émissions... ",
             "musics":"Plein de sons : artistes, albums, titres..."
         },
