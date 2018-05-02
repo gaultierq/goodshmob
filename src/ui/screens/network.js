@@ -193,6 +193,7 @@ class NetworkScreen extends Screen<Props, State> {
                     // initialLoaderDelay={FEED_INITIAL_LOADER_DURATION}
                     initialNumToRender={3}
                     onScroll={floatingButtonScrollListener.call(this)}
+                    navigator={this.props.navigator}
                 />
 
 

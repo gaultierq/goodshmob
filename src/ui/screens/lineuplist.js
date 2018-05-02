@@ -111,6 +111,7 @@ export class LineupListScreen extends Screen<Props, State> {
                 sections={sectionMaker && sectionMaker(items)}
                 renderItem={this.renderItem.bind(this)}
                 fetchSrc={fetchSrc}
+                navigator={this.props.navigator}
                 {...attributes}
             />
         );
