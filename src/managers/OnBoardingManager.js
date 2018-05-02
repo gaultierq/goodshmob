@@ -11,6 +11,7 @@ export type OnBoardingStep = 'focus_add' | 'notification' | 'privacy' | 'noise' 
 
 
 export const ON_BOARDING_STEP_CHANGED = 'ON_BOARDING_STEP_CHANGED';
+const TIME_BETWEEN_TIPS_MS = 24 * 60 * 60 * 1000
 
 class _OnBoardingManager implements OnBoardingManager {
     id = Math.random();
@@ -75,6 +76,10 @@ class _OnBoardingManager implements OnBoardingManager {
         return this.store.getState().onBoarding.nextStep;
     }
 
+    getLastTimeShown() {
+        return this.store.getState().onBoarding.lastShown;
+    }
+
     toString() {
         return "OnBoardingManager-" + this.id;
     }
@@ -92,10 +97,10 @@ class _OnBoardingManager implements OnBoardingManager {
 
             switch (action.type) {
                 case NEXT_STEP:
-                    state = {...state, nextStep: nextStep(state.nextStep)};
+                    state = {...state, nextStep: nextStep(state.nextStep), lastShown: Date.now()};
                     break;
                 case SET_STEP:
-                    state = {...state, nextStep: action.step};
+                    state = {...state, nextStep: action.step, lastShown: 0};
                     break;
             }
             return state;
@@ -103,11 +108,12 @@ class _OnBoardingManager implements OnBoardingManager {
     }
 
     onDisplayed(step: OnBoardingStep): void {
-        this.store.dispatch({type: NEXT_STEP});
+        this.store.dispatch({type: NEXT_STEP, lastShown: Date.now()});
     }
 
     listenToStepChange(options: {callback: (step?: ?OnBoardingStep) => void, triggerOnListen: ?boolean}) {
         const {callback, triggerOnListen} = options;
+
         let triggering;
 
         EventBus.addEventListener(ON_BOARDING_STEP_CHANGED, event => {
@@ -116,14 +122,15 @@ class _OnBoardingManager implements OnBoardingManager {
                 return;
             }
             const step: OnBoardingStep = event.target.step;
-            callback(step);
+            callback(null);
         });
 
-        if (triggerOnListen) {
+        if (triggerOnListen && Date.now () - this.getLastTimeShown() > TIME_BETWEEN_TIPS_MS) {
             triggering = true;
             callback(this.getPendingStep());
             triggering = false;
         }
+
     }
 }
 
