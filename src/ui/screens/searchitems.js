@@ -90,6 +90,7 @@ class SearchItem extends Screen<Props, State> {
                                         this.renderBlankIcon(categ, 50, color)
                                     }
                                     <Text style={{
+                                        textAlign: 'center',
                                         fontSize: 17,
                                         margin: 15,
                                         fontFamily: SFP_TEXT_MEDIUM,
