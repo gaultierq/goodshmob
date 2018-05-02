@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import {Clipboard, Dimensions, Image, Share, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import type {Dispatchee, Id, Item, ItemType, Url, User} from "../../types";
 import {CheckBox} from "react-native-elements";
-import Snackbar from "react-native-snackbar"
+import {Messenger} from "../../managers/Messenger"
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {currentUserId, logged} from "../../managers/CurrentUser"
@@ -121,7 +121,7 @@ class ShareScreen extends Component<Props, State> {
         const urlForClipboard = this.props.urlForClipboard;
         if (!urlForClipboard) return;
         Clipboard.setString(urlForClipboard());
-        Snackbar.show({title: i18n.t('shared.link_copied')});
+        Messenger.sendMessage(i18n.t('shared.link_copied'));
     }
 
     share() {

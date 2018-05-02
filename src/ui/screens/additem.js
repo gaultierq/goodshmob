@@ -17,7 +17,7 @@ import {Colors} from "../colors";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import Sheet from "../components/sheet";
 import {CANCELABLE_MODAL} from "../Nav";
-import Snackbar from "react-native-snackbar"
+import _Messenger from "../../managers/Messenger";
 import {SFP_TEXT_ITALIC, SFP_TEXT_REGULAR} from "../fonts"
 import GTouchable from "../GTouchable";
 import {pendingActionWrapper} from "../../helpers/ModelUtils";
@@ -220,9 +220,8 @@ export default class AddItemScreen extends Screen<Props, State> {
             saveItem(this.props.itemId, lineupId, visibility, description),
             'reqAdd'
         ).then(()=> {
-                Snackbar.show({
-                    title: i18n.t('shared.goodsh_saved'),
-                });
+                _Messenger.sendMessage(i18n.t('shared.goodsh_saved'));
+
                 let onAdded = this.props.onAdded;
                 onAdded && onAdded();
                 this.setState({adding: false});
