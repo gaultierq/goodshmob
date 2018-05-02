@@ -67,8 +67,11 @@ dans `RCTDefines.h` set `RCT_DEV 1`
 `./node_modules/flow-bin/flow-osx-v0.57.3/flow check --show-all-errors | grep 'Error: src'`
 
 - Deeplinking
+
 -- ios
 `xcrun simctl openurl booted https://goodshitapp-staging.herokuapp.com/lists/eb124127-5ec7-428c-bb7c-1c82f994ddc2`
+
+
 --android
 ```
 adb shell am start \
