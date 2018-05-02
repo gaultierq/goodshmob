@@ -214,7 +214,7 @@ class HomeScreen extends Screen<Props, State> {
                     case 'focus_add':
                         setTimeout(() => {
                             this.displayFocusAdd();
-                        }, 1000);
+                        }, 2000);
                         break;
                     case 'privacy':
                         newTip = TIP_PRIVACY;

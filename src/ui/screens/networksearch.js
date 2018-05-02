@@ -86,9 +86,9 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                 tabName: "network_search_tabs.savings",
                 placeholder: "search_bar.network_placeholder",
                 parseResponse: createResultFromHit,
-                renderResults: ({query: SearchQuery, searchResults: SearchState}) => (
+                renderResults: ({query, results}) => (
                     <SearchPage
-                        search={searchResults}
+                        search={results}
                         renderItem={renderItem}
                     />
                 )
