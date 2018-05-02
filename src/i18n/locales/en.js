@@ -59,8 +59,8 @@ export default {
     },
     home: {
         wizard: {
-            action_button_label : "Save a goodsh.",
-            action_button_body : "Tap '+' for your first goodsh.",
+            action_button_label : "Add a coup de coeur\nor a wish.",
+            action_button_body : "Book, movie, tvshow, restaurant, music...",
         }
     },
     search:{
@@ -170,7 +170,7 @@ export default {
     },
     "network_search_tabs":{
         "savings":"GOODSH & LIST",
-        "users":"CONTACT"
+        "users":"MEMBER"
     },
     "community_screen":{
         "tabs": {
@@ -190,10 +190,10 @@ export default {
             "musics":"MUSIC"
         },
         "placeholder": {
-            "consumer_goods":"##Stuff",
-            "places":"##City, Address...",
-            "movies":"##Movies",
-            "musics":"##Musics"
+            "consumer_goods":"Stuff: books, gifts, shoes, wine, games, products...",
+            "places":"Restaurants, cafés, shops, hotels, museums, cities, beaches, places to visit, doctors, plumbers...",
+            "movies":"Movies, TV shows",
+            "musics":"Musics, ortists, albums, tracks"
         },
         "search_options":  {
             "around_me": "Around me"

@@ -59,7 +59,7 @@ export default {
     },
     home: {
         wizard: {
-            action_button_label : "Ajouter un coup de coeur ou une envie.",
+            action_button_label : "Ajouter un coup de coeur\nou une envie.",
             action_button_body : "Livre, film, série, resto, musique...",
         }
     },
@@ -169,7 +169,7 @@ export default {
     },
     "network_search_tabs":{
         "savings":"GOODSH & LISTE",
-        "users":"CONTACT"
+        "users":"MEMBRE"
     },
     "community_screen":{
         "tabs": {
@@ -189,10 +189,10 @@ export default {
             "musics":"SON"
         },
         "placeholder": {
-            "consumer_goods":"##Plein de trucs",
-            "places":"##Plein d'endroits",
-            "movies":"##Plein de films",
-            "musics":"##Plein de sons"
+            "consumer_goods":"Plein de trucs : livres, cadeaux, gadgets, chaussures, vin, jouets, produits, ...",
+            "places":"Plein d'adresses : restaurants, cafés, boutiques, hôtels, musées, villes, plages, lieux à visiter, docteurs, plombier...",
+            "movies":"Plein de films, séries, documentaires, émissions... ",
+            "musics":"Plein de sons : artistes, albums, titres..."
         },
         "search_options":  {
             "around_me": "Autour de moi"
