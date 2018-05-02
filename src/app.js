@@ -302,7 +302,6 @@ export default class App {
 
         this.initialized = true;
         this.initializing = false;
-
         this.onAppReady()
     }
 

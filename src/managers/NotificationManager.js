@@ -9,12 +9,19 @@ import {isLogged} from "./CurrentUser";
 
 
 class _NotificationManager implements NotificationManager {
+
+    configured: boolean = false;
+
     constructor() {
     }
 
     init() {
         if (!__WITH_NOTIFICATIONS__) return;
         console.info("fcm:load");
+        this.configureSafe();
+    }
+
+    configureSafe() {
         RNFirebase
             .app()
             .messaging()
@@ -29,8 +36,14 @@ class _NotificationManager implements NotificationManager {
             });
     }
 
+
+
+
     configure() {
-        let firebase = RNFirebase.app();
+        if (this.configured) throw 'already configured'
+        this.configured = true
+
+        let firebase = RNFirebase.app()
         let messaging = firebase.messaging();
 
         messaging.getToken().then((token) => {
@@ -53,7 +66,7 @@ class _NotificationManager implements NotificationManager {
                     body: _.get(notification, '_body'),
                     deeplink: _.get(notification, '_data.deeplink')
                 }, // simple serializable object that will pass as props to the in-app notification (optional)
-                autoDismissTimerSec: 3 // auto dismiss notification in seconds
+                autoDismissTimerSec: 5 // auto dismiss notification in seconds
             })
             //handleNotif(notification)
         });
@@ -67,22 +80,23 @@ class _NotificationManager implements NotificationManager {
             console.log('onNotificationOpened', notificationOpen)
             if (notificationOpen) this.handleNotif(notificationOpen.notification)
         });
-
-
-        // messaging.requestPermissions();
-
-        //test
-        // setTimeout(()=> {
-        //     console.debug("notification test");
-        //     handleNotif({deeplink: "http://goodshit.io/lists/37e67b05-c86c-4aeb-b3af-bf1c34862cd0"});
-        // }, 2000);
     }
 
     requestPermissionsForLoggedUser() {
+        return new Promise((resolve,reject) => {
+            if (!__WITH_NOTIFICATIONS__) reject('notifications are not enabled on device')
+            console.info('request Permissions For LoggedUser')
+            RNFirebase
+                .app()
+                .messaging()
+                .requestPermission()
+                .then( () => {
+                    console.info('notification permission granted')
+                    this.configure()
+                    resolve()
+                }, reject);
 
-        if (!__WITH_NOTIFICATIONS__) return new Promise((ok,ko) => {throw 'notifications are not enabled on device'})
-        console.info('request Permissions For LoggedUser')
-        return RNFirebase.app().messaging().requestPermission();
+        })
     }
 
     handleNotif = notif => {

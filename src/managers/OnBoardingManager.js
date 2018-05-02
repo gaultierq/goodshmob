@@ -1,8 +1,6 @@
 // @flow
 
-import {requestPermissionsForLoggedUser} from "./NotificationManager";
-import {listenToUserChange} from "./CurrentUser";
-import CurrentUser from "./CurrentUser";
+import CurrentUser, {listenToUserChange} from "./CurrentUser";
 import watch from 'redux-watch'
 import EventBus from 'eventbusjs'
 
@@ -48,18 +46,18 @@ class _OnBoardingManager implements OnBoardingManager {
                     this.store.dispatch({type: SET_STEP, step: this.ALL_STEPS[0]});
                 }
                 //getPendingStep must be ok after init
-
-                if (this.getPendingStep() === null) {
-                    requestPermissionsForLoggedUser();
-                }
-                else {
-                    let unsubscribe = this.store.subscribe(() => {
-                        if (!this.getPendingStep()) {
-                            requestPermissionsForLoggedUser();
-                            unsubscribe();
-                        }
-                    });
-                }
+                //
+                // if (this.getPendingStep() === null) {
+                //     requestPermissionsForLoggedUser();
+                // }
+                // else {
+                //     let unsubscribe = this.store.subscribe(() => {
+                //         if (!this.getPendingStep()) {
+                //             requestPermissionsForLoggedUser();
+                //             unsubscribe();
+                //         }
+                //     });
+                // }
 
             }, triggerOnListen: true});
 
