@@ -21,7 +21,7 @@ import {connect} from "react-redux";
 import ActionButton from 'react-native-action-button';
 import type {Id, Lineup, RNNNavigator, Saving, SearchToken} from "../../types";
 import {List} from "../../types"
-import {Messenger} from "../../managers/Messenger"
+import _Messenger from "../../managers/Messenger"
 import {stylePadding, STYLES} from "../UIStyles";
 import {currentGoodshboxId, currentUserId, isCurrentUserId, logged} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
@@ -458,7 +458,7 @@ class HomeScreen extends Screen<Props, State> {
                         let delayMs = 4000;
                         this.props.dispatch(LINEUP_DELETION.pending({lineupId}, {delayMs, lineupId}))
                             .then(pendingId => {
-                                Messenger.sendMessage(i18n.t("activity_item.buttons.deleted_list"),
+                                _Messenger.sendMessage(i18n.t("activity_item.buttons.deleted_list"),
                                     {
                                         timeout: delayMs,
                                         action: {

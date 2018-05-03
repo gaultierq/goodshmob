@@ -8,7 +8,7 @@ import {logged} from "../../managers/CurrentUser"
 import * as Api from "../../managers/Api";
 import ApiAction from "../../helpers/ApiAction";
 
-import {Messenger} from "../../managers/Messenger"
+import _Messenger from "../../managers/Messenger"
 import Button from 'apsl-react-native-button'
 import {Colors} from "../colors";
 import Sheet from "../components/sheet";
@@ -180,7 +180,7 @@ export default class AskScreen extends Component<Props, State> {
         this.setState({isAsking: true});
 
         this.props.dispatch(ASK_CREATION.pending({content}, {}));
-        Messenger.sendMessage(i18n.t('ask.sent'));
+        _Messenger.sendMessage(i18n.t('ask.sent'));
 
         //hack: on bundled android, no timeout will crash the app
         setTimeout(()=> {
