@@ -6,11 +6,11 @@ export class RequestManager {
 
     //{action: "createComment", caller: #hashObject, status: "Sending"}
     events = [];
-/*
-    {
+    /*
+        {
 
-    }
-* */
+        }
+    * */
 
     createTracker(action: string, caller: any): RequestManagerTracker {
         let tracker = new RequestManagerTracker(this, action);
@@ -39,6 +39,11 @@ export class RequestManager {
     getEvents(caller, action, predicate?: () => boolean) {
         return this.events
             .filter(desc => desc.caller === caller && desc.action === action && (!predicate || predicate()));
+    }
+
+    clearEvents() {
+        this.events.length = 0;
+        this.actions.clear();
     }
 
     //setState, and register tracker

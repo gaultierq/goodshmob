@@ -40,10 +40,27 @@ export default {
         "- For a fully private goodsh, tap the lock\n\n",
         dialog_button: 'OK',
     },
+    tips: {
+        visibility: {
+            title: "Visibility",
+            text: "Your goodsh are only visible by you and your friends",
+            button: "OK"
+        },
+        noise: {
+            title: "Notification",
+            text: "When you save a goodsh, we don't notify your contacts",
+            button: "OK"
+        },
+        full_private: {
+            title: "Privacy",
+            text: "For a fully private goodsh, tap the lock",
+            button: "OK"
+        },
+    },
     home: {
         wizard: {
-            action_button_label : "Save a goodsh.",
-            action_button_body : "Tap '+' for your first goodsh.",
+            action_button_label : "Add a coup de coeur\nor a wish.",
+            action_button_body : "Book, movie, tvshow, restaurant, music...",
         }
     },
     search:{
@@ -153,7 +170,7 @@ export default {
     },
     "network_search_tabs":{
         "savings":"GOODSH & LIST",
-        "users":"CONTACT"
+        "users":"MEMBER"
     },
     "community_screen":{
         "tabs": {
@@ -173,10 +190,10 @@ export default {
             "musics":"MUSIC"
         },
         "placeholder": {
-            "consumer_goods":"##Stuff",
-            "places":"##City, Address...",
-            "movies":"##Movies",
-            "musics":"##Musics"
+            "consumer_goods":"Stuff: books, gifts, shoes, wine, games, products...",
+            "places":"Restaurants, cafés, shops, hotels, museums, cities, beaches, places to visit, doctors, plumbers...",
+            "movies":"Movies, TV shows",
+            "musics":"Musics, ortists, albums, tracks"
         },
         "search_options":  {
             "around_me": "Around me"
@@ -186,7 +203,7 @@ export default {
         "add_comment_placeholder":"Reply"
     },
     "send_screen":{
-        "add_description_placeholder":"Add a note (visible only to the recipient).",
+        "add_description_placeholder":"Add a note to %{recipient}",
         "sent": "Sent"
     },
     "interactions":{
@@ -294,6 +311,7 @@ export default {
         change: "Change",
         change_title: "Change title",
         edit_saving_menu: "Edit this goodsh",
+        share_list: "Share this list",
         change_description: "Change the description",
         move: "Change list",
         change_name: "Rename this list",
@@ -336,6 +354,11 @@ export default {
         delete: {
             title: "Delete",
             label: "Are you sure?"
+        },
+        position: {
+            title: "Places around me",
+            message: "To find the places around you, activate your location",
+            button: "Activate"
         }
     },
     dev: {
@@ -345,8 +368,7 @@ export default {
     congrats: {
         generic: "Done;)"
     },
-    content_actions: {
-        read_more: 'Read more',
-        hide: 'Hide',
-    },
+    errors: {
+        unavailable: 'Content not available',
+    }
 };

@@ -3,4 +3,6 @@
     <!--<string moduleConfig="true" name="reactNativeCodePush_androidDeploymentKey">wMQv5aKdleNZ-rplWQONOYVrVdw24cc6d0ae-bf43-4a45-ac18-52fde4b1b1b2</string>-->
     <string name="facebook_app_id">1933031383391822</string>
     <string name="bugsnag_api_key">f5136193bd74c794739ab36caae0107c</string>
+    <string name="host_url">goodshitapp-preprod.herokuapp.com</string>
+    <string name="host_url2">goodshitapp-preprod.herokuapp.com</string>
 </resources>

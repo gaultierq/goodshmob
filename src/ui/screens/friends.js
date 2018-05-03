@@ -2,7 +2,7 @@
 
 import type {Node} from 'react';
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View, Share} from 'react-native';
+import {Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
 import {logged} from "../../managers/CurrentUser"
 import FriendCell from "../components/FriendCell";
@@ -14,13 +14,11 @@ import type {Id, Item, User} from "../../types";
 import {buildData, doDataMergeInState} from "../../helpers/DataUtils";
 import Screen from "../components/Screen";
 import GTouchable from "../GTouchable";
-import {fullName} from "../../helpers/StringUtils";
 import * as Nav from "../Nav";
-;
-import {Colors} from "../colors";
-import Button from 'apsl-react-native-button'
-import {SFP_TEXT_MEDIUM} from "../fonts";
 import {STYLES} from "../UIStyles";
+import {seeUser} from "../Nav";
+
+;
 
 type Props = {
     userId: Id,
@@ -47,7 +45,9 @@ export default class FriendsScreen extends Screen<Props, State> {
         const {
             userId,
             renderItem,
-            ...attributes
+            ItemSeparatorComponent,
+            data,
+            ...attributes //not accepted...
         } = this.props;
 
 
@@ -66,12 +66,7 @@ export default class FriendsScreen extends Screen<Props, State> {
         }
 
         return (
-            <View style={styles.container}>
-                <View style={{height: 70}}>
-                    <ShareButton text={i18n.t('actions.invite')}/>
-                </View>
                 <Feed
-                    style={{paddingBottom: 70}}
                     data={friends}
                     renderItem={({item}) => (renderItem||this.renderItem.bind(this))(item)}
                     fetchSrc={{
@@ -80,37 +75,18 @@ export default class FriendsScreen extends Screen<Props, State> {
                         options: {userId}
                     }}
                     empty={<Text style={STYLES.empty_message}>{i18n.t('friends.empty_screen')}</Text>}
+                    ItemSeparatorComponent={ItemSeparatorComponent}
+                    {...attributes}
                     // cannotFetch={!super.isVisible()}
                 />
-        </View>);
+        );
     }
 
     renderItem(item: Item) : Node {
         let user = buildData(this.props.data, "users", item.id);
         return (
-            <GTouchable onPress={()=> {
-
-                // this.props.navigator.showModal({
-                //     screen: 'goodsh.UserSheetScreen', // unique ID registered with Navigation.registerScreen
-                //     animationType: 'none',
-                //     passProps: {
-                //         userId: user.id,
-                //     },
-                // });
-
-                this.props.navigator.showModal({
-                    screen: 'goodsh.UserScreen',
-                    // title: fullName(user),
-                    passProps: {
-                        userId: user.id,
-                        user
-                    },
-                    navigatorButtons: Nav.CANCELABLE_MODAL,
-                });
-
-
-            }}>
-                <FriendCell friend={user}/>
+            <GTouchable onPress={()=> {seeUser(this.props.navigator, user)}}>
+                <FriendCell friend={user} containerStyle={{padding: 16}}/>
             </GTouchable>
         )
     }
@@ -149,18 +125,11 @@ export const reducer =  (state = {}, action = {}) => {
 
     switch (action.type) {
         case actionTypes.LOAD_FRIENDS.success(): {
-            let {userId} = action.options;
+            let {userId, mergeOptions} = action.options;
             let path = `users.${userId}.relationships.friends.data`;
-            state = doDataMergeInState(state, path, action.payload.data);
+            state = doDataMergeInState(state, path, action.payload.data, mergeOptions);
             break;
         }
     }
     return state;
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: Colors.white,
-    }
-});

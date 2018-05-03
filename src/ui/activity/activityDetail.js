@@ -9,6 +9,7 @@ import {
     ScrollView,
     StyleSheet,
     Text,
+    Keyboard,
     TouchableOpacity,
     View
 } from 'react-native';
@@ -17,7 +18,7 @@ import {connect} from "react-redux";
 import {currentUser, currentUserId, logged} from "../../managers/CurrentUser"
 import ActivityBody from "./components/ActivityBody";
 import {buildData, getAskBackgroundColor, sanitizeActivityType, timeSinceActivity} from "../../helpers/DataUtils";
-import {Avatar, MainBackground} from "../UIComponents";
+import {Avatar, FullScreenLoader, MainBackground} from "../UIComponents";
 import type {Activity, ActivityType, Id, RNNNavigator} from "../../types";
 import Screen from "../components/Screen";
 import {Colors} from "../colors";
@@ -60,6 +61,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
         navBarTransparent: true,
         navBarTranslucent: true,
         navBarBackgroundColor: Colors.dirtyWhite,
+        topBarElevationShadowEnabled: false
     };
 
     static navigatorButtons = {
@@ -122,23 +124,15 @@ class ActivityDetailScreen extends Screen<Props, State> {
     render() {
         let activity = this.makeActivity();
 
-        let showLoader = !activity && this.state.isLoading;
-
         const isAsk = activity && sanitizeActivityType(activity.type) === 'asks';
+
+        if (!activity && this.state.isLoading) return <FullScreenLoader/>;
 
         return (
             <MainBackground>
                 <KeyboardAwareScrollView
                     contentContainerStyle={{flexGrow: 1, paddingBottom: 20}}
                 >
-                    {
-                        showLoader && <ActivityIndicator
-                            animating = {showLoader}
-                            size = "large"
-                            style={styles.loader}
-                        />
-                    }
-
                     <View style={styles.container}>
 
                         { activity &&
@@ -187,6 +181,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                     {style: {...styleMargin(0, 0)}, cardStyle: {paddingTop: 8}}
                                 )}
                                 keyExtractor={(item, index) => item.id}
+                                onScrollBeginDrag={Keyboard.dismiss}
                                 ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
                                 ListHeaderComponent={<Text style={{
                                     fontSize: 17,
@@ -271,7 +266,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                 }>
                     <CommentInput
                         activity={activity}
-                        placeholder={"activity_screen.comments.no_comments"}
+                        placeholder={i18n.t("activity_screen.comments.no_comments")}
                         {...this.commentInputStyles()}
                     />
                 </View>
@@ -338,7 +333,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                     <CommentInput
                                         activity={activity}
                                         containerStyle={{marginLeft: 30}}
-                                        placeholder={"activity_comments_screen.add_comment_placeholder"}
+                                        placeholder={i18n.t("activity_comments_screen.add_comment_placeholder")}
                                         {...this.commentInputStyles()}
                                     />
 
@@ -362,16 +357,16 @@ class ActivityDetailScreen extends Screen<Props, State> {
         return {
             height:28,
             inputStyle:{fontSize: 13},
-            inputContainerStyle: {
-                borderBottomWidth: 1,
-                borderTopWidth: 0,
-                borderLeftWidth: 0,
-                borderRightWidth: 0,
-                paddingHorizontal: 0,
-                borderColor: Colors.greying,
-                borderWidth: 1,
-            },
-            buttonStyle: {paddingRight: 0}
+            // inputContainerStyle: {
+                // borderBottomWidth: 0,
+                // borderTopWidth: 0,
+                // borderLeftWidth: 0,
+                // borderRightWidth: 0,
+                // paddingHorizontal: 0,
+                // borderColor: Colors.greying,
+                // borderWidth: 1,
+            // },
+            // buttonStyle: {paddingRight: 0}
         };
     }
 
@@ -408,8 +403,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
         const width  = dim + (dim * shift) * Math.max(n-1, 0) + 5;
         return <View style={{width, height: 18}}>
             {
-                othersCommentators.map((user, i) => user && <Avatar user={user} style={{
-                    dim: dim,
+                othersCommentators.map((user, i) => user && <Avatar user={user} size={dim} style={{
                     position: 'absolute',
                     left: dim * shift * i,
                     zIndex: (10 - i),

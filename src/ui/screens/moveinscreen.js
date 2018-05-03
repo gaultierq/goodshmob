@@ -67,8 +67,6 @@ export default class MoveInScreen extends Screen<Props, State> {
                         >
                             <LineupHorizontal
                                 lineupId={lineup.id}
-                                navigator={this.props.navigator}
-                                withLineupTitle={true}
                                 renderSaving={(saving: Saving) => {
                                     return <LineupCellSaving item={saving.resource} style={{
                                         borderWidth: saving.id === this.props.savingId ? 1 : 0,
@@ -143,5 +141,5 @@ export function moveSaving(saving: Saving, lineupId: Id) {
         .withRoute(`savings/${savingId}/move`)
         .addQuery({"list_id": lineupId})
         // .include(include)
-        .disptachForAction2(MOVE_SAVING, {savingId: savingId, originalLineupId, targetLineupId: lineupId});
+        .createActionDispatchee(MOVE_SAVING, {savingId: savingId, originalLineupId, targetLineupId: lineupId});
 }

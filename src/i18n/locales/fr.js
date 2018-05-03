@@ -20,10 +20,10 @@ export default {
         },
         search: {
             placeholder: "##Rechercher",
-            empty: "Ach, pas de résultat.",
+            empty: "Pas de résultat.",
         },
         goodsh : {
-            title: "GoodshBox"
+            title: "A ranger plus tard"
         },
         mine : {
             title: "Mes listes"
@@ -40,9 +40,26 @@ export default {
         "- Pour un goodsh **COMPLÈTEMENT** privé, active le cadenas",
         dialog_button: 'OK',
     },
+    tips: {
+        visibility: {
+            title: "Visibilité",
+            text: "Tes goodsh ne sont visibles que par toi et ton réseau",
+            button: "OK"
+        },
+        noise: {
+            title: "Notification",
+            text: "Quand tu enregistres un goodsh, tes contacts ne sont pas notifiés",
+            button: "OK"
+        },
+        full_private: {
+            title: "Privé",
+            text: "Pour un goodsh complètement privé, active le cadenas",
+            button: "OK"
+        },
+    },
     home: {
         wizard: {
-            action_button_label : "Enregistrer une recommandation qu'on m'a faite.",
+            action_button_label : "Ajouter un coup de coeur\nou une envie.",
             action_button_body : "Livre, film, série, resto, musique...",
         }
     },
@@ -50,7 +67,7 @@ export default {
         in_items: "Saisir le nom à enregistrer",
         in_network: "Rechercher dans mon réseau",
         in_feed: "Rechercher",
-        by: "de"
+        by: "par"
     },
     "shared":{
         "goodsh_saved":"Enregistré",
@@ -152,7 +169,7 @@ export default {
     },
     "network_search_tabs":{
         "savings":"GOODSH & LISTE",
-        "users":"CONTACT"
+        "users":"MEMBRE"
     },
     "community_screen":{
         "tabs": {
@@ -172,10 +189,10 @@ export default {
             "musics":"SON"
         },
         "placeholder": {
-            "consumer_goods":"##Plein de trucs",
-            "places":"##Plein d'endroits",
-            "movies":"##Plein de films",
-            "musics":"##Plein de sons"
+            "consumer_goods":"Plein de trucs : livres, cadeaux, gadgets, chaussures, vin, jouets, produits...",
+            "places":"Plein d'adresses : restaurants, cafés, boutiques, hôtels, musées, villes, plages, lieux à visiter, docteurs, plombiers...",
+            "movies":"Plein de films, séries, documentaires, émissions... ",
+            "musics":"Plein de sons : artistes, albums, titres..."
         },
         "search_options":  {
             "around_me": "Autour de moi"
@@ -185,7 +202,7 @@ export default {
         "add_comment_placeholder":"Répondre"
     },
     "send_screen":{
-        "add_description_placeholder":"Ajouter un petit mot (visible uniquement par le destinataire).",
+        "add_description_placeholder":"Adresser un petit mot à %{recipient}",
         "sent": "Envoyé"
     },
     "interactions":{
@@ -231,7 +248,7 @@ export default {
         }
     },
     loadmore: "Chargement",
-    send_message: "Envoyé via Goodsh : l'app Mémo pour noter et toujours retrouver toutes les recommandations qu'on me fait.",
+    send_message: "Envoyé via Goodsh : l'app où tu stockes tout ce que tu aimes.",
     send_object: "te recommande %{what} - via Goodsh",
     goodsh_url: "https:\/\/goodsh.it\/",
     friends: {
@@ -258,7 +275,7 @@ export default {
         }
     },
     empty: {
-        lineup: "Ach, cette liste est vide\n c'est bien dommage !"
+        lineup: "Cette liste est vide\n c'est bien dommage !"
     },
     activity_action_bar: {
         goodsh_deleted: "Goodsh supprimé",
@@ -290,6 +307,7 @@ export default {
         change: "Modifier",
         change_title: "Modifier le titre",
         edit_saving_menu: "Éditer ce goodsh",
+        share_list: "Partager cette liste",
         change_description: "Modifier la description",
         move: "Déplacer",
         change_name: "Changer le nom de cette liste",
@@ -335,6 +353,11 @@ export default {
         delete: {
             title: "Enlever de mes listes",
             label: "Confirmer ?"
+        },
+        position: {
+            title: "Lieux autour de moi",
+            message: "Pour trouver les lieux autour de vous, activer la localisation",
+            button: "Activer"
         }
     },
     dev: {
@@ -344,8 +367,7 @@ export default {
     congrats: {
         generic: "C'est fait ;)"
     },
-    content_actions: {
-        read_more: 'Voir plus',
-        hide: 'Cacher',
-    },
+    errors: {
+        unavailable: 'Le contenu n\'est pas disponible',
+    }
 };

@@ -2,6 +2,7 @@
 
 import React, {Component} from 'react';
 import {TouchableNativeFeedback, TouchableOpacity, View,} from 'react-native';
+
 import type {ms} from "../types";
 
 export type Props = {

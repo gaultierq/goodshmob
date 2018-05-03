@@ -52,7 +52,7 @@ class _GeoLocation implements GeoLocation {
                         resolve(position);
                     },
                     (error) => {
-                        console.log('Error requesting permission', error);
+                        console.log('Error requesting position', error);
                         reject(error);
                     },
                     {

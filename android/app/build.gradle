@@ -148,7 +148,6 @@ project.ext.react = [
 
 
 apply from: "../../node_modules/react-native/react.gradle"
-apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -166,13 +165,13 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.0'
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "it.goodsh.mob"
-        minSdkVersion 16
-        targetSdkVersion 22
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         // versionCode 1
         // versionName "1.0"
         ndk {
@@ -242,6 +241,7 @@ android {
             signingConfig signingConfigs.dev
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             applicationIdSuffix ".dev"
+            matchingFallbacks = ['release']
         }
         preprod {
             minifyEnabled true
@@ -249,12 +249,14 @@ android {
             signingConfig signingConfigs.preprod
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             applicationIdSuffix ".preprod"
+            matchingFallbacks = ['release']
         }
         prod {
             minifyEnabled true
             useProguard true
             signingConfig signingConfigs.prod
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            matchingFallbacks = ['release']
         }
     }
 
@@ -295,23 +297,30 @@ repositories {
 
 
 dependencies {
-    compile project(':react-native-spinkit')
-    compile project(':react-native-svg')
-    compile project(':react-native-fetch-blob')
-    compile project(':react-native-bottomsheet')
+    compile project(':react-native-device-info')
+    implementation project(':react-native-app-settings')
+    implementation project(':react-native-spinkit')
+    implementation project(':react-native-svg')
+    implementation project(':react-native-fetch-blob')
+    implementation project(':react-native-bottomsheet')
 
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }
-    compile project(':react-native-fabric')
-    compile project(':react-native-taptargetview')
-    compile project(':react-native-config')
-    compile project(':react-native-device-info')
+    implementation project(':react-native-fabric')
+    implementation project(':react-native-taptargetview')
+    implementation project(':react-native-config')
+//    implementation(project(':react-native-device-info')) {
+//        exclude group: 'com.google.android.gms', module: 'play-services-gcm'
+//    }
+
+    implementation project(':react-native-device-info')
 
     // Firebase dependencies
-    compile "com.google.android.gms:play-services-base:12.0.1"
-    compile "com.google.firebase:firebase-core:12.0.1"
-    compile "com.google.firebase:firebase-messaging:12.0.1"
+    implementation("com.google.android.gms:play-services-base:${rootProject.ext.googlePlayServicesVersion}")
+    implementation "com.google.firebase:firebase-core:${rootProject.ext.googlePlayServicesVersion}"
+    implementation "com.google.firebase:firebase-messaging:${rootProject.ext.googlePlayServicesVersion}"
+    implementation 'me.leolin:ShortcutBadger:1.1.21@aar' // <-- Add this line if you wish to use badge on Android
 
 
     //FIXME:
@@ -319,21 +328,20 @@ dependencies {
 //        transitive = false
 //    }
 
-    compile(project(':react-native-firebase')) {
+    implementation(project(':react-native-firebase')) {
         transitive = false
     }
-    compile project(':bugsnag-react-native')
-    compile project(':react-native-snackbar')
-    compile project(':react-native-code-push')
-    compile project(':react-native-vector-icons')
-    compile project(':react-native-i18n')
-    compile project(':react-native-fbsdk')
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:23.0.1'
+    implementation project(':bugsnag-react-native')
+    implementation project(':react-native-snackbar')
+    implementation project(':react-native-vector-icons')
+    implementation project(':react-native-i18n')
+    implementation project(':react-native-fbsdk')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}'
 //    compile 'com.android.support:support-annotations:27.0.0'
-    compile 'com.facebook.react:react-native:+'
+    implementation 'com.facebook.react:react-native:+'
     // From node_modules
-    compile project(':react-native-navigation')
+    implementation project(':react-native-navigation')
 
 
 }

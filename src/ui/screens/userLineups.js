@@ -12,7 +12,7 @@ import {
     StyleSheet,
     Text,
     TextInput,
-    TouchableOpacity,
+    TouchableOpacity, TouchableWithoutFeedback,
     View
 } from 'react-native';
 import {LineupListScreen} from './lineuplist'
@@ -28,6 +28,8 @@ import {Colors} from "../colors";
 import {SFP_TEXT_MEDIUM} from "../fonts";
 
 import GTouchable from "../GTouchable";
+import GSearchBar from "../GSearchBar";
+import {scheduleOpacityAnimation} from "../UIComponents";
 // $FlowFixMe
 
 
@@ -43,6 +45,9 @@ type State = {
 };
 
 export default class UserLineups extends Screen<Props, State> {
+
+
+    filterNode: Node;
 
     launchSearch(token?: SearchToken) {
         let navigator = this.props.navigator;
@@ -79,51 +84,102 @@ export default class UserLineups extends Screen<Props, State> {
         const navigator = this.props.navigator;
 
         return (
+            <View style={{flex:1}}>
+                {this.renderFilter()}
+                <View style={{flex:1}}>
 
-            <LineupListScreen
-
-                onLineupPressed={(lineup) => seeList(navigator, lineup)}
-                onSavingPressed={(saving) => seeActivityDetails(navigator, saving)}
-                scrollUpOnBack={super.isVisible() ? ()=>false : null}
-
-                cannotFetch={false}
-                visible={true}
-
-                renderSectionHeader={({section}) => this.renderSectionHeader(section)}
-                renderSectionFooter={()=> <View style={{height: 25, width: "100%"}} />}
-                ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
-
-                filter={this.filter()}
-
-                {...this.props}
-            />
-
+                    <LineupListScreen
+                        onLineupPressed={(lineup) => seeList(navigator, lineup)}
+                        onSavingPressed={(saving) => seeActivityDetails(navigator, saving)}
+                        scrollUpOnBack={super.isVisible() ? ()=>false : null}
+                        cannotFetch={false}
+                        visible={true}
+                        renderSectionHeader={({section}) => this.renderSectionHeader(section)}
+                        renderSectionFooter={()=> <View style={{height: 25, width: "100%"}} />}
+                        ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
+                        filter={this.filter()}
+                        {...this.props}
+                    />
+                    {_.isEmpty(this.state.filter) && this.state.isFilterFocused && this.renderSearchOverlay()}
+                </View>
+            </View>
         );
     }
 
+    renderFilter() {
+        // const paddingVertical = this.state.isFilterFocused ? 8 : 5;
+        const paddingVertical = 5;
+        let style = {
+            backgroundColor: NavStyles.navBarBackgroundColor,
+            paddingVertical: paddingVertical,
+            elevation: 3,
+            paddingLeft: 9,
+            paddingRight: 9,
+            borderBottomWidth: 1,
+            borderBottomColor: Colors.grey3
+        };
+
+
+        return (
+            <View key={'searchbar_container'} style={[style]}>
+
+                <GSearchBar
+                    textInputRef={r=>this.filterNode = r}
+                    onChangeText={filter => this.setState({filter})}
+                    placeholder={i18n.t('search.in_feed')}
+                    clearIcon={!!this.state.filter && {color: '#86939e'}}
+                    style={{
+                        margin: 0,
+                    }}
+                    // inputStyle={this.state.isFilterFocused && {height: 10}}
+                    onClearText={() => {
+                        this.filterNode && this.filterNode.blur();
+                    }}
+                    value={this.state.filter}
+                    onFocus={()=>this.onFilterFocusChange(true)}
+                    onBlur={()=>this.onFilterFocusChange(false)}
+                    onSubmitEditing={() => this.launchSearch(this.state.filter)}
+
+                />
+            </View>
+        )
+    }
+
+    onFilterFocusChange(focused: boolean) {
+        if (this.props.onFilterFocusChange) {
+            this.props.onFilterFocusChange(focused).then(()=>{
+                scheduleOpacityAnimation()
+                this.setState({isFilterFocused: focused})
+            })
+        }
+    }
+
+
+    renderSearchOverlay() {
+        return (<TouchableWithoutFeedback onPress={() => this.filterNode.blur()}>
+                <View style={{
+                    position: 'absolute', width: '100%', height: '100%', opacity: 0.4,
+                    backgroundColor: Colors.black, zIndex: 50000,}} />
+            </TouchableWithoutFeedback>
+        );
+    }
+
+
     filter() {
+
         return {
+            token: this.state.filter, //used just to re-render the children. todo: find a better way
             placeholder: 'search.in_feed',
-            onSearch: (searchToken: string) => {
-                this.launchSearch(searchToken);
-            },
             emptyFilterResult: (searchToken: string) => (
                 <View>
                     <Text style={STYLES.empty_message}>{i18n.t('lineups.filter.empty')}</Text>
                     {renderSimpleButton(i18n.t('lineups.filter.deepsearch'), () => this.launchSearch(searchToken))}
                 </View>
             ),
-            style: {
-                backgroundColor: NavStyles.navBarBackgroundColor,
-                paddingTop: 5,
-                paddingBottom: 5,
-                elevation: 3,
-                paddingLeft: 9,
-                paddingRight: 9,
-                borderBottomWidth: 1,
-                borderBottomColor: Colors.grey3
-            },
-            applyFilter: (sections, filter) => {
+            applyFilter: (sections) => {
+                const filter: string = this.state.filter;
+                if (!filter) return sections;
+
                 let contains = (container, token) => {
                     if (!container || !token) return false;
                     return container.toLowerCase().indexOf(token.toLowerCase()) >= 0;
@@ -164,6 +220,8 @@ export default class UserLineups extends Screen<Props, State> {
             }
         };
     }
+
+
 
 // render() {return <View style={{width: 50, height: 50, backgroundColor: BACKGROUND_COLOR}}/>}
 

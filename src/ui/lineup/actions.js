@@ -53,7 +53,7 @@ export function saveItem(itemId: Id, lineupId: Id, privacy = 0, description = ''
         .withBody(body)
         .addQuery({'include': '*.*'});
 
-    return call.disptachForAction2(SAVE_ITEM, {lineupId});
+    return call.createActionDispatchee(SAVE_ITEM, {lineupId});
 }
 
 //save
@@ -95,7 +95,7 @@ export function patchLineup(editedLineup: List) {
         .withRoute(`lists/${editedLineup.id}`)
         .withBody(editedLineup)
     ;
-    return call.disptachForAction2(EDIT_LINEUP, {lineupId: editedLineup.id});
+    return call.createActionDispatchee(EDIT_LINEUP, {lineupId: editedLineup.id});
 }
 
 export function doUnsave(pending, id, lineupId, delayMs?: ms) {

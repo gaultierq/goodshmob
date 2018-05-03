@@ -70,45 +70,10 @@ export const ebauchoirDetail = {
 //1 comment
 export const commentsScreen = {
     screen: {
-        label: 'test',
         screen: 'goodsh.CommentsScreen',
     },
     passProps: {
-        activityId: "381138c4-a988-4209-b9b0-285b62a11a43",
-        activityType: "savings",
-    }
-};
-
-//many comments
-export const commentsScreen2 = {
-    screen: {
-        label: 'test',
-        screen: 'goodsh.CommentsScreen',
-    },
-    passProps: {
-        activityId: "e0574190-b0c3-4aed-b451-4ae73187db3d",
-        activityType: "sendings",
-    }
-};
-//comments 3
-export const commentsScreen3 = {
-    screen: {
-        label: 'test',
-        screen: 'goodsh.CommentsScreen',
-    },
-    passProps: {
-        activityId: "97d25c16-3ded-4070-a8b8-d865a30ca15a",
-        activityType: "savings",
-    }
-};
-//comments benoit
-export const commentsScreen4 = {
-    screen: {
-        label: 'test',
-        screen: 'goodsh.CommentsScreen',
-    },
-    passProps: {
-        activityId: "fcb40005-64f1-4f17-8347-61c52f803525",
+        activityId: "ae4b733a-8047-4885-a8dd-95baa1cac876",
         activityType: "savings",
     }
 };
@@ -198,6 +163,9 @@ export const searchItemsScreen = {
         screen: 'goodsh.SearchItemsScreen',
         title: 'Test SearchItemsScreen',
     },
+    passProps: {
+        // index: 1,
+    }
 };
 
 export const homeSearchItemsScreen = {

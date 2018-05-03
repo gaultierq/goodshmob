@@ -21,7 +21,7 @@ export function logout(dispatch) {
         new Api.Call()
             .withMethod('POST')
             .withRoute(`logout`)
-            .disptachForAction2(actionTypes.USER_LOGOUT)
+            .createActionDispatchee(actionTypes.USER_LOGOUT)
     ).then(()=> {
         logoutOffline(dispatch);
     }, err => {console.error(err)});
@@ -32,7 +32,7 @@ export function login(facebookAccessToken: string) {
         .withMethod('POST')
         .withRoute(`auth/facebook/generate_token`)
         .withBody({auth: {access_token: facebookAccessToken}})
-        .disptachForAction2(actionTypes.USER_LOGIN);
+        .createActionDispatchee(actionTypes.USER_LOGIN);
 }
 
 export function saveDevice(device: Device) {
@@ -40,12 +40,12 @@ export function saveDevice(device: Device) {
         .withMethod('POST')
         .withRoute(`devices`)
         .withBody({...device})
-        .disptachForAction2(actionTypes.SAVE_DEVICE);
+        .createActionDispatchee(actionTypes.SAVE_DEVICE);
 }
 
 export function me() {
     return new Api.Call()
         .withMethod('GET')
         .withRoute(`me`)
-        .disptachForAction2(actionTypes.FETCH_ME);
+        .createActionDispatchee(actionTypes.FETCH_ME);
 }

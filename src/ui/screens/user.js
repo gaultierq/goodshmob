@@ -14,7 +14,7 @@ import {STYLES} from "../UIStyles";
 import ShareButton from "../components/ShareButton";
 import UserLineups from "./userLineups";
 import LineupHorizontal, {LineupH1} from "../components/LineupHorizontal";
-import {seeActivityDetails, seeList} from "../Nav";
+import {seeActivityDetails, seeList, startAddItem} from "../Nav";
 import * as UI from "../UIStyles";
 import {fullName} from "../../helpers/StringUtils";
 
@@ -69,22 +69,6 @@ export default class UserScreen extends Screen<Props, State> {
 
         return (
             <MainBackground>
-
-
-                {/*<Feed*/}
-                {/*data={activities}*/}
-                {/*renderItem={this.renderItem.bind(this)}*/}
-                {/*fetchSrc={{*/}
-                {/*callFactory: ()=>fetchUserNetwork(userId),*/}
-                {/*useLinks: true,*/}
-                {/*action: FETCH_ACTIVITIES,*/}
-                {/*options: {userId}*/}
-                {/*}}*/}
-                {/*hasMore={!network.hasNoMore}*/}
-                {/*empty={<View><Text style={STYLES.empty_message}>{i18n.t('common.empty_feed_generic')}</Text><ShareButton text={i18n.t('actions.invite')}/></View>}*/}
-                {/*{...activityFeedProps()}*/}
-                {/*/>*/}
-
                 <UserLineups
                     displayName={"user feed"}
                     feedId={"user list"}
@@ -106,7 +90,8 @@ export default class UserScreen extends Screen<Props, State> {
                                 <LineupH1
                                     lineup={item}
                                     navigator={navigator}
-                                    withAddInEmptyLineup={isCurrentUserId(userId)} />
+                                    skipLineupTitle={true}
+                                    onPressEmptyLineup={isCurrentUserId(userId) ? ()=>startAddItem(navigator, item.id): null } />
                             )
                         }));
                     }}

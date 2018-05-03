@@ -10,6 +10,8 @@ import android.app.Application;
 import android.content.Intent;
 
 import com.facebook.react.ReactApplication;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
+import com.krazylabs.OpenAppSettingsPackage;
 import com.react.rnspinkit.RNSpinkitPackage;
 import com.horcrux.svg.SvgPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
@@ -20,12 +22,12 @@ import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import io.fabric.sdk.android.Fabric;
 import io.invertase.firebase.RNFirebasePackage;
+import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import ui.taptargetview.RNTapTargetViewPackage;
 
 import com.bugsnag.BugsnagReactNative;
 import com.azendoo.reactnativesnackbar.SnackbarPackage;
-import com.microsoft.codepush.react.CodePush;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
@@ -57,6 +59,8 @@ public class MainApplication extends NavigationApplication implements ReactAppli
   protected List<ReactPackage> getPackages() {
     return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new RNDeviceInfo(),
+            new OpenAppSettingsPackage(),
             new RNSpinkitPackage(),
             new SvgPackage(),
             new RNFetchBlobPackage(),
@@ -64,12 +68,11 @@ public class MainApplication extends NavigationApplication implements ReactAppli
             new FabricPackage(),
             new RNTapTargetViewPackage(),
             new ReactNativeConfigPackage(),
-            new RNDeviceInfo(),
             new RNFirebasePackage(),
+            new RNFirebaseNotificationsPackage(),
             new RNFirebaseMessagingPackage(),
             BugsnagReactNative.getPackage(),
             new SnackbarPackage(),
-            new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey), getApplicationContext(), BuildConfig.DEBUG),
             new VectorIconsPackage(),
             new RNI18nPackage(),
             new FBSDKPackage(mCallbackManager)
@@ -81,10 +84,10 @@ public class MainApplication extends NavigationApplication implements ReactAppli
 //    return mReactNativeHost;
 //  }
 
-  @Override
-  public String getJSBundleFile() {
-    return CodePush.getJSBundleFile();
-  }
+//  @Override
+//  public String getJSBundleFile() {
+//    return CodePush.getJSBundleFile();
+//  }
 
   @Override
   public void onCreate() {

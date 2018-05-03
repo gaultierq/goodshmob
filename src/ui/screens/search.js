@@ -26,7 +26,6 @@ import {Navigation} from 'react-native-navigation';
 import update from "immutability-helper";
 import {Colors} from "../colors";
 import {DEEPLINK_SEARCH_CLOSE, DEEPLINK_SEARCH_SUBMITED, DEEPLINK_SEARCH_TEXT_CHANGED} from "./SearchNavBar";
-import SearchPage from "./SearchPage";
 
 export type SearchCategoryType = string;
 
@@ -37,7 +36,10 @@ export type SearchCategory = {
     renderItem: (item: *) => Node,
     tabName: i18Key,
     placeholder: i18Key,
-    searchOptions: SearchOptions
+    onItemSelected?: () => void,
+    searchOptions: SearchOptions,
+    renderResults: ({query: SearchQuery, results: SearchState}) => Node,
+    renderBlank?: () => Node,
 }
 
 export type SearchResult = {
@@ -49,6 +51,14 @@ export type SearchResult = {
 }
 export type SearchOptions = {
     renderOptions: (any, any => void, void => void) => Node
+}
+
+
+
+export type SearchQuery = {
+    token: SearchToken,
+    categoryType: SearchCategoryType,
+    options?: any
 }
 
 export type SearchEngine = {
@@ -63,18 +73,12 @@ export type SearchEngine = {
     canSearch: (
         token: SearchToken,
         category: SearchCategoryType,
-        searchOptions: ?any) => boolean
+        trigger: SearchTrigger,
+        searchOptions: ?any
+    ) => boolean
 
 };
 
-export type Props = {
-    categories: Array<SearchCategory>,
-    navigator: *,
-    searchEngine: SearchEngine,
-    token?: ?SearchToken,
-    style?: ? *
-
-};
 
 
 //token -> {data, hasMore, isSearching}
@@ -83,10 +87,11 @@ export type SearchState = {
     page: number,
     nbPages: number,
     data: Array<List|Saving>,
-    token: string
+    token: string,
 };
 
-
+//search query KEY: token x category x options
+//options: page x location? x
 export type State = {
     input?: SearchToken,
     routes: Array<*>,
@@ -94,6 +99,17 @@ export type State = {
     index: number
 };
 
+
+export type Props = {
+    categories: Array<SearchCategory>,
+    navigator: *,
+    searchEngine: SearchEngine,
+    token?: ?SearchToken,
+    style?: ? *,
+    index: number,
+};
+
+export type SearchTrigger = 'unknown' | 'button' | 'input_changed' | 'tab_changed' | 'intial_token'
 
 @connect()
 @logged
@@ -103,6 +119,8 @@ export default class SearchScreen extends Component<Props, State> {
 
     searchOptions: { [SearchCategoryType]: *} = {};
 
+    static defaultProps = {index: 0, autoSearch: true};
+
     constructor(props: Props) {
         super(props);
 
@@ -111,7 +129,7 @@ export default class SearchScreen extends Component<Props, State> {
         this.state = {
             input: '',
             searches: {},
-            index: 0,
+            index: props.index,
             routes: props.categories.map((c, i) => ({key: `${i}`, title: c.tabName ? i18n.t(c.tabName) : null})),
         };
 
@@ -124,15 +142,16 @@ export default class SearchScreen extends Component<Props, State> {
             const token = props.token;
             //weak
             this.state.input = token;
+
             setTimeout(()=> {
-                this.performSearch(token, 0);
+                this.tryPerformSearch(token, 0);
             });
         }
     }
 
     handleIndexChange(index: number) {
         console.log(`tab changed to ${index}`);
-        this.setState({index}, () => this.performSearch(this.state.input, 0));
+        this.setState({index}, () => this.tryPerformSearch(this.state.input, 0));
     }
 
     _renderPager = props => <TabViewPagerPan {...props} />;
@@ -160,7 +179,7 @@ export default class SearchScreen extends Component<Props, State> {
                 {
                     cat && cat.searchOptions && (
                         cat.searchOptions.renderOptions(
-                            this.getCurrentSearchOptions(cat.type),
+                            this.getSearchOptions(cat.type),
                             onNewOptions,
                             this._debounceSearch
                             )
@@ -186,7 +205,7 @@ export default class SearchScreen extends Component<Props, State> {
         );
     }
 
-    getCurrentSearchOptions(catType: SearchCategoryType) {
+    getSearchOptions(catType: SearchCategoryType) {
         return this.searchOptions[catType];
     }
 
@@ -204,16 +223,16 @@ export default class SearchScreen extends Component<Props, State> {
 
     renderSearchPage(category: SearchCategory) {
         let forToken = this.state.searches[this.state.input];
-        let forType : SearchState = forToken && forToken[category.type];
+        const categoryType = category.type;
+        let results : SearchState = forToken && forToken[categoryType];
+        let query: SearchQuery = {
+            token: this.state.input,
+            categoryType,
+            options: this.getSearchOptions(categoryType)
+        }
 
-        return (
-            <SearchPage
-                search={forType}
-                renderItem={category.renderItem}
-                onItemSelected={this.props.onItemSelected}
-                ListFooterComponent={this.renderSearchFooter(forType)}
-            />
-        );
+        //FIXME: restore loadmore
+        return category.renderResults({query, results})
     }
 
 
@@ -231,7 +250,7 @@ export default class SearchScreen extends Component<Props, State> {
         return (<Button
             isLoading={isLoadingMore}
             isDisabled={isLoadingMore}
-            onPress={()=>{this.performSearch(search.token, nextPage)}}
+            onPress={()=>{this.tryPerformSearch(search.token, nextPage)}}
             style={[styles.button, {marginTop: 15}]}
             disabledStyle={styles.button}
         >
@@ -251,7 +270,7 @@ export default class SearchScreen extends Component<Props, State> {
                     this.onSearchInputChange(payload);
                     break;
                 case DEEPLINK_SEARCH_SUBMITED:
-                    this.performSearch(this.state.input, 0);
+                    this.tryPerformSearch(this.state.input, 0);
                     break;
                 case DEEPLINK_SEARCH_CLOSE:
                     // this.setState({isSearching: false});
@@ -260,7 +279,7 @@ export default class SearchScreen extends Component<Props, State> {
         }
     }
 
-    _debounceSearch = _.debounce(() => this.performSearch(this.state.input, 0), 500);
+    _debounceSearch = _.debounce(() => this.tryPerformSearch(this.state.input, 0), 500);
 
     onSearchInputChange(input: string) {
         //this.setState({input});
@@ -268,25 +287,19 @@ export default class SearchScreen extends Component<Props, State> {
     }
 
 
-    performSearch(token: SearchToken, page: number) {
+    tryPerformSearch(token: SearchToken, page: number, trigger: SearchTrigger = 'unknown') {
 
         let catType = this.getCurrentCategory().type;
 
         console.log(`performSearch:token=${token} page=${page}`);
         const {search, canSearch} = this.props.searchEngine;
-        const options = this.getCurrentSearchOptions(catType);
+        const options = this.getSearchOptions(catType);
 
 
-        if (!canSearch(token, catType, options)) {
+        if (!canSearch(token, catType, trigger, options)) {
             console.log(`perform search aborted: cannot search`);
             return;
         }
-
-        // let lastPage = _.get(this.state.searches, `${token}.${catType}.page`, -1);
-        // if (lastPage >= page) {
-        //     console.log(`perform search aborted: lastPage>=page : ${lastPage} >= ${page}`);
-        //     return;
-        // }
 
         //set searching
         const debugState = {
@@ -313,7 +326,7 @@ export default class SearchScreen extends Component<Props, State> {
                 this.setState(update(this.state, {searches: {[token]: {[catType]: {$merge: {searchState: 3}}}}},));
             })
             .then((results: SearchResult) => {
-
+                console.debug('search results', results)
                 //const catType = this.getCurrentCategory().type;
                 if (!results) {
                     // TODO: set state error

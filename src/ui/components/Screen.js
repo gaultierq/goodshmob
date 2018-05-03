@@ -26,7 +26,7 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  ScreenStat
         let navigator = props.navigator;
         if (!navigator) throw "please provide navigator";
         navigator.addOnNavigatorEvent((event) => {
-            //console.debug("home:onNavigatorEvent" + JSON.stringify(event));
+            //console.debug("home:onNavigatorEvent" , event);
 
             let id = event.id;
 
@@ -36,18 +36,25 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  ScreenStat
 
                 console.debug(`Screen ${this.constructor.name} visib event ${id}`);
 
-                let callback = () => {
+                let visible: boolean;
+                switch (id) {
+                    case 'didAppear':
+                        visible = true
+                        break;
+                    case 'didDisappear':
+                        visible = false
+                        break;
+                    default: return
+                }
+
+
+                this.setState({visible}, () => {
                     let method = 'component' + toUppercase(id);
                     // $FlowFixMe
                     if (this[method]) this[method]();
-                };
+                });
 
-
-                const didAppear: boolean = id === 'didAppear';
-
-                this.setState({visible: didAppear}, callback);
-
-                if (didAppear && this.state.dirty) {
+                if (visible && this.state.dirty) {
                     //screen dirty, re-rendering
                     superLog("screen dirty, re-rendering");
                     this.setState({dirty: false});
@@ -71,7 +78,9 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  ScreenStat
         if (!this.getVisible(nextProps, nextState)) {
             // this.askRenderOnVisible = true;
             superLog(`[${this.constructor.name}]: shouldComponentUpdate skipped - ${JSON.stringify(this.state)}`);
-            this.setState({dirty: true});
+            if (!this.state.dirty) {
+                this.setState({dirty: true});
+            }
             return false;
         }
         return true;
@@ -84,6 +93,10 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  ScreenStat
 
     getVisible(props, state) {
         return props && props.visible || state && state.visible;
+    }
+
+    getVisibility() {
+        return this.isVisible() ? 'visible' : 'hidden'
     }
 
 //because when navigating back, a render may change the nav bar title. this is a flaw in wix nav

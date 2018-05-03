@@ -1,5 +1,4 @@
 #import "AppDelegate.h"
-#import <CodePush/CodePush.h>
 #import <React/RCTBundleURLProvider.h>
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
@@ -9,6 +8,9 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <BugsnagReactNative/BugsnagReactNative.h>
 #import "ReactNativeConfig.h"
+#import "RNFirebaseNotifications.h"
+#import "RNFirebaseMessaging.h"
+#import <React/RCTLinkingManager.h>
 
 // **********************************************
 // *** DON'T MISS: THE NEXT LINE IS IMPORTANT ***
@@ -26,12 +28,6 @@
 {
   NSURL *jsCodeLocation;
 #ifdef DEBUG
-  //  
-#ifdef DEBUG
-    jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=true"];
-#else
-    jsCodeLocation = [CodePush bundleURL];
-#endif
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
 #else
   jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
@@ -76,6 +72,7 @@
   
   if ([ReactNativeConfig envFor:@"WITH_NOTIFICATIONS"]) {
     [FIRApp configure];
+    [RNFirebaseNotifications configure];
   }
   
   if ([ReactNativeConfig envFor:@"WITH_FABRIC"]) {
@@ -92,11 +89,51 @@
   return [[FBSDKApplicationDelegate sharedInstance] application:application
                                                         openURL:url
                                               sourceApplication:sourceApplication
-                                                     annotation:annotation];
+                                                     annotation:annotation]
+  ||  [RCTLinkingManager
+         application:application
+         openURL:url
+         sourceApplication:sourceApplication
+         annotation:annotation];
+}
+
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
+  [[RNFirebaseNotifications instance] didReceiveLocalNotification:notification];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo
+                                                       fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler{
+  [[RNFirebaseNotifications instance] didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
+}
+
+- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
+  [[RNFirebaseMessaging instance] didRegisterUserNotificationSettings:notificationSettings];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
   [FBSDKAppEvents activateApp];
+}
+
+- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+  NSString *token = [[deviceToken description] stringByTrimmingCharactersInSet: [NSCharacterSet characterSetWithCharactersInString:@"<>"]];
+  token = [token stringByReplacingOccurrencesOfString:@" " withString:@""];
+  NSLog(@"content---%@", token);
+}
+
+//- (BOOL)application:(UIApplication *)application
+//            openURL:(NSURL *)url
+//            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+//{
+//  return [RCTLinkingManager application:application openURL:url options:options];
+//}
+
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity
+ restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler
+{
+  return [RCTLinkingManager application:application
+                   continueUserActivity:userActivity
+                     restorationHandler:restorationHandler];
 }
 
 @end

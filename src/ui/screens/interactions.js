@@ -1,7 +1,8 @@
 // @flow
 
 import React from 'react';
-import {ScrollView, StyleSheet, Text, TouchableOpacity, View, Share} from 'react-native';
+
+import {ScrollView, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
 import {logged} from "../../managers/CurrentUser"
 import Immutable from 'seamless-immutable';
@@ -17,11 +18,8 @@ import Screen from "../components/Screen";
 import NavManager from "../../managers/NavManager";
 import GTouchable from "../GTouchable";
 import ShareButton from "../components/ShareButton";
-
-import {Colors} from "../colors";
-import Button from 'apsl-react-native-button'
-import {SFP_TEXT_MEDIUM} from "../fonts";
 import {STYLES} from "../UIStyles";
+import Config from 'react-native-config';
 
 type Props = {
     navigator: *,
@@ -99,7 +97,7 @@ export class InteractionScreen extends Screen<Props, State> {
         return (
             <GTouchable
                 onPress={() => {
-                    NavManager.goToDeeplink(this.localDeeplink(activity));
+                    NavManager.goToDeeplink(NavManager.localDeeplink(activity));
                 }}>
                 <UserActivity
                     activityTime={createdAt}
@@ -115,39 +113,37 @@ export class InteractionScreen extends Screen<Props, State> {
         )
     }
 
-    //temporary: should be provided by the backend
-    localDeeplink(activity: Activity): Deeplink {
-        let deeplink;
-        const activityType = sanitizeActivityType(activity.type);
-        if (!activityType) return null;
-        let resource = activity.resource;
 
-        switch (activityType) {
-            case 'comments': {
+    /*
+    activity: {
+        type:
+        user: {
+            firstName:
+            lastName:
+        }
+        resource: {
+            type:
+            content: (if Ask)
 
-                if (resource) {
-                    let {id, type} = resource;
-                    return `https://goodsh.it/${sanitizeActivityType(type)}/${id}/comments`
-                }
-                break;
+            resource: {
+                title:
             }
-            default:
-                if (resource) {
-                    let {id, type} = resource;
-                    return `https://goodsh.it/${sanitizeActivityType(type)}/${id}`
-                }
         }
     }
-
+    */
     renderContentByType(activity:Activity) {
         if (!activity) return null;
         let type = activity.type.toLowerCase();
         const resource = activity.resource;
+
+        const user = activity.user;
+
         const isAsk = sanitizeActivityType(resource.type) === 'asks';
 
         let build = (key) => {
 
-            let username = activity.user.firstName + " " + activity.user.lastName;
+
+            let username = user.firstName + " " + user.lastName;
 
             if (!resource) {
                 console.warn(`say QG no resource found on activityId=${activity.id} type=${activity.type}`);
@@ -163,7 +159,7 @@ export class InteractionScreen extends Screen<Props, State> {
                 else {
                     let innerResource = resource.resource;
                     if (!innerResource) {
-                        console.warn("No resource for " + JSON.stringify(activity));
+                        console.warn("No resource for " , activity);
                         return null;
                     }
                     let item_title = _.toUpper(innerResource.title);

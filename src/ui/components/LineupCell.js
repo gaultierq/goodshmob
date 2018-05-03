@@ -70,7 +70,7 @@ export default class LineupCell extends React.Component<Props, State> {
                 {backgroundColor: isId(lineup.id) ? Colors.white : Colors.dirtyWhite}, style]}>
 
                 <View style={{flexDirection: titleChildrenBelow ? 'column' : 'row'}}>
-                    {<LineupTitle lineup={lineup}/>}
+                    {<LineupTitle lineup={lineup} style={{marginVertical: 6,}}/>}
 
                     {titleChildren}
                 </View>
@@ -81,8 +81,6 @@ export default class LineupCell extends React.Component<Props, State> {
 
     getPadding() {
         const {width} = Dimensions.get('window');
-
-
 
         let w = DIM;
         let n = Math.floor(width / w) + 1;

@@ -3,22 +3,20 @@ import React from 'react';
 import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
 import {connect} from "react-redux";
 import {currentUser, isCurrentUser, logged} from "../../managers/CurrentUser"
-import {MainBackground, TRANSPARENT_SPACER} from "../UIComponents";
+import {FullScreenLoader, Http404, MainBackground} from "../UIComponents";
 import Immutable from 'seamless-immutable';
 import * as Api from "../../managers/Api";
 import {Call} from "../../managers/Api";
 import Feed from "../components/feed";
-import type {Activity, ActivityType, Comment, Id} from "../../types";
+import type {Activity, ActivityType, Comment, Id, RequestState} from "../../types";
 import ApiAction from "../../helpers/ApiAction";
 import {buildData, doDataMergeInState, sanitizeActivityType} from "../../helpers/DataUtils";
 import {fetchActivity} from "../activity/actions";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-import type {PendingAction} from "../../helpers/ModelUtils";
-import {mergeItemsAndPendings, pendingActionWrapper} from "../../helpers/ModelUtils";
+import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
 import {Colors} from "../colors";
 import Screen from "../components/Screen";
 import {component as CommentInput} from "../components/CommentInput"
-import {styleMargin, STYLES} from "../UIStyles";
 import ActivityStatus from "../activity/components/ActivityStatus";
 import CommentCell from "../components/CommentCell";
 import MultiMap from "multimap";
@@ -37,7 +35,7 @@ type Props = {
 type State = {
     newComment?: string,
     isAddingComment?: boolean,
-    isFetchingActivity?: boolean
+    reqFetchActivity?: RequestState
 };
 
 @logged
@@ -51,22 +49,21 @@ class CommentsScreen extends Screen<Props, State> {
 
 
     componentDidMount() {
-        this.load();
+        Api.safeDispatchAction.call(
+            this,
+            this.props.dispatch,
+            fetchActivity(this.props.activityId, this.props.activityType, {include: "comments"}),
+            'reqFetchActivity'
+        )
     }
-
-    //use Api.safeDispatchAction
-    load() {
-        if (this.state.isFetchingActivity) return;
-        this.setState({isFetchingActivity: true});
-        this.props.dispatch(fetchActivity(this.props.activityId, this.props.activityType, {include: "comments"}))
-            .catch((err)=>console.log(err))
-            .then(this.setState({isFetchingActivity: false}))
-    }
-
 
     render() {
         let activity = this.getActivity();
 
+        if (!activity) {
+            if (this.state.reqFetchActivity === 'sending') return <FullScreenLoader/>
+            if (this.state.reqFetchActivity === 'ko') return <Http404/>
+        }
         let comments = mergeItemsAndPendings(
             activity ? activity.comments : [],
             this.props.pending[CREATE_COMMENT],
@@ -84,22 +81,41 @@ class CommentsScreen extends Screen<Props, State> {
 
         const fullComments = comments.filter( c => c.built || c.pending);
 
+        this.setNavigatorTitle(this.props.navigator, {
+            title: i18n.t('comments_screen.title'),
+            subtitle: _.get(activity, 'resource.title')
+        })
+
         return (
             <MainBackground>
 
                 {activity && <KeyboardAwareScrollView
                     // style={{ backgroundColor: '#4c69a5' }}
                     // resetScrollToCoords={{ x: 0, y: 0 }}
-                    contentContainerStyle={styles.container}
-                    extraScrollHeight={20}
+                    contentContainerStyle={[
+                        // styles.container,
+                        {
+                            flex:1,
+                            justifyContent: 'flex-end',
+                            // backgroundColor: 'pink',
+                        }
+                    ]}
+                    style={{
+                        //    backgroundColor: 'pink',
+                    }}
+                    // extraScrollHeight={20}
                     scrollEnabled={false}
                     keyboardShouldPersistTaps='always'
                 >
 
-                    <View style={{flex:1, justifyContent: 'flex-end'}}>
+                    <View style={{
+                        flex:1,
+                        // justifyContent: 'flex-end',
+                        //    backgroundColor: 'brown'
+                    }}>
 
                         <Feed
-                            style={{flex:1}}
+                            // style={{flex:1}}
                             inverted
                             ListFooterComponent={this.renderDescription(activity)}
                             sections={this.splitCommentsInSections(fullComments)}
@@ -125,18 +141,35 @@ class CommentsScreen extends Screen<Props, State> {
                             }}
                             contentContainerStyle={{
                                 marginBottom: 4,
-                                paddingTop: 40,
-                                paddingBottom: 15,
-                                backgroundColor: Colors.greying}}
+                                // paddingTop: 40,
+                                paddingVertical: 15,
+                                // backgroundColor: Colors.greying
+                            }}
                             // empty={<Text style={[STYLES.empty_message, {fontSize: 20, paddingBottom: 50}]}>{i18n.t('activity_screen.comments.no_comments')}</Text>}
                         />
 
-                        <CommentInput
-                            activity={activity}
-                            containerStyle={{position: 'absolute', bottom: 0, padding: 0, backgroundColor: Colors.white}}
-                            placeholder={"activity_comments_screen.add_comment_placeholder"}
-                            autoFocus={this.props.autoFocus}
-                        />
+                        <View style={{height: 60, flex:0, backgroundColor: 'blue'}}>
+                            <CommentInput
+                                activity={activity}
+                                underlineColorAndroid={'transparent'}
+                                containerStyle={{
+                                    // position: 'absolute',
+                                    // bottom: 0,
+                                    // padding: 0,
+                                    flex: 0,
+                                    paddingHorizontal: 8,
+                                    backgroundColor: Colors.white,
+                                    // backgroundColor: 'orange',
+                                }}
+                                inputStyle={{
+                                    paddingBottom: 0,
+                                    marginBottom: 0,
+                                }}
+                                height={60}
+                                placeholder={i18n.t("activity_comments_screen.add_comment_placeholder")}
+                                autoFocus={this.props.autoFocus}
+                            />
+                        </View>
 
                     </View>
                 </KeyboardAwareScrollView>}
@@ -150,16 +183,18 @@ class CommentsScreen extends Screen<Props, State> {
             // skipLineup={this.props.skipLineup}
             navigator={this.props.navigator}
             descriptionNumberOfLines={8}
-            style={{
-                ...styleMargin(0, 0),
-            }}
+            // style={{
+            // ...styleMargin(0, 0),
+            // backgroundColor: 'green'
+            // }}
             descriptionContainerStyle={{
-                backgroundColor: 'white',
+                //    backgroundColor: 'white',
                 borderRadius: 6,
                 padding: 6,
+                paddingRight: 18,
                 paddingHorizontal: 10,
                 marginLeft: 36,
-                marginRight: 4,
+                marginRight: 14,
                 marginTop: 4,
                 marginBottom: 8,
                 flex: 0
@@ -294,7 +329,7 @@ const actions = (() => {
                 .withRoute(`${activityType}/${activityId}/comments`)
                 .addQuery({include: "user"})
                 .withBody({comment: {content: content}})
-                .disptachForAction2(CREATE_COMMENT, {activityId, activityType})
+                .createActionDispatchee(CREATE_COMMENT, {activityId, activityType})
                 ;
         }
     };
@@ -308,11 +343,11 @@ const reducer = (() => {
 
         switch (action.type) {
             case LOAD_COMMENTS.success(): {
-                let {activityId, activityType} = action.options;
+                let {activityId, activityType, mergeOptions} = action.options;
                 activityType = sanitizeActivityType(activityType);
                 let path = `${activityType}.${activityId}.relationships.comments.data`;
 
-                state = doDataMergeInState(state, path, action.payload.data);
+                state = doDataMergeInState(state, path, action.payload.data, mergeOptions);
                 break;
             }
 
@@ -324,29 +359,3 @@ const reducer = (() => {
 let screen = CommentsScreen;
 
 export {reducer, screen, actions};
-
-const styles = StyleSheet.create({
-    container: {
-        flex:1,
-        backgroundColor: Colors.greying
-    },
-    input:{
-        height: 40,
-    },
-    inputContainer:{
-        // height: 40,
-        borderColor: Colors.greyishBrown,
-        borderWidth: StyleSheet.hairlineWidth,
-        borderRadius: 20,
-        paddingLeft: 14,
-        paddingRight: 14,
-        margin: 10,
-        marginTop: 0,
-        backgroundColor: Colors.white
-    },
-    comment: {
-        marginLeft: 38,
-        marginTop: -4,
-        color: Colors.brownishGrey
-    }
-});

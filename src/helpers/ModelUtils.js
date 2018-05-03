@@ -457,7 +457,7 @@ export function pendingActionWrapper<Payload>(
             });
             resolve();
         }),
-        exec: (payload: Payload) => callFactory(payload).disptachForAction2(action)
+        exec: (payload: Payload) => callFactory(payload).createActionDispatchee(action)
     };
 }
 

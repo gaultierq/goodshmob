@@ -1,17 +1,14 @@
 // @flow
 
-import {requestPermissionsForLoggedUser} from "./notification";
-import {listenToUserChange} from "./CurrentUser";
-import CurrentUser from "./CurrentUser";
+import CurrentUser, {listenToUserChange} from "./CurrentUser";
 import watch from 'redux-watch'
 import EventBus from 'eventbusjs'
 
 const NEXT_STEP = 'NEXT_STEP';
 const SET_STEP = 'SET_STEP';
 
-export type OnBoardingStep = 'no_spam' | 'focus_add' | 'notification';
+export type OnBoardingStep = 'focus_add' | 'notification' | 'privacy' | 'noise' | 'private';
 
-const ALL_STEPS = ['no_spam', 'focus_add'];
 
 export const ON_BOARDING_STEP_CHANGED = 'ON_BOARDING_STEP_CHANGED';
 
@@ -20,11 +17,19 @@ class _OnBoardingManager implements OnBoardingManager {
 
     store: any;
 
+    ALL_STEPS: OnBoardingStep[];
+
     constructor() {
     }
 
     init(store: any) {
         this.store = store;
+
+        this.ALL_STEPS = ['focus_add'];
+        if (__WITH_NOTIFICATIONS__ && __IS_IOS__) {
+            this.ALL_STEPS.push('notification')
+        }
+        this.ALL_STEPS.push('privacy', 'noise', 'private')
 
         //TODO: let current user implement this, and warn everybody when something is changing
         // on user (now, or later):
@@ -38,21 +43,21 @@ class _OnBoardingManager implements OnBoardingManager {
                 let {forceOnBoardingCycle, onBoardingOnEveryLogin} = this.store.getState().config;
                 //step to set
                 if (forceOnBoardingCycle || (onBoardingOnEveryLogin || true) && CurrentUser.loggedSince() < 5000) {
-                    this.store.dispatch({type: SET_STEP, step: 'no_spam'});
+                    this.store.dispatch({type: SET_STEP, step: this.ALL_STEPS[0]});
                 }
                 //getPendingStep must be ok after init
-
-                if (this.getPendingStep() === null) {
-                    requestPermissionsForLoggedUser();
-                }
-                else {
-                    let unsubscribe = this.store.subscribe(() => {
-                        if (!this.getPendingStep()) {
-                            requestPermissionsForLoggedUser();
-                            unsubscribe();
-                        }
-                    });
-                }
+                //
+                // if (this.getPendingStep() === null) {
+                //     requestPermissionsForLoggedUser();
+                // }
+                // else {
+                //     let unsubscribe = this.store.subscribe(() => {
+                //         if (!this.getPendingStep()) {
+                //             requestPermissionsForLoggedUser();
+                //             unsubscribe();
+                //         }
+                //     });
+                // }
 
             }, triggerOnListen: true});
 
@@ -78,9 +83,9 @@ class _OnBoardingManager implements OnBoardingManager {
         return (state: any = {}, action: any) => {
 
             let nextStep = (current: OnBoardingStep) => {
-                let i = ALL_STEPS.indexOf(current);
+                let i = this.ALL_STEPS.indexOf(current);
                 if (i > -1) {
-                    return _.nth(ALL_STEPS, ++i)
+                    return _.nth(this.ALL_STEPS, ++i)
                 }
                 return null;
             };

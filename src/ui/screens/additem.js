@@ -84,7 +84,7 @@ export default class AddItemScreen extends Screen<Props, State> {
             safeDispatchAction.call(
                 this,
                 this.props.dispatch,
-                fetchItemCall(this.props.itemId).include('*').disptachForAction2(FETCH_ITEM),
+                fetchItemCall(this.props.itemId).include('*').createActionDispatchee(FETCH_ITEM),
                 'reqFetch'
             );
         }
@@ -106,12 +106,12 @@ export default class AddItemScreen extends Screen<Props, State> {
         let xml = (<View style={[styles.container]}>
             <Text>{i18n.t('create_list_controller.all_list')}</Text>
         </View>);
-        const style = {backgroundColor: Colors.green, padding: 10, marginTop: 10, marginRight: 8, marginLeft: 8,};
+        // const style = {backgroundColor: Colors.green, padding: 10, marginTop: 10, marginRight: 8, marginLeft: 8,};
         return (
             <KeyboardAwareScrollView
-                contentContainerStyle={{flex:1}}
-                scrollEnabled={true}
-                extraScrollHeight={20}
+                contentContainerStyle={{flex: __IS_IOS__ ? 0 : 1}}
+                // scrollEnabled={true}
+                // extraScrollHeight={20}
                 keyboardShouldPersistTaps='always'
                 // style={{position: 'absolute', bottom:0, top: 0}}
             >
@@ -152,6 +152,7 @@ export default class AddItemScreen extends Screen<Props, State> {
                                 returnKeyType={selectedLineupId ? 'go' : 'next'}
                                 onSubmitEditing={() => {selectedLineupId && this._doAdd(selectedLineupId)}}
                                 multiline={true}
+                                autoFocus={true}
                             />
                         </ItemCell>
                         {this.renderListSelector(selectedLineupId)}

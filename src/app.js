@@ -9,13 +9,13 @@ import thunk from "redux-thunk";
 
 import * as Api from './managers/Api';
 import {autoRehydrate, createTransform, persistStore} from 'redux-persist'
-import {Alert, AsyncStorage, Dimensions, StyleSheet, TouchableOpacity} from 'react-native'
+import {Alert, AsyncStorage, Dimensions, Linking, StyleSheet, TouchableOpacity} from 'react-native'
 import immutableTransform from './immutableTransform'
 import {REHYDRATE} from 'redux-persist/constants'
 import * as CurrentUser from './managers/CurrentUser'
 import {currentUserId} from './managers/CurrentUser'
 import * as globalProps from 'react-native-global-props';
-import * as notification from './managers/notification';
+import * as notification from './managers/NotificationManager';
 import * as DeviceManager from "./managers/DeviceManager";
 import * as UI from "./ui/UIStyles";
 import {init as initGlobal} from "./global";
@@ -33,7 +33,11 @@ import * as appActions from "./auth/actions";
 import OnBoardingManager from "./managers/OnBoardingManager";
 import StoreManager from "./managers/StoreManager";
 import BugsnagManager from "./managers/BugsnagManager";
+import NotificationManager from "./managers/NotificationManager";
 import {currentUser} from "./managers/CurrentUser";
+import type {OnBoardingStep} from "./managers/OnBoardingManager";
+import {registerLayoutAnimation} from "./ui/UIComponents";
+import {isLogged} from "./managers/CurrentUser";
 
 
 type AppMode = 'idle' | 'init_cache' | 'nospam' | 'logged' | 'unlogged' | 'upgrading_cache' | 'unknown'
@@ -94,6 +98,19 @@ export default class App {
         this.prepareRedux();
 
         this.registerScreens();
+
+        //TODO: find a better way of delaying this Linking init
+        setTimeout(()=> {
+            Linking.addEventListener('url', ({url}) => {
+                if (url) console.log('Linking: url event: ', url);
+                NavManager.goToDeeplink(url);
+            })
+
+            Linking.getInitialURL().then(url => {
+                if (url) console.log('Linking:Initial url is: ', url);
+                NavManager.goToDeeplink(url);
+            }).catch(err => console.error('Linking:An error occurred', err));
+        }, 500)
     };
 
     prepareUI() {
@@ -109,11 +126,11 @@ export default class App {
             }
         });
 
-        globalProps.setCustomView({
-            style: {
-                backgroundColor: 'transparent'
-            }
-        });
+        // globalProps.setCustomView({
+        //     style: {
+        //         backgroundColor: 'transparent'
+        //     }
+        // });
 
         globalProps.setCustomTouchableOpacity({
             activeOpacity: 0.8
@@ -136,16 +153,19 @@ export default class App {
         //     return DEFAULT_PROPS;
         // };
         // Getting rid of that ugly line on Android and adding some custom style to all TextInput components.
-        const customTextInputProps = {
-            underlineColorAndroid: 'rgba(0,0,0,0)',
-            style: {
-                // paddingVertical: 5,
-                // paddingHorizontal: 8,
-                backgroundColor: 'white'
-            }
-        };
 
-        globalProps.setCustomTextInput(customTextInputProps);
+
+        // const customTextInputProps = {
+        //     underlineColorAndroid: Colors.greyish,
+        // style: {
+        //     // paddingVertical: 5,
+        //     // paddingHorizontal: 8,
+        //     paddingBottom: 0,
+        //     marginBottom: 0,
+        //     backgroundColor: 'white'
+        // }
+        // };
+        // globalProps.setCustomTextInput(customTextInputProps);
 
 
         // Component.setState.prototype = function setState(imconpleteState, callback) {
@@ -245,7 +265,7 @@ export default class App {
         //managers init rely on a ready store
         //singletons
 
-        
+
         if (ErrorUtils) {
             const previousHandler = ErrorUtils.getGlobalHandler();
 
@@ -276,24 +296,32 @@ export default class App {
         //api in the end: we dont want to make any call during the app init
         Api.init(this.store);
 
-
-        // if (__WITH_BUGSNAG__) {
-        //     this.bugsnag = new Client();
-        //
-        //     console.error = (err) => {
-        //         if (typeof err === 'string') {
-        //             err = new Error(`Wrapped error: '${err}'` );
-        //         }
-        //         this.bugsnag.notify(err);
-        //     }
-        // }
-
         this.prepareUI();
 
         console.info("== app initialized ==");
 
         this.initialized = true;
         this.initializing = false;
+        this.onAppReady()
+    }
+
+    onAppReady() {
+        OnBoardingManager.listenToStepChange({
+            triggerOnListen: true,
+            callback: (step?: ?OnBoardingStep) => {
+                if (step === 'notification') {
+                    if (isLogged()) {
+                        let callback = () => {
+                            OnBoardingManager.onDisplayed('notification')
+                        }
+                        NotificationManager.requestPermissionsForLoggedUser()
+                            .catch(callback)
+                            .then(callback)
+                    }
+
+                }
+            }
+        })
     }
 
     registerScreens() {
@@ -352,11 +380,13 @@ export default class App {
         console.debug(`mode changed: new mode=${this.mode} (old mode=${oldMode})`);
 
         let testScreen;
+        let testScreenName = (__IS_IOS__ ? __TEST_SCREEN_IOS__ : __TEST_SCREEN_ANDROID__)
+        if (!testScreenName) testScreenName = __TEST_SCREEN__
 
-        if (__TEST_SCREEN__) {
-            testScreen = require("./testScreen")[__TEST_SCREEN__];
+        if (testScreenName) {
+            testScreen = require("./testScreen")[testScreenName];
             if (!testScreen) {
-                console.warn(`test screen not found${__TEST_SCREEN__}`);
+                console.warn(`test screen not found${testScreenName}`);
             }
         }
         let navigatorStyle = {...UI.NavStyles};
@@ -374,9 +404,10 @@ export default class App {
                     Navigation.startSingleScreenApp(testScreen);
                 }
                 else {
-                    notification.load();
+                    //TODO: move
+                    NotificationManager.init();
 
-                    BugsnagManager.setUser(currentUser(false) || {});
+                    BugsnagManager.setUser(currentUser(false));
 
                     DeviceManager.checkAndSendDiff();
 

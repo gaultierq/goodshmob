@@ -28,6 +28,8 @@ pod install --project-directory=ios
 
 ### Android
 
+Once I had to add local.properties in ./android with : `sdk.dir=/Users/qg/Library/Android/sdk` not sure why...
+
 In order to build the app on your Android device (without running the packager), you can use the following command:
 
 ```bash
@@ -63,6 +65,22 @@ dans `RCTDefines.h` set `RCT_DEV 1`
 
 - Display flow errors:  
 `./node_modules/flow-bin/flow-osx-v0.57.3/flow check --show-all-errors | grep 'Error: src'`
+
+- Deeplinking
+
+ios:
+```
+xcrun simctl openurl booted https://goodshitapp-staging.herokuapp.com/lists/eb124127-5ec7-428c-bb7c-1c82f994ddc2
+```
+
+
+android:
+```
+adb shell am start \
+        -W -a android.intent.action.VIEW \
+        -d https://goodshitapp-staging.herokuapp.com/sendings/98e59b99-ba77-4781-9842-9e5d02b13d7c it.goodsh.mob.debug
+```
+
 
 ## Troubleshooting
 

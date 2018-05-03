@@ -2,7 +2,17 @@
 
 import type {Node} from 'react';
 import React, {Component} from 'react';
-import {ActivityIndicator, BackHandler, FlatList, RefreshControl, SectionList, Text, View} from 'react-native';
+import {
+    ActivityIndicator,
+    BackHandler,
+    FlatList,
+    Keyboard,
+    RefreshControl,
+    SectionList,
+    Text,
+    TouchableWithoutFeedback,
+    View
+} from 'react-native';
 import {connect} from "react-redux";
 import {assertUnique} from "../../helpers/DataUtils";
 import ApiAction from "../../helpers/ApiAction";
@@ -10,7 +20,7 @@ import * as Api from "../../managers/Api";
 import {TRIGGER_USER_DIRECT_ACTION, TRIGGER_USER_INDIRECT_ACTION} from "../../managers/Api";
 import {isEmpty} from "lodash";
 import type {i18Key, ms, RequestState, Url} from "../../types";
-import {NavStyles, renderSimpleButton} from "../UIStyles";
+import {renderSimpleButton} from "../UIStyles";
 import {SearchBar} from 'react-native-elements'
 
 import type {ScreenVisibility} from "./Screen";
@@ -51,10 +61,10 @@ export type Props<T> = {
 
 export type FilterConfig<T> = {
     placeholder: i18Key,
-    onSearch: string => void,
+    renderFilter: () => Node,
     emptyFilterResult: string => Node,
     style: *,
-    applyFilter: (Array<T>, string) => Array<T>
+    applyFilter: (Array<T>) => Array<T>
 };
 
 type State = {
@@ -64,6 +74,7 @@ type State = {
     isPulling?: boolean,
     lastEmptyResultMs?: number,
     moreLink?: Url,
+
     filter?:? string
 };
 
@@ -91,6 +102,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     lastFetchFail: number;
     manager: RequestManager = new RequestManager();
     logger: *;
+    filterNode;
 
     constructor(props: Props<T>) {
         super(props);
@@ -212,20 +224,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             }
         }
 
-        if (displayFirstLoader) {
-            return <FullScreenLoader/>;
-            // return <View style={{
-            //     flex:1, width: "100%", height: "100%", alignItems: 'center', justifyContent: 'center',
-            //     position: 'absolute', zIndex: 1000
-            // }}>
-            //     <Spinner
-            //         // style={styles.spinner}
-            //         isVisible={true}
-            //         size={__DEVICE_WIDTH__ / 5}
-            //         type={this.type}
-            //         color={this.color}/>
-            // </View>
-        }
+        if (displayFirstLoader) return <FullScreenLoader/>;
 
 
         let allViews = [];
@@ -238,16 +237,21 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
         const filter = this.props.filter;
         if (filter) {
-            allViews.push(this.renderSearchBar(filter));
-            if (this.state.filter) {
+            // allViews.push(this.renderSearchBar(filter));
+            // allViews.push(filter.renderFilter());
 
-                items = filter.applyFilter(items, this.state.filter);
-                if (_.isEmpty(items)) {
-                    allViews.push(filter.emptyFilterResult(this.state.filter));
-                }
+            items = filter.applyFilter(items);
+            if (_.isEmpty(items)) {
+                allViews.push(filter.emptyFilterResult(this.state.filter));
             }
         }
 
+        const style1 = [style];
+        if (firstEmptyLoader) style1.push({minHeight: 150});
+        // if (filter
+        //     && _.isEmpty(this.state.filter) && this.state.isFilterFocused) {
+        //     style1.push({opacity: 0.4})
+        // }
         let params =  {
             ref: "feed",
             renderItem,
@@ -257,101 +261,39 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             onEndReached: this.onEndReached.bind(this),
             onEndReachedThreshold: 0.1,
             ListFooterComponent: !firstEmptyLoader && this.renderFetchMoreLoader(ListFooterComponent),
-            style: [{...style}, firstEmptyLoader ? {minHeight: 150} : {}],
+            style: style1,
             ListHeaderComponent: !firstEmptyLoader && ListHeaderComponent,
             renderSectionHeader: !firstEmptyLoader && renderSectionHeader,
             onScroll: this._handleScroll,
+            onScrollBeginDrag: Keyboard.dismiss,
             keyboardShouldPersistTaps: 'always',
             ...attributes
         };
 
+        let listNode;
         if (sections) {
-            allViews.push(React.createElement(SectionList, {sections: items, ...params}));
+            // allViews.push(React.createElement(SectionList, {sections: items, ...params}));
+            listNode = React.createElement(SectionList, {sections: items, ...params});
         }
         else {
-            allViews.push(React.createElement(FlatList, {data: items, ...params}));
+            // allViews.push(React.createElement(FlatList, {data: items, ...params}));
+            listNode = React.createElement(FlatList, {data: items, ...params});
         }
+        allViews.push(<View style={{flex:1}}>
+            {listNode}
+        </View>);
+
 
         return <View style={[this.props.style, {flex: 1}]}>{allViews}</View>
     }
 
     isFiltering() {
-        return !!this.state.filter;
+        return !!_.get(this, 'props.filter.token');
     }
 
     debugOnlyEmptyFeeds() {
         return this.props.config && !!this.props.config.onlyEmptyFeeds;
     }
-
-    applyFilter(data, isSection: boolean = false) {
-        if (this.state.filter) {
-
-            let searchIn = data;
-
-            let fuse = new Fuse(searchIn, {
-                keys: [
-                    {
-                        name: 'name',
-                        weight: 0.6
-                    },
-                    {
-                        name: 'title',
-                        weight: 0.4
-                    }],
-                // keys: ['name', 'title'],
-                sort: true,
-                threshold: 0.6
-            });
-            data = fuse.search(this.state.filter);
-        }
-
-
-        return data;
-    }
-
-    renderSearchBar(filter: FilterConfig<T>){
-
-        let {onSearch, style, placeholder} = filter;
-
-        let font = {
-            fontSize: 16,
-            lineHeight: 22,
-            textAlign: 'left',
-        };
-
-        // const color = Colors.grey142;
-        // //TODO: adjust fr, en margins
-        // //TODO: center placeholder ! https://github.com/agiletechvn/react-native-search-box
-        // const placeholderConfig = {
-        //     placeholder: i18n.t(placeholder),
-        //     //TOREMOVE
-        //     placeholderCollapsedMargin: this.isFrenchLang ? 95 : 65,
-        //     //TOREMOVE
-        //     searchIconCollapsedMargin: this.isFrenchLang ? 110 : 80,
-        // };
-
-        return (
-            <View key={'searchbar_container'} style={[style]}>
-
-                <GSearchBar
-                    // lightTheme
-                    onChangeText={filter => this.setState({filter})}
-                    onClearText={()=>this.setState({filter: null})}
-                    placeholder={i18n.t(placeholder)}
-                    // autoCapitalize='none'
-                    clearIcon={!!this.state.filter && {color: '#86939e'}}
-                    // containerStyle={{backgroundColor: NavStyles.navBarBackgroundColor, marginTop:0 ,marginBottom: 0, borderBottomWidth: 0, borderTopWidth: 0,}}
-                    // inputStyle={{backgroundColor: Colors.greying, textAlign: 'center', marginBottom: 5, fontSize: 15}}
-                    // autoCorrect={false}
-                    style={{margin: 0,}}
-                    // returnKeyType={'search'}
-                    value={this.state.filter}
-
-                />
-            </View>
-        );
-    }
-
 
     //displayed when no data yet, and loading for the first time
 
@@ -409,6 +351,9 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     _handleScroll = (event: Object) => {
+        if (this.props.onScroll) {
+            this.props.onScroll(event)
+        }
         let lastEvent = event.nativeEvent;
         this.lastEvent = lastEvent;
 
@@ -510,7 +455,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     fetchIt(options?: any = {}) {
-        let {afterId, trigger} = options;
+        let {afterId, trigger, drop} = options;
         let requestName = afterId ? 'isFetchingMore' : 'isFetchingFirst';
 
         // $FlowFixMe
@@ -544,7 +489,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             }
 
             this.props
-                .dispatch(call.disptachForAction2(fetchSrc.action, {trigger, ...fetchSrc.options}))
+                .dispatch(call.createActionDispatchee(fetchSrc.action, {trigger, ...fetchSrc.options, mergeOptions: {drop}}))
                 .then(({data, links})=> {
                     this.logger.debug("disptachForAction" + JSON.stringify(this.props.fetchSrc.action));
                     if (!data) {
@@ -596,8 +541,9 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         if (this.state.isPulling) return;
         this.setState({isPulling: true});
 
+        this.manager.clearEvents();
         if (this.canFetch()) {
-            this.fetchIt()
+            this.fetchIt({drop: true})
                 .catch(err=>{console.warn("error while fetching:" + err)})
                 .then(()=>this.setState({isPulling: false}));
         }

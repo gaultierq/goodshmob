@@ -67,7 +67,7 @@ class LineupScreen extends Screen<Props, State> {
             else {
                 let subtitle = () => {
                     const user = _.get(lineup, 'user');
-                    //MagicString
+                    //FIXME: MagicString
                     return user && "par " + fullName(user)
                 };
                 this.setNavigatorTitle(this.props.navigator, {title: _.get(lineup, 'name'), subtitle: subtitle()});
@@ -196,7 +196,7 @@ const actions = {
             .withMethod('DELETE')
             .withRoute(`savings/${saving.id}`);
 
-        return call.disptachForAction2(UNSAVE);
+        return call.createActionDispatchee(UNSAVE);
     }
 };
 
@@ -209,9 +209,9 @@ const reducer = (() => {
 
         switch (action.type) {
             case FETCH_SAVINGS.success(): {
-                let {listId} = action.options;
+                let {listId, mergeOptions} = action.options;
                 let path = `lists.${listId}.relationships.savings.data`;
-                state = doDataMergeInState(state, path, action.payload.data);
+                state = doDataMergeInState(state, path, action.payload.data, mergeOptions);
                 break;
             }
         }

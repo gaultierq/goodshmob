@@ -16,7 +16,7 @@ import * as activityAction from "../actions";
 import {getPendingLikeStatus} from "../../rights";
 import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC} from "../../fonts";
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
-import User from "react-native-firebase/lib/modules/auth/user";
+import User from "react-native-firebase/lib/modules/auth/User";
 import {stylePadding} from "../../UIStyles";
 import {firstName} from "../../../helpers/StringUtils";
 import ActivityStatus from "./ActivityStatus";
@@ -141,9 +141,7 @@ export default class ActivityCell extends React.Component<Props, State> {
         let navigator: RNNNavigator = this.props.navigator;
         return this.wrapUserAvatar(
             <GTouchable onPress={() => seeUser(navigator, user)}>
-                <Avatar user={user} style={{
-                    dim: AVATAR_DIM,
-                }}/>
+                <Avatar user={user} />
             </GTouchable>,
             styles
         )

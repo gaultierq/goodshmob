@@ -15,6 +15,7 @@ import {InteractionScreen} from "./interactions";
 import Screen from "../components/Screen";
 import {Colors} from "../colors";
 import {NavStyles} from "../UIStyles";
+import ShareButton from "../components/ShareButton";
 
 type Props = {
     navigator:any,
@@ -77,6 +78,7 @@ export class CommunityScreen extends Screen<Props, State> {
                 userId={currentUserId()}
                 navigator={navigator}
                 //renderItem={(item) => this.renderItem(item)}
+                ListHeaderComponent={<ShareButton text={i18n.t('actions.invite')}/>}
                 ListFooterComponent={this.renderFriendsSuggestion.bind(this)}
                 style={{backgroundColor: Colors.white}}
                 //bug: drawer passProps not working [https://github.com/wix/react-native-navigation/issues/663]

@@ -11,7 +11,7 @@ I18n.translations = {
 var old = I18n.missingTranslation;
 
 I18n.missingTranslation = function(scope, options) {
-    console.error("missing locale:" + JSON.stringify([scope,options]));
+    console.error("missing locale:" , [scope,options]);
     return old.apply(I18n, [scope, options])
 };
 

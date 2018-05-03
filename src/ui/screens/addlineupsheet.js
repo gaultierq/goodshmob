@@ -88,7 +88,7 @@ export default class AddLineupSheet extends Component<Props, State> {
                     <View style={[styles.header, {flexDirection: 'column'}]}>
                         <SmartInput
                             execAction={(input: string) => this.createLineup(input)}
-                            placeholder={"create_list_controller.placeholder"}
+                            placeholder={i18n.t("create_list_controller.placeholder")}
                             button={<Text>{i18n.t('actions.create')}</Text>}
                             returnKeyType={'go'}
                             inputContainerStyle={{borderWidth: 0}}
