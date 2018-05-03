@@ -61,6 +61,18 @@ class _NavManager implements NavManager {
             });
             return true;
         }
+        if (main === 'users') {
+            let id = _.nth(parts, 2);
+            if (!isId(id)) return false;
+
+            this.showModal({
+                screen: 'goodsh.UserScreen', // unique ID registered with Navigation.registerScreen
+                passProps: {
+                    userId: id,
+                },
+            });
+            return true;
+        }
         if (isActivityType(main)) {
             let activityType = main;
             let id = _.nth(parts, 2);
