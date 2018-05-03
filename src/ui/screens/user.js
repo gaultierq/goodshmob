@@ -20,6 +20,7 @@ import {fullName} from "../../helpers/StringUtils";
 import * as Api from "../../managers/Api"
 import {buildData} from "../../helpers/DataUtils"
 import ApiAction from "../../helpers/ApiAction"
+import {getUserAndTheirLists} from "../../redux/UserActions"
 
 type Props = {
     userId: Id,
@@ -36,20 +37,6 @@ const mapStateToProps = (state, ownProps) => ({
     data: state.data,
     pending: state.pending
 });
-
-const GET_USER = ApiAction.create("get_user", "get the user");
-const actions = (() => {
-    return {
-        getUserAndTheirLists: (userId): Api.Call => new Api.Call()
-            .withMethod('GET')
-            .withRoute(`users/${userId}`)
-            .addQuery({
-                    include: ""
-                }
-            )
-            .createActionDispatchee(GET_USER),
-    };
-})();
 
 @logged
 @connect(mapStateToProps)
@@ -71,7 +58,7 @@ export default class UserScreen extends Screen<Props, State> {
         Api.safeDispatchAction.call(
             this,
             this.props.dispatch,
-            actions.getUserAndTheirLists(this.props.userId),
+            getUserAndTheirLists(this.props.userId),
             'reqFetchUser'
         )
     }
