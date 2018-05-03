@@ -49,7 +49,7 @@ export default class ChangeLineupName extends Component<Props, State> {
             placeholder={i18n.t("create_list_controller.placeholder")}
             numberOfLines={1}
             maxLength={100}
-            height={200}
+            height={600}
             title={i18n.t("actions.change_description")}
         />
     }
