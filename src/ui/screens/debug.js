@@ -8,7 +8,7 @@ import {CheckBox} from "react-native-elements";
 import {CONFIG_SET} from "../../reducers/dataReducer";
 import Screen from "../components/Screen";
 // import codePush from "react-native-code-push";
-import {Messenger} from "../../managers/Messenger"
+import _Messenger from "../../managers/Messenger"
 import Config from 'react-native-config'
 import {Colors} from "../colors";
 import BugsnagManager from "../../managers/BugsnagManager";
@@ -118,7 +118,7 @@ export default class DebugScreen extends Screen<Props, State> {
     copyStorage() {
         this.getStorage().then(storage=> {
             Clipboard.setString(storage);
-            Messenger.sendMessage("copié!");
+            _Messenger.sendMessage("copié!");
         })
     }
 
