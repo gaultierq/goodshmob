@@ -17,7 +17,7 @@ import GTouchable from "../../GTouchable";
 import * as Nav from "../../Nav";
 import {CREATE_SAVING, doUnsave, SAVING_DELETION} from "../../lineup/actions";
 import StoreManager from "../../../managers/StoreManager";
-import Messenger from "../../../managers/Messenger";
+import _Messenger from "../../../managers/Messenger";
 import Config from "react-native-config";
 import ItemCell from "../../components/ItemCell";
 import type {Description, Visibility} from "../../screens/save";
@@ -232,7 +232,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
         )).then(pendingId => {
             //console.info(`saving ${saving.id} unsaved`)
 
-            Messenger.sendMessage(
+            _Messenger.sendMessage(
                 //MagicString
                 i18n.t("activity_action_bar.goodsh_bookmarked", {lineup: "Goodshbox"}),
                 {
@@ -421,7 +421,7 @@ export function unsaveOnce(saving: Saving, dispatch: *) {
 
                     dispatch(doUnsave(saving.pending, saving.id, lineupId, delayMs)).then((pendingId) => {
                         //console.info(`saving ${saving.id} unsaved`)
-                        Messenger.sendMessage(
+                        _Messenger.sendMessage(
                             i18n.t("activity_action_bar.goodsh_deleted"),
                             {
                                 timeout: delayMs,

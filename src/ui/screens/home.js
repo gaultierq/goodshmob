@@ -21,12 +21,12 @@ import {connect} from "react-redux";
 import ActionButton from 'react-native-action-button';
 import type {Id, Lineup, RNNNavigator, Saving, SearchToken} from "../../types";
 import {List} from "../../types"
-import Snackbar from "react-native-snackbar"
+import _Messenger from "../../managers/Messenger"
 import {stylePadding, STYLES} from "../UIStyles";
 import {currentGoodshboxId, currentUserId, isCurrentUserId, logged} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
-import {LINEUP_DELETION, patchLineup} from "../lineup/actions";
+import {CREATE_SAVING, LINEUP_DELETION, patchLineup} from "../lineup/actions";
 import * as Nav from "../Nav";
 import {startAddItem} from "../Nav";
 import Screen from "../components/Screen";
@@ -454,11 +454,13 @@ class HomeScreen extends Screen<Props, State> {
             [
                 {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
                 {text: i18n.t("actions.ok"), onPress: () => {
+
+                        let delayMs = 4000;
                         this.props.dispatch(LINEUP_DELETION.pending({lineupId}, {delayMs, lineupId}))
                             .then(pendingId => {
-                                Snackbar.show({
-                                        title: i18n.t("activity_item.buttons.deleted_list"),
-                                        duration: Snackbar.LENGTH_LONG,
+                                _Messenger.sendMessage(i18n.t("activity_item.buttons.deleted_list"),
+                                    {
+                                        timeout: delayMs,
                                         action: {
                                             title: i18n.t("actions.undo"),
                                             color: 'green',
@@ -468,6 +470,7 @@ class HomeScreen extends Screen<Props, State> {
                                         },
                                     }
                                 );
+
                             });
                     }
                 },

@@ -3,6 +3,7 @@
 import CurrentUser, {listenToUserChange} from "./CurrentUser";
 import watch from 'redux-watch'
 import EventBus from 'eventbusjs'
+import Config from 'react-native-config'
 
 const NEXT_STEP = 'NEXT_STEP';
 const SET_STEP = 'SET_STEP';
@@ -11,6 +12,7 @@ export type OnBoardingStep = 'focus_add' | 'notification' | 'privacy' | 'noise' 
 
 
 export const ON_BOARDING_STEP_CHANGED = 'ON_BOARDING_STEP_CHANGED';
+const TIME_BETWEEN_TIPS_MS = Config.TIME_BETWEEN_TIPS_MS;
 
 class _OnBoardingManager implements OnBoardingManager {
     id = Math.random();
@@ -72,7 +74,15 @@ class _OnBoardingManager implements OnBoardingManager {
     }
 
     getPendingStep(): ?OnBoardingStep {
-        return this.store.getState().onBoarding.nextStep;
+        if (Date.now () - this.getLastTimeShown() > TIME_BETWEEN_TIPS_MS) {
+            return this.store.getState().onBoarding.nextStep;
+        } else {
+            return null
+        }
+    }
+
+    getLastTimeShown() {
+        return this.store.getState().onBoarding.lastShown;
     }
 
     toString() {
@@ -92,10 +102,10 @@ class _OnBoardingManager implements OnBoardingManager {
 
             switch (action.type) {
                 case NEXT_STEP:
-                    state = {...state, nextStep: nextStep(state.nextStep)};
+                    state = {...state, nextStep: nextStep(state.nextStep), lastShown: Date.now()};
                     break;
                 case SET_STEP:
-                    state = {...state, nextStep: action.step};
+                    state = {...state, nextStep: action.step, lastShown: 0};
                     break;
             }
             return state;
@@ -103,11 +113,12 @@ class _OnBoardingManager implements OnBoardingManager {
     }
 
     onDisplayed(step: OnBoardingStep): void {
-        this.store.dispatch({type: NEXT_STEP});
+        this.store.dispatch({type: NEXT_STEP, lastShown: Date.now()});
     }
 
     listenToStepChange(options: {callback: (step?: ?OnBoardingStep) => void, triggerOnListen: ?boolean}) {
         const {callback, triggerOnListen} = options;
+
         let triggering;
 
         EventBus.addEventListener(ON_BOARDING_STEP_CHANGED, event => {
@@ -115,7 +126,7 @@ class _OnBoardingManager implements OnBoardingManager {
                 console.warn("looping");
                 return;
             }
-            const step: OnBoardingStep = event.target.step;
+            const step: OnBoardingStep = this.getPendingStep();
             callback(step);
         });
 
@@ -124,6 +135,7 @@ class _OnBoardingManager implements OnBoardingManager {
             callback(this.getPendingStep());
             triggering = false;
         }
+
     }
 }
 

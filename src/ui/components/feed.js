@@ -108,7 +108,25 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         super(props);
         this.logger = props.displayName && createConsole(props.displayName) || console;
         this.createdAt = Date.now();
+
+        if (props.navigator) {
+            props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+        }
         // this.postFetchFirst();
+    }
+
+    onNavigatorEvent(event) {
+        if (event.id === 'bottomTabReselected') {
+
+            const type = this.refs.feed.constructor.name;
+            if (type == 'SectionList') {
+                this.refs.feed.scrollToLocation({sectionIndex: 0,
+                    itemIndex: 0,
+                    viewOffset: 50})
+            } else if (type == 'FlatList') {
+                this.refs.feed.scrollToOffset({x: 0, y: 0, animated: true});
+            }
+        }
     }
 
     componentWillReceiveProps(nextProps: Props<*>) {

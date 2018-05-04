@@ -5,7 +5,7 @@ import {CheckBox} from "react-native-elements";
 import {connect} from "react-redux";
 import {logged} from "../../managers/CurrentUser"
 
-import Snackbar from "react-native-snackbar"
+import _Messenger from "../../managers/Messenger"
 import ModalTextInput from "./modalTextInput";
 import {patchLineup} from "../lineup/actions";
 
@@ -49,7 +49,7 @@ export default class ChangeLineupName extends Component<Props, State> {
             placeholder={i18n.t("create_list_controller.placeholder")}
             numberOfLines={1}
             maxLength={100}
-            height={200}
+            height={600}
             title={i18n.t("actions.change_description")}
         />
     }
@@ -62,7 +62,7 @@ export default class ChangeLineupName extends Component<Props, State> {
             .then(()=> {
                 this.setState({changeLinupTitleId: null})
             })
-            .then(()=> Snackbar.show({title: i18n.t("activity_item.buttons.modified_list")}))
+            .then(()=> _Messenger.sendMessage(i18n.t("activity_item.buttons.modified_list")))
             ;
     }
 
