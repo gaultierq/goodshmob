@@ -13,8 +13,6 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
-import {TabBar, TabViewAnimated, TabViewPagerPan} from 'react-native-tab-view';
-
 import {SearchBar} from 'react-native-elements'
 
 import type {Item, List} from "../../types";

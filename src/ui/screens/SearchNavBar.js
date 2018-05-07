@@ -9,10 +9,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
-import {TabBar, TabViewAnimated, TabViewPagerPan} from 'react-native-tab-view';
-
 import {SearchBar} from 'react-native-elements'
-
 import type {SearchToken} from "../../types";
 import {Navigation} from 'react-native-navigation';
 import GSearchBar from "../GSearchBar";

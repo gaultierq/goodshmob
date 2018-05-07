@@ -2,7 +2,6 @@
 
 import React from 'react';
 import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {TabBar, TabViewAnimated} from 'react-native-tab-view';
 import {SearchBar} from 'react-native-elements'
 import type {SearchCategoryType, SearchTrigger} from "../ui/screens/search";
 import type {RNNNavigator, SearchToken} from "../types";
