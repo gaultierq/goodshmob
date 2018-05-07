@@ -9,6 +9,8 @@ import {pendingActionWrapper} from "../../helpers/ModelUtils";
 import type {Visibility} from "../screens/additem";
 import ApiAction from "../../helpers/ApiAction";
 import {UNSAVE} from "../activity/actionTypes";
+import {Alert} from "react-native";
+import Snackbar from "react-native-snackbar";
 
 export const FETCH_LINEUP = ApiAction.create("fetch_lineup", "retrieve a lineup details");
 export const FETCH_SAVINGS = ApiAction.create("fetch_savings", "retrieve savings info");
@@ -102,4 +104,38 @@ export function doUnsave(pending, id, lineupId, delayMs?: ms) {
     return pending ? CREATE_SAVING.undo(id) : SAVING_DELETION.pending(
         {savingId: id, lineupId},
         {delayMs, id, lineupId, scope: {activityId: id, lineupId}});
+}
+
+
+
+export function deleteLineup(dispatch: any, lineup: List) {
+    let delayMs = 3000;
+    //deleteLineup(lineup.id, delayMs)
+    const lineupId = lineup.id;
+    return Alert.alert(
+        i18n.t("alert.delete.title"),
+        i18n.t("alert.delete.label"),
+        [
+            {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+            {text: i18n.t("actions.ok"), onPress: () => {
+                    dispatch(LINEUP_DELETION.pending({lineupId}, {delayMs, lineupId}))
+                        .then(pendingId => {
+                            Snackbar.show({
+                                    title: i18n.t("activity_item.buttons.deleted_list"),
+                                    duration: Snackbar.LENGTH_LONG,
+                                    action: {
+                                        title: i18n.t("actions.undo"),
+                                        color: 'green',
+                                        onPress: () => {
+                                            dispatch(LINEUP_DELETION.undo(pendingId))
+                                        },
+                                    },
+                                }
+                            );
+                        });
+                }
+            },
+        ],
+        { cancelable: true }
+    );
 }

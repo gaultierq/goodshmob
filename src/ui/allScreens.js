@@ -10,7 +10,7 @@ import {screen as ActivityDetailScreen} from './activity/activityDetail';
 import {LineupListScreen} from './screens/lineuplist';
 import AddInScreen from './screens/addinscreen';
 import {screen as LineupScreen} from './screens/lineup';
-import {screen as HomeScreen} from './screens/home';
+import HomeScreen from './screens/home';
 import {screen as CommentsScreen} from './screens/comments';
 import {screen as SaveScreen} from './screens/save';
 import {screen as ShareScreen} from './screens/share';

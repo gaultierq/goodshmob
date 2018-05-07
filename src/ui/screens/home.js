@@ -7,48 +7,37 @@ import {
     Button,
     Dimensions,
     Image,
-    Platform,
+    Keyboard,
     KeyboardAvoidingView,
+    Platform,
     StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
     View,
-    Keyboard,
 } from 'react-native';
 
 import {connect} from "react-redux";
 import ActionButton from 'react-native-action-button';
-import type {Id, Lineup, RNNNavigator, Saving, SearchToken} from "../../types";
-import {List} from "../../types"
-import Snackbar from "react-native-snackbar"
+import type {Id, Lineup, RNNNavigator, Saving} from "../../types";
 import {stylePadding, STYLES} from "../UIStyles";
-import {currentGoodshboxId, currentUserId, isCurrentUserId, logged} from "../../managers/CurrentUser"
+import {currentGoodshboxId, currentUserId, logged} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
-import {LINEUP_DELETION, patchLineup} from "../lineup/actions";
-import * as Nav from "../Nav";
-import {startAddItem} from "../Nav";
+import {displayHomeSearch, displayLineupActionMenu, seeList, startAddItem} from "../Nav";
 import Screen from "../components/Screen";
 import {Colors} from "../colors";
 import {PROFILE_CLICKED} from "../components/MyAvatar";
 import LineupTitle from "../components/LineupTitle";
-import LineupCellSaving, {ITEM_DIM} from "../components/LineupCellSaving";
 
 import GTouchable from "../GTouchable";
 import AddLineupComponent from "../components/addlineup";
-import type {OnBoardingStep} from "../../managers/OnBoardingManager";
 import OnBoardingManager from "../../managers/OnBoardingManager";
-// $FlowFixMe
-import {AppTour, AppTourSequence, AppTourView} from "../../../vendors/taptarget";
-import LineupHorizontal, {ITEM_SEP, LineupH1} from "../components/LineupHorizontal";
-import {seeList} from "../Nav";
-import {seeActivityDetails} from "../Nav";
+import LineupHorizontal, {LineupH1} from "../components/LineupHorizontal";
 import UserLineups from "./userLineups";
 import {floatingButtonScrollListener, registerLayoutAnimation} from "../UIComponents";
-import BottomSheet from "react-native-bottomsheet";
-import {displayShareLineup} from "../Nav";
 import {Tip, TipConfig} from "../components/Tip";
+import {HomeOnBoardingHelper} from "./HomeOnBoardingHelper";
 
 
 type Props = {
@@ -60,33 +49,16 @@ type State = {
     focusedSaving?: Saving,
     isActionButtonVisible: boolean,
     filterFocused?: boolean,
-    currentTip?: TipConfig
+    currentTip?: ?TipConfig
 };
 
-const TIP_PRIVACY: TipConfig = {
-    type: 'visibility',
-    keys: 'tips.visibility',
-    materialIcon: 'lock',
-}
-const TIP_NOISE: TipConfig = {
-    type: 'noise',
-    keys: 'tips.noise',
-    materialIcon: 'notifications-off',
-}
-const TIP_FULL_PRIVATE: TipConfig = {
-    type: 'full_private',
-    keys: 'tips.full_private',
-    materialIcon: 'lock',
-}
-// const TEST_TIP = TIP_PRIVACY;
-// const TEST_TIP = TIP_PRIVACY;
 
 @logged
 @connect(state=>({
     config: state.config,
     onBoarding: state.onBoarding,
 }))
-class HomeScreen extends Screen<Props, State> {
+export default class HomeScreen extends Screen<Props, State> {
 
     static navigatorButtons = {
 
@@ -103,12 +75,14 @@ class HomeScreen extends Screen<Props, State> {
                 }
         ],
         rightButtons: [
-            // {
-            //     icon: require('../../img2/searchHeaderIcon.png'),
-            //     id: 'search'
-            // }
         ],
     };
+
+    static navigatorStyle = {
+        navBarNoBorder: true,
+        topBarElevationShadowEnabled: false
+    };
+
 
     state = {
         focusedSaving: false,
@@ -116,12 +90,7 @@ class HomeScreen extends Screen<Props, State> {
         // currentTip: TEST_TIP
     }
 
-    static navigatorStyle = {
-        navBarNoBorder: true,
-        topBarElevationShadowEnabled: false
-    };
-
-    appTourTargets = new Map();
+    onBoardingHelper = new HomeOnBoardingHelper()
 
 
     constructor(props: Props){
@@ -166,113 +135,32 @@ class HomeScreen extends Screen<Props, State> {
                     });
                     break;
                 case 'search':
-                    this.launchSearch();
+                    displayHomeSearch(this.props.navigator, "")
                     break;
             }
         }
     }
 
-
-    launchSearch(token?: SearchToken) {
-        let navigator = this.props.navigator;
-
-        navigator.showModal({
-            screen: 'goodsh.HomeSearchScreen', // unique ID registered with Navigation.registerScreen
-            animationType: 'none',
-            backButtonHidden: true,
-            passProps: {
-                onClickClose: () => navigator.dismissModal({animationType: 'none'}),
-                token
-            },
-            backButtonHidden: true,
-            navigatorButtons: {
-                leftButtons: [],
-                rightButtons: [
-                    {
-                        id: Nav.CLOSE_MODAL,
-                        title: i18n.t("actions.cancel")
-                    }
-                ],
-            },
-            //
-            // navigatorButtons: Nav.CANCELABLE_SEARCH_MODAL(),
-        });
-    }
-
     componentDidAppear() {
 
-        //if a new onBoarding step is broadcasted, then display it
-        OnBoardingManager.listenToStepChange({
-            triggerOnListen: true,
-            callback: (step?: ?OnBoardingStep) => {
-                const visible = this.isVisible();
-                console.debug(`OnBoardingManager:step=${step} visible=${visible}`);
-                if (!visible) return;
-                let oldTip = this.state.currentTip;
-                let newTip = null;
-                switch (step) {
-                    case 'focus_add':
-                        setTimeout(() => {
-                            this.displayFocusAdd();
-                        }, 2000);
-                        break;
-                    case 'privacy':
-                        newTip = TIP_PRIVACY;
-                        break
-                    case 'noise':
-                        newTip = TIP_NOISE;
-                        break
-                    case 'private':
-                        newTip = TIP_FULL_PRIVATE;
-                        break
-                }
-                if (newTip !== oldTip) {
-                    registerLayoutAnimation("opacity")
-                    this.setState({currentTip: newTip})
-                }
-
+        this.onBoardingHelper.listenTipChange(tip => {
+            if (tip !== this.state.currentTip) {
+                console.debug(`new tip`, tip)
+                registerLayoutAnimation("opacity")
+                this.setState({currentTip: tip})
             }
         })
     }
 
-    displayFocusAdd() {
-        if (!this.isVisible()) {
-            console.warn('home is not visible anymore. aborting');
-            return false;
-        }
-
-        if (this.appTourTargets.size > 0) {
-            let appTourSequence = new AppTourSequence();
-            this.appTourTargets.forEach((appTourTarget, view) => {
-                appTourSequence.add(appTourTarget);
-            });
-            AppTour.ShowSequence(appTourSequence);
-
-
-            //as we don't have a callback on when the tour is finished,
-            // we are using a 10s timer, to go to the next onBoardingStep
-            setTimeout(() => {
-                OnBoardingManager.onDisplayed('focus_add')
-            }, 10000);
-
-        }
-        else {
-            console.warn('appTourTargets.size === 0. aborting');
-        }
-        return true;
-    }
-
-    // _onScroll = floatingButtonScrollListener.call(this);
-
     render() {
-
         const userId = currentUserId();
         const navigator = this.props.navigator;
 
+        if (this.isVisible()) {
+            this.onBoardingHelper.handleFocusAdd()
+        }
+
         return (
-            // FIXME: workflow w/ padding bottom to fix the last cutted item
-            // in the lineups list, a better solution might come with #371
-            // 70 is the size of a lineup cell
             <View style={{flex:1}}>
 
                 <UserLineups
@@ -315,42 +203,7 @@ class HomeScreen extends Screen<Props, State> {
                                 data: _.slice(lineups, 1),
                                 title: i18n.t("lineups.mine.title"),
                                 renderSectionHeaderChildren:() => <AddLineupComponent navigator={this.props.navigator}/>,
-                                renderItem: ({item, index})=>(
-                                    <LineupH1 lineup={item} navigator={navigator}
-                                              withMenuButton={true}
-                                              onPressEmptyLineup={() => startAddItem(navigator, item.id)}
-                                              renderEmpty={this.renderEmptyLineup(navigator, item)}
-                                              // TODO: watch https://github.com/facebook/react-native/issues/13202
-                                              // ListHeaderComponent={
-                                              //     () => <GTouchable
-                                              //         onPress={() => startAddItem(navigator, item.id)}
-                                              //         deactivated={item.pending}
-                                              //     >
-                                              //         {
-                                              //             LineupHorizontal.renderEmptyCell(0, true)
-                                              //         }
-                                              //     </GTouchable>
-                                              //
-                                              // }
-                                              // initialScrollIndex={1}
-                                              // initialNumToRender={6}
-                                              // getItemLayout={(data, index) => (
-                                              //     {length: ITEM_DIM, offset: (ITEM_DIM + ITEM_SEP)* index, index}
-                                              // )}
-                                              // onScrollToIndexFailed={err=>{console.warn('onScrollToIndexFailed',err)}}
-                                              // contentOffset={{y: ITEM_DIM + ITEM_SEP, x: ITEM_DIM + ITEM_SEP}}
-                                              // contentOffset={{x: 30, y: 10, }}
-                                              renderMenuButton={() => {
-                                                  //TODO: dubious 15
-                                                  return this.renderMenuButton(item, 15)
-                                              }}
-                                              renderTitle={(lineup: Lineup) => <LineupTitle lineup={lineup} style={{marginBottom: 10,}}/>}
-                                              style={[
-                                                  {paddingTop: 8, paddingBottom: 12},
-                                                  {backgroundColor: index % 2 === 1 ? 'transparent' : 'rgba(255, 255, 255, 0.3)'}
-                                              ]}
-                                    />
-                                )
+                                renderItem: ({item, index})=> this.renderLineup(item, index, navigator)
                             },
                         ];
                     }}
@@ -362,7 +215,46 @@ class HomeScreen extends Screen<Props, State> {
         );
     }
 
-    renderEmptyLineup(navigator, item) {
+    renderLineup(item: Lineup, index: number, navigator: RNNNavigator) {
+        return (
+            <LineupH1
+                lineup={item} navigator={navigator}
+                withMenuButton={true}
+                onPressEmptyLineup={() => startAddItem(navigator, item.id)}
+                renderEmpty={this.renderEmptyLineup(navigator, item)}
+                // TODO: watch https://github.com/facebook/react-native/issues/13202
+                // ListHeaderComponent={
+                //     () => <GTouchable
+                //         onPress={() => startAddItem(navigator, item.id)}
+                //         deactivated={item.pending}
+                //     >
+                //         {
+                //             LineupHorizontal.renderEmptyCell(0, true)
+                //         }
+                //     </GTouchable>
+                //
+                // }
+                // initialScrollIndex={1}
+                // initialNumToRender={6}
+                // getItemLayout={(data, index) => (
+                //     {length: ITEM_DIM, offset: (ITEM_DIM + ITEM_SEP)* index, index}
+                // )}
+                // onScrollToIndexFailed={err=>{console.warn('onScrollToIndexFailed',err)}}
+                // contentOffset={{y: ITEM_DIM + ITEM_SEP, x: ITEM_DIM + ITEM_SEP}}
+                // contentOffset={{x: 30, y: 10, }}
+                renderMenuButton={() => {
+                    //TODO: dubious 15
+                    return this.renderMenuButton(item, 15)
+                }}
+                renderTitle={(lineup: Lineup) => <LineupTitle lineup={lineup} style={{marginBottom: 10,}}/>}
+                style={[
+                    {paddingTop: 8, paddingBottom: 12},
+                    {backgroundColor: index % 2 === 1 ? 'transparent' : 'rgba(255, 255, 255, 0.3)'}
+                ]}
+            />)
+    }
+
+    renderEmptyLineup(navigator: RNNNavigator, item: Lineup) {
         return (list: Lineup) => (
             <GTouchable
                 onPress={() => startAddItem(navigator, item.id)}
@@ -389,147 +281,29 @@ class HomeScreen extends Screen<Props, State> {
             materialIcon={currentTip.materialIcon}
             style={{margin: 10}}
             onClickClose={() => {
-                // registerLayoutAnimation("opacity")
-                // this.setState({currentTip: null})
                 OnBoardingManager.onDisplayed(currentTip.type)
             }}
 
         />;
     }
 
-//TODO: use right manager
     renderMenuButton(item: Lineup, padding: number) {
-        if (!item) return null;
-
         //TODO: use right manager
-        if (item.id === currentGoodshboxId()) return null;
+        if (!item || item.id === currentGoodshboxId()) return null;
 
-        // console.log("paddings:" + stylePadding(padding, 12));
-        let handler = () => {
-            BottomSheet.showBottomSheetWithOptions({
-                options: [
-                    i18n.t("actions.change_title"),
-                    i18n.t("actions.share_list"),
-                    i18n.t("actions.delete"),
-                    i18n.t("actions.cancel")
-                ],
-                title: item.name,
-                dark: true,
-                destructiveButtonIndex: 2,
-                cancelButtonIndex: 3,
-            }, (value) => {
-                switch (value) {
-                    case 0:
-                        this.changeTitle(item);
-                        break;
-                    case 1:
-                        displayShareLineup(this.props.navigator, item)
-                        break;
-                    case 2:
-                        this.deleteLineup(item);
-                        break;
-
-                }
-            });
-        };
-        return (<View style={{position: "absolute", right: 0, margin: 0}}>
-            <GTouchable onPress={handler}>
+        return (
+            <GTouchable style={{position: "absolute", right: 0, margin: 0}} onPress={() => displayLineupActionMenu(this.props.navigator, this.props.dispatch, item)}>
                 <View style={{...stylePadding(padding, 14)}}>
                     <Image
                         source={require('../../img2/moreDotsGrey.png')} resizeMode="contain"/>
                 </View>
             </GTouchable>
-        </View>);
-    }
-
-
-    //TODO: move out of home
-    deleteLineup(lineup: List) {
-        let delayMs = 3000;
-        //deleteLineup(lineup.id, delayMs)
-        const lineupId = lineup.id;
-        return Alert.alert(
-            i18n.t("alert.delete.title"),
-            i18n.t("alert.delete.label"),
-            [
-                {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-                {text: i18n.t("actions.ok"), onPress: () => {
-                        this.props.dispatch(LINEUP_DELETION.pending({lineupId}, {delayMs, lineupId}))
-                            .then(pendingId => {
-                                Snackbar.show({
-                                        title: i18n.t("activity_item.buttons.deleted_list"),
-                                        duration: Snackbar.LENGTH_LONG,
-                                        action: {
-                                            title: i18n.t("actions.undo"),
-                                            color: 'green',
-                                            onPress: () => {
-                                                this.props.dispatch(LINEUP_DELETION.undo(pendingId))
-                                            },
-                                        },
-                                    }
-                                );
-                            });
-                    }
-                },
-            ],
-            { cancelable: true }
         );
     }
-
-    //TODO: move out of home
-    changeTitle(lineup: List) {
-        let {id, name} = lineup;
-
-        this.props.navigator.showModal({
-            screen: 'goodsh.ChangeLineupName',
-            animationType: 'none',
-            passProps: {
-                lineupId: id,
-                initialLineupName: name
-            }
-        });
-    }
-
-
-    renderSaving(saving: Saving) {
-        return (
-            <GTouchable
-                onPress={() => seeActivityDetails(this.props.navigator, saving)}
-            >
-                <LineupCellSaving item={saving.resource} />
-            </GTouchable>
-        );
-    }
-
-    // render() {return <View style={{width: 50, height: 50, backgroundColor: BACKGROUND_COLOR}}/>}
 
     _targetRef = (primaryText, secondaryText) => ref => {
         if (!ref) return;
-
-        if (!this.appTourTargets.has(ref)) {
-            let params;
-            if (__IS_IOS__) {
-                params = {
-                    primaryText,
-                    secondaryText,
-                    targetHolderColor: Colors.blue,
-                    targetTintColor: Colors.white,
-                    primaryTextColor: Colors.white,
-                }
-            }
-            else {
-                params = {
-                    title: primaryText,
-                    description: secondaryText,
-                    //defined in android/app/src/main/res/values/colors.xml
-                    outerCircleColor: 'outerCircleColorPrimary',
-                    targetCircleColor: 'outerCircleColorSecondary',
-                }
-            }
-
-            let appTourTarget = AppTourView.for(ref, params);
-            this.appTourTargets.set(ref, appTourTarget);
-        }
+        this.onBoardingHelper.registerTapTarget(ref, primaryText, secondaryText)
     };
 
     renderFloatingButton() {
@@ -537,24 +311,10 @@ class HomeScreen extends Screen<Props, State> {
         return (
             <ActionButton
                 buttonColor={Colors.green}
-                onPress={() => {
-                    this.onFloatingButtonPressed()
-                }}
+                onPress={() => {startAddItem(this.props.navigator, currentGoodshboxId())}}
                 mainRef={this._targetRef(i18n.t("home.wizard.action_button_label"), i18n.t("home.wizard.action_button_body"))}
                 buttonTextStyle={{fontSize: 26, fontWeight: 'bold', marginTop: -5}}
             />
         );
     }
-
-
-    onFloatingButtonPressed() {
-        startAddItem(this.props.navigator, currentGoodshboxId());
-    }
 }
-
-
-
-const screen = HomeScreen;
-
-
-export {screen};

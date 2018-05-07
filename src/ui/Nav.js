@@ -1,6 +1,6 @@
 // @flow
 
-import type {Activity, ActivityType, Id, Item, Lineup, RNNNavigator, User} from "../types";
+import type {Activity, ActivityType, Id, Item, Lineup, RNNNavigator, SearchToken, User} from "../types";
 import {fullName} from "../helpers/StringUtils";
 import StoreManager from "../managers/StoreManager";
 import i18n from '../i18n/i18n';
@@ -19,6 +19,7 @@ import LineupHorizontal from "./components/LineupHorizontal";
 import LineupCellSaving from "./components/LineupCellSaving";
 import LineupTitle from "./components/LineupTitle";
 import {Colors} from "./colors";
+import {deleteLineup} from "./lineup/actions";
 
 export const CLOSE_MODAL = 'close_modal';
 
@@ -256,7 +257,73 @@ function sendItem(itemId: Id, user: User, description?: Description = "", privac
         .addQuery({
             include: "*.*"
         });
-};
+}
 
 
+export function displayHomeSearch(navigator: RNNNavigator, token: SearchToken) {
 
+    navigator.showModal({
+        screen: 'goodsh.HomeSearchScreen', // unique ID registered with Navigation.registerScreen
+        animationType: 'none',
+        backButtonHidden: true,
+        passProps: {
+            onClickClose: () => navigator.dismissModal({animationType: 'none'}),
+            token
+        },
+        backButtonHidden: true,
+        navigatorButtons: {
+            leftButtons: [],
+            rightButtons: [
+                {
+                    id: CLOSE_MODAL,
+                    title: i18n.t("actions.cancel")
+                }
+            ],
+        },
+        //
+        // navigatorButtons: Nav.CANCELABLE_SEARCH_MODAL(),
+    });
+}
+
+
+export function displayChangeTitle(navigator: RNNNavigator, lineup: Lineup) {
+    let {id, name} = lineup;
+
+    navigator.showModal({
+        screen: 'goodsh.ChangeLineupName',
+        animationType: 'none',
+        passProps: {
+            lineupId: id,
+            initialLineupName: name
+        }
+    });
+}
+
+
+export function displayLineupActionMenu(navigator: RNNNavigator, dispatch: any, lineup: Lineup) {
+    BottomSheet.showBottomSheetWithOptions({
+        options: [
+            i18n.t("actions.change_title"),
+            i18n.t("actions.share_list"),
+            i18n.t("actions.delete"),
+            i18n.t("actions.cancel")
+        ],
+        title: lineup.name,
+        dark: true,
+        destructiveButtonIndex: 2,
+        cancelButtonIndex: 3,
+    }, (value) => {
+        switch (value) {
+            case 0:
+                displayChangeTitle(navigator, lineup)
+                break;
+            case 1:
+                displayShareLineup(navigator, lineup)
+                break;
+            case 2:
+                deleteLineup(dispatch, lineup)
+                break;
+
+        }
+    });
+}
