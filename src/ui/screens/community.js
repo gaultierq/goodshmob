@@ -71,6 +71,15 @@ export class CommunityScreen extends Screen<Props, State> {
         )
     }
 
+
+    renderScene({ route }: *) {
+        switch (route.key) {
+            case 'friends': return this.renderFriends()
+            case 'interactions': return this.renderInteractions()
+            default: throw "unexpected"
+        }
+    }
+
     renderFriends() {
         const {navigator} = this.props;
         return (
@@ -129,13 +138,6 @@ export class CommunityScreen extends Screen<Props, State> {
         return <TabBar {...TAB_BAR_PROPS} {...props}/>
     }
 
-    renderScene({ route }: *) {
-        switch (route.key) {
-            case 'friends': return this.renderFriends()
-            case 'interactions': return this.renderInteractions()
-            default: throw "unexpected"
-        }
-    }
 }
 
 export const reducer = (() => {

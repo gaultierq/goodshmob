@@ -20,7 +20,7 @@ import {
 import {connect} from "react-redux";
 import ActionButton from 'react-native-action-button';
 import type {Id, Lineup, RNNNavigator, Saving} from "../../types";
-import {stylePadding, STYLES} from "../UIStyles";
+import {stylePadding, STYLES, TAB_BAR_PROPS} from "../UIStyles";
 import {currentGoodshboxId, currentUserId, logged} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
@@ -38,6 +38,10 @@ import UserLineups from "./userLineups";
 import {floatingButtonScrollListener, registerLayoutAnimation} from "../UIComponents";
 import {Tip, TipConfig} from "../components/Tip";
 import {HomeOnBoardingHelper} from "./HomeOnBoardingHelper";
+import {TabBar, TabViewAnimated} from "react-native-tab-view";
+import MyGoodsh from "./MyGoodsh";
+import {InteractionScreen} from "./interactions";
+import MyInterests from "./MyInterests";
 
 
 type Props = {
@@ -87,6 +91,11 @@ export default class HomeScreen extends Screen<Props, State> {
     state = {
         focusedSaving: false,
         isActionButtonVisible: true,
+        index: 0,
+        routes: [
+            {key: `my_goodsh`, title: i18n.t("home.tabs.my_goodsh")},
+            {key: `my_interests`, title: i18n.t("home.tabs.my_interests")},
+        ],
         // currentTip: TEST_TIP
     }
 
@@ -215,6 +224,58 @@ export default class HomeScreen extends Screen<Props, State> {
         );
     }
 
+
+    render() {
+        return (
+            <View style={{flex:1}}>
+                <TabViewAnimated
+                    style={{flex: 1}}
+                    navigationState={{...this.state, visible: this.isVisible()}}
+                    renderScene={this.renderScene.bind(this)}
+                    renderHeader={props => <TabBar {...TAB_BAR_PROPS} {...props}/>}
+                    onIndexChange={index => this.setState({index})}
+                />
+                {!this.state.filterFocused && this.state.isActionButtonVisible && this.renderFloatingButton()}
+            </View>
+        )
+    }
+
+
+    renderScene({ route }: *) {
+        switch (route.key) {
+            case 'my_goodsh': return this.renderMyGoodsh()
+            case 'my_interests': return this.renderMyInterests()
+            default: throw "unexpected"
+        }
+    }
+
+    renderMyGoodsh() {
+        const {navigator} = this.props;
+        return (
+            <MyGoodsh
+                navigator={navigator}
+                onScroll={floatingButtonScrollListener.call(this)}
+                // ItemSeparatorComponent={() => <View style={{height: StyleSheet.hairlineWidth, backgroundColor: Colors.white}} />}
+                ItemSeparatorComponent={() => null}
+                ListHeaderComponent={
+                    !this.state.filterFocused && this.state.currentTip && this.renderTip()
+                }
+                onFilterFocusChange={focused => new Promise(resolved => {
+                    this.setState({filterFocused: focused}, resolved())
+                })
+                }
+            />
+        )
+    }
+
+    renderMyInterests() {
+        return (
+            <MyInterests
+                navigator={this.props.navigator}
+                visible={true}
+            />
+        )
+    }
     renderLineup(item: Lineup, index: number, navigator: RNNNavigator) {
         return (
             <LineupH1

@@ -61,6 +61,10 @@ export default {
         wizard: {
             action_button_label : "Ajouter un coup de coeur\nou une envie.",
             action_button_body : "Livre, film, série, resto, musique...",
+        },
+        tabs: {
+            my_goodsh: "MY GOODSH",
+            my_interests: "LINEUP",
         }
     },
     search: {

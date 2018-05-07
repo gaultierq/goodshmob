@@ -471,7 +471,7 @@ export default class App {
                     screen: 'goodsh.HomeScreen',
                     icon: require('./img2/mystuff_Glyph.png'),
                     selectedIcon: require('./img2/mystuff_Glyph_Active.png'),
-                    title: i18n.t('tabs.home.title'),
+                    // title: i18n.t('tabs.home.title'),
                     navigatorStyle: [navigatorStyle],
                     iconInsets
                 },
