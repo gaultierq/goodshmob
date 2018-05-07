@@ -18,189 +18,78 @@ import {
 } from 'react-native';
 
 import {connect} from "react-redux";
-import type {Id, Lineup, RNNNavigator, Saving} from "../../types";
-import {stylePadding, STYLES} from "../UIStyles";
-import {currentGoodshboxId, currentUserId, logged} from "../../managers/CurrentUser"
+import {currentUserId, logged} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
-import {displayLineupActionMenu, seeList, startAddItem} from "../Nav";
 import Screen from "../components/Screen";
-import LineupTitle from "../components/LineupTitle";
-
-import GTouchable from "../GTouchable";
-import AddLineupComponent from "../components/addlineup";
-import OnBoardingManager from "../../managers/OnBoardingManager";
-import LineupHorizontal, {LineupH1} from "../components/LineupHorizontal";
-import UserLineups from "./userLineups";
-import {Tip, TipConfig} from "../components/Tip";
+import Feed, {FeedSource} from "../components/feed";
+import * as Api from "../../managers/Api";
+import ApiAction from "../../helpers/ApiAction";
+import type {Id} from "../../types";
+import {STYLES} from "../UIStyles";
+import {LINEUP_SECTIONS, renderEmptyLineup, renderSectionHeader} from "../UIComponents";
+import {reducerFactory} from "../../managers/Api";
+import {LineupH1} from "../components/LineupHorizontal";
+import {buildData} from "../../helpers/DataUtils";
 
 
 type Props = {
-    userId: Id,
-    navigator: RNNNavigator
 };
 
 type State = {
-    focusedSaving?: Saving,
-    isActionButtonVisible: boolean,
-    filterFocused?: boolean,
-    currentTip?: ?TipConfig
 };
 
 
 @logged
-@connect(state=>({
-    config: state.config,
-    onBoarding: state.onBoarding,
+@connect(state => ({
+    data: state.data,
+    followed_lists: state.followed_lists,
 }))
 export default class MyInterests extends Screen<Props, State> {
 
 
-    state = {
-        focusedSaving: false,
-    }
-
     render() {
-        const userId = currentUserId();
-        const navigator = this.props.navigator;
+        let userId = currentUserId()
+
+        let followed_lists = this.props.followed_lists
+        let followed = _.slice(followed_lists.list);
 
         return (
-
-            <UserLineups
-                displayName={"home feed"}
-                feedId={"home list"}
-                userId={userId}
-                navigator={navigator}
-                empty={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
-                initialLoaderDelay={0}
-
-
-                // onScroll={floatingButtonScrollListener.call(this)}
-                // // ItemSeparatorComponent={() => <View style={{height: StyleSheet.hairlineWidth, backgroundColor: Colors.white}} />}
-                // ItemSeparatorComponent={() => null}
-                // ListHeaderComponent={
-                //     !this.state.filterFocused && this.state.currentTip && this.renderTip()
-                // }
-                // onFilterFocusChange={focused => new Promise(resolved => {
-                //     this.setState({filterFocused: focused}, resolved())
-                // })
-                // }
-
-                sectionMaker={(lineups)=> {
-                    const goodshbox = _.head(lineups);
-                    let savingCount = _.get(goodshbox, `meta.savingsCount`, null) || 0;
-                    return [
-                        {
-                            data: goodshbox ? [goodshbox] : [],
-                            title: i18n.t("lineups.goodsh.title"),
-                            subtitle: ` (${savingCount})`,
-                            onPress: () => seeList(navigator, goodshbox),
-                            renderItem: ({item, index}) => (
-                                <LineupH1
-                                    lineup={item}
-                                    navigator={navigator}
-                                    skipLineupTitle={true}
-                                    renderEmpty={this.renderEmptyLineup(navigator, item)}
-                                />
-                            )
-                        },
-                        {
-                            data: _.slice(lineups, 1),
-                            title: i18n.t("lineups.mine.title"),
-                            renderSectionHeaderChildren:() => <AddLineupComponent navigator={this.props.navigator}/>,
-                            renderItem: ({item, index})=> this.renderLineup(item, index, navigator)
-                        },
-                    ];
-                }}
-
-            />
-
-        );
-    }
-
-    renderLineup(item: Lineup, index: number, navigator: RNNNavigator) {
-        return (
-            <LineupH1
-                lineup={item} navigator={navigator}
-                withMenuButton={true}
-                onPressEmptyLineup={() => startAddItem(navigator, item.id)}
-                renderEmpty={this.renderEmptyLineup(navigator, item)}
-                // TODO: watch https://github.com/facebook/react-native/issues/13202
-                // ListHeaderComponent={
-                //     () => <GTouchable
-                //         onPress={() => startAddItem(navigator, item.id)}
-                //         deactivated={item.pending}
-                //     >
-                //         {
-                //             LineupHorizontal.renderEmptyCell(0, true)
-                //         }
-                //     </GTouchable>
-                //
-                // }
-                // initialScrollIndex={1}
-                // initialNumToRender={6}
-                // getItemLayout={(data, index) => (
-                //     {length: ITEM_DIM, offset: (ITEM_DIM + ITEM_SEP)* index, index}
+            <Feed
+                displayName={"my interests"}
+                data={followed}
+                renderSectionHeader={({section}) => renderSectionHeader(section)}
+                sections={LINEUP_SECTIONS(this.props.navigator, userId)(followed.map(f => buildData(this.props.data, f.type, f.id)))}
+                // renderItem={({item, index})=>(
+                //     <LineupH1
+                //         lineup={item}
+                //         navigator={navigator}
+                //         skipLineupTitle={true}
+                //         renderEmpty={renderEmptyLineup(navigator, item)}
+                //     />
                 // )}
-                // onScrollToIndexFailed={err=>{console.warn('onScrollToIndexFailed',err)}}
-                // contentOffset={{y: ITEM_DIM + ITEM_SEP, x: ITEM_DIM + ITEM_SEP}}
-                // contentOffset={{x: 30, y: 10, }}
-                renderMenuButton={() => {
-                    //TODO: dubious 15
-                    return this.renderMenuButton(item, 15)
-                }}
-                renderTitle={(lineup: Lineup) => <LineupTitle lineup={lineup} style={{marginBottom: 10,}}/>}
-                style={[
-                    {paddingTop: 8, paddingBottom: 12},
-                    {backgroundColor: index % 2 === 1 ? 'transparent' : 'rgba(255, 255, 255, 0.3)'}
-                ]}
-            />)
+                empty={<View><Text style={STYLES.empty_message}>{i18n.t('community_screen.empty_screen')}</Text></View>}
+                fetchSrc={this.fetchSrc(userId)}
+            />
+        )
     }
 
-    renderEmptyLineup(navigator: RNNNavigator, item: Lineup) {
-        return (list: Lineup) => (
-            <GTouchable
-                onPress={() => startAddItem(navigator, item.id)}
-                deactivated={item.pending}
-            >
-                {
-                    LineupHorizontal.defaultRenderEmpty(true)
-                }
-            </GTouchable>
-        );
+    fetchSrc(userId: Id): FeedSource {
+        return {
+            callFactory: () => fetchFollowedLineups(userId),
+            action: FETCH_FOLLOWED_LINEUPS,
+            options: {userId}
+        }
     }
 
-    renderTip() {
-        const currentTip = this.state.currentTip;
-        let keys = currentTip.keys;
-        let res = {};
-        ['title', 'text', 'button'].forEach(k=> {
-            res[k] = i18n.t(`${keys}.${k}`)
-        })
-
-        ;
-        return <Tip
-            {...res}
-            materialIcon={currentTip.materialIcon}
-            style={{margin: 10}}
-            onClickClose={() => {
-                OnBoardingManager.onDisplayed(currentTip.type)
-            }}
-
-        />;
-    }
-
-    renderMenuButton(item: Lineup, padding: number) {
-        //TODO: use right manager
-        if (!item || item.id === currentGoodshboxId()) return null;
-
-        return (
-            <GTouchable style={{position: "absolute", right: 0, margin: 0}} onPress={() => displayLineupActionMenu(this.props.navigator, this.props.dispatch, item)}>
-                <View style={{...stylePadding(padding, 14)}}>
-                    <Image
-                        source={require('../../img2/moreDotsGrey.png')} resizeMode="contain"/>
-                </View>
-            </GTouchable>
-        );
-    }
 }
+
+const FETCH_FOLLOWED_LINEUPS = ApiAction.create("fetch_followed_lineups", "retrieve the user followed lineups details");
+
+const fetchFollowedLineups =  userId => new Api.Call()
+    .withMethod('GET')
+    .withRoute(`users/${userId}/followed_lists`)
+    .addQuery({include: "savings,savings.resource"})
+
+
+export const reducer = reducerFactory(FETCH_FOLLOWED_LINEUPS)

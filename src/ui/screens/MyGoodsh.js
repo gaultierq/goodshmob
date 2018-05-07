@@ -113,7 +113,7 @@ export default class MyGoodsh extends Screen<Props, State> {
                         },
                     ];
                 }}
-                
+
                 {...attributes}
             />
 

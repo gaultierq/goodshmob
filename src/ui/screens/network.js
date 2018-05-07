@@ -220,58 +220,6 @@ class NetworkScreen extends Screen<Props, State> {
     showSearch() {
         let navigator = this.props.navigator;
 
-
-        const queries = [
-            {
-                indexName: 'Saving_staging',
-                params: {
-                    facets: "[\"list_name\"]",
-                    filters: 'user_id:' + currentUserId(),
-                }
-            }
-        ];
-
-        let renderItem = ({item})=> {
-
-            let isLineup = item.type === 'lists';
-
-            //FIXME: item can be from search, and not yet in redux store
-            //item = buildData(this.props.data, item.type, item.id) || item;
-
-            //if (!item) return null;
-
-            if (isLineup) {
-                let lineup: List = item;
-                //let handler = this.props.onLineupPressed ? () => this.props.onLineupPressed(item) : null;
-                return (
-                    <GTouchable
-                        //onPress={handler}
-                    >
-                        <View>
-                            <LineupCell
-                                lineup={lineup}
-                                //onAddInLineupPressed={this.props.onAddInLineupPressed}
-                            />
-                        </View>
-                    </GTouchable>
-                )
-            }
-            else {
-                let saving = item;
-
-                let resource = saving.resource;
-
-                //TODO: this is hack
-                if (!resource) return null;
-
-                return (
-                    <ItemCell
-                        item={resource}
-                    />
-                )
-            }
-        };
-
         navigator.showModal({
             screen: 'goodsh.NetworkSearchScreen',
             animationType: 'none',

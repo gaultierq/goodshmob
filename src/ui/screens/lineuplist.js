@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 
 import {connect} from "react-redux";
-import {currentUserId, logged} from "../../managers/CurrentUser"
+import {logged} from "../../managers/CurrentUser"
 import LineupCell from "../components/LineupCell";
 import Immutable from 'seamless-immutable';
 import * as Api from "../../managers/Api";
@@ -28,10 +28,8 @@ import ApiAction from "../../helpers/ApiAction";
 import {buildData, doDataMergeInState} from "../../helpers/DataUtils";
 import {CREATE_LINEUP, DELETE_LINEUP} from "../lineup/actionTypes";
 import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
-import {STYLES} from "../UIStyles";
 import GTouchable from "../GTouchable";
 import Screen from "../components/Screen";
-import dotprop from "dot-prop-immutable"
 
 export type Props = FeedProps<List> & {
     userId: Id,

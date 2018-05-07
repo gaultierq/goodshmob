@@ -36,7 +36,7 @@ import {FullScreenLoader} from "../UIComponents";
 
 export type FeedSource = {
     callFactory: ()=>Api.Call,
-    useLinks:? boolean,
+    useLinks?: ?boolean,
     action: ApiAction,
     options?: any
 }
@@ -45,18 +45,18 @@ export type Props<T> = {
     data: Array<T>,
     renderItem: Function,
     fetchSrc: FeedSource,
-    hasMore: boolean,
+    hasMore?: boolean,
     ListHeaderComponent?: Node,
     ListFooterComponent?: Node,
     empty: Node,
-    style: any,
-    scrollUpOnBack?: ()=>boolean,
+    style?: any,
+    scrollUpOnBack?: ?() => ?boolean,
     cannotFetch?: boolean,
     visibility: ScreenVisibility,
     filter?: ?FilterConfig<T>,
     initialLoaderDelay?: ?ms,
     displayName?: string,
-    doNotDisplayFetchMoreLoader: ?boolean
+    doNotDisplayFetchMoreLoader?: boolean
 };
 
 export type FilterConfig<T> = {
@@ -111,27 +111,33 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         // this.postFetchFirst();
     }
 
+    componentDidMount() {
+        this.postFetchFirst();
+    }
+
     componentWillReceiveProps(nextProps: Props<*>) {
-        if (__ENABLE_BACK_HANDLER__ && this.props.scrollUpOnBack !== nextProps.scrollUpOnBack) {
-            let scrollUpOnBack = nextProps.scrollUpOnBack;
-            if (scrollUpOnBack) {
-                this.logger.info("Feed listening to back navigation");
+        this.logger.debug('componentWillReceiveProps')
 
-                this._listener = () => {
-                    this.logger.info("Feed onBackPressed");
-                    if (this.getScrollY() > 100) {
-                        this.refs.feed.scrollToOffset({x: 0, y: 0, animated: true});
-                        return true;
-                    }
-
-                    return scrollUpOnBack();
-                };
-            }
-            else {
-                BackHandler.removeEventListener('hardwareBackPress', this._listener);
-                this._listener = null;
-            }
-        }
+        // if (__ENABLE_BACK_HANDLER__ && this.props.scrollUpOnBack !== nextProps.scrollUpOnBack) {
+        //     let scrollUpOnBack = nextProps.scrollUpOnBack;
+        //     if (scrollUpOnBack) {
+        //         this.logger.info("Feed listening to back navigation");
+        //
+        //         this._listener = () => {
+        //             this.logger.info("Feed onBackPressed");
+        //             if (this.getScrollY() > 100) {
+        //                 this.refs.feed.scrollToOffset({x: 0, y: 0, animated: true});
+        //                 return true;
+        //             }
+        //
+        //             return scrollUpOnBack();
+        //         };
+        //     }
+        //     else {
+        //         BackHandler.removeEventListener('hardwareBackPress', this._listener);
+        //         this._listener = null;
+        //     }
+        // }
 
         //hack: let the next props become the props
         this.postFetchFirst();
@@ -153,6 +159,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         //     return;
         // }
 
+        this.logger.debug('postFetchFirst')
         setTimeout(() => {
             if (this.state.firstLoad !== 'idle') {
                 this.logger.debug(`postFetchFirst was not performed, firstLoad=${this.state.firstLoad}`);
@@ -224,7 +231,11 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             }
         }
 
-        if (displayFirstLoader) return <FullScreenLoader/>;
+        if (displayFirstLoader) {
+
+            this.logger.debug("displayFirstLoader");
+            return <FullScreenLoader/>;
+        }
 
 
         let allViews = [];

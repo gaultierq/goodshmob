@@ -16,7 +16,8 @@ import {
     View
 } from 'react-native';
 import {LineupListScreen} from './lineuplist'
-import type {Id, RNNNavigator, SearchToken} from "../../types";
+import type {Props as LineupListProps} from './lineuplist'
+import type {Id, Lineup, RNNNavigator, SearchToken} from "../../types";
 import {BACKGROUND_COLOR, NavStyles, renderSimpleButton, STYLES} from "../UIStyles";
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
@@ -29,11 +30,12 @@ import {SFP_TEXT_MEDIUM} from "../fonts";
 
 import GTouchable from "../GTouchable";
 import GSearchBar from "../GSearchBar";
-import {scheduleOpacityAnimation} from "../UIComponents";
+import {renderSectionHeader, scheduleOpacityAnimation} from "../UIComponents";
+import {FilterConfig} from "../components/feed";
 // $FlowFixMe
 
 
-type Props = {
+type Props = LineupListProps & {
     userId: Id,
     navigator: RNNNavigator
 };
@@ -94,7 +96,7 @@ export default class UserLineups extends Screen<Props, State> {
                         scrollUpOnBack={super.isVisible() ? ()=>false : null}
                         cannotFetch={false}
                         visible={true}
-                        renderSectionHeader={({section}) => this.renderSectionHeader(section)}
+                        renderSectionHeader={({section}) => renderSectionHeader(section)}
                         renderSectionFooter={()=> <View style={{height: 25, width: "100%"}} />}
                         ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
                         filter={this.filter()}
@@ -165,7 +167,7 @@ export default class UserLineups extends Screen<Props, State> {
     }
 
 
-    filter() {
+    filter(): FilterConfig<Lineup> {
 
         return {
             token: this.state.filter, //used just to re-render the children. todo: find a better way
@@ -221,33 +223,5 @@ export default class UserLineups extends Screen<Props, State> {
         };
     }
 
-
-
-// render() {return <View style={{width: 50, height: 50, backgroundColor: BACKGROUND_COLOR}}/>}
-
-    renderSectionHeader({title, subtitle, onPress, renderSectionHeaderChildren}) {
-        return (<GTouchable
-            deactivated={!onPress}
-            onPress={onPress}>
-            <View style={{
-                backgroundColor: BACKGROUND_COLOR,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                paddingLeft: 15,
-                paddingRight: 15,
-                paddingTop: 15,
-                paddingBottom: 10,
-            }}>
-                <Text style={{
-                    fontSize: 20,
-                    fontFamily: SFP_TEXT_MEDIUM
-                }}>
-                    {title}
-                    {subtitle && <Text style={{fontSize: 16, color: Colors.greyish}}>{subtitle}</Text>}
-                </Text>
-                {renderSectionHeaderChildren && renderSectionHeaderChildren()}
-            </View>
-        </GTouchable>);
-    }
 
 }

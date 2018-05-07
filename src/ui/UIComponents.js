@@ -9,7 +9,12 @@ import {CachedImage} from "react-native-img-cache";
 import GTouchable from "./GTouchable";
 import {BACKGROUND_COLOR, STYLES} from "./UIStyles";
 import Spinner from 'react-native-spinkit';
-import type {RequestState} from "../types";
+import type {Id, Lineup, RequestState, RNNNavigator} from "../types";
+import {seeList, startAddItem} from "./Nav";
+import {LineupH1} from "./components/LineupHorizontal";
+import {isCurrentUserId} from "../managers/CurrentUser";
+import {SFP_TEXT_MEDIUM} from "./fonts";
+import LineupHorizontal from "./components/LineupHorizontal";
 
 
 // export const MainBackground = (props) => <ImageBackground
@@ -147,5 +152,63 @@ export function floatingButtonScrollListener() {
             _listViewOffset = currentOffset
         })
     }();
+}
 
+
+//TODO: split - create a file dedicated to Lineup rendering
+export const LINEUP_SECTIONS = (navigator: RNNNavigator, userId: Id) => (lineups: Lineup[])=> {
+    // const goodshbox = _.head(lineups);
+    // let savingCount = _.get(goodshbox, `meta.savingsCount`, null) || 0;
+    return lineups.map(lineup => ({
+        data: [lineup],
+        title:lineup.name,
+        subtitle: ` (${_.get(lineup, `meta.savingsCount`, null) || 0})`,
+        onPress: () => seeList(navigator, lineup),
+        renderItem: ({item}: {item: Lineup}) => (
+            <LineupH1
+                lineup={item}
+                navigator={navigator}
+                skipLineupTitle={true}
+                onPressEmptyLineup={isCurrentUserId(userId) ? ()=>startAddItem(navigator, item.id): null } />
+        )
+    }));
+};
+
+
+export function renderSectionHeader({title, subtitle, onPress, renderSectionHeaderChildren}) {
+    return (<GTouchable
+        deactivated={!onPress}
+        onPress={onPress}>
+        <View style={{
+            backgroundColor: BACKGROUND_COLOR,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingLeft: 15,
+            paddingRight: 15,
+            paddingTop: 15,
+            paddingBottom: 10,
+        }}>
+            <Text style={{
+                fontSize: 20,
+                fontFamily: SFP_TEXT_MEDIUM
+            }}>
+                {title}
+                {subtitle && <Text style={{fontSize: 16, color: Colors.greyish}}>{subtitle}</Text>}
+            </Text>
+            {renderSectionHeaderChildren && renderSectionHeaderChildren()}
+        </View>
+    </GTouchable>);
+}
+
+export function renderEmptyLineup(navigator: RNNNavigator, item: Lineup) {
+    return (list: Lineup) => (
+        <GTouchable
+            onPress={() => startAddItem(navigator, item.id)}
+            deactivated={item.pending}
+        >
+            {
+                LineupHorizontal.defaultRenderEmpty(true)
+            }
+        </GTouchable>
+    );
 }

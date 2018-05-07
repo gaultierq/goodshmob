@@ -7,7 +7,7 @@ import normalize from 'json-api-normalizer';
 import {logoutOffline} from "../auth/actions";
 import ApiAction from "../helpers/ApiAction";
 import fetch from 'react-native-fetch-polyfill';
-import type {Dispatchee, ms, RequestState} from "../types";
+import type {Dispatchee, Id, ms, RequestState} from "../types";
 import Config from 'react-native-config'
 import {Statistics} from "./Statistics";
 import {REMOVE_PENDING_ACTION} from "../reducers/dataReducer";
@@ -213,6 +213,7 @@ class Api {
                         reject(err);
                     })
                     .then(resp=> {
+                        console.log(resp)
                         setTimeout(()=> {
                             if (instance.auth() === auth) {
                                 resolve(resp);
@@ -582,3 +583,49 @@ export const reduceList = (state, action, desc, optionalExtractor?) => {
     }
     return state;
 };
+
+
+type STATE<T> = {
+    list?: Array<T>,
+    hasNoMore?: boolean
+}
+
+type SHELL = {
+    id: Id, type: string
+}
+
+type REDUX_ACTION<T> = {
+    type: string,
+    payload: {data: Array<T>}
+}
+
+export function reducerFactory(apiAction: ApiAction) {
+    return (state: STATE<SHELL> = {}, action: REDUX_ACTION<SHELL>) => {
+        return reduceList2(state, action, apiAction);
+    };
+}
+
+export const reduceList2 = (state: STATE<SHELL>, action: REDUX_ACTION<SHELL>, apiAction: ApiAction, optionalExtractor?: any => any) => {
+    switch (action.type) {
+        case apiAction.success():
+
+            let newList = action.payload.data.map(f => {
+                let {id, type} = f;
+                let options = optionalExtractor && optionalExtractor(f) || {};
+                return {id, type, ...options};
+            });
+
+            let merged = new Util.Merge(state.list || [], newList)
+                .withHasLess(true)
+                .merge();
+
+            if (merged !== state.list) state = {...state, list: merged}
+
+            const hasNoMore = action.payload.data.length === 0;
+            if (hasNoMore !== state.hasNoMore) state = {...state, hasNoMore: hasNoMore}
+
+    }
+    return state;
+};
+
+

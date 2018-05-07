@@ -33,14 +33,13 @@ import LineupTitle from "../components/LineupTitle";
 import GTouchable from "../GTouchable";
 import AddLineupComponent from "../components/addlineup";
 import OnBoardingManager from "../../managers/OnBoardingManager";
-import LineupHorizontal, {LineupH1} from "../components/LineupHorizontal";
+import {LineupH1} from "../components/LineupHorizontal";
 import UserLineups from "./userLineups";
-import {floatingButtonScrollListener, registerLayoutAnimation} from "../UIComponents";
+import {floatingButtonScrollListener, registerLayoutAnimation, renderEmptyLineup} from "../UIComponents";
 import {Tip, TipConfig} from "../components/Tip";
 import {HomeOnBoardingHelper} from "./HomeOnBoardingHelper";
 import {TabBar, TabViewAnimated} from "react-native-tab-view";
 import MyGoodsh from "./MyGoodsh";
-import {InteractionScreen} from "./interactions";
 import MyInterests from "./MyInterests";
 
 
@@ -204,7 +203,7 @@ export default class HomeScreen extends Screen<Props, State> {
                                         lineup={item}
                                         navigator={navigator}
                                         skipLineupTitle={true}
-                                        renderEmpty={this.renderEmptyLineup(navigator, item)}
+                                        renderEmpty={renderEmptyLineup(navigator, item)}
                                     />
                                 )
                             },
@@ -282,7 +281,7 @@ export default class HomeScreen extends Screen<Props, State> {
                 lineup={item} navigator={navigator}
                 withMenuButton={true}
                 onPressEmptyLineup={() => startAddItem(navigator, item.id)}
-                renderEmpty={this.renderEmptyLineup(navigator, item)}
+                renderEmpty={renderEmptyLineup(navigator, item)}
                 // TODO: watch https://github.com/facebook/react-native/issues/13202
                 // ListHeaderComponent={
                 //     () => <GTouchable
@@ -315,18 +314,7 @@ export default class HomeScreen extends Screen<Props, State> {
             />)
     }
 
-    renderEmptyLineup(navigator: RNNNavigator, item: Lineup) {
-        return (list: Lineup) => (
-            <GTouchable
-                onPress={() => startAddItem(navigator, item.id)}
-                deactivated={item.pending}
-            >
-                {
-                    LineupHorizontal.defaultRenderEmpty(true)
-                }
-            </GTouchable>
-        );
-    }
+
 
     renderTip() {
         const currentTip = this.state.currentTip;
