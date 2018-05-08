@@ -32,6 +32,7 @@ import {STYLES} from "../UIStyles";
 import GTouchable from "../GTouchable";
 import Screen from "../components/Screen";
 import dotprop from "dot-prop-immutable"
+import * as Nav from "../Nav"
 
 export type Props = FeedProps<List> & {
     userId: Id,
@@ -63,6 +64,20 @@ export class LineupListScreen extends Screen<Props, State> {
         this.state = {...super.state, isLoading: false, isLoadingMore: false,}
     }
 
+    feed: any
+
+
+    componentDidMount() {
+        if (this.props.navigator) {
+            this.props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+        }
+    }
+
+    onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
+        if (event.id === 'bottomTabReselected' && this.feed) {
+            this.feed.scrollToLocation({sectionIndex: 0, itemIndex: 0, viewOffset: 50})
+        }
+    }
 
     render() {
         const {
@@ -108,9 +123,11 @@ export class LineupListScreen extends Screen<Props, State> {
         return (
             <Feed
                 data={items}
+                listRef={ref => this.feed = ref}
                 sections={sectionMaker && sectionMaker(items)}
                 renderItem={this.renderItem.bind(this)}
                 fetchSrc={fetchSrc}
+                navigator={this.props.navigator}
                 {...attributes}
             />
         );

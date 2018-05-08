@@ -56,7 +56,8 @@ export type Props<T> = {
     filter?: ?FilterConfig<T>,
     initialLoaderDelay?: ?ms,
     displayName?: string,
-    doNotDisplayFetchMoreLoader: ?boolean
+    doNotDisplayFetchMoreLoader: ?boolean,
+    listRef: any => void | string
 };
 
 export type FilterConfig<T> = {
@@ -91,7 +92,8 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     static defaultProps = {
         visibility: 'unknown',
         keyExtractor: item => item.id,
-        initialLoaderDelay: 0
+        initialLoaderDelay: 0,
+        listRef: "feed"
     };
 
     state = {initialLoaderVisibility: 'idle', firstLoad: 'idle'};
@@ -111,28 +113,8 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         // this.postFetchFirst();
     }
 
+
     componentWillReceiveProps(nextProps: Props<*>) {
-        if (__ENABLE_BACK_HANDLER__ && this.props.scrollUpOnBack !== nextProps.scrollUpOnBack) {
-            let scrollUpOnBack = nextProps.scrollUpOnBack;
-            if (scrollUpOnBack) {
-                this.logger.info("Feed listening to back navigation");
-
-                this._listener = () => {
-                    this.logger.info("Feed onBackPressed");
-                    if (this.getScrollY() > 100) {
-                        this.refs.feed.scrollToOffset({x: 0, y: 0, animated: true});
-                        return true;
-                    }
-
-                    return scrollUpOnBack();
-                };
-            }
-            else {
-                BackHandler.removeEventListener('hardwareBackPress', this._listener);
-                this._listener = null;
-            }
-        }
-
         //hack: let the next props become the props
         this.postFetchFirst();
     }
@@ -199,6 +181,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             ListHeaderComponent,
             ListFooterComponent,
             renderSectionHeader,
+            listRef,
             ...attributes
         } = this.props;
 
@@ -253,7 +236,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         //     style1.push({opacity: 0.4})
         // }
         let params =  {
-            ref: "feed",
+            ref: listRef,
             renderItem,
             // keyExtractor: this.keyExtractor,
             key: "feed-list",
