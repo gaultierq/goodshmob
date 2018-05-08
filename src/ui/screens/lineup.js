@@ -8,18 +8,21 @@ import {activityFeedProps} from "../UIComponents";
 import Immutable from 'seamless-immutable';
 import * as Api from "../../managers/Api";
 import Feed from "../components/feed";
-import type {List, Saving} from "../../types";
+import type {Lineup, List, Saving} from "../../types";
 import {buildData, doDataMergeInState} from "../../helpers/DataUtils";
 import ActivityCell from "../activity/components/ActivityCell";
 import ActionButton from 'react-native-action-button';
 import {startAddItem} from "../Nav";
 import {Colors} from "../colors";
 import Screen from "./../components/Screen";
-import {STYLES} from "../UIStyles";
+import {renderSimpleButton, STYLES} from "../UIStyles";
 import {fullName} from "../../helpers/StringUtils";
 import {FETCH_LINEUP, FETCH_SAVINGS} from "../lineup/actions";
 import {UNSAVE} from "../activity/actionTypes";
 import * as UI from "../UIStyles";
+import GTouchable from "../GTouchable";
+import * as authActions from "../../auth/actions";
+import FollowButton from "../activity/components/FollowButton";
 
 type Props = {
     lineupId: string,
@@ -46,6 +49,7 @@ class LineupScreen extends Screen<Props, State> {
         navBarTitleTextCentered: true,
         navBarSubTitleTextCentered: true,
     };
+
 
     render() {
         const lineup = this.getLineup();
@@ -96,10 +100,12 @@ class LineupScreen extends Screen<Props, State> {
         return (
             <View style={styles.container}>
                 {lineup && lineup.description && <Text style={[styles.description]}>{lineup.description}</Text>}
+                {this.renderHeader(lineup)}
                 <Feed
                     data={savings}
                     renderItem={item => this.renderItem(item, lineup)}
                     fetchSrc={fetchSrc}
+                    ListHeaderComponent={this.renderHeader(lineup)}
                     hasMore={true}
                     empty={<Text style={STYLES.empty_message}>{i18n.t("empty.lineup")}</Text>}
                     {...activityFeedProps()}
@@ -113,6 +119,25 @@ class LineupScreen extends Screen<Props, State> {
                 }
 
             </View>
+        );
+    }
+
+    renderHeader(lineup: Lineup) {
+        return (
+            <View style={{}}>
+                <Text>{`#Ajoutée le ${lineup.createdAt}`}</Text>
+                <FollowButton lineup={lineup} />
+            </View>
+        )
+    }
+
+    follow() {
+        Api.safeExecBlock.call(
+            this,
+            () => {
+                return authActions.logout(this.props.dispatch)
+            },
+            'reqLogout'
         );
     }
 

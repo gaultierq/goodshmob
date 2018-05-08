@@ -12,13 +12,14 @@ import {
     StyleSheet,
     Text,
     TextInput,
-    TouchableOpacity, TouchableWithoutFeedback,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
     View
 } from 'react-native';
-import {LineupListScreen} from './lineuplist'
 import type {Props as LineupListProps} from './lineuplist'
+import {LineupListScreen} from './lineuplist'
 import type {Id, Lineup, RNNNavigator, SearchToken} from "../../types";
-import {BACKGROUND_COLOR, NavStyles, renderSimpleButton, STYLES} from "../UIStyles";
+import {NavStyles, renderSimpleButton, STYLES} from "../UIStyles";
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import type {Visibility} from "./additem";
@@ -26,9 +27,6 @@ import * as Nav from "../Nav";
 import {seeActivityDetails, seeList} from "../Nav";
 import Screen from "../components/Screen";
 import {Colors} from "../colors";
-import {SFP_TEXT_MEDIUM} from "../fonts";
-
-import GTouchable from "../GTouchable";
 import GSearchBar from "../GSearchBar";
 import {renderSectionHeader, scheduleOpacityAnimation} from "../UIComponents";
 import {FilterConfig} from "../components/feed";

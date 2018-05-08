@@ -139,3 +139,19 @@ export function deleteLineup(dispatch: any, lineup: List) {
         { cancelable: true }
     );
 }
+
+const FOLLOW_LINEUP = ApiAction.create("follow_lineup", "follow a lineup");
+const UNFOLLOW_LINEUP = ApiAction.create("unfollow_lineup", "unfollow a lineup");
+
+
+export function followLineup(dispatch: any, lineup: List) {
+    return dispatch(new Api.Call().withMethod('POST')
+        .withRoute(`lists/${lineup.id}/follows`).createActionDispatchee(FOLLOW_LINEUP))
+}
+
+export function unfollowLineup(dispatch: any, lineup: List) {
+    return dispatch(new Api.Call().withMethod('DELETE')
+        .withRoute(`lists/${lineup.id}/follows`).createActionDispatchee(UNFOLLOW_LINEUP))
+}
+
+

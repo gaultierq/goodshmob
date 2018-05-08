@@ -19,7 +19,10 @@ import LineupHorizontal from "./components/LineupHorizontal";
 import LineupCellSaving from "./components/LineupCellSaving";
 import LineupTitle from "./components/LineupTitle";
 import {Colors} from "./colors";
-import {deleteLineup} from "./lineup/actions";
+import {deleteLineup, followLineup, unfollowLineup} from "./lineup/actions";
+import {GAction, L_DELETE, L_FOLLOW, L_RENAME, L_SHARE, L_UNFOLLOW} from "./rights";
+import {isCurrentUser} from "../managers/CurrentUser";
+import {isFollowed} from "./activity/components/FollowButton";
 
 export const CLOSE_MODAL = 'close_modal';
 
@@ -299,31 +302,69 @@ export function displayChangeTitle(navigator: RNNNavigator, lineup: Lineup) {
     });
 }
 
+//TODO: restore destuctive button index
+type LineupMenuAction = {
+    action: GAction,
+    label: string,
+    handler: () => void,
+}
+
 
 export function displayLineupActionMenu(navigator: RNNNavigator, dispatch: any, lineup: Lineup) {
-    BottomSheet.showBottomSheetWithOptions({
-        options: [
-            i18n.t("actions.change_title"),
-            i18n.t("actions.share_list"),
-            i18n.t("actions.delete"),
-            i18n.t("actions.cancel")
-        ],
-        title: lineup.name,
-        dark: true,
-        destructiveButtonIndex: 2,
-        cancelButtonIndex: 3,
-    }, (value) => {
-        switch (value) {
-            case 0:
-                displayChangeTitle(navigator, lineup)
-                break;
-            case 1:
-                displayShareLineup(navigator, lineup)
-                break;
-            case 2:
-                deleteLineup(dispatch, lineup)
-                break;
 
+    //TODO: right manager
+    let actions : LineupMenuAction[]
+
+    if (isCurrentUser(lineup.user)) {
+        actions = [
+            {
+                action: L_RENAME,
+                label: i18n.t("actions.change_title"),
+                handler: () => displayChangeTitle(navigator, lineup)
+            },
+            {
+                action: L_SHARE,
+                label: i18n.t("actions.share_list"),
+                handler: () => displayShareLineup(navigator, lineup)
+            },
+            {
+                action: L_DELETE,
+                label: i18n.t("actions.delete"),
+                handler: () => deleteLineup(dispatch, lineup)
+            },
+
+        ]
+    }
+    else {
+        actions = [
+            isFollowed(lineup)?
+                {
+                    action: L_UNFOLLOW,
+                    label: i18n.t("actions.unfollow"),
+                    handler: () => unfollowLineup(dispatch, lineup)
+                }
+                : {
+                    action: L_FOLLOW,
+                    label: i18n.t("actions.follow"),
+                    handler: () => followLineup(dispatch, lineup)
+                }
+        ]
+    }
+
+    BottomSheet.showBottomSheetWithOptions({
+            options: [
+                ...actions.map(a => a.label),
+                i18n.t("actions.cancel")
+            ],
+            title: lineup.name,
+            // dark: true,
+            // destructiveButtonIndex: 2,
+            cancelButtonIndex: actions.length,
+        }, (value) => {
+            const lineupMenuAction = actions[value];
+            if (lineupMenuAction) {
+                lineupMenuAction.handler()
+            }
         }
-    });
+    );
 }

@@ -59,7 +59,7 @@ export default class MyInterests extends Screen<Props, State> {
                 displayName={"my interests"}
                 data={followed}
                 renderSectionHeader={({section}) => renderSectionHeader(section)}
-                sections={LINEUP_SECTIONS(this.props.navigator, userId)(followed.map(f => buildData(this.props.data, f.type, f.id)))}
+                sections={LINEUP_SECTIONS(this.props.navigator, this.props.dispatch, userId)(followed.map(f => buildData(this.props.data, f.type, f.id)))}
                 // renderItem={({item, index})=>(
                 //     <LineupH1
                 //         lineup={item}

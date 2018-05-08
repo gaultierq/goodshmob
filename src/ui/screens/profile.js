@@ -120,15 +120,17 @@ export default class Profile extends Component<Props, State> {
                     bottom: 52,
                     left: 17
                 }}>
-                    {renderSimpleButton(
-                        i18n.t("actions.logout"),
-                        this.logout.bind(this),
-                        {
-                            loading: this.state.reqLogout === 'sending',
-                            style: {alignSelf: 'flex-start'},
-                            textStyle: styles.footerButton
-                        }
-                    )}
+                    {
+                        renderSimpleButton(
+                            i18n.t("actions.logout"),
+                            this.logout.bind(this),
+                            {
+                                loading: this.state.reqLogout === 'sending',
+                                style: {alignSelf: 'flex-start'},
+                                textStyle: styles.footerButton
+                            }
+                        )
+                    }
 
                     {
                         this.props.config.devMenu &&

@@ -608,21 +608,28 @@ export function reducerFactory(apiAction: ApiAction) {
 export const reduceList2 = (state: STATE<SHELL>, action: REDUX_ACTION<SHELL>, apiAction: ApiAction, optionalExtractor?: any => any) => {
     switch (action.type) {
         case apiAction.success():
-
+            console.info("reduceList2::start", action)
             let newList = action.payload.data.map(f => {
                 let {id, type} = f;
                 let options = optionalExtractor && optionalExtractor(f) || {};
                 return {id, type, ...options};
             });
-
-            let merged = new Util.Merge(state.list || [], newList)
-                .withHasLess(true)
-                .merge();
+            let merged;
+            try {
+                merged = new Util.Merge(state.list || [], newList)
+                    .withHasLess(true)
+                    .merge();
+            }
+            catch (e) {
+                console.error(e)
+                throw e
+            }
 
             if (merged !== state.list) state = {...state, list: merged}
 
             const hasNoMore = action.payload.data.length === 0;
             if (hasNoMore !== state.hasNoMore) state = {...state, hasNoMore: hasNoMore}
+            console.info("reduceList2::end", action)
 
     }
     return state;

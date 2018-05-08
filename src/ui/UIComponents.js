@@ -7,10 +7,10 @@ import {Colors} from "./colors";
 import User from "react-native-firebase/lib/modules/auth/User";
 import {CachedImage} from "react-native-img-cache";
 import GTouchable from "./GTouchable";
-import {BACKGROUND_COLOR, STYLES} from "./UIStyles";
+import {BACKGROUND_COLOR, LINEUP_PADDING, STYLES} from "./UIStyles";
 import Spinner from 'react-native-spinkit';
 import type {Id, Lineup, RequestState, RNNNavigator} from "../types";
-import {seeList, startAddItem} from "./Nav";
+import {displayLineupActionMenu, seeList, startAddItem} from "./Nav";
 import {LineupH1} from "./components/LineupHorizontal";
 import {isCurrentUserId} from "../managers/CurrentUser";
 import {SFP_TEXT_MEDIUM} from "./fonts";
@@ -156,7 +156,7 @@ export function floatingButtonScrollListener() {
 
 
 //TODO: split - create a file dedicated to Lineup rendering
-export const LINEUP_SECTIONS = (navigator: RNNNavigator, userId: Id) => (lineups: Lineup[])=> {
+export const LINEUP_SECTIONS = (navigator: RNNNavigator, dispatch: any, userId: Id) => (lineups: Lineup[])=> {
     // const goodshbox = _.head(lineups);
     // let savingCount = _.get(goodshbox, `meta.savingsCount`, null) || 0;
     return lineups.map(lineup => ({
@@ -169,8 +169,10 @@ export const LINEUP_SECTIONS = (navigator: RNNNavigator, userId: Id) => (lineups
                 lineup={item}
                 navigator={navigator}
                 skipLineupTitle={true}
-                onPressEmptyLineup={isCurrentUserId(userId) ? ()=>startAddItem(navigator, item.id): null } />
-        )
+                onPressEmptyLineup={isCurrentUserId(userId) ? ()=>startAddItem(navigator, item.id): null }
+            />
+        ),
+        renderSectionHeaderChildren:() => renderLineupMenu(navigator, dispatch, lineup)
     }));
 };
 
@@ -183,8 +185,7 @@ export function renderSectionHeader({title, subtitle, onPress, renderSectionHead
             backgroundColor: BACKGROUND_COLOR,
             flexDirection: 'row',
             justifyContent: 'space-between',
-            paddingLeft: 15,
-            paddingRight: 15,
+            paddingHorizontal: LINEUP_PADDING,
             paddingTop: 15,
             paddingBottom: 10,
         }}>
@@ -209,6 +210,21 @@ export function renderEmptyLineup(navigator: RNNNavigator, item: Lineup) {
             {
                 LineupHorizontal.defaultRenderEmpty(true)
             }
+        </GTouchable>
+    );
+}
+
+
+export function renderLineupMenu(navigator: RNNNavigator, dispatch: any, lineup: Lineup) {
+    return (
+        <GTouchable style={{position: "absolute", right: 0, margin: 0}}
+                    onPress={() => displayLineupActionMenu(navigator, dispatch, lineup)}>
+            <View style={{
+                paddingHorizontal: LINEUP_PADDING,
+                paddingVertical: 14,
+            }}>
+                <Image source={require('../img2/moreDotsGrey.png')} resizeMode="contain"/>
+            </View>
         </GTouchable>
     );
 }

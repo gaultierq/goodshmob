@@ -20,7 +20,7 @@ import {
 import {connect} from "react-redux";
 import ActionButton from 'react-native-action-button';
 import type {Id, Lineup, RNNNavigator, Saving} from "../../types";
-import {stylePadding, STYLES, TAB_BAR_PROPS} from "../UIStyles";
+import {LINEUP_PADDING, stylePadding, STYLES, TAB_BAR_PROPS} from "../UIStyles";
 import {currentGoodshboxId, currentUserId, logged} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
@@ -35,7 +35,10 @@ import AddLineupComponent from "../components/addlineup";
 import OnBoardingManager from "../../managers/OnBoardingManager";
 import {LineupH1} from "../components/LineupHorizontal";
 import UserLineups from "./userLineups";
-import {floatingButtonScrollListener, registerLayoutAnimation, renderEmptyLineup} from "../UIComponents";
+import {
+    floatingButtonScrollListener,
+    registerLayoutAnimation,
+    renderEmptyLineup} from "../UIComponents";
 import {Tip, TipConfig} from "../components/Tip";
 import {HomeOnBoardingHelper} from "./HomeOnBoardingHelper";
 import {TabBar, TabViewAnimated} from "react-native-tab-view";
@@ -302,10 +305,8 @@ export default class HomeScreen extends Screen<Props, State> {
                 // onScrollToIndexFailed={err=>{console.warn('onScrollToIndexFailed',err)}}
                 // contentOffset={{y: ITEM_DIM + ITEM_SEP, x: ITEM_DIM + ITEM_SEP}}
                 // contentOffset={{x: 30, y: 10, }}
-                renderMenuButton={() => {
-                    //TODO: dubious 15
-                    return this.renderMenuButton(item, 15)
-                }}
+
+
                 renderTitle={(lineup: Lineup) => <LineupTitle lineup={lineup} style={{marginBottom: 10,}}/>}
                 style={[
                     {paddingTop: 8, paddingBottom: 12},
@@ -336,19 +337,6 @@ export default class HomeScreen extends Screen<Props, State> {
         />;
     }
 
-    renderMenuButton(item: Lineup, padding: number) {
-        //TODO: use right manager
-        if (!item || item.id === currentGoodshboxId()) return null;
-
-        return (
-            <GTouchable style={{position: "absolute", right: 0, margin: 0}} onPress={() => displayLineupActionMenu(this.props.navigator, this.props.dispatch, item)}>
-                <View style={{...stylePadding(padding, 14)}}>
-                    <Image
-                        source={require('../../img2/moreDotsGrey.png')} resizeMode="contain"/>
-                </View>
-            </GTouchable>
-        );
-    }
 
     _targetRef = (primaryText, secondaryText) => ref => {
         if (!ref) return;

@@ -34,6 +34,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {UpdateTracker} from "../UpdateTracker";
 import StoreManager from "../../managers/StoreManager";
 import {EmptyCell, ITEM_DIM} from "./LineupCellSaving";
+import {LINEUP_PADDING} from "../UIStyles";
+import {renderLineupMenu} from "../UIComponents";
 // $FlowFixMe
 type Props = {
     lineupId: Id,
@@ -52,6 +54,7 @@ type State = {
 };
 
 export const ITEM_SEP = 10
+
 
 @connect(state => ({
     data: state.data,
@@ -93,7 +96,7 @@ export default class LineupHorizontal extends Component<Props, State> {
                 {
                     !skipLineupTitle &&
 
-                    <View style={{flexDirection:'row', paddingHorizontal: 15}}>
+                    <View style={{flexDirection:'row', paddingHorizontal: LINEUP_PADDING}}>
                         {renderTitle(lineup)}
                         {renderMenuButton && renderMenuButton()}
                     </View>
@@ -106,7 +109,7 @@ export default class LineupHorizontal extends Component<Props, State> {
                         hasMore={false}
                         horizontal={true}
                         ItemSeparatorComponent={()=> <View style={{width: ITEM_SEP}} />}
-                        contentContainerStyle={{paddingLeft: 15}}
+                        contentContainerStyle={{paddingLeft: LINEUP_PADDING}}
                         showsHorizontalScrollIndicator={false}
                         {...attributes}
                         // cannotFetch={!super.isVisible()}
@@ -119,7 +122,7 @@ export default class LineupHorizontal extends Component<Props, State> {
 
     static defaultRenderEmpty(renderFirstAsPlus: boolean = false) {
         return (
-            <View style={{flexDirection: 'row', paddingLeft: 15}}>{
+            <View style={{flexDirection: 'row', paddingLeft: LINEUP_PADDING}}>{
                 [0,1,2,3,4].map((o, i) => (
                         this.renderEmptyCell(i, renderFirstAsPlus)
                     )
@@ -209,10 +212,11 @@ export default class LineupHorizontal extends Component<Props, State> {
 
 export type Props1 = {
     lineup: Lineup,
+    dispatch: any,
     navigator: RNNNavigator
 }
 export const LineupH1 = connect()((props: Props1) => {
-    const {lineup, navigator, ...attr} = props;
+    const {lineup, dispatch, navigator, ...attr} = props;
     return <GTouchable onPress={()=>seeList(navigator, lineup)}>
         <LineupHorizontal
             lineupId={lineup.id}
@@ -226,6 +230,7 @@ export const LineupH1 = connect()((props: Props1) => {
                     <LineupCellSaving item={saving.resource} />
                 </GTouchable>
             )}
+            renderMenuButton={renderLineupMenu(navigator, dispatch, lineup)}
             {...attr}
         />
     </GTouchable>

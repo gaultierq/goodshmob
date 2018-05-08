@@ -323,6 +323,8 @@ export default {
         try_again: "Réessayer",
         ask_friend: "Poser une\nquestion à\nmon réseau",
         logout: "Déconnexion",
+        follow: "Suivre",
+        unfollow: "Ne plus suivre",
         terms: "Conditions d'utilisation",
         copy_link: "Copier le lien",
         send_to_goodsher: "Envoyer à un contact",

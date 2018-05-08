@@ -327,6 +327,8 @@ export default {
         try_again: "Try Again",
         ask_friend: "Ask my network",
         logout: "Logout",
+        follow: "Follow",
+        unfollow: "Unfollow",
         terms: "Terms and personal data",
         copy_link: "Copy link",
         send_to_goodsher: "Send to another\nuser",

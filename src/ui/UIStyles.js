@@ -89,6 +89,7 @@ export const TEXT_LIST = {fontSize: 14, color: Colors.blue};
 export const TEXT_LESS_IMPORTANT = {fontSize: 12, color: Colors.greyish};
 export const TEXT_LEAST_IMPORTANT = {fontSize: 9, color: Colors.greyish};
 
+export const LINEUP_PADDING = 15
 
 type ButtonOptions = {disabled?: boolean, loading?: boolean, style?: *};
 
