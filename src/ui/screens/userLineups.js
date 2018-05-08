@@ -174,6 +174,10 @@ export default class UserLineups extends Screen<Props, State> {
                 <View>
                     <Text style={STYLES.empty_message}>{i18n.t('lineups.filter.empty')}</Text>
                     {renderSimpleButton(i18n.t('lineups.filter.deepsearch'), () => this.launchSearch(searchToken))}
+                    {renderSimpleButton(i18n.t('actions.cancel'), () => {
+                        this.setState({filter: ''});
+                        this.filterNode.blur();
+                    })}
                 </View>
             ),
             applyFilter: (sections) => {
