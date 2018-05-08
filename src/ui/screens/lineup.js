@@ -211,7 +211,6 @@ const actions = {
             .withRoute(`lists/${lineupId}/savings`)
             .addQuery({
                 page: 1,
-                per_page: 10,
                 include: "*.*"
             });
     },

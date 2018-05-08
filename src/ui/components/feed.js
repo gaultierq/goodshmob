@@ -25,12 +25,10 @@ import {SearchBar} from 'react-native-elements'
 
 import type {ScreenVisibility} from "./Screen";
 import {Colors} from "../colors";
-import Fuse from 'fuse.js'
 import {getLanguages} from 'react-native-i18n'
 import {RequestManager} from "../../managers/request";
 import {createConsole} from "../../helpers/DebugUtils";
 import Spinner from 'react-native-spinkit';
-import GSearchBar from "../GSearchBar";
 import Config from "react-native-config"
 import {FullScreenLoader} from "../UIComponents";
 
@@ -43,7 +41,7 @@ export type FeedSource = {
 
 export type Props<T> = {
     data: Array<T>,
-    renderItem: Function,
+    renderItem?: any => Node,
     fetchSrc: FeedSource,
     hasMore?: boolean,
     ListHeaderComponent?: Node,
@@ -56,7 +54,8 @@ export type Props<T> = {
     filter?: ?FilterConfig<T>,
     initialLoaderDelay?: ?ms,
     displayName?: string,
-    doNotDisplayFetchMoreLoader?: boolean
+    doNotDisplayFetchMoreLoader?: boolean,
+    lastIdExtractor: any => any
 };
 
 export type FilterConfig<T> = {
@@ -91,6 +90,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     static defaultProps = {
         visibility: 'unknown',
         keyExtractor: item => item.id,
+        lastIdExtractor: item => item.id,
         initialLoaderDelay: 0
     };
 
@@ -500,7 +500,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             }
 
             this.props
-                .dispatch(call.createActionDispatchee(fetchSrc.action, {trigger, ...fetchSrc.options, mergeOptions: {drop}}))
+                .dispatch(call.createActionDispatchee(fetchSrc.action, {trigger, ...fetchSrc.options, mergeOptions: {drop, hasLess: !!afterId}}))
                 .then(({data, links})=> {
                     this.logger.debug("disptachForAction" + JSON.stringify(this.props.fetchSrc.action));
                     if (!data) {
@@ -541,7 +541,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     fetchMore(options ?: any = {}) {
         let last = this.getLastItem();
         if (last) {
-            const lastId = this.props.keyExtractor(last);
+            const lastId = this.props.lastIdExtractor(last);
             if (!lastId) throw "no id found for this item:" + JSON.stringify(last);
             return this.tryFetchIt({afterId: lastId, ...options});
         }

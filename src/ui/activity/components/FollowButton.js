@@ -38,7 +38,7 @@ export default class FollowButton extends Component<Props, State> {
         let followed = isFollowed(lineup)
 
         //TODO: use rights manager
-        let followable = isCurrentUser(lineup.user)
+        let followable = lineup.user && !isCurrentUser(lineup.user)
 
         return renderSimpleButton(
             followed ? i18n.t("actions.unfollow") : i18n.t("actions.follow"),

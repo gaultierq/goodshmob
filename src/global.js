@@ -38,6 +38,7 @@ const ALL_KEYS = [
     'MIN_REQUEST_TIME',
     'WITH_NOTIFICATIONS',
     'ENABLE_PERF_OPTIM',
+    'API_PAGINATION_PER_PAGE',
 ];
 
 export function init(hotReload: boolean) {

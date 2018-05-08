@@ -164,13 +164,13 @@ export function createObject(source: Source, store: any): Base {
 */
 
 export type MergeOptions<K> = {
-    afterId:? K,
-    beforeId:? K,
+    afterId?: K,
+    beforeId?: K,
 
     //has more and has less are used to know if we should extends segment to remove to list boundaries
-    hasMore:? boolean,
-    hasLess:? boolean,
-    reverse:? boolean
+    hasMore?: boolean,
+    hasLess?: boolean,
+    reverse?: boolean
 }
 
 

@@ -298,7 +298,10 @@ export class Call {
     // - load more timeout => display some in-screen message on screen (with retry)
     // - default: temp. snack (ouch! ...)
     // - item already in lineup: some alerts
-    createActionDispatchee(apiAction: ApiAction, options?: any = {}): Dispatchee {
+    createActionDispatchee(apiAction: ApiAction, options?: {
+        trigger?: any,
+        mergeOptions?: {drop?: boolean},
+    } = {}): Dispatchee {
         const call = this;
         const {trigger = TRIGGER_USER_DIRECT_ACTION} = options;
 
@@ -377,6 +380,10 @@ export class Call {
 
     run() {
         if (!this.method) throw new Error(`call need a method ${this.toString()}`);
+        if (__API_PAGINATION_PER_PAGE__) {
+            this.addQuery({per_page: __API_PAGINATION_PER_PAGE__})
+        }
+
         return instance.submit(this.url.toString(), this.method, this.body, this.delay)
             .catch(err => {throw err})
             .then(resp => {
@@ -596,7 +603,8 @@ type SHELL = {
 
 type REDUX_ACTION<T> = {
     type: string,
-    payload: {data: Array<T>}
+    payload: {data: Array<T>},
+    options: any
 }
 
 export function reducerFactory(apiAction: ApiAction) {
@@ -608,16 +616,19 @@ export function reducerFactory(apiAction: ApiAction) {
 export const reduceList2 = (state: STATE<SHELL>, action: REDUX_ACTION<SHELL>, apiAction: ApiAction, optionalExtractor?: any => any) => {
     switch (action.type) {
         case apiAction.success():
-            console.info("reduceList2::start", action)
+
+            let {mergeOptions = {}} = action.options
+
             let newList = action.payload.data.map(f => {
                 let {id, type} = f;
                 let options = optionalExtractor && optionalExtractor(f) || {};
                 return {id, type, ...options};
             });
+
             let merged;
             try {
                 merged = new Util.Merge(state.list || [], newList)
-                    .withHasLess(true)
+                    .withOptions(mergeOptions)
                     .merge();
             }
             catch (e) {
@@ -629,7 +640,6 @@ export const reduceList2 = (state: STATE<SHELL>, action: REDUX_ACTION<SHELL>, ap
 
             const hasNoMore = action.payload.data.length === 0;
             if (hasNoMore !== state.hasNoMore) state = {...state, hasNoMore: hasNoMore}
-            console.info("reduceList2::end", action)
 
     }
     return state;

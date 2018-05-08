@@ -54,22 +54,23 @@ export default class MyInterests extends Screen<Props, State> {
         let followed_lists = this.props.followed_lists
         let followed = _.slice(followed_lists.list);
 
+        const lists = []
+        const followIdsByListIds = {}
+        followed.forEach(f => {
+            let list = buildData(this.props.data, 'follows', f.id).list
+            lists.push(list)
+            followIdsByListIds[list.id] = f.id
+        })
+
         return (
             <Feed
                 displayName={"my interests"}
                 data={followed}
                 renderSectionHeader={({section}) => renderSectionHeader(section)}
-                sections={LINEUP_SECTIONS(this.props.navigator, this.props.dispatch, userId)(followed.map(f => buildData(this.props.data, f.type, f.id)))}
-                // renderItem={({item, index})=>(
-                //     <LineupH1
-                //         lineup={item}
-                //         navigator={navigator}
-                //         skipLineupTitle={true}
-                //         renderEmpty={renderEmptyLineup(navigator, item)}
-                //     />
-                // )}
+                sections={LINEUP_SECTIONS(this.props.navigator, this.props.dispatch, userId)(lists)}
                 empty={<View><Text style={STYLES.empty_message}>{i18n.t('community_screen.empty_screen')}</Text></View>}
                 fetchSrc={this.fetchSrc(userId)}
+                lastIdExtractor={list => followIdsByListIds[list.id]}
             />
         )
     }
@@ -89,7 +90,6 @@ const FETCH_FOLLOWED_LINEUPS = ApiAction.create("fetch_followed_lineups", "retri
 const fetchFollowedLineups =  userId => new Api.Call()
     .withMethod('GET')
     .withRoute(`users/${userId}/followed_lists`)
-    .addQuery({include: "savings,savings.resource"})
 
 
 export const reducer = reducerFactory(FETCH_FOLLOWED_LINEUPS)
