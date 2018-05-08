@@ -80,6 +80,15 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/green" />
 
+        <meta-data
+                android:name="com.facebook.sdk.ApplicationId"
+                android:value="@string/facebook_app_id" />
+        <meta-data
+                android:name="com.facebook.accountkit.ApplicationName"
+                android:value="@string/app_name" />
+        <meta-data
+                android:name="com.facebook.accountkit.ClientToken"
+                android:value="@string/ak_client_token" />
     </application>
 
 </manifest>

@@ -2,11 +2,12 @@
 // @flow
 import React, {Component} from 'react';
 
-import {ActivityIndicator, Button, Image, ImageBackground, StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, Button, Image, ImageBackground, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import * as appActions from "../../auth/actions"
 import {connect} from 'react-redux';
 import {AccessToken, LoginManager} from 'react-native-fbsdk';
 import Config from 'react-native-config';
+import RNAccountKit from 'react-native-facebook-account-kit'
 
 import SmartButton from "../components/SmartButton";
 import SwiperNav from "../components/SwiperNav";
@@ -116,6 +117,12 @@ class Login extends Component<Props, State> {
                               {i18n.t('login_screen.no_publication')}
                           </Text>
 
+                          <TouchableOpacity onPress={this.handleAccountKitLogin}>
+                              <Text style={{fontSize: 12, color: '#ffffff', letterSpacing:1.2, textAlign: 'center', marginTop: 22, fontFamily: SFP_TEXT_BOLD}}>
+                                  {i18n.t('login_screen.account_kit_signin')}
+                              </Text>
+                          </TouchableOpacity>
+
                       </View>
                   </View>
               </Swiper>
@@ -202,6 +209,26 @@ class Login extends Component<Props, State> {
                 }
             )
         ;
+    });
+
+    handleAccountKitLogin = () => new Promise((resolve, reject)=> {
+
+        const loginAction = appActions.login;
+        RNAccountKit.loginWithPhone()
+            .then((token) => {
+                if (!token) {
+                    console.log('Login cancelled')
+                } else {
+                    console.log('login ok !')
+                    this.props
+                        .dispatch(loginAction(token))
+                        .then((user) => {
+                            resolve();
+                        }, err => reject(err))
+                }
+            })
+
+
     });
 
     renderPagination = (index, total, context) => {
