@@ -84,7 +84,7 @@ class NetworkScreen extends Screen<Props, State> {
         let navigator = this.props.navigator;
 
         if (event.id === 'bottomTabReselected' && this.feed) {
-                this.feed.scrollToOffset({x: 0, y: 0, animated: true});
+            this.feed.scrollToOffset({x: 0, y: 0, animated: true});
         }
 
 

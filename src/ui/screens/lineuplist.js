@@ -41,7 +41,8 @@ export type Props = FeedProps<List> & {
     sectionMaker?: (lineups: List<List>) => Array<*>,
     ListHeaderComponent?: Node,
     renderItem: (item: *)=>Node,
-    navigator: *
+    navigator: *,
+    listRef: any => void | string
 };
 
 type State = {
@@ -62,21 +63,6 @@ export class LineupListScreen extends Screen<Props, State> {
     constructor(props) {
         super(props);
         this.state = {...super.state, isLoading: false, isLoadingMore: false,}
-    }
-
-    feed: any
-
-
-    componentDidMount() {
-        if (this.props.navigator) {
-            this.props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-        }
-    }
-
-    onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
-        if (event.id === 'bottomTabReselected' && this.feed) {
-            this.feed.scrollToLocation({sectionIndex: 0, itemIndex: 0, viewOffset: 50})
-        }
     }
 
     render() {
@@ -123,7 +109,7 @@ export class LineupListScreen extends Screen<Props, State> {
         return (
             <Feed
                 data={items}
-                listRef={ref => this.feed = ref}
+                listRef={this.props.listRef}
                 sections={sectionMaker && sectionMaker(items)}
                 renderItem={this.renderItem.bind(this)}
                 fetchSrc={fetchSrc}
