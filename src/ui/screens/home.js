@@ -120,7 +120,7 @@ class HomeScreen extends Screen<Props, State> {
         navBarNoBorder: true,
         topBarElevationShadowEnabled: false
     };
-
+    feed: any
     appTourTargets = new Map();
 
 
@@ -153,6 +153,17 @@ class HomeScreen extends Screen<Props, State> {
                         animated: true
                     });
                     break;
+            }
+        }
+        if (event.id === 'bottomTabReselected') {
+            if (this.feed) {
+                this.feed.scrollToLocation({
+                        sectionIndex: 0,
+                        itemIndex: 0,
+                        viewOffset: 50
+                    }
+                )
+
             }
         }
 
@@ -276,6 +287,7 @@ class HomeScreen extends Screen<Props, State> {
             <View style={{flex:1}}>
 
                 <UserLineups
+                    listRef={ref => this.feed = ref}
                     displayName={"home feed"}
                     feedId={"home list"}
                     userId={userId}
@@ -320,26 +332,26 @@ class HomeScreen extends Screen<Props, State> {
                                               withMenuButton={true}
                                               onPressEmptyLineup={() => startAddItem(navigator, item.id)}
                                               renderEmpty={this.renderEmptyLineup(navigator, item)}
-                                              // TODO: watch https://github.com/facebook/react-native/issues/13202
-                                              // ListHeaderComponent={
-                                              //     () => <GTouchable
-                                              //         onPress={() => startAddItem(navigator, item.id)}
-                                              //         deactivated={item.pending}
-                                              //     >
-                                              //         {
-                                              //             LineupHorizontal.renderEmptyCell(0, true)
-                                              //         }
-                                              //     </GTouchable>
-                                              //
-                                              // }
-                                              // initialScrollIndex={1}
-                                              // initialNumToRender={6}
-                                              // getItemLayout={(data, index) => (
-                                              //     {length: ITEM_DIM, offset: (ITEM_DIM + ITEM_SEP)* index, index}
-                                              // )}
-                                              // onScrollToIndexFailed={err=>{console.warn('onScrollToIndexFailed',err)}}
-                                              // contentOffset={{y: ITEM_DIM + ITEM_SEP, x: ITEM_DIM + ITEM_SEP}}
-                                              // contentOffset={{x: 30, y: 10, }}
+                                        // TODO: watch https://github.com/facebook/react-native/issues/13202
+                                        // ListHeaderComponent={
+                                        //     () => <GTouchable
+                                        //         onPress={() => startAddItem(navigator, item.id)}
+                                        //         deactivated={item.pending}
+                                        //     >
+                                        //         {
+                                        //             LineupHorizontal.renderEmptyCell(0, true)
+                                        //         }
+                                        //     </GTouchable>
+                                        //
+                                        // }
+                                        // initialScrollIndex={1}
+                                        // initialNumToRender={6}
+                                        // getItemLayout={(data, index) => (
+                                        //     {length: ITEM_DIM, offset: (ITEM_DIM + ITEM_SEP)* index, index}
+                                        // )}
+                                        // onScrollToIndexFailed={err=>{console.warn('onScrollToIndexFailed',err)}}
+                                        // contentOffset={{y: ITEM_DIM + ITEM_SEP, x: ITEM_DIM + ITEM_SEP}}
+                                        // contentOffset={{x: 30, y: 10, }}
                                               renderMenuButton={() => {
                                                   //TODO: dubious 15
                                                   return this.renderMenuButton(item, 15)
