@@ -56,7 +56,8 @@ export type Props<T> = {
     filter?: ?FilterConfig<T>,
     initialLoaderDelay?: ?ms,
     displayName?: string,
-    doNotDisplayFetchMoreLoader: ?boolean
+    doNotDisplayFetchMoreLoader: ?boolean,
+    listRef: any => void | string
 };
 
 export type FilterConfig<T> = {
@@ -91,7 +92,8 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     static defaultProps = {
         visibility: 'unknown',
         keyExtractor: item => item.id,
-        initialLoaderDelay: 0
+        initialLoaderDelay: 0,
+        listRef: "feed"
     };
 
     state = {initialLoaderVisibility: 'idle', firstLoad: 'idle'};
@@ -115,10 +117,6 @@ export default class Feed<T> extends Component<Props<T>, State>  {
 
 
     componentWillReceiveProps(nextProps: Props<*>) {
-        if (this.props.getFlatlistRef) {
-            this.props.getFlatlistRef(this.refs.feed)
-        }
-
         if (__ENABLE_BACK_HANDLER__ && this.props.scrollUpOnBack !== nextProps.scrollUpOnBack) {
             let scrollUpOnBack = nextProps.scrollUpOnBack;
             if (scrollUpOnBack) {
@@ -206,6 +204,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             ListHeaderComponent,
             ListFooterComponent,
             renderSectionHeader,
+            listRef,
             ...attributes
         } = this.props;
 
@@ -260,7 +259,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         //     style1.push({opacity: 0.4})
         // }
         let params =  {
-            ref: "feed",
+            ref: listRef,
             renderItem,
             // keyExtractor: this.keyExtractor,
             key: "feed-list",

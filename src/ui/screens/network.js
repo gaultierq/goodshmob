@@ -63,6 +63,8 @@ class NetworkScreen extends Screen<Props, State> {
         isActionButtonVisible: true
     };
 
+    feed: any
+
     constructor(props){
         super(props);
         props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
@@ -82,14 +84,8 @@ class NetworkScreen extends Screen<Props, State> {
         let navigator = this.props.navigator;
 
         if (event.id === 'bottomTabReselected') {
-
-            const type = this._childFlatlist.constructor.name;
-            if (type == 'SectionList') {
-                this._childFlatlist.scrollToLocation({sectionIndex: 0,
-                    itemIndex: 0,
-                    viewOffset: 50})
-            } else if (type == 'FlatList') {
-                this._childFlatlist.scrollToOffset({x: 0, y: 0, animated: true});
+            if (this.feed) {
+                this.feed.scrollToOffset({x: 0, y: 0, animated: true});
             }
         }
 
@@ -190,7 +186,7 @@ class NetworkScreen extends Screen<Props, State> {
                     displayName={"network feed"}
                     data={activities}
                     renderItem={this.renderItem.bind(this)}
-                    getFlatlistRef={ref => this._childFlatlist = ref}
+                    listRef={ref => this.feed = ref}
                     fetchSrc={{
                         callFactory: fetchMyNetwork,
                         useLinks: true,
