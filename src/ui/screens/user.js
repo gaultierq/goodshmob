@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {Clipboard, Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpacity, User, View} from 'react-native';
-import type {Id} from "../../types";
+import type {Id, RequestState} from "../../types";
 import {CheckBox} from "react-native-elements";
 import {connect} from "react-redux";
 import {isCurrentUserId, logged} from "../../managers/CurrentUser"
@@ -17,6 +17,10 @@ import LineupHorizontal, {LineupH1} from "../components/LineupHorizontal";
 import {seeActivityDetails, seeList, startAddItem} from "../Nav";
 import * as UI from "../UIStyles";
 import {fullName} from "../../helpers/StringUtils";
+import * as Api from "../../managers/Api"
+import {buildData} from "../../helpers/DataUtils"
+import ApiAction from "../../helpers/ApiAction"
+import {getUserAndTheirLists} from "../../redux/UserActions"
 
 type Props = {
     userId: Id,
@@ -26,10 +30,12 @@ type Props = {
 };
 
 type State = {
+    reqFetchUser?: RequestState
 };
 
 const mapStateToProps = (state, ownProps) => ({
     data: state.data,
+    pending: state.pending
 });
 
 @logged
@@ -48,22 +54,35 @@ export default class UserScreen extends Screen<Props, State> {
         super(props);
     }
 
+    componentDidMount() {
+        Api.safeDispatchAction.call(
+            this,
+            this.props.dispatch,
+            getUserAndTheirLists(this.props.userId),
+            'reqFetchUser'
+        )
+    }
+
+    getUser() {
+        return buildData(this.props.data, "users", this.props.userId);
+    }
 
     render() {
+        let user = this.props.user || this.getUser();
 
         let userId = this.props.userId;
         //FIXME: rm platform specific code, https://github.com/wix/react-native-navigation/issues/1871
-        if (this.isVisible() && this.props.user) {
+        if (this.isVisible() && user) {
             if (__IS_IOS__) {
                 this.props.navigator.setStyle({...UI.NavStyles,
                     navBarCustomView: 'goodsh.UserNav',
                     navBarCustomViewInitialProps: {
-                        user: this.props.user,
+                        user: user,
                     }
                 });
             }
             else {
-                this.setNavigatorTitle(this.props.navigator, {title: fullName(this.props.user)})
+                this.setNavigatorTitle(this.props.navigator, {title: fullName(user)})
             }
         }
 
