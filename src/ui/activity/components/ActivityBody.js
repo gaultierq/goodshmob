@@ -17,27 +17,34 @@ import {connect} from "react-redux";
 import {logged} from "../../../managers/CurrentUser"
 import type {Activity} from "../../../types"
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
-import {canPerformAction, A_BUY} from "../../rights";
+import ActionRights, {canPerformAction, A_BUY} from "../../rights";
 import Button from 'apsl-react-native-button';
 import {SFP_TEXT_ITALIC} from "../../fonts";
 import {CachedImage} from "react-native-img-cache";
 import Icon from 'react-native-vector-icons/Feather';
 import {firstName} from "../../../helpers/StringUtils";
+import Carousel from 'react-native-looped-carousel';
 
 
 type Props = {
     activity: Activity,
-    skipLineup?: boolean,
+    onPressItem: (any) => void,
+    showAllImages?: boolean,
     liked: boolean,
     bodyStyle?: *
 };
 
 type State = {
+    width: number,
 };
 
 @connect()
 @logged
 export default class ActivityBody extends React.Component<Props, State> {
+
+    static defaultProps = {
+        showAllImages: false
+    };
 
     componentWillReceiveProps(nextProps: Props) {
         if (nextProps.liked && !this.props.liked) {
@@ -45,12 +52,14 @@ export default class ActivityBody extends React.Component<Props, State> {
         }
     }
 
+    state = {}
+
     render() {
         const {activity, bodyStyle} = this.props;
         let resource = activity.resource;
 
         return (
-            <View>
+            <View onLayout={this._onLayoutDidChange}>
                 {/*Image And Button*/}
                 {this.renderImage()}
 
@@ -101,19 +110,35 @@ export default class ActivityBody extends React.Component<Props, State> {
         });
     }
 
+    _onLayoutDidChange = e => {
+        const layout = e.nativeEvent.layout;
+        this.setState({  width: layout.width });
+    };
+
     renderImage() {
 
         const {activity} = this.props;
-        let resource = activity.resource;
-        let image = resource ? resource.image : undefined;
-        let imageHeight = 288;
         if (activity.type === 'asks'){
             let content = activity.content;
             if (__DEBUG_SHOW_IDS__) content += ` (id=${activity.id.substr(0, 5)})`;
             return <Text style={styles.askText}>{content}</Text>;
         }
 
-        const resize = image && (
+        let resource = activity.resource;
+        let images = resource ? resource.images : undefined;
+
+        // For when resource is a Spotify song
+        if (images && images.length === 0) {
+            images = [resource.image]
+        }
+
+        if (images && !this.props.showAllImages) {
+            images = images.slice(0, 1)
+        }
+
+        let imageHeight = 288;
+
+        const resize = images && (
             resource.type === 'CreativeWork'
             || resource.type === 'TvShow'
             || resource.type === 'Movie'
@@ -136,18 +161,26 @@ export default class ActivityBody extends React.Component<Props, State> {
             style:{marginVertical:5}
         };
 
-        return <View style={[styles.imageContainer,
-            {height: imageHeight,
-            }
-            ]}>
+        return <View style={[styles.imageContainer,{height: imageHeight,}]}>
 
             {/*<BoxShadow setting={shadowOpt}>*/}
-            <CachedImage
-                source={image ? {uri: image} : require('../../../img/goodsh_placeholder.png')}
-                resizeMode={resize}
-                style={[styles.image, {height: imageHeight}]}
-                defaultSource={{}}
-            />
+
+            <Carousel
+                delay={4000}
+                style={styles.imageContainer}
+                autoplay
+                bullets={this.props.showAllImages}>
+                {images.map((image, i) => {
+                    return <CachedImage
+                        source={image ? {uri: image} : require('../../../img/goodsh_placeholder.png')}
+                        key={image}
+                        resizeMode={resize}
+                        style={[styles.image, {height: imageHeight, width: this.state.width}]}
+                        defaultSource={{}}
+                    />
+
+                }) }
+            </Carousel>
 
             {
                 <Animated.View style={[styles.yheaaContainer, {opacity}]}>
@@ -157,7 +190,6 @@ export default class ActivityBody extends React.Component<Props, State> {
             {/*</BoxShadow>*/}
 
         </View>
-
     }
 
     animatedValue = new Animated.Value(0);
