@@ -20,7 +20,10 @@ import {fullName} from "../../helpers/StringUtils";
 import * as Api from "../../managers/Api"
 import {buildData} from "../../helpers/DataUtils"
 import ApiAction from "../../helpers/ApiAction"
-import {getUserAndTheirLists} from "../../redux/UserActions"
+import {
+    actions as userActions,
+    actionTypes as userActionTypes
+} from "../../redux/UserActions"
 
 type Props = {
     userId: Id,
@@ -58,7 +61,7 @@ export default class UserScreen extends Screen<Props, State> {
         Api.safeDispatchAction.call(
             this,
             this.props.dispatch,
-            getUserAndTheirLists(this.props.userId),
+            userActions.getUser(this.props.userId).createActionDispatchee(userActionTypes.GET_USER),
             'reqFetchUser'
         )
     }

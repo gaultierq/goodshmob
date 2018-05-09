@@ -32,6 +32,7 @@ import {STYLES} from "../UIStyles";
 import GTouchable from "../GTouchable";
 import Screen from "../components/Screen";
 import dotprop from "dot-prop-immutable"
+import {actionTypes as userActionTypes, actions as userActions} from "../../redux/UserActions"
 
 export type Props = FeedProps<List> & {
     userId: Id,
@@ -82,12 +83,12 @@ export class LineupListScreen extends Screen<Props, State> {
         let lists = user && user.lists || [];
 
         let fetchSrc =  !_.isEmpty(lists) ? {
-            callFactory: () => actions.fetchLineups(userId),
-            action: FETCH_LINEUPS,
+            callFactory: () => userActions.fetchLineups(userId),
+            action: userActionTypes.FETCH_LINEUPS,
             options: {userId}
         } : {
-            callFactory: () => actions.getUserAndTheirLists(userId),
-            action: GET_USER_W_LISTS
+            callFactory: () => userActions.getUserAndTheirLists(userId),
+            action: userActionTypes.GET_USER_W_LISTS
         };
 
 
@@ -129,26 +130,6 @@ export class LineupListScreen extends Screen<Props, State> {
 
 }
 
-
-const GET_USER_W_LISTS = ApiAction.create("get_user_w_lists", "get user lists of lineups");
-const FETCH_LINEUPS = ApiAction.create("fetch_lineups", "retrieve the user lineups details");
-
-const actions = (() => {
-
-    return {
-        fetchLineups: userId => new Api.Call()
-            .withMethod('GET')
-            .withRoute(`users/${userId}/lists`)
-            .addQuery({include: "savings,savings.resource"}),
-
-        getUserAndTheirLists: (userId): Api.Call => new Api.Call()
-            .withMethod('GET')
-            .withRoute(`users/${userId}`)
-            .addQuery({include: "lists,lists.savings,lists.savings.resource"}),
-
-    };
-})();
-
 const reducer = (() => {
     const initialState = Immutable(Api.initialListState());
 
@@ -156,7 +137,7 @@ const reducer = (() => {
 
     return (state = initialState, action = {}) => {
         switch (action.type) {
-            case FETCH_LINEUPS.success(): {
+            case userActionTypes.FETCH_LINEUPS.success(): {
                 let {userId, mergeOptions} = action.options;
                 let path = getPath(userId);
                 state = doDataMergeInState(state, path, action.payload.data, mergeOptions);

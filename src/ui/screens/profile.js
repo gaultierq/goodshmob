@@ -36,6 +36,7 @@ import Icon from "react-native-vector-icons/SimpleLineIcons";
 import {SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "../fonts";
 import FeedSeparator from "../activity/components/FeedSeparator";
 import {getDeviceInfo} from "../../managers/DeviceManager";
+import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
 
 type Props = {
     // userId: Id,
@@ -67,9 +68,10 @@ export default class Profile extends Component<Props, State> {
         let userId = currentUserId();
 
         if (!this.getUser(userId)) {
-            this.props.dispatch(actions.getUserAndTheirLists(userId).createActionDispatchee(GET_USER)).then(({data})=>{
-                //let user = this.getUser(userId);
-                //this.setState({user});
+            this.props.dispatch(userActions.getUser(userId)
+                .createActionDispatchee(userActionTypes.GET_USER)).then(({data})=>{
+                // let user = this.getUser(userId);
+                // this.setState({user});
             });
         }
     }
@@ -262,22 +264,6 @@ export default class Profile extends Component<Props, State> {
         return buildData(data, "users", userId);
     }
 }
-
-const GET_USER = ApiAction.create("get_user(profile)", "get the user profile information");
-
-const actions = (() => {
-
-    const include = "";
-
-    return {
-        getUserAndTheirLists: (userId: Id) => new Api.Call()
-            .withMethod('GET')
-            .withRoute(`users/${userId}`)
-            .addQuery({include}),
-
-    };
-})();
-
 
 const styles = StyleSheet.create({
     userName: {

@@ -17,8 +17,8 @@ import GTouchable from "../GTouchable";
 import * as Nav from "../Nav";
 import {STYLES} from "../UIStyles";
 import {seeUser} from "../Nav";
+import {actionTypes as userActionTypes, actions as userActions} from "../../redux/UserActions";
 
-;
 
 type Props = {
     userId: Id,
@@ -56,13 +56,13 @@ export default class FriendsScreen extends Screen<Props, State> {
         let friends, callFactory, action;
         if (user && user.friends) {
             friends = user.friends;
-            callFactory = () => actions.fetchFriendsCall(userId);
-            action = actionTypes.LOAD_FRIENDS;
+            callFactory = () => userActions.fetchFriendsCall(userId);
+            action = userActionTypes.LOAD_FRIENDS;
         }
         else {
             friends = [];
-            callFactory = () => actions.getUserAndTheirLists(userId);
-            action = actionTypes.GET_USER;
+            callFactory = () => userActions.getUserAndTheirFriends(userId);
+            action = userActionTypes.GET_USER_W_FRIENDS;
         }
 
         return (
@@ -92,39 +92,11 @@ export default class FriendsScreen extends Screen<Props, State> {
     }
 }
 
-const actionTypes = (() => {
-
-    const LOAD_FRIENDS = ApiAction.create("load_friends", "retrieve user friends details");
-    const GET_USER_W_FRIENDS = ApiAction.create("get_user_w_friends", "get the user friends list");
-
-    return {LOAD_FRIENDS, GET_USER: GET_USER_W_FRIENDS};
-})();
-
-
-const actions = (() => {
-    return {
-        fetchFriendsCall: (userId: string) => {
-
-            return new Api.Call().withMethod('GET')
-                .withRoute(`users/${userId}/friends`)
-                .addQuery({
-                    include: "creator"
-                });
-        },
-        getUserAndTheirLists: (userId): Api.Call => new Api.Call()
-            .withMethod('GET')
-            .withRoute(`users/${userId}`)
-            .addQuery({
-                    include: "friends"
-                }
-            ),
-    };
-})();
 
 export const reducer =  (state = {}, action = {}) => {
 
     switch (action.type) {
-        case actionTypes.LOAD_FRIENDS.success(): {
+        case userActionTypes.LOAD_FRIENDS.success(): {
             let {userId, mergeOptions} = action.options;
             let path = `users.${userId}.relationships.friends.data`;
             state = doDataMergeInState(state, path, action.payload.data, mergeOptions);
