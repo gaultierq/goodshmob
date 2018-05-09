@@ -14,6 +14,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import {MainBackground, TRANSPARENT_SPACER} from "../UIComponents";
 import GTouchable from "../GTouchable";
 import {userFirstName} from "../../helpers/StringUtils";
+import {sendMessage} from "../../managers/Messenger"
 
 type Props = {
     data?: any,
@@ -85,7 +86,6 @@ export default class SendScreen extends Component<Props, State> {
     }
 
     renderChildren(isSelected: boolean, sent: boolean, friend: User) {
-        if (sent) return <Text style={UI.TEXT_LESS_IMPORTANT}>{i18n.t("send_screen.sent")}</Text>
         return isSelected &&
             <View style={{flex: 1}}>
                 <SmartInput
@@ -97,7 +97,12 @@ export default class SendScreen extends Component<Props, State> {
                         fontSize: 15
                     }}
                     // inputContainerStyle={{borderRadius: 1}}
-                    execAction={(input: string) => this.props.dispatch(this.props.sendAction(friend, input))}
+                    execAction={(input: string) => {
+                        return this.props.dispatch(this.props.sendAction(friend, input))
+                            .then((info, err)=> {
+                                sendMessage(i18n.t('send_screen.sent'));
+                            });
+                    }}
                     placeholder={i18n.t("send_screen.add_description_placeholder", {recipient: userFirstName(friend)})}
                     autoFocus
                     height={35}
