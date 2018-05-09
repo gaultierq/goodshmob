@@ -8,8 +8,8 @@ import {connect} from 'react-redux';
 import {AccessToken, LoginManager} from 'react-native-fbsdk';
 import Config from 'react-native-config';
 import RNAccountKit from 'react-native-facebook-account-kit'
+import Button from 'apsl-react-native-button'
 
-import SmartButton from "../components/SmartButton";
 import SwiperNav from "../components/SwiperNav";
 import {Colors} from "../colors";
 
@@ -38,6 +38,7 @@ class Login extends Component<Props, State> {
     render() {
         let marg = 40;
         let transformBase = 100;
+        let sending = this.isSending();
 
         return (
             <View style={styles.wrapper}>
@@ -105,13 +106,16 @@ class Login extends Component<Props, State> {
                       <View style={{
                       }}>
 
-                          <SmartButton
-                              textKey={'login_screen.facebook_signin'}
-                              execAction={this.handleFacebookLogin2}
-                              style={[styles.facebookButton]}
-                              textStyle={[styles.facebookButtonText]}
-                              returnKeyType={'go'}
-                          />
+
+                          <Button
+                              isLoading={sending}
+                              isDisabled={sending}
+                              onPress={this.execLogin.bind(this)}
+                              style={[styles.button, styles.facebookButton]}>
+                              <Text style={styles.facebookButtonText}>
+                                  {i18n.t('login_screen.facebook_signin')}
+                              </Text>
+                          </Button>
 
                           <Text style={{fontSize: 10, color: '#ffffff', letterSpacing:1.2, textAlign: 'center', marginTop: 22, fontFamily: SFP_TEXT_BOLD}}>
                               {i18n.t('login_screen.no_publication')}
@@ -231,6 +235,29 @@ class Login extends Component<Props, State> {
 
     });
 
+    execLogin() {
+        if (this.isSending()) {
+            console.debug("already executing action");
+            return;
+        }
+        let setReqState = (requestState) => {
+            this.setState({requestState});
+        };
+        setReqState('sending');
+
+        this.handleFacebookLogin2()
+            .then(()=> {
+                setReqState('ok');
+            }, (err) => {
+                console.warn(err);
+                setReqState('ko');
+            });
+    }
+
+    isSending() {
+        return this.state.requestState === 'sending';
+    }
+
     renderPagination = (index, total, context) => {
         // By default, dots only show when `total` >= 2
         //if (total <= 1) return null;
@@ -291,15 +318,16 @@ export {screen};
 
 const styles = StyleSheet.create({
     facebookButton: {
-        backgroundColor: Colors.white,
-        borderColor: Colors.green,
+        backgroundColor: Colors.facebookBlue,
+        borderColor: Colors.facebookBlue,
         borderWidth: StyleSheet.hairlineWidth,
         borderRadius: 8,
         paddingRight: 10,
         paddingLeft: 10
     },
     facebookButtonText: {
-        color: Colors.green,
+        color: Colors.white,
+        fontWeight: "bold",
         fontSize: 15
     },
     wrapper: {
@@ -323,6 +351,12 @@ const styles = StyleSheet.create({
     },
     desc: {
         padding: "10%"
+    },
+    button: {
+        marginBottom: 0,
+        marginLeft: 8,
+        marginRight: 8,
+        borderWidth: 0,
     },
     pagination_x: {
         position: 'absolute',
