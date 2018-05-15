@@ -139,9 +139,14 @@ class HomeScreen extends Screen<Props, State> {
         this.props.navigator.setDrawerEnabled({side: 'left', enabled: false});
     }
 
+    feed: any
+
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
         //console.debug("home:onNavigatorEvent" , event);
 
+        if (event.id === 'bottomTabReselected' && this.feed) {
+            this.feed.scrollToLocation({sectionIndex: 0, itemIndex: 0, viewOffset: 50})
+        }
 
         //HACK
         if (event.type === 'DeepLink') {
@@ -279,6 +284,7 @@ class HomeScreen extends Screen<Props, State> {
                     displayName={"home feed"}
                     feedId={"home list"}
                     userId={userId}
+                    listRef={ref => this.feed = ref}
                     navigator={navigator}
                     empty={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
                     initialLoaderDelay={0}

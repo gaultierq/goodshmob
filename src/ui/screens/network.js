@@ -63,6 +63,8 @@ class NetworkScreen extends Screen<Props, State> {
         isActionButtonVisible: true
     };
 
+    feed: any
+
     constructor(props){
         super(props);
         props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
@@ -80,6 +82,10 @@ class NetworkScreen extends Screen<Props, State> {
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
         console.debug("network:onNavigatorEvent" , event);
         let navigator = this.props.navigator;
+
+        if (event.id === 'bottomTabReselected' && this.feed) {
+            this.feed.scrollToOffset({x: 0, y: 0, animated: true});
+        }
 
 
         if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
@@ -178,6 +184,7 @@ class NetworkScreen extends Screen<Props, State> {
                     displayName={"network feed"}
                     data={activities}
                     renderItem={this.renderItem.bind(this)}
+                    listRef={ref => this.feed = ref}
                     fetchSrc={{
                         callFactory: fetchMyNetwork,
                         useLinks: true,

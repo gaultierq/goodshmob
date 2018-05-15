@@ -35,7 +35,8 @@ import {scheduleOpacityAnimation} from "../UIComponents";
 
 type Props = {
     userId: Id,
-    navigator: RNNNavigator
+    navigator: RNNNavigator,
+    listRef: any => void | string
 };
 
 type State = {
@@ -89,6 +90,7 @@ export default class UserLineups extends Screen<Props, State> {
                 <View style={{flex:1}}>
 
                     <LineupListScreen
+                        listRef={this.props.listRef}
                         onLineupPressed={(lineup) => seeList(navigator, lineup)}
                         onSavingPressed={(saving) => seeActivityDetails(navigator, saving)}
                         scrollUpOnBack={super.isVisible() ? ()=>false : null}
