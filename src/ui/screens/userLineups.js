@@ -18,12 +18,13 @@ import {
 import {LineupListScreen} from './lineuplist'
 import type {Id, RNNNavigator, SearchToken} from "../../types";
 import {BACKGROUND_COLOR, NavStyles, renderSimpleButton, STYLES} from "../UIStyles";
-import {CheckBox, SearchBar} from 'react-native-elements'
+import {CheckBox} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import type {Visibility} from "./additem";
 import * as Nav from "../Nav";
 import {seeActivityDetails, seeList} from "../Nav";
 import Screen from "../components/Screen";
+import SearchBar from "../components/SearchBar";
 import {Colors} from "../colors";
 import {SFP_TEXT_MEDIUM} from "../fonts";
 
@@ -49,6 +50,7 @@ export default class UserLineups extends Screen<Props, State> {
 
 
     filterNode: Node;
+    cancelSearch: Function
 
     launchSearch(token?: SearchToken) {
         let navigator = this.props.navigator;
@@ -115,8 +117,6 @@ export default class UserLineups extends Screen<Props, State> {
             backgroundColor: NavStyles.navBarBackgroundColor,
             paddingVertical: paddingVertical,
             elevation: 3,
-            paddingLeft: 9,
-            paddingRight: 9,
             borderBottomWidth: 1,
             borderBottomColor: Colors.grey3
         };
@@ -125,23 +125,14 @@ export default class UserLineups extends Screen<Props, State> {
         return (
             <View key={'searchbar_container'} style={[style]}>
 
-                <GSearchBar
-                    textInputRef={r=>this.filterNode = r}
+                <SearchBar
                     onChangeText={filter => this.setState({filter})}
                     placeholder={i18n.t('search.in_feed')}
-                    clearIcon={!!this.state.filter && {color: '#86939e'}}
-                    style={{
-                        margin: 0,
-                    }}
-                    // inputStyle={this.state.isFilterFocused && {height: 10}}
-                    onClearText={() => {
-                        this.filterNode && this.filterNode.blur();
-                    }}
-                    value={this.state.filter}
+                    cancelTitle={i18n.t('actions.cancel')}
                     onFocus={()=>this.onFilterFocusChange(true)}
-                    onBlur={()=>this.onFilterFocusChange(false)}
-                    onSubmitEditing={() => this.launchSearch(this.state.filter)}
-
+                    onCancel={()=>this.onFilterFocusChange(false)}
+                    textInputRef={r=>this.filterNode = r}
+                    cancelFunctionRef={f => console.log('testf', f) || (this.cancelSearch = f)}
                 />
             </View>
         )
@@ -158,7 +149,7 @@ export default class UserLineups extends Screen<Props, State> {
 
 
     renderSearchOverlay() {
-        return (<TouchableWithoutFeedback onPress={() => this.filterNode.blur()}>
+        return (<TouchableWithoutFeedback onPress={() => this.cancelSearch && this.cancelSearch()}>
                 <View style={{
                     position: 'absolute', width: '100%', height: '100%', opacity: 0.4,
                     backgroundColor: Colors.black, zIndex: 50000,}} />
@@ -176,10 +167,7 @@ export default class UserLineups extends Screen<Props, State> {
                 <View>
                     <Text style={STYLES.empty_message}>{i18n.t('lineups.filter.empty')}</Text>
                     {renderSimpleButton(i18n.t('lineups.filter.deepsearch'), () => this.launchSearch(searchToken))}
-                    {renderSimpleButton(i18n.t('actions.cancel'), () => {
-                        this.setState({filter: ''});
-                        this.filterNode.blur();
-                    })}
+
                 </View>
             ),
             applyFilter: (sections) => {
