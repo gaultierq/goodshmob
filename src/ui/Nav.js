@@ -14,15 +14,14 @@ import ApiAction from "../helpers/ApiAction";
 import Config from "react-native-config";
 import ItemCell from "./components/ItemCell";
 import React from "react";
-import {LineupH1} from "./components/LineupHorizontal";
 import LineupHorizontal from "./components/LineupHorizontal";
 import LineupCellSaving from "./components/LineupCellSaving";
-import LineupTitle from "./components/LineupTitle";
-import {Colors} from "./colors";
 import {deleteLineup, followLineup, unfollowLineup} from "./lineup/actions";
 import {GAction, L_DELETE, L_FOLLOW, L_RENAME, L_SHARE, L_UNFOLLOW} from "./rights";
 import {isCurrentUser} from "../managers/CurrentUser";
 import {isFollowed} from "./activity/components/FollowButton";
+import {BACKGROUND_COLOR} from "./UIStyles";
+import LineupTitle2 from "./components/LineupTitle2";
 
 export const CLOSE_MODAL = 'close_modal';
 
@@ -233,7 +232,14 @@ export function displayShareLineup(navigator: RNNNavigator, lineup: Lineup) {
                     lineupId={lineup.id}
                     style={{height: 100}}
                     renderSaving={saving => <LineupCellSaving item={saving.resource} />}
-                    renderTitle={(lineup: Lineup) => <LineupTitle style={{fontSize: 24}} lineup={lineup} skipChevron={true}/>}
+                    renderTitle={(lineup: Lineup) => (
+                        //{/*<:LineupTitle style={{fontSize: 24}} lineup={lineup} />*/}
+                        <LineupTitle2
+                            lineupId={lineup.id}
+                            dataResolver={id => lineup}
+                            style={{backgroundColor: BACKGROUND_COLOR,}}
+                        />
+                    )}
                 />),
             sendAction: null,
             createShareIntent: () => createShareIntent(lineup.name, url),

@@ -25,7 +25,6 @@ import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import {displayLineupActionMenu, seeList, startAddItem} from "../Nav";
 import Screen from "../components/Screen";
-import LineupTitle from "../components/LineupTitle";
 
 import GTouchable from "../GTouchable";
 import AddLineupComponent from "../components/addlineup";
@@ -33,6 +32,7 @@ import OnBoardingManager from "../../managers/OnBoardingManager";
 import LineupHorizontal, {LineupH1} from "../components/LineupHorizontal";
 import UserLineups from "./userLineups";
 import {Tip, TipConfig} from "../components/Tip";
+import LineupTitle2 from "../components/LineupTitle2";
 
 
 type Props = {
@@ -151,7 +151,16 @@ export default class MyGoodsh extends Screen<Props, State> {
                     //TODO: dubious 15
                     return this.renderMenuButton(item, 15)
                 }}
-                renderTitle={(lineup: Lineup) => <LineupTitle lineup={lineup} style={{marginBottom: 10,}}/>}
+                renderTitle={(lineup: Lineup) => (
+                    <LineupTitle2
+                        lineupId={lineup.id}
+                        dataResolver={id => lineup}
+                        style={{marginBottom: 10,}}
+                        skipAuthor={true}
+                    />
+                )}
+
+
                 style={[
                     {paddingTop: 8, paddingBottom: 12},
                     {backgroundColor: index % 2 === 1 ? 'transparent' : 'rgba(255, 255, 255, 0.3)'}

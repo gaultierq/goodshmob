@@ -19,23 +19,22 @@ import {
 
 import {connect} from "react-redux";
 import type {Id, Lineup, RNNNavigator, Saving} from "../../types";
-import {List} from "../../types"
 import {logged} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import {displayActivityActions, seeActivityDetails, seeList} from "../Nav";
 import {Colors} from "../colors";
-import LineupTitle from "../components/LineupTitle";
 import Feed from "../components/feed";
 import LineupCellSaving from "../components/LineupCellSaving";
 
 import GTouchable from "../GTouchable";
-import Icon from 'react-native-vector-icons/FontAwesome';
 import {UpdateTracker} from "../UpdateTracker";
 import StoreManager from "../../managers/StoreManager";
-import {EmptyCell, ITEM_DIM} from "./LineupCellSaving";
+import {EmptyCell} from "./LineupCellSaving";
 import {LINEUP_PADDING} from "../UIStyles";
 import {renderLineupMenu} from "../UIComponents";
+import LineupTitle2 from "./LineupTitle2";
+
 // $FlowFixMe
 type Props = {
     lineupId: Id,
@@ -67,7 +66,14 @@ export default class LineupHorizontal extends Component<Props, State> {
 
     static defaultProps = {
         skipLineupTitle: false,
-        renderTitle: (lineup: Lineup) => <LineupTitle lineup={lineup} style={{marginVertical: 6,}}/>,
+        renderTitle: (lineup: Lineup) => (
+            //<:LineupTitle lineup={lineup} style={{marginVertical: 6,}}/>
+            <LineupTitle2
+                lineupId={lineup.id}
+                dataResolver={id => lineup}
+                style={{marginVertical: 6}}
+            />
+        ),
         renderSaving: saving => <LineupCellSaving item={saving.resource} />,
         dataResolver: lineupId => StoreManager.getLineupAndSavings(lineupId),
         renderEmpty: (list: Lineup) => LineupHorizontal.defaultRenderEmpty()
@@ -218,6 +224,7 @@ export type Props1 = {
 export const LineupH1 = connect()((props: Props1) => {
     const {lineup, dispatch, navigator, ...attr} = props;
     return <GTouchable onPress={()=>seeList(navigator, lineup)}>
+
         <LineupHorizontal
             lineupId={lineup.id}
             renderSaving={saving => (

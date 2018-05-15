@@ -24,12 +24,11 @@ import {Navigation} from 'react-native-navigation';
 import Screen from "../components/Screen";
 import Feed, {FeedSource} from "../components/feed";
 import * as Api from "../../managers/Api";
+import {reducerFactory} from "../../managers/Api";
 import ApiAction from "../../helpers/ApiAction";
 import type {Id} from "../../types";
 import {STYLES} from "../UIStyles";
-import {LINEUP_SECTIONS, renderEmptyLineup, renderSectionHeader} from "../UIComponents";
-import {reducerFactory} from "../../managers/Api";
-import {LineupH1} from "../components/LineupHorizontal";
+import {LINEUP_SECTIONS} from "../UIComponents";
 import {buildData} from "../../helpers/DataUtils";
 
 
@@ -66,7 +65,7 @@ export default class MyInterests extends Screen<Props, State> {
             <Feed
                 displayName={"my interests"}
                 data={followed}
-                renderSectionHeader={({section}) => renderSectionHeader(section)}
+                renderSectionHeader={({section}) => section.renderSectionHeader()}
                 sections={LINEUP_SECTIONS(this.props.navigator, this.props.dispatch, userId)(lists)}
                 empty={<View><Text style={STYLES.empty_message}>{i18n.t('community_screen.empty_screen')}</Text></View>}
                 fetchSrc={this.fetchSrc(userId)}

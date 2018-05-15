@@ -12,6 +12,8 @@ import {currentUserId} from "../../managers/CurrentUser";
 import Screen from "../components/Screen";
 import LineupHorizontal from "../components/LineupHorizontal";
 import LineupCellSaving from "../components/LineupCellSaving";
+import type {Lineup} from "../../types";
+import LineupTitle2 from "../components/LineupTitle2";
 
 type Props = LineupProps & {
     onListSelected: ()=>void
@@ -41,6 +43,16 @@ export default class AddInScreen extends Screen<Props, State> {
                             <LineupHorizontal
                                 lineupId={lineup.id}
                                 renderSaving={saving => <LineupCellSaving item={saving.resource} />}
+                                renderTitle={(lineup: Lineup) => (
+                                    //<:LineupTitle lineup={lineup} style={{marginVertical: 6,}}/>
+                                    <LineupTitle2
+                                        lineupId={lineup.id}
+                                        dataResolver={id => lineup}
+                                        style={{marginVertical: 6}}
+                                        skipAuthor={true}
+                                    />
+                                )}
+
                             />
                         </GTouchable>
                     )

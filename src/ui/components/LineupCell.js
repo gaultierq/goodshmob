@@ -9,11 +9,11 @@ import {assertUnique, buildData} from "../../helpers/DataUtils";
 import {isEmpty} from "lodash";
 import type {List, Saving} from "../../types";
 import {Colors} from "../colors";
-import LineupTitle from "./LineupTitle";
 import LineupCellSaving from "./LineupCellSaving";
 import {connect} from "react-redux";
 import {logged} from "../../managers/CurrentUser"
 import {isId} from "../../helpers/StringUtils";
+import LineupTitle2 from "./LineupTitle2";
 //;
 
 type Props = {
@@ -70,7 +70,13 @@ export default class LineupCell extends React.Component<Props, State> {
                 {backgroundColor: isId(lineup.id) ? Colors.white : Colors.dirtyWhite}, style]}>
 
                 <View style={{flexDirection: titleChildrenBelow ? 'column' : 'row'}}>
-                    {<LineupTitle lineup={lineup} style={{marginVertical: 6,}}/>}
+                    {/*<:LineupTitle lineup={lineup} style={{marginVertical: 6,}}/>*/}
+
+                    <LineupTitle2
+                        lineupId={lineup.id}
+                        dataResolver={id => lineup}
+                        style={{marginVertical: 6,}}
+                    />
 
                     {titleChildren}
                 </View>

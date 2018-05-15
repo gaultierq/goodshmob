@@ -94,7 +94,7 @@ export default class UserLineups extends Screen<Props, State> {
                         scrollUpOnBack={super.isVisible() ? ()=>false : null}
                         cannotFetch={false}
                         visible={true}
-                        renderSectionHeader={({section}) => renderSectionHeader(section)}
+                        // renderSectionHeader={({section}) => renderSectionHeader(section)}
                         renderSectionFooter={()=> <View style={{height: 25, width: "100%"}} />}
                         ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
                         filter={this.filter()}
