@@ -8,8 +8,6 @@ import {superLog as _superLog} from './helpers/DebugUtils'
 import {Dimensions, Platform} from 'react-native';
 
 
-declare var i18n: any;
-declare var _: any;
 declare var superConsole: any;
 // declare var ENABLE_PERF_OPTIM: boolean;
 declare var ensureNotNull: () => void;

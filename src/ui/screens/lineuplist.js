@@ -33,6 +33,7 @@ import GTouchable from "../GTouchable";
 import Screen from "../components/Screen";
 import dotprop from "dot-prop-immutable"
 import {actionTypes as userActionTypes, actions as userActions} from "../../redux/UserActions"
+import * as Nav from "../Nav"
 
 export type Props = FeedProps<List> & {
     userId: Id,
@@ -41,7 +42,8 @@ export type Props = FeedProps<List> & {
     sectionMaker?: (lineups: List<List>) => Array<*>,
     ListHeaderComponent?: Node,
     renderItem: (item: *)=>Node,
-    navigator: *
+    navigator: *,
+    listRef: any => void | string
 };
 
 type State = {
@@ -63,7 +65,6 @@ export class LineupListScreen extends Screen<Props, State> {
         super(props);
         this.state = {...super.state, isLoading: false, isLoadingMore: false,}
     }
-
 
     render() {
         const {
@@ -109,9 +110,11 @@ export class LineupListScreen extends Screen<Props, State> {
         return (
             <Feed
                 data={items}
+                listRef={this.props.listRef}
                 sections={sectionMaker && sectionMaker(items)}
                 renderItem={this.renderItem.bind(this)}
                 fetchSrc={fetchSrc}
+                navigator={this.props.navigator}
                 {...attributes}
             />
         );
