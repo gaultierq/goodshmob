@@ -7,10 +7,10 @@ export default {
     },
     "tabs": {
         home: {
-            title: "Mes goodsh"
+            title: "Mes listes"
         },
         network: {
-            title: "Mon réseau"
+            title: "Fil d'actualité"
         }
     },
     lineups: {
@@ -150,7 +150,7 @@ export default {
         "related_activities_title": "Autres activités"
     },
     "create_list_controller":{
-        "title":"Nouvelle liste",
+        "title":"+ Nouvelle liste",
         "subtitle":"##Pour y ranger plein de trucs top et les partager si je veux",
         "placeholder":"Sois créatif !",
         "action":"Créer une nouvelle liste",
@@ -275,7 +275,7 @@ export default {
         }
     },
     empty: {
-        lineup: "Cette liste est vide\n c'est bien dommage !"
+        lineup: "Cette liste est vide\n ajoute ce que tu aimes !"
     },
     activity_action_bar: {
         goodsh_deleted: "Goodsh supprimé",
@@ -334,7 +334,7 @@ export default {
     common: {
         empty_feed_generic: "Quand on aime on partage.\nCrée ton réseau de contacts.",
         api: {
-            generic_error: "Oups... Y a quelque chose qui cloche."
+            generic_error: "Oups... Problème de connexion."
         }
     },
     ask: {
