@@ -592,16 +592,16 @@ export const reduceList = (state, action, desc, optionalExtractor?) => {
 };
 
 
-type STATE<T> = {
+export type STATE<T> = {
     list?: Array<T>,
     hasNoMore?: boolean
 }
 
-type SHELL = {
+export type SHELL = {
     id: Id, type: string
 }
 
-type REDUX_ACTION<T> = {
+export type REDUX_ACTION<T> = {
     type: string,
     payload: {data: Array<T>},
     options: any

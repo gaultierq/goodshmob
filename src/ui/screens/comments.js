@@ -319,19 +319,6 @@ const actions = (() => {
                 .withMethod('GET')
                 .withRoute(`${activityType}/${activity.id}/comments`);
         },
-
-        addComment: (activity: Activity, content: string) => {
-            let activityType = sanitizeActivityType(activity.type);
-            let activityId = activity.id;
-
-            return new Call()
-                .withMethod('POST')
-                .withRoute(`${activityType}/${activityId}/comments`)
-                .addQuery({include: "user"})
-                .withBody({comment: {content: content}})
-                .createActionDispatchee(CREATE_COMMENT, {activityId, activityType})
-                ;
-        }
     };
 })();
 

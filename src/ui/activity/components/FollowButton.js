@@ -3,14 +3,12 @@
 import React, {Component} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {connect} from "react-redux";
-import {currentUserId, isCurrentUser, logged} from "../../../managers/CurrentUser"
+import {isCurrentUser, logged} from "../../../managers/CurrentUser"
 import * as Api from "../../../managers/Api";
 import type {Lineup, RequestState} from "../../../types";
-import {doDataMergeInState} from "../../../helpers/DataUtils";
 import {Colors} from "../../colors";
 import {renderSimpleButton} from "../../UIStyles";
-import {FETCH_SAVINGS, followLineup, unfollowLineup} from "../../lineup/actions";
-import ApiAction from "../../../helpers/ApiAction";
+import {followLineup, unfollowLineup} from "../../lineup/actions";
 import {SFP_TEXT_REGULAR} from "../../fonts";
 
 type Props = {
@@ -64,22 +62,6 @@ export default class FollowButton extends Component<Props, State> {
 export function isFollowed(lineup: Lineup) {
     return _.get(lineup, 'meta.followed', false)
 }
-
-const reducer = (() => {
-
-    return (state = {}, action = {}) => {
-
-        switch (action.type) {
-            case FETCH_SAVINGS.success(): {
-                let {listId, mergeOptions} = action.options;
-                let path = `lists.${listId}.relationships.savings.data`;
-                state = doDataMergeInState(state, path, action.payload.data, mergeOptions);
-                break;
-            }
-        }
-        return state;
-    }
-})();
 
 const styles = StyleSheet.create({
     container: {
