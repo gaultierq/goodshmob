@@ -97,7 +97,15 @@ export default class SendScreen extends Component<Props, State> {
                         fontSize: 15
                     }}
                     // inputContainerStyle={{borderRadius: 1}}
-                    execAction={(input: string) => this.props.dispatch(this.props.sendAction(friend, input))}
+                    execAction={(input: string) => {
+                        return this.props.dispatch(this.props.sendAction(friend, input))
+                            .then((info, err)=> {
+                                const targetId = info.data.relationships.target.data.id;
+                                let sent = this.state.sent;
+                                sent[targetId] = true;
+                                this.setState({sent})
+                            });
+                    }}
                     placeholder={i18n.t("send_screen.add_description_placeholder", {recipient: userFirstName(friend)})}
                     autoFocus
                     height={35}
