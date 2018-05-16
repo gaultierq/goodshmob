@@ -14,6 +14,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import UserRowI from "../activity/components/UserRowI";
 import {buildData} from "../../helpers/DataUtils";
 import {SFP_TEXT_MEDIUM} from "../fonts";
+import {STYLES} from "../UIStyles";
 
 export type State = {
 
@@ -53,10 +54,7 @@ export default class LineupTitle2 extends Component<Props, State> {
                         // paddingTop: 15,
                         // paddingBottom: 10,
                     }}>
-                        <Text style={{
-                            fontSize: 20,
-                            fontFamily: SFP_TEXT_MEDIUM
-                        }}>
+                        <Text style={STYLES.SECTION_TITLE}>
                             {lineup.name}
 
                             {
@@ -96,10 +94,10 @@ export default class LineupTitle2 extends Component<Props, State> {
     }
 
     getMedals(lineup: Lineup) {
-        var it = (function *() {
+        const it = (function* () {
             yield true
             yield false
-        })()
+        })();
         return [
             this.renderMedal(_.get(lineup, 'meta.savingsCount', -1), "th-large", it),
             this.renderMedal(_.get(lineup, 'meta.followersCount', -1), "star", it)
@@ -128,8 +126,7 @@ const styles = StyleSheet.create({
     },
     medalsContainer: {
         flexDirection: 'row',
-        // backgroundColor: 'yellow',
         alignItems: 'flex-end'
-        // flex: 0,
-    }
+    },
+
 })

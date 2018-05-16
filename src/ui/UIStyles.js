@@ -217,6 +217,10 @@ export const STYLES = StyleSheet.create({
         position: 'absolute',
         zIndex: 1000,
         backgroundColor: 'rgba(255, 255, 255, 0.65)'
+    },
+    SECTION_TITLE: {
+        fontSize: 20,
+        fontFamily: SFP_TEXT_MEDIUM
     }
 });
 

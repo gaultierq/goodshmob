@@ -28,7 +28,7 @@ import {seeActivityDetails, seeList} from "../Nav";
 import Screen from "../components/Screen";
 import {Colors} from "../colors";
 import GSearchBar from "../GSearchBar";
-import {renderSectionHeader, scheduleOpacityAnimation} from "../UIComponents";
+import {scheduleOpacityAnimation} from "../UIComponents";
 import {FilterConfig} from "../components/feed";
 // $FlowFixMe
 

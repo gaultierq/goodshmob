@@ -151,6 +151,22 @@ export function floatingButtonScrollListener() {
 }
 
 
+export const RENDER_SECTION_HEADER = (navigator: RNNNavigator, dispatch: Dispatch, lineup: Lineup) => <GTouchable
+    onPress={() => seeList(navigator, lineup)}>
+
+    <LineupTitle2
+        lineupId={lineup.id}
+        dataResolver={id => lineup}
+        style={{
+            backgroundColor: BACKGROUND_COLOR,
+            paddingHorizontal: LINEUP_PADDING,
+            paddingVertical: 8,
+        }}
+    >
+        {renderLineupMenu(navigator, dispatch, lineup)}
+    </LineupTitle2>
+</GTouchable>;
+
 //TODO: split - create a file dedicated to Lineup rendering
 export const LINEUP_SECTIONS = (navigator: RNNNavigator, dispatch: any, userId: Id) => (lineups: Lineup[])=> {
     // const goodshbox = _.head(lineups);
@@ -171,55 +187,9 @@ export const LINEUP_SECTIONS = (navigator: RNNNavigator, dispatch: any, userId: 
                 />
             </GTouchable>
         ),
-        renderSectionHeader: () => (
-            <GTouchable
-                onPress={() => seeList(navigator, lineup)}>
-
-                <LineupTitle2
-                    lineupId={lineup.id}
-                    dataResolver={id => lineup}
-                    style={{
-                        backgroundColor: BACKGROUND_COLOR,
-                        paddingHorizontal: LINEUP_PADDING,
-                        paddingVertical: 8,
-                    }}
-                >
-                    {renderLineupMenu(navigator, dispatch, lineup)}
-                </LineupTitle2>
-            </GTouchable>
-        ),
-        renderSectionHeaderChildren: () => renderLineupMenu(navigator, dispatch, lineup)
+        renderSectionHeader: () => RENDER_SECTION_HEADER(navigator, dispatch, lineup),
     }));
 };
-
-
-export function renderSectionHeader(lineup: Lineup, onPress: () => void, renderSectionHeaderChildren: () => Node) {
-    // let {title, subtitle, onPress} = section
-
-    return (
-        <GTouchable
-            deactivated={!onPress}
-            onPress={onPress}>
-
-            <LineupTitle2 dataResolver={id => lineup} lineupId={lineup.id}>
-                {renderSectionHeaderChildren && renderSectionHeaderChildren()}
-            </LineupTitle2>
-        </GTouchable>
-    );
-}
-
-export function renderEmptyLineup(navigator: RNNNavigator, item: Lineup) {
-    return (list: Lineup) => (
-        <GTouchable
-            onPress={() => startAddItem(navigator, item.id)}
-            deactivated={item.pending}
-        >
-            {
-                LineupHorizontal.defaultRenderEmpty(true)
-            }
-        </GTouchable>
-    );
-}
 
 
 export function renderLineupMenu(navigator: RNNNavigator, dispatch: any, lineup: Lineup) {
@@ -236,20 +206,7 @@ export function renderLineupMenu(navigator: RNNNavigator, dispatch: any, lineup:
     );
 }
 
-
-
 export function renderLineupFromOtherPeople(navigator: RNNNavigator, lineup: Lineup) {
-
-    const styles = StyleSheet.create({
-        smallText: {
-            fontSize: 12,
-            color: Colors.greyishBrown,
-            marginLeft: 8,
-            marginRight: 3,
-            flex: 0,
-        }
-    })
-
 
     return (<GTouchable
         onPress={() => seeList(navigator, lineup)}>

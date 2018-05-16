@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import type {Node} from 'react';
 import {
     Alert,
     BackHandler,
@@ -19,7 +20,7 @@ import {
 
 import {connect} from "react-redux";
 import type {Id, Lineup, RNNNavigator, Saving} from "../../types";
-import {stylePadding, STYLES} from "../UIStyles";
+import {BACKGROUND_COLOR, LINEUP_PADDING, stylePadding, STYLES} from "../UIStyles";
 import {currentGoodshboxId, currentUserId, logged} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
@@ -33,6 +34,8 @@ import LineupHorizontal, {LineupH1} from "../components/LineupHorizontal";
 import UserLineups from "./userLineups";
 import {Tip, TipConfig} from "../components/Tip";
 import LineupTitle2 from "../components/LineupTitle2";
+import {RENDER_SECTION_HEADER, renderLineupMenu} from "../UIComponents";
+import {SFP_TEXT_MEDIUM} from "../fonts";
 
 
 type Props = {
@@ -62,11 +65,11 @@ export default class MyGoodsh extends Screen<Props, State> {
 
     render() {
         const userId = currentUserId();
-        const {navigator, ...attributes}= this.props;
+        const {navigator, dispatch, ...attributes}= this.props;
 
 
         return (
-
+            // $FlowFixMe
             <UserLineups
                 displayName={"home feed"}
                 feedId={"home list"}
@@ -86,10 +89,10 @@ export default class MyGoodsh extends Screen<Props, State> {
                 //     this.setState({filterFocused: focused}, resolved())
                 // })
                 // }
-
+                renderSectionHeader={({section}) => section.renderSectionHeader()}
                 sectionMaker={(lineups)=> {
                     const goodshbox = _.head(lineups);
-                    let savingCount = _.get(goodshbox, `meta.savingsCount`, null) || 0;
+                    let savingCount = _.get(goodshbox, `meta.savingsCount`, 0)
                     return [
                         {
                             data: goodshbox ? [goodshbox] : [],
@@ -103,13 +106,20 @@ export default class MyGoodsh extends Screen<Props, State> {
                                     skipLineupTitle={true}
                                     renderEmpty={this.renderEmptyLineup(navigator, item)}
                                 />
+                            ),
+                            renderSectionHeader: () => this.renderSectionHeader(
+                                i18n.t("lineups.goodsh.title"),
                             )
                         },
                         {
                             data: _.slice(lineups, 1),
                             title: i18n.t("lineups.mine.title"),
-                            renderSectionHeaderChildren:() => <AddLineupComponent navigator={this.props.navigator}/>,
-                            renderItem: ({item, index})=> this.renderLineup(item, index, navigator)
+                            // renderSectionHeaderChildren:() => <AddLineupComponent navigator={this.props.navigator}/>,
+                            renderItem: ({item, index})=> this.renderLineup(item, index, navigator),
+                            renderSectionHeader: () => this.renderSectionHeader(
+                                i18n.t("lineups.mine.title"),
+                                <AddLineupComponent navigator={this.props.navigator}/>
+                            )
                         },
                     ];
                 }}
@@ -117,6 +127,22 @@ export default class MyGoodsh extends Screen<Props, State> {
                 {...attributes}
             />
 
+        );
+    }
+
+    renderSectionHeader(name: string, children?: Node) {
+        return (
+            <View style={{
+                flexDirection: 'row', backgroundColor: BACKGROUND_COLOR,
+                paddingHorizontal: LINEUP_PADDING,
+                paddingVertical: 8
+            }}>
+                <Text style={{
+                    fontSize: 24,
+                    fontFamily: SFP_TEXT_MEDIUM
+                }}>{name}</Text>
+                {children}
+            </View>
         );
     }
 
@@ -179,26 +205,6 @@ export default class MyGoodsh extends Screen<Props, State> {
                 }
             </GTouchable>
         );
-    }
-
-    renderTip() {
-        const currentTip = this.state.currentTip;
-        let keys = currentTip.keys;
-        let res = {};
-        ['title', 'text', 'button'].forEach(k=> {
-            res[k] = i18n.t(`${keys}.${k}`)
-        })
-
-        ;
-        return <Tip
-            {...res}
-            materialIcon={currentTip.materialIcon}
-            style={{margin: 10}}
-            onClickClose={() => {
-                OnBoardingManager.onDisplayed(currentTip.type)
-            }}
-
-        />;
     }
 
     renderMenuButton(item: Lineup, padding: number) {
