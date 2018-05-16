@@ -41,11 +41,6 @@ export default class LineupTitle2 extends Component<Props, State> {
         dataResolver = dataResolver || (id => buildData(this.props.data, 'lists', id))
         let lineup = dataResolver(lineupId)
         let author =  lineup.user;
-        let followersCount = _.get(lineup, 'meta.followersCount', -1)
-        let savingsCount = _.get(lineup, 'meta.savingsCount', -1)
-        const color = Colors.greyish;
-
-        const iconSize = 16;
         return (
             <View style={style}>
                 <View style={{flexDirection: 'row',
@@ -63,32 +58,16 @@ export default class LineupTitle2 extends Component<Props, State> {
                             fontFamily: SFP_TEXT_MEDIUM
                         }}>
                             {lineup.name}
+
+                            {
+                                __IS_IOS__ && this.getMedals(lineup)
+                            }
+
                         </Text>
                     </View>
 
                     {
-                        savingsCount > 0 && <View style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            marginLeft: 8,
-                            flex: 0,
-                            // backgroundColor: 'yellow'
-                        }}>
-                            <Icon name="th-large" size={iconSize} color={color}/>
-                            <Text style={[styles.smallText, {marginLeft: 4}]}>{savingsCount}</Text>
-                        </View>
-                    }
-                    {
-                        followersCount > 0 && <View style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            marginLeft: 8,
-                            flex: 0,
-                            // backgroundColor: 'yellow'
-                        }}>
-                            <Icon name="star" size={iconSize} color={color}/>
-                            <Text style={[styles.smallText, {marginLeft: 4}]}>{followersCount}</Text>
-                        </View>
+                        __IS_ANDROID__ && this.getMedals(lineup)
                     }
 
                     {
@@ -115,11 +94,42 @@ export default class LineupTitle2 extends Component<Props, State> {
 
         );
     }
+
+    getMedals(lineup: Lineup) {
+        var it = (function *() {
+            yield true
+            yield false
+        })()
+        return [
+            this.renderMedal(_.get(lineup, 'meta.savingsCount', -1), "th-large", it),
+            this.renderMedal(_.get(lineup, 'meta.followersCount', -1), "star", it)
+        ];
+    }
+
+    renderMedal(count: number, icon: string, displayDot: () => boolean) {
+        const color = Colors.greyish;
+        const iconSize = 15;
+
+        return count > 0 && <View style={[styles.medalsContainer, {marginLeft: 4}]} key={icon}>
+            {displayDot.next().value && <Text style={[styles.smallText, {color, marginHorizontal: 6}]}>•</Text>}
+            <Icon name={icon} size={iconSize} color={color}/>
+            <Text style={[styles.smallText, {marginLeft: 4, color,
+                alignSelf: 'flex-end',
+                // backgroundColor: 'red',
+            }]}>{count}</Text>
+        </View>;
+    }
 }
 
 
 const styles = StyleSheet.create({
     smallText: {
-        fontSize: 12,
+        fontSize: 14,
+    },
+    medalsContainer: {
+        flexDirection: 'row',
+        // backgroundColor: 'yellow',
+        alignItems: 'flex-end'
+        // flex: 0,
     }
 })
