@@ -10,6 +10,7 @@ import android.app.Application;
 import android.content.Intent;
 
 import com.facebook.react.ReactApplication;
+import io.underscope.react.fbak.RNAccountKitPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.krazylabs.OpenAppSettingsPackage;
 import com.react.rnspinkit.RNSpinkitPackage;
@@ -59,6 +60,7 @@ public class MainApplication extends NavigationApplication implements ReactAppli
   protected List<ReactPackage> getPackages() {
     return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new RNAccountKitPackage(),
             new RNDeviceInfo(),
             new OpenAppSettingsPackage(),
             new RNSpinkitPackage(),

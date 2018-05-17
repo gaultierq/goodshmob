@@ -51,6 +51,7 @@
 		90C407EB6BAC424492F7C571 /* Chivo-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 224F1BE54A5D4D8AAC1B5B12 /* Chivo-Regular.ttf */; };
 		95025F9D983C4013B67F611E /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 35C24F0535F74219B08A8897 /* libRNFetchBlob.a */; };
 		AE0DB3C792FE41C4AB2E7E45 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0172E0B5EAEF42B19DF6273D /* libRNFirebase.a */; };
+		AED6CDBB05034F568A780AD0 /* libRNAccountKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A6722BFCEB84E8DB480CFFF /* libRNAccountKit.a */; };
 		AF19B0F819114F88962429D8 /* SFProText-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 826353747CD045BFB4950A84 /* SFProText-Bold.otf */; };
 		B096BAC853F3496CB6AA33EB /* SFProText-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = D4679778DB004D97AC2294FA /* SFProText-Regular.otf */; };
 		B6B6A8ECFF5A458789ADDE6C /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3713A1A16A3B474CBF4B2E0E /* Foundation.ttf */; };
@@ -73,6 +74,8 @@
 		E3378056004E45EDAE2E6BB8 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6237B7E7B6B436CBF8A63DB /* FBSDKLoginKit.framework */; };
 		E562BCD35F904331841C43E0 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7D9112FBAA7A42859CAEC569 /* SimpleLineIcons.ttf */; };
 		E7C39EC7370041DC87851EE9 /* libRNSpinkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FF07B820F6D4DC6A0AB5289 /* libRNSpinkit.a */; };
+		F17B8FB120A1D31900FAF469 /* AccountKitStrings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F17B8FAF20A1D31900FAF469 /* AccountKitStrings.bundle */; };
+		F17B8FB220A1D31900FAF469 /* AccountKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F17B8FB020A1D31900FAF469 /* AccountKit.framework */; };
 		F52F29A1D072424D85D70653 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F79D97351B445FE8CF44CB5 /* libRCTActionSheet.a */; };
 /* End PBXBuildFile section */
 
@@ -469,6 +472,13 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNFirebase;
 		};
+		F17B903320A1DD3100FAF469 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6E5BFCCE93424121BB5DB735 /* RNAccountKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2C7C6901CD1552900C9B392;
+			remoteInfo = RNAccountKit;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -514,6 +524,7 @@
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		1636B54F260E4655BA6A7D2B /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFirebase.xcodeproj; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; };
 		17E0B663F753463295EFB4FD /* libRNI18n.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNI18n.a; sourceTree = "<group>"; };
+		1A6722BFCEB84E8DB480CFFF /* libRNAccountKit.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNAccountKit.a; sourceTree = "<group>"; };
 		1A872A307D3E0ABAF99FD8B7 /* Pods-goodshmob.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-goodshmob.release.xcconfig"; path = "Pods/Target Support Files/Pods-goodshmob/Pods-goodshmob.release.xcconfig"; sourceTree = "<group>"; };
 		1D7E73F0709F4B7187928641 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		221EC19158B265BE4D533013 /* Pods-goodshmob.preprod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-goodshmob.preprod.xcconfig"; path = "Pods/Target Support Files/Pods-goodshmob/Pods-goodshmob.preprod.xcconfig"; sourceTree = "<group>"; };
@@ -535,6 +546,7 @@
 		61E1F585D8914B64BA2ED4CE /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		678FD9CE4201E629E6B7C3D1 /* libPods-goodshmobTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-goodshmobTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6CC80DDD08BA490A87B562C5 /* SFProDisplay-RegularItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProDisplay-RegularItalic.otf"; path = "../src/assets/fonts/SFProDisplay-RegularItalic.otf"; sourceTree = "<group>"; };
+		6E5BFCCE93424121BB5DB735 /* RNAccountKit.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNAccountKit.xcodeproj; path = "../node_modules/react-native-facebook-account-kit/ios/RNAccountKit.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		794B991B28404E1DA6FDB6FD /* SFProText-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProText-Light.otf"; path = "../src/assets/fonts/SFProText-Light.otf"; sourceTree = "<group>"; };
 		7D9112FBAA7A42859CAEC569 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
@@ -586,6 +598,8 @@
 		EFC06FE802CC4765911E6132 /* RNFetchBlob.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFetchBlob.xcodeproj; path = "../node_modules/react-native-fetch-blob/ios/RNFetchBlob.xcodeproj"; sourceTree = "<group>"; };
 		EFE82430CC8C4D96B3BE95E5 /* libRNSnackbar.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSnackbar.a; sourceTree = "<group>"; };
 		F0E96BCC274685F5679F551E /* Pods-goodshmobTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-goodshmobTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-goodshmobTests/Pods-goodshmobTests.debug.xcconfig"; sourceTree = "<group>"; };
+		F17B8FAF20A1D31900FAF469 /* AccountKitStrings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = AccountKitStrings.bundle; path = "../node_modules/react-native-facebook-account-kit/ios/AccountKitStrings.bundle"; sourceTree = "<group>"; };
+		F17B8FB020A1D31900FAF469 /* AccountKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AccountKit.framework; path = "../node_modules/react-native-facebook-account-kit/ios/AccountKit.framework"; sourceTree = "<group>"; };
 		F2001FE082D1450CB20A698F /* libRNOpenAppSettings.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNOpenAppSettings.a; sourceTree = "<group>"; };
 		F67A393C22434FF8ADFA75F4 /* SFProText-RegularItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProText-RegularItalic.otf"; path = "../src/assets/fonts/SFProText-RegularItalic.otf"; sourceTree = "<group>"; };
 		FF95AED0484E442B85B9D1D0 /* SFProText-LightItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProText-LightItalic.otf"; path = "../src/assets/fonts/SFProText-LightItalic.otf"; sourceTree = "<group>"; };
@@ -598,6 +612,7 @@
 			files = (
 				D0DF636F1FB6C9050000AD5E /* GameKit.framework in Frameworks */,
 				D08F4DF21F5E900C0018E2DD /* libReactNativeNavigation.a in Frameworks */,
+				F17B8FB220A1D31900FAF469 /* AccountKit.framework in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
@@ -630,6 +645,7 @@
 				72AA6A5500F047B28F3CAF40 /* libRNSVG.a in Frameworks */,
 				E7C39EC7370041DC87851EE9 /* libRNSpinkit.a in Frameworks */,
 				54A221EE91544867BE2B7451 /* libRNOpenAppSettings.a in Frameworks */,
+				AED6CDBB05034F568A780AD0 /* libRNAccountKit.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -800,6 +816,7 @@
 				04388142985F47AB8EF61A0D /* RNSVG.xcodeproj */,
 				8CE21DE565504438A9B350F6 /* RNSpinkit.xcodeproj */,
 				E42842FC436740EABADDCE28 /* RNOpenAppSettings.xcodeproj */,
+				6E5BFCCE93424121BB5DB735 /* RNAccountKit.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -896,6 +913,7 @@
 				B85D4761E40747519C6E5BB1 /* libRNSVG.a */,
 				5FF07B820F6D4DC6A0AB5289 /* libRNSpinkit.a */,
 				F2001FE082D1450CB20A698F /* libRNOpenAppSettings.a */,
+				1A6722BFCEB84E8DB480CFFF /* libRNAccountKit.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -1088,9 +1106,19 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		F17B903020A1DD3000FAF469 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F17B903420A1DD3100FAF469 /* libRNAccountKit.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		F193B04D1EF44D979793D005 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F17B8FB020A1D31900FAF469 /* AccountKit.framework */,
+				F17B8FAF20A1D31900FAF469 /* AccountKitStrings.bundle */,
 				D0DF636E1FB6C9050000AD5E /* GameKit.framework */,
 				47158AD1F83943FD82888F9E /* libz.tbd */,
 				A06E8505DD3F65927823475C /* libPods-goodshmob.a */,
@@ -1228,6 +1256,10 @@
 				{
 					ProductGroup = D0D9D9601F5E8FAF003772C8 /* Products */;
 					ProjectRef = D0D9D95F1F5E8FAF003772C8 /* ReactNativeNavigation.xcodeproj */;
+				},
+				{
+					ProductGroup = F17B903020A1DD3000FAF469 /* Products */;
+					ProjectRef = 6E5BFCCE93424121BB5DB735 /* RNAccountKit.xcodeproj */;
 				},
 				{
 					ProductGroup = D06F5B66201229630044AA7B /* Products */;
@@ -1670,6 +1702,13 @@
 			remoteRef = D0E93C411FB54528003DB2BA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		F17B903420A1DD3100FAF469 /* libRNAccountKit.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNAccountKit.a;
+			remoteRef = F17B903320A1DD3100FAF469 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -1708,6 +1747,7 @@
 				D8B3949E6DBE4AB09DB37DD4 /* SFProText-Medium.otf in Resources */,
 				B096BAC853F3496CB6AA33EB /* SFProText-Regular.otf in Resources */,
 				0AA4110B85AA46D2BD30F4F5 /* SFProText-RegularItalic.otf in Resources */,
+				F17B8FB120A1D31900FAF469 /* AccountKitStrings.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1842,6 +1882,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E79F654AE19EC47D5F3244D7 /* Pods-goodshmob.debug.xcconfig */;
 			buildSettings = {
+				ACCOUNT_KIT_CLIENT_TOKEN = 2eae8c3800fe11fd6bb1fe426d782558;
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUGSNAG_API_KEY = e9d1e430d2405cc1e6f6d775fac95ca9;
@@ -1876,6 +1917,7 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-spinkit/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-app-settings/ios",
+					"$(SRCROOT)/../node_modules/react-native-facebook-account-kit/ios/**",
 				);
 				INFOPLIST_FILE = goodshmob/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1904,6 +1946,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1A872A307D3E0ABAF99FD8B7 /* Pods-goodshmob.release.xcconfig */;
 			buildSettings = {
+				ACCOUNT_KIT_CLIENT_TOKEN = "";
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUGSNAG_API_KEY = e9d1e430d2405cc1e6f6d775fac95ca9;
@@ -1937,6 +1980,7 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-spinkit/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-app-settings/ios",
+					"$(SRCROOT)/../node_modules/react-native-facebook-account-kit/ios/**",
 				);
 				INFOPLIST_FILE = goodshmob/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2107,6 +2151,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 221EC19158B265BE4D533013 /* Pods-goodshmob.preprod.xcconfig */;
 			buildSettings = {
+				ACCOUNT_KIT_CLIENT_TOKEN = "";
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUGSNAG_API_KEY = f5136193bd74c794739ab36caae0107c;
@@ -2140,6 +2185,7 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-spinkit/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-app-settings/ios",
+					"$(SRCROOT)/../node_modules/react-native-facebook-account-kit/ios/**",
 				);
 				INFOPLIST_FILE = goodshmob/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2213,6 +2259,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CBBBED14AB462FFD29D4AEC4 /* Pods-goodshmob.dev.xcconfig */;
 			buildSettings = {
+				ACCOUNT_KIT_CLIENT_TOKEN = 2eae8c3800fe11fd6bb1fe426d782558;
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUGSNAG_API_KEY = e9d1e430d2405cc1e6f6d775fac95ca9;
@@ -2246,6 +2293,7 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-spinkit/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-app-settings/ios",
+					"$(SRCROOT)/../node_modules/react-native-facebook-account-kit/ios/**",
 				);
 				INFOPLIST_FILE = goodshmob/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2319,6 +2367,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1209FB8CA334A60727ACA40E /* Pods-goodshmob.prod.xcconfig */;
 			buildSettings = {
+				ACCOUNT_KIT_CLIENT_TOKEN = "";
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUGSNAG_API_KEY = 40d9f8b35e4216c738e694e92a9a57d6;
@@ -2352,6 +2401,7 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-spinkit/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-app-settings/ios",
+					"$(SRCROOT)/../node_modules/react-native-facebook-account-kit/ios/**",
 				);
 				INFOPLIST_FILE = goodshmob/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

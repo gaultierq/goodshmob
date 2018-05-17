@@ -137,6 +137,7 @@ export default {
     "login_screen":{
         "facebook_signin":"SIGN IN WITH FACEBOOK",
         "no_publication":"Goodsh does not post anything on Facebook.",
+        "account_kit_signin":"Sign in without Facebook",
         "definition":{
             "example":"##Bouquin, restaurant, film, série, artiste,lieu, musique, gadget, fringue, vin, …"
         },

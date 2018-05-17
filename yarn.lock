@@ -5435,6 +5435,12 @@ react-native-fabric@^0.5.1:
   version "0.5.1"
   resolved "https://registry.yarnpkg.com/react-native-fabric/-/react-native-fabric-0.5.1.tgz#e5eb65c56196355b41f230c14adcc9c4bcf60dda"
 
+react-native-facebook-account-kit@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/react-native-facebook-account-kit/-/react-native-facebook-account-kit-0.9.0.tgz#dd1932eaae1d77e4c4a9142500d1baf1b41d70bb"
+  dependencies:
+    prop-types "^15.5.10"
+
 "react-native-fbsdk@github:facebook/react-native-fbsdk#065507a":
   version "0.6.1"
   resolved "https://codeload.github.com/facebook/react-native-fbsdk/tar.gz/065507aa1d2b8b0b6cb50d13117694123f8303fa"
