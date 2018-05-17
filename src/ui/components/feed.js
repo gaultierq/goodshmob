@@ -25,39 +25,39 @@ import {SearchBar} from 'react-native-elements'
 
 import type {ScreenVisibility} from "./Screen";
 import {Colors} from "../colors";
-import Fuse from 'fuse.js'
 import {getLanguages} from 'react-native-i18n'
 import {RequestManager} from "../../managers/request";
 import {createConsole} from "../../helpers/DebugUtils";
 import Spinner from 'react-native-spinkit';
-import GSearchBar from "../GSearchBar";
 import Config from "react-native-config"
 import {FullScreenLoader} from "../UIComponents";
 
 export type FeedSource = {
     callFactory: ()=>Api.Call,
-    useLinks:? boolean,
+    useLinks?: ?boolean,
     action: ApiAction,
     options?: any
 }
 
 export type Props<T> = {
     data: Array<T>,
-    renderItem: Function,
+    renderItem?: any => Node,
     fetchSrc: FeedSource,
-    hasMore: boolean,
+    hasMore?: boolean,
     ListHeaderComponent?: Node,
     ListFooterComponent?: Node,
     empty: Node,
-    style: any,
-    scrollUpOnBack?: ()=>boolean,
+    style?: any,
+    scrollUpOnBack?: ?() => ?boolean,
     cannotFetch?: boolean,
     visibility: ScreenVisibility,
     filter?: ?FilterConfig<T>,
     initialLoaderDelay?: ?ms,
     displayName?: string,
     doNotDisplayFetchMoreLoader: ?boolean,
-    listRef: any => void | string
+    listRef: any => void | string,
+    doNotDisplayFetchMoreLoader?: boolean,
+    lastIdExtractor: any => any
 };
 
 export type FilterConfig<T> = {
@@ -93,7 +93,8 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         visibility: 'unknown',
         keyExtractor: item => item.id,
         initialLoaderDelay: 0,
-        listRef: "feed"
+        listRef: "feed",
+        lastIdExtractor: item => item.id,
     };
 
     state = {initialLoaderVisibility: 'idle', firstLoad: 'idle'};
@@ -112,7 +113,6 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         this.createdAt = Date.now();
         // this.postFetchFirst();
     }
-
 
     componentWillReceiveProps(nextProps: Props<*>) {
         //hack: let the next props become the props
@@ -135,6 +135,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         //     return;
         // }
 
+        this.logger.debug('postFetchFirst')
         setTimeout(() => {
             if (this.state.firstLoad !== 'idle') {
                 this.logger.debug(`postFetchFirst was not performed, firstLoad=${this.state.firstLoad}`);
@@ -207,7 +208,11 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             }
         }
 
-        if (displayFirstLoader) return <FullScreenLoader/>;
+        if (displayFirstLoader) {
+
+            this.logger.debug("displayFirstLoader");
+            return <FullScreenLoader/>;
+        }
 
 
         let allViews = [];
@@ -262,9 +267,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             // allViews.push(React.createElement(FlatList, {data: items, ...params}));
             listNode = React.createElement(FlatList, {data: items, ...params});
         }
-        allViews.push(<View style={{flex:1}}>
-            {listNode}
-        </View>);
+        allViews.push(<View style={{flex:1}}>{listNode}</View>);
 
 
         return <View style={[this.props.style, {flex: 1}]}>{allViews}</View>
@@ -472,7 +475,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             }
 
             this.props
-                .dispatch(call.createActionDispatchee(fetchSrc.action, {trigger, ...fetchSrc.options, mergeOptions: {drop}}))
+                .dispatch(call.createActionDispatchee(fetchSrc.action, {trigger, ...fetchSrc.options, mergeOptions: {drop, hasLess: !!afterId}}))
                 .then(({data, links})=> {
                     this.logger.debug("disptachForAction" + JSON.stringify(this.props.fetchSrc.action));
                     if (!data) {
@@ -513,7 +516,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     fetchMore(options ?: any = {}) {
         let last = this.getLastItem();
         if (last) {
-            const lastId = this.props.keyExtractor(last);
+            const lastId = this.props.lastIdExtractor(last);
             if (!lastId) throw "no id found for this item:" + JSON.stringify(last);
             return this.tryFetchIt({afterId: lastId, ...options});
         }

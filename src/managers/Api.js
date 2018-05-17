@@ -7,7 +7,7 @@ import normalize from 'json-api-normalizer';
 import {logoutOffline} from "../auth/actions";
 import ApiAction from "../helpers/ApiAction";
 import fetch from 'react-native-fetch-polyfill';
-import type {Dispatchee, ms, RequestState} from "../types";
+import type {Dispatchee, Id, ms, RequestState} from "../types";
 import Config from 'react-native-config'
 import {Statistics} from "./Statistics";
 import {REMOVE_PENDING_ACTION} from "../reducers/dataReducer";
@@ -213,6 +213,7 @@ class Api {
                         reject(err);
                     })
                     .then(resp=> {
+                        console.log(resp)
                         setTimeout(()=> {
                             if (instance.auth() === auth) {
                                 resolve(resp);
@@ -297,7 +298,10 @@ export class Call {
     // - load more timeout => display some in-screen message on screen (with retry)
     // - default: temp. snack (ouch! ...)
     // - item already in lineup: some alerts
-    createActionDispatchee(apiAction: ApiAction, options?: any = {}): Dispatchee {
+    createActionDispatchee(apiAction: ApiAction, options?: {
+        trigger?: any,
+        mergeOptions?: {drop?: boolean},
+    } = {}): Dispatchee {
         const call = this;
         const {trigger = TRIGGER_USER_DIRECT_ACTION} = options;
 
@@ -376,6 +380,10 @@ export class Call {
 
     run() {
         if (!this.method) throw new Error(`call need a method ${this.toString()}`);
+        if (__API_PAGINATION_PER_PAGE__) {
+            this.addQuery({per_page: __API_PAGINATION_PER_PAGE__})
+        }
+
         return instance.submit(this.url.toString(), this.method, this.body, this.delay)
             .catch(err => {throw err})
             .then(resp => {
@@ -582,3 +590,59 @@ export const reduceList = (state, action, desc, optionalExtractor?) => {
     }
     return state;
 };
+
+
+export type STATE<T> = {
+    list?: Array<T>,
+    hasNoMore?: boolean
+}
+
+export type SHELL = {
+    id: Id, type: string
+}
+
+export type REDUX_ACTION<T> = {
+    type: string,
+    payload: {data: Array<T>},
+    options: any
+}
+
+export function reducerFactory(apiAction: ApiAction) {
+    return (state: STATE<SHELL> = {}, action: REDUX_ACTION<SHELL>) => {
+        return reduceList2(state, action, apiAction);
+    };
+}
+
+export const reduceList2 = (state: STATE<SHELL>, action: REDUX_ACTION<SHELL>, apiAction: ApiAction, optionalExtractor?: any => any) => {
+    switch (action.type) {
+        case apiAction.success():
+
+            let {mergeOptions = {}} = action.options
+
+            let newList = action.payload.data.map(f => {
+                let {id, type} = f;
+                let options = optionalExtractor && optionalExtractor(f) || {};
+                return {id, type, ...options};
+            });
+
+            let merged;
+            try {
+                merged = new Util.Merge(state.list || [], newList)
+                    .withOptions(mergeOptions)
+                    .merge();
+            }
+            catch (e) {
+                console.error(e)
+                throw e
+            }
+
+            if (merged !== state.list) state = {...state, list: merged}
+
+            const hasNoMore = action.payload.data.length === 0;
+            if (hasNoMore !== state.hasNoMore) state = {...state, hasNoMore: hasNoMore}
+
+    }
+    return state;
+};
+
+

@@ -61,6 +61,10 @@ export default {
         wizard: {
             action_button_label : "Add a coup de coeur\nor a wish.",
             action_button_body : "Book, movie, tvshow, restaurant, music...",
+        },
+        tabs: {
+            my_goodsh: "MY GOODSH",
+            my_interests: "LINEUP",
         }
     },
     search:{
@@ -323,6 +327,8 @@ export default {
         try_again: "Try Again",
         ask_friend: "Ask my network",
         logout: "Logout",
+        follow: "Follow",
+        unfollow: "Unfollow",
         terms: "Terms and personal data",
         copy_link: "Copy link",
         send_to_goodsher: "Send to another\nuser",

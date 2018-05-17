@@ -16,24 +16,22 @@ import {
 } from 'react-native';
 
 import {connect} from "react-redux";
-import {currentUserId, logged} from "../../managers/CurrentUser"
-import LineupCell from "../components/LineupCell";
-import Immutable from 'seamless-immutable';
-import * as Api from "../../managers/Api";
+import {isCurrentUserId, logged} from "../../managers/CurrentUser"
 import {SearchBar} from 'react-native-elements'
 import type {Id, List, User} from "../../types";
 import type {Props as FeedProps} from "../components/feed";
 import Feed from "../components/feed";
-import ApiAction from "../../helpers/ApiAction";
 import {buildData, doDataMergeInState} from "../../helpers/DataUtils";
 import {CREATE_LINEUP, DELETE_LINEUP} from "../lineup/actionTypes";
 import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
-import {STYLES} from "../UIStyles";
-import GTouchable from "../GTouchable";
 import Screen from "../components/Screen";
-import dotprop from "dot-prop-immutable"
-import {actionTypes as userActionTypes, actions as userActions} from "../../redux/UserActions"
-import * as Nav from "../Nav"
+import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
+import {GoodshContext} from "../UIComponents"
+import Immutable from 'seamless-immutable'
+import LineupCell from "../components/LineupCell";
+import * as Api from "../../managers/Api";
+import GTouchable from "../GTouchable";
+
 
 export type Props = FeedProps<List> & {
     userId: Id,
@@ -78,6 +76,7 @@ export class LineupListScreen extends Screen<Props, State> {
             ...attributes
         } = this.props;
 
+
         let user: User = buildData(this.props.data, "users", userId);
 
 
@@ -108,29 +107,28 @@ export class LineupListScreen extends Screen<Props, State> {
         );
 
         return (
-            <Feed
-                data={items}
-                listRef={this.props.listRef}
-                sections={sectionMaker && sectionMaker(items)}
-                renderItem={this.renderItem.bind(this)}
-                fetchSrc={fetchSrc}
-                navigator={this.props.navigator}
-                {...attributes}
-            />
-        );
+            <GoodshContext.Provider value={{userOwnResources: isCurrentUserId(userId)}}>
+                <Feed
+                    data={items}
+                    listRef={this.props.listRef}
+                    sections={sectionMaker && sectionMaker(items)}
+                    renderItem={this.renderItem.bind(this)}
+                    fetchSrc={fetchSrc}
+                    {...attributes}
+                />
+
+            </GoodshContext.Provider>
+        )
     }
 
-    renderItem(item) {
-        let list = item.item;
-        if (!(list.type === 'lists')) throw "unexpected type";
-
+    renderItem({item}) {
+        let list = item;
         list = buildData(this.props.data, list.type, list.id) || list;
 
         let {renderItem, navigator} = this.props;
 
         return (renderItem || renderSimpleListItem(navigator))(list);
     }
-
 }
 
 const reducer = (() => {

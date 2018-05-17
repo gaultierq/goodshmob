@@ -1,16 +1,17 @@
 // @flow
-// @flow
 
 import React, {Component} from 'react';
-import {Image, LayoutAnimation, StyleSheet, Text, View, UIManager} from 'react-native';
+import {Image, LayoutAnimation, StyleSheet, Text, UIManager, View} from 'react-native';
 import {Colors} from "./colors";
 import User from "react-native-firebase/lib/modules/auth/User";
 import {CachedImage} from "react-native-img-cache";
 import GTouchable from "./GTouchable";
-import {BACKGROUND_COLOR, STYLES} from "./UIStyles";
+import {BACKGROUND_COLOR, LINEUP_PADDING, STYLES} from "./UIStyles";
 import Spinner from 'react-native-spinkit';
-import type {RequestState} from "../types";
-
+import type {Id, Lineup, RNNNavigator} from "../types";
+import {displayLineupActionMenu, seeList, startAddItem} from "./Nav";
+import LineupHorizontal from "./components/LineupHorizontal";
+import LineupTitle2 from "./components/LineupTitle2";
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
@@ -147,5 +148,80 @@ export function floatingButtonScrollListener() {
             _listViewOffset = currentOffset
         })
     }();
-
 }
+
+
+export const RENDER_SECTION_HEADER = (navigator: RNNNavigator, dispatch: Dispatch, lineup: Lineup) => <GTouchable
+    onPress={() => seeList(navigator, lineup)}>
+
+    <LineupTitle2
+        lineupId={lineup.id}
+        dataResolver={id => lineup}
+        style={{
+            backgroundColor: BACKGROUND_COLOR,
+            paddingLeft: LINEUP_PADDING,
+        }}
+    >
+        {renderLineupMenu(navigator, dispatch, lineup)}
+    </LineupTitle2>
+</GTouchable>;
+
+//TODO: split - create a file dedicated to Lineup rendering
+export const LINEUP_SECTIONS = (navigator: RNNNavigator, dispatch: any, userId: Id) => (lineups: Lineup[])=> {
+    // const goodshbox = _.head(lineups);
+    // let savingCount = _.get(goodshbox, `meta.savingsCount`, null) || 0;
+    return lineups.map(lineup => ({
+        data: [lineup],
+        title: lineup.name,
+        subtitle: ` (${_.get(lineup, `meta.savingsCount`, 0)})`,
+        onPress: () => seeList(navigator, lineup),
+        renderItem: ({item}: {item: Lineup}) => (
+            <GTouchable
+                onPress={() => seeList(navigator, lineup)}>
+                <LineupHorizontal
+                    lineupId={item.id}
+                    dataResolver={() => ({lineup: lineup, savings: lineup.savings})}
+                    style={{paddingBottom: 10}}
+                    skipLineupTitle={true}
+                />
+            </GTouchable>
+        ),
+        renderSectionHeader: () => RENDER_SECTION_HEADER(navigator, dispatch, lineup),
+    }));
+};
+
+
+export function renderLineupMenu(navigator: RNNNavigator, dispatch: any, lineup: Lineup) {
+    return (
+        <GTouchable style={{
+            position: "absolute",
+            right: 0,
+            margin: 0,
+            // backgroundColor: 'red'
+        }}
+                    onPress={() => displayLineupActionMenu(navigator, dispatch, lineup)}>
+            <View style={{
+                paddingHorizontal: LINEUP_PADDING,
+                paddingVertical: 14,
+            }}>
+                <Image source={require('../img2/moreDotsGrey.png')} resizeMode="contain"/>
+            </View>
+        </GTouchable>
+    );
+}
+
+export function renderLineupFromOtherPeople(navigator: RNNNavigator, lineup: Lineup) {
+
+    return (<GTouchable
+        onPress={() => seeList(navigator, lineup)}>
+
+        <LineupHorizontal
+            lineupId={lineup.id}
+            dataResolver={() => ({lineup: lineup, savings: lineup.savings})}
+            style={{paddingBottom: 10}}
+            renderTitle={(lineup: Lineup) => <LineupTitle2 dataResolver={id => lineup} lineupId={lineup.id}/>}
+        />
+    </GTouchable>);
+}
+
+export const GoodshContext = React.createContext({userOwnResources: true});

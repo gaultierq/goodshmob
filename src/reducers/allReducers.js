@@ -12,6 +12,9 @@ import {reducer as interaction} from '../ui/screens/interactions';
 import {statReducer as stat} from '../managers/Statistics';
 import {authReducer as auth, deviceReducer as device} from '../auth/reducer';
 import OnBoardingManager from "../managers/OnBoardingManager";
+import {reducer as followed_lists} from "../ui/screens/MyInterests";
+
+
 import app from './app';
 
 function reduceReducers(...reducers) {
@@ -48,5 +51,6 @@ export {
     config,
     pending,
     onBoarding,
+    followed_lists
     // search,
 };

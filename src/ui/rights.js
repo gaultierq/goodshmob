@@ -7,7 +7,7 @@ import {currentUserId} from "../managers/CurrentUser";
 import {CREATE_LIKE, DELETE_LIKE} from "./activity/actionTypes";
 import StoreManager from "../managers/StoreManager";
 
-class GAction {
+export class GAction {
     actionName: string;
 
     constructor(name: string) {
@@ -41,9 +41,13 @@ export const A_UNLIKE : GAction = new GAction('unlike');
 export const A_SAVE : GAction = new GAction('save');
 export const A_UNSAVE : GAction = new GAction('unsave');
 export const A_BUY : GAction = new GAction('buy');
+
+//lineups
 export const L_SHARE : GAction = new GAction('share list');
 export const L_RENAME : GAction = new GAction('rename list');
 export const L_DELETE : GAction = new GAction('delete list');
+export const L_FOLLOW : GAction = new GAction('follow list');
+export const L_UNFOLLOW : GAction = new GAction('unfollow list');
 
 class LineupRights {
     lineup: Lineup;

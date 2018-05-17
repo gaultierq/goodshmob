@@ -14,7 +14,7 @@ import Immutable from 'seamless-immutable';
 import {InteractionScreen} from "./interactions";
 import Screen from "../components/Screen";
 import {Colors} from "../colors";
-import {NavStyles} from "../UIStyles";
+import {NavStyles, TAB_BAR_PROPS} from "../UIStyles";
 import ShareButton from "../components/ShareButton";
 
 type Props = {
@@ -58,17 +58,26 @@ export class CommunityScreen extends Screen<Props, State> {
             <TabViewAnimated
                 style={
                     [
-                        styles.container,
+                        {flex: 1},
                         //bug: drawer passProps not working [https://github.com/wix/react-native-navigation/issues/663]
                         //this.props.style || __IS_IOS__? {marginTop: 38} : {}
                     ]
                 }
                 navigationState={{...this.state, visible: this.isVisible()}}
                 renderScene={this.renderScene.bind(this)}
-                renderHeader={this.renderHeader.bind(this)}
-                onIndexChange={this.handleIndexChange.bind(this)}
+                renderHeader={props => <TabBar {...TAB_BAR_PROPS} {...props}/>}
+                onIndexChange={index => this.setState({index})}
             />
         )
+    }
+
+
+    renderScene({ route }: *) {
+        switch (route.key) {
+            case 'friends': return this.renderFriends()
+            case 'interactions': return this.renderInteractions()
+            default: throw "unexpected"
+        }
     }
 
     renderFriends() {
@@ -106,20 +115,16 @@ export class CommunityScreen extends Screen<Props, State> {
             <View>
                 {/*<Text>People you may know</Text>*/}
                 {/*<Feed*/}
-                    {/*data={peopleYouMayKnow}*/}
-                    {/*renderItem={this.renderItem.bind(this)}*/}
-                    {/*fetchSrc={{*/}
-                        {/*callFactory: ()=> this.fetchPeopleYouMayKnow(currentUserId()),*/}
-                        {/*action: FETCH_PEOPLE_YOU_MAY_KNOW,*/}
-                    {/*}}*/}
-                    {/*hasMore={false}*/}
+                {/*data={peopleYouMayKnow}*/}
+                {/*renderItem={this.renderItem.bind(this)}*/}
+                {/*fetchSrc={{*/}
+                {/*callFactory: ()=> this.fetchPeopleYouMayKnow(currentUserId()),*/}
+                {/*action: FETCH_PEOPLE_YOU_MAY_KNOW,*/}
+                {/*}}*/}
+                {/*hasMore={false}*/}
                 {/*/>*/}
             </View>
         );
-    }
-
-    handleIndexChange(index: number) {
-        this.setState({ index });
     }
 
     fetchPeopleYouMayKnow(user_id: Id) {
@@ -130,50 +135,10 @@ export class CommunityScreen extends Screen<Props, State> {
     }
 
     renderHeader(props: *) {
-        return <TabBar {...props}
-                       indicatorStyle={styles.indicator}
-                       style={styles.tabbar}
-                       tabStyle={styles.tab}
-                       labelStyle={styles.label}/>;
+        return <TabBar {...TAB_BAR_PROPS} {...props}/>
     }
 
-    renderScene({ route }: *) {
-        if (route.key === 'friends') {
-            return this.renderFriends();
-        }
-        if (route.key === 'interactions') {
-            return this.renderInteractions();
-        }
-        throw "unexpected"
-    };
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    indicator: {
-        backgroundColor: Colors.green,
-    },
-    tab: {
-        opacity: 1,
-    },
-    label: {
-        color: '#000000',
-    },
-    tabbar: {
-        backgroundColor: NavStyles.navBarBackgroundColor,
-    },
-    indicator: {
-        backgroundColor: Colors.green,
-    },
-    tab: {
-        opacity: 1,
-    },
-    label: {
-        color: '#000000',
-    },
-});
 
 export const reducer = (() => {
     const initialState = Immutable(Api.initialListState());

@@ -85,10 +85,9 @@ export function styleMargin(left?: number, top?: number, right?: number, bottom?
 }
 
 //TODO: convert to stylesheet
-export const TEXT_LIST = {fontSize: 14, color: Colors.blue};
 export const TEXT_LESS_IMPORTANT = {fontSize: 12, color: Colors.greyish};
-export const TEXT_LEAST_IMPORTANT = {fontSize: 9, color: Colors.greyish};
 
+export const LINEUP_PADDING = 15
 
 type ButtonOptions = {disabled?: boolean, loading?: boolean, style?: *};
 
@@ -216,6 +215,10 @@ export const STYLES = StyleSheet.create({
         position: 'absolute',
         zIndex: 1000,
         backgroundColor: 'rgba(255, 255, 255, 0.65)'
+    },
+    SECTION_TITLE: {
+        fontSize: 20,
+        fontFamily: SFP_TEXT_MEDIUM
     }
 });
 
@@ -264,3 +267,30 @@ export const SEARCH_INPUT_PROPS = {
     returnKeyType: 'search',
     underlineColorAndroid: 'transparent'
 };
+
+
+let TAB_BAR_STYLES = StyleSheet.create({
+    tabbar: {
+        // backgroundColor: Colors.white,
+        backgroundColor: NavStyles.navBarBackgroundColor,
+    },
+    indicator: {
+        backgroundColor: Colors.green,
+    },
+    tab: {
+        opacity: 1,
+        //width: 90,
+    },
+    label: {
+        color: '#000000',
+    },
+
+})
+
+export const TAB_BAR_PROPS = {
+    indicatorStyle: TAB_BAR_STYLES.indicator,
+    style: TAB_BAR_STYLES.tabbar,
+    tabStyle: TAB_BAR_STYLES.tab,
+    labelStyle: TAB_BAR_STYLES.label,
+}
+

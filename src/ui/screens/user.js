@@ -4,18 +4,13 @@ import {Clipboard, Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpac
 import type {Id, RequestState} from "../../types";
 import {CheckBox} from "react-native-elements";
 import {connect} from "react-redux";
-import {isCurrentUserId, logged} from "../../managers/CurrentUser"
-import Feed from "../components/feed";
-import {FETCH_ACTIVITIES, fetchUserNetwork} from "../networkActions";
+import {logged} from "../../managers/CurrentUser"
 import ActivityCell from "../activity/components/ActivityCell";
 import Screen from "../components/Screen";
-import {activityFeedProps, MainBackground} from "../UIComponents";
-import {STYLES} from "../UIStyles";
-import ShareButton from "../components/ShareButton";
-import UserLineups from "./userLineups";
-import LineupHorizontal, {LineupH1} from "../components/LineupHorizontal";
-import {seeActivityDetails, seeList, startAddItem} from "../Nav";
+import {LINEUP_SECTIONS, MainBackground} from "../UIComponents";
 import * as UI from "../UIStyles";
+import {STYLES} from "../UIStyles";
+import UserLineups from "./userLineups";
 import {fullName} from "../../helpers/StringUtils";
 import * as Api from "../../managers/Api"
 import {buildData} from "../../helpers/DataUtils"
@@ -98,25 +93,7 @@ export default class UserScreen extends Screen<Props, State> {
                     navigator={this.props.navigator}
                     empty={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
                     initialLoaderDelay={500}
-
-                    sectionMaker={(lineups)=> {
-                        // const goodshbox = _.head(lineups);
-                        // let savingCount = _.get(goodshbox, `meta.savingsCount`, null) || 0;
-                        const navigator = this.props.navigator;
-                        return lineups.map(lineup => ({
-                            data: [lineup],
-                            title:lineup.name,
-                            subtitle: ` (${_.get(lineup, `meta.savingsCount`, null) || 0})`,
-                            onPress: () => seeList(navigator, lineup),
-                            renderItem: ({item}) => (
-                                <LineupH1
-                                    lineup={item}
-                                    navigator={navigator}
-                                    skipLineupTitle={true}
-                                    onPressEmptyLineup={isCurrentUserId(userId) ? ()=>startAddItem(navigator, item.id): null } />
-                            )
-                        }));
-                    }}
+                    sectionMaker={LINEUP_SECTIONS(this.props.navigator, this.props.dispatch, userId)}
 
                 />
             </MainBackground>

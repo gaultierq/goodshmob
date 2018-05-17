@@ -5559,12 +5559,6 @@ react-native-schemes-manager@^1.0.1:
     xcode "^0.9.1"
     yargs "^6.6.0"
 
-react-native-search-box@^0.0.13:
-  version "0.0.13"
-  resolved "https://registry.yarnpkg.com/react-native-search-box/-/react-native-search-box-0.0.13.tgz#75b5d21ecfb5d5dc12e26fac85b1225b48070f90"
-  dependencies:
-    prop-types "^15.5.10"
-
 react-native-shadow@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/react-native-shadow/-/react-native-shadow-1.2.2.tgz#08991cd14b71e32f2fc6363911c139d231949a66"

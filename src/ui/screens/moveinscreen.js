@@ -8,7 +8,7 @@ import AddLineupComponent from "../components/addlineup";
 import {Colors} from "../colors";
 import {currentUserId, logged} from "../../managers/CurrentUser";
 import Screen from "../components/Screen";
-import LineupHorizontal from "../components/LineupHorizontal";
+import LineupHorizontal, {default_renderTitle} from "../components/LineupHorizontal";
 import type {Id, Lineup, RequestState, Saving} from "../../types";
 import {connect} from "react-redux";
 import * as Api from "../../managers/Api";
@@ -51,13 +51,13 @@ export default class MoveInScreen extends Screen<Props, State> {
             <View style={{flex:1}}>
 
                 <LineupListScreen
-                    ListHeaderComponent={(<AddLineupComponent
+                    ListHeaderComponent={(
+                        <AddLineupComponent
                             disableOffline={true}
                             navigator={this.props.navigator}
                             style={{backgroundColor: Colors.green, padding: 10, marginTop: 15, marginRight: 15, marginLeft: 8, borderRadius:8}}
                             styleText={{color: Colors.white, fontWeight: 'normal'}}/>
                     )}
-
                     {...otherProps}
                     userId={currentUserId()}
                     renderItem={(lineup: Lineup) => (
@@ -67,6 +67,7 @@ export default class MoveInScreen extends Screen<Props, State> {
                         >
                             <LineupHorizontal
                                 lineupId={lineup.id}
+                                renderTitle={default_renderTitle}
                                 renderSaving={(saving: Saving) => {
                                     return <LineupCellSaving item={saving.resource} style={{
                                         borderWidth: saving.id === this.props.savingId ? 1 : 0,
@@ -79,6 +80,7 @@ export default class MoveInScreen extends Screen<Props, State> {
 
                                     }}/>
                                 }
+
                                 }
                             />
                         </GTouchable>

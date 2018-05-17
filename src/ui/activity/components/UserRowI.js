@@ -7,7 +7,6 @@ import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import type {User} from "../../../types";
 import {Colors} from "../../colors";
-import {CachedImage} from "react-native-img-cache";
 import {SFP_TEXT_BOLD} from "../../fonts";
 import GTouchable from "../../GTouchable";
 import {fullName} from "../../../helpers/StringUtils";
@@ -21,7 +20,9 @@ type Props = {
     rightText?: Node,
     small?: boolean,
     style?: any,
+    textStyle?: any,
     onPressAvatar?: () => void,
+
 };
 
 type State = {
@@ -30,7 +31,8 @@ type State = {
 export default class UserRowI extends React.Component<Props, State> {
 
     render() {
-        const {small, user, style, noImage, rightComponent, rightText, onPressAvatar} = this.props;
+
+        const {small, user, style, textStyle, noImage, rightComponent, rightText, onPressAvatar} = this.props;
 
         let imageDim = small ? 20 : 30;
 
@@ -51,7 +53,7 @@ export default class UserRowI extends React.Component<Props, State> {
 
             <View style={{flex:1}}>
                 <View style={[styles.rightContainer]}>
-                    <Text style={styles.rightText}>
+                    <Text style={[styles.rightText, textStyle]}>
                         {user && fullName(user)}
                         {rightText}
                     </Text>

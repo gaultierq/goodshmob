@@ -22,7 +22,7 @@ import SearchScreen, {SearchQuery} from "./search";
 import {SearchStyles} from "../UIStyles";
 import GTouchable from "../GTouchable";
 import Config from 'react-native-config'
-import {renderLineupFromAlgolia} from "./networksearch";
+import {renderLineupFromOtherPeople} from "./networksearch";
 import SearchPage from "./SearchPage";
 
 type Props = NavigableProps & {

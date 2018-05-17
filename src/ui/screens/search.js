@@ -26,6 +26,7 @@ import {Navigation} from 'react-native-navigation';
 import update from "immutability-helper";
 import {Colors} from "../colors";
 import {DEEPLINK_SEARCH_CLOSE, DEEPLINK_SEARCH_SUBMITED, DEEPLINK_SEARCH_TEXT_CHANGED} from "./SearchNavBar";
+import {TAB_BAR_PROPS} from "../UIStyles";
 
 export type SearchCategoryType = string;
 
@@ -210,11 +211,7 @@ export default class SearchScreen extends Component<Props, State> {
     }
 
     renderHeader(props: *) {
-        return <TabBar {...props}
-                       indicatorStyle={styles.indicator}
-                       style={styles.tabbar}
-                       tabStyle={styles.tab}
-                       labelStyle={styles.label}/>;
+        return <TabBar {...TAB_BAR_PROPS} {...props}/>
     }
 
     renderScene({ route }: *) {
@@ -361,21 +358,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    indicator: {
-        backgroundColor: Colors.green,
-    },
-    activityIndicator: {
-        position: "absolute",
-        top: 30, left: 0, right: 0, justifyContent: 'center',
-        zIndex: 3000
-    },
-    tab: {
-        opacity: 1,
-        //width: 90,
-    },
-    label: {
-        color: '#000000',
-    },
     button: {
         padding: 8,
         height: 30,
@@ -385,24 +367,10 @@ const styles = StyleSheet.create({
     searchInput: {
         backgroundColor: Colors.white,
     },
-    tabbar: {
-        // backgroundColor: Colors.white,
-        backgroundColor: NavStyles.navBarBackgroundColor,
-    },
-    indicator: {
-        backgroundColor: Colors.green,
-    },
     activityIndicator: {
         position: "absolute",
         top: 30, left: 0, right: 0, justifyContent: 'center',
         zIndex: 3000
-    },
-    tab: {
-        opacity: 1,
-        //width: 90,
-    },
-    label: {
-        color: '#000000',
     },
 });
 

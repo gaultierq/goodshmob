@@ -13,23 +13,23 @@ import {
 } from 'react-native';
 import {connect} from "react-redux";
 import {currentUserId, logged} from "../../managers/CurrentUser"
-import type {Id, Lineup, List, NavigableProps, Saving} from "../../types";
+import type {Id, List, NavigableProps, Saving} from "../../types";
 import ItemCell from "../components/ItemCell";
-import LineupCell from "../components/LineupCell";
-import {AlgoliaClient, createResultFromHit, createResultFromHit2, makeAlgoliaSearchEngine} from "../../helpers/AlgoliaUtils";
+import {
+    AlgoliaClient,
+    createResultFromHit,
+    createResultFromHit2,
+    makeAlgoliaSearchEngine
+} from "../../helpers/AlgoliaUtils";
 import UserConnectItem from "./userConnectItem";
-import UserRowI from "../activity/components/UserRowI";
 import {SearchStyles} from "../UIStyles";
 import Screen from "../components/Screen";
 import Config from 'react-native-config'
 import SearchScreen from "./search";
-import {Colors} from "../colors";
 import GTouchable from "../GTouchable";
-import {seeActivityDetails, seeList, seeUser} from "../Nav";
-import LineupHorizontal, {LineupH1} from "../components/LineupHorizontal";
-import LineupTitle from "../components/LineupTitle";
-import type {SearchState} from "./search";
+import {seeActivityDetails, seeUser} from "../Nav";
 import SearchPage from "./SearchPage";
+import {renderLineupFromOtherPeople} from "../UIComponents";
 
 type Props = NavigableProps & {
 };
@@ -142,54 +142,7 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
 }
 
 
-//TODO: move
-export let renderLineupFromAlgolia = (navigator, item) => {
-    let user = item.user;
 
-
-    let userXml = (
-
-
-        <View style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            flex: 0,
-            // backgroundColor: 'yellow'
-        }}>
-            <Text style={{
-                fontSize: 12,
-                color: Colors.greyishBrown,
-                marginLeft: 8,
-                marginRight: 3,
-                flex: 0,
-
-            }}>{i18n.t('search.by')}</Text>
-            <UserRowI
-                user={user}
-                navigator={navigator}
-                noImage={true}
-                style={{flex: 0}} //TODO: rm when removed in UserRowI
-            />
-        </View>
-    );
-
-    const newVar = <GTouchable
-        onPress={() => seeList(navigator, item)}>
-
-        <LineupHorizontal
-            lineupId={item.id}
-            dataResolver={() => ({lineup: item, savings: item.savings})}
-            style={{paddingBottom: 10}}
-            renderTitle={(lineup: Lineup) => (
-                <View style={{flexDirection: 'row'}}>
-                    <LineupTitle lineup={lineup} style={{marginVertical: 6,}}/>
-                    {userXml}
-                </View>
-            )}
-        />
-    </GTouchable>;
-    return newVar;
-};
 let itemRenderer = navigator => {
     let renderItem = ({item}) => {
 
@@ -197,7 +150,7 @@ let itemRenderer = navigator => {
 
 
         if (isLineup) {
-            return renderLineupFromAlgolia(navigator, item)
+            return renderLineupFromOtherPeople(navigator, item)
         }
         else {
             let saving = item;

@@ -12,29 +12,27 @@ import {
     StyleSheet,
     Text,
     TextInput,
-    TouchableOpacity, TouchableWithoutFeedback,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
     View
 } from 'react-native';
-import {LineupListScreen} from './lineuplist'
-import type {Id, RNNNavigator, SearchToken} from "../../types";
-import {BACKGROUND_COLOR, NavStyles, renderSimpleButton, STYLES} from "../UIStyles";
 import {CheckBox} from 'react-native-elements'
+import type {Id, Lineup, RNNNavigator, SearchToken} from "../../types";
+import {NavStyles, renderSimpleButton, STYLES} from "../UIStyles";
+import Screen from "../components/Screen";
+import * as Nav from "../Nav"
+import {seeActivityDetails, seeList} from "../Nav"
+import type {Props as LineupListProps} from './lineuplist'
+import {LineupListScreen} from './lineuplist'
 import {Navigation} from 'react-native-navigation';
 import type {Visibility} from "./additem";
-import * as Nav from "../Nav";
-import {seeActivityDetails, seeList} from "../Nav";
-import Screen from "../components/Screen";
 import SearchBar from "../components/SearchBar";
 import {Colors} from "../colors";
-import {SFP_TEXT_MEDIUM} from "../fonts";
-
-import GTouchable from "../GTouchable";
-import GSearchBar from "../GSearchBar";
 import {scheduleOpacityAnimation} from "../UIComponents";
-// $FlowFixMe
+import type {FilterConfig} from "../components/feed";
 
 
-type Props = {
+type Props = LineupListProps & {
     userId: Id,
     navigator: RNNNavigator,
     listRef: any => void | string
@@ -98,7 +96,7 @@ export default class UserLineups extends Screen<Props, State> {
                         scrollUpOnBack={super.isVisible() ? ()=>false : null}
                         cannotFetch={false}
                         visible={true}
-                        renderSectionHeader={({section}) => this.renderSectionHeader(section)}
+                        // renderSectionHeader={({section}) => renderSectionHeader(section)}
                         renderSectionFooter={()=> <View style={{height: 25, width: "100%"}} />}
                         ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
                         filter={this.filter()}
@@ -158,7 +156,7 @@ export default class UserLineups extends Screen<Props, State> {
     }
 
 
-    filter() {
+    filter(): FilterConfig<Lineup> {
 
         return {
             token: this.state.filter, //used just to re-render the children. todo: find a better way
@@ -215,33 +213,5 @@ export default class UserLineups extends Screen<Props, State> {
         };
     }
 
-
-
-// render() {return <View style={{width: 50, height: 50, backgroundColor: BACKGROUND_COLOR}}/>}
-
-    renderSectionHeader({title, subtitle, onPress, renderSectionHeaderChildren}) {
-        return (<GTouchable
-            deactivated={!onPress}
-            onPress={onPress}>
-            <View style={{
-                backgroundColor: BACKGROUND_COLOR,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                paddingLeft: 15,
-                paddingRight: 15,
-                paddingTop: 15,
-                paddingBottom: 10,
-            }}>
-                <Text style={{
-                    fontSize: 20,
-                    fontFamily: SFP_TEXT_MEDIUM
-                }}>
-                    {title}
-                    {subtitle && <Text style={{fontSize: 16, color: Colors.greyish}}>{subtitle}</Text>}
-                </Text>
-                {renderSectionHeaderChildren && renderSectionHeaderChildren()}
-            </View>
-        </GTouchable>);
-    }
 
 }

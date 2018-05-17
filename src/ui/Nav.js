@@ -1,6 +1,6 @@
 // @flow
 
-import type {Activity, ActivityType, Id, Item, Lineup, RNNNavigator, User} from "../types";
+import type {Activity, ActivityType, Id, Item, Lineup, RNNNavigator, SearchToken, User} from "../types";
 import {fullName} from "../helpers/StringUtils";
 import StoreManager from "../managers/StoreManager";
 import i18n from '../i18n/i18n';
@@ -14,11 +14,14 @@ import ApiAction from "../helpers/ApiAction";
 import Config from "react-native-config";
 import ItemCell from "./components/ItemCell";
 import React from "react";
-import {LineupH1} from "./components/LineupHorizontal";
 import LineupHorizontal from "./components/LineupHorizontal";
 import LineupCellSaving from "./components/LineupCellSaving";
-import LineupTitle from "./components/LineupTitle";
-import {Colors} from "./colors";
+import {deleteLineup, followLineup, unfollowLineup} from "./lineup/actions";
+import {GAction, L_DELETE, L_FOLLOW, L_RENAME, L_SHARE, L_UNFOLLOW} from "./rights";
+import {isCurrentUser} from "../managers/CurrentUser";
+import {isFollowed} from "./activity/components/FollowButton";
+import {BACKGROUND_COLOR} from "./UIStyles";
+import LineupTitle2 from "./components/LineupTitle2";
 
 export const CLOSE_MODAL = 'close_modal';
 
@@ -229,7 +232,14 @@ export function displayShareLineup(navigator: RNNNavigator, lineup: Lineup) {
                     lineupId={lineup.id}
                     style={{height: 100}}
                     renderSaving={saving => <LineupCellSaving item={saving.resource} />}
-                    renderTitle={(lineup: Lineup) => <LineupTitle style={{fontSize: 24}} lineup={lineup} skipChevron={true}/>}
+                    renderTitle={(lineup: Lineup) => (
+                        //{/*<:LineupTitle style={{fontSize: 24}} lineup={lineup} />*/}
+                        <LineupTitle2
+                            lineupId={lineup.id}
+                            dataResolver={id => lineup}
+                            style={{backgroundColor: BACKGROUND_COLOR,}}
+                        />
+                    )}
                 />),
             sendAction: null,
             createShareIntent: () => createShareIntent(lineup.name, url),
@@ -256,7 +266,111 @@ function sendItem(itemId: Id, user: User, description?: Description = "", privac
         .addQuery({
             include: "*.*"
         });
-};
+}
 
 
+export function displayHomeSearch(navigator: RNNNavigator, token: SearchToken) {
 
+    navigator.showModal({
+        screen: 'goodsh.HomeSearchScreen', // unique ID registered with Navigation.registerScreen
+        animationType: 'none',
+        backButtonHidden: true,
+        passProps: {
+            onClickClose: () => navigator.dismissModal({animationType: 'none'}),
+            token
+        },
+        backButtonHidden: true,
+        navigatorButtons: {
+            leftButtons: [],
+            rightButtons: [
+                {
+                    id: CLOSE_MODAL,
+                    title: i18n.t("actions.cancel")
+                }
+            ],
+        },
+        //
+        // navigatorButtons: Nav.CANCELABLE_SEARCH_MODAL(),
+    });
+}
+
+
+export function displayChangeTitle(navigator: RNNNavigator, lineup: Lineup) {
+    let {id, name} = lineup;
+
+    navigator.showModal({
+        screen: 'goodsh.ChangeLineupName',
+        animationType: 'none',
+        passProps: {
+            lineupId: id,
+            initialLineupName: name
+        }
+    });
+}
+
+//TODO: restore destuctive button index
+type LineupMenuAction = {
+    action: GAction,
+    label: string,
+    handler: () => void,
+}
+
+
+export function displayLineupActionMenu(navigator: RNNNavigator, dispatch: any, lineup: Lineup) {
+
+    //TODO: right manager
+    let actions : LineupMenuAction[]
+
+    if (isCurrentUser(lineup.user)) {
+        actions = [
+            {
+                action: L_RENAME,
+                label: i18n.t("actions.change_title"),
+                handler: () => displayChangeTitle(navigator, lineup)
+            },
+            {
+                action: L_SHARE,
+                label: i18n.t("actions.share_list"),
+                handler: () => displayShareLineup(navigator, lineup)
+            },
+            {
+                action: L_DELETE,
+                label: i18n.t("actions.delete"),
+                handler: () => deleteLineup(dispatch, lineup)
+            },
+
+        ]
+    }
+    else {
+        actions = [
+            isFollowed(lineup)?
+                {
+                    action: L_UNFOLLOW,
+                    label: i18n.t("actions.unfollow"),
+                    handler: () => unfollowLineup(dispatch, lineup)
+                }
+                : {
+                    action: L_FOLLOW,
+                    label: i18n.t("actions.follow"),
+                    handler: () => followLineup(dispatch, lineup)
+                }
+        ]
+    }
+
+    BottomSheet.showBottomSheetWithOptions({
+            options: [
+                ...actions.map(a => a.label),
+                i18n.t("actions.cancel")
+            ],
+            title: lineup.name,
+            // dark: true,
+            // destructiveButtonIndex: 2,
+            cancelButtonIndex: actions.length,
+        }, (value) => {
+            const lineupMenuAction = actions[value];
+            if (lineupMenuAction) {
+                lineupMenuAction.handler()
+            }
+        }
+    );
+}
