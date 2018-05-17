@@ -99,17 +99,4 @@ export default class UserScreen extends Screen<Props, State> {
             </MainBackground>
         );
     }
-
-
-    renderItem({item}) {
-
-        return (
-            <ActivityCell
-                onPressItem={() => this.navToActivity(item)}
-                activityId={item.id}
-                activityType={item.type}
-                navigator={this.props.navigator}
-            />
-        )
-    }
 }

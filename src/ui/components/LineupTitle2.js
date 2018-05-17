@@ -17,6 +17,7 @@ import {SFP_TEXT_MEDIUM} from "../fonts";
 import {STYLES} from "../UIStyles";
 import {getFirstDefined} from "../../helpers/LangUtil";
 import {GoodshContext} from "../UIComponents"
+import {ViewStyle} from "../../types";
 
 export type State = {
 
@@ -24,7 +25,7 @@ export type State = {
 export type Props = {
     lineupId: Id,
     dataResolver?: Id => Lineup,
-    style?: any,
+    style?: ViewStyle,
     skipAuthor?: boolean,
     children?: Node,
 }

@@ -31,6 +31,7 @@ import {createConsole} from "../../helpers/DebugUtils";
 import Spinner from 'react-native-spinkit';
 import Config from "react-native-config"
 import {FullScreenLoader} from "../UIComponents";
+import {ViewStyle} from "../../types";
 
 export type FeedSource = {
     callFactory: ()=>Api.Call,
@@ -47,7 +48,7 @@ export type Props<T> = {
     ListHeaderComponent?: Node,
     ListFooterComponent?: Node,
     empty: Node,
-    style?: any,
+    style?: ViewStyle,
     scrollUpOnBack?: ?() => ?boolean,
     cannotFetch?: boolean,
     visibility: ScreenVisibility,

@@ -5,7 +5,8 @@ import React from 'react';
 
 
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import type {User} from "../../../types";
+import type {TextStyle, User} from "../../../types";
+import {ViewStyle} from "../../../types";
 import {Colors} from "../../colors";
 import {SFP_TEXT_BOLD} from "../../fonts";
 import GTouchable from "../../GTouchable";
@@ -19,8 +20,8 @@ type Props = {
     rightComponent?: Node,
     rightText?: Node,
     small?: boolean,
-    style?: any,
-    textStyle?: any,
+    style?: ViewStyle,
+    textStyle?: TextStyle,
     onPressAvatar?: () => void,
 
 };

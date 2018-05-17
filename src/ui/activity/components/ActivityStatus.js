@@ -12,49 +12,19 @@ import {isAsking, isSaving, isSending, timeSinceActivity} from "../../../helpers
 import UserRowI from "./UserRowI";
 import {userFirstName} from "../../../helpers/StringUtils";
 import {currentUserId} from "../../../managers/CurrentUser";
+import {ViewStyle} from "../../../types";
 
-
-const styles = StyleSheet.create({
-    // description: {fontSize: 14, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey},
-    tag: {flex:1, flexDirection:'row', alignItems: 'center'},
-    mainContainer: {backgroundColor: 'transparent'},
-    descriptionContainer: {
-        flex: 1,
-        flexDirection: 'row',
-        backgroundColor: 'white',
-        paddingHorizontal: 0,
-        paddingTop: 10,
-        marginLeft: 2,
-    },
-    description: {
-        fontSize: 13, lineHeight: 18,
-        fontFamily: SFP_TEXT_ITALIC,
-        color: Colors.brownishGrey},
-    userText: {
-        fontSize: 10,
-        lineHeight: 10,
-        color: Colors.greyish,
-    },
-    shadow: {
-        shadowColor: Colors.greyishBrown,
-        shadowOffset: {width: 0, height: 4},
-        shadowOpacity: 0.3,
-        shadowRadius: 1,
-        elevation: 3,
-    }
-});
 
 type Props = {
     activity: Activity,
     navigator: RNNNavigator,
     skipLineup?: boolean,
     style?: ?*,
-    cardStyle?: ?*,
+    cardStyle?: ViewStyle,
     descriptionContainerStyle?: ?*,
-    descriptionStyle?: ?*,
+    descriptionStyle?: ViewStyle,
     children?: ?Node,
     descriptionNumberOfLines?: number
-
 };
 
 type State = {
@@ -227,5 +197,33 @@ export default class ActivityStatus extends React.Component<Props, State> {
 }
 
 
-
+const styles = StyleSheet.create({
+    // description: {fontSize: 14, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey},
+    tag: {flex:1, flexDirection:'row', alignItems: 'center'},
+    mainContainer: {backgroundColor: 'transparent'},
+    descriptionContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        backgroundColor: 'white',
+        paddingHorizontal: 0,
+        paddingTop: 10,
+        marginLeft: 2,
+    },
+    description: {
+        fontSize: 13, lineHeight: 18,
+        fontFamily: SFP_TEXT_ITALIC,
+        color: Colors.brownishGrey},
+    userText: {
+        fontSize: 10,
+        lineHeight: 10,
+        color: Colors.greyish,
+    },
+    shadow: {
+        shadowColor: Colors.greyishBrown,
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.3,
+        shadowRadius: 1,
+        elevation: 3,
+    }
+});
 

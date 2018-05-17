@@ -7,12 +7,13 @@ import * as TimeUtils from '../../../helpers/TimeUtils'
 import type {User} from "../../../types";
 import {Colors} from "../../colors";
 import UserRowI from "./UserRowI";
+import {ViewStyle} from "../../../types";
 
 type Props = {
     activityTime: string,
     user: User,
     children?: Node,
-    style?: any
+    style?: ViewStyle
 };
 
 type State = {

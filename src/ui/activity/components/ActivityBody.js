@@ -17,7 +17,7 @@ import {connect} from "react-redux";
 import {logged} from "../../../managers/CurrentUser"
 import type {Activity} from "../../../types"
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
-import ActionRights, {canPerformAction, A_BUY} from "../../rights";
+import {canPerformAction, A_BUY} from "../../rights";
 import Button from 'apsl-react-native-button';
 import {SFP_TEXT_ITALIC} from "../../fonts";
 import {CachedImage} from "react-native-img-cache";
@@ -27,7 +27,6 @@ import {firstName} from "../../../helpers/StringUtils";
 
 type Props = {
     activity: Activity,
-    onPressItem: (any) => void,
     skipLineup?: boolean,
     liked: boolean,
     bodyStyle?: *

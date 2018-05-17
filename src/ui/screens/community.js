@@ -16,10 +16,11 @@ import Screen from "../components/Screen";
 import {Colors} from "../colors";
 import {NavStyles, TAB_BAR_PROPS} from "../UIStyles";
 import ShareButton from "../components/ShareButton";
+import {ViewStyle} from "../../types";
 
 type Props = {
     navigator:any,
-    style?: any
+    style?: ViewStyle
 };
 
 type State = {

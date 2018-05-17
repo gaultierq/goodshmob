@@ -5,13 +5,14 @@ import {Button, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 
 import type {User} from "../../types";
 import {CachedImage} from "react-native-img-cache";
 import {Avatar} from "../UIComponents";
+import {ViewStyle} from "../../types";
 
 
 type Props = {
     friend: User,
     children?: Node,
     childrenBelow?: boolean,
-    containerStyle?: any
+    containerStyle?: ViewStyle
 
 };
 

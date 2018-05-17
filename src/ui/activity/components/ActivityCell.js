@@ -28,14 +28,14 @@ export type ActivityDisplayContext = {
 }
 
 type Props = {
-    data: any,
+    data?: any,
     activity: Activity,
     activityId: Id,
     activityType: ActivityType,
     navigator: any,
     onPressItem: (any) => void,
-    skipLineup:? boolean;
-    skipDescription:? boolean;
+    skipLineup?: boolean;
+    skipDescription?: boolean;
 };
 
 type State = {

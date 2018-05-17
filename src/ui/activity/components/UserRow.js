@@ -8,13 +8,14 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import type {User} from "../../../types";
 import UserRowI from "./UserRowI";
 import {Colors} from "../../colors";
+import {ViewStyle} from "../../../types";
 
 type Props = {
     user: User,
     children?: Node,
     small?: boolean,
     text?: string,
-    style?: any,
+    style?: ViewStyle,
     navigator: *,
     pic?: boolean,
     noImage: boolean

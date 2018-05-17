@@ -247,13 +247,6 @@ class NetworkScreen extends Screen<Props, State> {
         });
     }
 
-    static checkEmpty(activities) {
-        let empty = activities.filter((elem, index, self) => {
-            return typeof elem === 'undefined';
-        });
-        if (empty.length > 0) throw new Error(`empty activities found`);
-    }
-
     renderItem({item}) {
 
         return (

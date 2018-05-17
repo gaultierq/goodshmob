@@ -6,12 +6,13 @@ import GTouchable from "../GTouchable";
 import type {i18Key} from "../../types";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Col, Grid, Row} from "react-native-easy-grid";
+import {ViewStyle} from "../../types";
 
 type Props = {
     text: string,
     title: string,
     button: string,
-    style?: any,
+    style?: ViewStyle,
     onClickClose?: () => void,
 
 }

@@ -12,6 +12,7 @@ import type {Id, Lineup, RNNNavigator} from "../types";
 import {displayLineupActionMenu, seeList, startAddItem} from "./Nav";
 import LineupHorizontal from "./components/LineupHorizontal";
 import LineupTitle2 from "./components/LineupTitle2";
+import {ViewStyle} from "../types";
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
@@ -39,7 +40,7 @@ export const MainBackground = (props) => <View
 type Props = {
     user: User,
     size?: number,
-    style?: any
+    style?: ViewStyle
 }
 type State = {}
 

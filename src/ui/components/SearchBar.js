@@ -1,16 +1,17 @@
 //@flow
 
-import React, { Component } from 'react';
-import type {Id, RNNNavigator, SearchToken} from "../../types";
+import React, {Component} from 'react';
+import type {TextStyle} from "../../types";
+import {ViewStyle} from "../../types";
 import {
-    Text,
-    TouchableWithoutFeedback,
-    TouchableOpacity,
-    TextInput,
     Animated,
     Dimensions,
-    Keyboard,
     Image,
+    Keyboard,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
     View,
     ViewPropTypes
 } from 'react-native';
@@ -76,11 +77,11 @@ export type Props = {
     tintColorDelete?: string,
     inputStyle?: any,
     direction?: any,
-    cancelButtonStyle?: any,
+    cancelButtonStyle?: ViewStyle,
     onLayout?: Function,
-    cancelButtonTextStyle?: any,
+    cancelButtonTextStyle?: TextStyle,
 
-    cancelButtonViewStyle?: any,
+    cancelButtonViewStyle?: ViewStyle,
 
     /**
      * text input

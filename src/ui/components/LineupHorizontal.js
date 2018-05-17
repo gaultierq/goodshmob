@@ -34,6 +34,7 @@ import {EmptyCell} from "./LineupCellSaving";
 import {LINEUP_PADDING} from "../UIStyles";
 import {renderLineupMenu} from "../UIComponents";
 import LineupTitle2 from "./LineupTitle2";
+import {ViewStyle} from "../../types";
 
 // $FlowFixMe
 type Props = {
@@ -45,7 +46,7 @@ type Props = {
     onSavingPressed?: ?(navigator: RNNNavigator, saving: Saving) => void,
     renderSaving?: (saving:Saving) => Node,
     renderTitle: (lineup: Lineup) => Node,
-    style?: any,
+    style?: ViewStyle,
     renderEmpty: (list: Lineup) => Node,
 };
 
