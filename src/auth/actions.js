@@ -27,11 +27,11 @@ export function logout(dispatch) {
     }, err => {console.error(err)});
 }
 
-export function login(facebookAccessToken: string) {
+export function loginWith(service: 'facebook'|'account_kit', token: string) {
     return new Api.Call()
         .withMethod('POST')
-        .withRoute(`auth/facebook/generate_token`)
-        .withBody({auth: {access_token: facebookAccessToken}})
+        .withRoute(`auth/${service}/generate_token`)
+        .withBody({auth: {access_token: token}})
         .createActionDispatchee(actionTypes.USER_LOGIN);
 }
 

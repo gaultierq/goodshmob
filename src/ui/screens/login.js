@@ -194,7 +194,7 @@ class Login extends Component<Props, State> {
 
                                 console.info("facebook token:" + token);
                                 this.props
-                                    .dispatch(appActions.login(token))
+                                    .dispatch(appActions.loginWith('facebook', token))
                                     .then((user) => {
                                         resolve();
                                     }, err => reject(err))
@@ -213,16 +213,16 @@ class Login extends Component<Props, State> {
 
     handleAccountKitLogin = () => new Promise((resolve, reject)=> {
 
-        const loginAction = appActions.login;
-        RNAccountKit.loginWithPhone()
-            .then((token) => {
+        RNAccountKit.loginWithEmail()
+            .then(data => {
+                let token = data && data.token
                 if (!token) {
                     console.log('Login cancelled')
                 } else {
                     console.log('login ok !')
                     this.props
-                        .dispatch(loginAction(token))
-                        .then((user) => {
+                        .dispatch(appActions.loginWith('account_kit', token))
+                        .then(user => {
                             resolve();
                         }, err => reject(err))
                 }
