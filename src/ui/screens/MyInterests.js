@@ -24,15 +24,14 @@ import {Navigation} from 'react-native-navigation';
 import Screen from "../components/Screen";
 import Feed from "../components/feed";
 import * as Api from "../../managers/Api";
-import {reducerFactory} from "../../managers/Api";
+import {reduceList2} from "../../managers/Api";
 import ApiAction from "../../helpers/ApiAction";
 import type {Id} from "../../types";
 import {STYLES} from "../UIStyles";
-import {LINEUP_SECTIONS} from "../UIComponents";
-import {buildData, doDataMergeInState, sanitizeActivityType, updateSplice0} from "../../helpers/DataUtils";
-import {reduceList2} from "../../managers/Api";
-import {L_FOLLOW} from "../rights";
+import {GoodshContext, LINEUP_SECTIONS} from "../UIComponents";
+import {buildData, updateSplice0} from "../../helpers/DataUtils";
 import {FOLLOW_LINEUP, UNFOLLOW_LINEUP} from "../lineup/actions";
+import type {FeedSource} from "../components/feed";
 
 
 type Props = {
@@ -65,15 +64,17 @@ export default class MyInterests extends Screen<Props, State> {
         })
 
         return (
-            <Feed
-                displayName={"my interests"}
-                data={followed}
-                renderSectionHeader={({section}) => section.renderSectionHeader()}
-                sections={LINEUP_SECTIONS(this.props.navigator, this.props.dispatch, userId)(lists)}
-                empty={<View><Text style={STYLES.empty_message}>{i18n.t('community_screen.empty_screen')}</Text></View>}
-                fetchSrc={this.fetchSrc(userId)}
-                lastIdExtractor={list => followIdsByListIds[list.id]}
-            />
+            <GoodshContext.Provider value={{userOwnResources: false}}>
+                <Feed
+                    displayName={"my interests"}
+                    data={followed}
+                    renderSectionHeader={({section}) => section.renderSectionHeader()}
+                    sections={LINEUP_SECTIONS(this.props.navigator, this.props.dispatch, userId)(lists)}
+                    empty={<View><Text style={STYLES.empty_message}>{i18n.t('community_screen.empty_screen')}</Text></View>}
+                    fetchSrc={this.fetchSrc(userId)}
+                    lastIdExtractor={list => followIdsByListIds[list.id]}
+                />
+            </GoodshContext.Provider>
         )
     }
 

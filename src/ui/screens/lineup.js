@@ -123,6 +123,7 @@ class LineupScreen extends Screen<Props, State> {
         );
     }
 
+    //TODO: need a design for this
     renderHeader(lineup: Lineup) {
         return (
             <View style={{alignItems: 'flex-end', justifyContent: 'flex-end', paddingHorizontal: LINEUP_PADDING, paddingTop: 6}}>

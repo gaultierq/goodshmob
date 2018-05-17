@@ -30,6 +30,7 @@ import {CREATE_LINEUP, DELETE_LINEUP} from "../lineup/actionTypes";
 import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
 import GTouchable from "../GTouchable";
 import Screen from "../components/Screen";
+import {GoodshContext} from "../UIComponents"
 
 export type Props = FeedProps<List> & {
     userId: Id,
@@ -105,7 +106,7 @@ export class LineupListScreen extends Screen<Props, State> {
         );
 
         return (
-            <LineupListContext.Provider value={{isCurrentUser: isCurrentUserId(userId)}}>
+            <GoodshContext.Provider value={{userOwnResources: isCurrentUserId(userId)}}>
                 <Feed
                     data={items}
                     sections={sectionMaker && sectionMaker(items)}
@@ -114,7 +115,7 @@ export class LineupListScreen extends Screen<Props, State> {
                     {...attributes}
                 />
 
-            </LineupListContext.Provider>
+            </GoodshContext.Provider>
         )
     }
 
@@ -184,6 +185,3 @@ export function renderSimpleListItem(navigator: *) {
         <LineupCell lineup={item}/>
     </GTouchable>)
 }
-
-//
-export const LineupListContext = React.createContext({isCurrentUser:true});

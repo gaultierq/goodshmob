@@ -160,9 +160,6 @@ export const RENDER_SECTION_HEADER = (navigator: RNNNavigator, dispatch: Dispatc
         style={{
             backgroundColor: BACKGROUND_COLOR,
             paddingLeft: LINEUP_PADDING,
-            // paddingRight: 50,
-            marginVertical: 8,
-            // backgroundColor: 'yellow'
         }}
     >
         {renderLineupMenu(navigator, dispatch, lineup)}
@@ -226,3 +223,5 @@ export function renderLineupFromOtherPeople(navigator: RNNNavigator, lineup: Lin
         />
     </GTouchable>);
 }
+
+export const GoodshContext = React.createContext({userOwnResources: true});

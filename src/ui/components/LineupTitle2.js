@@ -15,8 +15,8 @@ import UserRowI from "../activity/components/UserRowI";
 import {buildData} from "../../helpers/DataUtils";
 import {SFP_TEXT_MEDIUM} from "../fonts";
 import {STYLES} from "../UIStyles";
-import {LineupListContext} from "../screens/lineuplist";
 import {getFirstDefined} from "../../helpers/LangUtil";
+import {GoodshContext} from "../UIComponents"
 
 export type State = {
 
@@ -45,8 +45,8 @@ export default class LineupTitle2 extends Component<Props, State> {
         let lineup = dataResolver(lineupId)
         let author =  lineup.user;
         return (
-            <LineupListContext.Consumer>
-                { ({isCurrentUser}) => (
+            <GoodshContext.Consumer>
+                { ({userOwnResources}) => (
                     <View style={[{marginVertical: 6}, style, {flex:1,}]}>
                         <View style={{
                             flex: 1,
@@ -82,7 +82,7 @@ export default class LineupTitle2 extends Component<Props, State> {
 
                         </View>
                         {
-                            !getFirstDefined(skipAuthor, isCurrentUser) && author && author.firstName && <View style={{
+                            !getFirstDefined(skipAuthor, userOwnResources) && author && author.firstName && <View style={{
                                 flexDirection: 'row',
                                 alignItems: 'center',
                                 flex: 0,
@@ -93,13 +93,14 @@ export default class LineupTitle2 extends Component<Props, State> {
                                     user={author}
                                     noImage={true}
                                     style={{flex: 0, marginLeft: 4}} //TODO: rm when removed in UserRowI
+                                    textStyle={{color: Colors.greyish}}
                                 />
                             </View>
                         }
                     </View>
                 )}
 
-            </LineupListContext.Consumer>
+            </GoodshContext.Consumer>
 
         );
     }
@@ -134,6 +135,7 @@ export default class LineupTitle2 extends Component<Props, State> {
 const styles = StyleSheet.create({
     smallText: {
         fontSize: 14,
+        color: Colors.greyish
     },
     medalsContainer: {
         flexDirection: 'row',
