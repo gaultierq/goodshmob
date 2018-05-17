@@ -38,6 +38,7 @@ import {currentUser} from "./managers/CurrentUser";
 import type {OnBoardingStep} from "./managers/OnBoardingManager";
 import {registerLayoutAnimation} from "./ui/UIComponents";
 import {isLogged} from "./managers/CurrentUser";
+import {fullName} from "./helpers/StringUtils";
 
 
 type AppMode = 'idle' | 'init_cache' | 'nospam' | 'logged' | 'unlogged' | 'upgrading_cache' | 'unknown'
@@ -448,8 +449,6 @@ export default class App {
     }
 
     startLogged(navigatorStyle) {
-        let userId = CurrentUser.currentUserId();
-        if (!userId) throw "wtf";
 
         let tabsStyle = { // optional, add this if you want to style the tab bar beyond the defaults
             tabBarButtonColor: Colors.black, // optional, change the color of the tab icons and text (also unselected)
@@ -471,7 +470,6 @@ export default class App {
                     screen: 'goodsh.HomeScreen',
                     icon: require('./img2/mystuff_Glyph.png'),
                     selectedIcon: require('./img2/mystuff_Glyph_Active.png'),
-                    titleImage: require('./img2/headerLogoBlack.png'),
                     navigatorStyle: [navigatorStyle],
                     iconInsets
                 },
@@ -505,9 +503,6 @@ export default class App {
                     // screen: 'goodsh.FriendsScreen',
                     screen: 'goodsh.ProfileScreen', // unique ID registered with Navigation.registerScreen
                     enabled: false,
-                    passProps: {
-                        userId
-                    } // simple serializable object that will pass as props to all top screens (optional)
                 },
                 // right: { // optional, define if you want a drawer from the right
                 //     screen: 'goodsh.CommunityScreen', // unique ID registered with Navigation.registerScreen

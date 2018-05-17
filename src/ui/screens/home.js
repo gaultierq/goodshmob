@@ -20,7 +20,7 @@ import {
 import {connect} from "react-redux";
 import type {Id, RNNNavigator, Saving} from "../../types";
 import {TAB_BAR_PROPS} from "../UIStyles";
-import {currentGoodshboxId, logged} from "../../managers/CurrentUser"
+import {currentGoodshboxId, currentUser, logged} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import {displayHomeSearch, startAddItem} from "../Nav";
@@ -35,6 +35,7 @@ import {TabBar, TabViewAnimated} from "react-native-tab-view";
 import ActionButton from 'react-native-action-button';
 import MyGoodsh from "./MyGoodsh";
 import MyInterests from "./MyInterests";
+import {fullName} from "../../helpers/StringUtils";
 
 
 type Props = {
@@ -161,6 +162,11 @@ export default class HomeScreen extends Screen<Props, State> {
 
 
     render() {
+
+        this.setNavigatorTitle(this.props.navigator, {
+            title: fullName(currentUser(false)),
+        })
+
         return (
             <View style={{flex:1}}>
 
