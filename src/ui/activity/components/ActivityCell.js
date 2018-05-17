@@ -17,7 +17,7 @@ import {getPendingLikeStatus} from "../../rights";
 import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC} from "../../fonts";
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
 import User from "react-native-firebase/lib/modules/auth/User";
-import {stylePadding} from "../../UIStyles";
+import {LINEUP_PADDING, stylePadding} from "../../UIStyles";
 import {firstName} from "../../../helpers/StringUtils";
 import ActivityStatus from "./ActivityStatus";
 import FeedSeparator from "./FeedSeparator";
@@ -91,7 +91,8 @@ export default class ActivityCell extends React.Component<Props, State> {
                         skipLineup={this.props.skipLineup}
                         descriptionNumberOfLines={3}
                         navigator={this.props.navigator}
-                        cardStyle={{paddingHorizontal: 23,
+                        cardStyle={{
+                            paddingLeft: LINEUP_PADDING,
                             paddingVertical: 10,}}
                     />
                     <FeedSeparator/>

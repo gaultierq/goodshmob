@@ -33,6 +33,10 @@ export function fullName(user: User) {
     return user ? `${user.firstName} ${user.lastName}` : "";
 }
 
+export function savingCount(lineup: Lineup) {
+    return _.get(lineup, 'meta.savingsCount', 0)
+}
+
 export function userFirstName(user: User) {
     return user ? `${user.firstName}` : "";
 }

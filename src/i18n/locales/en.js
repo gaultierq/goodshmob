@@ -80,10 +80,10 @@ export default {
     },
     "activity_item":{
         header: {
-            in: "added in",
+            in: "%{adder} added %{what} in %{lineup}",
             added_somewhere: "added it",
-            to: "sent it to",
-            ask: "needs some tips!",
+            to: "%{from} sent %{what} to %{to}",
+            ask: "%{asker} needs some tips!",
         },
         buttons:{
             "comment": {
