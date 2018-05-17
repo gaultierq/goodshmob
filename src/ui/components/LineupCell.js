@@ -70,12 +70,9 @@ export default class LineupCell extends React.Component<Props, State> {
                 {backgroundColor: isId(lineup.id) ? Colors.white : Colors.dirtyWhite}, style]}>
 
                 <View style={{flexDirection: titleChildrenBelow ? 'column' : 'row'}}>
-                    {/*<:LineupTitle lineup={lineup} style={{marginVertical: 6,}}/>*/}
-
                     <LineupTitle2
                         lineupId={lineup.id}
                         dataResolver={id => lineup}
-                        style={{marginVertical: 6,}}
                     />
 
                     {titleChildren}

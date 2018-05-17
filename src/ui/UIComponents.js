@@ -159,8 +159,10 @@ export const RENDER_SECTION_HEADER = (navigator: RNNNavigator, dispatch: Dispatc
         dataResolver={id => lineup}
         style={{
             backgroundColor: BACKGROUND_COLOR,
-            paddingHorizontal: LINEUP_PADDING,
-            paddingVertical: 8,
+            paddingLeft: LINEUP_PADDING,
+            // paddingRight: 50,
+            marginVertical: 8,
+            // backgroundColor: 'yellow'
         }}
     >
         {renderLineupMenu(navigator, dispatch, lineup)}
@@ -194,7 +196,12 @@ export const LINEUP_SECTIONS = (navigator: RNNNavigator, dispatch: any, userId: 
 
 export function renderLineupMenu(navigator: RNNNavigator, dispatch: any, lineup: Lineup) {
     return (
-        <GTouchable style={{position: "absolute", right: 0, margin: 0}}
+        <GTouchable style={{
+            position: "absolute",
+            right: 0,
+            margin: 0,
+            // backgroundColor: 'red'
+        }}
                     onPress={() => displayLineupActionMenu(navigator, dispatch, lineup)}>
             <View style={{
                 paddingHorizontal: LINEUP_PADDING,

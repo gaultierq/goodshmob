@@ -66,14 +66,7 @@ export default class LineupHorizontal extends Component<Props, State> {
 
     static defaultProps = {
         skipLineupTitle: false,
-        renderTitle: (lineup: Lineup) => (
-            //<:LineupTitle lineup={lineup} style={{marginVertical: 6,}}/>
-            <LineupTitle2
-                lineupId={lineup.id}
-                dataResolver={id => lineup}
-                style={{marginVertical: 6}}
-            />
-        ),
+        renderTitle: default_renderTitle,
         renderSaving: saving => <LineupCellSaving item={saving.resource} />,
         dataResolver: lineupId => StoreManager.getLineupAndSavings(lineupId),
         renderEmpty: (list: Lineup) => LineupHorizontal.defaultRenderEmpty()
@@ -242,3 +235,11 @@ export const LineupH1 = connect()((props: Props1) => {
         />
     </GTouchable>
 });
+
+
+export function default_renderTitle(lineup: Lineup) {
+    return <LineupTitle2
+        lineupId={lineup.id}
+        dataResolver={id => lineup}
+    />
+}

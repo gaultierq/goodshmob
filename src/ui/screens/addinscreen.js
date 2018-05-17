@@ -48,7 +48,6 @@ export default class AddInScreen extends Screen<Props, State> {
                                     <LineupTitle2
                                         lineupId={lineup.id}
                                         dataResolver={id => lineup}
-                                        style={{marginVertical: 6}}
                                         skipAuthor={true}
                                     />
                                 )}

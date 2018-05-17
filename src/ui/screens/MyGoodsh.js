@@ -181,7 +181,7 @@ export default class MyGoodsh extends Screen<Props, State> {
                     <LineupTitle2
                         lineupId={lineup.id}
                         dataResolver={id => lineup}
-                        style={{marginBottom: 10,}}
+                        style={{marginBottom: 10, paddingRight: 30}}
                         skipAuthor={true}
                     />
                 )}

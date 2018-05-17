@@ -92,6 +92,7 @@ const FETCH_FOLLOWED_LINEUPS = ApiAction.create("fetch_followed_lineups", "retri
 const fetchFollowedLineups =  userId => new Api.Call()
     .withMethod('GET')
     .withRoute(`users/${userId}/followed_lists`)
+    .include('savings')
 
 
 

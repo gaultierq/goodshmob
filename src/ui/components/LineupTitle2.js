@@ -15,6 +15,8 @@ import UserRowI from "../activity/components/UserRowI";
 import {buildData} from "../../helpers/DataUtils";
 import {SFP_TEXT_MEDIUM} from "../fonts";
 import {STYLES} from "../UIStyles";
+import {LineupListContext} from "../screens/lineuplist";
+import {getFirstDefined} from "../../helpers/LangUtil";
 
 export type State = {
 
@@ -43,52 +45,61 @@ export default class LineupTitle2 extends Component<Props, State> {
         let lineup = dataResolver(lineupId)
         let author =  lineup.user;
         return (
-            <View style={style}>
-                <View style={{flexDirection: 'row',
-                    // backgroundColor: 'red'
-                }}>
+            <LineupListContext.Consumer>
+                { ({isCurrentUser}) => (
+                    <View style={[{marginVertical: 6}, style, {flex:1,}]}>
+                        <View style={{
+                            flex: 1,
+                            flexDirection: 'row',
+                            // backgroundColor: 'purple'
+                        }}>
 
-                    <View style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        // paddingTop: 15,
-                        // paddingBottom: 10,
-                    }}>
-                        <Text style={STYLES.SECTION_TITLE}>
-                            {lineup.name}
+                            <View style={{
+                                flex:1,
+                                flexDirection: 'row',
+                                // justifyContent: 'space-between',
+                                // backgroundColor: 'orange'
+                                // paddingTop: 15,
+                                // paddingBottom: 10,
+                            }}>
+                                <Text style={STYLES.SECTION_TITLE}>
+                                    {lineup.name}
+
+                                    {
+                                        __IS_IOS__ && this.getMedals(lineup)
+                                    }
+
+                                </Text>
+                            </View>
 
                             {
-                                __IS_IOS__ && this.getMedals(lineup)
+                                __IS_ANDROID__ && this.getMedals(lineup)
                             }
 
-                        </Text>
+                            {
+                                children
+                            }
+
+                        </View>
+                        {
+                            !getFirstDefined(skipAuthor, isCurrentUser) && author && author.firstName && <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                flex: 0,
+                                // backgroundColor: 'yellow'
+                            }}>
+                                <Text style={styles.smallText}>{i18n.t('search.by')}</Text>
+                                <UserRowI
+                                    user={author}
+                                    noImage={true}
+                                    style={{flex: 0, marginLeft: 4}} //TODO: rm when removed in UserRowI
+                                />
+                            </View>
+                        }
                     </View>
+                )}
 
-                    {
-                        __IS_ANDROID__ && this.getMedals(lineup)
-                    }
-
-                    {
-                        children
-                    }
-
-                </View>
-                {
-                    !skipAuthor && author && author.firstName && <View style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        flex: 0,
-                        // backgroundColor: 'yellow'
-                    }}>
-                        <Text style={styles.smallText}>{i18n.t('search.by')}</Text>
-                        <UserRowI
-                            user={author}
-                            noImage={true}
-                            style={{flex: 0, marginLeft: 4}} //TODO: rm when removed in UserRowI
-                        />
-                    </View>
-                }
-            </View>
+            </LineupListContext.Consumer>
 
         );
     }

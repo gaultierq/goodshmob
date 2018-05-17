@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 
 import {connect} from "react-redux";
-import {logged} from "../../managers/CurrentUser"
+import {isCurrentUserId, logged} from "../../managers/CurrentUser"
 import LineupCell from "../components/LineupCell";
 import Immutable from 'seamless-immutable';
 import * as Api from "../../managers/Api";
@@ -74,6 +74,7 @@ export class LineupListScreen extends Screen<Props, State> {
             ...attributes
         } = this.props;
 
+
         let user: User = buildData(this.props.data, "users", userId);
 
 
@@ -104,29 +105,28 @@ export class LineupListScreen extends Screen<Props, State> {
         );
 
         return (
-            <Feed
-                data={items}
-                sections={sectionMaker && sectionMaker(items)}
-                renderItem={this.renderItem.bind(this)}
-                fetchSrc={fetchSrc}
-                {...attributes}
-            />
-        );
+            <LineupListContext.Provider value={{isCurrentUser: isCurrentUserId(userId)}}>
+                <Feed
+                    data={items}
+                    sections={sectionMaker && sectionMaker(items)}
+                    renderItem={this.renderItem.bind(this)}
+                    fetchSrc={fetchSrc}
+                    {...attributes}
+                />
+
+            </LineupListContext.Provider>
+        )
     }
 
-    renderItem(item) {
-        let list = item.item;
-        if (!(list.type === 'lists')) throw "unexpected type";
-
+    renderItem({item}) {
+        let list = item;
         list = buildData(this.props.data, list.type, list.id) || list;
 
         let {renderItem, navigator} = this.props;
 
         return (renderItem || renderSimpleListItem(navigator))(list);
     }
-
 }
-
 
 const GET_USER_W_LISTS = ApiAction.create("get_user_w_lists", "get user lists of lineups");
 const FETCH_LINEUPS = ApiAction.create("fetch_lineups", "retrieve the user lineups details");
@@ -184,3 +184,6 @@ export function renderSimpleListItem(navigator: *) {
         <LineupCell lineup={item}/>
     </GTouchable>)
 }
+
+//
+export const LineupListContext = React.createContext({isCurrentUser:true});
