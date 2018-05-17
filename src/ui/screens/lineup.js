@@ -15,7 +15,7 @@ import ActionButton from 'react-native-action-button';
 import {startAddItem} from "../Nav";
 import {Colors} from "../colors";
 import Screen from "./../components/Screen";
-import {renderSimpleButton, STYLES} from "../UIStyles";
+import {LINEUP_PADDING, renderSimpleButton, STYLES, TEXT_LESS_IMPORTANT} from "../UIStyles";
 import {fullName} from "../../helpers/StringUtils";
 import {FETCH_LINEUP, FETCH_SAVINGS} from "../lineup/actions";
 import {UNSAVE} from "../activity/actionTypes";
@@ -23,6 +23,7 @@ import * as UI from "../UIStyles";
 import GTouchable from "../GTouchable";
 import * as authActions from "../../auth/actions";
 import FollowButton from "../activity/components/FollowButton";
+import * as TimeUtils from "../../helpers/TimeUtils";
 
 type Props = {
     lineupId: string,
@@ -124,9 +125,9 @@ class LineupScreen extends Screen<Props, State> {
 
     renderHeader(lineup: Lineup) {
         return (
-            <View style={{}}>
-                <Text>{`#Ajoutée le ${lineup.createdAt}`}</Text>
-                <FollowButton lineup={lineup} />
+            <View style={{alignItems: 'flex-end', justifyContent: 'flex-end', paddingHorizontal: LINEUP_PADDING, paddingTop: 6}}>
+                <Text style={TEXT_LESS_IMPORTANT}>{`${TimeUtils.timeSince(Date.parse(lineup.createdAt))}`}</Text>
+                <View><FollowButton lineup={lineup} /></View>
             </View>
         )
     }
