@@ -7,10 +7,10 @@ export default {
     },
     "tabs": {
         home: {
-            title: "My goodsh"
+            title: "My lists"
         },
         network: {
-            title: "My network"
+            title: "News feed"
         }
     },
     lineups: {
@@ -155,7 +155,7 @@ export default {
         "related_activities_title": "Related activities"
     },
     "create_list_controller":{
-        "title":"Add new",
+        "title":"+ Add new",
         "subtitle":"##Be creative;)",
         "placeholder":"Be creative;)",
         "action":"Add new list",
@@ -181,7 +181,7 @@ export default {
             "friends":"MY CONTACTS",
             "notifications":"NOTIFICATIONS",
         },
-        "empty_screen": "The goodsh of your friends are here.\nGo to MY CONTACTS to invite and connect."
+        "empty_screen": "The goodsh of your friends are here.\nInvite them to share your tips with them."
     },
     "comments_screen":{
         "title": "Comments"
@@ -280,7 +280,7 @@ export default {
         }
     },
     empty: {
-        lineup: "This list is empty, what a shame!"
+        lineup: "This list is empty, add what you love!"
     },
     activity_action_bar: {
         goodsh_deleted: "Goodsh deleted",
@@ -343,7 +343,7 @@ export default {
     common: {
         empty_feed_generic: "If you love it, share it.\nWhy don't you invite some friends to goodsh?",
         api: {
-            generic_error: "Oops... Something went wrong"
+            generic_error: "Oops... Problem with the internet."
         }
     },
     ask: {
