@@ -29,7 +29,7 @@ import {Colors} from "../colors";
 import {PROFILE_CLICKED} from "../components/MyAvatar";
 import OnBoardingManager from "../../managers/OnBoardingManager";
 import {floatingButtonScrollListener, registerLayoutAnimation} from "../UIComponents";
-import {TipConfig} from "../components/Tip";
+import {Tip, TipConfig} from "../components/Tip";
 import {HomeOnBoardingHelper} from "./HomeOnBoardingHelper";
 import {TabBar, TabViewAnimated} from "react-native-tab-view";
 import ActionButton from 'react-native-action-button';
