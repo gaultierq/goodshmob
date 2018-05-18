@@ -7,7 +7,7 @@ import {currentUser, currentUserId, logged} from "../../managers/CurrentUser"
 import ActivityCell from "../activity/components/ActivityCell";
 import {activityFeedProps, floatingButtonScrollListener} from "../UIComponents"
 import Feed from "../components/feed"
-import type {List, NavigableProps} from "../../types";
+import type {Lineup, List, NavigableProps} from "../../types";
 import ActionButton from 'react-native-action-button';
 import ItemCell from "../components/ItemCell";
 import LineupCell from "../components/LineupCell";
@@ -21,6 +21,7 @@ import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
 import {CREATE_ASK} from "./ask";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ShareButton from "../components/ShareButton";
+import {Call} from "../../managers/Api";
 
 type Props = NavigableProps;
 
@@ -169,8 +170,6 @@ class NetworkScreen extends Screen<Props, State> {
             })
         );
 
-
-
         let scrollUpOnBack = super.isVisible() ? ()=> {
             this.props.navigator.switchToTab({
                 tabIndex: 0
@@ -187,7 +186,7 @@ class NetworkScreen extends Screen<Props, State> {
                     listRef={ref => this.feed = ref}
                     fetchSrc={{
                         callFactory: fetchMyNetwork,
-                        useLinks: true,
+                        // useLinks: true,
                         action: FETCH_ACTIVITIES,
                         options: {userId}
                     }}
@@ -200,6 +199,8 @@ class NetworkScreen extends Screen<Props, State> {
                     // initialLoaderDelay={FEED_INITIAL_LOADER_DURATION}
                     initialNumToRender={3}
                     onScroll={floatingButtonScrollListener.call(this)}
+                    decorateLoadMoreCall={(last: Activity, call: Call) => call.addQuery({id_after: last.streamId})
+                    }
                 />
 
 

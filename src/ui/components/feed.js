@@ -19,7 +19,7 @@ import ApiAction from "../../helpers/ApiAction";
 import * as Api from "../../managers/Api";
 import {TRIGGER_USER_DIRECT_ACTION, TRIGGER_USER_INDIRECT_ACTION} from "../../managers/Api";
 import {isEmpty} from "lodash";
-import type {i18Key, ms, RequestState, Url} from "../../types";
+import type {i18Key, Id, ms, RequestState, Url} from "../../types";
 import {renderSimpleButton} from "../UIStyles";
 import {SearchBar} from 'react-native-elements'
 
@@ -32,6 +32,7 @@ import Spinner from 'react-native-spinkit';
 import Config from "react-native-config"
 import {FullScreenLoader} from "../UIComponents";
 import {ViewStyle} from "../../types";
+import {Call} from "../../managers/Api";
 
 export type FeedSource = {
     callFactory: ()=>Api.Call,
@@ -56,9 +57,9 @@ export type Props<T> = {
     initialLoaderDelay?: ?ms,
     displayName?: string,
     doNotDisplayFetchMoreLoader: ?boolean,
-    listRef: any => void | string,
+    listRef?: ?(any => void | string),
     doNotDisplayFetchMoreLoader?: boolean,
-    lastIdExtractor: any => any
+    decorateLoadMoreCall: (last: T, call: Call) => Call,
 };
 
 export type FilterConfig<T> = {
@@ -81,6 +82,13 @@ type State = {
 };
 
 
+type FeedFetchOption = {
+    // afterId?: Id,
+    loadMore: boolean,
+    trigger?: any,
+    drop?: boolean
+}
+
 // const LAST_EMPTY_RESULT_WAIT_MS = 5 * 60 * 1000;
 const LAST_EMPTY_RESULT_WAIT_MS = Config.LAST_EMPTY_RESULT_WAIT_MS;
 
@@ -95,8 +103,8 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         keyExtractor: item => item.id,
         initialLoaderDelay: 0,
         listRef: "feed",
-        lastIdExtractor: item => item.id,
-    };
+        decorateLoadMoreCall: (last: T, call: Call) => call.addQuery({id_after: last.id})
+    }
 
     state = {initialLoaderVisibility: 'idle', firstLoad: 'idle'};
     createdAt: ms;
@@ -121,7 +129,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: Props<*>, nextState: State) {
         if (!__ENABLE_PERF_OPTIM__) return true;
         if (nextProps.visibility === 'hidden') {
             this.logger.debug('feed component update saved');
@@ -143,7 +151,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                 return;
             }
             let trigger = this.hasItems() ? TRIGGER_USER_INDIRECT_ACTION : TRIGGER_USER_DIRECT_ACTION;
-            const options = {trigger};
+            const options = {loadMore: false, trigger};
 
             const canotFetch = this.cannotFetchReason('isFetchingFirst', options);
 
@@ -388,12 +396,12 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         }
     }
 
-    canFetch(requestName: string = 'isFetchingFirst', options: * = {}): boolean {
+    canFetch(requestName: string = 'isFetchingFirst', options: FeedFetchOption = {}): boolean {
         return this.cannotFetchReason(requestName, options) === null;
     }
 
 
-    cannotFetchReason(requestName: string = 'isFetchingFirst', options: * = {}): string  | null {
+    cannotFetchReason(requestName: string = 'isFetchingFirst', options: FeedFetchOption = {}): string  | null {
         if (this.isFiltering()) return "filtering list";
 
         if (this.notFetchable()) return this.notFetchable();
@@ -431,9 +439,9 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         return null;
     }
 
-    tryFetchIt(options?: any = {}) {
-        let {afterId} = options;
-        let requestName = afterId ? 'isFetchingMore' : 'isFetchingFirst';
+    tryFetchIt(options?: FeedFetchOption = {loadMore: false}) {
+        let {loadMore} = options;
+        let requestName = loadMore ? 'isFetchingMore' : 'isFetchingFirst';
         if (this.canFetch(requestName, options)) {
             this.fetchIt(options);
             return true;
@@ -441,9 +449,9 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         return false;
     }
 
-    fetchIt(options?: any = {}) {
-        let {afterId, trigger, drop} = options;
-        let requestName = afterId ? 'isFetchingMore' : 'isFetchingFirst';
+    fetchIt(options?: FeedFetchOption = {loadMore: false}) {
+        let {loadMore, trigger, drop} = options;
+        let requestName = loadMore ? 'isFetchingMore' : 'isFetchingFirst';
 
         // $FlowFixMe
         return new Promise((resolve, reject) => {
@@ -462,21 +470,21 @@ export default class Feed<T> extends Component<Props<T>, State>  {
             const {callFactory, useLinks} = fetchSrc;
             let call;
             //backend api is not unified yet
-            if (afterId && this.state.moreLink) {
+            if (loadMore && this.state.moreLink) {
                 call = Api.Call.parse(this.state.moreLink).withMethod('GET');
             }
             else {
                 call = callFactory();
-                if (afterId && !useLinks) {
-                    call.addQuery({id_after: afterId});
+                if (loadMore && !useLinks) {
+                    this.decorateCallForNextPage(call)
                 }
             }
             if (trigger === undefined) {
-                trigger = afterId ? TRIGGER_USER_INDIRECT_ACTION : TRIGGER_USER_DIRECT_ACTION;
+                trigger = loadMore ? TRIGGER_USER_INDIRECT_ACTION : TRIGGER_USER_DIRECT_ACTION;
             }
 
             this.props
-                .dispatch(call.createActionDispatchee(fetchSrc.action, {trigger, ...fetchSrc.options, mergeOptions: {drop, hasLess: !!afterId}}))
+                .dispatch(call.createActionDispatchee(fetchSrc.action, {trigger, ...fetchSrc.options, mergeOptions: {drop, hasLess: !!loadMore}}))
                 .then(({data, links})=> {
                     this.logger.debug("disptachForAction" + JSON.stringify(this.props.fetchSrc.action));
                     if (!data) {
@@ -498,7 +506,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
                     if (
                         useLinks
                         && links && links.next
-                        && (afterId || !this.state.moreLink)
+                        && (loadMore || !this.state.moreLink)
                     ) {
 
                         this.setState({moreLink: links.next});
@@ -514,12 +522,22 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         });
     }
 
-    fetchMore(options ?: any = {}) {
+    decorateCallForNextPage(call: Call) {
+        const lastItem = this.getLastItem();
+
+        if (lastItem) {
+            return this.props.decorateLoadMoreCall(lastItem, call);
+        }
+        else {
+            console.warn("no last item found")
+            return call
+        }
+    }
+
+    fetchMore(options ?: FeedFetchOption = {loadMore: false}) {
         let last = this.getLastItem();
         if (last) {
-            const lastId = this.props.lastIdExtractor(last);
-            if (!lastId) throw "no id found for this item:" + JSON.stringify(last);
-            return this.tryFetchIt({afterId: lastId, ...options});
+            return this.tryFetchIt({loadMore: true, ...options});
         }
         return false;
     }
@@ -573,7 +591,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         )
     }
 
-    renderFail(fetch: () => void) {
+    renderFail(fetch: () => any) {
 
         return (
             <View style={{padding: 12}}>

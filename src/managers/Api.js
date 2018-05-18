@@ -592,27 +592,6 @@ export const reduceList = (state, action, desc, optionalExtractor?) => {
 };
 
 
-export type STATE<T> = {
-    list?: Array<T>,
-    hasNoMore?: boolean
-}
-
-export type SHELL = {
-    id: Id, type: string
-}
-
-export type REDUX_ACTION<T> = {
-    type: string,
-    payload: {data: Array<T>},
-    options: any
-}
-
-export function reducerFactory(apiAction: ApiAction) {
-    return (state: STATE<SHELL> = {}, action: REDUX_ACTION<SHELL>) => {
-        return reduceList2(state, action, apiAction);
-    };
-}
-
 export const reduceList2 = (state: STATE<SHELL>, action: REDUX_ACTION<SHELL>, apiAction: ApiAction, optionalExtractor?: any => any) => {
     switch (action.type) {
         case apiAction.success():
@@ -645,4 +624,20 @@ export const reduceList2 = (state: STATE<SHELL>, action: REDUX_ACTION<SHELL>, ap
     return state;
 };
 
+
+
+export type STATE<T> = {
+    list?: Array<T>,
+    hasNoMore?: boolean
+}
+
+export type SHELL = {
+    id: Id, type: string
+}
+
+export type REDUX_ACTION<T> = {
+    type: string,
+    payload: {data: Array<T>},
+    options: any
+}
 

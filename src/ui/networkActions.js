@@ -4,6 +4,7 @@ import ApiAction from "../helpers/ApiAction";
 import * as Api from "../managers/Api";
 import Immutable from 'seamless-immutable';
 import type {Id} from "../types";
+import {reduceList2} from "../managers/Api";
 
 export const FETCH_ACTIVITIES = ApiAction.create("network/fetch_activities", "retrieve the network activities");
 
@@ -22,24 +23,20 @@ export function fetchUserNetwork(userId: Id) {
 }
 
 export const reducer = (() => {
-    const initialState = Immutable({});
 
-    const initialSubState = Immutable(Api.initialListState());
-
-    return (state = initialState, action) => {
+    return (state = {}, action) => {
 
         if (action.type === FETCH_ACTIVITIES.success()) {
             let {userId} = action.options || {};
 
             if (userId) {
-                let subState = state[userId] || initialSubState;
-                subState = Api.reduceList(
-                    subState,
-                    action,
-                    {fetchFirst: FETCH_ACTIVITIES},
-                    activity => ({createdAt: activity.attributes['created-at']})
-                    );
-                state = state.merge({[userId]: subState}, {deep: true});
+                let subState = state[userId] || {};
+                subState = reduceList2(subState, action, FETCH_ACTIVITIES, activity => ({
+                    createdAt: activity.attributes['created-at'],
+                    streamId: _.get(activity, 'meta.stream-id')
+                }))
+
+                state = {...state, [userId]: subState}
             }
         }
 

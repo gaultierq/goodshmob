@@ -26,12 +26,13 @@ import Feed from "../components/feed";
 import * as Api from "../../managers/Api";
 import {reduceList2} from "../../managers/Api";
 import ApiAction from "../../helpers/ApiAction";
-import type {Id} from "../../types";
+import type {Id, Lineup} from "../../types";
 import {STYLES} from "../UIStyles";
 import {GoodshContext, LINEUP_SECTIONS} from "../UIComponents";
 import {buildData, updateSplice0} from "../../helpers/DataUtils";
 import {FOLLOW_LINEUP, UNFOLLOW_LINEUP} from "../lineup/actions";
 import type {FeedSource} from "../components/feed";
+import {Call} from "../../managers/Api";
 
 
 type Props = {
@@ -66,13 +67,14 @@ export default class MyInterests extends Screen<Props, State> {
         return (
             <GoodshContext.Provider value={{userOwnResources: false}}>
                 <Feed
+                    listRef={ref=>ref} //otherwise flow problem???
                     displayName={"my interests"}
                     data={followed}
                     renderSectionHeader={({section}) => section.renderSectionHeader()}
                     sections={LINEUP_SECTIONS(this.props.navigator, this.props.dispatch, userId)(lists)}
                     empty={<View><Text style={STYLES.empty_message}>{i18n.t('community_screen.empty_screen')}</Text></View>}
                     fetchSrc={this.fetchSrc(userId)}
-                    lastIdExtractor={list => followIdsByListIds[list.id]}
+                    decorateLoadMoreCall={(last: Lineup, call: Call) => call.addQuery({id_after: followIdsByListIds[last.id]})}
                 />
             </GoodshContext.Provider>
         )
