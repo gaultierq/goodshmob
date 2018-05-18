@@ -92,7 +92,7 @@ export default class ActivityCell extends React.Component<Props, State> {
                         descriptionNumberOfLines={3}
                         navigator={this.props.navigator}
                         cardStyle={{
-                            paddingLeft: LINEUP_PADDING,
+                            paddingHorizontal: LINEUP_PADDING,
                             paddingVertical: 10,}}
                     />
                     <FeedSeparator/>
