@@ -1,27 +1,25 @@
 // @flow
 
 import React from 'react';
-import {ActivityIndicator, FlatList, Platform, RefreshControl, TouchableOpacity, View, Text} from 'react-native';
+import {ActivityIndicator, FlatList, Platform, RefreshControl, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
 import {currentUser, currentUserId, logged} from "../../managers/CurrentUser"
 import ActivityCell from "../activity/components/ActivityCell";
 import {activityFeedProps, floatingButtonScrollListener} from "../UIComponents"
 import Feed from "../components/feed"
-import type {Lineup, List, NavigableProps} from "../../types";
+import type {Activity, ActivityGroup, NavigableProps} from "../../types";
 import ActionButton from 'react-native-action-button';
-import ItemCell from "../components/ItemCell";
-import LineupCell from "../components/LineupCell";
 import {FETCH_ACTIVITIES, fetchMyNetwork} from "../networkActions";
 import * as Nav from "../Nav";
 import Screen from "../components/Screen";
-import {FEED_INITIAL_LOADER_DURATION, STYLES} from "../UIStyles";
+import {STYLES} from "../UIStyles";
 import {Colors} from "../colors";
-import GTouchable from "../GTouchable";
 import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
 import {CREATE_ASK} from "./ask";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ShareButton from "../components/ShareButton";
 import {Call} from "../../managers/Api";
+import {buildData} from "../../helpers/DataUtils";
 
 type Props = NavigableProps;
 
@@ -120,55 +118,20 @@ class NetworkScreen extends Screen<Props, State> {
     }
 
     //hack to skip the first render
-    hasBeenRenderedOnce = false;
+    // hasBeenRenderedOnce = false;
 
     render() {
-        if (__ENABLE_PERF_OPTIM__) {
-            if (!this.hasBeenRenderedOnce && !this.isVisible()) return null;
-            this.hasBeenRenderedOnce = true;
-        }
-
 
         let userId = currentUserId();
 
-        let network = this.props.network[userId] || {};
-        let activities = _.slice(network.list);
+        let network = this.props.network[userId] || {list: []}
+        let sections = network.list
+            .map(group => buildData(this.props.data, 'activityGroups', group.id))
+            .map(built => ({
+                activityCount: built.activityCount,
+                data: built.activities
+            }))
 
-        //take all my asks
-        //oder by date
-
-        let myAsks = _.transform(
-            this.props.data.asks,
-            (asks, value) => {
-                if (value.relationships.user.data.id === userId) {
-                    asks.push(value);
-                }
-            }, []);
-
-        myAsks = _.orderBy(myAsks, 'attributes.createdAt', 'asc');
-
-        let firstActivityOfFeed = Date.parse(_.get(activities, '0.createdAt'));
-
-        for (let i = 0; i < myAsks.length; i++) {
-            let a = myAsks[i];
-            if (Date.parse(a.attributes.createdAt) < firstActivityOfFeed) break;
-            activities.unshift({id: a.id, type: 'asks'});
-        }
-
-        //FIXME: remove dep to ask
-        activities = mergeItemsAndPendings(
-            activities,
-            this.props.pending[CREATE_ASK],
-            [],
-            (pending) => ({
-                id: pending.id,
-                content: pending.payload.content,
-                createdAt: pending.insertedAt,
-                user: currentUser(),
-                type: 'asks',
-                pending: true
-            })
-        );
 
         let scrollUpOnBack = super.isVisible() ? ()=> {
             this.props.navigator.switchToTab({
@@ -181,8 +144,9 @@ class NetworkScreen extends Screen<Props, State> {
             <View style={{flex:1}}>
                 <Feed
                     displayName={"network feed"}
-                    data={activities}
-                    renderItem={this.renderItem.bind(this)}
+                    sections={sections}
+                    renderItem={({item}) => this.renderItem(item)}
+                    renderSectionFooter={({section}) => <Text>{`total: ${section.activityCount} activities`}</Text>}
                     listRef={ref => this.feed = ref}
                     fetchSrc={{
                         callFactory: fetchMyNetwork,
@@ -248,14 +212,13 @@ class NetworkScreen extends Screen<Props, State> {
         });
     }
 
-    renderItem({item}) {
-
+    renderItem(activity: Activity) {
         return (
             <ActivityCell
-                onPressItem={() => this.navToActivity(item)}
-                activity={item.pending ? item : null}
-                activityId={item.id}
-                activityType={item.type}
+                onPressItem={() => this.navToActivity(activity)}
+                activity={activity.pending ? activity : null}
+                activityId={activity.id}
+                activityType={activity.type}
                 navigator={this.props.navigator}
             />
         )

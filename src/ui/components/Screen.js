@@ -3,6 +3,7 @@ import {Component} from 'react';
 import type {NavigableProps} from "../../types";
 import {toUppercase} from "../../helpers/StringUtils";
 import * as Nav from "../Nav";
+import {sendMessage} from "../../managers/Messenger";
 
 
 export type ScreenVisibility = 'unknown' | 'visible' | 'hidden';
@@ -84,6 +85,16 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  ScreenStat
             return false;
         }
         return true;
+    }
+
+    componentDidCatch() {
+        sendMessage('rendering error', {timeout: 60000, action: {
+                title: 'post forceUpdate',
+                onPress: () => {
+                    setTimeout(()=> this.forceUpdate(), 1000)
+                },
+            }
+        })
     }
 
 

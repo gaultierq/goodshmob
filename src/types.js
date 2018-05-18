@@ -49,6 +49,17 @@ export type Base = {
     meta: any,
 }
 
+export type ActivityGroup = {
+    id: Id,
+    activityCount: number,
+    actorCount: number,
+    created_at: Date,
+    group: string,
+    updatedAt: any,
+    verb: string,
+    firstActivity: Activity,
+}
+
 export type Activity = Base & {
     createdAt: any,
     updatedAt: any,

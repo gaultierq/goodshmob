@@ -120,12 +120,12 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         super(props);
         this.logger = props.displayName && createConsole(props.displayName) || console;
         this.createdAt = Date.now();
-        // this.postFetchFirst();
+        this.postFetchFirst();
     }
 
     componentWillReceiveProps(nextProps: Props<*>) {
         //hack: let the next props become the props
-        this.postFetchFirst();
+        // this.postFetchFirst();
     }
 
 
@@ -396,12 +396,16 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         }
     }
 
-    canFetch(requestName: string = 'isFetchingFirst', options: FeedFetchOption = {}): boolean {
-        return this.cannotFetchReason(requestName, options) === null;
+    canFetch(requestName: string = 'isFetchingFirst', options: FeedFetchOption = {loadMore: false}): boolean {
+        const reason = this.cannotFetchReason(requestName, options);
+        if (reason) {
+            console.debug('cannot fetch: ${reason}')
+        }
+        return reason === null
     }
 
 
-    cannotFetchReason(requestName: string = 'isFetchingFirst', options: FeedFetchOption = {}): string  | null {
+    cannotFetchReason(requestName: string = 'isFetchingFirst', options: FeedFetchOption = {loadMore: false}): string  | null {
         if (this.isFiltering()) return "filtering list";
 
         if (this.notFetchable()) return this.notFetchable();
