@@ -41,8 +41,9 @@ export type FeedSource = {
     options?: any
 }
 
-export type Props<T> = {
-    data: Array<T>,
+export type Props = {
+    data?: Array<T>,
+    sections?: any,
     renderItem?: any => Node,
     fetchSrc: FeedSource,
     hasMore?: boolean,
@@ -59,7 +60,7 @@ export type Props<T> = {
     doNotDisplayFetchMoreLoader: ?boolean,
     listRef?: ?(any => void | string),
     doNotDisplayFetchMoreLoader?: boolean,
-    decorateLoadMoreCall: (last: T, call: Call) => Call,
+    decorateLoadMoreCall?: (last: any, call: Call) => Call,
 };
 
 export type FilterConfig<T> = {
@@ -78,7 +79,8 @@ type State = {
     lastEmptyResultMs?: number,
     moreLink?: Url,
 
-    filter?:? string
+    filter?:? string,
+    decorateLoadMoreCall: (last: any, call: Call) => Call,
 };
 
 
@@ -95,7 +97,7 @@ const LAST_EMPTY_RESULT_WAIT_MS = Config.LAST_EMPTY_RESULT_WAIT_MS;
 @connect((state, ownProps) => ({
     config: state.config,
 }))
-export default class Feed<T> extends Component<Props<T>, State>  {
+export default class Feed extends Component<Props, State>  {
 
 
     static defaultProps = {
@@ -103,10 +105,8 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         keyExtractor: item => item.id,
         initialLoaderDelay: 0,
         listRef: "feed",
-        decorateLoadMoreCall: (last: T, call: Call) => call.addQuery({id_after: last.id})
     }
 
-    state = {initialLoaderVisibility: 'idle', firstLoad: 'idle'};
     createdAt: ms;
     firstRenderAt: ms;
     firstLoaderTimeout: number;
@@ -114,22 +114,39 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     lastFetchFail: number;
     manager: RequestManager = new RequestManager();
     logger: *;
-    filterNode;
+    filterNode: Node;
 
-    constructor(props: Props<T>) {
+    constructor(props: Props) {
         super(props);
+        this.state = {
+            initialLoaderVisibility: 'idle',
+            firstLoad: 'idle',
+            decorateLoadMoreCall: props.decorateLoadMoreCall || this._defaultDecorateLoadMoreCall(props)
+        }
         this.logger = props.displayName && createConsole(props.displayName) || console;
         this.createdAt = Date.now();
         this.postFetchFirst();
     }
 
-    componentWillReceiveProps(nextProps: Props<*>) {
+    _defaultDecorateLoadMoreCall = (props: Props) => (last: any, call: Call) => {
+        let lastId;
+        if (props.sections) {
+            let last = _.last(props.sections)
+            lastId = last && last.id
+        }
+        else {
+            lastId = last.id
+        }
+        return call.addQuery({id_after: lastId})
+    }
+
+    componentWillReceiveProps(nextProps: Props) {
         //hack: let the next props become the props
         // this.postFetchFirst();
     }
 
 
-    shouldComponentUpdate(nextProps: Props<*>, nextState: State) {
+    shouldComponentUpdate(nextProps: Props, nextState: State) {
         if (!__ENABLE_PERF_OPTIM__) return true;
         if (nextProps.visibility === 'hidden') {
             this.logger.debug('feed component update saved');
@@ -314,16 +331,16 @@ export default class Feed<T> extends Component<Props<T>, State>  {
         return this.props.sections || this.props.data;
     }
 
-    getLastItem() {
-        let data;
-        if (this.props.sections) {
-            let lastSection = _.last(this.props.sections);
-            data = lastSection && lastSection.data;
-        }
-        else {
-            data = this.props.data;
-        }
-        return _.last(data);
+    getLastElement() {
+        return _.last(this.props.sections || this.props.data);
+    }
+
+    getElementCount() {
+        return (this.props.sections || this.props.data || []).length;
+    }
+
+    isEmpty() {
+        return this.getElementCount() === 0
     }
 
     renderEmpty() {
@@ -527,10 +544,10 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     decorateCallForNextPage(call: Call) {
-        const lastItem = this.getLastItem();
+        const lastItem = this.getLastElement();
 
         if (lastItem) {
-            return this.props.decorateLoadMoreCall(lastItem, call);
+            return this.state.decorateLoadMoreCall(lastItem, call);
         }
         else {
             console.warn("no last item found")
@@ -539,8 +556,7 @@ export default class Feed<T> extends Component<Props<T>, State>  {
     }
 
     fetchMore(options ?: FeedFetchOption = {loadMore: false}) {
-        let last = this.getLastItem();
-        if (last) {
+        if (!this.isEmpty()) {
             return this.tryFetchIt({loadMore: true, ...options});
         }
         return false;

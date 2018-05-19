@@ -133,7 +133,8 @@ export default class ActivityCell extends React.Component<Props, State> {
     renderDebugActivityInfo(activity: Activity) {
         return (
             <View>
-                {_.keys(activity).map(k => <Text style={{fontSize: 9}}>{`${k}=${activity[k]}`}</Text>)}
+                {/*{_.keys(activity).map(k => <Text style={{fontSize: 9}}>{`${k}=${activity[k]}`}</Text>)}*/}
+                <Text>{JSON.stringify(activity,null,'\t')}</Text>
             </View>
         );
     }

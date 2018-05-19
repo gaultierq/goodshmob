@@ -294,6 +294,11 @@ export default {
             title: "Réponses"
         }
     },
+    "load_more_activities": {
+        zero: "",
+        one: "Voir %{count} activité supplémentaire",
+        other: "Voir %{count} activités supplémentaires",
+    },
     add_item_screen: {
         title: "Choisir une liste"
     },

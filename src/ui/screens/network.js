@@ -3,19 +3,17 @@
 import React from 'react';
 import {ActivityIndicator, FlatList, Platform, RefreshControl, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
-import {currentUser, currentUserId, logged} from "../../managers/CurrentUser"
+import {currentUserId, logged} from "../../managers/CurrentUser"
 import ActivityCell from "../activity/components/ActivityCell";
 import {activityFeedProps, floatingButtonScrollListener} from "../UIComponents"
 import Feed from "../components/feed"
-import type {Activity, ActivityGroup, NavigableProps} from "../../types";
+import type {Activity, ActivityGroup, Id, NavigableProps} from "../../types";
 import ActionButton from 'react-native-action-button';
 import {FETCH_ACTIVITIES, fetchMyNetwork} from "../networkActions";
 import * as Nav from "../Nav";
 import Screen from "../components/Screen";
-import {STYLES} from "../UIStyles";
+import {renderSimpleButton, STYLES} from "../UIStyles";
 import {Colors} from "../colors";
-import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
-import {CREATE_ASK} from "./ask";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ShareButton from "../components/ShareButton";
 import {Call} from "../../managers/Api";
@@ -26,6 +24,12 @@ type Props = NavigableProps;
 type State = {
     isActionButtonVisible: boolean
 };
+
+type NetworkSection = {
+    id: Id,
+    activityCount: number,
+    data: Array<any>
+}
 
 @logged
 @connect((state, ownProps) => ({
@@ -64,7 +68,7 @@ class NetworkScreen extends Screen<Props, State> {
 
     feed: any
 
-    constructor(props){
+    constructor(props: Props){
         super(props);
         props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
@@ -120,6 +124,7 @@ class NetworkScreen extends Screen<Props, State> {
     //hack to skip the first render
     // hasBeenRenderedOnce = false;
 
+
     render() {
 
         let userId = currentUserId();
@@ -128,6 +133,7 @@ class NetworkScreen extends Screen<Props, State> {
         let sections = network.list
             .map(group => buildData(this.props.data, 'activityGroups', group.id))
             .map(built => ({
+                id: built.id,
                 activityCount: built.activityCount,
                 data: built.activities
             }))
@@ -146,7 +152,7 @@ class NetworkScreen extends Screen<Props, State> {
                     displayName={"network feed"}
                     sections={sections}
                     renderItem={({item}) => this.renderItem(item)}
-                    renderSectionFooter={({section}) => <Text>{`total: ${section.activityCount} activities`}</Text>}
+                    renderSectionFooter={({section}) => this.renderSectionFooter(section)}
                     listRef={ref => this.feed = ref}
                     fetchSrc={{
                         callFactory: fetchMyNetwork,
@@ -163,7 +169,7 @@ class NetworkScreen extends Screen<Props, State> {
                     // initialLoaderDelay={FEED_INITIAL_LOADER_DURATION}
                     initialNumToRender={3}
                     onScroll={floatingButtonScrollListener.call(this)}
-                    decorateLoadMoreCall={(last: Activity, call: Call) => call.addQuery({id_after: last.streamId})
+                    decorateLoadMoreCall={(last: ActivityGroup, call: Call) => call.addQuery({id_lt: last.id})
                     }
                 />
 
@@ -176,6 +182,21 @@ class NetworkScreen extends Screen<Props, State> {
 
             </View>
         );
+    }
+
+    renderSectionFooter(section: NetworkSection) {
+        return (
+
+            renderSimpleButton(
+                i18n.t('load_more_activities', {count: section.activityCount - section.data.length}),
+                ()=> this.loadMore(section),
+                // {loading: reqState === 'sending', disabled: ok, textStyle: {fontWeight: "normal", fontSize: 14, color: Colors.grey}}
+            )
+        )
+    }
+
+    loadMore(section: NetworkSection) {
+        this.props.dispatch(fetchMyNetwork({limit: 1, activity_by_group: section.activityCount, id_lte: section.id}).createActionDispatchee(FETCH_ACTIVITIES, {userId: currentUserId()}))
     }
 
     navToActivity(activity) {

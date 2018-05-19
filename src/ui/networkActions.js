@@ -3,14 +3,18 @@
 import ApiAction from "../helpers/ApiAction";
 import * as Api from "../managers/Api";
 import {reduceList2} from "../managers/Api";
+import {Call} from "../managers/Api";
 
 export const FETCH_ACTIVITIES = ApiAction.create("network/fetch_activities", "retrieve the network activities");
 
-export function fetchMyNetwork() {
+export type FetchActivitiesOptions = { limit?: number, activity_by_group?: number }
+
+export function fetchMyNetwork(options?: FetchActivitiesOptions = {limit: 10}): Call {
     return new Api.Call()
         .withMethod('GET')
         .withRoute("activities")
-        .addQuery({include: "activities.user,activities.resource,activities.target,activities.comments"});
+        .addQuery({include: "activities.user,activities.resource,activities.target,activities.comments"})
+        .addQuery(options)
 }
 
 

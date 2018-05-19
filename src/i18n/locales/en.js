@@ -295,6 +295,11 @@ export default {
             title: "Replies"
         }
     },
+    "load_more_activities": {
+        zero: "",
+        one: "See %{count} more activity",
+        other: "See %{count} more activities",
+    },
     add_item_screen: {
         title: "Select list"
     },
