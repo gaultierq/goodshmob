@@ -73,41 +73,30 @@ export class CommunityScreen extends Screen<Props, State> {
     }
 
 
-    renderScene({ route }: *) {
+    renderScene({ route, focused }: *) {
+        const navigator = this.props.navigator;
         switch (route.key) {
-            case 'friends': return this.renderFriends()
-            case 'interactions': return this.renderInteractions()
+            case 'friends':
+                return (
+                    <FriendsScreen
+                        userId={currentUserId()}
+                        navigator={navigator}
+                        //renderItem={(item) => this.renderItem(item)}
+                        ListHeaderComponent={<ShareButton text={i18n.t('actions.invite')}/>}
+                        ListFooterComponent={this.renderFriendsSuggestion.bind(this)}
+                        style={{backgroundColor: Colors.white}}
+                        visibility={focused ? 'visible' : 'hidden'}
+                    />
+                )
+            case 'interactions':
+                return (
+                    <InteractionScreen
+                        navigator={navigator}
+                        visibility={focused ? 'visible' : 'hidden'}
+                    />
+                )
             default: throw "unexpected"
         }
-    }
-
-    renderFriends() {
-        const {navigator} = this.props;
-        return (
-            <FriendsScreen
-                userId={currentUserId()}
-                navigator={navigator}
-                //renderItem={(item) => this.renderItem(item)}
-                ListHeaderComponent={<ShareButton text={i18n.t('actions.invite')}/>}
-                ListFooterComponent={this.renderFriendsSuggestion.bind(this)}
-                style={{backgroundColor: Colors.white}}
-                //bug: drawer passProps not working [https://github.com/wix/react-native-navigation/issues/663]
-                // visible={this.isVisible()}
-                visibility={'visible'}
-            />
-        )
-    }
-
-    renderInteractions() {
-        const {navigator} = this.props;
-        return (
-            <InteractionScreen
-                navigator={navigator}
-                visibility={'visible'}
-                //bug: drawer passProps not working [https://github.com/wix/react-native-navigation/issues/663]
-                // visible={this.isVisible()}
-            />
-        )
     }
 
     renderFriendsSuggestion() {

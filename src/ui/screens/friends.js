@@ -25,7 +25,7 @@ type Props = {
     navigator:any,
     renderItem:?(item:Item)=>Node,
 
-    onPressItem:? (item: User)=>void,
+    onPressItem?: (item: User)=>void,
     data?: any,
 };
 
