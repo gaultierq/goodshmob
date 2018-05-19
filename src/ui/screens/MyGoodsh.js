@@ -39,13 +39,11 @@ import {SFP_TEXT_MEDIUM} from "../fonts";
 
 
 type Props = {
-    userId: Id,
     navigator: RNNNavigator
 };
 
 type State = {
-    focusedSaving?: Saving,
-    isActionButtonVisible: boolean,
+    isActionButtonVisible?: boolean,
     filterFocused?: boolean,
     currentTip?: ?TipConfig
 };
@@ -60,7 +58,6 @@ export default class MyGoodsh extends Screen<Props, State> {
 
 
     state = {
-        focusedSaving: false,
     }
 
     render() {

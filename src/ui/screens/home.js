@@ -183,41 +183,37 @@ export default class HomeScreen extends Screen<Props, State> {
     }
 
 
-    renderScene({ route }: *) {
+    renderScene({ route, focused }: *) {
         switch (route.key) {
-            case 'my_goodsh': return this.renderMyGoodsh()
-            case 'my_interests': return this.renderMyInterests()
+            case 'my_goodsh':
+                return (
+                    <MyGoodsh
+                        visibility={focused ? 'visible' : 'hidden'}
+                        navigator={this.props.navigator}
+                        onScroll={floatingButtonScrollListener.call(this)}
+                        // ItemSeparatorComponent={() => <View style={{height: StyleSheet.hairlineWidth, backgroundColor: Colors.white}} />}
+                        ItemSeparatorComponent={() => null}
+                        ListHeaderComponent={
+                            !this.state.filterFocused && this.state.currentTip && this.renderTip()
+                        }
+                        onFilterFocusChange={filterFocused => new Promise(resolved => {
+                            this.setState({filterFocused}, resolved())
+                        })
+                        }
+                    />
+                )
+            case 'my_interests':
+                return (
+                    <MyInterests
+
+                        navigator={this.props.navigator}
+                        visibility={focused ? 'visible' : 'hidden'}
+                    />
+                )
             default: throw "unexpected"
         }
     }
 
-    renderMyGoodsh() {
-        const {navigator} = this.props;
-        return (
-            <MyGoodsh
-                navigator={navigator}
-                onScroll={floatingButtonScrollListener.call(this)}
-                // ItemSeparatorComponent={() => <View style={{height: StyleSheet.hairlineWidth, backgroundColor: Colors.white}} />}
-                ItemSeparatorComponent={() => null}
-                ListHeaderComponent={
-                    !this.state.filterFocused && this.state.currentTip && this.renderTip()
-                }
-                onFilterFocusChange={focused => new Promise(resolved => {
-                    this.setState({filterFocused: focused}, resolved())
-                })
-                }
-            />
-        )
-    }
-
-    renderMyInterests() {
-        return (
-            <MyInterests
-                navigator={this.props.navigator}
-                visibility={'visible'}
-            />
-        )
-    }
 
     renderTip() {
         const currentTip = this.state.currentTip;
