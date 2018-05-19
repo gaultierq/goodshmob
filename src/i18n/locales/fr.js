@@ -63,8 +63,8 @@ export default {
             action_button_body : "Livre, film, série, resto, musique...",
         },
         tabs: {
-            my_goodsh: "MY GOODSH",
-            my_interests: "LINEUP",
+            my_goodsh: "Mes listes",
+            my_interests: "Listes suivies",
         }
     },
     search: {
