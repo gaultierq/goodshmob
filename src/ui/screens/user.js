@@ -92,7 +92,8 @@ export default class UserScreen extends Screen<Props, State> {
                     userId={userId}
                     navigator={this.props.navigator}
                     empty={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
-                    initialLoaderDelay={500}
+                    // initialLoaderDelay={500}
+                    renderSectionHeader={({section}) => section.renderSectionHeader()}
                     sectionMaker={LINEUP_SECTIONS(this.props.navigator, this.props.dispatch, userId)}
 
                 />

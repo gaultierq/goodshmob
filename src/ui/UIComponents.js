@@ -173,8 +173,8 @@ export const LINEUP_SECTIONS = (navigator: RNNNavigator, dispatch: any, userId: 
     // let savingCount = _.get(goodshbox, `meta.savingsCount`, null) || 0;
     return lineups.map(lineup => ({
         data: [lineup],
-        title: lineup.name,
-        subtitle: ` (${_.get(lineup, `meta.savingsCount`, 0)})`,
+        // title: lineup.name,
+        // subtitle: ` (${_.get(lineup, `meta.savingsCount`, 0)})`,
         onPress: () => seeList(navigator, lineup),
         renderItem: ({item}: {item: Lineup}) => (
             <GTouchable
