@@ -1,6 +1,6 @@
 // @flow
 import {Component} from 'react';
-import type {NavigableProps} from "../../types";
+import type {NavigableProps, RNNNavigator} from "../../types";
 import {toUppercase} from "../../helpers/StringUtils";
 import * as Nav from "../Nav";
 import {sendMessage} from "../../managers/Messenger";
@@ -9,18 +9,18 @@ import {sendMessage} from "../../managers/Messenger";
 export type ScreenVisibility = 'unknown' | 'visible' | 'hidden';
 
 export type ScreenState = {
-    visible: boolean,
+    visibility: ScreenVisibility,
     dirty: boolean
 }
 
 export type ScreenProps = NavigableProps & {
-    visible?: boolean,
+    visibility?: ScreenVisibility,
     onClickClose?: () => void
 }
 
 export default class Screen<P, S> extends Component<P & ScreenProps,  ScreenState> {
 
-    state = {visible: false, dirty: false};
+    state = {visibility: 'unknown', dirty: false};
 
     constructor(props:P) {
         super(props);
@@ -34,28 +34,26 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  ScreenStat
 
             if (event.type === "ScreenChangedEvent") {
 
-
                 console.debug(`Screen ${this.constructor.name} visib event ${id}`);
 
-                let visible: boolean;
+                let visibility: ScreenVisibility;
                 switch (id) {
                     case 'didAppear':
-                        visible = true
+                        visibility = 'visible'
                         break;
                     case 'didDisappear':
-                        visible = false
+                        visibility = 'hidden'
                         break;
                     default: return
                 }
 
-
-                this.setState({visible}, () => {
+                this.setState({visibility}, () => {
                     let method = 'component' + toUppercase(id);
                     // $FlowFixMe
                     if (this[method]) this[method]();
                 });
 
-                if (visible && this.state.dirty) {
+                if (visibility === 'visible' && this.state.dirty) {
                     //screen dirty, re-rendering
                     superLog("screen dirty, re-rendering");
                     this.setState({dirty: false});
@@ -103,15 +101,17 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  ScreenStat
     }
 
     getVisible(props, state) {
-        return props && props.visible || state && state.visible;
+        return props && props.visibility === 'visible' || state && state.visibility === 'visible';
     }
 
+
+    //this is used, do not remove
     getVisibility() {
         return this.isVisible() ? 'visible' : 'hidden'
     }
 
 //because when navigating back, a render may change the nav bar title. this is a flaw in wix nav
-    setNavigatorTitle(navigator, {title, subtitle}) {
+    setNavigatorTitle(navigator: RNNNavigator, {title, subtitle}) {
         if (this.isVisible()) {
             navigator.setTitle({title});
             navigator.setSubTitle({subtitle});

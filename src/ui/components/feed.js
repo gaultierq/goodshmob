@@ -52,7 +52,6 @@ export type Props = {
     empty: Node,
     style?: ViewStyle,
     scrollUpOnBack?: ?() => ?boolean,
-    cannotFetch?: boolean,
     visibility: ScreenVisibility,
     filter?: ?FilterConfig<T>,
     initialLoaderDelay?: ?ms,
@@ -141,11 +140,10 @@ export default class Feed extends Component<Props, State>  {
         return call.addQuery({id_after: lastId})
     }
 
-    componentWillReceiveProps(nextProps: Props) {
-        //hack: let the next props become the props
-        // this.postFetchFirst();
-    }
 
+    componentDidUpdate(prevProps: Props, prevState: State, snapshot) {
+        this.postFetchFirst();
+    }
 
     shouldComponentUpdate(nextProps: Props, nextState: State) {
         if (!__ENABLE_PERF_OPTIM__) return true;
@@ -230,7 +228,7 @@ export default class Feed extends Component<Props, State>  {
         let displayFirstLoader = firstEmptyLoader || this.props.initialLoaderDelay && isFirstRenderRecent;
 
         if (this.props.initialLoaderDelay && isFirstRenderRecent) {
-            if (this.props.visibility === 'visible' && !this.firstLoaderTimeout) {
+            if (this.isVisible() && !this.firstLoaderTimeout) {
                 this.console.debug("first timer force update posted");
                 this.firstLoaderTimeout = setTimeout(() => {
                     this.console.debug("first timer force update triggered");
@@ -302,6 +300,10 @@ export default class Feed extends Component<Props, State>  {
 
 
         return <View style={[this.props.style, {flex: 1}]}>{allViews}</View>
+    }
+
+    isVisible() {
+        return this.props.visibility === 'visible';
     }
 
     isFiltering() {
@@ -429,8 +431,8 @@ export default class Feed extends Component<Props, State>  {
 
     cannotFetchReason(requestName: string = 'isFetchingFirst', options: FeedFetchOption = {loadMore: false}): string  | null {
         if (this.isFiltering()) return "filtering list";
-
-        if (this.notFetchable()) return this.notFetchable();
+        if (!this.isVisible()) return "not visible";
+        if (!this.props.fetchSrc) return "no fetch sources";
 
         if (this.manager.isSending(requestName, this)) return "already sending";
         if (options.trigger === TRIGGER_USER_INDIRECT_ACTION) {
@@ -455,13 +457,6 @@ export default class Feed extends Component<Props, State>  {
                 }
             }
         }
-        return null;
-    }
-
-    //doesnt depend on any state
-    notFetchable() {
-        if (this.props.cannotFetch) return "cannot fetch";
-        if (!this.props.fetchSrc) return "no fetch sources";
         return null;
     }
 

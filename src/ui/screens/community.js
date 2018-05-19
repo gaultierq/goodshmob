@@ -93,7 +93,7 @@ export class CommunityScreen extends Screen<Props, State> {
                 style={{backgroundColor: Colors.white}}
                 //bug: drawer passProps not working [https://github.com/wix/react-native-navigation/issues/663]
                 // visible={this.isVisible()}
-                visible={true}
+                visibility={'visible'}
             />
         )
     }
@@ -103,7 +103,7 @@ export class CommunityScreen extends Screen<Props, State> {
         return (
             <InteractionScreen
                 navigator={navigator}
-                visible={true}
+                visibility={'visible'}
                 //bug: drawer passProps not working [https://github.com/wix/react-native-navigation/issues/663]
                 // visible={this.isVisible()}
             />

@@ -214,7 +214,7 @@ export default class HomeScreen extends Screen<Props, State> {
         return (
             <MyInterests
                 navigator={this.props.navigator}
-                visible={true}
+                visibility={'visible'}
             />
         )
     }

@@ -77,18 +77,6 @@ export default class MyGoodsh extends Screen<Props, State> {
                 navigator={navigator}
                 empty={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
                 initialLoaderDelay={0}
-
-
-                // onScroll={floatingButtonScrollListener.call(this)}
-                // // ItemSeparatorComponent={() => <View style={{height: StyleSheet.hairlineWidth, backgroundColor: Colors.white}} />}
-                // ItemSeparatorComponent={() => null}
-                // ListHeaderComponent={
-                //     !this.state.filterFocused && this.state.currentTip && this.renderTip()
-                // }
-                // onFilterFocusChange={focused => new Promise(resolved => {
-                //     this.setState({filterFocused: focused}, resolved())
-                // })
-                // }
                 renderSectionHeader={({section}) => section.renderSectionHeader()}
                 sectionMaker={(lineups)=> {
                     const goodshbox = _.head(lineups);
@@ -153,26 +141,6 @@ export default class MyGoodsh extends Screen<Props, State> {
                 withMenuButton={true}
                 onPressEmptyLineup={() => startAddItem(navigator, item.id)}
                 renderEmpty={this.renderEmptyLineup(navigator, item)}
-                // TODO: watch https://github.com/facebook/react-native/issues/13202
-                // ListHeaderComponent={
-                //     () => <GTouchable
-                //         onPress={() => startAddItem(navigator, item.id)}
-                //         deactivated={item.pending}
-                //     >
-                //         {
-                //             LineupHorizontal.renderEmptyCell(0, true)
-                //         }
-                //     </GTouchable>
-                //
-                // }
-                // initialScrollIndex={1}
-                // initialNumToRender={6}
-                // getItemLayout={(data, index) => (
-                //     {length: ITEM_DIM, offset: (ITEM_DIM + ITEM_SEP)* index, index}
-                // )}
-                // onScrollToIndexFailed={err=>{console.warn('onScrollToIndexFailed',err)}}
-                // contentOffset={{y: ITEM_DIM + ITEM_SEP, x: ITEM_DIM + ITEM_SEP}}
-                // contentOffset={{x: 30, y: 10, }}
                 renderMenuButton={() => {
                     //TODO: dubious 15
                     return this.renderMenuButton(item, 15)

@@ -127,11 +127,13 @@ class NetworkScreen extends Screen<Props, State> {
 
     render() {
 
+        const {network, data, navigator, ...attr} = this.props
+
         let userId = currentUserId();
 
-        let network = this.props.network[userId] || {list: []}
-        let sections = network.list
-            .map(group => buildData(this.props.data, 'activityGroups', group.id))
+        let network1 = network[userId] || {list: []}
+        let sections = network1.list
+            .map(group => buildData(data, 'activityGroups', group.id))
             .map(built => ({
                 id: built.id,
                 activityCount: built.activityCount,
@@ -140,7 +142,7 @@ class NetworkScreen extends Screen<Props, State> {
 
 
         let scrollUpOnBack = super.isVisible() ? ()=> {
-            this.props.navigator.switchToTab({
+            navigator.switchToTab({
                 tabIndex: 0
             });
             return true;
@@ -160,7 +162,7 @@ class NetworkScreen extends Screen<Props, State> {
                         action: FETCH_ACTIVITIES,
                         options: {userId}
                     }}
-                    hasMore={!network.hasNoMore}
+                    hasMore={!network1.hasNoMore}
                     scrollUpOnBack={scrollUpOnBack}
                     visibility={super.getVisibility()}
                     empty={<View><Text style={STYLES.empty_message}>{i18n.t('community_screen.empty_screen')}</Text><ShareButton text={i18n.t('actions.invite')}/></View>}
@@ -170,6 +172,8 @@ class NetworkScreen extends Screen<Props, State> {
                     onScroll={floatingButtonScrollListener.call(this)}
                     decorateLoadMoreCall={(last: ActivityGroup, call: Call) => call.addQuery({id_lt: last.id})
                     }
+                    visibility={super.getVisibility()}
+                    {...attr}
                 />
 
 
