@@ -149,7 +149,7 @@ class NetworkScreen extends Screen<Props, State> {
         return (
             <View style={{flex:1}}>
                 <Feed
-                    displayName={"network feed"}
+                    displayName={"Network"}
                     sections={sections}
                     renderItem={({item}) => this.renderItem(item)}
                     renderSectionFooter={({section}) => this.renderSectionFooter(section)}
@@ -162,7 +162,6 @@ class NetworkScreen extends Screen<Props, State> {
                     }}
                     hasMore={!network.hasNoMore}
                     scrollUpOnBack={scrollUpOnBack}
-                    cannotFetch={!super.isVisible()}
                     visibility={super.getVisibility()}
                     empty={<View><Text style={STYLES.empty_message}>{i18n.t('community_screen.empty_screen')}</Text><ShareButton text={i18n.t('actions.invite')}/></View>}
                     {...activityFeedProps()}

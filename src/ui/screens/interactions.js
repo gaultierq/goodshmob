@@ -71,7 +71,6 @@ export class InteractionScreen extends Screen<Props, State> {
                             <ShareButton text={i18n.t('actions.invite')}/>
                             <Text style={STYLES.empty_message}>{i18n.t('interactions.empty_screen')}</Text>
                         </View>}
-                    // cannotFetch={!super.isVisible()}
                 />
 
             </View>

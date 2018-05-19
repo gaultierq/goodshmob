@@ -94,7 +94,6 @@ export default class UserLineups extends Screen<Props, State> {
                         onLineupPressed={(lineup) => seeList(navigator, lineup)}
                         onSavingPressed={(saving) => seeActivityDetails(navigator, saving)}
                         scrollUpOnBack={super.isVisible() ? ()=>false : null}
-                        cannotFetch={false}
                         visible={true}
                         // renderSectionHeader={({section}) => renderSectionHeader(section)}
                         renderSectionFooter={()=> <View style={{height: 25, width: "100%"}} />}

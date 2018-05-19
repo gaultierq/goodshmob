@@ -77,7 +77,6 @@ export default class FriendsScreen extends Screen<Props, State> {
                     empty={<Text style={STYLES.empty_message}>{i18n.t('friends.empty_screen')}</Text>}
                     ItemSeparatorComponent={ItemSeparatorComponent}
                     {...attributes}
-                    // cannotFetch={!super.isVisible()}
                 />
         );
     }

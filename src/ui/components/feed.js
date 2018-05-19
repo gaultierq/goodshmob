@@ -113,7 +113,7 @@ export default class Feed extends Component<Props, State>  {
     _listener: ()=>boolean;
     lastFetchFail: number;
     manager: RequestManager = new RequestManager();
-    logger: *;
+    console: *;
     filterNode: Node;
 
     constructor(props: Props) {
@@ -121,9 +121,10 @@ export default class Feed extends Component<Props, State>  {
         this.state = {
             initialLoaderVisibility: 'idle',
             firstLoad: 'idle',
-            decorateLoadMoreCall: props.decorateLoadMoreCall || this._defaultDecorateLoadMoreCall(props)
+            decorateLoadMoreCall: props.decorateLoadMoreCall || this._defaultDecorateLoadMoreCall(props),
+            tempDisplayName: props.displayName
         }
-        this.logger = props.displayName && createConsole(props.displayName) || console;
+        this.console = props.displayName ? createConsole(props.displayName) : console;
         this.createdAt = Date.now();
         this.postFetchFirst();
     }
@@ -149,11 +150,12 @@ export default class Feed extends Component<Props, State>  {
     shouldComponentUpdate(nextProps: Props, nextState: State) {
         if (!__ENABLE_PERF_OPTIM__) return true;
         if (nextProps.visibility === 'hidden') {
-            this.logger.debug('feed component update saved');
+            this.console.debug('feed component update saved');
             return false;
         }
         return true;
     }
+
 
     postFetchFirst() {
         // if (this.notFetchable()) {
@@ -161,10 +163,9 @@ export default class Feed extends Component<Props, State>  {
         //     return;
         // }
 
-        this.logger.debug('postFetchFirst')
         setTimeout(() => {
             if (this.state.firstLoad !== 'idle') {
-                this.logger.debug(`postFetchFirst was not performed, firstLoad=${this.state.firstLoad}`);
+                this.console.debug(`postFetchFirst was not performed, firstLoad=${this.state.firstLoad}`);
                 return;
             }
             let trigger = this.hasItems() ? TRIGGER_USER_INDIRECT_ACTION : TRIGGER_USER_DIRECT_ACTION;
@@ -173,7 +174,7 @@ export default class Feed extends Component<Props, State>  {
             const canotFetch = this.cannotFetchReason('isFetchingFirst', options);
 
             if (canotFetch === null) {
-
+                this.console.debug('posting first fetch')
                 Api.safeExecBlock.call(
                     this,
                     () => this.fetchIt(options),
@@ -181,7 +182,7 @@ export default class Feed extends Component<Props, State>  {
                 );
             }
             else {
-                this.logger.debug(`postFetchFirst was not performed: reason=${canotFetch}`);
+                this.console.debug(`postFetchFirst was not performed: reason=${canotFetch}`);
             }
         });
     }
@@ -195,7 +196,10 @@ export default class Feed extends Component<Props, State>  {
 
 
     render() {
-        // console.warn("test::render")
+        if (this.props.displayName === 'Network') {
+            this.console.debug("feed::render")
+        }
+
         assertUnique(this.getFlatItems());
 
         const {
@@ -227,9 +231,9 @@ export default class Feed extends Component<Props, State>  {
 
         if (this.props.initialLoaderDelay && isFirstRenderRecent) {
             if (this.props.visibility === 'visible' && !this.firstLoaderTimeout) {
-                this.logger.debug("first timer force update posted");
+                this.console.debug("first timer force update posted");
                 this.firstLoaderTimeout = setTimeout(() => {
-                    this.logger.debug("first timer force update triggered");
+                    this.console.debug("first timer force update triggered");
                     this.forceUpdate();
                 }, this.props.initialLoaderDelay);
             }
@@ -237,7 +241,7 @@ export default class Feed extends Component<Props, State>  {
 
         if (displayFirstLoader) {
 
-            this.logger.debug("displayFirstLoader");
+            this.console.debug("displayFirstLoader");
             return <FullScreenLoader/>;
         }
 
@@ -392,7 +396,7 @@ export default class Feed extends Component<Props, State>  {
 
             if (remainingRows < 5) {
                 if (this.gentleFetchMore()) {
-                    this.logger.debug("Only " + remainingRows + " left. Prefetching...");
+                    this.console.debug("Only " + remainingRows + " left. Prefetching...");
                 }
             }
         }
@@ -400,7 +404,7 @@ export default class Feed extends Component<Props, State>  {
 
     onEndReached() {
         if (this.gentleFetchMore()) {
-            this.logger.debug("onEndReached => fetching more");
+            this.console.debug("onEndReached => fetching more");
         }
     }
 
@@ -409,7 +413,7 @@ export default class Feed extends Component<Props, State>  {
             return this.fetchMore({trigger: TRIGGER_USER_INDIRECT_ACTION});
         }
         else {
-            this.logger.debug("== end of feed ==");
+            this.console.debug("== end of feed ==");
             return false;
         }
     }
@@ -417,7 +421,7 @@ export default class Feed extends Component<Props, State>  {
     canFetch(requestName: string = 'isFetchingFirst', options: FeedFetchOption = {loadMore: false}): boolean {
         const reason = this.cannotFetchReason(requestName, options);
         if (reason) {
-            console.debug('cannot fetch: ${reason}')
+            this.console.debug(`cannot fetch: ${reason}`)
         }
         return reason === null
     }
@@ -509,7 +513,7 @@ export default class Feed extends Component<Props, State>  {
             this.props
                 .dispatch(call.createActionDispatchee(fetchSrc.action, {trigger, ...fetchSrc.options, mergeOptions: {drop, hasLess: !!loadMore}}))
                 .then(({data, links})=> {
-                    this.logger.debug("disptachForAction" + JSON.stringify(this.props.fetchSrc.action));
+                    this.console.debug("disptachForAction" + JSON.stringify(this.props.fetchSrc.action));
                     if (!data) {
                         reqTrack.fail();
                         // this.setState({[requestName]: 'ko'});
@@ -536,7 +540,7 @@ export default class Feed extends Component<Props, State>  {
                     }
                     resolve(data);
                 }, err => {
-                    this.logger.warn("feed error:", err);
+                    this.console.warn("feed error:", err);
                     this.lastFetchFail = Date.now();
                     reqTrack.fail()
                     // this.setState({[requestName]: 'ko'});
@@ -554,7 +558,7 @@ export default class Feed extends Component<Props, State>  {
             return this.state.decorateLoadMoreCall(lastItem, call);
         }
         else {
-            console.warn("no last item found")
+            this.console.warn("no last item found")
             return call
         }
     }

@@ -70,7 +70,7 @@ export default class MyInterests extends Screen<Props, State> {
             <GoodshContext.Provider value={{userOwnResources: false}}>
                 <Feed
                     listRef={ref=>ref} //otherwise flow problem???
-                    displayName={"my interests"}
+                    displayName={"MyInterests"}
                     data={followed}
                     renderSectionHeader={({section}) => section.renderSectionHeader()}
                     sections={LINEUP_SECTIONS(this.props.navigator, this.props.dispatch, userId)(lists)}

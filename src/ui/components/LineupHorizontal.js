@@ -112,7 +112,6 @@ export default class LineupHorizontal extends Component<Props, State> {
                         contentContainerStyle={{paddingLeft: LINEUP_PADDING}}
                         showsHorizontalScrollIndicator={false}
                         {...attributes}
-                        // cannotFetch={!super.isVisible()}
                     />
                 }
             </View>
