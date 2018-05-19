@@ -6,6 +6,8 @@ import {toUppercase} from "../helpers/StringUtils";
 import {Colors, SEARCH_PLACEHOLDER_COLOR} from "./colors";
 import {SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "./fonts";
 import GTouchable from "./GTouchable";
+import type {ViewStyle} from "../types";
+import {TextStyle} from "../types";
 
 export const BACKGROUND_COLOR = Colors.dirtyWhite2;
 
@@ -89,12 +91,12 @@ export const TEXT_LESS_IMPORTANT = {fontSize: 12, color: Colors.greyish};
 
 export const LINEUP_PADDING = 15
 
-type ButtonOptions = {disabled?: boolean, loading?: boolean, style?: *};
+type ButtonOptions = {disabled?: boolean, loading?: boolean, style?: ViewStyle, textStyle?: TextStyle};
 
 export function renderSimpleButton(
     text: string,
-    onPress: ()=> void ,
-    {disabled = false, loading = false, style = {}, textStyle = {}} : ButtonOptions = {}) {
+    onPress: ()=> any ,
+    {disabled = false, loading = false, style, textStyle} : ButtonOptions = {}) {
 
     return (
         <Button

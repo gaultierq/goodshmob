@@ -5,7 +5,12 @@ import {ActivityIndicator, FlatList, Platform, RefreshControl, Text, TouchableOp
 import {connect} from "react-redux";
 import {currentUserId, logged} from "../../managers/CurrentUser"
 import ActivityCell from "../activity/components/ActivityCell";
-import {activityFeedProps, floatingButtonScrollListener} from "../UIComponents"
+import {
+    activityFeedProps,
+    floatingButtonScrollListener,
+    registerLayoutAnimation,
+    scheduleOpacityAnimation
+} from "../UIComponents"
 import Feed from "../components/feed"
 import type {Activity, ActivityGroup, Id, NavigableProps} from "../../types";
 import ActionButton from 'react-native-action-button';
@@ -16,8 +21,9 @@ import {renderSimpleButton, STYLES} from "../UIStyles";
 import {Colors} from "../colors";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ShareButton from "../components/ShareButton";
-import {Call} from "../../managers/Api";
+import {Call, safeDispatchAction} from "../../managers/Api";
 import {buildData} from "../../helpers/DataUtils";
+import {saveItem} from "../lineup/actions";
 
 type Props = NavigableProps;
 
@@ -189,17 +195,17 @@ class NetworkScreen extends Screen<Props, State> {
 
     renderSectionFooter(section: NetworkSection) {
         return (
-
             renderSimpleButton(
                 i18n.t('load_more_activities', {count: section.activityCount - section.data.length}),
-                ()=> this.loadMore(section),
-                // {loading: reqState === 'sending', disabled: ok, textStyle: {fontWeight: "normal", fontSize: 14, color: Colors.grey}}
+                ()=> safeDispatchAction.call(
+                    this,
+                    this.props.dispatch,
+                    fetchMyNetwork({limit: 1, activity_by_group: section.activityCount, id_lte: section.id}).createActionDispatchee(FETCH_ACTIVITIES, {userId: currentUserId()}),
+                    'reqFetchMore' + section.id
+                ).then(() => scheduleOpacityAnimation()),
+                {loading: this.state['reqFetchMore' + section.id] === 'sending'}
             )
         )
-    }
-
-    loadMore(section: NetworkSection) {
-        this.props.dispatch(fetchMyNetwork({limit: 1, activity_by_group: section.activityCount, id_lte: section.id}).createActionDispatchee(FETCH_ACTIVITIES, {userId: currentUserId()}))
     }
 
     navToActivity(activity) {
