@@ -131,8 +131,8 @@ export default class Feed extends Component<Props, State>  {
     _defaultDecorateLoadMoreCall = (props: Props) => (last: any, call: Call) => {
         let lastId;
         if (props.sections) {
-            let last = _.last(props.sections)
-            lastId = last && last.id
+            let lastItem = _.last(last.data)
+            lastId = lastItem && lastItem.id
         }
         else {
             lastId = last.id
