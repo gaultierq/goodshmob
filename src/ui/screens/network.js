@@ -17,13 +17,15 @@ import ActionButton from 'react-native-action-button';
 import {FETCH_ACTIVITIES, fetchMyNetwork} from "../networkActions";
 import * as Nav from "../Nav";
 import Screen from "../components/Screen";
-import {renderSimpleButton, STYLES} from "../UIStyles";
+import {LINEUP_PADDING, renderSimpleButton, STYLES} from "../UIStyles";
 import {Colors} from "../colors";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ShareButton from "../components/ShareButton";
 import {Call, safeDispatchAction} from "../../managers/Api";
 import {buildData} from "../../helpers/DataUtils";
 import {saveItem} from "../lineup/actions";
+import ActivityStatus from "../activity/components/ActivityStatus";
+import {SFP_TEXT_MEDIUM} from "../fonts";
 
 type Props = NavigableProps;
 
@@ -159,7 +161,7 @@ class NetworkScreen extends Screen<Props, State> {
                 <Feed
                     displayName={"Network"}
                     sections={sections}
-                    renderItem={({item}) => this.renderItem(item)}
+                    renderItem={({item, index}) => this.renderItem(item, index)}
                     renderSectionFooter={({section}) => this.renderSectionFooter(section)}
                     listRef={ref => this.feed = ref}
                     fetchSrc={{
@@ -179,6 +181,19 @@ class NetworkScreen extends Screen<Props, State> {
                     decorateLoadMoreCall={(last: ActivityGroup, call: Call) => call.addQuery({id_lt: last.id})
                     }
                     visibility={super.getVisibility()}
+                    ItemSeparatorComponent={({leadingItem, trailingItem, section}) => {
+                        if (leadingItem === section.data[0]) {
+                            return (
+                                <Text style={{
+                                    fontSize: 17,
+                                    margin: 15,
+                                    fontFamily: SFP_TEXT_MEDIUM
+                                }}>{i18n.t('detail_screen.related_activities_title')}</Text>
+                            )
+                        }
+                        return null
+
+                    }}
                     {...attr}
                 />
 
@@ -242,16 +257,28 @@ class NetworkScreen extends Screen<Props, State> {
         });
     }
 
-    renderItem(activity: Activity) {
-        return (
-            <ActivityCell
-                onPressItem={() => this.navToActivity(activity)}
-                activity={activity.pending ? activity : null}
-                activityId={activity.id}
-                activityType={activity.type}
+    renderItem(activity: Activity, index: number) {
+        if (index === 0) {
+            return (
+                <ActivityCell
+                    onPressItem={() => this.navToActivity(activity)}
+                    activity={activity.pending ? activity : null}
+                    activityId={activity.id}
+                    activityType={activity.type}
+                    navigator={this.props.navigator}
+                />
+            )
+        }
+        else {
+            return (<ActivityStatus
+                activity={activity}
+                descriptionNumberOfLines={3}
                 navigator={this.props.navigator}
-            />
-        )
+                cardStyle={{
+                    paddingHorizontal: LINEUP_PADDING,
+                    paddingVertical: 10,}}
+            />)
+        }
     }
 }
 
