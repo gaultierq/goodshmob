@@ -195,6 +195,7 @@ export default class Feed extends Component<Props, State>  {
 
 
     render() {
+        // console.warn("test::render")
         assertUnique(this.getFlatItems());
 
         const {
@@ -461,10 +462,11 @@ export default class Feed extends Component<Props, State>  {
     }
 
     tryFetchIt(options?: FeedFetchOption = {loadMore: false}) {
+        let that= this
         let {loadMore} = options;
         let requestName = loadMore ? 'isFetchingMore' : 'isFetchingFirst';
         if (this.canFetch(requestName, options)) {
-            this.fetchIt(options);
+            this.fetchIt(options)
             return true;
         }
         return false;
@@ -534,11 +536,13 @@ export default class Feed extends Component<Props, State>  {
                     }
                     resolve(data);
                 }, err => {
-                    this.logger.warn("feed error:" + err);
+                    this.logger.warn("feed error:", err);
                     this.lastFetchFail = Date.now();
-                    reqTrack.fail();
-                    reject(err);
+                    reqTrack.fail()
                     // this.setState({[requestName]: 'ko'});
+                    // reject(err);
+                    // this.logger.warn("test::finsih")
+
                 })
         });
     }

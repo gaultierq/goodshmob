@@ -51,7 +51,7 @@ export class RequestManager {
         let caller = this.actions.get(tracker);
         if (!caller) throw "no caller found";
         const action: string = tracker.getAction();
-        caller.setState({[action]: status});
+
 
         this.events.push({
             action,
@@ -59,7 +59,9 @@ export class RequestManager {
             status,
             date: Date.now(),
             options
-        });
+        })
+
+        caller.setState({[action]: status})
     }
 }
 

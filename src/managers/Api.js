@@ -311,10 +311,15 @@ export class Call {
             return new Promise((resolve, reject) => {
                 call.run()
                     .then(resp => {
-                        const debugError = this.debugFail(apiAction);
-                        if (debugError) throw debugError;
-                        return resp;
-                    })
+                            const debugError = this.debugFail(apiAction);
+                            if (debugError) throw debugError;
+                            return resp;
+                        },
+                        err => {
+                            // console.warn("test::1")
+                            throw err
+                        }
+                    )
                     .then(
                         resp => {
                             let requestTime = Date.now() - tic;
@@ -329,7 +334,10 @@ export class Call {
                             return resp;
                         },
                         //useless
-                        err => {throw err}
+                        err => {
+                            // console.warn("test::2")
+                            throw err
+                        }
                     )
                     .then(sleeper(Math.max(__MIN_REQUEST_TIME__ - (Date.now() - tic), 0)))
                     // .then(sleeper(5000))
@@ -353,7 +361,7 @@ export class Call {
                         },
                         //1., 2.
                         error => {
-
+                            // console.warn("test::3")
                             if (trigger <= 2) {
                                 sendMessage(
                                     __IS_LOCAL__ ?
