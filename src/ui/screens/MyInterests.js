@@ -50,6 +50,9 @@ type State = {
 export default class MyInterests extends Screen<Props, State> {
 
 
+    followIdsByListIds = {}
+
+
     render() {
         let userId = currentUserId()
 
@@ -57,11 +60,10 @@ export default class MyInterests extends Screen<Props, State> {
         let followed = _.slice(followed_lists.list);
 
         const lists = []
-        const followIdsByListIds = {}
         followed.forEach(f => {
             let list = buildData(this.props.data, 'follows', f.id).list
             lists.push(list)
-            followIdsByListIds[list.id] = f.id
+            this.followIdsByListIds[list.id] = f.id
         })
 
         return (
@@ -74,7 +76,11 @@ export default class MyInterests extends Screen<Props, State> {
                     sections={LINEUP_SECTIONS(this.props.navigator, this.props.dispatch, userId)(lists)}
                     empty={<View><Text style={STYLES.empty_message}>{i18n.t('community_screen.empty_screen')}</Text></View>}
                     fetchSrc={this.fetchSrc(userId)}
-                    decorateLoadMoreCall={(last: Lineup, call: Call) => call.addQuery({id_after: followIdsByListIds[last.id]})}
+                    decorateLoadMoreCall={(last: any, call: Call) => {
+                        const lastLineup = last.data[0];
+                        return call.addQuery({id_after: this.followIdsByListIds[lastLineup.id]})
+                    }
+                    }
                 />
             </GoodshContext.Provider>
         )

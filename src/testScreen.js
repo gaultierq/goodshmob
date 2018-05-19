@@ -204,6 +204,14 @@ export const moveInScreen = {
     passProps: {
         savingId: "ff4efcaf-19f4-49f1-9525-d49b42dc0803",
     },
+}
+export const myInterests = {
+    screen: {
+        screen: 'goodsh.MyInterestsScreen',
+    },
+    // passProps: {
+    //     savingId: "ff4efcaf-19f4-49f1-9525-d49b42dc0803",
+    // },
 };
 
 export const test = {

@@ -46,6 +46,9 @@ import NoSpamScreen from "./screens/NoSpamScreen";
 import MoveInScreen from "./screens/moveinscreen";
 import InAppNotif from "./screens/inAppNotif";
 
+import MyInterestsScreen from "./screens/MyInterests";
+import MyGoodshsScreen from "./screens/MyGoodsh";
+
 
 function wrap(screenName,screenCreator,store,provider) {
 
@@ -108,4 +111,6 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.PlacesAutocomplete', () => PlacesAutocomplete, store, Provider);
     wrap('goodsh.MoveInScreen', () => MoveInScreen, store, Provider);
     wrap('goodsh.InAppNotif', () => InAppNotif, store, Provider);
+    wrap('goodsh.MyInterestsScreen', () => MyInterestsScreen, store, Provider);
+    wrap('goodsh.MyGoodshsScreen', () => MyGoodshsScreen, store, Provider);
 }

@@ -13,8 +13,8 @@ export function createConsole(displayName: string) {
     return {
         log: (message: string, ...others) => console.log(`[${displayName}]: ${message}`, ...others),
         debug: (message: string, ...others) => console.debug(`[${displayName}]: ${message}`, ...others),
-        info: (message: string) => console.info(`[${displayName}]: ${message}`),
-        warn: (message: string) => console.warn(`[${displayName}]: ${message}`),
+        info: (message: string, ...others) => console.info(`[${displayName}]: ${message}`, ...others),
+        warn: (message: string, ...others) => console.warn(`[${displayName}]: ${message}`, ...others),
     }
 }
 
