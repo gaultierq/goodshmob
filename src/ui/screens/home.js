@@ -47,7 +47,8 @@ type State = {
     focusedSaving?: Saving,
     isActionButtonVisible: boolean,
     filterFocused?: boolean,
-    currentTip?: ?TipConfig
+    currentTip?: ?TipConfig,
+    index: number,
 };
 
 
@@ -177,11 +178,15 @@ export default class HomeScreen extends Screen<Props, State> {
                     renderHeader={props => <TabBar {...TAB_BAR_PROPS} {...props}/>}
                     onIndexChange={index => this.setState({index})}
                 />
-                {!this.state.filterFocused && this.state.isActionButtonVisible && this.renderFloatingButton()}
+                {this.displayFloatingButton() && this.renderFloatingButton()}
             </View>
         )
     }
 
+
+    displayFloatingButton() {
+        return !this.state.filterFocused && this.state.isActionButtonVisible && this.state.index === 0;
+    }
 
     renderScene({ route, focused }: *) {
         switch (route.key) {
