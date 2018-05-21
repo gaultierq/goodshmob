@@ -271,6 +271,16 @@ export default {
             label: "Êtes-vous sûr de vouloir vous déconnecter ?"
         }
     },
+    follow: {
+        alert: {
+            title_unfollow: "Ne plus suivre",
+            label: "Êtes-vous sûr de vouloir ne plus suivre cette liste ?",
+        },
+        messages: {
+            unfollowed: "Vous ne suivez plus cette liste",
+            followed: "Liste suivie"
+        }
+    },
     unsave_screen: {
         unsave_button: {
             idle: "Supprimer",
