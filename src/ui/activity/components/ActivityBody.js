@@ -165,11 +165,13 @@ export default class ActivityBody extends React.Component<Props, State> {
 
             {/*<BoxShadow setting={shadowOpt}>*/}
 
+
             <Carousel
                 delay={4000}
                 style={styles.imageContainer}
                 autoplay
-                bullets={this.props.showAllImages}>
+                swipe={this.props.showAllImages}
+                bullets={false}>
                 {images.map((image, i) => {
                     return <CachedImage
                         source={image ? {uri: image} : require('../../../img/goodsh_placeholder.png')}
@@ -182,13 +184,13 @@ export default class ActivityBody extends React.Component<Props, State> {
                 }) }
             </Carousel>
 
+
             {
-                <Animated.View style={[styles.yheaaContainer, {opacity}]}>
+                <Animated.View style={[styles.yheaaContainer, {opacity}]} pointerEvents={this.props.showAllImages ? 'none' : 'auto'}>
                     <Image resizeMode={'cover'} style={{}} source={require('../../../img2/yeaahAction.png')}/>
                 </Animated.View>
             }
             {/*</BoxShadow>*/}
-
         </View>
     }
 
