@@ -2,14 +2,15 @@
 // @flow
 import React, {Component} from 'react';
 
-import {ActivityIndicator, Button, Image, ImageBackground, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {ActivityIndicator, Image, ImageBackground, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import * as appActions from "../../auth/actions"
 import {connect} from 'react-redux';
 import {AccessToken, LoginManager} from 'react-native-fbsdk';
 import Config from 'react-native-config';
 import RNAccountKit from 'react-native-facebook-account-kit'
+import Button from 'apsl-react-native-button'
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-import SmartButton from "../components/SmartButton";
 import SwiperNav from "../components/SwiperNav";
 import {Colors} from "../colors";
 
@@ -17,13 +18,18 @@ import Swiper from 'react-native-swiper';
 import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts";
 
 import i18n from '../../i18n'
+import * as Api from "../../managers/Api"
+import {renderSimpleButton} from "../UIStyles"
+import type {RequestState} from "../../types";
 
 type Props = {
     initialIndex: number
 };
 
 type State = {
-    index: number
+    index: number,
+    reqLoginFb?: RequestState,
+    reqLoginAk?: RequestState,
 };
 
 @connect()
@@ -38,7 +44,6 @@ class Login extends Component<Props, State> {
     render() {
         let marg = 40;
         let transformBase = 100;
-
         return (
             <View style={styles.wrapper}>
               <Swiper
@@ -105,23 +110,36 @@ class Login extends Component<Props, State> {
                       <View style={{
                       }}>
 
-                          <SmartButton
-                              textKey={'login_screen.facebook_signin'}
-                              execAction={this.handleFacebookLogin2}
-                              style={[styles.facebookButton]}
-                              textStyle={[styles.facebookButtonText]}
-                              returnKeyType={'go'}
-                          />
+
+                          <Button
+                              isLoading={this.isSending(['reqLoginFb'])}
+                              isDisabled={this.isSending()}
+                              onPress={() => this.execLogin(false)}
+                              style={styles.facebookButton}>
+                              <Icon name="facebook" size={20} color="white" />
+                              <Text style={styles.facebookButtonText}>
+                                  {i18n.t('login_screen.facebook_signin')}
+                              </Text>
+                          </Button>
+
+
 
                           <Text style={{fontSize: 10, color: '#ffffff', letterSpacing:1.2, textAlign: 'center', marginTop: 22, fontFamily: SFP_TEXT_BOLD}}>
                               {i18n.t('login_screen.no_publication')}
                           </Text>
 
-                          <TouchableOpacity onPress={this.handleAccountKitLogin}>
-                              <Text style={{fontSize: 12, color: '#ffffff', letterSpacing:1.2, textAlign: 'center', marginTop: 22, fontFamily: SFP_TEXT_BOLD}}>
-                                  {i18n.t('login_screen.account_kit_signin')}
-                              </Text>
-                          </TouchableOpacity>
+                          {
+                              renderSimpleButton(
+                                  i18n.t('login_screen.account_kit_signin'),
+                                  () => this.execLogin(true),
+                                  {
+                                      loading: this.isSending(['reqLoginAk']),
+                                      disabled: this.isSending(),
+                                      style: {},
+                                      textStyle: {fontSize: 12, color: '#ffffff', letterSpacing:1.2, textAlign: 'center', marginTop: 22, fontFamily: SFP_TEXT_BOLD}
+                                  }
+                              )
+                          }
 
                       </View>
                   </View>
@@ -172,7 +190,7 @@ class Login extends Component<Props, State> {
         return {dotColor, loveColor, eiffel};
     }
 
-    handleFacebookLogin2 = () => new Promise((resolve, reject)=> {
+    handleFacebookLogin = () => new Promise((resolve, reject)=> {
 
         LoginManager.logInWithReadPermissions(['public_profile', 'email', 'user_friends'])
             .then(
@@ -218,6 +236,7 @@ class Login extends Component<Props, State> {
                 let token = data && data.token
                 if (!token) {
                     console.log('Login cancelled')
+                    reject('Login cancelled');
                 } else {
                     console.log('login ok !')
                     this.props
@@ -227,9 +246,26 @@ class Login extends Component<Props, State> {
                         }, err => reject(err))
                 }
             })
-
-
     });
+
+    execLogin(useAccountKit: boolean) {
+
+        const loginFunction = useAccountKit ? this.handleAccountKitLogin : this.handleFacebookLogin
+        if (this.isSending()) {
+            console.debug("already executing action");
+            return;
+        }
+
+        Api.safeExecBlock.call(
+            this,
+            loginFunction,
+            useAccountKit ? 'reqLoginAk' : 'reqLoginFb'
+        );
+    }
+
+    isSending(reqStat: Array<RequestState> = ['reqLoginAk', 'reqLoginFb']) {
+        return reqStat.some(r => this.state[r] === 'sending')
+    }
 
     renderPagination = (index, total, context) => {
         // By default, dots only show when `total` >= 2
@@ -291,16 +327,18 @@ export {screen};
 
 const styles = StyleSheet.create({
     facebookButton: {
-        backgroundColor: Colors.white,
-        borderColor: Colors.green,
+        backgroundColor: Colors.facebookBlue,
+        borderColor: Colors.facebookBlue,
         borderWidth: StyleSheet.hairlineWidth,
         borderRadius: 8,
         paddingRight: 10,
         paddingLeft: 10
     },
     facebookButtonText: {
-        color: Colors.green,
-        fontSize: 15
+        color: Colors.white,
+        fontWeight: "bold",
+        fontSize: 15,
+        marginLeft: 10,
     },
     wrapper: {
       flex: 1
@@ -323,6 +361,12 @@ const styles = StyleSheet.create({
     },
     desc: {
         padding: "10%"
+    },
+    button: {
+        marginBottom: 0,
+        marginLeft: 8,
+        marginRight: 8,
+        borderWidth: 0,
     },
     pagination_x: {
         position: 'absolute',
