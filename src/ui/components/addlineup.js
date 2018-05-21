@@ -41,10 +41,10 @@ export default class AddLineupComponent extends Component<Props, State> {
             animationType: 'none',
             passProps: {
                 disableOffline: this.props.disableOffline,
-                onFinished: () => {
+                onFinished: (lineup) => {
                     navigator.dismissModal({animationType: 'none'});
-                },
-                onListCreated: this.props.onListCreated
+                    this.props.onListCreated && this.props.onListCreated(lineup)
+                }
             }
         });
     };
