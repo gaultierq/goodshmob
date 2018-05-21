@@ -146,6 +146,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                         activity={activity}
                                         navigator={this.props.navigator}
                                         onPressItem={() => this.goBuy(activity)}
+                                        showAllImages
                                     />
                                 </GTouchable>}
                                 {isAsk &&
