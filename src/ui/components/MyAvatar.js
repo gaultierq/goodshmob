@@ -41,12 +41,12 @@ export default class MyAvatar extends Component<Props, State> {
             }}>
                 <GImage
                     source={{uri: user && user.image || ""}}
-                    fallbackSource={require('../../img/profil.png')}
                     style={{
                         height: imageDim,
                         width: imageDim,
                         borderRadius: imageDim / 2,
                     }}
+                    fallbackSource={require('../../img/avatar-missing.png')}
                 />
             </GTouchable>
         )

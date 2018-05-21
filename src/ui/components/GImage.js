@@ -1,8 +1,11 @@
 //@flow
 import React, {Component} from 'react';
-import {CachedImage} from "react-native-img-cache";
+import {
+    CachedImage,
+} from 'react-native-cached-image';
 
 export type Props = {
+    fallbackSource: any,
 };
 
 type State = {
@@ -12,11 +15,17 @@ type State = {
 export default class GImage extends Component<Props, State>  {
 
     render() {
+        const defaultFallback = require('../../img/missing-image.png')
+
+        const fallbackSource = this.props.fallbackSource || defaultFallback;
         return (
             <CachedImage
-                {...this.props}
-            />
-        );
+                useQueryParamsInCacheKey={true}
+                fallbackSource={fallbackSource}
+                {...this.props
+                }
+    />
+    );
     }
 
 }

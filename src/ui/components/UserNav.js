@@ -33,6 +33,7 @@ export default class UserNav extends Component<Props, State> {
             }>
                 <GImage
                     source={{uri: user && user.image || ""}}
+                    fallbackSource={require('../../img/avatar-missing.png')}
                     style={{
                         height: imageDim,
                         width: imageDim,

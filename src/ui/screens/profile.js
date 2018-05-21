@@ -223,7 +223,8 @@ export default class Profile extends Component<Props, State> {
         }}
         >
             {user && user.image && <GImage source={{uri: user.image}}
-                                                style={styles.userAvatar}
+                                           fallbackSource={require('../../img/avatar-missing.png')}
+                                           style={styles.userAvatar}
             />}
             {user && <Text style={styles.userName}>{user.firstName + " " + user.lastName}</Text>}
 

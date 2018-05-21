@@ -178,7 +178,6 @@ export default class ActivityBody extends React.Component<Props, State> {
                         key={image}
                         resizeMode={resize}
                         style={[styles.image, {height: imageHeight, width: this.state.width}]}
-                        defaultSource={{}}
                     />
 
                 }) }
