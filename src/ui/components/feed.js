@@ -42,7 +42,7 @@ export type FeedSource = {
 }
 
 export type Props = {
-    data?: Array<T>,
+    data?: Array,
     sections?: any,
     renderItem?: any => Node,
     fetchSrc: FeedSource,
@@ -57,7 +57,7 @@ export type Props = {
     initialLoaderDelay?: ?ms,
     displayName?: string,
     doNotDisplayFetchMoreLoader: ?boolean,
-    listRef?: ?(any => void | string),
+    listRef ?: ?(any => void | string),
     doNotDisplayFetchMoreLoader?: boolean,
     decorateLoadMoreCall?: (last: any, call: Call) => Call,
 };
@@ -103,7 +103,7 @@ export default class Feed extends Component<Props, State>  {
         visibility: 'unknown',
         keyExtractor: item => item.id,
         initialLoaderDelay: 0,
-        listRef: "feed",
+        // listRef: "feed",
     }
 
     createdAt: ms;
@@ -259,7 +259,7 @@ export default class Feed extends Component<Props, State>  {
 
             items = filter.applyFilter(items);
             if (_.isEmpty(items)) {
-                allViews.push(filter.emptyFilterResult(this.state.filter));
+                return filter.emptyFilterResult(this.state.filter)
             }
         }
 
@@ -289,17 +289,14 @@ export default class Feed extends Component<Props, State>  {
 
         let listNode;
         if (sections) {
-            // allViews.push(React.createElement(SectionList, {sections: items, ...params}));
             listNode = React.createElement(SectionList, {sections: items, ...params});
         }
         else {
-            // allViews.push(React.createElement(FlatList, {data: items, ...params}));
             listNode = React.createElement(FlatList, {data: items, ...params});
         }
-        allViews.push(<View style={{flex:1}}>{listNode}</View>);
 
 
-        return <View style={[this.props.style, {flex: 1}]}>{allViews}</View>
+        return <View style={[this.props.style, {flex: 1}]}>{listNode}</View>
     }
 
     isVisible() {

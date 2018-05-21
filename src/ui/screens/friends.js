@@ -6,18 +6,14 @@ import {Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
 import {logged} from "../../managers/CurrentUser"
 import FriendCell from "../components/FriendCell";
-import ShareButton from "../components/ShareButton";
-import * as Api from "../../managers/Api";
 import Feed from "../components/feed"
-import ApiAction from "../../helpers/ApiAction";
 import type {Id, Item, User} from "../../types";
 import {buildData, doDataMergeInState} from "../../helpers/DataUtils";
 import Screen from "../components/Screen";
 import GTouchable from "../GTouchable";
-import * as Nav from "../Nav";
-import {STYLES} from "../UIStyles";
 import {seeUser} from "../Nav";
-import {actionTypes as userActionTypes, actions as userActions} from "../../redux/UserActions";
+import {STYLES} from "../UIStyles";
+import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions";
 
 
 type Props = {
@@ -46,8 +42,6 @@ export default class FriendsScreen extends Screen<Props, State> {
             userId,
             renderItem,
             ItemSeparatorComponent,
-            data,
-            ...attributes //not accepted...
         } = this.props;
 
 
@@ -76,7 +70,7 @@ export default class FriendsScreen extends Screen<Props, State> {
                     }}
                     empty={<Text style={STYLES.empty_message}>{i18n.t('friends.empty_screen')}</Text>}
                     ItemSeparatorComponent={ItemSeparatorComponent}
-                    {...attributes}
+                    visibility={this.getVisibility()}
                 />
         );
     }
