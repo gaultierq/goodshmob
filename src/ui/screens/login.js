@@ -2,13 +2,14 @@
 // @flow
 import React, {Component} from 'react';
 
-import {ActivityIndicator, Button, Image, ImageBackground, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {ActivityIndicator, Image, ImageBackground, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import * as appActions from "../../auth/actions"
 import {connect} from 'react-redux';
 import {AccessToken, LoginManager} from 'react-native-fbsdk';
 import Config from 'react-native-config';
 import RNAccountKit from 'react-native-facebook-account-kit'
 import Button from 'apsl-react-native-button'
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import SwiperNav from "../components/SwiperNav";
 import {Colors} from "../colors";
@@ -17,6 +18,8 @@ import Swiper from 'react-native-swiper';
 import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts";
 
 import i18n from '../../i18n'
+import * as Api from "../../managers/Api"
+import {renderSimpleButton} from "../UIStyles"
 
 type Props = {
     initialIndex: number
@@ -110,22 +113,31 @@ class Login extends Component<Props, State> {
                           <Button
                               isLoading={sending}
                               isDisabled={sending}
-                              onPress={this.execLogin.bind(this)}
-                              style={[styles.button, styles.facebookButton]}>
+                              onPress={() => this.execLogin(false)}
+                              style={styles.facebookButton}>
+                              <Icon name="facebook" size={20} color="white" />
                               <Text style={styles.facebookButtonText}>
                                   {i18n.t('login_screen.facebook_signin')}
                               </Text>
                           </Button>
 
+
+
                           <Text style={{fontSize: 10, color: '#ffffff', letterSpacing:1.2, textAlign: 'center', marginTop: 22, fontFamily: SFP_TEXT_BOLD}}>
                               {i18n.t('login_screen.no_publication')}
                           </Text>
 
-                          <TouchableOpacity onPress={this.handleAccountKitLogin}>
-                              <Text style={{fontSize: 12, color: '#ffffff', letterSpacing:1.2, textAlign: 'center', marginTop: 22, fontFamily: SFP_TEXT_BOLD}}>
-                                  {i18n.t('login_screen.account_kit_signin')}
-                              </Text>
-                          </TouchableOpacity>
+                          {
+                              renderSimpleButton(
+                                  i18n.t('login_screen.account_kit_signin'),
+                                  () => this.execLogin(true),
+                                  {
+                                      loading: sending,
+                                      style: {},
+                                      textStyle: {fontSize: 12, color: '#ffffff', letterSpacing:1.2, textAlign: 'center', marginTop: 22, fontFamily: SFP_TEXT_BOLD}
+                                  }
+                              )
+                          }
 
                       </View>
                   </View>
@@ -222,6 +234,7 @@ class Login extends Component<Props, State> {
                 let token = data && data.token
                 if (!token) {
                     console.log('Login cancelled')
+                    reject('Login cancelled');
                 } else {
                     console.log('login ok !')
                     this.props
@@ -231,27 +244,21 @@ class Login extends Component<Props, State> {
                         }, err => reject(err))
                 }
             })
-
-
     });
 
-    execLogin() {
+    execLogin(useAccountKit: boolean) {
+
+        const loginFunction = useAccountKit ? this.handleAccountKitLogin : this.handleFacebookLogin2
         if (this.isSending()) {
             console.debug("already executing action");
             return;
         }
-        let setReqState = (requestState) => {
-            this.setState({requestState});
-        };
-        setReqState('sending');
 
-        this.handleFacebookLogin2()
-            .then(()=> {
-                setReqState('ok');
-            }, (err) => {
-                console.warn(err);
-                setReqState('ko');
-            });
+        Api.safeExecBlock.call(
+            this,
+            loginFunction,
+            'requestState'
+        );
     }
 
     isSending() {
@@ -328,7 +335,8 @@ const styles = StyleSheet.create({
     facebookButtonText: {
         color: Colors.white,
         fontWeight: "bold",
-        fontSize: 15
+        fontSize: 15,
+        marginLeft: 10,
     },
     wrapper: {
       flex: 1
