@@ -29,8 +29,11 @@ export function logger(target, name, descriptor) {
 }
 
 
-export function fullName(user: User) {
-    return user ? `${user.firstName} ${user.lastName}` : "";
+export const fullName2 = ({firstName, lastName} = {}) => _.isEmpty(firstName) || _.isEmpty(lastName) ? "" : firstName + " " + lastName;
+
+export function fullName(user: User): string {
+    let {firstName, lastName} = user || {}
+    return fullName2({firstName, lastName});
 }
 
 export function savingCount(lineup: Lineup) {

@@ -20,7 +20,7 @@ import {
 import {connect} from "react-redux";
 import type {Id, RNNNavigator, Saving} from "../../types";
 import {TAB_BAR_PROPS} from "../UIStyles";
-import {currentGoodshboxId, currentUser, logged} from "../../managers/CurrentUser"
+import {currentGoodshboxId, currentUser, currentUserId, logged} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import {displayHomeSearch, startAddItem} from "../Nav";
@@ -35,7 +35,8 @@ import {TabBar, TabViewAnimated} from "react-native-tab-view";
 import ActionButton from 'react-native-action-button';
 import MyGoodsh from "./MyGoodsh";
 import MyInterests from "./MyInterests";
-import {fullName} from "../../helpers/StringUtils";
+import {fullName2} from "../../helpers/StringUtils";
+import {currentUserFilter} from "../../redux/selectors";
 
 
 type Props = {
@@ -49,33 +50,16 @@ type State = {
     filterFocused?: boolean,
     currentTip?: ?TipConfig,
     index: number,
-};
+}
 
 
 @logged
-@connect(state=>({
+@connect((state, props)=>({
     config: state.config,
     onBoarding: state.onBoarding,
+    currentUser: currentUserFilter(state, props)
 }))
 export default class HomeScreen extends Screen<Props, State> {
-
-    static navigatorButtons = {
-
-        //'component' doesnt work on android :/
-        leftButtons: [
-            __IS_IOS__ ?
-                {
-                    id: 'profile',
-                    component: 'goodsh.MyAvatar'
-                }:
-                {
-                    icon: require('../../img/goodshersHeaderProfileIcon.png'),
-                    id: 'profile',
-                }
-        ],
-        rightButtons: [
-        ],
-    };
 
     static navigatorStyle = {
         navBarNoBorder: true,
@@ -164,8 +148,27 @@ export default class HomeScreen extends Screen<Props, State> {
 
     render() {
 
-        this.setNavigatorTitle(this.props.navigator, {
-            title: fullName(currentUser(false)),
+        this.setNavigatorTitle(this.props.navigator, {title: fullName2(_.get(this.props, 'currentUser.attributes'))})
+
+        this.props.navigator.setButtons({
+
+            //'component' doesnt work on android :/
+            leftButtons: [
+                __IS_IOS__ ?
+                    {
+                        id: 'profile',
+                        component: 'goodsh.MyAvatar',
+                        passProps: {
+                            userId: currentUserId()
+                        }
+                    }:
+                    {
+                        icon: require('../../img/goodshersHeaderProfileIcon.png'),
+                        id: 'profile',
+                    }
+            ],
+            rightButtons: [
+            ],
         })
 
         return (

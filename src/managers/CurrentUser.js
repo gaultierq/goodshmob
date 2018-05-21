@@ -36,8 +36,9 @@ class CurrentUser {
         return this.buildUser(this.id(), assertNotNull);
     }
 
+    //this shoulw always return something !== null if user is logged
     buildUser(id: Id, assertNotNull: boolean) {
-        return id && buildNonNullData(this.store.getState().data, "users", id, assertNotNull);
+        return id ? buildNonNullData(this.store.getState().data, "users", id, assertNotNull) || {id} : null;
     }
 
     currentGoodshboxId() {

@@ -48,6 +48,7 @@ import InAppNotif from "./screens/inAppNotif";
 
 import MyInterestsScreen from "./screens/MyInterests";
 import MyGoodshsScreen from "./screens/MyGoodsh";
+import EditUserProfileScreen from "./screens/edituserprofile";
 
 
 function wrap(screenName,screenCreator,store,provider) {
@@ -74,6 +75,10 @@ function wrap(screenName,screenCreator,store,provider) {
 
 // register all screens of the app (including internal ones)
 export default function registerScreens(store, Provider) {
+    const screenCreator = () => {
+        return EditUserProfileScreen
+    }
+    wrap('goodsh.EditUserProfileScreen', screenCreator, store, Provider);
     wrap('goodsh.LoginScreen', () => LoginScreen, store, Provider);
     wrap('goodsh.NetworkScreen', () => NetworkScreen, store, Provider);
     wrap('goodsh.SearchItemsScreen', () => SearchItemScreen, store, Provider);
@@ -113,4 +118,5 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.InAppNotif', () => InAppNotif, store, Provider);
     wrap('goodsh.MyInterestsScreen', () => MyInterestsScreen, store, Provider);
     wrap('goodsh.MyGoodshsScreen', () => MyGoodshsScreen, store, Provider);
+
 }

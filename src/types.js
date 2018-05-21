@@ -9,7 +9,7 @@ export type ActivityType = 'saving' | 'post' | 'sending' | 'ask';
 export type ItemType = 'movie' | 'place';
 
 export type NavigableProps = {
-    navigator: any
+    navigator: RNNNavigator
 };
 
 export type Item = Base & {

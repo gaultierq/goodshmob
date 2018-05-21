@@ -1,4 +1,5 @@
 import {currentUserId} from "./managers/CurrentUser";
+import EditUserProfileScreen from "./ui/screens/edituserprofile";
 
 export const homeScreen = {
     screen: {
@@ -205,6 +206,19 @@ export const moveInScreen = {
         savingId: "ff4efcaf-19f4-49f1-9525-d49b42dc0803",
     },
 }
+export const editUserProfileScreen = {
+    screen: {
+        screen: 'goodsh.EditUserProfileScreen',
+    },
+    passProps: {
+        user: {
+            id: "662a61d0-5473-4d09-9410-c63aadc12e6c",
+            firstName: "Quentin",
+            lastName: "Gaultier"
+        }
+    },
+}
+
 export const myInterests = {
     screen: {
         screen: 'goodsh.MyInterestsScreen',
@@ -212,7 +226,16 @@ export const myInterests = {
     // passProps: {
     //     savingId: "ff4efcaf-19f4-49f1-9525-d49b42dc0803",
     // },
-};
+}
+
+export const myGoodshs = {
+    screen: {
+        screen: 'goodsh.MyGoodshsScreen',
+    },
+    passProps: {
+        userId: "662a61d0-5473-4d09-9410-c63aadc12e6c",
+    },
+}
 
 export const test = {
     screen: {

@@ -11,11 +11,11 @@ import * as Api from './managers/Api';
 import {autoRehydrate, createTransform, persistStore} from 'redux-persist'
 import {Alert, AsyncStorage, Dimensions, Linking, StyleSheet, TouchableOpacity} from 'react-native'
 import immutableTransform from './immutableTransform'
-import {REHYDRATE} from 'redux-persist/constants'
 import * as CurrentUser from './managers/CurrentUser'
-import {currentUserId} from './managers/CurrentUser'
+import {currentUser, currentUserId, isLogged} from './managers/CurrentUser'
 import * as globalProps from 'react-native-global-props';
 import * as notification from './managers/NotificationManager';
+import NotificationManager from './managers/NotificationManager';
 import * as DeviceManager from "./managers/DeviceManager";
 import * as UI from "./ui/UIStyles";
 import {init as initGlobal} from "./global";
@@ -30,23 +30,26 @@ import {SFP_TEXT_REGULAR} from "./ui/fonts";
 import NavManager from "./managers/NavManager";
 import Analytics from "./managers/Analytics";
 import * as appActions from "./auth/actions";
+import type {OnBoardingStep} from "./managers/OnBoardingManager";
 import OnBoardingManager from "./managers/OnBoardingManager";
 import StoreManager from "./managers/StoreManager";
 import BugsnagManager from "./managers/BugsnagManager";
-import NotificationManager from "./managers/NotificationManager";
-import {currentUser} from "./managers/CurrentUser";
-import type {OnBoardingStep} from "./managers/OnBoardingManager";
-import {registerLayoutAnimation} from "./ui/UIComponents";
-import {isLogged} from "./managers/CurrentUser";
-import {fullName} from "./helpers/StringUtils";
+import type {User} from "./types";
 
 
 type AppMode = 'idle' | 'init_cache' | 'nospam' | 'logged' | 'unlogged' | 'upgrading_cache' | 'unknown'
+type AppConfig = {
+    mode: AppMode,
+    userValid?: boolean
+}
 
 
 export default class App {
 
-    mode: AppMode = 'idle';
+    config: AppConfig = {
+        mode: 'idle',
+    }
+
 
     initialized: boolean; //is app prepared
     initializing: boolean; //is app initializing
@@ -236,7 +239,7 @@ export default class App {
         console.log('app store update :)');
 
         setTimeout(() => {
-            this.refreshAppMode();
+            this.refreshApp();
         });
     }
 
@@ -267,7 +270,7 @@ export default class App {
         //singletons
 
 
-        if (ErrorUtils) {
+        if (ErrorUtils && Config.SKIP_EMPTY_CACHE_ON_UNHANDLED_ERROR !== 'true') {
             const previousHandler = ErrorUtils.getGlobalHandler();
 
             ErrorUtils.setGlobalHandler((error, isFatal) => {
@@ -333,10 +336,10 @@ export default class App {
 
     }
 
-    refreshAppMode() {
-        let mode: AppMode = 'unknown';
-
-        //invalidate cache if needed
+    refreshApp() {
+        // let mode: AppMode = 'unknown';
+        let config = {}
+            //invalidate cache if needed
         let cacheVersion = this.cacheVersion;
         if (cacheVersion === undefined) {
             console.debug("waiting for cache version (resolveMode)");
@@ -344,24 +347,22 @@ export default class App {
         //console.debug(`current cache version=${cacheVersion}, config cache version=${Config.CACHE_VERSION}`);
 
         if (!cacheVersion) {
-            mode = 'init_cache';
+            config.mode = 'init_cache';
         }
         else if (this.upgradingCache  || cacheVersion < Config.CACHE_VERSION) {
-            mode = 'upgrading_cache';
+            config.mode = 'upgrading_cache';
         }
         else {
-            const {currentUserId} = this.store.getState().auth;
-            if (!currentUserId) mode = 'unlogged';
-            else if (OnBoardingManager.getPendingStep() === 'no_spam') mode = 'nospam';
-            else mode = 'logged';
+            config.mode = isLogged() ? 'logged' : 'unlogged'
+            config.userValid = this.isValidUser(currentUser(false))
         }
 
         //TODO: use navigation to resolve the current screen
-        if (this.mode !== mode) {
-            let oldMode = this.mode;
-            this.mode = mode;
+        if (!_.isEqual(this.config, config)) {
+            let oldConfig = this.config;
+            this.config = config;
 
-            this.onAppModeChanged(oldMode);
+            this.onAppConfigChanged(oldConfig);
         }
     }
 
@@ -376,9 +377,9 @@ export default class App {
 
 //type AppMode = 'idle' | 'logged' | 'unlogged' | 'upgrading_cache'
 
-    onAppModeChanged(oldMode: AppMode) {
+    onAppConfigChanged(oldConfig: AppConfig) {
 
-        console.debug(`mode changed: new mode=${this.mode} (old mode=${oldMode})`);
+        console.debug(`app mode changed: new mode=${this.config} (old mode=${oldConfig})`);
 
         let testScreen;
         let testScreenName = (__IS_IOS__ ? __TEST_SCREEN_IOS__ : __TEST_SCREEN_ANDROID__)
@@ -393,7 +394,7 @@ export default class App {
         let navigatorStyle = {...UI.NavStyles};
 
         const cacheVersion = Config.CACHE_VERSION;
-        switch (this.mode) {
+        switch (this.config.mode) {
             case 'nospam':
                 this.showNoSpamModal();
                 break;
@@ -405,14 +406,45 @@ export default class App {
                     Navigation.startSingleScreenApp(testScreen);
                 }
                 else {
-                    //TODO: move
-                    NotificationManager.init();
+                    const user = currentUser(false)
 
-                    BugsnagManager.setUser(currentUser(false));
+                    if (this.config.userValid) {
+                        //TODO: move
+                        NotificationManager.init();
 
-                    DeviceManager.checkAndSendDiff();
 
-                    this.startLogged(navigatorStyle);
+                        BugsnagManager.setUser(user);
+
+                        DeviceManager.checkAndSendDiff();
+
+                        this.launchMain(navigatorStyle);
+                    }
+                    else {
+                        Navigation.startSingleScreenApp({
+                            screen: {
+                                screen: 'goodsh.EditUserProfileScreen',
+                                navigatorStyle: {
+                                    ...navigatorStyle,
+                                },
+
+                            },
+                            passProps: {
+                                userId: user.id
+                            }
+
+                        });
+
+                        // Navigation.startSingleScreenApp({
+                        //     screen: {
+                        //         label: 'Login',
+                        //         screen: 'goodsh.LoginScreen',
+                        //         navigatorStyle: {
+                        //             ...navigatorStyle,
+                        //             navBarHidden: true,
+                        //         },
+                        //     }
+                        // });
+                    }
                 }
                 break;
             case 'unlogged':
@@ -423,7 +455,7 @@ export default class App {
             case 'init_cache':
                 this.store.dispatch({type: INIT_CACHE, newCacheVersion: cacheVersion});
                 this.setCurrentCacheVersion(cacheVersion);
-                this.refreshAppMode();
+                this.refreshApp();
                 break;
             case 'upgrading_cache':
 
@@ -440,7 +472,7 @@ export default class App {
                 this.setCurrentCacheVersion(cacheVersion);
                 this.store.dispatch(appActions.me()).then(() => {
                     this.upgradingCache = false;
-                    this.refreshAppMode()
+                    this.refreshApp()
                 });
 
 
@@ -448,7 +480,11 @@ export default class App {
         }
     }
 
-    startLogged(navigatorStyle) {
+    isValidUser(user: User) {
+        return user && !_.isEmpty(user.firstName)  && !_.isEmpty(user.lastName)
+    }
+
+    launchMain(navigatorStyle) {
 
         let tabsStyle = { // optional, add this if you want to style the tab bar beyond the defaults
             tabBarButtonColor: Colors.black, // optional, change the color of the tab icons and text (also unselected)
@@ -471,7 +507,10 @@ export default class App {
                     icon: require('./img2/mystuff_Glyph.png'),
                     selectedIcon: require('./img2/mystuff_Glyph_Active.png'),
                     navigatorStyle: [navigatorStyle],
-                    iconInsets
+                    iconInsets,
+                    passProps: {
+                        userId: currentUserId()
+                    }
                 },
                 {
                     screen: 'goodsh.NetworkScreen', // unique ID registered with Navigation.registerScreen

@@ -9,8 +9,8 @@ import {sendMessage} from "../../managers/Messenger";
 export type ScreenVisibility = 'unknown' | 'visible' | 'hidden';
 
 export type ScreenState = {
-    visibility: ScreenVisibility,
-    dirty: boolean
+    visibility?: ScreenVisibility,
+    dirty?: boolean
 }
 
 export type ScreenProps = NavigableProps & {
@@ -18,14 +18,16 @@ export type ScreenProps = NavigableProps & {
     onClickClose?: () => void
 }
 
-export default class Screen<P, S> extends Component<P & ScreenProps,  ScreenState> {
+export default class Screen<P, S> extends Component<P & ScreenProps,  S & ScreenState> {
 
-    state = {visibility: 'unknown', dirty: false};
+    state: S & ScreenState = {visibility: 'unknown', dirty: false}
 
-    constructor(props:P) {
+    constructor(props: P & ScreenProps) {
         super(props);
+
         let navigator = props.navigator;
         if (!navigator) throw "please provide navigator";
+
         navigator.addOnNavigatorEvent((event) => {
             //console.debug("home:onNavigatorEvent" , event);
 
@@ -71,7 +73,7 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  ScreenStat
 
     // askRenderOnVisible: boolean;
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: P & ScreenProps, nextState: S & ScreenState) {
         if (!__ENABLE_PERF_OPTIM__) return true;
 
         if (!this.getVisible(nextProps, nextState)) {
@@ -100,7 +102,7 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  ScreenStat
         return this.getVisible(this.props, this.state);
     }
 
-    getVisible(props, state) {
+    getVisible(props:P & ScreenProps, state:S & ScreenState) {
         return props && props.visibility === 'visible' || state && state.visibility === 'visible';
     }
 
@@ -111,7 +113,7 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  ScreenStat
     }
 
 //because when navigating back, a render may change the nav bar title. this is a flaw in wix nav
-    setNavigatorTitle(navigator: RNNNavigator, {title, subtitle}) {
+    setNavigatorTitle(navigator: RNNNavigator, {title, subtitle} : {title?: string, subtitle?: string}) {
         if (this.isVisible()) {
             navigator.setTitle({title});
             navigator.setSubTitle({subtitle});
