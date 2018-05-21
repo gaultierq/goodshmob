@@ -42,7 +42,7 @@ export type FeedSource = {
 }
 
 export type Props = {
-    data?: Array,
+    data?: Array<any>,
     sections?: any,
     renderItem?: any => Node,
     fetchSrc: FeedSource,
@@ -52,8 +52,8 @@ export type Props = {
     empty: Node,
     style?: ViewStyle,
     scrollUpOnBack?: ?() => ?boolean,
-    visibility: ScreenVisibility,
-    filter?: ?FilterConfig<T>,
+    visibility?: ScreenVisibility,
+    filter?: ?FilterConfig<any>,
     initialLoaderDelay?: ?ms,
     displayName?: string,
     doNotDisplayFetchMoreLoader: ?boolean,
@@ -100,7 +100,7 @@ export default class Feed extends Component<Props, State>  {
 
 
     static defaultProps = {
-        visibility: 'unknown',
+        visibility: 'visible',
         keyExtractor: item => item.id,
         initialLoaderDelay: 0,
         // listRef: "feed",
