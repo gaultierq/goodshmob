@@ -20,13 +20,16 @@ import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts";
 import i18n from '../../i18n'
 import * as Api from "../../managers/Api"
 import {renderSimpleButton} from "../UIStyles"
+import type {RequestState} from "../../types";
 
 type Props = {
     initialIndex: number
 };
 
 type State = {
-    index: number
+    index: number,
+    reqLoginFb?: RequestState,
+    reqLoginAk?: RequestState,
 };
 
 @connect()
@@ -41,8 +44,6 @@ class Login extends Component<Props, State> {
     render() {
         let marg = 40;
         let transformBase = 100;
-        let sending = this.isSending();
-
         return (
             <View style={styles.wrapper}>
               <Swiper
@@ -111,8 +112,8 @@ class Login extends Component<Props, State> {
 
 
                           <Button
-                              isLoading={sending}
-                              isDisabled={sending}
+                              isLoading={this.isSending(['reqLoginFb'])}
+                              isDisabled={this.isSending()}
                               onPress={() => this.execLogin(false)}
                               style={styles.facebookButton}>
                               <Icon name="facebook" size={20} color="white" />
@@ -132,7 +133,8 @@ class Login extends Component<Props, State> {
                                   i18n.t('login_screen.account_kit_signin'),
                                   () => this.execLogin(true),
                                   {
-                                      loading: sending,
+                                      loading: this.isSending(['reqLoginAk']),
+                                      disabled: this.isSending(),
                                       style: {},
                                       textStyle: {fontSize: 12, color: '#ffffff', letterSpacing:1.2, textAlign: 'center', marginTop: 22, fontFamily: SFP_TEXT_BOLD}
                                   }
@@ -188,7 +190,7 @@ class Login extends Component<Props, State> {
         return {dotColor, loveColor, eiffel};
     }
 
-    handleFacebookLogin2 = () => new Promise((resolve, reject)=> {
+    handleFacebookLogin = () => new Promise((resolve, reject)=> {
 
         LoginManager.logInWithReadPermissions(['public_profile', 'email', 'user_friends'])
             .then(
@@ -248,7 +250,7 @@ class Login extends Component<Props, State> {
 
     execLogin(useAccountKit: boolean) {
 
-        const loginFunction = useAccountKit ? this.handleAccountKitLogin : this.handleFacebookLogin2
+        const loginFunction = useAccountKit ? this.handleAccountKitLogin : this.handleFacebookLogin
         if (this.isSending()) {
             console.debug("already executing action");
             return;
@@ -257,12 +259,12 @@ class Login extends Component<Props, State> {
         Api.safeExecBlock.call(
             this,
             loginFunction,
-            'requestState'
+            useAccountKit ? 'reqLoginAk' : 'reqLoginFb'
         );
     }
 
-    isSending() {
-        return this.state.requestState === 'sending';
+    isSending(reqStat: Array<RequestState> = ['reqLoginAk', 'reqLoginFb']) {
+        return reqStat.some(r => this.state[r] === 'sending')
     }
 
     renderPagination = (index, total, context) => {
