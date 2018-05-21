@@ -20,6 +20,7 @@ import {sendMessage} from "../../managers/Messenger";
 type Props = {
     disableOffline?: ?boolean,
     onFinished?:?()=>void,
+    onListCreated?:?()=>void,
 
     initialLineupName: string,
     navigator: any,
@@ -120,20 +121,31 @@ export default class AddLineupSheet extends Component<Props, State> {
         let delayMs = 4000;
         return this.props.dispatch(LINEUP_CREATION[this.props.disableOffline ? 'exec' : 'pending']({listName: name}, {delayMs}))
             .then((pendingId)=> {
+                console.log('pendingId', pendingId)
                 const onFinished = this.props.onFinished;
                 onFinished && onFinished();
+
+                if (this.props.disableOffline && this.props.onListCreated) {
+                    const lineup = {
+                        id: pendingId.data.id,
+                    }
+                    this.props.onListCreated(lineup)
+                }
+
+                const action = this.props.disableOffline ? {} : {
+                    title: i18n.t('actions.undo'),
+                    onPress: () => {
+                        this.props.dispatch(LINEUP_CREATION.undo(pendingId))
+                    },
+                }
 
                 sendMessage(
                     //MagicString
                     i18n.t('create_list_controller.created'),
                     {
                         timeout: delayMs,
-                        action: {
-                            title: i18n.t('actions.undo'),
-                            onPress: () => {
-                                this.props.dispatch(LINEUP_CREATION.undo(pendingId))
-                            },
-                        }}
+                        action
+                    }
                 );
 
             });
