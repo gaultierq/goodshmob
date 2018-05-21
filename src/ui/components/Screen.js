@@ -9,7 +9,7 @@ import {sendMessage} from "../../managers/Messenger";
 export type ScreenVisibility = 'unknown' | 'visible' | 'hidden';
 
 export type ScreenState = {
-    visibility?: ScreenVisibility,
+    screenVisibility?: ScreenVisibility,
     dirty?: boolean
 }
 
@@ -20,7 +20,7 @@ export type ScreenProps = NavigableProps & {
 
 export default class Screen<P, S> extends Component<P & ScreenProps,  S & ScreenState> {
 
-    state: S & ScreenState = {visibility: 'unknown', dirty: false}
+    state: S & ScreenState = {screenVisibility: 'unknown', dirty: false}
 
     constructor(props: P & ScreenProps) {
         super(props);
@@ -38,24 +38,24 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  S & Screen
 
                 console.debug(`Screen ${this.constructor.name} visib event ${id}`);
 
-                let visibility: ScreenVisibility;
+                let screenVisibility: ScreenVisibility;
                 switch (id) {
                     case 'didAppear':
-                        visibility = 'visible'
+                        screenVisibility = 'visible'
                         break;
                     case 'didDisappear':
-                        visibility = 'hidden'
+                        screenVisibility = 'hidden'
                         break;
                     default: return
                 }
 
-                this.setState({visibility}, () => {
+                this.setState({screenVisibility}, () => {
                     let method = 'component' + toUppercase(id);
                     // $FlowFixMe
                     if (this[method]) this[method]();
                 });
 
-                if (visibility === 'visible' && this.state.dirty) {
+                if (screenVisibility === 'visible' && this.state.dirty) {
                     //screen dirty, re-rendering
                     superLog("screen dirty, re-rendering");
                     this.setState({dirty: false});
@@ -103,7 +103,7 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  S & Screen
     }
 
     getVisible(props:P & ScreenProps, state:S & ScreenState) {
-        return props && props.visibility === 'visible' || state && state.visibility === 'visible';
+        return props && props.visibility === 'visible' || state && state.screenVisibility === 'visible';
     }
 
 
