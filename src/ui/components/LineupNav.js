@@ -2,7 +2,7 @@
 import React, {Component} from 'react';
 import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Navigation} from 'react-native-navigation';
-import {CachedImage} from "react-native-img-cache";
+import GImage from './GImage';
 import type {User} from "../../types";
 import {SFP_TEXT_MEDIUM} from "../fonts";
 import {Colors} from "../colors";
@@ -34,7 +34,7 @@ export default class LineupNav extends Component<Props, State> {
                 alignItems: 'center',
                 justifyContent: 'center'}
             }>
-                <CachedImage
+                <GImage
                     source={{uri: user && user.image || ""}}
                     style={{
                         height: imageDim,

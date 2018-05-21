@@ -4,7 +4,7 @@ import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} f
 import {currentUser, logged} from "../../managers/CurrentUser";
 import {Navigation} from 'react-native-navigation';
 import GTouchable from "../GTouchable";
-import {CachedImage} from "react-native-img-cache";
+import GImage from './GImage';
 import {connect} from "react-redux";
 import {currentUserFilter} from "../../redux/selectors";
 import type {Id, User} from "../../types";
@@ -39,8 +39,9 @@ export default class MyAvatar extends Component<Props, State> {
                 });
 
             }}>
-                <CachedImage
+                <GImage
                     source={{uri: user && user.image || ""}}
+                    fallbackSource={require('../../img/profil.png')}
                     style={{
                         height: imageDim,
                         width: imageDim,

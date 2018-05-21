@@ -20,7 +20,7 @@ import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
 import ActionRights, {canPerformAction, A_BUY} from "../../rights";
 import Button from 'apsl-react-native-button';
 import {SFP_TEXT_ITALIC} from "../../fonts";
-import {CachedImage} from "react-native-img-cache";
+import GImage from '../../components/GImage'
 import Icon from 'react-native-vector-icons/Feather';
 import {firstName} from "../../../helpers/StringUtils";
 import Carousel from 'react-native-looped-carousel';
@@ -173,7 +173,7 @@ export default class ActivityBody extends React.Component<Props, State> {
                 swipe={this.props.showAllImages}
                 bullets={false}>
                 {images.map((image, i) => {
-                    return <CachedImage
+                    return <GImage
                         source={image ? {uri: image} : require('../../../img/goodsh_placeholder.png')}
                         key={image}
                         resizeMode={resize}

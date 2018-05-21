@@ -3,7 +3,6 @@
 import React from 'react';
 import {Button, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import type {User} from "../../types";
-import {CachedImage} from "react-native-img-cache";
 import {Avatar} from "../UIComponents";
 import {ViewStyle} from "../../types";
 
