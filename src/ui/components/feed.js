@@ -30,7 +30,7 @@ import {RequestManager} from "../../managers/request";
 import {createConsole} from "../../helpers/DebugUtils";
 import Spinner from 'react-native-spinkit';
 import Config from "react-native-config"
-import {FullScreenLoader} from "../UIComponents";
+import {FullScreenLoader, Http404} from "../UIComponents";
 import {ViewStyle} from "../../types";
 import {Call} from "../../managers/Api";
 
@@ -54,7 +54,6 @@ export type Props = {
     scrollUpOnBack?: ?() => ?boolean,
     visibility?: ScreenVisibility,
     filter?: ?FilterConfig<any>,
-    initialLoaderDelay?: ?ms,
     displayName?: string,
     doNotDisplayFetchMoreLoader: ?boolean,
     listRef ?: ?(any => void | string),
@@ -71,9 +70,9 @@ export type FilterConfig<T> = {
 };
 
 type State = {
-    isFetchingFirst?: RequestState,
-    isFetchingMore?: RequestState,
-    firstLoad?: RequestState,
+    isFetchingFirst: RequestState,
+    isFetchingMore: RequestState,
+
     isPulling?: boolean,
     lastEmptyResultMs?: number,
     moreLink?: Url,
@@ -102,7 +101,6 @@ export default class Feed extends Component<Props, State>  {
     static defaultProps = {
         visibility: 'visible',
         keyExtractor: item => item.id,
-        initialLoaderDelay: 0,
         // listRef: "feed",
     }
 
@@ -119,9 +117,10 @@ export default class Feed extends Component<Props, State>  {
         super(props);
         this.state = {
             initialLoaderVisibility: 'idle',
-            firstLoad: 'idle',
             decorateLoadMoreCall: props.decorateLoadMoreCall || this._defaultDecorateLoadMoreCall(props),
-            tempDisplayName: props.displayName
+            tempDisplayName: props.displayName,
+            isFetchingFirst: 'idle',
+            isFetchingMore: 'idle',
         }
         this.console = props.displayName ? createConsole(props.displayName) : console;
         this.createdAt = Date.now();
@@ -162,8 +161,8 @@ export default class Feed extends Component<Props, State>  {
         // }
 
         setTimeout(() => {
-            if (this.state.firstLoad !== 'idle') {
-                this.console.debug(`postFetchFirst was not performed, firstLoad=${this.state.firstLoad}`);
+            if (this.state.isFetchingFirst !== 'idle') {
+                this.console.debug(`postFetchFirst was not performed, isFetchingFirst=${this.state.isFetchingFirst}`);
                 return;
             }
             let trigger = this.hasItems() ? TRIGGER_USER_INDIRECT_ACTION : TRIGGER_USER_DIRECT_ACTION;
@@ -173,11 +172,7 @@ export default class Feed extends Component<Props, State>  {
 
             if (canotFetch === null) {
                 this.console.debug('posting first fetch')
-                Api.safeExecBlock.call(
-                    this,
-                    () => this.fetchIt(options),
-                    'firstLoad'
-                );
+                this.fetchIt(options)
             }
             else {
                 this.console.debug(`postFetchFirst was not performed: reason=${canotFetch}`);
@@ -195,7 +190,7 @@ export default class Feed extends Component<Props, State>  {
 
     render() {
         if (this.props.displayName === 'Network') {
-            this.console.debug("feed::render")
+            this.console.debug("feed::render", this.state)
         }
 
         assertUnique(this.getFlatItems());
@@ -219,37 +214,15 @@ export default class Feed extends Component<Props, State>  {
 
         let items = this.getItems();
 
-        let nothingInterestingToDisplay = !this.hasItems() && this.manager.isSuccess('isFetchingFirst', this);
 
-        let firstEmptyLoader = (this.state.firstLoad === 'sending' || this.state.firstLoad === 'idle') && !this.hasItems();
-
-        const isFirstRenderRecent = this.firstRenderAt + this.props.initialLoaderDelay > Date.now();
-
-        let displayFirstLoader = firstEmptyLoader || this.props.initialLoaderDelay && isFirstRenderRecent;
-
-        if (this.props.initialLoaderDelay && isFirstRenderRecent) {
-            if (this.isVisible() && !this.firstLoaderTimeout) {
-                this.console.debug("first timer force update posted");
-                this.firstLoaderTimeout = setTimeout(() => {
-                    this.console.debug("first timer force update triggered");
-                    this.forceUpdate();
-                }, this.props.initialLoaderDelay);
-            }
-        }
-
-        if (displayFirstLoader) {
-
-            this.console.debug("displayFirstLoader");
-            return <FullScreenLoader/>;
-        }
-
-
-        let allViews = [];
-        if (nothingInterestingToDisplay) {
-            if (this.manager.isFail('isFetchingFirst', this)) {
-                return this.renderFail(()=>this.tryFetchIt());
-            }
-            if (empty) return this.renderEmpty();
+        // rendering rules
+        // 1. if has some items to display, display them
+        if (!this.hasItems()) {
+            if (this.manager.isSending('isFetchingFirst', this)) return <FullScreenLoader/>
+            if (this.manager.isFail('isFetchingFirst', this)) return this.renderFail(()=>this.tryFetchIt())
+            if (this.manager.isSuccess('isFetchingFirst', this)) return this.renderEmpty()
+            this.console.warn("rendering hole", this.state)
+            return null
         }
 
         const filter = this.props.filter;
@@ -264,7 +237,7 @@ export default class Feed extends Component<Props, State>  {
         }
 
         const style1 = [style];
-        if (firstEmptyLoader) style1.push({minHeight: 150});
+        if ((this.state.isFetchingFirst === 'sending' || this.state.isFetchingFirst === 'idle') && !this.hasItems()) style1.push({minHeight: 150});
         // if (filter
         //     && _.isEmpty(this.state.filter) && this.state.isFilterFocused) {
         //     style1.push({opacity: 0.4})
@@ -277,10 +250,10 @@ export default class Feed extends Component<Props, State>  {
             refreshControl: this.renderRefreshControl(),
             onEndReached: this.onEndReached.bind(this),
             onEndReachedThreshold: 0.1,
-            ListFooterComponent: !firstEmptyLoader && this.renderFetchMoreLoader(ListFooterComponent),
+            ListFooterComponent: !((this.state.isFetchingFirst === 'sending' || this.state.isFetchingFirst === 'idle') && !this.hasItems()) && this.renderFetchMoreLoader(ListFooterComponent),
             style: style1,
-            ListHeaderComponent: !firstEmptyLoader && ListHeaderComponent,
-            renderSectionHeader: !firstEmptyLoader && renderSectionHeader,
+            ListHeaderComponent: !((this.state.isFetchingFirst === 'sending' || this.state.isFetchingFirst === 'idle') && !this.hasItems()) && ListHeaderComponent,
+            renderSectionHeader: !((this.state.isFetchingFirst === 'sending' || this.state.isFetchingFirst === 'idle') && !this.hasItems()) && renderSectionHeader,
             onScroll: this._handleScroll,
             onScrollBeginDrag: Keyboard.dismiss,
             keyboardShouldPersistTaps: 'always',
@@ -458,7 +431,6 @@ export default class Feed extends Component<Props, State>  {
     }
 
     tryFetchIt(options?: FeedFetchOption = {loadMore: false}) {
-        let that= this
         let {loadMore} = options;
         let requestName = loadMore ? 'isFetchingMore' : 'isFetchingFirst';
         if (this.canFetch(requestName, options)) {

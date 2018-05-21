@@ -5,12 +5,7 @@ import {ActivityIndicator, FlatList, Platform, RefreshControl, Text, TouchableOp
 import {connect} from "react-redux";
 import {currentUserId, logged} from "../../managers/CurrentUser"
 import ActivityCell from "../activity/components/ActivityCell";
-import {
-    activityFeedProps,
-    floatingButtonScrollListener,
-    registerLayoutAnimation,
-    scheduleOpacityAnimation
-} from "../UIComponents"
+import {activityFeedProps, floatingButtonScrollListener, scheduleOpacityAnimation} from "../UIComponents"
 import Feed from "../components/feed"
 import type {Activity, ActivityGroup, Id, NavigableProps} from "../../types";
 import ActionButton from 'react-native-action-button';
@@ -23,7 +18,6 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ShareButton from "../components/ShareButton";
 import {Call, safeDispatchAction} from "../../managers/Api";
 import {buildData} from "../../helpers/DataUtils";
-import {saveItem} from "../lineup/actions";
 import ActivityStatus from "../activity/components/ActivityStatus";
 import {SFP_TEXT_MEDIUM} from "../fonts";
 
@@ -172,10 +166,8 @@ class NetworkScreen extends Screen<Props, State> {
                     }}
                     hasMore={!network1.hasNoMore}
                     scrollUpOnBack={scrollUpOnBack}
-                    visibility={super.getVisibility()}
                     empty={<View><Text style={STYLES.empty_message}>{i18n.t('community_screen.empty_screen')}</Text><ShareButton text={i18n.t('actions.invite')}/></View>}
                     {...activityFeedProps()}
-                    // initialLoaderDelay={FEED_INITIAL_LOADER_DURATION}
                     initialNumToRender={3}
                     onScroll={floatingButtonScrollListener.call(this)}
                     decorateLoadMoreCall={(last: ActivityGroup, call: Call) => call.addQuery({id_lt: last.id})
