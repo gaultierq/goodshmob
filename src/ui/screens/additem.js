@@ -61,6 +61,7 @@ export default class AddItemScreen extends Screen<Props, State> {
     };
 
     _sheet;
+    textInput: any
 
 
     constructor(props: Props) {
@@ -90,6 +91,11 @@ export default class AddItemScreen extends Screen<Props, State> {
         }
     }
 
+    componentDidAppear() {
+        if (this.textInput) {
+            this.textInput.focus()
+        }
+    }
 
     render() {
 
@@ -145,6 +151,7 @@ export default class AddItemScreen extends Screen<Props, State> {
                         <ItemCell item={item}>
                             <TextInput
                                 editable={editable}
+                                ref={(r) => this.textInput = r}
                                 style={[styles.input, (editable ? {color: Colors.greyish} : {color: "grey"})]}
                                 value={description}
                                 onChangeText={description => this.setState({description})}
