@@ -102,7 +102,7 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  S & Screen
             })
         }
         else {
-            sendMessage('errors.generic')
+            sendMessage(i18n.t('errors.generic'))
         }
 
     }
