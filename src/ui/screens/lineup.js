@@ -35,10 +35,6 @@ type State = {
     titleSet: boolean
 };
 
-
-
-
-
 @logged
 @connect((state, ownProps) => ({
     data: state.data,
@@ -125,6 +121,7 @@ class LineupScreen extends Screen<Props, State> {
 
     //TODO: need a design for this
     renderHeader(lineup: Lineup) {
+        if (!lineup) return null
         return (
             <View style={{alignItems: 'flex-end', justifyContent: 'flex-end', paddingHorizontal: LINEUP_PADDING, paddingTop: 6}}>
                 <Text style={TEXT_LESS_IMPORTANT}>{`${TimeUtils.timeSince(Date.parse(lineup.createdAt))}`}</Text>
