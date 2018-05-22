@@ -1,6 +1,6 @@
 // @flow
 import {Navigation} from 'react-native-navigation';
-import {Client} from 'bugsnag-react-native';
+import {Configuration, Client} from 'bugsnag-react-native';
 import type {User} from "../types";
 
 // export const DEEPLINK_OPEN_SCREEN_IN_MODAL = 'DEEPLINK_OPEN_SCREEN_IN_MODAL';
@@ -9,10 +9,19 @@ class _BugsnagManager implements BugsnagManager {
 
     bugsnag;
 
-    init() {
+    init(store: Store) {
         if (!__WITH_BUGSNAG__) return;
         console.info(`BugsnagManager:init`);
-        this.bugsnag = new Client();
+        const configuration = new Configuration()
+        configuration.registerBeforeSendCallback((report, error) => {
+            report.metadata = {redux: store.getState()}
+            return true
+        });
+
+        this.bugsnag = new Client(configuration);
+
+
+
 
         console.error = (err) => {
             if (typeof err === 'string') {
@@ -46,7 +55,7 @@ class _BugsnagManager implements BugsnagManager {
 
 export interface BugsnagManager {
 
-    init(): void;
+    init(store: any): void;
     setUser(user: User): void;
     clearUser(): void;
     notify(err: Error): void;

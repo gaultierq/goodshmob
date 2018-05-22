@@ -90,8 +90,8 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  S & Screen
     }
 
     componentDidCatch(err: Error, info: any) {
-        BugsnagManager.notify(err, report => report.state = StoreManager.getStore().getState())
         console.warn("componentDidCatch", err, info)
+
         if (Config.DEV_TOOLS === 'true') {
             sendMessage('rendering error', {timeout: 10000, action: {
                     title: 'post forceUpdate',
@@ -102,7 +102,7 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  S & Screen
             })
         }
         else {
-            sendMessage(i18n.t('errors.generic'))
+            throw err
         }
 
     }

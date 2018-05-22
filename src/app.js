@@ -293,7 +293,7 @@ export default class App {
         NavManager.init();
         Analytics.init();
         OnBoardingManager.init(this.store);
-        BugsnagManager.init();
+        BugsnagManager.init(this.store);
 
 
 
