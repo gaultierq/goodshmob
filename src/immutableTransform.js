@@ -17,5 +17,5 @@ export default {
     in: (raw) => {
         return fromImmutable(raw)
     },
-    config: {blacklist: ["data", "followed_lists"]}
+    config: {blacklist: ["data", "followed_lists", "network"]}
 }

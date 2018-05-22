@@ -136,11 +136,12 @@ class NetworkScreen extends Screen<Props, State> {
         let network1 = network[userId] || {list: []}
         let sections = network1.list
             .map(group => buildData(data, 'activityGroups', group.id))
-            .map(built => ({
+            .map(built => (built && {
                 id: built.id,
                 activityCount: built.activityCount,
                 data: built.activities
             }))
+            .filter(v => !!v)
 
 
         let scrollUpOnBack = super.isVisible() ? ()=> {
