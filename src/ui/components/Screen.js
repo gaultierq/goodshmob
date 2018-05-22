@@ -1,9 +1,11 @@
 // @flow
-import {Component} from 'react';
-import type {NavigableProps, RNNNavigator} from "../../types";
-import {toUppercase} from "../../helpers/StringUtils";
-import * as Nav from "../Nav";
-import {sendMessage} from "../../managers/Messenger";
+import {Component} from 'react'
+import type {NavigableProps, RNNNavigator} from "../../types"
+import {toUppercase} from "../../helpers/StringUtils"
+import * as Nav from "../Nav"
+import {sendMessage} from "../../managers/Messenger"
+import Config from "react-native-config"
+import BugsnagManager from "../../managers/BugsnagManager"
 
 
 export type ScreenVisibility = 'unknown' | 'visible' | 'hidden';
@@ -87,14 +89,22 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  S & Screen
         return true;
     }
 
-    componentDidCatch() {
-        sendMessage('rendering error', {timeout: 60000, action: {
-                title: 'post forceUpdate',
-                onPress: () => {
-                    setTimeout(()=> this.forceUpdate(), 1000)
-                },
-            }
-        })
+    componentDidCatch(err: Error, info: any) {
+        BugsnagManager.notify(err)
+        console.warn("componentDidCatch", err, info)
+        if (Config.DEV_TOOLS === 'true') {
+            sendMessage('rendering error', {timeout: 10000, action: {
+                    title: 'post forceUpdate',
+                    onPress: () => {
+                        setTimeout(()=> this.forceUpdate(), 1000)
+                    },
+                }
+            })
+        }
+        else {
+            sendMessage('errors.generic')
+        }
+
     }
 
 

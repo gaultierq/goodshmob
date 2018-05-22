@@ -382,5 +382,6 @@ export default {
     },
     errors: {
         unavailable: 'Content not available',
+        generic: "Oops... Something went wrong"
     }
 };

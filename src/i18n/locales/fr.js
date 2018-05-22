@@ -381,5 +381,6 @@ export default {
     },
     errors: {
         unavailable: 'Le contenu n\'est pas disponible',
+        generic: "Oups... Il y a quelquechose qui cloche"
     }
 };

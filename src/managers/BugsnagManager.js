@@ -38,7 +38,7 @@ class _BugsnagManager implements BugsnagManager {
 
     notify(err: Error): void {
         if (!__WITH_BUGSNAG__) return;
-        console.info(`BugsnagManager:notify: ${err}`);
+        console.warn(`BugsnagManager:notify: ${err}`);
         this.bugsnag.notify(err);
     }
 
