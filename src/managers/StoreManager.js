@@ -125,6 +125,10 @@ class _StoreManager implements StoreManager {
         return buildData(storeData, type, id);
     }
 
+    getStore(): any {
+        return this.store
+    }
+
 }
 
 export interface StoreManager {
@@ -136,6 +140,8 @@ export interface StoreManager {
     getMySavingsForItem(itemId: Id, itemType: ItemType): Saving[];
 
     buildData(type: string, id: Id): Saving;
+
+    getStore(): any
 
 }
 

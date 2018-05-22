@@ -6,7 +6,7 @@ import * as Nav from "../Nav"
 import {sendMessage} from "../../managers/Messenger"
 import Config from "react-native-config"
 import BugsnagManager from "../../managers/BugsnagManager"
-
+import StoreManager from "../../managers/StoreManager"
 
 export type ScreenVisibility = 'unknown' | 'visible' | 'hidden';
 
@@ -90,7 +90,7 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  S & Screen
     }
 
     componentDidCatch(err: Error, info: any) {
-        BugsnagManager.notify(err)
+        BugsnagManager.notify(err, report => report.state = StoreManager.getStore().getState())
         console.warn("componentDidCatch", err, info)
         if (Config.DEV_TOOLS === 'true') {
             sendMessage('rendering error', {timeout: 10000, action: {

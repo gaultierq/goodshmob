@@ -36,10 +36,10 @@ class _BugsnagManager implements BugsnagManager {
         this.bugsnag.clearUser();
     }
 
-    notify(err: Error): void {
+    notify(err: Error, attach?: (report:any)=>any): void {
         if (!__WITH_BUGSNAG__) return;
-        console.warn(`BugsnagManager:notify: ${err}`);
-        this.bugsnag.notify(err);
+        console.warn(`BugsnagManager:notify`, err);
+        this.bugsnag.notify(err,attach);
     }
 
 }
