@@ -341,6 +341,7 @@ export class Call {
                     )
                     .then(sleeper(Math.max(__MIN_REQUEST_TIME__ - (Date.now() - tic), 0)))
                     // .then(sleeper(5000))
+
                     .then(resp => {
                             let response = resp.json;
 
@@ -355,8 +356,12 @@ export class Call {
                                 payload: response,
                                 original: resp.original,
                                 options
-                            });
-
+                            })
+                            return response
+                        }
+                    )
+                    .then(response => {
+                            // console.warn("test::6")
                             resolve(response);
                         },
                         //1., 2.
