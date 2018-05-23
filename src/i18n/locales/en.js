@@ -272,6 +272,16 @@ export default {
             label: "Are you sure?"
         }
     },
+    follow: {
+        alert: {
+            title_unfollow: "Unfollow",
+            label: "Are you sure ?",
+        },
+        messages: {
+            unfollowed: "Unfollowed",
+            followed: "Followed"
+        }
+    },
     unsave_screen: {
         unsave_button: {
             idle: "Delete",
