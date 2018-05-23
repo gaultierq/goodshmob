@@ -5,7 +5,7 @@ import React, {Component} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 
 import {connect} from "react-redux";
-import type {Id, Lineup} from "../../types";
+import type {Color, Id, Lineup} from "../../types";
 import {logged} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
@@ -111,14 +111,14 @@ export default class LineupTitle2 extends Component<Props, State> {
             yield true
             yield false
         })();
+        let color = _.get(lineup, 'meta.followed', false) ? Colors.black : undefined
         return [
             this.renderMedal(_.get(lineup, 'meta.savingsCount', -1), "th-large", it),
-            this.renderMedal(_.get(lineup, 'meta.followersCount', -1), "star", it)
+            this.renderMedal(_.get(lineup, 'meta.followersCount', -1), "star", it, color)
         ];
     }
 
-    renderMedal(count: number, icon: string, displayDot: () => boolean) {
-        const color = Colors.greyish;
+    renderMedal(count: number, icon: string, displayDot: () => boolean, color: Color = Colors.greyish) {
         const iconSize = 15;
 
         return count > 0 && <View style={[styles.medalsContainer, {marginLeft: 4}]} key={icon}>
