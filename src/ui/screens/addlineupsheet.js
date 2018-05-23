@@ -121,19 +121,25 @@ export default class AddLineupSheet extends Component<Props, State> {
         return this.props.dispatch(LINEUP_CREATION[this.props.disableOffline ? 'exec' : 'pending']({listName: name}, {delayMs}))
             .then((pendingId)=> {
                 const onFinished = this.props.onFinished;
-                onFinished && onFinished();
+                const lineup = {
+                    id: pendingId.data.id,
+                }
+                onFinished && onFinished(lineup);
+
+                const action = this.props.disableOffline ? {} : {
+                    title: i18n.t('actions.undo'),
+                    onPress: () => {
+                        this.props.dispatch(LINEUP_CREATION.undo(pendingId))
+                    },
+                }
 
                 sendMessage(
                     //MagicString
                     i18n.t('create_list_controller.created'),
                     {
                         timeout: delayMs,
-                        action: {
-                            title: i18n.t('actions.undo'),
-                            onPress: () => {
-                                this.props.dispatch(LINEUP_CREATION.undo(pendingId))
-                            },
-                        }}
+                        action
+                    }
                 );
 
             });
