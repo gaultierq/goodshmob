@@ -48,7 +48,7 @@ export default class LineupTitle2 extends Component<Props, State> {
         return (
             <GoodshContext.Consumer>
                 { ({userOwnResources}) => (
-                    <View style={[{marginVertical: 6}, style, {flex:1,}]}>
+                    <View style={[{paddingVertical: 6}, style, {flex:1,}]}>
                         <View style={{
                             flex: 1,
                             flexDirection: 'row',
