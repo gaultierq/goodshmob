@@ -4,7 +4,6 @@ import React, {Component} from 'react';
 import {Image, LayoutAnimation, StyleSheet, Text, UIManager, View} from 'react-native';
 import {Colors} from "./colors";
 import User from "react-native-firebase/lib/modules/auth/User";
-import {CachedImage} from "react-native-img-cache";
 import GTouchable from "./GTouchable";
 import {BACKGROUND_COLOR, LINEUP_PADDING, STYLES} from "./UIStyles";
 import Spinner from 'react-native-spinkit';
@@ -13,6 +12,7 @@ import {displayLineupActionMenu, seeList, startAddItem} from "./Nav";
 import LineupHorizontal from "./components/LineupHorizontal";
 import LineupTitle2 from "./components/LineupTitle2";
 import {ViewStyle} from "../types";
+import GImage from "./components/GImage"
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
@@ -52,10 +52,10 @@ export class Avatar extends Component<Props, State> {
     }
     render() {
         const {user, style, size, ...attributes} = this.props;
-
-        //TODO: image placeholder
-        return (<CachedImage
+        return (<GImage
             source={{uri: user && user.image}}
+            fallbackSource={require('../img/avatar-missing.png')}
+
             style={[{
                 height: size,
                 width: size,

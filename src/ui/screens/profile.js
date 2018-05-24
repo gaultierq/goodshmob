@@ -31,7 +31,7 @@ import {CONFIG_SET} from "../../reducers/dataReducer";
 import * as Nav from "../Nav";
 import {Colors} from "../colors";
 import GTouchable from "../GTouchable";
-import {CachedImage} from "react-native-img-cache";
+import GImage from '../components/GImage'
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 import {SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "../fonts";
 import FeedSeparator from "../activity/components/FeedSeparator";
@@ -222,8 +222,9 @@ export default class Profile extends Component<Props, State> {
             alignItems: 'center',
         }}
         >
-            {user && user.image && <CachedImage source={{uri: user.image}}
-                                                style={styles.userAvatar}
+            {user && user.image && <GImage source={{uri: user.image}}
+                                           fallbackSource={require('../../img/avatar-missing.png')}
+                                           style={styles.userAvatar}
             />}
             {user && <Text style={styles.userName}>{user.firstName + " " + user.lastName}</Text>}
 
