@@ -2,13 +2,17 @@ declare var i18n: any;
 declare var _: any;
 
 export type Logger = {
-    info: (m: string, ...args) => void
+    log: (m: string, ...args) => void,
+    debug: (m: string, ...args) => void,
+    info: (m: string, ...args) => void,
+    warn: (m: string, ...args) => void,
+    error: (m: string, ...args) => void,
 }
-export type GLogger = {
-    subLogger: (conf: GLoggerConfig) => GLogger
+export type GLogger = Logger & {
+    createLogger: (conf: GLoggerConfig) => GLogger
 }
 
-declare var logger: GLogger;
+declare var console: GLogger;
 
 export type GLoggerLevel = 'log'| 'debug'| 'info'| 'warn'| 'error'
 export type GLoggerGroup = string
@@ -16,7 +20,7 @@ export type GLoggerStyle = string
 
 type GLoggerConfig = {
     group: GLoggerGroup,
-    groupName: string,
+    groupName?: string,
     format?: GLoggerLevel => ?GLoggerStyle,
 
     //you can filter your message, and all your children messages

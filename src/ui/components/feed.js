@@ -124,13 +124,8 @@ export default class Feed extends Component<Props, State>  {
             isFetchingMore: 'idle',
         }
         // this.console = props.displayName ? createConsole(props.displayName) : console
-        this.console = logger.subLogger({group: 'feed',
-            format: (level: GLoggerLevel) => {
-                switch (level) {
-                    // case "info": return 'background: #01DEB1'
-                    default: return null
-                }
-            },})
+        // this.console = console.createLogger({group: 'feed', groupName: props.displayName})
+        this.console = console.createLogger({group: 'feed'})
 
         this.createdAt = Date.now();
         this.postFetchFirst();

@@ -59,7 +59,7 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  S & Screen
 
                 if (screenVisibility === 'visible' && this.state.dirty) {
                     //screen dirty, re-rendering
-                    superLog("screen dirty, re-rendering");
+                    // superLog("screen dirty, re-rendering");
                     this.setState({dirty: false});
                 }
 
@@ -80,7 +80,7 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  S & Screen
 
         if (!this.getVisible(nextProps, nextState)) {
             // this.askRenderOnVisible = true;
-            superLog(`[${this.constructor.name}]: shouldComponentUpdate skipped - ${JSON.stringify(this.state)}`);
+            // superLog(`[${this.constructor.name}]: shouldComponentUpdate skipped - ${JSON.stringify(this.state)}`);
             if (!this.state.dirty) {
                 this.setState({dirty: true});
             }

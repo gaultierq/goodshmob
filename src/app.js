@@ -425,7 +425,6 @@ export default class App {
                             passProps: {
                                 userId: user.id
                             }
-
                         });
 
                         // Navigation.startSingleScreenApp({

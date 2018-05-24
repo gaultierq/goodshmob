@@ -26,12 +26,14 @@ export const logFilter = conf => (level, group) => {
     }
     return false
 }
-
+const levels = ['log', 'debug', 'info', 'warn', 'error'];
 
 export function createLogger(parent: Logger, conf: GLoggerConfig): GLogger {
 
-    const result: GLogger = {}
-    const levels = ['log', 'debug', 'info', 'warn', 'error'];
+    const result: GLogger = {
+        createLogger: function(conf: GLoggerConfig) { return createLogger(this, conf) }
+    }
+
     levels.forEach(level => {
         result[level] = (msg: string, ...args: any) => {
             let {group, groupName, format, filter} = conf
@@ -52,6 +54,5 @@ export function createLogger(parent: Logger, conf: GLoggerConfig): GLogger {
             parent[level].call(parent, message, ...args)
         }
     })
-    result.subLogger = (conf: GLoggerConfig) => createLogger(result, conf)
     return result
 }
