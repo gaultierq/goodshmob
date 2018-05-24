@@ -122,7 +122,8 @@ export default class Feed extends Component<Props, State>  {
             isFetchingFirst: 'idle',
             isFetchingMore: 'idle',
         }
-        this.console = props.displayName ? createConsole(props.displayName) : console;
+        // this.console = props.displayName ? createConsole(props.displayName) : console
+        this.console = logger.createLogger('feed')
         this.createdAt = Date.now();
         this.postFetchFirst();
     }
