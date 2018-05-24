@@ -35,7 +35,7 @@ import OnBoardingManager from "./managers/OnBoardingManager";
 import StoreManager from "./managers/StoreManager";
 import BugsnagManager from "./managers/BugsnagManager";
 import type {User} from "./types";
-
+import RNAccountKit, { Color, StatusBarStyle,} from 'react-native-facebook-account-kit'
 
 type AppMode = 'idle' | 'init_cache' | 'nospam' | 'logged' | 'unlogged' | 'upgrading_cache' | 'unknown'
 type AppConfig = {
@@ -288,6 +288,26 @@ export default class App {
         Analytics.init();
         OnBoardingManager.init(this.store);
         BugsnagManager.init(this.store);
+
+        RNAccountKit.configure({
+            theme: {
+                // Background
+                backgroundColor: Color.hex(Colors.green),
+                // Button
+                buttonBackgroundColor: Color.hex(Colors.facebookBlue),
+                buttonBorderColor: Color.hex(Colors.facebookBlue),
+                buttonTextColor: Color.hex(Colors.white),
+                // Button disabled
+                buttonDisabledBackgroundColor: Color.hex(Colors.greyish),
+                buttonDisabledBorderColor: Color.hex(Colors.greyish),
+                buttonDisabledTextColor: Color.hex(Colors.white),
+                // // Header
+                headerBackgroundColor: Color.hex(Colors.green),
+                headerButtonTextColor: Color.hex(Colors.white),
+                headerTextColor: Color.hex(Colors.white),
+                // // Others
+                textColor: Color.hex(Colors.white),
+            }})
 
 
 
