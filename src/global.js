@@ -78,7 +78,7 @@ export function init(hotReload: boolean) {
         }
     }
 
-    global.logger = global.console = createLogger(global.console, {
+    global.logger = createLogger(global.console, {
         group: 'root',
         groupName: '',
         format: logFormat,

@@ -12,7 +12,7 @@ export type GLogger = Logger & {
     createLogger: (conf: GLoggerConfig) => GLogger
 }
 
-declare var console: GLogger;
+declare var logger: GLogger;
 
 export type GLoggerLevel = 'log'| 'debug'| 'info'| 'warn'| 'error'
 export type GLoggerGroup = string
