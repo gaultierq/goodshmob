@@ -6,6 +6,7 @@ import GImage from './GImage';
 import type {User} from "../../types";
 import {SFP_TEXT_MEDIUM} from "../fonts";
 import {Colors} from "../colors";
+import {Avatar} from "../UIComponents"
 
 
 type Props = {
@@ -34,14 +35,9 @@ export default class LineupNav extends Component<Props, State> {
                 alignItems: 'center',
                 justifyContent: 'center'}
             }>
-                <GImage
-                    source={{uri: user && user.image || ""}}
-                    style={{
-                        height: imageDim,
-                        width: imageDim,
-                        borderRadius: imageDim / 2,
-                    }}
-                />
+                <Avatar
+                    user={user}
+                    size={imageDim}/>
                 <Text style={{
                     fontSize: 17,
                     fontFamily: SFP_TEXT_MEDIUM,

@@ -8,6 +8,7 @@ import GImage from './GImage';
 import {connect} from "react-redux";
 import {currentUserFilter} from "../../redux/selectors";
 import type {Id, User} from "../../types";
+import {Avatar} from "../UIComponents"
 
 
 type Props = {
@@ -39,15 +40,9 @@ export default class MyAvatar extends Component<Props, State> {
                 });
 
             }}>
-                <GImage
-                    source={{uri: user && user.image || ""}}
-                    style={{
-                        height: imageDim,
-                        width: imageDim,
-                        borderRadius: imageDim / 2,
-                    }}
-                    fallbackSource={require('../../img/avatar-missing.png')}
-                />
+                <Avatar
+                    user={user}
+                    size={imageDim}/>
             </GTouchable>
         )
 

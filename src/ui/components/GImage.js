@@ -22,6 +22,7 @@ export default class GImage extends Component<Props, State>  {
             <CachedImage
                 useQueryParamsInCacheKey={true}
                 fallbackSource={fallbackSource}
+                activityIndicatorProps={{opacity: 0}}
                 {...this.props
                 }
     />
