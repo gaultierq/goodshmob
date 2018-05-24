@@ -18,6 +18,7 @@ import type {RNNNavigator} from "../../types";
 type Props = {
     navigator: RNNNavigator,
     disableOffline?: ?boolean,
+    onListCreated?: ()=>void,
     style?: *,
     styleText?: *,
 };
@@ -40,8 +41,9 @@ export default class AddLineupComponent extends Component<Props, State> {
             animationType: 'none',
             passProps: {
                 disableOffline: this.props.disableOffline,
-                onFinished: () => {
+                onFinished: (lineup) => {
                     navigator.dismissModal({animationType: 'none'});
+                    this.props.onListCreated && this.props.onListCreated(lineup)
                 }
             }
         });

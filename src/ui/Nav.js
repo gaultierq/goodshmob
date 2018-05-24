@@ -7,7 +7,7 @@ import i18n from '../i18n/i18n';
 import BottomSheet from 'react-native-bottomsheet';
 import {unsaveOnce} from "./activity/components/ActivityActionBar";
 import {sanitizeActivityType} from "../helpers/DataUtils";
-import {View} from "react-native";
+import {Alert, View} from "react-native";
 import type {Description, Visibility} from "./screens/save";
 import * as Api from "../managers/Api";
 import ApiAction from "../helpers/ApiAction";
@@ -16,12 +16,13 @@ import ItemCell from "./components/ItemCell";
 import React from "react";
 import LineupHorizontal from "./components/LineupHorizontal";
 import LineupCellSaving from "./components/LineupCellSaving";
-import {deleteLineup, followLineup, unfollowLineup} from "./lineup/actions";
+import {deleteLineup, followLineup as followLineupAction, unfollowLineup as unfollowLineupAction} from "./lineup/actions";
 import {GAction, L_DELETE, L_FOLLOW, L_RENAME, L_SHARE, L_UNFOLLOW} from "./rights";
 import {isCurrentUser} from "../managers/CurrentUser";
 import {isFollowed} from "./activity/components/FollowButton";
 import {BACKGROUND_COLOR} from "./UIStyles";
 import LineupTitle2 from "./components/LineupTitle2";
+import _Messenger from "../managers/Messenger"
 
 export const CLOSE_MODAL = 'close_modal';
 
@@ -315,6 +316,31 @@ type LineupMenuAction = {
     handler: () => void,
 }
 
+function unfollowLineup(dispatch, lineup) {
+    Alert.alert(
+        i18n.t("follow.alert.title_unfollow"),
+        i18n.t("friends.alert.label"),
+        [
+            {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+            {text: i18n.t("actions.ok"), onPress: () => {
+                    unfollowLineupAction(dispatch, lineup)
+                        .then(()=> {
+                                _Messenger.sendMessage(i18n.t("follow.messages.unfollowed"));
+                            }
+                        );
+                }},
+        ],
+        { cancelable: true }
+    )
+}
+
+function followLineup(dispatch, lineup) {
+    followLineupAction(dispatch, lineup)
+        .then(()=> {
+                _Messenger.sendMessage(i18n.t("follow.messages.followed"));
+            }
+        );
+}
 
 export function displayLineupActionMenu(navigator: RNNNavigator, dispatch: any, lineup: Lineup) {
 
