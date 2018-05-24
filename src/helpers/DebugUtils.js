@@ -1,12 +1,6 @@
 //@flow
 
 
-export function superLog(msg: string) {
-
-    console.debug('%c ' + msg, 'background: #222; color: #bada55');
-
-    // superConsole = {...console};
-}
 
 export function createConsole(displayName: string) {
 
@@ -17,6 +11,8 @@ export function createConsole(displayName: string) {
         warn: (message: string, ...others) => console.warn(`[${displayName}]: ${message}`, ...others),
     }
 }
+
+
 
 
 export function hexToRgb(hex) {
