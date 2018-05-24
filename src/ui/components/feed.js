@@ -33,6 +33,7 @@ import Config from "react-native-config"
 import {FullScreenLoader, Http404} from "../UIComponents";
 import {ViewStyle} from "../../types";
 import {Call} from "../../managers/Api";
+import type {GLoggerLevel} from "../../../flow-typed/goodshmob";
 
 export type FeedSource = {
     callFactory: ()=>Api.Call,
@@ -110,7 +111,7 @@ export default class Feed extends Component<Props, State>  {
     _listener: ()=>boolean;
     lastFetchFail: number;
     manager: RequestManager = new RequestManager();
-    console: *;
+    console: GLogger;
     filterNode: Node;
 
     constructor(props: Props) {
@@ -123,7 +124,14 @@ export default class Feed extends Component<Props, State>  {
             isFetchingMore: 'idle',
         }
         // this.console = props.displayName ? createConsole(props.displayName) : console
-        this.console = logger.createLogger('feed')
+        this.console = logger.subLogger({group: 'feed',
+            format: (level: GLoggerLevel) => {
+                switch (level) {
+                    // case "info": return 'background: #01DEB1'
+                    default: return null
+                }
+            },})
+
         this.createdAt = Date.now();
         this.postFetchFirst();
     }

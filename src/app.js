@@ -86,12 +86,6 @@ export default class App {
         console.log(`spawning app with env`, Config);
         //this.hydrated = false;
 
-        ['log', 'debug', 'info', 'warn', 'error'].forEach((level) => {
-            if (!(_.includes(Config.ENABLED_LOGS, level))) {
-                console[level] = function () {};
-            }
-        });
-
         //see the network requests in the debugger
         //TODO: doesnt work yet
         //GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;

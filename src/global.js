@@ -3,11 +3,8 @@
 import * as __ from "lodash";
 import _i18n from './i18n/i18n'
 import Config from 'react-native-config'
-import {createLogger1, createLoggerI, superLog as _superLog} from './helpers/DebugUtils'
-
 import {Dimensions, Platform} from 'react-native';
-import {GLogger as createLogger} from "../flow-typed/goodshmob";
-import type {GLoggerLevel} from "../flow-typed/goodshmob";
+import {createLogger, logFilter, logFormat} from "./helpers/LogUtil";
 
 
 declare var superConsole: any;
@@ -27,7 +24,6 @@ const ALL_KEYS = [
     'WITH_BUGSNAG',
     'HTTP_TIMEOUT',
     'WITH_STATS',
-    'ENABLED_LOGS',
     'DEBUG_SHOW_IDS',
     'DEBUG_PERFS',
     'WITH_ASSERTS',
@@ -44,10 +40,6 @@ const ALL_KEYS = [
 export function init(hotReload: boolean) {
     global._ = __;
     global.i18n = _i18n;
-    global.superLog = _superLog;
-    // global.ENABLE_PERF_OPTIM = true;
-    // global.ENABLE_PERF_OPTIM = false;
-
     global.__ENABLE_BACK_HANDLER__ = false;
 
     //retry after react-native update !
@@ -65,14 +57,6 @@ export function init(hotReload: boolean) {
 
     confToGlobal(Config, true);
 
-    // if (__IS_LOCAL__ && require.resolve('./../env')) {
-    //     try {
-    //         const config = require('./../env');
-    //         confToGlobal(config, false);
-    //     }
-    //     catch (e) {}
-    // }
-
     let {width, height} = Dimensions.get('window');
     global.__DEVICE_WIDTH__ = width;
     global.__DEVICE_HEIGHT__ = height;
@@ -84,21 +68,23 @@ export function init(hotReload: boolean) {
         }
     }
 
-    global.logger = global.console = createLoggerI(console, {
-        group: 'main',
-        format: (level: GLoggerLevel) => {
-            switch (level) {
-                case "log": return 'color: #aaaaaa'
-                case "debug": return 'color: #aaaaaa'
-                case "info": return 'color: #0000ff'
-                case "warning": return 'color: #ffa500'
-                case "error": return 'color: #ff0000'
-                default: return null
-            }
+    let logConfig
+    if (Config.LOG_CONFIG) {
+        try {
+            logConfig = JSON.parse(Config.LOG_CONFIG);
         }
+        catch (e) {
+            console.error(e);
+        }
+    }
+
+    global.logger = global.console = createLogger(global.console, {
+        group: 'root',
+        groupName: '',
+        format: logFormat,
+        filter: logFilter(logConfig)
     })
 }
-
 
 let confToGlobal = function (config, throwIfAlreadyDefined) {
     let convert = (value) => {

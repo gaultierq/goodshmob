@@ -1,9 +1,11 @@
 declare var i18n: any;
 declare var _: any;
 
+export type Logger = {
+    info: (m: string, ...args) => void
+}
 export type GLogger = {
-    getGroup: () => string,
-    createLogger: (group: string) => GLogger
+    subLogger: (conf: GLoggerConfig) => GLogger
 }
 
 declare var logger: GLogger;
@@ -14,5 +16,10 @@ export type GLoggerStyle = string
 
 type GLoggerConfig = {
     group: GLoggerGroup,
-    format?: GLoggerLevel => ?GLoggerStyle
+    groupName: string,
+    format?: GLoggerLevel => ?GLoggerStyle,
+
+    //you can filter your message, and all your children messages
+    //return true if you want NOT to display the log
+    filter?: (GLoggerLevel, GLoggerGroup) => boolean,
 }
