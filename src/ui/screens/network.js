@@ -93,7 +93,6 @@ class NetworkScreen extends Screen<Props, State> {
             this.feed.scrollToLocation({sectionIndex: 0, itemIndex: 0, viewOffset: 50})
         }
 
-
         if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
             if (event.id === 'community') { // this is the same id field from the static navigatorButtons definition
 

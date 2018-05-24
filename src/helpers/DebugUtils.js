@@ -20,40 +20,30 @@ export function createConsole(displayName: string) {
 
 
 
+export const createLogger1 = (parent: GLogger) => (group: string) => createLoggerI(parent, {group})
 
-export const HELLO_CONSOLE1 = (group: string) => (msg, ...args) => {
-    return [`${group}: ${msg}`, ...args]
-}
+export function createLoggerI(parent: any, conf: GLoggerConfig): GLogger {
 
-export const createLogger = (parent: GLogger) => (group: string) => createConsole2(parent, HELLO_CONSOLE1(group))
-
-
-export function createConsole2(parent: any, argsMut?: (msg: string, ...args: any) => []) {
-
-    const result = {}
+    const result: GLogger = {}
     const levels = ['log', 'debug', 'info', 'warn', 'error'];
     levels.forEach(level => {
         result[level] = (msg: string, ...args: any) => {
+            let {group, format} = conf
+            let message = `${group}:${msg}`
+            if (format) {
+                let styles = format(level)
+                if (styles) {
+                    message = `%c ${message}`
+                    args.unshift(styles)
+                }
 
-            const mutatedArgs = argsMut(msg, ...args);
+            }
+            parent[level].call(parent, message, ...args)
 
-            // const m = mutatedArgs.shift();
-
-            const m = mutatedArgs.shift();
-            if (mutatedArgs.length > 0) parent[level].call(parent, m, ...mutatedArgs)
-            else parent[level].call(parent, m)
         }
     })
-    result.createLogger = createLogger(result)
+    result.createLogger = createLogger1(result)
     return result
-
-
-    // return {
-    //     log: (message: string, ...others) => console.log(`[${displayName}]: ${message}`, ...others),
-    //     debug: (message: string, ...others) => console.debug(`[${displayName}]: ${message}`, ...others),
-    //     info: (message: string, ...others) => console.info(`[${displayName}]: ${message}`, ...others),
-    //     warn: (message: string, ...others) => console.warn(`[${displayName}]: ${message}`, ...others),
-    // }
 }
 
 

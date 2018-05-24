@@ -3,9 +3,11 @@
 import * as __ from "lodash";
 import _i18n from './i18n/i18n'
 import Config from 'react-native-config'
-import {createLogger, superLog as _superLog} from './helpers/DebugUtils'
+import {createLogger1, createLoggerI, superLog as _superLog} from './helpers/DebugUtils'
 
 import {Dimensions, Platform} from 'react-native';
+import {GLogger as createLogger} from "../flow-typed/goodshmob";
+import type {GLoggerLevel} from "../flow-typed/goodshmob";
 
 
 declare var superConsole: any;
@@ -82,7 +84,19 @@ export function init(hotReload: boolean) {
         }
     }
 
-    global.logger = createLogger(global.console)('main')
+    global.logger = global.console = createLoggerI(console, {
+        group: 'main',
+        format: (level: GLoggerLevel) => {
+            switch (level) {
+                case "log": return 'color: #aaaaaa'
+                case "debug": return 'color: #aaaaaa'
+                case "info": return 'color: #0000ff'
+                case "warning": return 'color: #ffa500'
+                case "error": return 'color: #ff0000'
+                default: return null
+            }
+        }
+    })
 }
 
 

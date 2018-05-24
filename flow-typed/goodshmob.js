@@ -7,3 +7,12 @@ export type GLogger = {
 }
 
 declare var logger: GLogger;
+
+export type GLoggerLevel = 'log'| 'debug'| 'info'| 'warn'| 'error'
+export type GLoggerGroup = string
+export type GLoggerStyle = string
+
+type GLoggerConfig = {
+    group: GLoggerGroup,
+    format?: GLoggerLevel => ?GLoggerStyle
+}

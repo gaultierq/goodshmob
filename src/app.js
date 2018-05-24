@@ -72,7 +72,7 @@ export default class App {
 
     spawn() {
 
-        console.log(`spawning app with env=${JSON.stringify(Config)}`);
+
 
         if (module && module.hot) {
             global.reloads = 0;
@@ -83,7 +83,7 @@ export default class App {
         }
 
         initGlobal(false);
-
+        console.log(`spawning app with env`, Config);
         //this.hydrated = false;
 
         ['log', 'debug', 'info', 'warn', 'error'].forEach((level) => {
