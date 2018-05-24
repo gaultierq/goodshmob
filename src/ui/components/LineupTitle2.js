@@ -65,17 +65,14 @@ export default class LineupTitle2 extends Component<Props, State> {
                             }}>
                                 <Text style={STYLES.SECTION_TITLE}>
                                     {lineup.name}
+                                    {' '}
 
                                     {
-                                        __IS_IOS__ && this.getMedals(lineup)
+                                        this.getMedals(lineup)
                                     }
 
                                 </Text>
                             </View>
-
-                            {
-                                __IS_ANDROID__ && this.getMedals(lineup)
-                            }
 
                             {
                                 children
@@ -108,8 +105,8 @@ export default class LineupTitle2 extends Component<Props, State> {
 
     getMedals(lineup: Lineup) {
         const it = (function* () {
-            yield true
             yield false
+            yield true
         })();
         let color = _.get(lineup, 'meta.followed', false) ? Colors.black : undefined
         return [
@@ -121,8 +118,20 @@ export default class LineupTitle2 extends Component<Props, State> {
     renderMedal(count: number, icon: string, displayDot: () => boolean, color: Color = Colors.greyish) {
         const iconSize = 15;
 
-        return count > 0 && <View style={[styles.medalsContainer, {marginLeft: 4}]} key={icon}>
-            {displayDot.next().value && <Text style={[styles.smallText, {color, marginHorizontal: 6}]}>•</Text>}
+        if (__IS_ANDROID__) {
+            return count > 0 && <Text style={[styles.medalsContainer, {paddingLeft: 10, marginLeft: 10}]} key={icon}>
+                {displayDot.next().value && <Text style={[styles.smallText, {color, marginHorizontal: 6}]}> • </Text>}
+                {icon === 'th-large' && <Text style={[styles.smallText, {color, marginHorizontal: 6}]}>▣</Text>}
+                {icon === 'star' && <Text style={[styles.smallText, {color, marginHorizontal: 6}]}>☆</Text>}
+                <Text style={[styles.smallText, {marginLeft: 4, color,
+                    alignSelf: 'flex-end',
+                    // backgroundColor: 'red',
+                }]}>{count}</Text>
+            </Text>;
+        }
+
+        return count > 0 && <View style={[styles.medalsContainer]} key={icon}>
+            {displayDot.next().value && <Text style={[styles.smallText, {color, marginHorizontal: 6}]}>• </Text>}
             <Icon name={icon} size={iconSize} color={color}/>
             <Text style={[styles.smallText, {marginLeft: 4, color,
                 alignSelf: 'flex-end',
