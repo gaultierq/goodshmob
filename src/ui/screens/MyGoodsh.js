@@ -77,9 +77,11 @@ export default class MyGoodsh extends Screen<Props, State> {
                 sectionMaker={(lineups)=> {
                     const goodshbox = _.head(lineups);
                     let savingCount = _.get(goodshbox, `meta.savingsCount`, 0)
-                    return [
-                        {
-                            data: goodshbox ? [goodshbox] : [],
+                    const showGoodshbox = goodshbox && goodshbox.savings.length > 0;
+
+                    return _.compact([
+                        showGoodshbox ? {
+                            data: [goodshbox],
                             title: i18n.t("lineups.goodsh.title"),
                             subtitle: ` (${savingCount})`,
                             onPress: () => seeList(navigator, goodshbox),
@@ -94,7 +96,7 @@ export default class MyGoodsh extends Screen<Props, State> {
                             renderSectionHeader: () => this.renderSectionHeader(
                                 i18n.t("lineups.goodsh.title"),
                             )
-                        },
+                        } : false,
                         {
                             data: _.slice(lineups, 1),
                             title: i18n.t("lineups.mine.title"),
@@ -105,7 +107,7 @@ export default class MyGoodsh extends Screen<Props, State> {
                                 <AddLineupComponent navigator={this.props.navigator}/>
                             )
                         },
-                    ];
+                    ]);
                 }}
 
                 {...attributes}
