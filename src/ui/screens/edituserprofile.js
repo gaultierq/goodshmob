@@ -12,7 +12,9 @@ import ApiAction from "../../helpers/ApiAction";
 import {connect} from "react-redux";
 import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions";
 import {buildData} from "../../helpers/DataUtils";
-import {FullScreenLoader, Http404} from "../UIComponents";
+import {Avatar, FullScreenLoader, Http404} from "../UIComponents";
+import {Colors} from "../colors"
+import _Messenger from "../../managers/Messenger"
 
 type Props = LineupProps & {
     userId: Id
@@ -24,6 +26,8 @@ type State = {
     userId: Id,
     firstName: string,
     lastName: string,
+    updated: boolean,
+    user: any,
 };
 
 @connect(state => ({
@@ -31,6 +35,11 @@ type State = {
 }))
 export default class EditUserProfileScreen extends Screen<Props, State> {
 
+    state = {
+        firstName: '',
+        lastName: '',
+        updated: false,
+    }
 
     componentDidMount() {
         Api.safeDispatchAction.call(
@@ -39,45 +48,75 @@ export default class EditUserProfileScreen extends Screen<Props, State> {
             userActions.getUser(this.props.userId).createActionDispatchee(userActionTypes.GET_USER),
             'reqFetchUser'
         )
+            .then(() => {
+                const user = this.getUser()
+                if (user) {
+                    this.setState({
+                        firstName: user.firstName || '',
+                        lastName: user.lastName || '',
+                        user: user,
+                    })
+                }
+            })
     }
 
 
     render() {
-
-        const user = this.getUser()
-
-        if (!user) {
+        if (this.state.reqFetchUser !== 'ok') {
             if (this.state.reqFetchUser === 'sending') return <FullScreenLoader/>
             if (this.state.reqFetchUser === 'ko') return <Http404/>
             return null
         }
+
+        console.log(this.state)
         return (
             <View style={[styles.container]}>
 
+                <View style={styles.headerWrapper}>
+                    <Avatar user={this.state.user} />
+                    <Text>
+                        {i18n.t("form.description.user_name")}
+                    </Text>
+                </View>
+
+
                 <TextInput
-                    placeholder={'#first name'}
-                    onChangeText={firstName=> this.setState({firstName})}
-                    value={this.state.firstName || user.firstName}
+                    placeholder={i18n.t("form.label.first_name")}
+                    onChangeText={firstName=> this.setState({updated: true, firstName})}
+                    style={styles.input}
+                    value={this.state.firstName}
+
                 />
                 <TextInput
-                    placeholder={'#last name'}
-                    onChangeText={lastName=> this.setState({lastName})}
-                    value={this.state.lastName || user.lastName }
+                    placeholder={i18n.t("form.label.last_name")}
+                    onChangeText={lastName=> this.setState({updated: true, lastName})}
+                    style={styles.input}
+                    value={this.state.lastName}
                 />
-                {
-                    renderSimpleButton(
-                        "save",
-                        ()=> safeDispatchAction.call(
-                            this,
-                            this.props.dispatch,
-                            this.saveUserDispatchee(),
-                            'reqSave'
-                        ),
-                        {loading: this.state['reqSave'] === 'sending'}
-                    )
+                {this.state.updated &&
+                renderSimpleButton(
+                    i18n.t("actions.save"),
+                    this.submit.bind(this),
+                    {loading: this.state['reqSave'] === 'sending'}
+                )
                 }
             </View>
         );
+    }
+
+    submit() {
+        if (!(this.state.firstName.length > 0 &&
+                this.state.lastName.length > 0)) {
+            _Messenger.sendMessage(i18n.t('form.warning.fill_all_fields'));
+            return
+        }
+
+        return safeDispatchAction.call(
+            this,
+            this.props.dispatch,
+            this.saveUserDispatchee(),
+            'reqSave'
+        )
     }
 
     getUser() {
@@ -98,5 +137,19 @@ const PATCH_USER = ApiAction.create("patch_user", "patch user");
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        padding: 20,
+
     },
+
+    input: {
+        backgroundColor: Colors.grey3,
+        borderRadius: 4,
+        margin: 10,
+        padding: 8,
+    },
+    headerWrapper: {
+        alignItems: 'center',
+        alignContent: 'center',
+        marginBottom: 20,
+    }
 });

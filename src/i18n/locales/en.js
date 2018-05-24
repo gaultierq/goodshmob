@@ -393,5 +393,17 @@ export default {
     errors: {
         unavailable: 'Content not available',
         generic: "Oops... Something went wrong"
+    },
+    form: {
+        label: {
+            last_name: 'Last name',
+            first_name: 'First name'
+        },
+        warning: {
+            fill_all_fields: 'Please fill all the fields',
+        },
+        description: {
+            user_name: 'Please fill in your first and last name'
+        }
     }
 };
