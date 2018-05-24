@@ -53,8 +53,7 @@ export default class EditUserProfileScreen extends Screen<Props, State> {
                 if (user) {
                     this.setState({
                         firstName: user.firstName || '',
-                        lastName: user.lastName || '',
-                        user: user,
+                        lastName: user.lastName || ''
                     })
                 }
             })
@@ -62,19 +61,21 @@ export default class EditUserProfileScreen extends Screen<Props, State> {
 
 
     render() {
+
         if (this.state.reqFetchUser !== 'ok') {
             if (this.state.reqFetchUser === 'sending') return <FullScreenLoader/>
             if (this.state.reqFetchUser === 'ko') return <Http404/>
             return null
         }
 
-        console.log(this.state)
+        const user = this.getUser()
+
         return (
             <View style={[styles.container]}>
 
                 <View style={styles.headerWrapper}>
-                    <Avatar user={this.state.user} />
-                    <Text>
+                    <Avatar user={user} />
+                    <Text style={{marginTop: 10}}>
                         {i18n.t("form.description.user_name")}
                     </Text>
                 </View>
@@ -93,7 +94,7 @@ export default class EditUserProfileScreen extends Screen<Props, State> {
                     style={styles.input}
                     value={this.state.lastName}
                 />
-                {this.state.updated &&
+                {this.hasChanged(user) &&
                 renderSimpleButton(
                     i18n.t("actions.save"),
                     this.submit.bind(this),
@@ -102,6 +103,15 @@ export default class EditUserProfileScreen extends Screen<Props, State> {
                 }
             </View>
         );
+    }
+
+    hasChanged(user) {
+        if (!user) {
+            return false
+        }
+
+        return this.state.firstName != user.firstName ||
+            this.state.lastName != user.lastName;
     }
 
     submit() {

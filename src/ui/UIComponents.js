@@ -57,7 +57,7 @@ export class Avatar extends Component<Props, State> {
         uri = _.isNull(uri) ? '' : uri
 
         //TODO: image placeholder
-        return (<CachedImage
+        return (<GImage
             source={{uri: uri}}
             style={[{
                 height: size,
