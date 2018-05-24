@@ -237,6 +237,15 @@ export const myGoodshs = {
     },
 }
 
+export const editUserProfile = {
+    screen: {
+        screen: 'goodsh.EditUserProfileScreen',
+    },
+    passProps: {
+        userId: "5c73fe0f-f0c1-40fe-869f-3a00b55e2f1b",
+    },
+}
+
 export const test = {
     screen: {
         label: 'test',

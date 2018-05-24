@@ -52,10 +52,13 @@ export class Avatar extends Component<Props, State> {
     }
     render() {
         const {user, style, size, ...attributes} = this.props;
-        return (<GImage
-            source={{uri: user && user.image}}
-            fallbackSource={require('../img/avatar-missing.png')}
 
+        let uri = user && user.image
+        uri = _.isNull(uri) ? '' : uri
+
+        //TODO: image placeholder
+        return (<CachedImage
+            source={{uri: uri}}
             style={[{
                 height: size,
                 width: size,
