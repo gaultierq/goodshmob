@@ -11,6 +11,7 @@ import ApiAction from "../../helpers/ApiAction";
 import {UNSAVE} from "../activity/actionTypes";
 import {Alert} from "react-native";
 import Snackbar from "react-native-snackbar";
+import type {LineupActionParams} from "../Nav";
 
 export const FETCH_LINEUP = ApiAction.create("fetch_lineup", "retrieve a lineup details");
 export const FETCH_SAVINGS = ApiAction.create("fetch_savings", "retrieve savings info");
@@ -108,7 +109,7 @@ export function doUnsave(pending, id, lineupId, delayMs?: ms) {
 
 
 
-export function deleteLineup(dispatch: any, lineup: List) {
+export function deleteLineup({dispatch, lineup}: LineupActionParams) {
     let delayMs = 3000;
     //deleteLineup(lineup.id, delayMs)
     const lineupId = lineup.id;

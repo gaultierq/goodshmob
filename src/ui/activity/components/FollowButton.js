@@ -60,7 +60,7 @@ export default class FollowButton extends Component<Props, State> {
 
 //TODO: create decorators when building
 export function isFollowed(lineup: Lineup) {
-    return _.get(lineup, 'meta.followed', false)
+    return _.get(lineup, 'meta.followed')
 }
 
 const styles = StyleSheet.create({

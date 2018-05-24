@@ -55,7 +55,6 @@ export default class App {
     initializing: boolean; //is app initializing
 
     store;
-    bugsnag; //move to some manager
     cacheVersion: number;
 
     upgradingCache: boolean = false;
@@ -116,7 +115,6 @@ export default class App {
         const {height, width} = Dimensions.get('window');
         console.info(`window dimensions=${width}x${height}`);
 
-
         globalProps.setCustomText({
             style: {
                 fontFamily: SFP_TEXT_REGULAR,
@@ -124,64 +122,12 @@ export default class App {
             }
         });
 
-        // globalProps.setCustomView({
-        //     style: {
-        //         backgroundColor: 'transparent'
-        //     }
-        // });
-
         globalProps.setCustomTouchableOpacity({
             activeOpacity: 0.8
         });
-
-        // globalProps.setCustomView({
-        // backgroundColor: `rgba(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255}, 0.3)`,
-        // borderWidth: 1
-        // });
-
-        // setCustomTouchableOpacity({
-        //     underlayColor: "red"
-        // });
-        // const DEFAULT_PROPS = {
-        //     activeOpacity: 0.85,
-        //     underlayColor: 'red',
-        // };
-        //
-        // TouchableOpacity.prototype.getDefaultProps = function getDefaultProps() {
-        //     return DEFAULT_PROPS;
-        // };
-        // Getting rid of that ugly line on Android and adding some custom style to all TextInput components.
-
-
-        // const customTextInputProps = {
-        //     underlineColorAndroid: Colors.greyish,
-        // style: {
-        //     // paddingVertical: 5,
-        //     // paddingHorizontal: 8,
-        //     paddingBottom: 0,
-        //     marginBottom: 0,
-        //     backgroundColor: 'white'
-        // }
-        // };
-        // globalProps.setCustomTextInput(customTextInputProps);
-
-
-        // Component.setState.prototype = function setState(imconpleteState, callback) {
-        //     console.log("coucouc");
-        //     this.setState(imconpleteState, callback);
-        // };
     }
 
     prepareRedux() {
-        //
-        // const appReducer = (state = {}, action) => {
-        //     switch (action.type) {
-        //         case REHYDRATE:
-        //             return {...state, rehydrated: true};
-        //         //return state.merge({rehydrated: true})
-        //     }
-        //     return state;
-        // };
 
         let allReducers = combineReducers({...reducers/*, app: appReducer*/});
         const reducer = createWithReducers(allReducers);

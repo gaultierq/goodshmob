@@ -3,19 +3,24 @@
 
 import type {Activity, Lineup} from "../types";
 import {sanitizeActivityType} from "../helpers/DataUtils";
-import {currentUserId} from "../managers/CurrentUser";
+import {currentUserId, isCurrentUser} from "../managers/CurrentUser";
 import {CREATE_LIKE, DELETE_LIKE} from "./activity/actionTypes";
 import StoreManager from "../managers/StoreManager";
+import {isFollowed} from "./activity/components/FollowButton";
 
 export class GAction {
-    actionName: string;
+    name: string;
 
     constructor(name: string) {
-        this.actionName = name;
+        this.name = name;
+    }
+
+    toString() {
+        return "GAction-" + this.name
     }
 
     isActivityAction() {
-        switch (this.actionName) {
+        switch (this.name) {
             case 'like':
             case 'unlike':
             case 'save':
@@ -27,12 +32,29 @@ export class GAction {
         }
     }
     isListAction() {
-        switch (this.actionName) {
+        switch (this.name) {
             case 'share':
                 return true;
             default:return false
         }
     }
+}
+
+
+const GLineupActions = []
+class GLineupAction extends GAction {
+
+    constructor(name: string) {
+        super(name)
+        GLineupActions.push(this)
+    }
+
+
+
+    toString() {
+        return "GLineupAction-" + this.name
+    }
+
 }
 
 //TODO: comments, see,
@@ -42,14 +64,16 @@ export const A_SAVE : GAction = new GAction('save');
 export const A_UNSAVE : GAction = new GAction('unsave');
 export const A_BUY : GAction = new GAction('buy');
 
-//lineups
-export const L_SHARE : GAction = new GAction('share list');
-export const L_RENAME : GAction = new GAction('rename list');
-export const L_DELETE : GAction = new GAction('delete list');
-export const L_FOLLOW : GAction = new GAction('follow list');
-export const L_UNFOLLOW : GAction = new GAction('unfollow list');
 
-class LineupRights {
+
+//lineups
+export const L_SHARE : GAction = new GLineupAction('share list');
+export const L_RENAME : GAction = new GLineupAction('rename list');
+export const L_DELETE : GAction = new GLineupAction('delete list');
+export const L_FOLLOW : GAction = new GLineupAction('follow list');
+export const L_UNFOLLOW : GAction = new GLineupAction('unfollow list');
+
+export class LineupRights {
     lineup: Lineup;
 
     constructor(lineup: Lineup) {
@@ -59,6 +83,32 @@ class LineupRights {
 
     canShare() {
         return true
+    }
+
+    canExec(action: GLineupAction): boolean {
+        const l = this.lineup;
+        if (!l) return false
+        let isMine = isCurrentUser(l.user)
+        const followed = isFollowed(l)
+
+        switch (action) {
+            case L_SHARE:
+                return true
+            case L_RENAME:
+                return isMine
+            case L_DELETE:
+                return isMine
+            case L_FOLLOW:
+                return !isMine && followed === false
+            case L_UNFOLLOW:
+                return !isMine && followed === true
+            default: throw `unknown action ${action}`
+        }
+    }
+
+    static getActions(lineup: Lineup): GLineupAction[] {
+        let rights = new LineupRights(lineup)
+        return GLineupActions.filter(a => rights.canExec(a))
     }
 }
 
@@ -120,7 +170,7 @@ export function canPerformAction(action: GAction, payload: {activity:? Activity,
     if (action.isActivityAction()) {
         if (!payload || !payload.activity) throw 'invalid params 2';
         let ar = new ActivityRights(payload.activity);
-        switch (action.actionName) {
+        switch (action.name) {
             case 'like':
                 return ar.canLike();
             case 'unlike':
@@ -138,7 +188,7 @@ export function canPerformAction(action: GAction, payload: {activity:? Activity,
     if (action.isListAction()) {
         if (!payload || !payload.lineup) throw 'invalid params 3';
         let ar = new LineupRights(payload.lineup);
-        switch (action.actionName) {
+        switch (action.name) {
             case 'share':
                 return ar.canShare();
             default:

@@ -1,6 +1,6 @@
 // @flow
 
-import type {Activity, ActivityType, Id, Item, Lineup, RNNNavigator, SearchToken, User} from "../types";
+import type {Activity, ActivityType, Dispatchee, Id, Item, Lineup, RNNNavigator, SearchToken, User} from "../types";
 import {fullName} from "../helpers/StringUtils";
 import StoreManager from "../managers/StoreManager";
 import i18n from '../i18n/i18n';
@@ -17,7 +17,7 @@ import React from "react";
 import LineupHorizontal from "./components/LineupHorizontal";
 import LineupCellSaving from "./components/LineupCellSaving";
 import {deleteLineup, followLineup as followLineupAction, unfollowLineup as unfollowLineupAction} from "./lineup/actions";
-import {GAction, L_DELETE, L_FOLLOW, L_RENAME, L_SHARE, L_UNFOLLOW} from "./rights";
+import {GAction, L_DELETE, L_FOLLOW, L_RENAME, L_SHARE, L_UNFOLLOW, LineupRights} from "./rights";
 import {isCurrentUser} from "../managers/CurrentUser";
 import {isFollowed} from "./activity/components/FollowButton";
 import {BACKGROUND_COLOR} from "./UIStyles";
@@ -219,7 +219,7 @@ export function displayShareItem(navigator: RNNNavigator, activity: Activity) {
     );
 }
 
-export function displayShareLineup(navigator: RNNNavigator, lineup: Lineup) {
+export function displayShareLineup({navigator, lineup}: LineupActionParams) {
     let userId = _.get(lineup, 'user.id');
     let lineupId = _.get(lineup, 'id');
     if (!userId || !lineupId) return; //TODO: error
@@ -309,14 +309,8 @@ export function displayChangeTitle(navigator: RNNNavigator, lineup: Lineup) {
     });
 }
 
-//TODO: restore destuctive button index
-type LineupMenuAction = {
-    action: GAction,
-    label: string,
-    handler: () => void,
-}
 
-function unfollowLineup(dispatch, lineup) {
+function unfollowLineup({dispatch, lineup}) {
     Alert.alert(
         i18n.t("follow.alert.title_unfollow"),
         i18n.t("friends.alert.label"),
@@ -334,7 +328,7 @@ function unfollowLineup(dispatch, lineup) {
     )
 }
 
-function followLineup(dispatch, lineup) {
+function followLineup({dispatch, lineup}) {
     followLineupAction(dispatch, lineup)
         .then(()=> {
                 _Messenger.sendMessage(i18n.t("follow.messages.followed"));
@@ -342,46 +336,45 @@ function followLineup(dispatch, lineup) {
         );
 }
 
+//TODO: restore destuctive button index
+type LineupMenuAction = {
+    label: string,
+    handler: LineupActionParams => void,
+}
+
+export type LineupActionParams = {
+    dispatch: any,
+    navigator: RNNNavigator,
+    lineup: Lineup
+}
+const MENU_ACTIONS = new Map([
+    [L_RENAME, {
+        label: i18n.t("actions.change_title"),
+        handler: displayChangeTitle
+    }],
+
+    [L_SHARE, {
+        label: i18n.t("actions.share_list"),
+        handler: displayShareLineup
+    }],
+    [L_DELETE, {
+        label: i18n.t("actions.delete"),
+        handler: deleteLineup
+    }],
+    [L_UNFOLLOW, {
+        label: i18n.t("actions.unfollow"),
+        handler: unfollowLineup
+    }],
+    [L_FOLLOW, {
+        label: i18n.t("actions.follow"),
+        handler: followLineup
+    }]
+])
+
 export function displayLineupActionMenu(navigator: RNNNavigator, dispatch: any, lineup: Lineup) {
 
     //TODO: right manager
-    let actions : LineupMenuAction[]
-
-    if (isCurrentUser(lineup.user)) {
-        actions = [
-            {
-                action: L_RENAME,
-                label: i18n.t("actions.change_title"),
-                handler: () => displayChangeTitle(navigator, lineup)
-            },
-            {
-                action: L_SHARE,
-                label: i18n.t("actions.share_list"),
-                handler: () => displayShareLineup(navigator, lineup)
-            },
-            {
-                action: L_DELETE,
-                label: i18n.t("actions.delete"),
-                handler: () => deleteLineup(dispatch, lineup)
-            },
-
-        ]
-    }
-    else {
-        actions = [
-            isFollowed(lineup)?
-                {
-                    action: L_UNFOLLOW,
-                    label: i18n.t("actions.unfollow"),
-                    handler: () => unfollowLineup(dispatch, lineup)
-                }
-                : {
-                    action: L_FOLLOW,
-                    label: i18n.t("actions.follow"),
-                    handler: () => followLineup(dispatch, lineup)
-                }
-        ]
-    }
+    let actions : LineupMenuAction[] = LineupRights.getActions(lineup).map(a => MENU_ACTIONS.get(a))
 
     BottomSheet.showBottomSheetWithOptions({
             options: [
@@ -395,7 +388,7 @@ export function displayLineupActionMenu(navigator: RNNNavigator, dispatch: any, 
         }, (value) => {
             const lineupMenuAction = actions[value];
             if (lineupMenuAction) {
-                lineupMenuAction.handler()
+                lineupMenuAction.handler({navigator, dispatch, lineup})
             }
         }
     );
