@@ -392,5 +392,18 @@ export default {
     errors: {
         unavailable: 'Le contenu n\'est pas disponible',
         generic: "Oups... Il y a quelquechose qui cloche"
+    },
+    form: {
+        label: {
+            last_name: 'Nom',
+            first_name: 'Prénom'
+        },
+        warning: {
+            fill_all_fields: 'Veuillez remplir tous les champs',
+
+        },
+        description: {
+            user_name: 'Veuillez indiquer vos noms et prénoms'
+        }
     }
 };
