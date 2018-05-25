@@ -1,13 +1,12 @@
 // @flow
 import React, {Component} from 'react';
 import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {currentUser, logged} from "../../managers/CurrentUser";
+import {currentUser, currentUserId, logged} from "../../managers/CurrentUser";
 import {Navigation} from 'react-native-navigation';
 import GTouchable from "../GTouchable";
-import GImage from './GImage';
 import {connect} from "react-redux";
 import {currentUserFilter} from "../../redux/selectors";
-import type {Id, User} from "../../types";
+import type {Id} from "../../types";
 import {Avatar} from "../UIComponents"
 
 
@@ -22,7 +21,7 @@ export const PROFILE_CLICKED = 'PROFILE_NAV_CLICKED';
 
 @logged
 @connect((state, props)=>({
-    currentUser: currentUserFilter(state, props)
+    currentUser: currentUserFilter(state, {userId: currentUserId()})
 }))
 export default class MyAvatar extends Component<Props, State> {
 

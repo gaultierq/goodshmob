@@ -67,6 +67,25 @@ export default class HomeScreen extends Screen<Props, State> {
     };
 
 
+    static navigatorButtons = {
+
+        //'component' doesnt work on android :/
+        leftButtons: [
+            __IS_IOS__ ?
+                {
+                    id: 'profile',
+                    component: 'goodsh.MyAvatar'
+                }:
+                {
+                    icon: require('../../img/goodshersHeaderProfileIcon.png'),
+                    id: 'profile',
+                }
+        ],
+        rightButtons: [
+        ],
+    }
+
+
     state = {
         focusedSaving: false,
         isActionButtonVisible: true,
@@ -149,27 +168,6 @@ export default class HomeScreen extends Screen<Props, State> {
     render() {
 
         this.setNavigatorTitle(this.props.navigator, {title: fullName2(_.get(this.props, 'currentUser.attributes'))})
-
-        this.props.navigator.setButtons({
-
-            //'component' doesnt work on android :/
-            leftButtons: [
-                __IS_IOS__ ?
-                    {
-                        id: 'profile',
-                        component: 'goodsh.MyAvatar',
-                        passProps: {
-                            userId: currentUserId()
-                        }
-                    }:
-                    {
-                        icon: require('../../img/goodshersHeaderProfileIcon.png'),
-                        id: 'profile',
-                    }
-            ],
-            rightButtons: [
-            ],
-        })
 
         return (
             <View style={{flex:1}}>
