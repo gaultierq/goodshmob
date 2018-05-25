@@ -229,6 +229,7 @@ export default class AddItemScreen extends Screen<Props, State> {
                 description,
             }, {
                 scope: {itemId: this.props.itemId, lineupId},
+                lineupId: lineupId,
                 delayMs: delayMs
             }
         )).then(pendingId => {

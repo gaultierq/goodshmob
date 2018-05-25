@@ -227,6 +227,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                 description,
             }, {
                 scope: {itemId: item.id, lineupId},
+                lineupId: lineupId,
                 delayMs: delayMs
             }
         )).then(pendingId => {
