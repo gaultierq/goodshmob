@@ -236,7 +236,7 @@ export default class Feed extends Component<Props, State>  {
 
             items = filter.applyFilter(items);
             if (_.isEmpty(items)) {
-                return filter.emptyFilterResult(this.state.filter)
+                return filter.emptyFilterResult(filter.token)
             }
         }
 

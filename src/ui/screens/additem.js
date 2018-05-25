@@ -4,7 +4,10 @@ import {ActivityIndicator, ScrollView, StyleSheet, Text, TextInput, TouchableOpa
 import {CheckBox, SearchBar} from "react-native-elements";
 import {renderSimpleButton, STYLES} from "../UIStyles";
 import type {Id, Item, ItemType} from "../../types";
-import {fetchItemCall, saveItem} from "../lineup/actions";
+import {
+    SAVE_ITEM_PRENDING, fetchItemCall, saveItem,
+    CREATE_SAVING
+} from "../lineup/actions";
 import {logged} from "../../managers/CurrentUser";
 import {connect} from "react-redux";
 import {buildData, buildNonNullData} from "../../helpers/DataUtils";
@@ -43,7 +46,6 @@ type State = {
     reqAdd?: number,
     reqFetch?: number,
     selectedLineupId?: Id,
-    adding?: boolean
 };
 
 
@@ -69,7 +71,6 @@ export default class AddItemScreen extends Screen<Props, State> {
 
         this.state = {
             visibility: 0,
-            adding: false,
             selectedLineupId: props.defaultLineupId,
             showLineupList: !props.defaultLineupId,
             description: props.defaultDescription
@@ -108,7 +109,6 @@ export default class AddItemScreen extends Screen<Props, State> {
         let grey = Colors.greyishBrown;
         let req = this.state.reqAdd;
         let editable = req !== 1;
-        let adding = this.state.adding;
         let xml = (<View style={[styles.container]}>
             <Text>{i18n.t('create_list_controller.all_list')}</Text>
         </View>);
@@ -166,7 +166,7 @@ export default class AddItemScreen extends Screen<Props, State> {
                         {renderSimpleButton(
                             i18n.t('shared.add'),
                             ()=>this._doAdd(selectedLineupId),
-                            {disabled: !selectedLineupId, loading: adding, style: styles.lineupSelector, textStyle:styles.lineupSelectorText}
+                            {disabled: !selectedLineupId, style: styles.lineupSelector, textStyle:styles.lineupSelectorText}
                         )}
                     </View>
                 </Sheet>
@@ -217,23 +217,58 @@ export default class AddItemScreen extends Screen<Props, State> {
 
     _doAdd = (lineupId: Id) => {
 
-        this.setState({adding: true});
-
         let {description, visibility} = this.state;
 
-        safeDispatchAction.call(
-            this,
-            this.props.dispatch,
-            saveItem(this.props.itemId, lineupId, visibility, description),
-            'reqAdd'
-        ).then(()=> {
-                _Messenger.sendMessage(i18n.t('shared.goodsh_saved'));
+        const delayMs = 4000;
 
-                let onAdded = this.props.onAdded;
-                onAdded && onAdded();
-                this.setState({adding: false});
+        this.props.dispatch(CREATE_SAVING.pending({
+                itemId: this.props.itemId,
+                itemType: this.props.itemType,
+                lineupId,
+                privacy: visibility,
+                description,
+            }, {
+                scope: {itemId: this.props.itemId, lineupId},
+                delayMs: delayMs
             }
-        ).then(() => this.setState({selectedLineupId: null}))
+        )).then(pendingId => {
+
+            let onAdded = this.props.onAdded;
+            onAdded && onAdded();
+
+            _Messenger.sendMessage(
+                //MagicString
+                i18n.t("shared.goodsh_saved"),
+                {
+                    timeout: delayMs,
+                    action: {
+                        title: i18n.t('activity_action_bar.goodsh_bookmarked_change_lineup'),
+                        onPress: () => {
+                            //undo previous add
+                            console.info(`changing lineup: undo-ing pending=${pendingId}`);
+                            this.props.dispatch(CREATE_SAVING.undo(pendingId));
+
+                            let cancel = () => {
+                                this.props.navigator.dismissModal()
+                            };
+                            this.props.navigator.showModal({
+                                screen: 'goodsh.AddItemScreen',
+                                title: i18n.t("add_item_screen.title"),
+                                animationType: 'none',
+                                passProps: {
+                                    itemId: this.props.itemId,
+                                    itemType: this.props.itemType,
+                                    defaultLineupId: lineupId,
+                                    defaultDescription: description,
+                                    onCancel: cancel,
+                                    onAdded: cancel,
+                                },
+                            });
+
+                        },
+                    }}
+            );
+        });
     }
 }
 
