@@ -51,10 +51,7 @@ export class Avatar extends Component<Props, State> {
         size: 40
     }
 
-    logger = logger.createLogger({group: 'Avatar'})
-
     render() {
-        this.logger.log("render")
         const {user, style, size, ...attributes} = this.props;
 
         let uri = user && user.image
@@ -71,11 +68,6 @@ export class Avatar extends Component<Props, State> {
             }, style]}
             {...attributes}
         />)
-    }
-
-    shouldComponentUpdate(nextProps: Props, nextState: State) {
-        this.logger.log("shouldComponentUpdate")
-        return super.shouldComponentUpdate(nextProps, nextState)
     }
 }
 
