@@ -6,6 +6,8 @@ import {isActivityType, sanitizeActivityType} from "../helpers/DataUtils";
 import * as Nav from "../ui/Nav";
 import URL from "url-parse"
 import Config from 'react-native-config';
+import {displayLineupActionMenu} from "../ui/Nav";
+import {getLineup} from "../helpers/DataAccessors";
 
 // export const DEEPLINK_OPEN_SCREEN_IN_MODAL = 'DEEPLINK_OPEN_SCREEN_IN_MODAL';
 
@@ -35,11 +37,12 @@ class _NavManager implements NavManager {
         return "Messenger-" + this.id;
     }
 
-    goToDeeplink(deeplink: Deeplink) {
+    //options is a quick fix
+    goToDeeplink(deeplink: Deeplink, options?: any) {
         console.info('goToDeeplink: ' + deeplink);
         if (!deeplink) return false;
 
-        let url = new URL(deeplink);
+        let url = new URL(deeplink, "", true);
         //gds://goodsh.io/lineup/15
         let pathname = url.pathname;
         if (!pathname) return false;
@@ -53,6 +56,13 @@ class _NavManager implements NavManager {
             let id = _.nth(parts, 2);
             if (!isId(id)) return false;
 
+            if (url.query && url.query.origin === 'long_press') {
+                if (options) {
+                    let {dispatch, navigator} = options
+                    getLineup(id).then(lineup => displayLineupActionMenu(navigator, dispatch, lineup))
+                }
+                return
+            }
             this.showModal({
                 screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
                 passProps: {

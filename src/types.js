@@ -176,8 +176,8 @@ export type Position = {
 
 }
 
-
-export type Dispatchee = any;
+export interface Dispatchee {
+}
 
 export type Color = string
 

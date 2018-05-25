@@ -253,9 +253,7 @@ export class Call {
 
     addQuery(query: any): Call {
         if (query) {
-            let currentQuery = this.url.query;
-            let q = currentQuery;//qs.parse(currentQuery);
-            let newQuery = Object.assign({}, q || {}, query);
+            let newQuery = Object.assign({}, this.url.query || {}, query);
             this.url.set('query', newQuery);
         }
         return this;

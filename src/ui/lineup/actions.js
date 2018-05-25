@@ -2,7 +2,7 @@
 
 import * as Api from "../../managers/Api";
 import {Call} from "../../managers/Api";
-import type {Id, ItemType, List, ms} from "../../types";
+import type {Dispatchee, Id, ItemType, List, ms} from "../../types";
 import {CREATE_LINEUP, DELETE_LINEUP, EDIT_LINEUP, SAVE_ITEM} from "./actionTypes";
 import type {PendingAction} from "../../helpers/ModelUtils";
 import {pendingActionWrapper} from "../../helpers/ModelUtils";
@@ -156,3 +156,10 @@ export function unfollowLineup(dispatch: any, lineup: List) {
 }
 
 
+export function fetchLineup(lineupId: string): Call {
+    return new Api.Call().withMethod('GET')
+        .withRoute(`lists/${lineupId}`)
+        .addQuery({
+            include: "savings,savings.user"
+        });
+}

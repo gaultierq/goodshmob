@@ -1,19 +1,20 @@
 // @flow
 import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, Linking, StyleSheet, Text, View} from 'react-native';
 import {Colors} from "../../colors";
 import {stylePadding} from "../../UIStyles";
 import type {Activity, Lineup, RNNNavigator, User} from "../../../types";
 import {ViewStyle} from "../../../types";
 import Octicons from "react-native-vector-icons/Octicons";
-import {seeComments, seeUser} from "../../Nav";
+import {seeUser} from "../../Nav";
 import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "../../fonts";
 import GTouchable from "../../GTouchable";
 import {isAsking, isSaving, isSending, timeSinceActivity} from "../../../helpers/DataUtils";
 import {fullName, savingCount} from "../../../helpers/StringUtils";
 import {Avatar} from "../../UIComponents";
 import HTMLView from "react-native-htmlview/HTMLView";
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import URL from "url-parse"
+import NavManager from "../../../managers/NavManager";
 
 type Props = {
     activity: Activity,
@@ -111,17 +112,41 @@ export default class ActivityStatus extends React.Component<Props, State> {
         let target = activity.target;
 
         const user = activity.user;
-        let textNode = <HTMLView
-            // renderNode={renderNode}
-            value={`<div>${i18n.t("activity_item.header.in",
-                {
-                    adder: this.getUserHtml(user),
-                    lineup: this.getLineupHtml(target),
-                    what: this.getItemHtml(activity)
+        let textNode = (
+            <HTMLView
+                // renderNode={renderNode}
+                onLinkLongPress={pressed => {
+                    let url: URL
+                    try {
+                        url = new URL(pressed)
+                        const q = url.query;
+                        url.set('query', {... (q || {}), origin: 'long_press'})
+                    }
+                    catch (e) {
+                        console.log("failed to parse url", e)
+                    }
+                    if (url) {
+                        //this doesnt quite work as we need {navigator, dispatch}
+                        //follow: https://github.com/wix/react-native-navigation/issues/3260
+
+                        //Linking.openURL(url.toString())
+                        const {navigator, dispatch} = this.props
+                        NavManager.goToDeeplink(url, {navigator, dispatch})
+
+                    }
+
                 }
-            )}</div>`}
-            stylesheet={htmlStyles}
-        />
+                }
+                value={`<div>${i18n.t("activity_item.header.in",
+                    {
+                        adder: this.getUserHtml(user),
+                        lineup: this.getLineupHtml(target),
+                        what: this.getItemHtml(activity)
+                    }
+                )}</div>`}
+                stylesheet={htmlStyles}
+            />
+        )
 
         return {
             textNode,

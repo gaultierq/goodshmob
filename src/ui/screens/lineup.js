@@ -15,12 +15,11 @@ import ActionButton from 'react-native-action-button';
 import {startAddItem} from "../Nav";
 import {Colors} from "../colors";
 import Screen from "./../components/Screen";
-import {LINEUP_PADDING, renderSimpleButton, STYLES, TEXT_LESS_IMPORTANT} from "../UIStyles";
-import {fullName} from "../../helpers/StringUtils";
-import {FETCH_LINEUP, FETCH_SAVINGS} from "../lineup/actions";
-import {UNSAVE} from "../activity/actionTypes";
 import * as UI from "../UIStyles";
-import GTouchable from "../GTouchable";
+import {LINEUP_PADDING, STYLES, TEXT_LESS_IMPORTANT} from "../UIStyles";
+import {fullName} from "../../helpers/StringUtils";
+import {FETCH_LINEUP, FETCH_SAVINGS, fetchLineup} from "../lineup/actions";
+import {UNSAVE} from "../activity/actionTypes";
 import * as authActions from "../../auth/actions";
 import FollowButton from "../activity/components/FollowButton";
 import * as TimeUtils from "../../helpers/TimeUtils";
@@ -88,7 +87,7 @@ class LineupScreen extends Screen<Props, State> {
         else {
             savings = [];
             fetchSrc = {
-                callFactory:()=>actions.fetchLineup(this.props.lineupId),
+                callFactory:() => fetchLineup(this.props.lineupId),
                 action: FETCH_LINEUP,
                 options: {listId: this.props.lineupId}
             };
@@ -198,13 +197,6 @@ class LineupScreen extends Screen<Props, State> {
 
 const actions = {
 
-    fetchLineup: (lineupId: string) => {
-        return new Api.Call().withMethod('GET')
-            .withRoute(`lists/${lineupId}`)
-            .addQuery({
-                include: "savings,savings.user"
-            });
-    },
     fetchSavings: (lineupId: string) => {
         return new Api.Call().withMethod('GET')
             .withRoute(`lists/${lineupId}/savings`)

@@ -373,7 +373,6 @@ const MENU_ACTIONS = new Map([
 
 export function displayLineupActionMenu(navigator: RNNNavigator, dispatch: any, lineup: Lineup) {
 
-    //TODO: right manager
     let actions : LineupMenuAction[] = LineupRights.getActions(lineup).map(a => MENU_ACTIONS.get(a))
 
     BottomSheet.showBottomSheetWithOptions({
