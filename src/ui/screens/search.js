@@ -142,7 +142,7 @@ export default class SearchScreen extends Component<Props, State> {
         if (props.token) {
             const token = props.token;
             //weak
-            this.state.input = token;
+            this.state.input = token
 
             setTimeout(()=> {
                 this.tryPerformSearch(token, 0);
