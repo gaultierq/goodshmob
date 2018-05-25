@@ -39,26 +39,6 @@ export const LINEUP_DELETION: PendingAction<LINEUP_DELETION_PAYLOAD>  = pendingA
         .withRoute(`lists/${payload.lineupId}`)
 );
 
-export function saveItem(itemId: Id, lineupId: Id, privacy = 0, description = '') {
-
-    let body = {
-        saving: { list_id: lineupId, privacy, description}
-    };
-    if (description) {
-        Object.assign(body.saving, {description});
-    }
-    console.log("saving item, with body:");
-    console.log(body);
-
-    let call = new Api.Call()
-        .withMethod('POST')
-        .withRoute(`items/${itemId}/savings`)
-        .withBody(body)
-        .addQuery({'include': '*.*'});
-
-    return call.createActionDispatchee(SAVE_ITEM, {lineupId});
-}
-
 //save
 // export function bookmarkDispatchee(payload: SAVING_CREATION_PAYLOAD) {
 //
