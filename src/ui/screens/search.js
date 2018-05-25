@@ -68,14 +68,14 @@ export type SearchEngine = {
             token: SearchToken,
             category: SearchCategoryType,
             page: number,
-            searchOptions: ?any
+            searchOptions?:any
 
         ) => Promise<SearchResult>,
     canSearch: (
         token: SearchToken,
         category: SearchCategoryType,
         trigger: SearchTrigger,
-        searchOptions: ?any
+        searchOptions?:any
     ) => boolean
 
 };
@@ -105,8 +105,8 @@ export type Props = {
     categories: Array<SearchCategory>,
     navigator: *,
     searchEngine: SearchEngine,
-    token?: ?SearchToken,
-    style?: ? *,
+    token?:SearchToken,
+    style?: *,
     index: number,
 };
 

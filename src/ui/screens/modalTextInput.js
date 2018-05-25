@@ -26,7 +26,7 @@ import type {RequestState} from "../../types";
 
 type Props = {
     initialText: string,
-    title?: ?string,
+    title?:string,
     navigator: any,
     containerStyle?:? any,
     height: number,

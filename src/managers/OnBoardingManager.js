@@ -116,7 +116,7 @@ class _OnBoardingManager implements OnBoardingManager {
         this.store.dispatch({type: NEXT_STEP, lastShown: Date.now()});
     }
 
-    listenToStepChange(options: {callback: (step?: ?OnBoardingStep) => void, triggerOnListen: ?boolean}) {
+    listenToStepChange(options: {callback: (step?:OnBoardingStep) => void, triggerOnListen?:boolean}) {
         const {callback, triggerOnListen} = options;
 
         let triggering;
@@ -150,7 +150,7 @@ export interface OnBoardingManager {
 
     onDisplayed(step: OnBoardingStep): void;
 
-    listenToStepChange(options: {callback: (step?: ?OnBoardingStep) => void, triggerOnListen: ?boolean}): void;
+    listenToStepChange(options: {callback: (step?:OnBoardingStep) => void, triggerOnListen?:boolean}): void;
 
 }
 

@@ -80,7 +80,7 @@ export function logged(target) {
     return Scope(target);
 }
 
-export function listenToUserChange(options: {onUser?: ?(user: User) => void, onNoUser?: ?() => void, triggerOnListen: ?boolean}) {
+export function listenToUserChange(options: {onUser?:(user: User) => void, onNoUser?:() => void, triggerOnListen?:boolean}) {
     const {onUser, onNoUser, triggerOnListen} = options;
 
 

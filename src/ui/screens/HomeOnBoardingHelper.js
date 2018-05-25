@@ -30,7 +30,7 @@ export class HomeOnBoardingHelper {
 
     appTourTargets = new Map();
 
-    focusAddJob: ?number;
+    focusAddJob: ?number
 
     registerTapTarget(ref: any, primaryText: string, secondaryText: string) {
 
@@ -89,7 +89,7 @@ export class HomeOnBoardingHelper {
         //if a new onBoarding step is broadcasted, then display it
         OnBoardingManager.listenToStepChange({
             triggerOnListen: true,
-            callback: (step?: ?OnBoardingStep) => {
+            callback: (step?:OnBoardingStep) => {
                 let newTip = null;
                 switch (step) {
                     case 'privacy':

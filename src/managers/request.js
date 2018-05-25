@@ -47,7 +47,7 @@ export class RequestManager {
     }
 
     //setState, and register tracker
-    notify(tracker: RequestManagerTracker, status: string, options?: ?*) {
+    notify(tracker: RequestManagerTracker, status: string, options?:*) {
         let caller = this.actions.get(tracker);
         if (!caller) throw "no caller found";
         const action: string = tracker.getAction();
@@ -79,7 +79,7 @@ export class RequestManagerTracker {
         this.manager.notify(this, 'ko')
     }
 
-    success(options?: ?*) {
+    success(options?:*) {
         this.manager.notify(this, 'ok', options)
     }
 

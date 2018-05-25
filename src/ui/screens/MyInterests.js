@@ -69,7 +69,7 @@ export default class MyInterests extends Screen<Props, State> {
         return (
             <GoodshContext.Provider value={{userOwnResources: false}}>
                 <Feed
-                    listRef={ref=>ref} //otherwise flow problem???
+                    listRef={ref=>ref} //otherwise flow problem??
                     displayName={"MyInterests"}
                     data={followed}
                     renderSectionHeader={({section}) => section.renderSectionHeader()}

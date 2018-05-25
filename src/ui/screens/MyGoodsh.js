@@ -45,7 +45,7 @@ type Props = {
 type State = {
     isActionButtonVisible?: boolean,
     filterFocused?: boolean,
-    currentTip?: ?TipConfig
+    currentTip?:TipConfig
 };
 
 

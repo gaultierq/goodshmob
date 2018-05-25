@@ -17,7 +17,7 @@ import type {RNNNavigator} from "../../types";
 
 type Props = {
     navigator: RNNNavigator,
-    disableOffline?: ?boolean,
+    disableOffline?:boolean,
     onListCreated?: ()=>void,
     style?: *,
     styleText?: *,

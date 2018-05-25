@@ -149,7 +149,7 @@ export default class ActivityCell extends React.Component<Props, State> {
         )
     }
 
-    // renderUserGeneral(user: User, user2?: User, style?: ?*) {
+    // renderUserGeneral(user: User, user2?: User, style?:*) {
     //     let navigator: RNNNavigator = this.props.navigator;
     //     // let result = this.wrapUserAvatar(
     //     return this.wrapUserAvatar(

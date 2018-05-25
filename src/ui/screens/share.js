@@ -13,6 +13,8 @@ import * as Nav from "../Nav";
 import {Colors} from "../colors";
 import GTouchable from "../GTouchable";
 import Sheet from "../components/sheet";
+import type { MapStateToProps } from "react-redux"
+
 
 type Props = {
     navigator: any,
@@ -22,10 +24,10 @@ type Props = {
     renderSharedObject: ()=>Node,
 
     //return the url to copy
-    urlForClipboard: ? () => Url,
+    urlForClipboard?: () => Url,
 
     //for send screen
-    sendAction: ?(friend: User, description?: string) => Dispatchee,
+    sendAction?:(friend: User, description?: string) => Dispatchee,
 
     //return the intent for the share
     createShareIntent:? () => {content: any, options: any},
@@ -34,11 +36,9 @@ type Props = {
 type State = {
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps: MapStateToProps<*, *, *> = state => ({
     data: state.data,
-});
-
-
+})
 @logged
 @connect(mapStateToProps)
 class ShareScreen extends Component<Props, State> {

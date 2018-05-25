@@ -21,11 +21,11 @@ type Props = {
     activity: Activity,
     navigator: RNNNavigator,
     skipLineup?: boolean,
-    style?: ?*,
+    style?:*,
     cardStyle?: ViewStyle,
-    descriptionContainerStyle?: ?*,
+    descriptionContainerStyle?:*,
     descriptionStyle?: ViewStyle,
-    children?: ?Node,
+    children?:Node,
     descriptionNumberOfLines?: number
 };
 

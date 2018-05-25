@@ -21,7 +21,7 @@ import type {RNNNavigator} from "../../types";
 
 
 export type SearchPlacesProps = {
-    aroundMe: ?boolean,
+    aroundMe?:boolean,
     onNewOptions: any => void,
     onSearchSubmited: void => void,
     navigator: RNNNavigator

@@ -25,8 +25,8 @@ type Props = LineupProps & {
 };
 
 type State = {
-    reqFetch?: ?RequestState,
-    reqMove?: ?RequestState,
+    reqFetch?:RequestState,
+    reqMove?:RequestState,
     // filter:? string,  //filter lists over this search token
 };
 

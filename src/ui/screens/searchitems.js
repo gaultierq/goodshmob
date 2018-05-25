@@ -122,7 +122,7 @@ class SearchItem extends Screen<Props, State> {
 
         const searchEngine: SearchEngine = {
             search: this.search.bind(this),
-            canSearch: (token: SearchToken, category: SearchCategoryType, trigger: SearchTrigger, searchOptions: ?any) => {
+            canSearch: (token: SearchToken, category: SearchCategoryType, trigger: SearchTrigger, searchOptions?:any) => {
                 //if search places, do not auto search if tab change
                 if (category === 'places' && searchOptions && (searchOptions.aroundMe || searchOptions.place)) {
                     if (searchOptions) {
@@ -192,7 +192,7 @@ class SearchItem extends Screen<Props, State> {
 
     }
 
-    search(token: SearchToken, category: SearchCategoryType, page: number, options: ?any): Promise<*> {
+    search(token: SearchToken, category: SearchCategoryType, page: number, options?:any): Promise<*> {
 
         //searching
         console.debug(`api: searching: token='${token}', category='${category}', page=${page}, options=`, options);

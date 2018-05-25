@@ -41,7 +41,7 @@ type Props = LineupListProps & {
 type State = {
     newLineupTitle?: string,
     newLineupPrivacy?: Visibility,
-    filter?: ?string
+    filter?:string
 };
 
 export default class UserLineups extends Screen<Props, State> {

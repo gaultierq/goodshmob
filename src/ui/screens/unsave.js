@@ -8,12 +8,11 @@ import {buildData} from "../../helpers/DataUtils";
 import {connect} from "react-redux";
 import {renderSimpleButton} from "../UIStyles";
 import * as Api from "../../managers/Api";
-import {fetchActivity} from "../activity/actions";
 import {Colors} from "../colors"
 import {doUnsave, fetchItemCall} from "../lineup/actions";
 import {FETCH_ITEM} from "../lineup/actionTypes";
 import StoreManager from "../../managers/StoreManager";
-
+import {fetchActivity} from "../activity/actions";
 type Props = {
     itemId: Id,
     itemType: ItemType,
@@ -86,6 +85,8 @@ type Props2 = {
 @connect(state => ({
     data: state.data,
     pending: state.pending
+}), dispatch => ({
+    fetchActivity: (id, type, options) => dispatch(fetchActivity(id, type, options))
 }))
 class UnsaveSavingCell extends Component<Props2, State2> {
 
@@ -98,10 +99,9 @@ class UnsaveSavingCell extends Component<Props2, State2> {
     componentDidMount() {
         const saving = this.props.saving;
         if (!saving.pending && !this.getLineupBySavingId(saving.id)) {
-            Api.safeDispatchAction.call(
+            Api.safeExecBlock.call(
                 this,
-                this.props.dispatch,
-                fetchActivity(saving.id, 'savings', {include: 'target'}),
+                () => this.props.fetchActivity(saving.id, 'savings', {include: 'target'}),
                 'fetch'
             )
         }

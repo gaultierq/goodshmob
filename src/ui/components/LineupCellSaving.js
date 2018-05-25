@@ -10,7 +10,7 @@ import GImage from './GImage';
 
 type Props = {
     item: Item,
-    style?: ?*,
+    style?:*,
 };
 
 type State = {

@@ -43,7 +43,7 @@ type Props = {
     renderMenuButton?: () => Node,
     skipLineupTitle?: boolean,
     onPressEmptyLineup?: () => void,
-    onSavingPressed?: ?(navigator: RNNNavigator, saving: Saving) => void,
+    onSavingPressed?:(navigator: RNNNavigator, saving: Saving) => void,
     renderSaving?: (saving:Saving) => Node,
     renderTitle: (lineup: Lineup) => Node,
     style?: ViewStyle,

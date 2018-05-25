@@ -7,7 +7,7 @@ import {Colors} from "../../colors";
 
 type Props = {
     vMargin?: number,
-    style?: ?*
+    style?:*
 };
 
 type State = {

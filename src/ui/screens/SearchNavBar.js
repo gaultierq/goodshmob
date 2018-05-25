@@ -16,7 +16,7 @@ import GSearchBar from "../GSearchBar";
 
 type NavProps = {
     onChangeText: (token: string) => void,
-    initialInput?: ?SearchToken,
+    initialInput?:SearchToken,
     placeholder?: string,
     navigator: any
 };

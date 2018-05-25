@@ -18,7 +18,7 @@ import ModalTextInput from "./modalTextInput";
 import {sendMessage} from "../../managers/Messenger";
 
 type Props = {
-    disableOffline?: ?boolean,
+    disableOffline?:boolean,
     onFinished?:?()=>void,
 
     initialLineupName: string,

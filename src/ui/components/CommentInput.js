@@ -13,7 +13,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import type {PendingAction} from "../../helpers/ModelUtils";
 import {pendingActionWrapper} from "../../helpers/ModelUtils";
 import {connect} from "react-redux";
-
+import type { MapStateToProps } from "react-redux"
 
 export const CREATE_COMMENT = ApiAction.create("create_comment", "add a comment");
 

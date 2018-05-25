@@ -272,7 +272,7 @@ export default class App {
     onAppReady() {
         OnBoardingManager.listenToStepChange({
             triggerOnListen: true,
-            callback: (step?: ?OnBoardingStep) => {
+            callback: (step?:OnBoardingStep) => {
                 if (step === 'notification') {
                     if (isLogged()) {
                         let callback = () => {
@@ -290,7 +290,7 @@ export default class App {
 
     registerScreens() {
         //delayed import.
-        // => Why ?? for perfs ? :D
+        // => Why ? for perfs ? :D
         let registerScreens = require('./ui/allScreens').default;
         registerScreens(this.store, Provider);
 

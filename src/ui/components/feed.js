@@ -37,7 +37,7 @@ import type {GLoggerLevel} from "../../../flow-typed/goodshmob";
 
 export type FeedSource = {
     callFactory: ()=>Api.Call,
-    useLinks?: ?boolean,
+    useLinks?:boolean,
     action: ApiAction,
     options?: any
 }
@@ -52,19 +52,18 @@ export type Props = {
     ListFooterComponent?: Node,
     empty: Node,
     style?: ViewStyle,
-    scrollUpOnBack?: ?() => ?boolean,
+    scrollUpOnBack?:() => ?boolean,
     visibility?: ScreenVisibility,
-    filter?: ?FilterConfig<any>,
+    filter?:FilterConfig<any>,
     displayName?: string,
-    doNotDisplayFetchMoreLoader: ?boolean,
-    listRef ?: ?(any => void | string),
+    doNotDisplayFetchMoreLoader?:boolean,
+    listRef ?:(any => void | string),
     doNotDisplayFetchMoreLoader?: boolean,
     decorateLoadMoreCall?: (last: any, call: Call) => Call,
 };
 
 export type FilterConfig<T> = {
     placeholder: i18Key,
-    renderFilter: () => Node,
     emptyFilterResult: string => Node,
     style: *,
     applyFilter: (Array<T>) => Array<T>

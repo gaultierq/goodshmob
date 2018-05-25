@@ -10,7 +10,7 @@ import NavManager from "../../managers/NavManager";
 type Props = {
     title: string,
     body?: string,
-    deeplink: ?Deeplink
+    deeplink?:Deeplink
 };
 
 type State = {

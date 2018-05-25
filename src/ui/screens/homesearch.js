@@ -26,7 +26,7 @@ import {renderLineupFromOtherPeople} from "./networksearch";
 import SearchPage from "./SearchPage";
 
 type Props = NavigableProps & {
-    token?: ?SearchToken,
+    token?:SearchToken,
     userId: Id
 };
 

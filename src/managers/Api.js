@@ -423,8 +423,8 @@ export class Call {
         return conf && conf.getFail(action);
     }
 
-    debugFailObtained: boolean = false;
-    debugfailConfig: ?DebugFailConfig;
+    debugFailObtained: boolean = false
+    debugfailConfig: ?DebugFailConfig
 
     obtainDebugFailConfig(): ?DebugFailConfig {
         if (!this.debugFailObtained) {
