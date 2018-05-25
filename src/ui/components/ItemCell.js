@@ -5,7 +5,7 @@ import {Button, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 
 import * as UI from "../UIStyles";
 import type {Item} from "../../types";
 import {Colors} from "../colors";
-import {CachedImage} from "react-native-img-cache";
+import GImage from './GImage';
 
 
 type Props = {
@@ -32,7 +32,7 @@ export default class ItemCell extends React.Component<Props, State> {
                 <View style={styles.containerInner}>
                     <View style={[styles.image, UI.STYLES.lightBorder, {backgroundColor: Colors.dirtyWhite}]}>
                         {
-                            image && <CachedImage
+                            image && <GImage
                                 source={{uri: image}}
                                 resizeMode='cover'
                                 style={[styles.image, UI.STYLES.lightBorder]}/>

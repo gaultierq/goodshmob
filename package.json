@@ -52,6 +52,7 @@
 		"react-native-action-button": "github:gaultierq/react-native-action-button",
 		"react-native-app-settings": "^2.0.0",
 		"react-native-bottomsheet": "^1.8.1",
+		"react-native-cached-image": "^1.4.3",
 		"react-native-config": "^0.9.1",
 		"react-native-device-info": "^0.21.5",
 		"react-native-easy-grid": "^0.1.17",
