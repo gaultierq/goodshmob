@@ -127,6 +127,12 @@ export default class ActivityBody extends React.Component<Props, State> {
         let resource = activity.resource;
         let images = resource ? resource.images : undefined;
 
+        // When resource is a book, to show cover first
+        if (images && resource.provider === 'Amazon') {
+            images.unshift(resource.image)
+            images = _.uniq(images)
+        }
+
         // For when resource is a Spotify song
         if (images && images.length === 0) {
             images = [resource.image]
