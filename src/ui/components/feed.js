@@ -217,7 +217,6 @@ export default class Feed extends Component<Props, State>  {
 
         let items = this.getItems();
 
-
         // rendering rules
         // 1. if has some items to display, display them
         if (!this.hasItems()) {

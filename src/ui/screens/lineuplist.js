@@ -23,7 +23,11 @@ import type {Props as FeedProps} from "../components/feed";
 import Feed from "../components/feed";
 import {buildData, doDataMergeInState} from "../../helpers/DataUtils";
 import {CREATE_LINEUP, DELETE_LINEUP} from "../lineup/actionTypes";
-import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
+import {UNFOLLOW_LINEUP, FOLLOW_LINEUP} from "../lineup/actions";
+import {
+    mergeItemsAndPendings, includePendingFollow,
+    includePendingFollowItems
+} from "../../helpers/ModelUtils";
 import Screen from "../components/Screen";
 import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
 import {GoodshContext} from "../UIComponents"
@@ -105,6 +109,10 @@ export class LineupListScreen extends Screen<Props, State> {
             }),
             {afterI: 0}
         );
+
+        items = includePendingFollowItems(items,
+            this.props.pending[FOLLOW_LINEUP],
+            this.props.pending[UNFOLLOW_LINEUP])
 
         return (
             <GoodshContext.Provider value={{userOwnResources: isCurrentUserId(userId)}}>

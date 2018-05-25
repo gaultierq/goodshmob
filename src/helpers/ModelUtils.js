@@ -513,3 +513,76 @@ export function mergeItemsAndPendings<T>(
     return items;
 }
 
+
+export function isItemPending(item: Object, pending: []) {
+
+    if (!pending) return false
+
+    let foundPendingItem = false
+
+    _.forEach(pending, (pendingItem) => {
+        if (item.id === pendingItem.payload.id) {
+            foundPendingItem = true
+            return false
+        }
+    })
+    return foundPendingItem
+}
+
+
+
+export function includePendingFollowItems<T>(
+    items: Array<T>,
+    pendingFollow: [],
+    pendingUnfollow: []) {
+
+    const filteredItems = _.map(items, (item) => {
+        // To avoid altering the fields in the original object
+        return alterList(item,
+            isItemPending(item, pendingFollow),
+            isItemPending(item, pendingUnfollow))
+    })
+
+    return filteredItems
+}
+
+function alterList(list: Object, pendingFollow: boolean, pendingUnfollow: boolean,
+                   removePendingUnfollow: boolean = false){
+    list.meta = _.cloneDeep(list.meta)
+
+    if (pendingFollow) {
+        list.meta.followed = true
+        list.meta.followersCount += 1
+    }
+
+    if (pendingUnfollow) {
+        list.meta.followed = false
+        list.meta.followersCount -= 1
+        if (removePendingUnfollow) {
+            return false
+        }
+    }
+    return list
+}
+
+export function includePendingFollow<T>(
+    section: Object,
+    pendingFollow: [],
+    pendingUnfollow: [],
+    removePendingUnfollow: boolean = false
+) {
+    const filteredItems = _.compact(_.map(section.data, (item) => {
+        return alterList(item,
+            isItemPending(item, pendingFollow),
+            isItemPending(item, pendingUnfollow),
+            removePendingUnfollow)
+    }))
+
+    if (_.isEmpty(filteredItems)){
+        return false
+    }
+    section.data = filteredItems
+
+    return section
+}
+

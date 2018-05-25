@@ -89,7 +89,7 @@ export class LineupRights {
         const l = this.lineup;
         if (!l) return false
         let isMine = isCurrentUser(l.user)
-        const followed = isFollowed(l)
+        const followed = isFollowed(l, true)
 
         switch (action) {
             case L_SHARE:

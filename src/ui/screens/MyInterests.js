@@ -33,6 +33,7 @@ import {buildData, updateSplice0} from "../../helpers/DataUtils";
 import {FOLLOW_LINEUP, UNFOLLOW_LINEUP} from "../lineup/actions";
 import type {FeedSource} from "../components/feed";
 import {Call} from "../../managers/Api";
+import {includePendingFollow} from "../../helpers/ModelUtils"
 import ShareButton from "../components/ShareButton";
 
 
@@ -46,6 +47,7 @@ type State = {
 @logged
 @connect(state => ({
     data: state.data,
+    pending: state.pending,
     followed_lists: state.followed_lists,
 }))
 export default class MyInterests extends Screen<Props, State> {
@@ -67,7 +69,20 @@ export default class MyInterests extends Screen<Props, State> {
             this.followIdsByListIds[list.id] = f.id
         })
 
-        const sections = LINEUP_SECTIONS(navigator, dispatch, userId)(lists);
+        let sections = LINEUP_SECTIONS(navigator, dispatch, userId)(lists);
+
+        sections = _.map(sections, (section) => {
+            section = includePendingFollow(
+                section,
+                this.props.pending[FOLLOW_LINEUP],
+                this.props.pending[UNFOLLOW_LINEUP],
+                true
+            );
+            return section
+        })
+        sections = _.compact(sections)
+
+
         return (
             <GoodshContext.Provider value={{userOwnResources: false}}>
                 <Feed
@@ -111,7 +126,7 @@ const fetchFollowedLineups =  userId => new Api.Call()
 export const reducer = (state = {list: []}, action) => {
     switch (action.type) {
         case FOLLOW_LINEUP.success(): {
-            let {lineupId} = action.options;
+            let {lineupId} = action.options.scope;
             let {id, type} = action.payload.data
 
             state = updateSplice0(state, `list`,
@@ -125,7 +140,7 @@ export const reducer = (state = {list: []}, action) => {
             break;
         }
         case UNFOLLOW_LINEUP.success():
-            let {lineupId} = action.options;
+            let {lineupId} = action.options.scope;
             state = updateSplice0(state, `list`,
                 {
                     deletePredicate: item => item.lineupId === lineupId,

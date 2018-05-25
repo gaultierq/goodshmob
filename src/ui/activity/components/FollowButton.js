@@ -3,12 +3,19 @@
 import React, {Component} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {connect} from "react-redux";
-import {isCurrentUser, logged} from "../../../managers/CurrentUser"
+import {
+    currentGoodshboxId, isCurrentUser,
+    logged
+} from "../../../managers/CurrentUser"
 import * as Api from "../../../managers/Api";
 import type {Lineup, RequestState} from "../../../types";
 import {Colors} from "../../colors";
 import {renderSimpleButton} from "../../UIStyles";
-import {followLineup, unfollowLineup} from "../../lineup/actions";
+import {
+    FOLLOW_LINEUP, followLineupPending, UNFOLLOW_LINEUP,
+    unfollowLineupPending
+} from "../../lineup/actions";
+import {isItemPending} from "../../../helpers/ModelUtils";
 import {SFP_TEXT_REGULAR} from "../../fonts";
 
 type Props = {
@@ -20,7 +27,9 @@ type State = {
 };
 
 @logged
-@connect()
+@connect(state => ({
+    pending: state.pending
+}))
 export default class FollowButton extends Component<Props, State> {
 
 
@@ -33,7 +42,7 @@ export default class FollowButton extends Component<Props, State> {
         const {lineup} = this.props;
 
 
-        let followed = isFollowed(lineup)
+        let followed = isFollowed.bind(this)(lineup)
 
         //TODO: use rights manager
         let followable = lineup.user && !isCurrentUser(lineup.user)
@@ -43,7 +52,7 @@ export default class FollowButton extends Component<Props, State> {
             () => {
                 Api.safeExecBlock.call(
                     this,
-                    () => followed ? unfollowLineup(this.props.dispatch, lineup) : followLineup(this.props.dispatch, lineup),
+                    () => followed ? unfollowLineupPending(this.props.dispatch, lineup) : followLineupPending(this.props.dispatch, lineup),
                     'reqFollow'
                 )
             },
@@ -59,7 +68,14 @@ export default class FollowButton extends Component<Props, State> {
 }
 
 //TODO: create decorators when building
-export function isFollowed(lineup: Lineup) {
+export function isFollowed(lineup: Lineup, ignorePending: boolean = false) {
+    if (!ignorePending && isItemPending(lineup, this.props.pending[FOLLOW_LINEUP])) {
+        return true
+    }
+    if (!ignorePending && isItemPending(lineup, this.props.pending[UNFOLLOW_LINEUP])) {
+        return false
+    }
+
     return _.get(lineup, 'meta.followed')
 }
 
