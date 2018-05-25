@@ -15,6 +15,7 @@ import {Avatar} from "../../UIComponents";
 import HTMLView from "react-native-htmlview/HTMLView";
 import URL from "url-parse"
 import NavManager from "../../../managers/NavManager";
+import {connect} from "react-redux";
 
 type Props = {
     activity: Activity,
@@ -31,6 +32,7 @@ type Props = {
 type State = {
 };
 
+@connect()
 export default class ActivityStatus extends React.Component<Props, State> {
 
     static defaultProps = {

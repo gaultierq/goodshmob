@@ -107,7 +107,7 @@ const fetchFollowedLineups =  userId => new Api.Call()
 
 
 // export const reducer = reducerFactory(FETCH_FOLLOWED_LINEUPS)
-export const reducer = (state = {}, action) => {
+export const reducer = (state = {list: []}, action) => {
     switch (action.type) {
         case FOLLOW_LINEUP.success(): {
             let {lineupId} = action.options;

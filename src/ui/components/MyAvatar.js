@@ -29,7 +29,7 @@ export default class MyAvatar extends Component<Props, State> {
 
         let imageDim = 32;
 
-        const user = _.get(this.props, 'currentUser.attributes')
+        const user = _.get(this.props, 'currentUser.attributes', null)
 
         return (
             <GTouchable onPress={()=>{
@@ -39,9 +39,7 @@ export default class MyAvatar extends Component<Props, State> {
                 });
 
             }}>
-                <Avatar
-                    user={user}
-                    size={imageDim}/>
+                {user && <Avatar user={user} size={imageDim}/>}
             </GTouchable>
         )
 
