@@ -127,13 +127,15 @@ export default class ActivityBody extends React.Component<Props, State> {
         let resource = activity.resource;
         let images = resource ? resource.images : undefined;
 
+        // When resource is a book, to show cover first
+        if (images && resource.provider === 'Amazon') {
+            images.unshift(resource.image)
+            images = _.uniq(images)
+        }
+
         // For when resource is a Spotify song
         if (images && images.length === 0) {
             images = [resource.image]
-        }
-
-        if (images && !this.props.showAllImages) {
-            images = images.slice(0, 1)
         }
 
         let imageHeight = 288;
@@ -161,12 +163,13 @@ export default class ActivityBody extends React.Component<Props, State> {
             style:{marginVertical:5}
         };
 
+
+
         return <View style={[styles.imageContainer,{height: imageHeight,}]}>
 
             {/*<BoxShadow setting={shadowOpt}>*/}
 
-
-            <Carousel
+            {this.props.showAllImages && <Carousel
                 delay={4000}
                 style={styles.imageContainer}
                 autoplay
@@ -181,8 +184,13 @@ export default class ActivityBody extends React.Component<Props, State> {
                     />
 
                 }) }
-            </Carousel>
-
+            </Carousel>}
+            {!this.props.showAllImages &&
+                <GImage
+                source={resource.image ? {uri: resource.image} : require('../../../img/goodsh_placeholder.png')}
+                resizeMode={resize}
+                style={[styles.image, {height: imageHeight, width: this.state.width}]}
+                />}
 
             {
                 <Animated.View style={[styles.yheaaContainer, {opacity}]} pointerEvents={this.props.showAllImages ? 'none' : 'auto'}>
