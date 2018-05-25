@@ -159,7 +159,6 @@ export function updateSplice3(state: any, path: string, index: number, removeCou
 
         const args = [index, removeCount];
         if (itemToAdd) args.push(itemToAdd);
-        logger.warn("debug::updateSplice3", args)
         let obj = _.set({}, path, {$splice: [args]});
         state = update(state, obj);
     }
