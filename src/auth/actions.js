@@ -5,11 +5,11 @@ import * as actionTypes from "./actionTypes"
 import {SET_USER_NULL} from "./actionTypes"
 import {LoginManager as FacebookLoginManager} from "react-native-fbsdk";
 import type {Device} from "../types";
-
+const {ImageCacheManager} = require('react-native-cached-image');
 
 export function logoutOffline(dispatch) {
     FacebookLoginManager.logOut();
-    ImageCache.get().clear();
+    ImageCacheManager.clearCache()
     dispatch({type: SET_USER_NULL});
 
 }
