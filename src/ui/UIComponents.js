@@ -60,6 +60,7 @@ export class Avatar extends Component<Props, State> {
         //TODO: image placeholder
         return (<GImage
             source={{uri: uri}}
+            fallbackSource={require('../img/avatar-missing.png')}
             style={[{
                 height: size,
                 width: size,
