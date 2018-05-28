@@ -171,8 +171,7 @@ class NetworkScreen extends Screen<Props, State> {
                     {...activityFeedProps()}
                     initialNumToRender={3}
                     onScroll={floatingButtonScrollListener.call(this)}
-                    decorateLoadMoreCall={(last: ActivityGroup, call: Call) => call.addQuery({id_lt: last.id})
-                    }
+                    decorateLoadMoreCall={(sections: any[], call: Call) => call.addQuery({id_lt: _.last(sections).id})}
                     visibility={super.getVisibility()}
                     ItemSeparatorComponent={({leadingItem, trailingItem, section}) => {
                         if (leadingItem === section.data[0]) {

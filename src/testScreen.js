@@ -74,8 +74,8 @@ export const commentsScreen = {
         screen: 'goodsh.CommentsScreen',
     },
     passProps: {
-        activityId: "ae4b733a-8047-4885-a8dd-95baa1cac876",
-        activityType: "savings",
+        activityId: "e297e849-8fd4-4f85-82c3-c371ba0a119e",
+        activityType: "Saving",
     }
 };
 

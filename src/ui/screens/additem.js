@@ -1,20 +1,16 @@
 // @flow
 import React from 'react';
-import {ActivityIndicator, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image} from 'react-native';
+import {ActivityIndicator, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {CheckBox, SearchBar} from "react-native-elements";
 import {renderSimpleButton, STYLES} from "../UIStyles";
 import type {Id, Item, ItemType} from "../../types";
-import {
-    SAVE_ITEM_PRENDING, fetchItemCall, saveItem,
-    CREATE_SAVING
-} from "../lineup/actions";
+import {CREATE_SAVING, fetchItemCall} from "../lineup/actions";
 import {logged} from "../../managers/CurrentUser";
 import {connect} from "react-redux";
-import {buildData, buildNonNullData} from "../../helpers/DataUtils";
+import {buildData} from "../../helpers/DataUtils";
 import ItemCell from "../components/ItemCell";
 import Screen from "../components/Screen";
 import {safeDispatchAction} from "../../managers/Api";
-import {renderTag} from "../UIComponents";
 import {FETCH_ITEM} from "../lineup/actionTypes";
 import {Colors} from "../colors";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
@@ -23,7 +19,6 @@ import {CANCELABLE_MODAL} from "../Nav";
 import _Messenger from "../../managers/Messenger";
 import {SFP_TEXT_ITALIC, SFP_TEXT_REGULAR} from "../fonts"
 import GTouchable from "../GTouchable";
-import {pendingActionWrapper} from "../../helpers/ModelUtils";
 
 type Props = {
     defaultLineupId: Id,

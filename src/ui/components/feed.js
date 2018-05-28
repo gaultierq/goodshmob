@@ -17,9 +17,10 @@ import {connect} from "react-redux";
 import {assertUnique} from "../../helpers/DataUtils";
 import ApiAction from "../../helpers/ApiAction";
 import * as Api from "../../managers/Api";
-import {TRIGGER_USER_DIRECT_ACTION, TRIGGER_USER_INDIRECT_ACTION} from "../../managers/Api";
+import {Call, TRIGGER_USER_DIRECT_ACTION, TRIGGER_USER_INDIRECT_ACTION} from "../../managers/Api";
 import {isEmpty} from "lodash";
-import type {i18Key, Id, ms, RequestState, Url} from "../../types";
+import type {i18Key, ms, RequestState, Url} from "../../types";
+import {ViewStyle} from "../../types";
 import {renderSimpleButton} from "../UIStyles";
 import {SearchBar} from 'react-native-elements'
 
@@ -27,13 +28,9 @@ import type {ScreenVisibility} from "./Screen";
 import {Colors} from "../colors";
 import {getLanguages} from 'react-native-i18n'
 import {RequestManager} from "../../managers/request";
-import {createConsole} from "../../helpers/DebugUtils";
 import Spinner from 'react-native-spinkit';
 import Config from "react-native-config"
-import {FullScreenLoader, Http404} from "../UIComponents";
-import {ViewStyle} from "../../types";
-import {Call} from "../../managers/Api";
-import type {GLoggerLevel} from "../../../flow-typed/goodshmob";
+import {FullScreenLoader} from "../UIComponents";
 
 export type FeedSource = {
     callFactory: ()=>Api.Call,
@@ -59,7 +56,7 @@ export type Props = {
     doNotDisplayFetchMoreLoader?:boolean,
     listRef ?:(any => void | string),
     doNotDisplayFetchMoreLoader?: boolean,
-    decorateLoadMoreCall?: (last: any, call: Call) => Call,
+    decorateLoadMoreCall?: (sections: any[], call: Call) => Call,
 };
 
 export type FilterConfig<T> = {
@@ -78,7 +75,7 @@ type State = {
     moreLink?: Url,
 
     filter?:? string,
-    decorateLoadMoreCall: (last: any, call: Call) => Call,
+    decorateLoadMoreCall: (sections: any[], call: Call) => Call,
 };
 
 
@@ -117,7 +114,7 @@ export default class Feed extends Component<Props, State>  {
         super(props);
         this.state = {
             initialLoaderVisibility: 'idle',
-            decorateLoadMoreCall: props.decorateLoadMoreCall || this._defaultDecorateLoadMoreCall(props),
+            decorateLoadMoreCall: props.decorateLoadMoreCall || this._defaultDecorateLoadMoreCall(),
             tempDisplayName: props.displayName,
             isFetchingFirst: 'idle',
             isFetchingMore: 'idle',
@@ -130,16 +127,27 @@ export default class Feed extends Component<Props, State>  {
         this.postFetchFirst();
     }
 
-    _defaultDecorateLoadMoreCall = (props: Props) => (last: any, call: Call) => {
-        let lastId;
-        if (props.sections) {
+    _defaultDecorateLoadMoreCall = () => (sections: any[], call: Call) => {
+
+        let lastId
+        if (this.props.sections) {
+            let last = _.last(this.props.sections)
             let lastItem = _.last(last.data)
+
             lastId = lastItem && lastItem.id
         }
         else {
+            let last = _.last(this.props.data)
             lastId = last.id
         }
-        return call.addQuery({id_after: lastId})
+        if (lastId) {
+            call.addQuery({id_after: lastId})
+        }
+        else {
+            console.warn("Error while forming load more call")
+        }
+        return call
+
     }
 
 
@@ -158,11 +166,6 @@ export default class Feed extends Component<Props, State>  {
 
 
     postFetchFirst() {
-        // if (this.notFetchable()) {
-        //     this.logger.debug('cannot fetch. aborting', this.props);
-        //     return;
-        // }
-
         setTimeout(() => {
             if (this.state.isFetchingFirst !== 'idle') {
                 this.console.debug(`postFetchFirst was not performed, isFetchingFirst=${this.state.isFetchingFirst}`);
@@ -184,9 +187,6 @@ export default class Feed extends Component<Props, State>  {
     }
     // type = _.sample(['CircleFlip', 'Bounce', 'Wave', 'WanderingCubes', 'Pulse', 'ChasingDots', 'ThreeBounce', 'Circle', '9CubeGrid', 'WordPress', 'FadingCircle', 'FadingCircleAlt', 'Arc', 'ArcAlt']);
     type = _.sample(['Bounce']);
-    // type = _.sample(['ChasingDots']);
-
-    // color = _.sample(['CircleFlip', 'Bounce', 'Wave', 'WanderingCubes', 'Pulse', 'ChasingDots', 'ThreeBounce', 'Circle', '9CubeGrid', 'WordPress', 'FadingCircle', 'FadingCircleAlt', 'Arc', 'ArcAlt']);
     color = _.sample([Colors.greyish]);
     color = _.sample([Colors.green]);
 
@@ -470,7 +470,7 @@ export default class Feed extends Component<Props, State>  {
             else {
                 call = callFactory();
                 if (loadMore && !useLinks) {
-                    this.decorateCallForNextPage(call)
+                    this.state.decorateLoadMoreCall(this.props.sections || this.props.data, call);
                 }
             }
             if (trigger === undefined) {
@@ -516,18 +516,6 @@ export default class Feed extends Component<Props, State>  {
 
                 })
         });
-    }
-
-    decorateCallForNextPage(call: Call) {
-        const lastItem = this.getLastElement();
-
-        if (lastItem) {
-            return this.state.decorateLoadMoreCall(lastItem, call);
-        }
-        else {
-            this.console.warn("no last item found")
-            return call
-        }
     }
 
     fetchMore(options ?: FeedFetchOption = {loadMore: false}) {

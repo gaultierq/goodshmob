@@ -66,18 +66,18 @@ export default class MyInterests extends Screen<Props, State> {
             this.followIdsByListIds[list.id] = f.id
         })
 
+        const sections = LINEUP_SECTIONS(navigator, dispatch, userId)(lists);
         return (
             <GoodshContext.Provider value={{userOwnResources: false}}>
                 <Feed
                     listRef={ref=>ref} //otherwise flow problem??
                     displayName={"MyInterests"}
-                    data={followed}
                     renderSectionHeader={({section}) => section.renderSectionHeader()}
-                    sections={LINEUP_SECTIONS(navigator, dispatch, userId)(lists)}
+                    sections={sections}
                     empty={<View><Text style={STYLES.empty_message}>{i18n.t('community_screen.empty_screen')}</Text></View>}
                     fetchSrc={this.fetchSrc(userId)}
-                    decorateLoadMoreCall={(last: any, call: Call) => {
-                        const lastLineup = last.data[0];
+                    decorateLoadMoreCall={(sections: any[], call: Call) => {
+                        const lastLineup = _.last(sections).data[0];
                         return call.addQuery({id_after: this.followIdsByListIds[lastLineup.id]})
                     }
                     }

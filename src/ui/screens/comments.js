@@ -8,7 +8,7 @@ import Immutable from 'seamless-immutable';
 import * as Api from "../../managers/Api";
 import {Call} from "../../managers/Api";
 import Feed from "../components/feed";
-import type {Activity, ActivityType, Comment, Id, RequestState} from "../../types";
+import type {Activity, ActivityGroup, ActivityType, Comment, Id, RequestState} from "../../types";
 import ApiAction from "../../helpers/ApiAction";
 import {buildData, doDataMergeInState, sanitizeActivityType} from "../../helpers/DataUtils";
 import {fetchActivity} from "../activity/actions";
@@ -86,6 +86,7 @@ class CommentsScreen extends Screen<Props, State> {
             subtitle: _.get(activity, 'resource.title')
         })
 
+        let sections = this.splitCommentsInSections(fullComments);
         return (
             <MainBackground>
 
@@ -110,15 +111,22 @@ class CommentsScreen extends Screen<Props, State> {
 
                     <View style={{
                         flex:1,
-                        // justifyContent: 'flex-end',
-                        //    backgroundColor: 'brown'
+                        justifyContent: 'flex-end',
+                        // backgroundColor: 'brown'
                     }}>
 
                         <Feed
-                            // style={{flex:1}}
+                            decorateLoadMoreCall={(sections: any[], call: Call) => {
+                                if (!_.isEmpty(sections)) {
+                                    let lastGroup = _.head(sections).data;
+                                    let last = _.head(_.head(lastGroup))
+                                    call.addQuery({id_after: last.id})
+                                }
+
+                            }}
                             inverted
                             ListFooterComponent={this.renderDescription(activity)}
-                            sections={this.splitCommentsInSections(fullComments)}
+                            sections={sections}
                             keyExtractor={item => _.head(item).id}
                             doNotDisplayFetchMoreLoader={true}
                             SectionSeparatorComponent={()=> <View style={{margin: 4}} />}
@@ -132,7 +140,6 @@ class CommentsScreen extends Screen<Props, State> {
                                     color: Colors.greyish,
                                 }}>
                                 {section.title}</Text>}
-
 
                             fetchSrc={{
                                 callFactory:()=>actions.loadComments(activity),
@@ -208,6 +215,9 @@ class CommentsScreen extends Screen<Props, State> {
         />;
     }
 
+    //sections[0].data[0][0]
+    // list of sections, each section as its data: D
+    // here D is an array !
     splitCommentsInSections(comments: Array<Comment>) {
 
         const sectionsMap = new MultiMap();
@@ -264,13 +274,9 @@ class CommentsScreen extends Screen<Props, State> {
             const date = new Date(dateStr);
             let format = Date.now() - Date.parse(dateStr) < 7 * 24 * 60 * 60 * 1000 ? "%a %-H:%M" :  "%d/%m/%-y %-H:%M";
 
-            const data = _.reverse(value);
             sections.push({
-                // data: data,
                 data: value,
                 title: i18n.strftime(date, format),
-                // subtitle: ` (${savingCount})`,
-                // onPress: () => this.seeLineup(goodshbox.id),
                 renderItem: this.renderItem.bind(this)
             })
         });
