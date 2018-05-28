@@ -26,7 +26,7 @@ class _OnBoardingManager implements OnBoardingManager {
     }
 
     init(store: any) {
-        this.logger = logger.createLogger({group: 'OnBoarding'})
+        this.logger = logger.createLogger('OnBoarding')
         this.store = store;
 
         //this should trigger th onboarding on user login

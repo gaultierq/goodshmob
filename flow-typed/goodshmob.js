@@ -9,7 +9,7 @@ export type Logger = {
     error: (m: string, ...args) => void,
 }
 export type GLogger = Logger & {
-    createLogger: (conf: GLoggerConfig) => GLogger
+    createLogger: (conf: GLoggerConfig | string) => GLogger
 }
 
 declare var logger: GLogger;

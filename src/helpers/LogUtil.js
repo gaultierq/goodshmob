@@ -31,7 +31,12 @@ const levels = ['log', 'debug', 'info', 'warn', 'error'];
 export function createLogger(parent: Logger, conf: GLoggerConfig): GLogger {
 
     const result: GLogger = {
-        createLogger: function(conf: GLoggerConfig) { return createLogger(this, conf) }
+        createLogger: function(conf: GLoggerConfig | string) {
+            if (typeof conf === 'string') {
+                conf = {group: conf}
+            }
+            return createLogger(this, conf)
+        }
     }
 
     levels.forEach(level => {
