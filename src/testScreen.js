@@ -28,13 +28,13 @@ export const communityScreen = {
     }
 };
 
-export const sendingDetail = {
+export const activityDetail3 = {
     screen: {
         screen: 'goodsh.ActivityDetailScreen',
     },
     passProps: {
-        activityId: "f5c41253-7ab4-4311-bf6a-d7d62ca33fab",
-        activityType: "sendings"
+        activityId: "ae4b733a-8047-4885-a8dd-95baa1cac876",
+        activityType: "savings"
     }
 };
 

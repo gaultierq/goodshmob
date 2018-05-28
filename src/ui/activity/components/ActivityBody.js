@@ -125,7 +125,7 @@ export default class ActivityBody extends React.Component<Props, State> {
         }
 
         let resource = activity.resource;
-        let images = resource ? resource.images : undefined;
+        let images = _.get(resource, 'images', [])
 
         // When resource is a book, to show cover first
         if (images && resource.provider === 'Amazon') {
@@ -150,20 +150,6 @@ export default class ActivityBody extends React.Component<Props, State> {
             inputRange: [0, 1],
             outputRange: [0, 1]
         });
-
-        const shadowOpt = {
-            width:"100%",
-            height:imageHeight,
-            color:"#000",
-            border:5,
-            radius:3,
-            opacity:1,
-            x:0,
-            y:3,
-            style:{marginVertical:5}
-        };
-
-
 
         return <View style={[styles.imageContainer,{height: imageHeight,}]}>
 

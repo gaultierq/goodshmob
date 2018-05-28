@@ -112,14 +112,12 @@ class ActivityDetailScreen extends Screen<Props, State> {
         if (this.state.isLoading) return;
         this.setState({isLoading: true});
         this.props.dispatch(
-            actions.fetchActivity(this.props.activityId, this.props.activityType)
+            actions.fetchActivity(this.props.activityId, this.props.activityType, {include: '\'user,resource,target,comments,commentators,related_activities,related_activities.commentators,related_activities.target,related_activities.user"'})
         ).catch((err)=>console.log(err))
             .then(()=>{
                 this.setState({isLoading: false})
             })
-
     }
-
 
     render() {
         let activity = this.makeActivity();
