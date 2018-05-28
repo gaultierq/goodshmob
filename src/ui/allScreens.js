@@ -42,7 +42,6 @@ import {View} from 'react-native';
 import UnsaveScreen from "./screens/unsave";
 import ChangeDescriptionScreen from "./screens/changeDescription";
 import ChangeLineupName from "./screens/changeLineupName";
-import NoSpamScreen from "./screens/NoSpamScreen";
 import MoveInScreen from "./screens/moveinscreen";
 import InAppNotif from "./screens/inAppNotif";
 
@@ -112,7 +111,6 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.UnsaveScreen', () => UnsaveScreen, store, Provider);
     wrap('goodsh.ChangeDescriptionScreen', () => ChangeDescriptionScreen, store, Provider);
     wrap('goodsh.ChangeLineupName', () => ChangeLineupName, store, Provider);
-    wrap('goodsh.NoSpamScreen', () => NoSpamScreen, store, Provider);
     wrap('goodsh.PlacesAutocomplete', () => PlacesAutocomplete, store, Provider);
     wrap('goodsh.MoveInScreen', () => MoveInScreen, store, Provider);
     wrap('goodsh.InAppNotif', () => InAppNotif, store, Provider);

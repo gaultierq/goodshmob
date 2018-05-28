@@ -89,7 +89,7 @@ export class HomeOnBoardingHelper {
         //if a new onBoarding step is broadcasted, then display it
         OnBoardingManager.listenToStepChange({
             triggerOnListen: true,
-            callback: (step?:OnBoardingStep) => {
+            callback: (step: ?OnBoardingStep) => {
                 let newTip = null;
                 switch (step) {
                     case 'privacy':

@@ -37,7 +37,7 @@ import BugsnagManager from "./managers/BugsnagManager";
 import type {User} from "./types";
 import RNAccountKit, { Color, StatusBarStyle,} from 'react-native-facebook-account-kit'
 
-type AppMode = 'idle' | 'init_cache' | 'nospam' | 'logged' | 'unlogged' | 'upgrading_cache' | 'unknown'
+type AppMode = 'idle' | 'init_cache' | 'logged' | 'unlogged' | 'upgrading_cache' | 'unknown'
 type AppConfig = {
     mode: AppMode,
     userValid?: boolean
@@ -355,9 +355,6 @@ export default class App {
 
         const cacheVersion = Config.CACHE_VERSION;
         switch (this.config.mode) {
-            case 'nospam':
-                this.showNoSpamModal();
-                break;
             case 'idle':
                 break;
             case 'logged':
@@ -380,6 +377,10 @@ export default class App {
                         this.launchMain(navigatorStyle);
                     }
                     else {
+
+                        //this probably shouldn't be here
+                        NotificationManager.requestPermissionsForLoggedUser()
+
                         Navigation.startSingleScreenApp({
                             screen: {
                                 screen: 'goodsh.EditUserProfileScreen',
@@ -393,16 +394,6 @@ export default class App {
                             }
                         });
 
-                        // Navigation.startSingleScreenApp({
-                        //     screen: {
-                        //         label: 'Login',
-                        //         screen: 'goodsh.LoginScreen',
-                        //         navigatorStyle: {
-                        //             ...navigatorStyle,
-                        //             navBarHidden: true,
-                        //         },
-                        //     }
-                        // });
                     }
                 }
                 break;
@@ -539,10 +530,4 @@ export default class App {
         });
     }
 
-    showNoSpamModal() {
-        Navigation.showModal({
-            screen: 'goodsh.NoSpamScreen', // unique ID registered with Navigation.registerScreen
-            animationType: 'none' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
-        });
-    }
 }

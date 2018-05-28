@@ -8,35 +8,26 @@ import Config from 'react-native-config'
 const NEXT_STEP = 'NEXT_STEP';
 const SET_STEP = 'SET_STEP';
 
-export type OnBoardingStep = 'focus_add' | 'notification' | 'privacy' | 'noise' | 'private';
+export type OnBoardingStep = 'focus_add' | 'privacy' | 'noise' | 'private';
 
 
 export const ON_BOARDING_STEP_CHANGED = 'ON_BOARDING_STEP_CHANGED';
 const TIME_BETWEEN_TIPS_MS = Config.TIME_BETWEEN_TIPS_MS;
+const ALL_STEPS: OnBoardingStep[] = ['focus_add', 'privacy', 'noise', 'private']
 
 class _OnBoardingManager implements OnBoardingManager {
     id = Math.random();
 
     store: any;
 
-    ALL_STEPS: OnBoardingStep[];
+    logger: GLogger
 
     constructor() {
     }
 
     init(store: any) {
+        this.logger = logger.createLogger({group: 'OnBoarding'})
         this.store = store;
-
-        this.ALL_STEPS = ['focus_add'];
-        if (__WITH_NOTIFICATIONS__ && __IS_IOS__) {
-            this.ALL_STEPS.push('notification')
-        }
-        this.ALL_STEPS.push('privacy', 'noise', 'private')
-
-        //TODO: let current user implement this, and warn everybody when something is changing
-        // on user (now, or later):
-
-        // on no_user (now, or later)
 
         //this should trigger th onboarding on user login
         listenToUserChange({
@@ -45,21 +36,8 @@ class _OnBoardingManager implements OnBoardingManager {
                 let {forceOnBoardingCycle, onBoardingOnEveryLogin} = this.store.getState().config;
                 //step to set
                 if (forceOnBoardingCycle || (onBoardingOnEveryLogin || true) && CurrentUser.loggedSince() < 5000) {
-                    this.store.dispatch({type: SET_STEP, step: this.ALL_STEPS[0]});
+                    this.store.dispatch({type: SET_STEP, step: ALL_STEPS[0]});
                 }
-                //getPendingStep must be ok after init
-                //
-                // if (this.getPendingStep() === null) {
-                //     requestPermissionsForLoggedUser();
-                // }
-                // else {
-                //     let unsubscribe = this.store.subscribe(() => {
-                //         if (!this.getPendingStep()) {
-                //             requestPermissionsForLoggedUser();
-                //             unsubscribe();
-                //         }
-                //     });
-                // }
 
             }, triggerOnListen: true});
 
@@ -93,9 +71,9 @@ class _OnBoardingManager implements OnBoardingManager {
         return (state: any = {}, action: any) => {
 
             let nextStep = (current: OnBoardingStep) => {
-                let i = this.ALL_STEPS.indexOf(current);
+                let i = ALL_STEPS.indexOf(current);
                 if (i > -1) {
-                    return _.nth(this.ALL_STEPS, ++i)
+                    return _.nth(ALL_STEPS, ++i)
                 }
                 return null;
             };
@@ -116,17 +94,20 @@ class _OnBoardingManager implements OnBoardingManager {
         this.store.dispatch({type: NEXT_STEP, lastShown: Date.now()});
     }
 
-    listenToStepChange(options: {callback: (step?:OnBoardingStep) => void, triggerOnListen?:boolean}) {
+    listenToStepChange(options: {callback: (step: ?OnBoardingStep) => void, triggerOnListen?:boolean}) {
         const {callback, triggerOnListen} = options;
 
-        let triggering;
+        let triggering
+
+        this.logger.debug('listening To Step Change')
 
         EventBus.addEventListener(ON_BOARDING_STEP_CHANGED, event => {
+            this.logger.debug('on event', event)
             if (triggering) {
-                console.warn("looping");
+                this.logger.warn("looping");
                 return;
             }
-            const step: OnBoardingStep = this.getPendingStep();
+            const step : ?OnBoardingStep = this.getPendingStep();
             callback(step);
         });
 
@@ -150,7 +131,7 @@ export interface OnBoardingManager {
 
     onDisplayed(step: OnBoardingStep): void;
 
-    listenToStepChange(options: {callback: (step?:OnBoardingStep) => void, triggerOnListen?:boolean}): void;
+    listenToStepChange(options: {callback: (step: ?OnBoardingStep) => void, triggerOnListen?:boolean}): void;
 
 }
 

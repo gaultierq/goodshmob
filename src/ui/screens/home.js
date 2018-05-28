@@ -162,6 +162,8 @@ export default class HomeScreen extends Screen<Props, State> {
                 this.setState({currentTip: tip})
             }
         })
+
+        this.onBoardingHelper.handleFocusAdd()
     }
 
 
