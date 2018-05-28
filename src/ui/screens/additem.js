@@ -81,18 +81,13 @@ export default class AddItemScreen extends Screen<Props, State> {
         return this.props.item || buildData(this.props.data, this.props.itemType, this.props.itemId)
     }
 
-    componentWillAppear() {
-        if (!this.getItem()) {
-            safeDispatchAction.call(
-                this,
-                this.props.dispatch,
-                fetchItemCall(this.props.itemId).include('*').createActionDispatchee(FETCH_ITEM),
-                'reqFetch'
-            );
-        }
-    }
-
     componentDidAppear() {
+        safeDispatchAction.call(
+            this,
+            this.props.dispatch,
+            fetchItemCall(this.props.itemId).include('*').createActionDispatchee(FETCH_ITEM),
+            'reqFetch'
+        )
         if (this.textInput) {
             this.textInput.focus()
         }
