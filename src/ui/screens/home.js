@@ -196,6 +196,7 @@ export default class HomeScreen extends Screen<Props, State> {
                     <MyGoodsh
                         visibility={focused ? 'visible' : 'hidden'}
                         navigator={this.props.navigator}
+                        listRef={ref => this.feed = ref}
                         onScroll={floatingButtonScrollListener.call(this)}
                         // ItemSeparatorComponent={() => <View style={{height: StyleSheet.hairlineWidth, backgroundColor: Colors.white}} />}
                         ItemSeparatorComponent={() => null}
