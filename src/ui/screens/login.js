@@ -20,7 +20,7 @@ import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts";
 import i18n from '../../i18n'
 import * as Api from "../../managers/Api"
 import {renderSimpleButton} from "../UIStyles"
-import type {RequestState} from "../../types";
+import type {RequestState, User} from "../../types";
 
 type Props = {
     initialIndex: number
@@ -229,28 +229,21 @@ class Login extends Component<Props, State> {
         ;
     });
 
-    handleAccountKitLogin = () => new Promise((resolve, reject)=> {
-
-        RNAccountKit.loginWithEmail()
-            .then(data => {
-                let token = data && data.token
-                if (!token) {
-                    console.log('Login cancelled')
-                    reject('Login cancelled');
-                } else {
-                    console.log('login ok !')
-                    this.props
-                        .dispatch(appActions.loginWith('account_kit', token))
-                        .then(user => {
-                            resolve();
-                        }, err => reject(err))
-                }
-            })
-    });
+    async handleAccountKitLogin(): Promise<User> {
+        let token =  Config.DEBUG_ACCOUNT_KIT_TOKEN
+        if (!token) {
+            let data = await RNAccountKit.loginWithEmail()
+            token = data && data.token;
+        }
+        if (token) {
+            return await this.props.dispatch(appActions.loginWith('account_kit', token))
+        }
+        return null
+    }
 
     execLogin(useAccountKit: boolean) {
 
-        const loginFunction = useAccountKit ? this.handleAccountKitLogin : this.handleFacebookLogin
+        const loginFunction = useAccountKit ? this.handleAccountKitLogin.bind(this) : this.handleFacebookLogin
         if (this.isSending()) {
             console.debug("already executing action");
             return;
