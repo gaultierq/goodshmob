@@ -367,8 +367,10 @@ export default class App {
 
                     if (this.config.userValid) {
                         //TODO: move
-                        NotificationManager.init();
+                        NotificationManager.init()
 
+                        //this probably shouldn't be here
+                        NotificationManager.requestPermissionsForLoggedUser()
 
                         BugsnagManager.setUser(user);
 
@@ -377,9 +379,6 @@ export default class App {
                         this.launchMain(navigatorStyle);
                     }
                     else {
-
-                        //this probably shouldn't be here
-                        NotificationManager.requestPermissionsForLoggedUser()
 
                         Navigation.startSingleScreenApp({
                             screen: {
