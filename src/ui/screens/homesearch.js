@@ -22,8 +22,8 @@ import SearchScreen, {SearchQuery} from "./search";
 import {SearchStyles} from "../UIStyles";
 import GTouchable from "../GTouchable";
 import Config from 'react-native-config'
-import {renderLineupFromOtherPeople} from "./networksearch";
 import SearchPage from "./SearchPage";
+import {renderLineupFromOtherPeople} from "../UIComponents";
 
 type Props = NavigableProps & {
     token?:SearchToken,
@@ -55,7 +55,7 @@ export default class HomeSearchScreen extends Screen<Props, State> {
             if (isLineup) {
 
                 let lineup: List = item;
-                return renderLineupFromAlgolia(this.props.navigator, lineup)
+                return renderLineupFromOtherPeople(this.props.navigator, lineup)
                 // return (
                 //
                 //     <GTouchable onPress={()=>seeList(this.props.navigator, lineup)}>
