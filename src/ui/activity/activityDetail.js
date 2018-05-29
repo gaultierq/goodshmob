@@ -361,13 +361,13 @@ class ActivityDetailScreen extends Screen<Props, State> {
             height:28,
             inputStyle:{fontSize: 13},
             // inputContainerStyle: {
-                // borderBottomWidth: 0,
-                // borderTopWidth: 0,
-                // borderLeftWidth: 0,
-                // borderRightWidth: 0,
-                // paddingHorizontal: 0,
-                // borderColor: Colors.greying,
-                // borderWidth: 1,
+            // borderBottomWidth: 0,
+            // borderTopWidth: 0,
+            // borderLeftWidth: 0,
+            // borderRightWidth: 0,
+            // paddingHorizontal: 0,
+            // borderColor: Colors.greying,
+            // borderWidth: 1,
             // },
             // buttonStyle: {paddingRight: 0}
         };
@@ -400,19 +400,20 @@ class ActivityDetailScreen extends Screen<Props, State> {
     }
 
     renderMedals(othersCommentators) {
-        const dim = 20;
+        const size = 20;
         const shift = 0.5;
         const n = othersCommentators.length;
-        const width  = dim + (dim * shift) * Math.max(n-1, 0) + 5;
-        return <View style={{width, height: 18}}>
+        const width  = size + (size * shift) * Math.max(n-1, 0) + 5;
+        return <View style={{flexDirection: 'row', marginRight: 10, height: 18}}>
             {
-                othersCommentators.map((user, i) => user && <Avatar user={user} size={dim} style={{
-                    position: 'absolute',
-                    left: dim * shift * i,
-                    zIndex: (10 - i),
-                    borderWidth: StyleSheet.hairlineWidth,
-                    borderColor: Colors.white
-                }}/>)
+                othersCommentators.map((user, i) => user && <Avatar key={`med-${i}`} user={user} size={size} style={{
+                        // position: 'absolute',
+                        // left: size * shift * i,
+                        // zIndex: (10 - i),
+                        borderWidth: StyleSheet.hairlineWidth,
+                        borderColor: Colors.white
+                    }} />
+                )
             }
         </View>;
     }

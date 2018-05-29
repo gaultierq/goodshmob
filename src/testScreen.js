@@ -33,7 +33,7 @@ export const activityDetail3 = {
         screen: 'goodsh.ActivityDetailScreen',
     },
     passProps: {
-        activityId: "ae4b733a-8047-4885-a8dd-95baa1cac876",
+        activityId: "e21a4e19-c3e5-4a29-a5c2-c9483d933533",
         activityType: "savings"
     }
 };
