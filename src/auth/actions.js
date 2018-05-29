@@ -5,13 +5,17 @@ import * as actionTypes from "./actionTypes"
 import {SET_USER_NULL} from "./actionTypes"
 import {LoginManager as FacebookLoginManager} from "react-native-fbsdk";
 import type {Device} from "../types";
-const {ImageCacheManager} = require('react-native-cached-image');
+import {ImageCacheManager} from 'react-native-cached-image'
 
 export function logoutOffline(dispatch) {
-    FacebookLoginManager.logOut();
-    ImageCacheManager.clearCache()
-    dispatch({type: SET_USER_NULL});
-
+    try {
+        const imageCacheManager = ImageCacheManager()
+        imageCacheManager.clearCache().catch(e => console.error("send notification to bugsnag", e))
+    }
+    finally {
+        FacebookLoginManager.logOut()
+        dispatch({type: SET_USER_NULL})
+    }
 }
 
 //if user lost auth, then offline logout
