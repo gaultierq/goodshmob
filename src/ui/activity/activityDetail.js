@@ -19,7 +19,7 @@ import {currentUser, currentUserId, logged} from "../../managers/CurrentUser"
 import ActivityBody from "./components/ActivityBody";
 import {buildData, getAskBackgroundColor, sanitizeActivityType, timeSinceActivity} from "../../helpers/DataUtils";
 import {Avatar, FullScreenLoader, MainBackground} from "../UIComponents";
-import type {Activity, ActivityType, Id, RNNNavigator} from "../../types";
+import type {Activity, ActivityType, Id, RequestState, RNNNavigator} from "../../types";
 import Screen from "../components/Screen";
 import {Colors} from "../colors";
 import GTouchable from "../GTouchable";
@@ -34,6 +34,7 @@ import FeedSeparator from "./components/FeedSeparator";
 import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import {CLOSE_MODAL, displayActivityActions} from "../Nav";
+import * as Api from "../../managers/Api";
 
 type Props = {
     activityId: Id,
@@ -42,7 +43,7 @@ type Props = {
 };
 
 type State = {
-    isLoading?: boolean
+    reqFetch?: RequestState
 };
 
 const EDIT_SAVING = "EDIT_SAVING";
@@ -75,7 +76,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
         rightButtons: []
     };
 
-    constructor(props) {
+    constructor(props: Props) {
         super(props);
         props.navigator.addOnNavigatorEvent((event) => {
 
@@ -89,11 +90,13 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
 
     componentDidMount() {
+
+        this.prepareNavButton();
+
         this.load();
     }
 
-    load() {
-
+    prepareNavButton() {
         let activity = this.makeActivity();
         if (activity) {
             let isMine = activity.user && activity.user.id === currentUserId();
@@ -108,15 +111,16 @@ class ActivityDetailScreen extends Screen<Props, State> {
                 })
             }
         }
+    }
 
-        if (this.state.isLoading) return;
-        this.setState({isLoading: true});
-        this.props.dispatch(
-            actions.fetchActivity(this.props.activityId, this.props.activityType, {include: '\'user,resource,target,comments,commentators,related_activities,related_activities.commentators,related_activities.target,related_activities.user"'})
-        ).catch((err)=>console.log(err))
-            .then(()=>{
-                this.setState({isLoading: false})
-            })
+    load() {
+        Api.safeExecBlock.call(
+            this,
+            () => this.props.dispatch(
+                actions.fetchActivity(this.props.activityId, this.props.activityType, {include: 'user,resource,target,comments,commentators,related_activities,related_activities.commentators,related_activities.target,related_activities.user'})
+            ),
+            'reqFetch'
+        )
     }
 
     render() {
@@ -124,7 +128,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
         const isAsk = activity && sanitizeActivityType(activity.type) === 'asks';
 
-        if (!activity && this.state.isLoading) return <FullScreenLoader/>;
+        if (!activity && this.state.reqFetch === 'sending') return <FullScreenLoader/>;
 
         return (
             <MainBackground>
