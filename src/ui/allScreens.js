@@ -48,6 +48,7 @@ import InAppNotif from "./screens/inAppNotif";
 import MyInterestsScreen from "./screens/MyInterests";
 import MyGoodshsScreen from "./screens/MyGoodsh";
 import EditUserProfileScreen from "./screens/edituserprofile";
+import PopularItemsScreen from "./screens/popularitems";
 
 
 function wrap(screenName,screenCreator,store,provider) {
@@ -116,5 +117,6 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.InAppNotif', () => InAppNotif, store, Provider);
     wrap('goodsh.MyInterestsScreen', () => MyInterestsScreen, store, Provider);
     wrap('goodsh.MyGoodshsScreen', () => MyGoodshsScreen, store, Provider);
+    wrap('goodsh.PopularItemsScreen', () => PopularItemsScreen, store, Provider);
 
 }

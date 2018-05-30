@@ -190,3 +190,9 @@ import type {
 export type ViewStyle = ____ViewStyleProp_Internal
 export type TextStyle = ____TextStyleProp_Internal
 export type ImageStyle = ____ImageStyleProp_Internal
+
+
+export type GListState = {
+    list: Array<any>,
+    hasMore?: boolean
+}
