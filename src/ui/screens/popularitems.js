@@ -32,6 +32,8 @@ import GTouchable from "../GTouchable";
 import {Colors} from "../colors";
 import {SFP_TEXT_REGULAR} from "../fonts";
 import {LINEUP_PADDING, renderSimpleButton} from "../UIStyles";
+import {fetchActivity} from "../activity/actions";
+import * as types from "../activity/actionTypes";
 
 
 export type Props = {
@@ -44,9 +46,12 @@ type State = {
 
 @logged
 @connect(state => ({
-    data: state.data,
-    popular_items: state.popular_items,
-}))
+        data: state.data,
+        popular_items: state.popular_items,
+    }), dispatch => ({
+        saveManyItems: (itemsIds) => dispatch(saveManyItems(itemsIds))
+    })
+)
 export default class PopularItemsScreen extends Screen<Props, State> {
 
 
@@ -115,7 +120,11 @@ export default class PopularItemsScreen extends Screen<Props, State> {
     }
 
     saveMany(itemIds: Id[]) {
-
+        Api.safeExecBlock.call(
+            this,
+            () => this.props.saveManyItems(itemIds),
+            'reqAdd'
+        )
     }
 }
 
@@ -125,6 +134,18 @@ const fetchFollowedLineups =  () => new Api.Call()
 
 
 const FETCH_POPULAR_ITEMS = ApiAction.create("fetch_popular_items", "retrieve popular items");
+
+
+const saveManyItems =  (itemIds: Id[]) => new Api.Call()
+    .withMethod('POST')
+    .withRoute(`items/save`)
+    .withBody({savings: itemIds.map(item_id=>({item_id}))})
+    .createActionDispatchee(SAVE_MANY_ITEMS)
+
+
+const SAVE_MANY_ITEMS = ApiAction.create("save_many_items", "save many items");
+
+
 
 export const reducer = (state:GListState = {list: []}, action: any) => {
     return reduceList2(state, action, FETCH_POPULAR_ITEMS);
