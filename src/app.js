@@ -1,41 +1,39 @@
 // @flow
 /* global ErrorUtils */
 
-import {applyMiddleware, combineReducers, compose, createStore} from "redux";
-import {Navigation} from 'react-native-navigation';
-import * as reducers from "./reducers/allReducers";
-import {createWithReducers} from "./auth/reducer";
-import thunk from "redux-thunk";
+import {applyMiddleware, combineReducers, compose, createStore} from "redux"
+import {Navigation} from 'react-native-navigation'
+import * as reducers from "./reducers/allReducers"
+import {createWithReducers} from "./auth/reducer"
+import thunk from "redux-thunk"
 
-import * as Api from './managers/Api';
+import * as Api from './managers/Api'
 import {autoRehydrate, createTransform, persistStore} from 'redux-persist'
 import {Alert, AsyncStorage, Dimensions, Linking, StyleSheet, TouchableOpacity} from 'react-native'
 import immutableTransform from './immutableTransform'
 import * as CurrentUser from './managers/CurrentUser'
 import {currentUser, currentUserId, isLogged} from './managers/CurrentUser'
-import * as globalProps from 'react-native-global-props';
-import * as notification from './managers/NotificationManager';
-import NotificationManager from './managers/NotificationManager';
-import * as DeviceManager from "./managers/DeviceManager";
-import * as UI from "./ui/UIStyles";
-import {init as initGlobal} from "./global";
-import {AlgoliaClient} from "./helpers/AlgoliaUtils";
-import {Statistics} from "./managers/Statistics";
-import {CLEAR_CACHE, INIT_CACHE, UPGRADE_CACHE} from "./auth/actionTypes";
+import * as globalProps from 'react-native-global-props'
+import NotificationManager from './managers/NotificationManager'
+import * as DeviceManager from "./managers/DeviceManager"
+import * as UI from "./ui/UIStyles"
+import {init as initGlobal} from "./global"
+import {AlgoliaClient} from "./helpers/AlgoliaUtils"
+import {Statistics} from "./managers/Statistics"
+import {CLEAR_CACHE, INIT_CACHE, UPGRADE_CACHE} from "./auth/actionTypes"
 import Config from 'react-native-config'
-import {Provider} from "react-redux";
+import {Provider} from "react-redux"
 import {Messenger} from "./managers/Messenger"
-import {Colors} from "./ui/colors";
-import {SFP_TEXT_REGULAR} from "./ui/fonts";
-import NavManager from "./managers/NavManager";
-import Analytics from "./managers/Analytics";
-import * as appActions from "./auth/actions";
-import type {OnBoardingStep} from "./managers/OnBoardingManager";
-import OnBoardingManager from "./managers/OnBoardingManager";
-import StoreManager from "./managers/StoreManager";
-import BugsnagManager from "./managers/BugsnagManager";
-import type {User} from "./types";
-import RNAccountKit, { Color, StatusBarStyle,} from 'react-native-facebook-account-kit'
+import {Colors} from "./ui/colors"
+import {SFP_TEXT_REGULAR} from "./ui/fonts"
+import NavManager from "./managers/NavManager"
+import Analytics from "./managers/Analytics"
+import * as appActions from "./auth/actions"
+import OnBoardingManager from "./managers/OnBoardingManager"
+import StoreManager from "./managers/StoreManager"
+import BugsnagManager from "./managers/BugsnagManager"
+import type {User} from "./types"
+import RNAccountKit, {Color,} from 'react-native-facebook-account-kit'
 
 type AppMode = 'idle' | 'init_cache' | 'logged' | 'unlogged' | 'upgrading_cache' | 'unknown'
 type AppConfig = {
@@ -270,22 +268,22 @@ export default class App {
     }
 
     onAppReady() {
-        OnBoardingManager.listenToStepChange({
-            triggerOnListen: true,
-            callback: (step?:OnBoardingStep) => {
-                if (step === 'notification') {
-                    if (isLogged()) {
-                        let callback = () => {
-                            OnBoardingManager.onDisplayed('notification')
-                        }
-                        NotificationManager.requestPermissionsForLoggedUser()
-                            .catch(callback)
-                            .then(callback)
-                    }
-
-                }
-            }
-        })
+        // OnBoardingManager.listenToStepChange({
+        //     triggerOnListen: true,
+        //     callback: (step?:OnBoardingStep) => {
+        //         if (step === 'notification') {
+        //             if (isLogged()) {
+        //                 let callback = () => {
+        //                     OnBoardingManager.onDisplayed('notification')
+        //                 }
+        //                 NotificationManager.requestPermissionsForLoggedUser()
+        //                     .catch(callback)
+        //                     .then(callback)
+        //             }
+        //
+        //         }
+        //     }
+        // })
     }
 
     registerScreens() {

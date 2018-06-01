@@ -80,8 +80,6 @@ export default class UserLineups extends Screen<Props, State> {
 
     render() {
 
-        // if (onBoardingStep === 'no_spam') return <NoSpamDialog/>
-
         const navigator = this.props.navigator;
 
         return (

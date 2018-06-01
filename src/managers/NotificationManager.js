@@ -37,6 +37,13 @@ class _NotificationManager implements NotificationManager {
             });
     }
 
+    async hasPermissions(): Promise<boolean> {
+        return RNFirebase
+            .app()
+            .messaging()
+            .hasPermission()
+    }
+
     configure() {
         if (this.configured) throw 'already configured'
         this.configured = true

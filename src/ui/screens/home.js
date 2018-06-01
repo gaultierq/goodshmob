@@ -23,7 +23,7 @@ import {TAB_BAR_PROPS} from "../UIStyles";
 import {currentGoodshboxId, currentUser, currentUserId, logged} from "../../managers/CurrentUser"
 import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
-import {displayHomeSearch, startAddItem} from "../Nav";
+import {CANCELABLE_MODAL, displayHomeSearch, startAddItem} from "../Nav"
 import Screen from "../components/Screen";
 import {Colors} from "../colors";
 import {PROFILE_CLICKED} from "../components/MyAvatar";
@@ -37,7 +37,7 @@ import MyGoodsh from "./MyGoodsh";
 import MyInterests from "./MyInterests";
 import {fullName2} from "../../helpers/StringUtils";
 import {currentUserFilter} from "../../redux/selectors";
-
+import NotificationManager from '../../managers/NotificationManager'
 
 type Props = {
     userId: Id,
@@ -85,7 +85,9 @@ export default class HomeScreen extends Screen<Props, State> {
         ],
     }
 
-
+    logger = logger.createLogger("home")
+    feed: any
+    onBoardingHelper = new HomeOnBoardingHelper()
     state = {
         focusedSaving: false,
         isActionButtonVisible: true,
@@ -97,7 +99,7 @@ export default class HomeScreen extends Screen<Props, State> {
         // currentTip: TEST_TIP
     }
 
-    onBoardingHelper = new HomeOnBoardingHelper()
+
 
 
     constructor(props: Props){
@@ -115,7 +117,7 @@ export default class HomeScreen extends Screen<Props, State> {
         this.props.navigator.setDrawerEnabled({side: 'left', enabled: false});
     }
 
-    feed: any
+
 
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
         //console.debug("home:onNavigatorEvent" , event);
@@ -155,15 +157,51 @@ export default class HomeScreen extends Screen<Props, State> {
 
     componentDidAppear() {
 
-        this.onBoardingHelper.listenTipChange(tip => {
-            if (tip !== this.state.currentTip) {
-                console.debug(`new tip`, tip)
-                registerLayoutAnimation("opacity")
-                this.setState({currentTip: tip})
-            }
+        // this.onBoardingHelper.listenTipChange(tip => {
+        //     if (tip !== this.state.currentTip) {
+        //         console.debug(`new tip`, tip)
+        //         registerLayoutAnimation("opacity")
+        //         this.setState({currentTip: tip})
+        //     }
+        // })
+        this.refreshOnBoarding()
+    }
+
+    refreshOnBoarding() {
+
+        //TODO: rm this settimeout
+        setTimeout(() => {
+            OnBoardingManager
+                .getPendingInfo("full_focus", this.props.onBoarding, true)
+                .then(infoType => {
+                        if (infoType) {
+                            this.logger.debug("getPendingInfo", infoType)
+                            switch (infoType) {
+                                case "focus_add":
+                                    this.onBoardingHelper.handleFocusAdd()
+                                    break
+                                case "notification_permissions":
+                                    NotificationManager.requestPermissionsForLoggedUser()
+                                    break
+                                case "popular":
+                                    this.props.navigator.showModal({
+                                        screen: 'goodsh.PopularItemsScreen',
+                                        passProps: {onFinished: ()=> {
+                                                OnBoardingManager.postOnDismissed("popular")
+                                                this.props.navigator.dismissModal()
+                                            }},
+                                    })
+                                    break
+                            }
+                        }
+                    }
+                )
         })
 
-        this.onBoardingHelper.handleFocusAdd()
+    }
+
+    componentDidUpdate() {
+        this.refreshOnBoarding()
     }
 
 

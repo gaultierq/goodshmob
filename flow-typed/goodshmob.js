@@ -1,5 +1,6 @@
 declare var i18n: any;
 declare var _: any;
+declare var __WITH_NOTIFICATIONS__: boolean
 
 export type Logger = {
     log: (m: string, ...args) => void,

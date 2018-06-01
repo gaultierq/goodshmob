@@ -37,6 +37,7 @@ import * as types from "../activity/actionTypes";
 
 
 export type Props = {
+    onFinished ?: () => void
 };
 
 type State = {
@@ -120,11 +121,12 @@ export default class PopularItemsScreen extends Screen<Props, State> {
     }
 
     saveMany(itemIds: Id[]) {
-        Api.safeExecBlock.call(
+        const call = itemIds.length > 0 ? Api.safeExecBlock.call(
             this,
             () => this.props.saveManyItems(itemIds),
             'reqAdd'
-        )
+        ) : Promise.resolve()
+        call.then(this.props.onFinished)
     }
 }
 

@@ -1,10 +1,9 @@
 // @flow
 
-import {Colors} from "../colors";
-import type {OnBoardingStep} from "../../managers/OnBoardingManager";
-import OnBoardingManager from "../../managers/OnBoardingManager";
-import {TipConfig} from "../components/Tip";
-import {AppTour, AppTourSequence, AppTourView} from "../../../vendors/taptarget";
+import {Colors} from "../colors"
+import OnBoardingManager from "../../managers/OnBoardingManager"
+import {TipConfig} from "../components/Tip"
+import {AppTour, AppTourSequence, AppTourView} from "../../../vendors/taptarget"
 
 
 //TODO: move tips
@@ -62,7 +61,7 @@ export class HomeOnBoardingHelper {
 
     handleFocusAdd() {
         if (this.focusAddJob) return
-        if (OnBoardingManager.getPendingStep() !== 'focus_add') return
+        if (OnBoardingManager.shouldDisplayFocusAdd()) return
         if (this.appTourTargets.size  === 0) return
 
 
@@ -87,26 +86,25 @@ export class HomeOnBoardingHelper {
 
     listenTipChange(onTip: TipConfig => void) {
         //if a new onBoarding step is broadcasted, then display it
-        OnBoardingManager.listenToStepChange({
-            triggerOnListen: true,
-            callback: (step: ?OnBoardingStep) => {
-                let newTip = null;
-                switch (step) {
-                    case 'privacy':
-                        newTip = TIP_PRIVACY;
-                        break
-                    case 'noise':
-                        newTip = TIP_NOISE;
-                        break
-                    case 'private':
-                        newTip = TIP_FULL_PRIVATE;
-                        break
-                }
-                onTip(newTip)
-
-            }
-        })
-
+        // OnBoardingManager.listenToStepChange({
+        //     triggerOnListen: true,
+        //     callback: (step: ?OnBoardingStep) => {
+        //         let newTip = null;
+        //         switch (step) {
+        //             case 'privacy':
+        //                 newTip = TIP_PRIVACY;
+        //                 break
+        //             case 'noise':
+        //                 newTip = TIP_NOISE;
+        //                 break
+        //             case 'private':
+        //                 newTip = TIP_FULL_PRIVATE;
+        //                 break
+        //         }
+        //         onTip(newTip)
+        //
+        //     }
+        // })
     }
 
 }
