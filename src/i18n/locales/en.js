@@ -156,7 +156,7 @@ export default {
         "related_activities_title": "Related activities"
     },
     "create_list_controller":{
-        "title":"+ Add new",
+        "title":"+ New list",
         "subtitle":"##Be creative;)",
         "placeholder":"Be creative;)",
         "action":"Add new list",
