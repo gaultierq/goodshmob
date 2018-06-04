@@ -19,8 +19,8 @@ export default {
             empty: "No result",
         },
         filter: {
-            empty: "No result. Try launching a deep search.",
-            deepsearch: "Deep search",
+            empty: "Search in my lists on the server",
+            deepsearch: "Search in all my lists",
         },
         goodsh : {
             title: "GoodshBox"

@@ -15,8 +15,8 @@ export default {
     },
     lineups: {
         filter: {
-            empty: "Pas de résultat.\nPasser en mode recherche approfondie ?",
-            deepsearch: "Recherche approfondie",
+            empty: "Chercher dans mes listes sur le serveur.",
+            deepsearch: "Chercher dans toutes mes listes",
         },
         search: {
             placeholder: "##Rechercher",
@@ -372,7 +372,7 @@ export default {
         message: "Rejoins-moi sur Goodsh : https://goodsh.it/",
     },
     loading: {
-        error: "Z@#u$%t, le chargement a échoué. "
+        error: "Oups... Problème avec internet. "
     },
     alert: {
         delete: {
