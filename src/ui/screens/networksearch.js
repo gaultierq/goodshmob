@@ -90,6 +90,7 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                     <SearchPage
                         search={results}
                         renderItem={renderItem}
+                        placeholder={i18n.t('network_search_info.savings')}
                     />
                 )
             },
@@ -107,6 +108,7 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                     <SearchPage
                         search={results}
                         renderItem={renderUser}
+                        placeholder={i18n.t('network_search_info.users')}
                     />
                 )
             },
