@@ -177,6 +177,10 @@ export default {
         "savings":"GOODSH & LIST",
         "users":"MEMBER"
     },
+    "network_search_info": {
+        "savings": "Search for interesting lists to follow",
+        "users": "Search for users to follow",
+    },
     "community_screen":{
         "tabs": {
             "friends":"MY CONTACTS",

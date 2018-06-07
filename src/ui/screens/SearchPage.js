@@ -24,7 +24,8 @@ import type {SearchState} from "./search";
 type PageProps = {
     renderItem: (item: *) => Node,
     search: SearchState,
-    ListFooterComponent?: Node
+    ListFooterComponent?: Node,
+    placeholder?: string,
 
 };
 
@@ -49,6 +50,7 @@ export default class SearchPage extends Component<PageProps, PageState> {
 
         if (loadingFirst) return <FullScreenLoader/>
         if (emptySearchResult) return <Text style={{alignSelf: "center", marginTop: 20}}>{i18n.t('lineups.search.empty')}</Text>
+        if (!search && this.props.placeholder) return <Text style={{alignSelf: "center", marginTop: 20}}>{this.props.placeholder}</Text>
 
         return (<FlatList
             data={searchResult}
