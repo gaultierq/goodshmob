@@ -37,6 +37,7 @@ export type Props = FeedProps<List> & {
     userId: Id,
     data?: any,
     onCancel?: ()=>void,
+    renderHeader?: ()=>void,
     sectionMaker?: (lineups: List<List>) => Array<*>,
     ListHeaderComponent?: Node,
     renderItem: (item: *)=>Node,
