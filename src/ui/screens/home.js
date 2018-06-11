@@ -122,6 +122,7 @@ export default class HomeScreen extends Screen<Props, State> {
 
         if (__IS_IOS__ && event.id === 'bottomTabReselected' && this.feed) {
             //__IS_IOS__ because of: scrollToIndex should be used in conjunction with getItemLayout or onScrollToIndexFailed
+            this.setState({index: 0})
             this.feed.scrollToLocation({sectionIndex: 0, itemIndex: 0, viewOffset: 50})
         }
 
