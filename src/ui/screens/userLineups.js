@@ -99,7 +99,7 @@ export default class UserLineups extends Screen<Props, State> {
                         ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
                         filter={this.filter()}
                         {...this.props}
-                        ListHeaderComponent={() => this.renderAll()}
+                        ListHeaderComponent={this.renderAll()}
                     />
                     {_.isEmpty(this.state.filter) && this.state.isFilterFocused && this.renderSearchOverlay()}
                 </View>

@@ -234,9 +234,7 @@ export default class Feed extends Component<Props, State>  {
             // allViews.push(filter.renderFilter());
 
             items = filter.applyFilter(items);
-            if (_.isEmpty(items)) {
-                return filter.emptyFilterResult(filter.token)
-            }
+
         }
 
         const style1 = [style];
@@ -264,6 +262,7 @@ export default class Feed extends Component<Props, State>  {
         };
 
         let listNode;
+
         if (sections) {
             listNode = React.createElement(SectionList, {sections: items, ...params});
         }
@@ -272,7 +271,10 @@ export default class Feed extends Component<Props, State>  {
         }
 
 
-        return <View style={[this.props.style, {flex: 1}]}>{listNode}</View>
+        return <View style={[this.props.style, {flex: 1}]}>
+            {listNode}
+            {filter && filter.emptyFilterResult(filter.token)}
+            </View>
     }
 
     isVisible() {
