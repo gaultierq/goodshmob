@@ -24,6 +24,7 @@ import {
 import UserConnectItem from "./userConnectItem";
 import {SearchStyles} from "../UIStyles";
 import Screen from "../components/Screen";
+import EmptySearch from "../components/EmptySearch";
 import Config from 'react-native-config'
 import SearchScreen from "./search";
 import GTouchable from "../GTouchable";
@@ -86,13 +87,16 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                 tabName: "network_search_tabs.savings",
                 placeholder: "search_bar.network_placeholder",
                 parseResponse: createResultFromHit,
-                renderResults: ({query, results}) => (
-                    <SearchPage
+                renderResults: ({query, results}) => {
+                    if (!results) {
+                        return <EmptySearch categ={'savings'}/>
+                    }
+
+                    return <SearchPage
                         search={results}
                         renderItem={renderItem}
-                        placeholder={i18n.t('network_search_info.savings')}
                     />
-                )
+                }
             },
             {
                 type: "users",
@@ -104,13 +108,16 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                 tabName: "network_search_tabs.users",
                 placeholder: "search_bar.network_placeholder",
                 parseResponse: createResultFromHit2,
-                renderResults: ({query, results}) => (
-                    <SearchPage
+                renderResults: ({query, results}) => {
+                    if (!results) {
+                        return <EmptySearch categ={'users'}/>
+                    }
+
+                    return <SearchPage
                         search={results}
                         renderItem={renderUser}
-                        placeholder={i18n.t('network_search_info.users')}
                     />
-                )
+                }
             },
 
         ];
