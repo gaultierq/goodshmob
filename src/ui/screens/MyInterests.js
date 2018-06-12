@@ -71,7 +71,7 @@ export default class MyInterests extends Screen<Props, State> {
         lists = mergeItemsAndPendings2(
             lists,
             this.props.pending[FOLLOW_LINEUP],
-            cand => this.props.pending[UNFOLLOW_LINEUP].some(o => o.payload.id === cand.id),
+            cand => _.some(this.props.pending[UNFOLLOW_LINEUP], o => o.payload.id === cand.id),
             (pending) => buildData(data, 'lists', pending.payload.id) || {}
         );
 

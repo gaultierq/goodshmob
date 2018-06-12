@@ -36,7 +36,7 @@ class _StoreManager implements StoreManager {
 
     isListPendingFollowOrUnfollow(listId: Id): boolean {
         const pending = this.store.getState().pending
-        let finder = pendings => pendings.some(p => _.get(p, 'payload.id') === listId)
+        let finder = pendings => _.some(pendings, p => _.get(p, 'payload.id') === listId)
 
         return finder(pending[FOLLOW_LINEUP]) || finder(pending[UNFOLLOW_LINEUP])
     }
