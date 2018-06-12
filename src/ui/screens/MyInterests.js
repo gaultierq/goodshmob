@@ -33,6 +33,7 @@ import {buildData, updateSplice0} from "../../helpers/DataUtils";
 import {FOLLOW_LINEUP, UNFOLLOW_LINEUP} from "../lineup/actions";
 import type {FeedSource} from "../components/feed";
 import {Call} from "../../managers/Api";
+import ShareButton from "../components/ShareButton";
 
 
 type Props = {
@@ -74,7 +75,7 @@ export default class MyInterests extends Screen<Props, State> {
                     displayName={"MyInterests"}
                     renderSectionHeader={({section}) => section.renderSectionHeader()}
                     sections={sections}
-                    empty={<View><Text style={STYLES.empty_message}>{i18n.t('community_screen.empty_screen')}</Text></View>}
+                    empty={<View><Text style={STYLES.empty_message}>{i18n.t('my_interests_screen.empty_screen')}</Text><ShareButton text={i18n.t('actions.invite')}/></View>}
                     fetchSrc={this.fetchSrc(userId)}
                     decorateLoadMoreCall={(sections: any[], call: Call) => {
                         const lastLineup = _.last(sections).data[0];

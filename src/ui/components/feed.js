@@ -7,7 +7,7 @@ import {
     BackHandler,
     FlatList,
     Keyboard,
-    RefreshControl,
+    RefreshControl, ScrollView,
     SectionList,
     Text,
     TouchableWithoutFeedback,
@@ -324,7 +324,7 @@ export default class Feed extends Component<Props, State>  {
     }
 
     renderEmpty() {
-        return <View>{this.props.empty}</View>;
+        return <ScrollView refreshControl={this.renderRefreshControl()}>{this.props.empty}</ScrollView>;
     }
 
     isFetchingFirst() {

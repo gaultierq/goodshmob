@@ -95,7 +95,7 @@ export const FullScreenLoader = props => (<View style={STYLES.FULL_SCREEN}>
     <Spinner
         isVisible={true}
         size={__DEVICE_WIDTH__ / 10}
-        type={"WanderingCubes"}
+        type={"9CubeGrid"}
         color={Colors.grey3}/>
 </View>);
 

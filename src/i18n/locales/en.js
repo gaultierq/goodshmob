@@ -19,8 +19,8 @@ export default {
             empty: "No result",
         },
         filter: {
-            empty: "No result. Try launching a deep search.",
-            deepsearch: "Deep search",
+            empty: "Search in my lists on the server",
+            deepsearch: "Search in all my lists",
         },
         goodsh : {
             title: "GoodshBox"
@@ -156,7 +156,7 @@ export default {
         "related_activities_title": "Related activities"
     },
     "create_list_controller":{
-        "title":"+ Add new",
+        "title":"+ New list",
         "subtitle":"##Be creative;)",
         "placeholder":"Be creative;)",
         "action":"Add new list",
@@ -184,6 +184,9 @@ export default {
         },
         "empty_screen": "The goodsh of your friends are here.\nInvite them to share your tips with them."
     },
+    "my_interests_screen":{
+        "empty_screen": "You will find every list you follow here.\nExplore your friends lists, and find them here !"
+    },
     "comments_screen":{
         "title": "Comments"
     },
@@ -198,7 +201,7 @@ export default {
             "consumer_goods":"Stuff: books, gifts, shoes, wine, games, products...",
             "places":"Restaurants, cafés, shops, hotels, museums, cities, beaches, places to visit, doctors, plumbers...",
             "movies":"Movies, TV shows",
-            "musics":"Musics, ortists, albums, tracks"
+            "musics":"Musics, artists, albums, tracks"
         },
         "search_options":  {
             "around_me": "Around me"

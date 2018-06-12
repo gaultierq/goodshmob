@@ -15,8 +15,8 @@ export default {
     },
     lineups: {
         filter: {
-            empty: "Pas de résultat.\nPasser en mode recherche approfondie ?",
-            deepsearch: "Recherche approfondie",
+            empty: "Chercher dans mes listes sur le serveur.",
+            deepsearch: "Chercher dans toutes mes listes",
         },
         search: {
             placeholder: "##Rechercher",
@@ -59,7 +59,7 @@ export default {
     },
     home: {
         wizard: {
-            action_button_label : "Ajouter un coup de coeur\nou une envie.",
+            action_button_label : "Ajouter un coup de coeur,\nune envie, un conseil.",
             action_button_body : "Livre, film, série, resto, musique...",
         },
         tabs: {
@@ -182,6 +182,9 @@ export default {
             "notifications":"NOTIFICATIONS",
         },
         "empty_screen": "Découvre ici les goodsh de tes contacts.\nTap Ask pour leur poser des questions."
+    },
+    "my_interests_screen":{
+        "empty_screen": "Tu retrouveras les listes que tu suis ici.\nExplore les listes de tes amis, et suis les plus intéressantes !"
     },
     "comments_screen":{
         "title": "Commentaires"
@@ -369,7 +372,7 @@ export default {
         message: "Rejoins-moi sur Goodsh : https://goodsh.it/",
     },
     loading: {
-        error: "Z@#u$%t, le chargement a échoué. "
+        error: "Oups... Problème avec internet. "
     },
     alert: {
         delete: {

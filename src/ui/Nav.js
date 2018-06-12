@@ -296,7 +296,7 @@ export function displayHomeSearch(navigator: RNNNavigator, token: SearchToken) {
 }
 
 
-export function displayChangeTitle(navigator: RNNNavigator, lineup: Lineup) {
+export function displayChangeTitle({navigator, lineup}: {navigator: RNNNavigator, lineup: Lineup}) {
     let {id, name} = lineup;
 
     navigator.showModal({

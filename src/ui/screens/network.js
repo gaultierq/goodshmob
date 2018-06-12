@@ -88,7 +88,8 @@ class NetworkScreen extends Screen<Props, State> {
         console.debug("network:onNavigatorEvent" , event);
         let navigator = this.props.navigator;
 
-        if (event.id === 'bottomTabReselected' && this.feed) {
+        if (__IS_IOS__ && event.id === 'bottomTabReselected' && this.feed) {
+            //__IS_IOS__ because of: scrollToIndex should be used in conjunction with getItemLayout or onScrollToIndexFailed
             // this.feed.scrollToOffset({x: 0, y: 0, animated: true});
             this.feed.scrollToLocation({sectionIndex: 0, itemIndex: 0, viewOffset: 50})
         }
