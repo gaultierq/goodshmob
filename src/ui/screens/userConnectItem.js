@@ -64,7 +64,7 @@ export default class UserConnectItem extends Component<Props, State> {
 
     openConnectModal(user) {
         this.props.navigator.showModal({
-            screen: 'goodsh.FollowUser',
+            screen: 'goodsh.UserSheet',
             animationType: 'none',
             passProps: {
                 user: user,

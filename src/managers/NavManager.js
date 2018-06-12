@@ -75,21 +75,9 @@ class _NavManager implements NavManager {
             let id = _.nth(parts, 2);
             if (!isId(id)) return false;
 
-            this.showModal({
-                screen: 'goodsh.UserScreen', // unique ID registered with Navigation.registerScreen
-                passProps: {
-                    userId: id,
-                },
-            });
-            return true;
-        }
-        if (main === 'user_details') {
-            let id = _.nth(parts, 2);
-            if (!isId(id)) return false;
-
             if (url.query && url.query.origin === 'long_press') {
                 this.showModal({
-                    screen: 'goodsh.FollowUser', // unique ID registered with Navigation.registerScreen
+                    screen: 'goodsh.UserSheet', // unique ID registered with Navigation.registerScreen
                     passProps: {
                         userId: id,
                     },

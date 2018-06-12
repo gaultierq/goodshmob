@@ -190,7 +190,7 @@ export default class ActivityStatus extends React.Component<Props, State> {
     }
 
     getUserHtml(user: User) {
-        return `<a href="goodsh://it/user_details/${user.id}">${fullName(user)}</a>`;
+        return `<a href="goodsh://it/users/${user.id}">${fullName(user)}</a>`;
     }
 
     getLineupHtml(lineup: Lineup) {
