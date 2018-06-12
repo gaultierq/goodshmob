@@ -76,7 +76,7 @@ class _NavManager implements NavManager {
             if (!isId(id)) return false;
 
             this.showModal({
-                screen: 'goodsh.UserScreen', // unique ID registered with Navigation.registerScreen
+                screen: 'goodsh.FollowUser', // unique ID registered with Navigation.registerScreen
                 passProps: {
                     userId: id,
                 },
