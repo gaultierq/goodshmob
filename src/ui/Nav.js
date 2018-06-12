@@ -1,5 +1,6 @@
 // @flow
 
+
 import type {Activity, ActivityType, Id, Item, Lineup, RNNNavigator, SearchToken, User} from "../types"
 import {fullName} from "../helpers/StringUtils"
 import StoreManager from "../managers/StoreManager"
@@ -32,6 +33,15 @@ export const CANCELABLE_MODAL = {
         }
     ],
     rightButtons: []
+}
+export const CANCELABLE_MODAL2 = {
+    leftButtons: [
+        {
+            id: CLOSE_MODAL,
+            icon: require('../img2/leftBackArrowGrey.png')
+        }
+    ],
+    rightButtons: []
 };
 
 export const CANCELABLE_SEARCH_MODAL = () => ({
@@ -52,7 +62,7 @@ export function startAddItem(navigator: *, defaultLineupId: Id) {
 
     navigator.showModal({
         screen: 'goodsh.SearchItemsScreen', // unique ID registered with Navigation.registerScreen
-        navigatorButtons: CANCELABLE_SEARCH_MODAL(),
+        navigatorButtons: CANCELABLE_MODAL2,
         passProps: {
             onItemSelected: (item: Item, navigator: RNNNavigator) => {
 

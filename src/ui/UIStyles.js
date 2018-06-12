@@ -10,10 +10,11 @@ import type {ViewStyle} from "../types";
 import {TextStyle} from "../types";
 
 export const BACKGROUND_COLOR = Colors.dirtyWhite2;
+export const NAV_BACKGROUND_COLOR = Colors.dirtyWhite;
 
 export const NavStyles = {
     navBarButtonColor: Colors.greyishBrown,
-    navBarBackgroundColor: Colors.dirtyWhite,
+    navBarBackgroundColor: NAV_BACKGROUND_COLOR,
     navBarTextFontSize: 17,
     navBarSubtitleFontSize: 14,
     navBarSubtitleColor: Colors.brownishGrey,

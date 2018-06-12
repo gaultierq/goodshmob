@@ -22,7 +22,6 @@ export type State = {
 
 export default class PlacesAutocomplete extends Screen<Props, State> {
 
-
     static navigatorStyle = {
         screenBackgroundColor: 'transparent',
         modalPresentationStyle: 'overFullScreen',
@@ -34,9 +33,6 @@ export default class PlacesAutocomplete extends Screen<Props, State> {
         props.navigator.setStyle({...UI.NavStyles,
             navBarNoBorder: true,
             topBarElevationShadowEnabled: false,
-            navBarCustomView: 'goodsh.SearchNavBar',
-
-
 
             navBarCustomViewInitialProps: {
                 initialInput: props.token,

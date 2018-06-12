@@ -3,7 +3,6 @@ import {Navigation} from 'react-native-navigation';
 import {screen as LoginScreen} from './screens/login';
 import {screen as NetworkScreen} from './screens/network';
 import {screen as SearchItemScreen} from './screens/searchitems';
-import SearchNavBar from './screens/SearchNavBar';
 import DebugScreen from './screens/debug';
 
 import {screen as ActivityDetailScreen} from './activity/activityDetail';
@@ -32,11 +31,8 @@ import AddLineupSheet from './screens/addlineupsheet';
 import PlacesAutocomplete from './screens/PlacesAutocomplete';
 import UserNav from './components/UserNav';
 import LineupNav from './components/LineupNav';
-
-
 import RnRenderPerfs from 'rn-render-perfs';
 import Perf from 'ReactPerf';
-
 import React from 'react';
 import {View} from 'react-native';
 import UnsaveScreen from "./screens/unsave";
@@ -44,7 +40,6 @@ import ChangeDescriptionScreen from "./screens/changeDescription";
 import ChangeLineupName from "./screens/changeLineupName";
 import MoveInScreen from "./screens/moveinscreen";
 import InAppNotif from "./screens/inAppNotif";
-
 import MyInterestsScreen from "./screens/MyInterests";
 import MyGoodshsScreen from "./screens/MyGoodsh";
 import EditUserProfileScreen from "./screens/edituserprofile";
@@ -87,7 +82,6 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.LineupListScreen', () => LineupListScreen, store, Provider);
     wrap('goodsh.AddInScreen', () => AddInScreen, store, Provider);
     wrap('goodsh.HomeScreen', () => HomeScreen, store, Provider);
-    wrap('goodsh.SearchNavBar', () => SearchNavBar, store, Provider);
     wrap('goodsh.LineupScreen', () => LineupScreen, store, Provider);
     wrap('goodsh.CommentsScreen', () => CommentsScreen, store, Provider);
     wrap('goodsh.SaveScreen', () => SaveScreen, store, Provider);

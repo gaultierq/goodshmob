@@ -22,8 +22,6 @@ import {isEmpty} from "lodash";
 import type {i18Key, ms, RequestState, Url} from "../../types";
 import {ViewStyle} from "../../types";
 import {renderSimpleButton} from "../UIStyles";
-import {SearchBar} from 'react-native-elements'
-
 import type {ScreenVisibility} from "./Screen";
 import {Colors} from "../colors";
 import {getLanguages} from 'react-native-i18n'
@@ -42,7 +40,7 @@ export type FeedSource = {
 export type Props = {
     data?: Array<any>,
     sections?: any,
-    renderItem?: any => Node,
+    renderItem: any => Node,
     fetchSrc: FeedSource,
     hasMore?: boolean,
     ListHeaderComponent?: Node,
@@ -62,7 +60,7 @@ export type Props = {
 export type FilterConfig<T> = {
     placeholder: i18Key,
     emptyFilterResult: string => Node,
-    style: *,
+    style?: *,
     applyFilter: (Array<T>) => Array<T>
 };
 
@@ -228,50 +226,44 @@ export default class Feed extends Component<Props, State>  {
         }
 
         const filter = this.props.filter;
+        let emptyFilter = false
+        let filteredItems = null
         if (filter) {
             // allViews.push(this.renderSearchBar(filter));
             // allViews.push(filter.renderFilter());
-
+            let wasEmpty = _.isEmpty(items)
+            // filteredItems = filter.applyFilter(items);
             items = filter.applyFilter(items);
-            if (_.isEmpty(items)) {
-                return filter.emptyFilterResult(filter.token)
-            }
+
+            emptyFilter = !wasEmpty && _.isEmpty(items)
+            // if (_.isEmpty(items)) {
+            //     return filter.emptyFilterResult(filter.token)
+            // }
         }
 
         const style1 = [style];
         if ((this.state.isFetchingFirst === 'sending' || this.state.isFetchingFirst === 'idle') && !this.hasItems()) style1.push({minHeight: 150});
-        // if (filter
-        //     && _.isEmpty(this.state.filter) && this.state.isFilterFocused) {
-        //     style1.push({opacity: 0.4})
-        // }
+
+        const someCondition = !((this.state.isFetchingFirst === 'sending' || this.state.isFetchingFirst === 'idle') && !this.hasItems())
         let params =  {
             ref: listRef,
             renderItem,
-            // keyExtractor: this.keyExtractor,
             key: "feed-list",
             refreshControl: this.renderRefreshControl(),
             onEndReached: this.onEndReached.bind(this),
             onEndReachedThreshold: 0.1,
-            ListFooterComponent: !((this.state.isFetchingFirst === 'sending' || this.state.isFetchingFirst === 'idle') && !this.hasItems()) && this.renderFetchMoreLoader(ListFooterComponent),
+            ListFooterComponent: (filter && emptyFilter) ? filter.emptyFilterResult(filter.token) : someCondition && this.renderFetchMoreLoader(ListFooterComponent),
             style: style1,
-            ListHeaderComponent: !((this.state.isFetchingFirst === 'sending' || this.state.isFetchingFirst === 'idle') && !this.hasItems()) && ListHeaderComponent,
-            renderSectionHeader: !((this.state.isFetchingFirst === 'sending' || this.state.isFetchingFirst === 'idle') && !this.hasItems()) && renderSectionHeader,
+            ListHeaderComponent: someCondition && ListHeaderComponent,
+            renderSectionHeader: someCondition && renderSectionHeader,
             onScroll: this._handleScroll,
             onScrollBeginDrag: Keyboard.dismiss,
             keyboardShouldPersistTaps: 'always',
-            ...attributes
+            ...attributes,
         };
 
-        let listNode;
-        if (sections) {
-            listNode = React.createElement(SectionList, {sections: items, ...params});
-        }
-        else {
-            listNode = React.createElement(FlatList, {data: items, ...params});
-        }
-
-
-        return <View style={[this.props.style, {flex: 1}]}>{listNode}</View>
+        if (sections) return <SectionList sections={items} {...params} />
+        else return <FlatList data={items} {...params} />
     }
 
     isVisible() {
@@ -307,7 +299,7 @@ export default class Feed extends Component<Props, State>  {
 
     getItems() {
         if (this.debugOnlyEmptyFeeds()) return [];
-        return this.props.sections || this.props.data;
+        return this.props.sections || this.props.data || []
     }
 
     getLastElement() {

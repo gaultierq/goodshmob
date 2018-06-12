@@ -25,6 +25,7 @@ import {buildData, doDataMergeInState} from "../../helpers/DataUtils"
 import {CREATE_LINEUP, DELETE_LINEUP} from "../lineup/actionTypes"
 import {mergeItemsAndPendings} from "../../helpers/ModelUtils"
 import Screen from "../components/Screen"
+
 import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
 import {GoodshContext} from "../UIComponents"
 import Immutable from 'seamless-immutable'

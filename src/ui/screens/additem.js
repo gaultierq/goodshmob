@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {ActivityIndicator, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import {CheckBox, SearchBar} from "react-native-elements";
+import {CheckBox} from "react-native-elements";
 import {renderSimpleButton, STYLES} from "../UIStyles";
 import type {Id, Item, ItemType} from "../../types";
 import {SAVE_ITEM_PRENDING, fetchItemCall} from "../lineup/actions";
