@@ -5,6 +5,7 @@ import {StyleSheet, Text, TextInput, View,} from 'react-native'
 import GTouchable from "../GTouchable"
 import {Colors} from "../colors"
 import Octicons from "react-native-vector-icons/Octicons"
+import {SFP_TEXT_REGULAR} from "../fonts"
 
 type State = {
     value: string
@@ -100,8 +101,7 @@ export default class GSearchBar2 extends Component<Props, State> {
 const styles = StyleSheet.create({
     input: {
         fontSize: 17,
-        // lineHeight: 22,
-        // backgroundColor: 'green',
+        fontFamily: SFP_TEXT_REGULAR,
 
 
     },
@@ -109,9 +109,7 @@ const styles = StyleSheet.create({
         height: 36,
         paddingHorizontal: 14,
         paddingVertical: 4,
-        borderRadius: 6,
+        borderRadius: 10,
         backgroundColor: 'rgba(142,142,142,0.12)',
-        // alignItems: 'center',
-
     },
 });

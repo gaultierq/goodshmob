@@ -72,7 +72,6 @@ export default class MyGoodsh extends Screen<Props, State> {
                 displayName={"MyGoodsh"}
                 feedId={"home list"}
                 userId={userId}
-                listRef={this.props.listRef}
                 navigator={navigator}
                 empty={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
                 renderSectionHeader={({section}) => section.renderSectionHeader()}

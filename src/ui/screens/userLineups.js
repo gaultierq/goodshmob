@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import React from 'react'
 import {
     Alert,
     BackHandler,
@@ -15,21 +15,18 @@ import {
     TouchableOpacity,
     TouchableWithoutFeedback,
     View
-} from 'react-native';
+} from 'react-native'
 import {CheckBox} from 'react-native-elements'
-import type {Id, Lineup, RNNNavigator, SearchToken} from "../../types";
-import {LINEUP_PADDING, NavStyles, renderSimpleButton, STYLES} from "../UIStyles"
-import Screen from "../components/Screen";
+import type {Id, Lineup, RNNNavigator, SearchToken} from "../../types"
+import {LINEUP_PADDING, renderSimpleButton, STYLES} from "../UIStyles"
+import Screen from "../components/Screen"
 import * as Nav from "../Nav"
 import {seeActivityDetails, seeList} from "../Nav"
 import type {Props as LineupListProps} from './lineuplist'
 import {LineupListScreen} from './lineuplist'
-import {Navigation} from 'react-native-navigation';
-import type {Visibility} from "./additem";
-import SearchBar from "../components/SearchBar";
-import {Colors} from "../colors";
-import {scheduleOpacityAnimation} from "../UIComponents";
-import type {FilterConfig} from "../components/feed";
+import {Navigation} from 'react-native-navigation'
+import type {Visibility} from "./additem"
+import type {FilterConfig} from "../components/feed"
 import GSearchBar2 from "../components/GSearchBar2"
 
 
@@ -48,8 +45,8 @@ type State = {
 export default class UserLineups extends Screen<Props, State> {
 
 
-    filterNode: Node;
     cancelSearch: Function
+    listRef: Node
 
     launchSearch(token?: SearchToken) {
         let navigator = this.props.navigator;
@@ -90,7 +87,6 @@ export default class UserLineups extends Screen<Props, State> {
                 <View style={{flex:1}}>
 
                     <LineupListScreen
-                        listRef={this.props.listRef}
                         onLineupPressed={(lineup) => seeList(navigator, lineup)}
                         onSavingPressed={(saving) => seeActivityDetails(navigator, saving)}
                         scrollUpOnBack={super.isVisible() ? ()=>false : null}
@@ -100,6 +96,7 @@ export default class UserLineups extends Screen<Props, State> {
                         ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
                         filter={this.filter()}
                         {...this.props}
+                        listRef={ref => {this.listRef = ref; this.props.listRef(ref)}}
                         ListHeaderComponent={this.renderFilter()}
                     />
                     {/*{_.isEmpty(this.state.filter) && this.state.isFilterFocused && this.renderSearchOverlay()}*/}
@@ -194,6 +191,8 @@ export default class UserLineups extends Screen<Props, State> {
                     }
 
                 });
+
+                this.listRef.flashScrollIndicators()
                 return result;
             }
         };
