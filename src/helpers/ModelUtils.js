@@ -472,10 +472,27 @@ export interface PendingAction<T> {
     exec: (payload: T) => (dispatch: any) => Promise<T>;
 }
 
+
 export function mergeItemsAndPendings<T>(
     syncedItems: Array<T>,
     pendingCreate: [],
     pendingDelete: [],
+    pendingToItem: (pending: PendingItem) => T,
+    options: any = {}
+) {
+    return  mergeItemsAndPendings2(
+        syncedItems,
+        pendingCreate,
+        cand => _.findIndex(pendingDelete, (o) => o.payload.lineupId === cand.id) >= 0,
+        pendingToItem,
+        options)
+}
+
+
+export function mergeItemsAndPendings2<T>(
+    syncedItems: Array<T>,
+    pendingCreate: [],
+    filterItem: T => boolean,
     pendingToItem: (pending: PendingItem) => T,
     options: any = {}
 ) {
@@ -487,7 +504,6 @@ export function mergeItemsAndPendings<T>(
     let addPendingCreate = () => {
         _.forEach(pendingCreate, pending => {
             if (pending.state === 'pending' || pending.state === 'processing') {
-
                 items.push(pendingToItem(pending));
             }
         })
@@ -504,7 +520,8 @@ export function mergeItemsAndPendings<T>(
         if (!l) break;
 
         //do not display items with pending deletion
-        if (_.findIndex(pendingDelete, (o) => o.payload.lineupId === l.id) >= 0) continue;
+
+        if (filterItem && filterItem(l)) continue;
 
         items.push(l);
 
@@ -514,75 +531,75 @@ export function mergeItemsAndPendings<T>(
 }
 
 
-export function isItemPending(item: Object, pending: []) {
+// export function isItemPending(item: Object, pending: []) {
+//
+//     if (!pending) return false
+//
+//     let foundPendingItem = false
+//
+//     _.forEach(pending, (pendingItem) => {
+//         if (item.id === pendingItem.payload.id) {
+//             foundPendingItem = true
+//             return false
+//         }
+//     })
+//     return foundPendingItem
+// }
 
-    if (!pending) return false
-
-    let foundPendingItem = false
-
-    _.forEach(pending, (pendingItem) => {
-        if (item.id === pendingItem.payload.id) {
-            foundPendingItem = true
-            return false
-        }
-    })
-    return foundPendingItem
-}
 
 
+// export function includePendingFollowItems<T>(
+//     items: Array<T>,
+//     pendingFollow: [],
+//     pendingUnfollow: []) {
+//
+//     const filteredItems = _.map(items, (item) => {
+//         // To avoid altering the fields in the original object
+//         return alterList(item,
+//             isItemPending(item, pendingFollow),
+//             isItemPending(item, pendingUnfollow))
+//     })
+//
+//     return filteredItems
+// }
 
-export function includePendingFollowItems<T>(
-    items: Array<T>,
-    pendingFollow: [],
-    pendingUnfollow: []) {
+// function alterList(list: Object, pendingFollow: boolean, pendingUnfollow: boolean,
+//                    removePendingUnfollow: boolean = false){
+//     list.meta = _.cloneDeep(list.meta)
+//
+//     if (pendingFollow) {
+//         list.meta.followed = true
+//         list.meta.followersCount += 1
+//     }
+//
+//     if (pendingUnfollow) {
+//         list.meta.followed = false
+//         list.meta.followersCount -= 1
+//         if (removePendingUnfollow) {
+//             return false
+//         }
+//     }
+//     return list
+// }
 
-    const filteredItems = _.map(items, (item) => {
-        // To avoid altering the fields in the original object
-        return alterList(item,
-            isItemPending(item, pendingFollow),
-            isItemPending(item, pendingUnfollow))
-    })
-
-    return filteredItems
-}
-
-function alterList(list: Object, pendingFollow: boolean, pendingUnfollow: boolean,
-                   removePendingUnfollow: boolean = false){
-    list.meta = _.cloneDeep(list.meta)
-
-    if (pendingFollow) {
-        list.meta.followed = true
-        list.meta.followersCount += 1
-    }
-
-    if (pendingUnfollow) {
-        list.meta.followed = false
-        list.meta.followersCount -= 1
-        if (removePendingUnfollow) {
-            return false
-        }
-    }
-    return list
-}
-
-export function includePendingFollow<T>(
-    section: Object,
-    pendingFollow: [],
-    pendingUnfollow: [],
-    removePendingUnfollow: boolean = false
-) {
-    const filteredItems = _.compact(_.map(section.data, (item) => {
-        return alterList(item,
-            isItemPending(item, pendingFollow),
-            isItemPending(item, pendingUnfollow),
-            removePendingUnfollow)
-    }))
-
-    if (_.isEmpty(filteredItems)){
-        return false
-    }
-    section.data = filteredItems
-
-    return section
-}
+// export function includePendingFollow<T>(
+//     section: Object,
+//     pendingFollow: [],
+//     pendingUnfollow: [],
+//     removePendingUnfollow: boolean = false
+// ) {
+//     const filteredItems = _.compact(_.map(section.data, (item) => {
+//         return alterList(item,
+//             isItemPending(item, pendingFollow),
+//             isItemPending(item, pendingUnfollow),
+//             removePendingUnfollow)
+//     }))
+//
+//     if (_.isEmpty(filteredItems)){
+//         return false
+//     }
+//     section.data = filteredItems
+//
+//     return section
+// }
 

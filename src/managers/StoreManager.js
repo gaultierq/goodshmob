@@ -6,6 +6,7 @@ import {CREATE_LINEUP, SAVE_ITEM} from "../ui/lineup/actionTypes";
 import {buildData} from "../helpers/DataUtils";
 import {UNSAVE} from "../ui/activity/actionTypes";
 import {isId} from "../helpers/StringUtils";
+import {FOLLOW_LINEUP, UNFOLLOW_LINEUP} from "../ui/lineup/actions"
 
 // export const DEEPLINK_OPEN_SCREEN_IN_MODAL = 'DEEPLINK_OPEN_SCREEN_IN_MODAL';
 
@@ -31,6 +32,13 @@ class _StoreManager implements StoreManager {
         );
 
         return !_.isEmpty(_.filter(result, pending => pending.itemId === itemId));
+    }
+
+    isListPendingFollowOrUnfollow(listId: Id): boolean {
+        const pending = this.store.getState().pending
+        let finder = pendings => pendings.some(p => _.get(p, 'payload.id') === listId)
+
+        return finder(pending[FOLLOW_LINEUP]) || finder(pending[UNFOLLOW_LINEUP])
     }
 
     getMySavingsForItem(itemId: Id, itemType: ItemType): Saving[] {
@@ -136,6 +144,8 @@ export interface StoreManager {
     init(store: *): void;
 
     isItemPendingAdd(itemId: Id): boolean;
+
+    isListPendingFollowOrUnfollow(listId: Id): boolean;
 
     getMySavingsForItem(itemId: Id, itemType: ItemType): Saving[];
 

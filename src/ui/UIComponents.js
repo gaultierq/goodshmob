@@ -173,13 +173,9 @@ export const RENDER_SECTION_HEADER = (navigator: RNNNavigator, dispatch: Dispatc
 </GTouchable>;
 
 //TODO: split - create a file dedicated to Lineup rendering
-export const LINEUP_SECTIONS = (navigator: RNNNavigator, dispatch: any, userId: Id) => (lineups: Lineup[])=> {
-    // const goodshbox = _.head(lineups);
-    // let savingCount = _.get(goodshbox, `meta.savingsCount`, null) || 0;
+export const LINEUP_SECTIONS = (navigator: RNNNavigator, dispatch: any) => (lineups: Lineup[])=> {
     return lineups.map(lineup => ({
         data: [lineup],
-        // title: lineup.name,
-        // subtitle: ` (${_.get(lineup, `meta.savingsCount`, 0)})`,
         onPress: () => seeList(navigator, lineup),
         renderItem: ({item}: {item: Lineup}) => (
             <GTouchable

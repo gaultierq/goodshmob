@@ -67,11 +67,11 @@ export const A_BUY : GAction = new GAction('buy');
 
 
 //lineups
-export const L_SHARE : GAction = new GLineupAction('share list');
-export const L_RENAME : GAction = new GLineupAction('rename list');
-export const L_DELETE : GAction = new GLineupAction('delete list');
-export const L_FOLLOW : GAction = new GLineupAction('follow list');
-export const L_UNFOLLOW : GAction = new GLineupAction('unfollow list');
+export const L_SHARE : GLineupAction = new GLineupAction('share list');
+export const L_RENAME : GLineupAction = new GLineupAction('rename list');
+export const L_DELETE : GLineupAction = new GLineupAction('delete list');
+export const L_FOLLOW : GLineupAction = new GLineupAction('follow list');
+export const L_UNFOLLOW : GLineupAction = new GLineupAction('unfollow list');
 
 export class LineupRights {
     lineup: Lineup;
@@ -89,7 +89,7 @@ export class LineupRights {
         const l = this.lineup;
         if (!l) return false
         let isMine = isCurrentUser(l.user)
-        const followed = isFollowed(l, true)
+        const followed = isFollowed(l)
 
         switch (action) {
             case L_SHARE:
