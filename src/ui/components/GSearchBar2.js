@@ -50,6 +50,11 @@ export default class GSearchBar2 extends Component<Props, State> {
                     <View style={[{flex:1, justifyContent: 'center',}]}>
                         <TextInput
                             placeholderTextColor={color1}
+                            autoCorrect={false}
+                            blurOnSubmit={true}
+                            returnKeyType={'search'}
+                            keyboardType={'default'}
+                            autoCapitalize={false}
                             {...this.props}
                             value={this.state.value}
                             onChangeText={this.onChangeText.bind(this)}
@@ -87,7 +92,7 @@ export default class GSearchBar2 extends Component<Props, State> {
     }
 
     displayCancelButton() {
-        return !!this.state.value || this.inputNode && this.inputNode.isFocused()
+        return !!this.state.value// || this.inputNode && this.inputNode.isFocused()
     }
 
     onChangeText = async (value : string) => {

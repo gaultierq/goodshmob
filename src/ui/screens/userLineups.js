@@ -180,6 +180,10 @@ export default class UserLineups extends Screen<Props, State> {
                     return result;
                 };
 
+                // applyFilter is called within a render => no call to refs
+                setTimeout(()=> {
+                    this.listRef && this.listRef.flashScrollIndicators()
+                })
 
                 let result = [];
                 sections.forEach(section => {
@@ -192,7 +196,7 @@ export default class UserLineups extends Screen<Props, State> {
 
                 });
 
-                this.listRef.flashScrollIndicators()
+
                 return result;
             }
         };

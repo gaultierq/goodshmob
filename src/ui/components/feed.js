@@ -42,7 +42,7 @@ export type FeedSource = {
 export type Props = {
     data?: Array<any>,
     sections?: any,
-    renderItem?: any => Node,
+    renderItem: any => Node,
     fetchSrc: FeedSource,
     hasMore?: boolean,
     ListHeaderComponent?: Node,
@@ -62,7 +62,7 @@ export type Props = {
 export type FilterConfig<T> = {
     placeholder: i18Key,
     emptyFilterResult: string => Node,
-    style: *,
+    style?: *,
     applyFilter: (Array<T>) => Array<T>
 };
 
@@ -230,11 +230,14 @@ export default class Feed extends Component<Props, State>  {
 
         const filter = this.props.filter;
         let emptyFilter = false
+        let filteredItems = null
         if (filter) {
             // allViews.push(this.renderSearchBar(filter));
             // allViews.push(filter.renderFilter());
             let wasEmpty = _.isEmpty(items)
+            // filteredItems = filter.applyFilter(items);
             items = filter.applyFilter(items);
+
             emptyFilter = !wasEmpty && _.isEmpty(items)
             // if (_.isEmpty(items)) {
             //     return filter.emptyFilterResult(filter.token)
@@ -248,7 +251,6 @@ export default class Feed extends Component<Props, State>  {
         let params =  {
             ref: listRef,
             renderItem,
-            // keyExtractor: this.keyExtractor,
             key: "feed-list",
             refreshControl: this.renderRefreshControl(),
             onEndReached: this.onEndReached.bind(this),
@@ -260,19 +262,11 @@ export default class Feed extends Component<Props, State>  {
             onScroll: this._handleScroll,
             onScrollBeginDrag: Keyboard.dismiss,
             keyboardShouldPersistTaps: 'always',
-            ...attributes
+            ...attributes,
         };
 
-        let listNode;
-        if (sections) {
-            listNode = React.createElement(SectionList, {sections: items, ...params});
-        }
-        else {
-            listNode = React.createElement(FlatList, {data: items, ...params});
-        }
-
-
-        return <View style={[this.props.style, {flex: 1}]}>{listNode}</View>
+        if (sections) return <SectionList sections={items} {...params} />
+        else return <FlatList data={items} {...params} />
     }
 
     isVisible() {
