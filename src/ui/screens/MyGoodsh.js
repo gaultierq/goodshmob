@@ -68,6 +68,7 @@ export default class MyGoodsh extends Screen<Props, State> {
         return (
             // $FlowFixMe
             <UserLineups
+                contentOffset={{x: 0, y: 50}}
                 displayName={"MyGoodsh"}
                 feedId={"home list"}
                 userId={userId}
