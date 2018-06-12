@@ -59,7 +59,7 @@ export default {
     },
     home: {
         wizard: {
-            action_button_label : "Ajouter un coup de coeur\nou une envie.",
+            action_button_label : "Ajouter un coup de coeur,\nune envie, un conseil.",
             action_button_body : "Livre, film, série, resto, musique...",
         },
         tabs: {
