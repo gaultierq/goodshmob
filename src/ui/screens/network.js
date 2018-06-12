@@ -20,6 +20,8 @@ import {Call, safeDispatchAction} from "../../managers/Api";
 import {buildData} from "../../helpers/DataUtils";
 import ActivityStatus from "../activity/components/ActivityStatus";
 import {SFP_TEXT_MEDIUM} from "../fonts";
+import {CANCELABLE_MODAL} from "../Nav"
+import {CANCELABLE_MODAL2} from "../Nav"
 
 type Props = NavigableProps;
 
@@ -232,21 +234,10 @@ class NetworkScreen extends Screen<Props, State> {
 
         navigator.showModal({
             screen: 'goodsh.NetworkSearchScreen',
-            animationType: 'none',
-
             passProps:{
                 onClickClose: () => navigator.dismissModal({animationType: 'none'}),
             },
-            backButtonHidden: true,
-            navigatorButtons: {
-                leftButtons: [],
-                rightButtons: [
-                    {
-                        id: Nav.CLOSE_MODAL,
-                        title: i18n.t("actions.cancel")
-                    }
-                ],
-            },
+            navigatorButtons: CANCELABLE_MODAL2,
         });
     }
 

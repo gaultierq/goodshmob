@@ -18,8 +18,6 @@ import LineupHorizontal from "./components/LineupHorizontal";
 import LineupCellSaving from "./components/LineupCellSaving";
 import {deleteLineup, followLineup as followLineupAction, unfollowLineup as unfollowLineupAction} from "./lineup/actions";
 import {GAction, L_DELETE, L_FOLLOW, L_RENAME, L_SHARE, L_UNFOLLOW, LineupRights} from "./rights";
-import {isCurrentUser} from "../managers/CurrentUser";
-import {isFollowed} from "./activity/components/FollowButton";
 import {BACKGROUND_COLOR} from "./UIStyles";
 import LineupTitle2 from "./components/LineupTitle2";
 import _Messenger from "../managers/Messenger"
@@ -32,6 +30,15 @@ export const CANCELABLE_MODAL = {
         {
             id: CLOSE_MODAL,
             icon: require('../img2/closeXGrey.png')
+        }
+    ],
+    rightButtons: []
+}
+export const CANCELABLE_MODAL2 = {
+    leftButtons: [
+        {
+            id: CLOSE_MODAL,
+            icon: require('../img2/leftBackArrowGrey.png')
         }
     ],
     rightButtons: []
@@ -55,7 +62,7 @@ export function startAddItem(navigator: *, defaultLineupId: Id) {
 
     navigator.showModal({
         screen: 'goodsh.SearchItemsScreen', // unique ID registered with Navigation.registerScreen
-        navigatorButtons: CANCELABLE_SEARCH_MODAL(),
+        navigatorButtons: CANCELABLE_MODAL2,
         passProps: {
             onItemSelected: (item: Item, navigator: RNNNavigator) => {
 

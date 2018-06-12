@@ -30,6 +30,7 @@ import GTouchable from "../GTouchable";
 import {seeActivityDetails, seeUser} from "../Nav";
 import SearchPage from "./SearchPage";
 import {renderLineupFromOtherPeople} from "../UIComponents";
+import {Colors} from "../colors"
 
 type Props = NavigableProps & {
 };
@@ -47,8 +48,6 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
         topBarElevationShadowEnabled: false
     };
 
-
-    static navigatorStyle = SearchStyles;
 
     state: State = {connect: {}};
 
@@ -120,6 +119,7 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
             categories={categories}
             navigator={navigator}
             placeholder={i18n.t('search.in_network')}
+            style={{backgroundColor: Colors.white}}
         />;
     }
 

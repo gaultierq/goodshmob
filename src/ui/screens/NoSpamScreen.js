@@ -14,7 +14,6 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
-import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import {Colors} from "../colors";
 import NoSpamDialog from "./NoSpamDialog";

@@ -15,9 +15,10 @@ export type Props = {
     value?: ?string,
     onCancel?: () => void,
     cancelTitle?: string,
-    inputStyle?: any,
+    style?: any,
     onChangeText: string => void,
-    ref?: any => string
+    ref?: any => string,
+
 
 };
 
@@ -25,6 +26,10 @@ export type Props = {
 export default class GSearchBar2 extends Component<Props, State> {
 
     inputNode: Node
+
+    static defaultProps = {
+        cancelTitle: i18n.t('actions.cancel')
+    }
 
     constructor(props: Props) {
         super(props)
@@ -35,9 +40,11 @@ export default class GSearchBar2 extends Component<Props, State> {
 
     render() {
 
+        const {style} = this.props
+
         const color1 = _.isEmpty(this.state.value) ? 'rgb(142,142,147)' : 'black'
         return (
-            <View style={{flexDirection: 'row'}}>
+            <View style={[{flexDirection: 'row'}, style]}>
 
                 <View style={[{flexDirection: 'row', flex:1}, styles.inputContainer]}>
                     <Octicons name="search" size={16} color={color1} style={{
@@ -79,9 +86,9 @@ export default class GSearchBar2 extends Component<Props, State> {
                                 this.props.onCancel && this.props.onCancel()
                             }}>
                             <Text style={{
-                                fontSize: 15,
+                                fontSize: 17,
                                 color: Colors.brownishGrey,
-                                paddingLeft: 6,
+                                paddingLeft: 13,
                             }}>{this.props.cancelTitle}</Text>
                         </GTouchable>)
                 }

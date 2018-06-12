@@ -17,7 +17,6 @@ import * as Api from "../../managers/Api";
 import {Call} from "../../managers/Api";
 import ItemCell from "../components/ItemCell";
 import {buildData} from "../../helpers/DataUtils";
-import {CheckBox, SearchBar} from 'react-native-elements'
 import type {SearchCategoryType, SearchEngine, SearchQuery, SearchState, SearchTrigger} from "./search";
 import SearchScreen from "./search";
 import normalize from 'json-api-normalizer';
@@ -65,7 +64,7 @@ class SearchItem extends Screen<Props, State> {
             return {
                 type: categ,
                 tabName: "search_item_screen.tabs." + categ,
-                placeholder: "search_item_screen.placeholder." + categ,
+                // placeholder: "search_item_screen.placeholder." + categ,
 
                 searchOptions: this.renderSearchOptions(categ),
                 renderResults: ({query, results}) => {

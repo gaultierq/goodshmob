@@ -126,7 +126,6 @@ export default class UserLineups extends Screen<Props, State> {
                     value={this.state.filter}
                     onChangeText={filter => this.setState({filter})}
                     placeholder={i18n.t('search.in_feed')}
-                    cancelTitle={i18n.t('actions.cancel')}
                     // onFocus={() => this.onFilterFocusChange(true)}
                     // onCancel={() => this.onFilterFocusChange(false)}
                     // textInputRef={r => this.filterNode = r}

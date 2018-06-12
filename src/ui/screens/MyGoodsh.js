@@ -22,7 +22,6 @@ import {connect} from "react-redux";
 import type {Id, Lineup, RNNNavigator, Saving} from "../../types";
 import {BACKGROUND_COLOR, LINEUP_PADDING, stylePadding, STYLES} from "../UIStyles";
 import {currentGoodshboxId, currentUserId, logged} from "../../managers/CurrentUser"
-import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import {displayLineupActionMenu, seeList, startAddItem} from "../Nav";
 import Screen from "../components/Screen";

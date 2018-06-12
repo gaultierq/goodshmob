@@ -1,23 +1,21 @@
 // @flow
 
-import type {Node} from 'react';
-import React, {Component} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import type {Node} from 'react'
+import React, {Component} from 'react'
+import {StyleSheet, Text, View} from 'react-native'
 
-import {connect} from "react-redux";
-import type {Color, Id, Lineup} from "../../types";
+import {connect} from "react-redux"
+import type {Color, Id, Lineup} from "../../types"
+import {ViewStyle} from "../../types"
 import {logged} from "../../managers/CurrentUser"
-import {CheckBox, SearchBar} from 'react-native-elements'
-import {Navigation} from 'react-native-navigation';
-import {Colors} from "../colors";
-import Icon from 'react-native-vector-icons/FontAwesome';
-import UserRowI from "../activity/components/UserRowI";
-import {buildData} from "../../helpers/DataUtils";
-import {SFP_TEXT_MEDIUM} from "../fonts";
-import {STYLES} from "../UIStyles";
-import {getFirstDefined} from "../../helpers/LangUtil";
+import {Navigation} from 'react-native-navigation'
+import {Colors} from "../colors"
+import Icon from 'react-native-vector-icons/FontAwesome'
+import UserRowI from "../activity/components/UserRowI"
+import {buildData} from "../../helpers/DataUtils"
+import {STYLES} from "../UIStyles"
+import {getFirstDefined} from "../../helpers/LangUtil"
 import {GoodshContext} from "../UIComponents"
-import {ViewStyle} from "../../types";
 
 export type State = {
 

@@ -189,6 +189,9 @@ export default {
     "comments_screen":{
         "title": "Commentaires"
     },
+    "search_screen":{
+        "title": "Rechercher"
+    },
     "search_item_screen":{
         "tabs": {
             "consumer_goods":"TRUC",

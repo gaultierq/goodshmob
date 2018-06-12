@@ -1,23 +1,22 @@
 // @flow
-import React from 'react';
-import {StyleSheet, Text, TextInput, View} from 'react-native';
-import {CheckBox, SearchBar} from "react-native-elements";
-import type {Props as LineupProps} from "./lineuplist";
-import {LineupListScreen} from './lineuplist';
-import AddLineupComponent from "../components/addlineup";
-import {Colors} from "../colors";
-import {currentUserId, logged} from "../../managers/CurrentUser";
-import Screen from "../components/Screen";
-import LineupHorizontal, {default_renderTitle} from "../components/LineupHorizontal";
-import type {Id, Lineup, RequestState, Saving} from "../../types";
-import {connect} from "react-redux";
-import * as Api from "../../managers/Api";
-import {buildData} from "../../helpers/DataUtils";
-import Spinner from 'react-native-spinkit';
-import {MOVE_SAVING} from "../activity/actionTypes";
-import LineupCellSaving from "../components/LineupCellSaving";
-import GTouchable from "../GTouchable";
-import {FullScreenLoader} from "../UIComponents";
+import React from 'react'
+import {StyleSheet, Text, TextInput, View} from 'react-native'
+import {CheckBox, SearchBar} from "react-native-elements"
+import type {Props as LineupProps} from "./lineuplist"
+import {LineupListScreen} from './lineuplist'
+import AddLineupComponent from "../components/addlineup"
+import {Colors} from "../colors"
+import {currentUserId, logged} from "../../managers/CurrentUser"
+import Screen from "../components/Screen"
+import LineupHorizontal, {default_renderTitle} from "../components/LineupHorizontal"
+import type {Id, Lineup, RequestState, Saving} from "../../types"
+import {connect} from "react-redux"
+import * as Api from "../../managers/Api"
+import {buildData} from "../../helpers/DataUtils"
+import {MOVE_SAVING} from "../activity/actionTypes"
+import LineupCellSaving from "../components/LineupCellSaving"
+import GTouchable from "../GTouchable"
+import {FullScreenLoader} from "../UIComponents"
 
 type Props = LineupProps & {
     // onListSelected: ()=>void

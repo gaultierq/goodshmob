@@ -17,7 +17,6 @@ import {
 
 import {connect} from "react-redux";
 import {isCurrentUserId, logged} from "../../managers/CurrentUser"
-import {SearchBar} from 'react-native-elements'
 import type {Id, List, User} from "../../types";
 import type {Props as FeedProps} from "../components/feed";
 import Feed from "../components/feed";

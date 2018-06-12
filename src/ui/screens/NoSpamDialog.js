@@ -15,7 +15,6 @@ import {
     TouchableWithoutFeedback,
     View
 } from 'react-native';
-import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import {Colors} from "../colors";
 import {SFP_TEXT_MEDIUM} from "../fonts";

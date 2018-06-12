@@ -10,7 +10,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
-import {CheckBox, SearchBar} from 'react-native-elements'
+import {CheckBox} from 'react-native-elements'
 import GTouchable from "../GTouchable";
 import {Colors} from "../colors";
 import {NavStyles, SEARCH_INPUT_PROPS, SEARCH_INPUT_RADIUS, SEARCH_STYLES, SEARCH_STYLES_OBJ} from "../UIStyles";

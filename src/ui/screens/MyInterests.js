@@ -19,7 +19,6 @@ import {
 
 import {connect} from "react-redux";
 import {currentUserId, logged} from "../../managers/CurrentUser"
-import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import Screen from "../components/Screen";
 import Feed from "../components/feed";

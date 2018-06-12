@@ -22,8 +22,6 @@ import {isEmpty} from "lodash";
 import type {i18Key, ms, RequestState, Url} from "../../types";
 import {ViewStyle} from "../../types";
 import {renderSimpleButton} from "../UIStyles";
-import {SearchBar} from 'react-native-elements'
-
 import type {ScreenVisibility} from "./Screen";
 import {Colors} from "../colors";
 import {getLanguages} from 'react-native-i18n'
