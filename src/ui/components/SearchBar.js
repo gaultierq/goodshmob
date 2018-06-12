@@ -86,6 +86,7 @@ export type Props = {
     /**
      * text input
      */
+    value?: string,
     placeholder?: string,
     cancelTitle?: any,
     iconDelete?: Object,
@@ -150,7 +151,7 @@ class Search extends Component<Props, State> {
         super(props);
 
         this.state = {
-            keyword: '',
+            keyword: props.value || '',
             expanded: false,
             cancelButtonWidth: 90,
         };

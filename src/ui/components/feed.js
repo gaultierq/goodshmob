@@ -229,22 +229,22 @@ export default class Feed extends Component<Props, State>  {
         }
 
         const filter = this.props.filter;
+        let emptyFilter = false
         if (filter) {
             // allViews.push(this.renderSearchBar(filter));
             // allViews.push(filter.renderFilter());
-
+            let wasEmpty = _.isEmpty(items)
             items = filter.applyFilter(items);
-            if (_.isEmpty(items)) {
-                return filter.emptyFilterResult(filter.token)
-            }
+            emptyFilter = !wasEmpty && _.isEmpty(items)
+            // if (_.isEmpty(items)) {
+            //     return filter.emptyFilterResult(filter.token)
+            // }
         }
 
         const style1 = [style];
         if ((this.state.isFetchingFirst === 'sending' || this.state.isFetchingFirst === 'idle') && !this.hasItems()) style1.push({minHeight: 150});
-        // if (filter
-        //     && _.isEmpty(this.state.filter) && this.state.isFilterFocused) {
-        //     style1.push({opacity: 0.4})
-        // }
+
+        const someCondition = !((this.state.isFetchingFirst === 'sending' || this.state.isFetchingFirst === 'idle') && !this.hasItems())
         let params =  {
             ref: listRef,
             renderItem,
@@ -253,10 +253,10 @@ export default class Feed extends Component<Props, State>  {
             refreshControl: this.renderRefreshControl(),
             onEndReached: this.onEndReached.bind(this),
             onEndReachedThreshold: 0.1,
-            ListFooterComponent: !((this.state.isFetchingFirst === 'sending' || this.state.isFetchingFirst === 'idle') && !this.hasItems()) && this.renderFetchMoreLoader(ListFooterComponent),
+            ListFooterComponent: (filter && emptyFilter) ? filter.emptyFilterResult(filter.token) : someCondition && this.renderFetchMoreLoader(ListFooterComponent),
             style: style1,
-            ListHeaderComponent: !((this.state.isFetchingFirst === 'sending' || this.state.isFetchingFirst === 'idle') && !this.hasItems()) && ListHeaderComponent,
-            renderSectionHeader: !((this.state.isFetchingFirst === 'sending' || this.state.isFetchingFirst === 'idle') && !this.hasItems()) && renderSectionHeader,
+            ListHeaderComponent: someCondition && ListHeaderComponent,
+            renderSectionHeader: someCondition && renderSectionHeader,
             onScroll: this._handleScroll,
             onScrollBeginDrag: Keyboard.dismiss,
             keyboardShouldPersistTaps: 'always',
@@ -308,7 +308,7 @@ export default class Feed extends Component<Props, State>  {
 
     getItems() {
         if (this.debugOnlyEmptyFeeds()) return [];
-        return this.props.sections || this.props.data;
+        return this.props.sections || this.props.data || []
     }
 
     getLastElement() {
