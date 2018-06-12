@@ -1,7 +1,7 @@
 // @flow
 
-import type {Node} from 'react';
-import React from 'react';
+import type {Node} from 'react'
+import React from 'react'
 import {
     ActivityIndicator,
     Button,
@@ -13,23 +13,25 @@ import {
     TextInput,
     TouchableOpacity,
     View
-} from 'react-native';
+} from 'react-native'
 
-import {connect} from "react-redux";
+import {connect} from "react-redux"
 import {isCurrentUserId, logged} from "../../managers/CurrentUser"
-import type {Id, List, User} from "../../types";
-import type {Props as FeedProps} from "../components/feed";
-import Feed from "../components/feed";
-import {buildData, doDataMergeInState} from "../../helpers/DataUtils";
-import {CREATE_LINEUP, DELETE_LINEUP} from "../lineup/actionTypes";
-import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
-import Screen from "../components/Screen";
+import {SearchBar} from 'react-native-elements'
+import type {Id, List, User} from "../../types"
+import type {Props as FeedProps} from "../components/feed"
+import Feed from "../components/feed"
+import {buildData, doDataMergeInState} from "../../helpers/DataUtils"
+import {CREATE_LINEUP, DELETE_LINEUP} from "../lineup/actionTypes"
+import {mergeItemsAndPendings} from "../../helpers/ModelUtils"
+import Screen from "../components/Screen"
+
 import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
 import {GoodshContext} from "../UIComponents"
 import Immutable from 'seamless-immutable'
-import LineupCell from "../components/LineupCell";
-import * as Api from "../../managers/Api";
-import GTouchable from "../GTouchable";
+import LineupCell from "../components/LineupCell"
+import * as Api from "../../managers/Api"
+import GTouchable from "../GTouchable"
 
 
 export type Props = FeedProps<List> & {
@@ -104,6 +106,10 @@ export class LineupListScreen extends Screen<Props, State> {
             }),
             {afterI: 0}
         );
+
+        // items = includePendingFollowItems(items,
+        //     this.props.pending[FOLLOW_LINEUP],
+        //     this.props.pending[UNFOLLOW_LINEUP])
 
         return (
             <GoodshContext.Provider value={{userOwnResources: isCurrentUserId(userId)}}>

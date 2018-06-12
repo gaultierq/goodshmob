@@ -1,15 +1,17 @@
 // @flow
 
-import React, {Component} from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import {connect} from "react-redux";
-import {isCurrentUser, logged} from "../../../managers/CurrentUser"
-import * as Api from "../../../managers/Api";
-import type {Lineup, RequestState} from "../../../types";
-import {Colors} from "../../colors";
-import {renderSimpleButton} from "../../UIStyles";
-import {followLineup, unfollowLineup} from "../../lineup/actions";
-import {SFP_TEXT_REGULAR} from "../../fonts";
+import React, {Component} from 'react'
+import {ScrollView, StyleSheet, Text, View} from 'react-native'
+import {connect} from "react-redux"
+import {logged} from "../../../managers/CurrentUser"
+import * as Api from "../../../managers/Api"
+import type {Lineup, RequestState} from "../../../types"
+import {Colors} from "../../colors"
+import {renderSimpleButton} from "../../UIStyles"
+import {followLineupPending, unfollowLineupPending} from "../../lineup/actions"
+import {SFP_TEXT_REGULAR} from "../../fonts"
+import StoreManager from "../../../managers/StoreManager"
+import {L_FOLLOW, L_UNFOLLOW, LineupRights} from "../../rights"
 
 type Props = {
     lineup: Lineup,
@@ -20,7 +22,9 @@ type State = {
 };
 
 @logged
-@connect()
+@connect(state => ({
+    pending: state.pending
+}))
 export default class FollowButton extends Component<Props, State> {
 
 
@@ -33,17 +37,21 @@ export default class FollowButton extends Component<Props, State> {
         const {lineup} = this.props;
 
 
-        let followed = isFollowed(lineup)
+        let followed = isFollowed.bind(this)(lineup)
+        let rights = new LineupRights(lineup)
+        let canFollow = rights.canExec(L_FOLLOW)
+        let canUnfollow = rights.canExec(L_UNFOLLOW)
 
-        //TODO: use rights manager
-        let followable = lineup.user && !isCurrentUser(lineup.user)
+        if (canFollow === null && canUnfollow === null) return null
+
+        let followable = canFollow === true
 
         return renderSimpleButton(
             followed ? i18n.t("actions.unfollow") : i18n.t("actions.follow"),
             () => {
                 Api.safeExecBlock.call(
                     this,
-                    () => followed ? unfollowLineup(this.props.dispatch, lineup) : followLineup(this.props.dispatch, lineup),
+                    () => followed ? unfollowLineupPending(this.props.dispatch, lineup) : followLineupPending(this.props.dispatch, lineup),
                     'reqFollow'
                 )
             },
@@ -59,7 +67,9 @@ export default class FollowButton extends Component<Props, State> {
 }
 
 //TODO: create decorators when building
+// return null if we don't know (eg: when item is pending)
 export function isFollowed(lineup: Lineup) {
+    if (StoreManager.isListPendingFollowOrUnfollow(lineup.id)) return null
     return _.get(lineup, 'meta.followed')
 }
 

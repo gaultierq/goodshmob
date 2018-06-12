@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import React from 'react'
 import {
     Alert,
     BackHandler,
@@ -15,24 +15,25 @@ import {
     TextInput,
     TouchableOpacity,
     View,
-} from 'react-native';
+} from 'react-native'
 
-import {connect} from "react-redux";
+import {connect} from "react-redux"
 import {currentUserId, logged} from "../../managers/CurrentUser"
-import {Navigation} from 'react-native-navigation';
-import Screen from "../components/Screen";
-import Feed from "../components/feed";
-import * as Api from "../../managers/Api";
-import {reduceList2} from "../../managers/Api";
-import ApiAction from "../../helpers/ApiAction";
-import type {Id, Lineup} from "../../types";
-import {STYLES} from "../UIStyles";
-import {GoodshContext, LINEUP_SECTIONS} from "../UIComponents";
-import {buildData, updateSplice0} from "../../helpers/DataUtils";
-import {FOLLOW_LINEUP, UNFOLLOW_LINEUP} from "../lineup/actions";
-import type {FeedSource} from "../components/feed";
-import {Call} from "../../managers/Api";
-import ShareButton from "../components/ShareButton";
+import {CheckBox, SearchBar} from 'react-native-elements'
+import {Navigation} from 'react-native-navigation'
+import Screen from "../components/Screen"
+import type {FeedSource} from "../components/feed"
+import Feed from "../components/feed"
+import * as Api from "../../managers/Api"
+import {Call, reduceList2} from "../../managers/Api"
+import ApiAction from "../../helpers/ApiAction"
+import type {Id} from "../../types"
+import {STYLES} from "../UIStyles"
+import {GoodshContext, LINEUP_SECTIONS} from "../UIComponents"
+import {buildData, updateSplice0} from "../../helpers/DataUtils"
+import {FOLLOW_LINEUP, UNFOLLOW_LINEUP} from "../lineup/actions"
+import {mergeItemsAndPendings, mergeItemsAndPendings2} from "../../helpers/ModelUtils"
+import ShareButton from "../components/ShareButton"
 
 
 type Props = {
@@ -45,6 +46,7 @@ type State = {
 @logged
 @connect(state => ({
     data: state.data,
+    pending: state.pending,
     followed_lists: state.followed_lists,
 }))
 export default class MyInterests extends Screen<Props, State> {
@@ -59,14 +61,22 @@ export default class MyInterests extends Screen<Props, State> {
 
         let followed = _.slice(followed_lists.list);
 
-        const lists = []
+        let lists = []
         followed.forEach(f => {
             let list = buildData(data, 'follows', f.id).list
             lists.push(list)
             this.followIdsByListIds[list.id] = f.id
         })
 
-        const sections = LINEUP_SECTIONS(navigator, dispatch, userId)(lists);
+        lists = mergeItemsAndPendings2(
+            lists,
+            this.props.pending[FOLLOW_LINEUP],
+            cand => _.some(this.props.pending[UNFOLLOW_LINEUP], o => o.payload.id === cand.id),
+            (pending) => buildData(data, 'lists', pending.payload.id) || {}
+        );
+
+        let sections = LINEUP_SECTIONS(navigator, dispatch)(lists);
+
         return (
             <GoodshContext.Provider value={{userOwnResources: false}}>
                 <Feed
@@ -110,7 +120,7 @@ const fetchFollowedLineups =  userId => new Api.Call()
 export const reducer = (state = {list: []}, action) => {
     switch (action.type) {
         case FOLLOW_LINEUP.success(): {
-            let {lineupId} = action.options;
+            let {lineupId} = action.options.scope;
             let {id, type} = action.payload.data
 
             state = updateSplice0(state, `list`,
@@ -124,7 +134,7 @@ export const reducer = (state = {list: []}, action) => {
             break;
         }
         case UNFOLLOW_LINEUP.success():
-            let {lineupId} = action.options;
+            let {lineupId} = action.options.scope;
             state = updateSplice0(state, `list`,
                 {
                     deletePredicate: item => item.lineupId === lineupId,

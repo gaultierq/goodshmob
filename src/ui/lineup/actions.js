@@ -12,6 +12,7 @@ import {UNSAVE} from "../activity/actionTypes";
 import {Alert} from "react-native";
 import Snackbar from "react-native-snackbar";
 import type {LineupActionParams} from "../Nav";
+import _Messenger from "../../managers/Messenger"
 
 export const FETCH_LINEUP = ApiAction.create("fetch_lineup", "retrieve a lineup details");
 export const FETCH_SAVINGS = ApiAction.create("fetch_savings", "retrieve savings info");
@@ -38,26 +39,6 @@ export const LINEUP_DELETION: PendingAction<LINEUP_DELETION_PAYLOAD>  = pendingA
         .withMethod('DELETE')
         .withRoute(`lists/${payload.lineupId}`)
 );
-
-export function saveItem(itemId: Id, lineupId: Id, privacy = 0, description = '') {
-
-    let body = {
-        saving: { list_id: lineupId, privacy, description}
-    };
-    if (description) {
-        Object.assign(body.saving, {description});
-    }
-    console.log("saving item, with body:");
-    console.log(body);
-
-    let call = new Api.Call()
-        .withMethod('POST')
-        .withRoute(`items/${itemId}/savings`)
-        .withBody(body)
-        .addQuery({'include': '*.*'});
-
-    return call.createActionDispatchee(SAVE_ITEM, {lineupId});
-}
 
 //save
 // export function bookmarkDispatchee(payload: SAVING_CREATION_PAYLOAD) {
@@ -145,21 +126,79 @@ export const FOLLOW_LINEUP = ApiAction.create("follow_lineup", "follow a lineup"
 export const UNFOLLOW_LINEUP = ApiAction.create("unfollow_lineup", "unfollow a lineup");
 
 
-export function followLineup(dispatch: any, lineup: List) {
-    return dispatch(new Api.Call().withMethod('POST')
-        .withRoute(`lists/${lineup.id}/follows`).createActionDispatchee(FOLLOW_LINEUP, {lineupId: lineup.id}))
-}
-
-export function unfollowLineup(dispatch: any, lineup: List) {
-    return dispatch(new Api.Call().withMethod('DELETE')
-        .withRoute(`lists/${lineup.id}/follows`).createActionDispatchee(UNFOLLOW_LINEUP, {lineupId: lineup.id}))
-}
-
-
 export function fetchLineup(lineupId: string): Call {
     return new Api.Call().withMethod('GET')
         .withRoute(`lists/${lineupId}`)
         .addQuery({
             include: "savings,savings.user"
         });
+}
+
+export const FOLLOW_LINEUP_PENDING: PendingAction<List>  = pendingActionWrapper(
+    FOLLOW_LINEUP,
+    (lineup: List) => new Api.Call().withMethod('POST')
+        .withRoute(`lists/${lineup.id}/follows`)
+);
+
+export function followLineupPending(dispatch, lineup) {
+    let delayMs = 4000;
+
+    dispatch(FOLLOW_LINEUP_PENDING.pending({id: lineup.id}, {
+            scope: {lineupId: lineup.id},
+            delayMs: delayMs
+        }
+    )).then(pendingId => {
+        _Messenger.sendMessage(
+            i18n.t('follow.messages.followed'),
+            {
+                timeout: delayMs,
+                action: {
+                    title: i18n.t('actions.undo'),
+                    onPress: () => {
+                        dispatch(FOLLOW_LINEUP_PENDING.undo(pendingId));
+                    },
+                }}
+        );
+    });
+
+}
+
+
+export const UNFOLLOW_LINEUP_PENDING: PendingAction<List>  = pendingActionWrapper(
+    UNFOLLOW_LINEUP,
+    (lineup: List) => new Api.Call().withMethod('DELETE')
+        .withRoute(`lists/${lineup.id}/follows`)
+);
+
+export function unfollowLineupPending(dispatch, lineup) {
+    let delayMs = 4000;
+
+    Alert.alert(
+        i18n.t("follow.alert.title_unfollow"),
+        i18n.t("friends.alert.label"),
+        [
+            {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+            {text: i18n.t("actions.ok"), onPress: () => {
+                    dispatch(UNFOLLOW_LINEUP_PENDING.pending({id: lineup.id}, {
+                            scope: {lineupId: lineup.id},
+                            delayMs: delayMs
+                        }
+                    )).then(pendingId => {
+                        _Messenger.sendMessage(
+                            i18n.t('follow.messages.unfollowed'),
+                            {
+                                timeout: delayMs,
+                                action: {
+                                    title: i18n.t('actions.undo'),
+                                    onPress: () => {
+                                        //undo previous add
+                                        dispatch(UNFOLLOW_LINEUP_PENDING.undo(pendingId));
+                                    },
+                                }}
+                        );
+                    });
+                }},
+        ],
+        { cancelable: true }
+    )
 }
