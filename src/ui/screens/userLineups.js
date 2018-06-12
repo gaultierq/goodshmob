@@ -86,7 +86,6 @@ export default class UserLineups extends Screen<Props, State> {
 
         return (
             <View style={{flex:1}}>
-                {this.renderFilter()}
                 <View style={{flex:1}}>
 
                     <LineupListScreen
@@ -100,13 +99,13 @@ export default class UserLineups extends Screen<Props, State> {
                         ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
                         filter={this.filter()}
                         {...this.props}
+                        ListHeaderComponent={this.renderAll()}
                     />
                     {_.isEmpty(this.state.filter) && this.state.isFilterFocused && this.renderSearchOverlay()}
                 </View>
             </View>
         );
     }
-
     renderFilter() {
         // const paddingVertical = this.state.isFilterFocused ? 8 : 5;
         const paddingVertical = 5;
@@ -123,17 +122,28 @@ export default class UserLineups extends Screen<Props, State> {
             <View key={'searchbar_container'} style={[style]}>
 
                 <SearchBar
-                    onChangeText={filter => this.setState({filter})}
+                    onChangeText={filter => console.log({filter}) || this.setState({filter})}
                     placeholder={i18n.t('search.in_feed')}
                     cancelTitle={i18n.t('actions.cancel')}
-                    onFocus={()=>this.onFilterFocusChange(true)}
-                    onCancel={()=>this.onFilterFocusChange(false)}
+                    onCancel={()=>console.log({filter:'onCancel'}) ||this.onFilterFocusChange(false)}
+                    onFocus={()=>true}
+
                     textInputRef={r=>this.filterNode = r}
-                    cancelFunctionRef={f => console.log('testf', f) || (this.cancelSearch = f)}
+                    // cancelFunctionRef={f => (this.cancelSearch = f)}
                 />
             </View>
         )
     }
+
+
+
+    renderAll() {
+        return (<View>
+            {this.props.ListHeaderComponent && <View>{this.props.ListHeaderComponent}</View>}
+            <View>{this.renderFilter.bind(this)()}</View>
+        </View> )
+    }
+
 
     onFilterFocusChange(focused: boolean) {
         if (this.props.onFilterFocusChange) {
