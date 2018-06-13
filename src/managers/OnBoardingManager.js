@@ -5,14 +5,16 @@ import Config from 'react-native-config'
 import type {ms} from "../types"
 import NotificationManager from './NotificationManager'
 import {TipConfig} from "../ui/components/Tip"
+import * as __ from "lodash";
 
 const DISPLAYED = 'DISPLAYED';
 const DISMISSED = 'DISMISSED';
 
-export type InfoType = 'popular' | 'focus_add' | 'privacy' | 'noise' | 'private' | 'notification_permissions'
+export type InfoType = 'popular' | 'focus_add' | 'visibility' | 'noise' | 'private' | 'notification_permissions'
 type InfoGroup = 'full_focus' | 'tip'
 
-const TIME_BETWEEN_TIPS_MS = Config.TIME_BETWEEN_TIPS_MS
+const TIME_BETWEEN_TIPS_MS = __.toNumber(Config.TIME_BETWEEN_TIPS_MS)
+const TIP_DISPLAY_MAX_MS = __.toNumber(Config.TIP_DISPLAY_MAX_MS)
 
 const ALL_INFOS = []
 
@@ -59,7 +61,7 @@ const POPULAR: InfoConfig = add({
 
 
 const TIP_VISIBILITY: InfoConfig = add({
-    type: 'privacy',
+    type: 'visibility',
     group: 'tip',
     maxDisplay: 0,
     priority: 3,
@@ -86,7 +88,7 @@ const TIP_FULL_PRIVATE: InfoConfig = add({
     maxDisplay: 0,
     priority: 5,
     extraData: {
-        type: 'full_private',
+        type: 'private',
         keys: 'tips.full_private',
         materialIcon: 'lock',
     }
@@ -112,12 +114,14 @@ class _OnBoardingManager implements OnBoardingManager {
     getPendingInfo2(candidates, state, options) {
         let result
         let group = null
-        for (;;) {
+        let previous = []
+        for (;; previous.push(result)) {
             result = candidates.shift()
             if (result) {
                 if (!group) group = result.group
+
                 if (this.hasBeenDismissed(result.type, state)) continue
-                else if (this.shouldBeDisplayed(result.type, state)) break
+                else if (this.shouldBeDisplayed(result.type, state, previous)) break
                 else if (this.canBeSkipped(result)) continue
                 else {
                     result = null
@@ -167,7 +171,7 @@ class _OnBoardingManager implements OnBoardingManager {
     }
 
     //based on visibility rules
-    shouldBeDisplayed(type: InfoType, state: OnBoardingState) {
+    shouldBeDisplayed(type: InfoType, state: OnBoardingState, previous: InfoConfig[]) {
         let stat = state[type]
         switch (type) {
             case 'focus_add':
@@ -177,20 +181,37 @@ class _OnBoardingManager implements OnBoardingManager {
             case 'notification_permissions':
                 return true
             case "noise":
-            case "privacy":
+            case "visibility":
             case "private":
-                if (stat) {
-                    //not already displayed
-                    if (!stat.displayedAt) return true
-                    //displayed, but for a short time
-                    return stat.displayedAt + TIME_BETWEEN_TIPS_MS > Date.now();
+                return this.shouldTipBeDisplayed(type, state, previous)
 
-                }
-                return true
         }
     }
 
-    //what can be shown, ignoring what was already shown
+
+    shouldTipBeDisplayed(type: InfoType, state: OnBoardingState, previous) {
+
+        let result
+        let last = _.last(previous)
+        if (last) {
+            let lastStat = state[last.type]
+            let lastDismissed = lastStat.dismissedAt || (lastStat.displayedAt + TIP_DISPLAY_MAX_MS)
+            if (lastDismissed + TIME_BETWEEN_TIPS_MS > Date.now()) return false
+        }
+
+        let stat = state[type]
+        if (stat) {
+            //not already displayed
+            if (!stat.displayedAt) result = true
+            //displayed, but for a short time
+            else result = stat.displayedAt + TIME_BETWEEN_TIPS_MS > Date.now()
+
+        }
+        else result = true
+        return result
+    }
+
+//what can be shown, ignoring what was already shown
     async filterByRules(filterInfos: InfoConfig[] = ALL_INFOS): Promise<InfoConfig[]> {
 
 
@@ -208,7 +229,7 @@ class _OnBoardingManager implements OnBoardingManager {
                     let sCount = _.get(user, 'meta.savingsCount', -1);
                     return Promise.resolve(sCount === 0);
                 case "noise":
-                case "privacy":
+                case "visibility":
                 case "private":
                     return Promise.resolve(true)
                 default:
@@ -252,39 +273,6 @@ class _OnBoardingManager implements OnBoardingManager {
 
     }
 
-
-    //display focus add if:
-    //not already displayed
-    //not displaying "add_your_first_items"
-    shouldDisplayFocusAdd(): boolean {
-        return false
-
-    }
-
-    // listenToStepChange(options: {callback: (step: ?OnBoardingStep) => void, triggerOnListen?:boolean}) {
-    //     const {callback, triggerOnListen} = options;
-    //
-    //     let triggering
-    //
-    //     this.logger.debug('listening To Step Change')
-    //
-    //     EventBus.addEventListener(ON_BOARDING_STEP_CHANGED, event => {
-    //         this.logger.debug('on event', event)
-    //         if (triggering) {
-    //             this.logger.warn("looping");
-    //             return;
-    //         }
-    //         const step : ?OnBoardingStep = this.getPendingStep();
-    //         callback(step);
-    //     });
-    //
-    //     if (triggerOnListen) {
-    //         triggering = true;
-    //         callback(this.getPendingStep());
-    //         triggering = false;
-    //     }
-    //
-    // }
 }
 
 

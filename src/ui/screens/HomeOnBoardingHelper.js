@@ -43,9 +43,7 @@ export class HomeOnBoardingHelper {
 
     handleFocusAdd() {
         if (this.focusAddJob) return
-        if (OnBoardingManager.shouldDisplayFocusAdd()) return
         if (this.appTourTargets.size  === 0) return
-
 
         this.focusAddJob = setTimeout(() => {
             let appTourSequence = new AppTourSequence();

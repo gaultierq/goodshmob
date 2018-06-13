@@ -28,7 +28,7 @@ import Screen from "../components/Screen";
 import {Colors} from "../colors";
 import {PROFILE_CLICKED} from "../components/MyAvatar";
 import OnBoardingManager from "../../managers/OnBoardingManager";
-import {floatingButtonScrollListener, registerLayoutAnimation} from "../UIComponents";
+import {floatingButtonScrollListener, registerLayoutAnimation, scheduleOpacityAnimation} from "../UIComponents"
 import {Tip, TipConfig} from "../components/Tip";
 import {HomeOnBoardingHelper} from "./HomeOnBoardingHelper";
 import {TabBar, TabViewAnimated} from "react-native-tab-view";
@@ -174,32 +174,30 @@ export default class HomeScreen extends Screen<Props, State> {
         //TODO: rm this settimeout
         setTimeout(async () => {
             let candidates = await OnBoardingManager.getCandidates("full_focus")
-            OnBoardingManager
-                .getPendingInfo2(candidates, this.props.onBoarding, {persistBeforeDisplay: true})
-                .then((result) => {
-                        if (result) {
-                            let {type} = result
-                            this.logger.debug("get pending info", type)
-                            switch (type) {
-                                case "focus_add":
-                                    this.onBoardingHelper.handleFocusAdd()
-                                    break
-                                case "notification_permissions":
-                                    NotificationManager.requestPermissionsForLoggedUser()
-                                    break
-                                case "popular":
-                                    this.props.navigator.showModal({
-                                        screen: 'goodsh.PopularItemsScreen',
-                                        passProps: {onFinished: ()=> {
-                                                OnBoardingManager.postOnDismissed("popular")
-                                                this.props.navigator.dismissModal()
-                                            }},
-                                    })
-                                    break
-                            }
-                        }
-                    }
-                )
+            let result = OnBoardingManager.getPendingInfo2(candidates, this.props.onBoarding, {persistBeforeDisplay: true});
+
+
+            if (result) {
+                let {type} = result
+                this.logger.debug("get pending info", type)
+                switch (type) {
+                    case "focus_add":
+                        this.onBoardingHelper.handleFocusAdd()
+                        break
+                    case "notification_permissions":
+                        NotificationManager.requestPermissionsForLoggedUser()
+                        break
+                    case "popular":
+                        this.props.navigator.showModal({
+                            screen: 'goodsh.PopularItemsScreen',
+                            passProps: {onFinished: ()=> {
+                                    OnBoardingManager.postOnDismissed("popular")
+                                    this.props.navigator.dismissModal()
+                                }},
+                        })
+                        break
+                }
+            }
         })
 
     }
@@ -295,6 +293,7 @@ export default class HomeScreen extends Screen<Props, State> {
             return null
         }
         else {
+            scheduleOpacityAnimation()
             return {...state, currentTip: _.get(nextTip, 'extraData')}
         }
 
