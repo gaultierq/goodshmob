@@ -95,7 +95,7 @@ export default class UserLineups extends Screen<Props, State> {
                         filter={this.filter()}
                         {...this.props}
                         listRef={ref => {this.listRef = ref; this.props.listRef(ref)}}
-                        ListHeaderComponent={this.renderFilter()}
+                        ListHeaderComponent={<View>{[this.renderFilter(), this.props.ListHeaderComponent]}</View>}
                     />
                     {/*{_.isEmpty(this.state.filter) && this.state.isFilterFocused && this.renderSearchOverlay()}*/}
                 </View>

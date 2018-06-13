@@ -6,24 +6,6 @@ import {TipConfig} from "../components/Tip"
 import {AppTour, AppTourSequence, AppTourView} from "../../../vendors/taptarget"
 
 
-//TODO: move tips
-const TIP_PRIVACY: TipConfig = {
-    type: 'visibility',
-    keys: 'tips.visibility',
-    materialIcon: 'lock',
-}
-const TIP_NOISE: TipConfig = {
-    type: 'noise',
-    keys: 'tips.noise',
-    materialIcon: 'notifications-off',
-}
-const TIP_FULL_PRIVATE: TipConfig = {
-    type: 'full_private',
-    keys: 'tips.full_private',
-    materialIcon: 'lock',
-}
-
-
 export class HomeOnBoardingHelper {
 
 

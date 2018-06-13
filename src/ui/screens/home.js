@@ -172,13 +172,15 @@ export default class HomeScreen extends Screen<Props, State> {
     refreshOnBoarding() {
 
         //TODO: rm this settimeout
-        setTimeout(() => {
+        setTimeout(async () => {
+            let candidates = await OnBoardingManager.getCandidates("full_focus")
             OnBoardingManager
-                .getPendingInfo("full_focus", this.props.onBoarding, true)
-                .then(infoType => {
-                        if (infoType) {
-                            this.logger.debug("getPendingInfo", infoType)
-                            switch (infoType) {
+                .getPendingInfo2(candidates, this.props.onBoarding, {persistBeforeDisplay: true})
+                .then((result) => {
+                        if (result) {
+                            let {type} = result
+                            this.logger.debug("get pending info", type)
+                            switch (type) {
                                 case "focus_add":
                                     this.onBoardingHelper.handleFocusAdd()
                                     break
@@ -208,6 +210,8 @@ export default class HomeScreen extends Screen<Props, State> {
 
 
     render() {
+
+        this.logger.debug("rendering home", this.state)
 
         this.setNavigatorTitle(this.props.navigator, {title: fullName2(_.get(this.props, 'currentUser.attributes'))})
 
@@ -271,18 +275,31 @@ export default class HomeScreen extends Screen<Props, State> {
         ['title', 'text', 'button'].forEach(k=> {
             res[k] = i18n.t(`${keys}.${k}`)
         })
-
-        ;
         return <Tip
             {...res}
             materialIcon={currentTip.materialIcon}
             style={{margin: 10}}
             onClickClose={() => {
-                OnBoardingManager.onDisplayed(currentTip.type)
+                OnBoardingManager.postOnDismissed(currentTip.type)
             }}
 
         />;
     }
+
+    static getDerivedStateFromProps(props: Props, state: State) {
+        let current = state.currentTip
+
+        let candidates = OnBoardingManager.getAllCandidates('tip')
+        let nextTip = OnBoardingManager.getPendingInfo2(candidates, props.onBoarding, {persistBeforeDisplay: true})
+        if (_.get(current, 'type') === _.get(nextTip, 'extraData.type')) {
+            return null
+        }
+        else {
+            return {...state, currentTip: _.get(nextTip, 'extraData')}
+        }
+
+    }
+
 
     _targetRef = (primaryText, secondaryText) => ref => {
         if (!ref) return;
