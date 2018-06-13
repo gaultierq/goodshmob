@@ -1,7 +1,7 @@
 // @flow
 
-import type {Node} from 'react';
-import React, {Component} from 'react';
+import type {Node} from 'react'
+import React, {Component} from 'react'
 import {
     ActivityIndicator,
     FlatList,
@@ -11,22 +11,18 @@ import {
     Text,
     TouchableOpacity,
     View
-} from 'react-native';
-import {connect} from "react-redux";
+} from 'react-native'
+import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
-import {TabBar, TabViewAnimated, TabViewPagerPan} from 'react-native-tab-view';
+import {TabBar, TabViewAnimated, TabViewPagerPan} from 'react-native-tab-view'
 
-import {SearchBar} from 'react-native-elements'
-
-import type {i18Key, List, Saving, SearchToken} from "../../types";
+import type {i18Key, List, Saving, SearchToken} from "../../types"
 import Button from 'apsl-react-native-button'
-import * as UI from "../UIStyles";
-import {NavStyles} from "../UIStyles";
-import {Navigation} from 'react-native-navigation';
-import update from "immutability-helper";
-import {Colors} from "../colors";
-import {DEEPLINK_SEARCH_CLOSE, DEEPLINK_SEARCH_SUBMITED, DEEPLINK_SEARCH_TEXT_CHANGED} from "./SearchNavBar";
-import {TAB_BAR_PROPS} from "../UIStyles";
+import {LINEUP_PADDING, NAV_BACKGROUND_COLOR, TAB_BAR_PROPS} from "../UIStyles"
+import {Navigation} from 'react-native-navigation'
+import update from "immutability-helper"
+import {Colors} from "../colors"
+import GSearchBar2 from "../components/GSearchBar2"
 
 export type SearchCategoryType = string;
 
@@ -125,19 +121,12 @@ export default class SearchScreen extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
 
-        props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-
         this.state = {
-            input: '',
+            input: props.token,
             searches: {},
             index: props.index,
             routes: props.categories.map((c, i) => ({key: `${i}`, title: c.tabName ? i18n.t(c.tabName) : null})),
         };
-
-        props.navigator.setStyle({...UI.NavStyles,
-            navBarCustomView: 'goodsh.SearchNavBar',
-            navBarCustomViewInitialProps: {initialInput: props.token, placeholder: props.placeholder}
-        });
 
         if (props.token) {
             const token = props.token;
@@ -148,6 +137,7 @@ export default class SearchScreen extends Component<Props, State> {
                 this.tryPerformSearch(token, 0);
             });
         }
+        this.props.navigator.setTitle({title: i18n.t("search_screen.title")})
     }
 
     handleIndexChange(index: number) {
@@ -176,6 +166,19 @@ export default class SearchScreen extends Component<Props, State> {
             <KeyboardAvoidingView behavior={ (Platform.OS === 'ios') ? 'padding' : null }
                                   keyboardVerticalOffset={Platform.OS === 'ios' ? 50 : 0}
                                   style={[{width:"100%", height: "100%", backgroundColor: "transparent"},this.props.style]}>
+
+                {
+                    <GSearchBar2
+                        onChangeText={input => this.setState({input}, input => this._debounceSearch(input))}
+                        onSubmitEditing={() => this.tryPerformSearch(this.state.input, 0)}
+                        placeholder={this.props.placeholder}
+                        value={this.state.input}
+                        style={{
+                            paddingTop: 10,
+                            paddingBottom: 5,
+                            paddingHorizontal: LINEUP_PADDING, backgroundColor: NAV_BACKGROUND_COLOR}}
+                    />
+                }
 
                 {
                     cat && cat.searchOptions && (
@@ -233,6 +236,7 @@ export default class SearchScreen extends Component<Props, State> {
     }
 
 
+    //FIXME: restore
     renderSearchFooter(search: SearchState) {
         //let search = this.props.search;
         if (!search) return null;
@@ -256,33 +260,7 @@ export default class SearchScreen extends Component<Props, State> {
     }
 
 
-    onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
-
-        //HACK
-        if (event.type === 'DeepLink') {
-            const payload = event.payload; // (optional) The payload
-
-            switch (event.link) {
-                case DEEPLINK_SEARCH_TEXT_CHANGED:
-                    this.onSearchInputChange(payload);
-                    break;
-                case DEEPLINK_SEARCH_SUBMITED:
-                    this.tryPerformSearch(this.state.input, 0);
-                    break;
-                case DEEPLINK_SEARCH_CLOSE:
-                    // this.setState({isSearching: false});
-                    break;
-            }
-        }
-    }
-
     _debounceSearch = _.debounce(() => this.tryPerformSearch(this.state.input, 0), 500);
-
-    onSearchInputChange(input: string) {
-        //this.setState({input});
-        this.setState({input}, input => this._debounceSearch(input));
-    }
-
 
     tryPerformSearch(token: SearchToken, page: number, trigger: SearchTrigger = 'unknown') {
 

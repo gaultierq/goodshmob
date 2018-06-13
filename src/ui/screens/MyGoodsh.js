@@ -22,7 +22,6 @@ import {connect} from "react-redux";
 import type {Id, Lineup, RNNNavigator, Saving} from "../../types";
 import {BACKGROUND_COLOR, LINEUP_PADDING, stylePadding, STYLES} from "../UIStyles";
 import {currentGoodshboxId, currentUserId, logged} from "../../managers/CurrentUser"
-import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import {displayLineupActionMenu, seeList, startAddItem} from "../Nav";
 import Screen from "../components/Screen";
@@ -68,10 +67,10 @@ export default class MyGoodsh extends Screen<Props, State> {
         return (
             // $FlowFixMe
             <UserLineups
+                contentOffset={{x: 0, y: 50}}
                 displayName={"MyGoodsh"}
                 feedId={"home list"}
                 userId={userId}
-                listRef={this.props.listRef}
                 navigator={navigator}
                 empty={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
                 renderSectionHeader={({section}) => section.renderSectionHeader()}

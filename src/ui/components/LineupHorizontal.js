@@ -20,7 +20,6 @@ import {
 import {connect} from "react-redux";
 import type {Id, Lineup, RNNNavigator, Saving} from "../../types";
 import {logged} from "../../managers/CurrentUser"
-import {CheckBox, SearchBar} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
 import {displayActivityActions, seeActivityDetails, seeList} from "../Nav";
 import {Colors} from "../colors";

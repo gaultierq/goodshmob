@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import {Platform, StyleSheet, Text, TextInput, View} from 'react-native';
-import {CheckBox, SearchBar} from "react-native-elements";
 import type {Props as LineupProps} from "./lineuplist";
 import Screen from "../components/Screen";
 import type {Id, RequestState, User} from "../../types";

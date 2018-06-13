@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import React from 'react'
 import {
     Alert,
     BackHandler,
@@ -15,21 +15,19 @@ import {
     TouchableOpacity,
     TouchableWithoutFeedback,
     View
-} from 'react-native';
+} from 'react-native'
 import {CheckBox} from 'react-native-elements'
-import type {Id, Lineup, RNNNavigator, SearchToken} from "../../types";
-import {NavStyles, renderSimpleButton, STYLES} from "../UIStyles";
-import Screen from "../components/Screen";
+import type {Id, Lineup, RNNNavigator, SearchToken} from "../../types"
+import {LINEUP_PADDING, renderSimpleButton, STYLES} from "../UIStyles"
+import Screen from "../components/Screen"
 import * as Nav from "../Nav"
 import {seeActivityDetails, seeList} from "../Nav"
 import type {Props as LineupListProps} from './lineuplist'
 import {LineupListScreen} from './lineuplist'
-import {Navigation} from 'react-native-navigation';
-import type {Visibility} from "./additem";
-import SearchBar from "../components/SearchBar";
-import {Colors} from "../colors";
-import {scheduleOpacityAnimation} from "../UIComponents";
-import type {FilterConfig} from "../components/feed";
+import {Navigation} from 'react-native-navigation'
+import type {Visibility} from "./additem"
+import type {FilterConfig} from "../components/feed"
+import GSearchBar2 from "../components/GSearchBar2"
 
 
 type Props = LineupListProps & {
@@ -47,8 +45,8 @@ type State = {
 export default class UserLineups extends Screen<Props, State> {
 
 
-    filterNode: Node;
     cancelSearch: Function
+    listRef: Node
 
     launchSearch(token?: SearchToken) {
         let navigator = this.props.navigator;
@@ -84,11 +82,9 @@ export default class UserLineups extends Screen<Props, State> {
 
         return (
             <View style={{flex:1}}>
-                {this.renderFilter()}
                 <View style={{flex:1}}>
 
                     <LineupListScreen
-                        listRef={this.props.listRef}
                         onLineupPressed={(lineup) => seeList(navigator, lineup)}
                         onSavingPressed={(saving) => seeActivityDetails(navigator, saving)}
                         scrollUpOnBack={super.isVisible() ? ()=>false : null}
@@ -98,8 +94,10 @@ export default class UserLineups extends Screen<Props, State> {
                         ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
                         filter={this.filter()}
                         {...this.props}
+                        listRef={ref => {this.listRef = ref; this.props.listRef(ref)}}
+                        ListHeaderComponent={this.renderFilter()}
                     />
-                    {_.isEmpty(this.state.filter) && this.state.isFilterFocused && this.renderSearchOverlay()}
+                    {/*{_.isEmpty(this.state.filter) && this.state.isFilterFocused && this.renderSearchOverlay()}*/}
                 </View>
             </View>
         );
@@ -109,48 +107,33 @@ export default class UserLineups extends Screen<Props, State> {
         // const paddingVertical = this.state.isFilterFocused ? 8 : 5;
         const paddingVertical = 5;
         let style = {
-            backgroundColor: NavStyles.navBarBackgroundColor,
-            paddingVertical: paddingVertical,
-            elevation: 3,
-            borderBottomWidth: 1,
-            borderBottomColor: Colors.grey3
+            // backgroundColor: NavStyles.navBarBackgroundColor,
+            paddingTop: 12,
+            paddingBottom: paddingVertical,
+            paddingHorizontal: LINEUP_PADDING
+            // elevation: 3,
+            // borderBottomWidth: 1,
+            // borderBottomColor: Colors.grey3
         };
 
 
         return (
             <View key={'searchbar_container'} style={[style]}>
 
-                <SearchBar
+                <GSearchBar2
+                    value={this.state.filter}
                     onChangeText={filter => this.setState({filter})}
                     placeholder={i18n.t('search.in_feed')}
-                    cancelTitle={i18n.t('actions.cancel')}
-                    onFocus={()=>this.onFilterFocusChange(true)}
-                    onCancel={()=>this.onFilterFocusChange(false)}
-                    textInputRef={r=>this.filterNode = r}
-                    cancelFunctionRef={f => console.log('testf', f) || (this.cancelSearch = f)}
+                    // onFocus={() => this.onFilterFocusChange(true)}
+                    // onCancel={() => this.onFilterFocusChange(false)}
+                    // textInputRef={r => this.filterNode = r}
+                    // inputHeight={36}
+                    cancelFunctionRef={f => this.cancelSearch = f}
                 />
             </View>
         )
     }
 
-    onFilterFocusChange(focused: boolean) {
-        if (this.props.onFilterFocusChange) {
-            this.props.onFilterFocusChange(focused).then(()=>{
-                scheduleOpacityAnimation()
-                this.setState({isFilterFocused: focused})
-            })
-        }
-    }
-
-
-    renderSearchOverlay() {
-        return (<TouchableWithoutFeedback onPress={() => this.cancelSearch && this.cancelSearch()}>
-                <View style={{
-                    position: 'absolute', width: '100%', height: '100%', opacity: 0.4,
-                    backgroundColor: Colors.black, zIndex: 50000,}} />
-            </TouchableWithoutFeedback>
-        );
-    }
 
 
     filter(): FilterConfig<Lineup> {
@@ -194,6 +177,10 @@ export default class UserLineups extends Screen<Props, State> {
                     return result;
                 };
 
+                // applyFilter is called within a render => no call to refs
+                setTimeout(()=> {
+                    this.listRef && this.listRef.flashScrollIndicators()
+                })
 
                 let result = [];
                 sections.forEach(section => {
@@ -205,6 +192,8 @@ export default class UserLineups extends Screen<Props, State> {
                     }
 
                 });
+
+
                 return result;
             }
         };

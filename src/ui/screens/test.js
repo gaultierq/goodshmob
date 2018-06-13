@@ -1,9 +1,9 @@
 // @flow
-import React, {Component} from 'react';
-import {Clipboard, Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import {CheckBox} from "react-native-elements";
-import {Navigation} from "react-native-navigation";
-import GTouchable from "../GTouchable";
+import React, {Component} from 'react'
+import {Clipboard, Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import {CheckBox} from "react-native-elements"
+import {Navigation} from "react-native-navigation"
+import GTouchable from "../GTouchable"
 
 
 type Props = {

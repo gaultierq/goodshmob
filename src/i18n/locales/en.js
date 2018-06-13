@@ -68,7 +68,7 @@ export default {
         }
     },
     search:{
-        in_items: "What would you like to save?",
+        in_items: "Find anything",
         in_network: "Search in my network",
         in_feed: "Search",
         by: "by",
@@ -189,6 +189,9 @@ export default {
     },
     "comments_screen":{
         "title": "Comments"
+    },
+    "search_screen":{
+        "title": "Search"
     },
     "search_item_screen":{
         "tabs": {
