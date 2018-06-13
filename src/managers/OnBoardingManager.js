@@ -101,27 +101,34 @@ class _OnBoardingManager implements OnBoardingManager {
         this.store = store;
     }
 
-    getPendingInfo2(candidates, state, options) {
+    getPendingInfo(state: any, options: any) {
+
+        let candidates: InfoConfig[] = ALL_INFOS
+            .sort((l, r) => l.priority - r.priority)
+            // .filter(i => i.group === group)
+            .filter(this._displayableByRule)
+
         let result
-        let group = null
-        let previous = []
+        let previous: Array<InfoConfig> = []
+        let {group, persistBeforeDisplay} = options || {}
+
+        // $FlowFixMe
         for (;; previous.push(result)) {
             result = candidates.shift()
             if (result) {
-                if (!group) group = result.group
-
                 if (this.hasBeenDismissed(result.type, state)) continue
-                else if (this.shouldBeDisplayed(result.type, state, previous)) break
-                else if (this.canBeSkipped(result)) continue
-                else {
-                    result = null
-                    break
+                if (this.shouldBeDisplayed(result.type, state, previous)) {
+                    if (group && group === result.group) break
                 }
+                if (this.hasBeenSeenLongEnough(result, state)) continue
+                if (this.canBeSkipped(result)) continue
+                result = null
+                break
             }
             else break
         }
         let type = null
-        if (result && options && options.persistBeforeDisplay) {
+        if (result && persistBeforeDisplay) {
             type = result.type
             if (!this.hasBeenDisplayed(type, state)) {
                 this.onDisplayed(type)
@@ -133,19 +140,6 @@ class _OnBoardingManager implements OnBoardingManager {
         return result
     }
 
-    async getCandidates(group: InfoGroup) {
-        let candidates: InfoConfig[] = this.getAllCandidates(group)
-        //https://github.com/facebook/flow/issues/5294
-        let afterCandidates = await this.filterByRules(candidates)
-        this.logger.debug("candidates filter", candidates, "=>", afterCandidates)
-        candidates = afterCandidates
-        return candidates
-    }
-
-    getAllCandidates(group: InfoGroup) {
-        return ALL_INFOS.filter(i => i.group === group).sort((l, r) => l.priority - r.priority)
-    }
-
     canBeSkipped(config: InfoConfig): boolean {
         return !!config.skippable
     }
@@ -155,13 +149,18 @@ class _OnBoardingManager implements OnBoardingManager {
         return stat && stat.dismissedAt
     }
 
+    hasBeenSeenLongEnough(config: InfoConfig, state: OnBoardingState) {
+        let lastStat = state[config.type]
+        return lastStat && (lastStat.displayedAt + (config.maxDisplay || 0) < Date.now())
+    }
+
     hasBeenDisplayed(type: InfoType, state: OnBoardingState) {
         let stat = state[type]
         return stat && stat.displayedAt
     }
 
     //based on visibility rules
-    shouldBeDisplayed(type: InfoType, state: OnBoardingState, previous: InfoConfig[]) {
+    shouldBeDisplayed(type: InfoType, state: OnBoardingState, previous: Array<InfoConfig>) {
         let stat = state[type]
         switch (type) {
             case 'focus_add':
@@ -179,7 +178,7 @@ class _OnBoardingManager implements OnBoardingManager {
     }
 
 
-    shouldTipBeDisplayed(type: InfoType, state: OnBoardingState, previous) {
+    shouldTipBeDisplayed(type: InfoType, state: OnBoardingState, previous: Array<InfoConfig>) {
 
         let result
         let last = _.last(previous)
@@ -201,32 +200,26 @@ class _OnBoardingManager implements OnBoardingManager {
         return result
     }
 
-//what can be shown, ignoring what was already shown
-    filterByRules(filterInfos: InfoConfig[] = ALL_INFOS): InfoConfig[] {
-
-
-        const displayableByRule = (info: InfoConfig) => {
-            switch (info.type) {
-                case "focus_add":
-                    // no conditions on user
-                    return true
-                case "notification_permissions":
-                    if (!__WITH_NOTIFICATIONS__) return false
-                    return !NotificationManager.hasPermissionsSync(true)
-                case "popular":
-
-                    const user = currentUser(false)
-                    let sCount = _.get(user, 'meta.savingsCount', -1);
-                    return sCount === 0
-                case "noise":
-                case "visibility":
-                case "private":
-                    return true
-                default:
-                    return false
-            }
+    //logic which decide if a info is interesting for this user x device configuration
+    _displayableByRule = (info: InfoConfig) => {
+        switch (info.type) {
+            case "focus_add":
+                // no conditions on user
+                return true
+            case "notification_permissions":
+                if (!__WITH_NOTIFICATIONS__) return false
+                return !NotificationManager.hasPermissionsSync(true)
+            case "popular":
+                const user = currentUser(false)
+                let sCount = _.get(user, 'meta.savingsCount', -1);
+                return sCount === 0
+            case "noise":
+            case "visibility":
+            case "private":
+                return true
+            default:
+                return false
         }
-        return filterInfos.filter(info => displayableByRule(info))
     }
 
     createReducer() {
@@ -263,8 +256,6 @@ class _OnBoardingManager implements OnBoardingManager {
 export interface OnBoardingManager {
 
     init(store: any): void;
-
-    getPendingStep(): ?InfoType;
 
     createReducer(): any;
 

@@ -172,9 +172,9 @@ export default class HomeScreen extends Screen<Props, State> {
     refreshOnBoarding() {
 
         //TODO: rm this settimeout
-        setTimeout(async () => {
-            let candidates = await OnBoardingManager.getCandidates("full_focus")
-            let result = OnBoardingManager.getPendingInfo2(candidates, this.props.onBoarding, {persistBeforeDisplay: true});
+        setTimeout(() => {
+
+            let result = OnBoardingManager.getPendingInfo(this.props.onBoarding, {group: "full_focus", persistBeforeDisplay: true});
 
 
             if (result) {
@@ -287,8 +287,7 @@ export default class HomeScreen extends Screen<Props, State> {
     static getDerivedStateFromProps(props: Props, state: State) {
         let current = state.currentTip
 
-        let candidates = OnBoardingManager.getAllCandidates('tip')
-        let nextTip = OnBoardingManager.getPendingInfo2(candidates, props.onBoarding, {persistBeforeDisplay: true})
+        let nextTip = OnBoardingManager.getPendingInfo(props.onBoarding, {group: 'tip', persistBeforeDisplay: true})
         if (_.get(current, 'type') === _.get(nextTip, 'extraData.type')) {
             return null
         }
@@ -298,7 +297,6 @@ export default class HomeScreen extends Screen<Props, State> {
         }
 
     }
-
 
     _targetRef = (primaryText, secondaryText) => ref => {
         if (!ref) return;
