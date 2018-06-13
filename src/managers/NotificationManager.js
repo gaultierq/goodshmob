@@ -12,14 +12,17 @@ class _NotificationManager implements NotificationManager {
     configured: boolean = false;
     logger: GLogger
 
+    _hasPermission: boolean //used as a proxy for synchronous cases
+
     constructor() {
     }
 
-    init() {
+    async init() {
         this.logger = logger.createLogger('notifications')
         if (!__WITH_NOTIFICATIONS__) return;
         this.logger.info("fcm:load");
-        this.configureSafe();
+        this.configureSafe()
+        this._hasPermission = await this.hasPermissions()
     }
 
     configureSafe() {
@@ -42,6 +45,15 @@ class _NotificationManager implements NotificationManager {
             .app()
             .messaging()
             .hasPermission()
+    }
+
+    hasPermissionsSync(askAgain: boolean = false): boolean {
+        if (askAgain) {
+            setTimeout(()=> {
+                this.hasPermissions().then(has=>this._hasPermission = has)
+            })
+        }
+        return this._hasPermission
     }
 
     configure() {
@@ -87,7 +99,7 @@ class _NotificationManager implements NotificationManager {
         });
     }
 
-    requestPermissionsForLoggedUser() {
+    requestPermissionsForLoggedUser(): Promise<boolean> {
         return new Promise((resolve,reject) => {
             if (!__WITH_NOTIFICATIONS__) {
                 reject('notifications are not enabled on device')
@@ -109,7 +121,7 @@ class _NotificationManager implements NotificationManager {
         })
     }
 
-    handleNotif = notif => {
+    handleNotif = (notif: any) => {
         if (!__WITH_NOTIFICATIONS__) return;
         if (!notif) return
         if (!notif._data) {
@@ -131,9 +143,11 @@ class _NotificationManager implements NotificationManager {
 
 export interface NotificationManager {
 
-    init(store: any): void;
+    init(store: any): Promise<void>;
 
-    requestPermissionsForLoggedUser(): Promise<boolean>
+    requestPermissionsForLoggedUser(): Promise<boolean>;
+
+    hasPermissionsSync(askAgain?: boolean): boolean;
 
 }
 

@@ -16,13 +16,6 @@ type InfoGroup = 'full_focus' | 'tip'
 const TIME_BETWEEN_TIPS_MS = __.toNumber(Config.TIME_BETWEEN_TIPS_MS)
 const TIP_DISPLAY_MAX_MS = __.toNumber(Config.TIP_DISPLAY_MAX_MS)
 
-const ALL_INFOS = []
-
-
-const add = (info: InfoConfig) => {
-    ALL_INFOS.push(info)
-    return info
-}
 type InfoConfig = {
     type: InfoType,
     group: InfoGroup,
@@ -39,62 +32,59 @@ type OnBoardingState = {
     }
 }
 
-const FOCUS_ADD: InfoConfig = add({
-    type: 'focus_add',
-    group: 'full_focus',
-    maxDisplay: 0,
-    priority: 3
-})
-const NOTIFICATION: InfoConfig = add({
-    type: 'notification_permissions',
-    group: 'full_focus',
-    maxDisplay: 0,
-    priority: 2
-})
-const POPULAR: InfoConfig = add({
-    type: 'popular',
-    group: 'full_focus',
-    maxDisplay: 0,
-    priority: 1,
-})
-
-
-
-const TIP_VISIBILITY: InfoConfig = add({
-    type: 'visibility',
-    group: 'tip',
-    maxDisplay: 0,
-    priority: 3,
-    extraData: {
+const ALL_INFOS = [
+    {
+        type: 'popular',
+        group: 'full_focus',
+        maxDisplay: 0,
+        priority: 1,
+    },
+    {
+        type: 'focus_add',
+        group: 'full_focus',
+        maxDisplay: 0,
+        priority: 2
+    },
+    {
+        type: 'notification_permissions',
+        group: 'full_focus',
+        maxDisplay: 0,
+        priority: 3
+    },
+    {
         type: 'visibility',
-        keys: 'tips.visibility',
-        materialIcon: 'lock',
-    }
-})
-const TIP_NOISE: InfoConfig = add({
-    type: 'noise',
-    group: 'tip',
-    maxDisplay: 0,
-    priority: 4,
-    extraData: {
+        group: 'tip',
+        maxDisplay: 0,
+        priority: 4,
+        extraData: {
+            type: 'visibility',
+            keys: 'tips.visibility',
+            materialIcon: 'lock',
+        }
+    },
+    {
         type: 'noise',
-        keys: 'tips.noise',
-        materialIcon: 'notifications-off',
-    }
-})
-const TIP_FULL_PRIVATE: InfoConfig = add({
-    type: 'private',
-    group: 'tip',
-    maxDisplay: 0,
-    priority: 5,
-    extraData: {
+        group: 'tip',
+        maxDisplay: 0,
+        priority: 5,
+        extraData: {
+            type: 'noise',
+            keys: 'tips.noise',
+            materialIcon: 'notifications-off',
+        }
+    },
+    {
         type: 'private',
-        keys: 'tips.full_private',
-        materialIcon: 'lock',
+        group: 'tip',
+        maxDisplay: 0,
+        priority: 6,
+        extraData: {
+            type: 'private',
+            keys: 'tips.full_private',
+            materialIcon: 'lock',
+        }
     }
-})
-
-
+]
 
 class _OnBoardingManager implements OnBoardingManager {
     id = Math.random();
@@ -212,37 +202,31 @@ class _OnBoardingManager implements OnBoardingManager {
     }
 
 //what can be shown, ignoring what was already shown
-    async filterByRules(filterInfos: InfoConfig[] = ALL_INFOS): Promise<InfoConfig[]> {
+    filterByRules(filterInfos: InfoConfig[] = ALL_INFOS): InfoConfig[] {
 
 
-        const displayableByRule = async function(info: InfoConfig): Promise<boolean> {
+        const displayableByRule = (info: InfoConfig) => {
             switch (info.type) {
                 case "focus_add":
                     // no conditions on user
-                    return Promise.resolve(true);
+                    return true
                 case "notification_permissions":
-                    if (!__WITH_NOTIFICATIONS__) return Promise.resolve(false)
-                    return NotificationManager.hasPermissions().then(result => !result)
+                    if (!__WITH_NOTIFICATIONS__) return false
+                    return !NotificationManager.hasPermissionsSync(true)
                 case "popular":
 
                     const user = currentUser(false)
                     let sCount = _.get(user, 'meta.savingsCount', -1);
-                    return Promise.resolve(sCount === 0);
+                    return sCount === 0
                 case "noise":
                 case "visibility":
                 case "private":
-                    return Promise.resolve(true)
+                    return true
                 default:
-                    return Promise.resolve(false)
+                    return false
             }
         }
-
-        let selfIfDisplayable: InfoConfig => Promise<InfoConfig> = info => {
-            return displayableByRule(info).then(result => result? info : null)
-        }
-
-        return Promise.all(filterInfos.map(info => selfIfDisplayable(info)))
-            .then(result => result.filter(r => r != null))
+        return filterInfos.filter(info => displayableByRule(info))
     }
 
     createReducer() {

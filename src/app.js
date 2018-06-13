@@ -320,7 +320,9 @@ export default class App {
             let oldConfig = this.config;
             this.config = config;
 
-            this.onAppConfigChanged(oldConfig);
+            setTimeout(async () => {
+                await this.onAppConfigChanged(oldConfig)
+            })
         }
     }
 
@@ -335,7 +337,7 @@ export default class App {
 
 //type AppMode = 'idle' | 'logged' | 'unlogged' | 'upgrading_cache'
 
-    onAppConfigChanged(oldConfig: AppConfig) {
+    async onAppConfigChanged(oldConfig: AppConfig) {
 
         console.debug(`app mode changed: new mode=${this.config} (old mode=${oldConfig})`);
 
@@ -365,10 +367,10 @@ export default class App {
 
                     if (this.config.userValid) {
                         //TODO: move
-                        NotificationManager.init()
+                        await NotificationManager.init()
 
                         //this probably shouldn't be here
-                        NotificationManager.requestPermissionsForLoggedUser()
+                        //NotificationManager.requestPermissionsForLoggedUser()
 
                         BugsnagManager.setUser(user);
 
