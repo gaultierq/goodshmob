@@ -59,7 +59,7 @@ export default {
     },
     home: {
         wizard: {
-            action_button_label : "Add a coup de coeur\nor a wish.",
+            action_button_label : "Add a coup de coeur,\n, a wish, a tip.",
             action_button_body : "Book, movie, tvshow, restaurant, music...",
         },
         tabs: {
@@ -70,7 +70,7 @@ export default {
     search:{
         in_items: "Find anything",
         in_network: "Search in my network",
-        in_feed: "Search",
+        in_feed: "In my lists",
         by: "by",
     },
     "shared":{
