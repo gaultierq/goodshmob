@@ -141,6 +141,7 @@ const FETCH_POPULAR_ITEMS = ApiAction.create("fetch_popular_items", "retrieve po
 const saveManyItems =  (itemIds: Id[]) => new Api.Call()
     .withMethod('POST')
     .withRoute(`items/save`)
+    .include('savings')
     .withBody({savings: itemIds.map(item_id=>({item_id}))})
     .createActionDispatchee(SAVE_MANY_ITEMS)
 
