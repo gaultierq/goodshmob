@@ -34,6 +34,7 @@ import {SFP_TEXT_REGULAR} from "../fonts";
 import {LINEUP_PADDING, renderSimpleButton} from "../UIStyles";
 import {fetchActivity} from "../activity/actions";
 import * as types from "../activity/actionTypes";
+import {hexToRgbaWithHalpha} from "../../helpers/DebugUtils"
 
 
 export type Props = {
@@ -60,22 +61,28 @@ export default class PopularItemsScreen extends Screen<Props, State> {
         selectedItems: []
     }
 
+    constructor(props: Props) {
+        super(props)
+        props.navigator.setTitle({title: i18n.t("popular_screen.title")});
+    }
+
     render() {
         const data = this.props.popular_items.list.map(i => buildNonNullData(this.props.data, i.type, i.id))
 
+        const empty = _.isEmpty(this.state.selectedItems)
         return (
             <View style={{flex: 1, justifyContent: "space-between"}}>
                 <View style={{padding: LINEUP_PADDING}}>
                     <Text style={{
                         fontSize: 18,
                         fontFamily: SFP_TEXT_REGULAR
-                    }}>#Choisissez vos premiers goodsh dans la liste suivante:</Text>
+                    }}>{i18n.t("popular_screen.main_explanation")}</Text>
                 </View>
                 <Feed
                     data={data}
                     renderItem={({item}) => (
                         <GTouchable
-                            style={{backgroundColor: this.state.selectedItems.includes(item.id) ? Colors.green : "transparent" }}
+                            style={{backgroundColor: this.state.selectedItems.includes(item.id) ? hexToRgbaWithHalpha(Colors.green, 0.3) : "transparent" }}
                             onPress={()=>{
                                 let selectedItems = this.state.selectedItems;
                                 selectedItems = _.xor(selectedItems, [item.id])
@@ -88,7 +95,7 @@ export default class PopularItemsScreen extends Screen<Props, State> {
                     listRef={ref=>ref}
                     displayName={"PopularItems"}
                     fetchSrc={this.fetchSrc()}
-                    empty={<Text>#No popular items found</Text>}
+                    empty={<Text>{i18n.t("popular_screen.empty")}</Text>}
                 />
                 <View style={{
                     padding: LINEUP_PADDING,
@@ -96,10 +103,15 @@ export default class PopularItemsScreen extends Screen<Props, State> {
                     <Text style={{
                         fontSize: 16,
                         fontFamily: SFP_TEXT_REGULAR
-                    }}>{this.state.selectedItems.length} items selected</Text>
+                    }}>{i18n.t("popular_screen.item_selected", {count: this.state.selectedItems.length})}</Text>
                     {
-                        renderSimpleButton(
-                            "#Suivant",
+                        empty ?
+                            renderSimpleButton(
+                                i18n.t("popular_screen.button_skip"),
+                                this._finish , {textStyle: {fontSize: 18, color: Colors.greyish}}
+                            )
+                            : renderSimpleButton(
+                            i18n.t("popular_screen.button_next"),
                             () => this.saveMany(this.state.selectedItems),
                             {
                                 loading: this.state.reqAdd === 'sending',
@@ -127,6 +139,10 @@ export default class PopularItemsScreen extends Screen<Props, State> {
             'reqAdd'
         ) : Promise.resolve()
         call.then(this.props.onFinished)
+    }
+
+    _finish = () => {
+        this.props.onFinished && this.props.onFinished()
     }
 }
 
