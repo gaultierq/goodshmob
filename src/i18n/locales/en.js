@@ -205,7 +205,9 @@ export default {
             "consumer_goods":"Stuff: books, gifts, shoes, wine, games, products...",
             "places":"Restaurants, cafés, shops, hotels, museums, cities, beaches, places to visit, doctors, plumbers...",
             "movies":"Movies, TV shows",
-            "musics":"Musics, ortists, albums, tracks"
+            "musics":"Musics, artists, albums, tracks",
+            "savings": "Search for interesting lists to follow",
+            "users": "Search for users to follow",
         },
         "search_options":  {
             "around_me": "Around me"

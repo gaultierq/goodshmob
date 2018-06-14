@@ -59,7 +59,7 @@ export default {
     },
     home: {
         wizard: {
-            action_button_label : "Ajouter un coup de coeur\nou une envie.",
+            action_button_label : "Ajouter un coup de coeur,\nune envie, un conseil.",
             action_button_body : "Livre, film, série, resto, musique...",
         },
         tabs: {
@@ -204,7 +204,9 @@ export default {
             "consumer_goods":"Plein de trucs : livres, cadeaux, gadgets, chaussures, vin, jouets, produits...",
             "places":"Plein d'adresses : restaurants, cafés, boutiques, hôtels, musées, villes, plages, lieux à visiter, docteurs, plombiers...",
             "movies":"Plein de films, séries, documentaires, émissions... ",
-            "musics":"Plein de sons : artistes, albums, titres..."
+            "musics":"Plein de sons : artistes, albums, titres...",
+            "savings": "Cherche des listes qui t'intéressent pour les suivre",
+            "users": "Cherche des membres à suivre",
         },
         "search_options":  {
             "around_me": "Autour de moi"
