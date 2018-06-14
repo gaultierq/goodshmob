@@ -130,14 +130,14 @@ export default class LineupTitle2 extends Component<Props, State> {
             </Text>;
         }
 
-        return count > 0 && <View style={[styles.medalsContainer, {marginLeft: 4}]} key={icon}>
+        return count > 0 && <Text key={icon}>
             {displayDot.next().value && <Text style={[styles.smallText, {color, marginHorizontal: 6}]}>• </Text>}
             <Icon name={icon} size={iconSize} color={color}/>
             <Text style={[styles.smallText, {marginLeft: 4, color,
                 alignSelf: 'flex-end',
                 // backgroundColor: 'red',
-            }]}>{count}</Text>
-        </View>;
+            }]}>{' '}{count}{' '}</Text>
+        </Text>;
     }
 }
 
