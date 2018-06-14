@@ -255,7 +255,7 @@ export default class Feed extends Component<Props, State>  {
             onEndReachedThreshold: 0.1,
             ListFooterComponent: (filter && emptyFilter) ? filter.emptyFilterResult(filter.token) : someCondition && this.renderFetchMoreLoader(ListFooterComponent),
             style: style1,
-            ListHeaderComponent: someCondition && ListHeaderComponent,
+            ListHeaderComponent: ListHeaderComponent,
             renderSectionHeader: someCondition && renderSectionHeader,
             onScroll: this._handleScroll,
             onScrollBeginDrag: Keyboard.dismiss,
