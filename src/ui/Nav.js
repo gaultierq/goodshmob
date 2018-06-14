@@ -284,7 +284,7 @@ export function displayHomeSearch(navigator: RNNNavigator, token: SearchToken) {
         animationType: 'none',
         backButtonHidden: true,
         passProps: {
-            onClickClose: () => navigator.dismissModal({animationType: 'none'}),
+            onClickClose: () => navigator.dismissModal(),
             token
         },
         backButtonHidden: true,
