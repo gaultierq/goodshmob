@@ -75,6 +75,17 @@ class _NavManager implements NavManager {
             let id = _.nth(parts, 2);
             if (!isId(id)) return false;
 
+            if (url.query && url.query.origin === 'long_press') {
+                this.showModal({
+                    screen: 'goodsh.UserSheet', // unique ID registered with Navigation.registerScreen
+                    animationType: 'none',
+                    passProps: {
+                        userId: id,
+                    },
+                });
+                return
+            }
+
             this.showModal({
                 screen: 'goodsh.UserScreen', // unique ID registered with Navigation.registerScreen
                 passProps: {
