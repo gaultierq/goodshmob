@@ -122,32 +122,23 @@ export default class LineupHorizontal extends Component<Props, State> {
         return (
             <View style={{flexDirection: 'row', paddingLeft: LINEUP_PADDING}}>{
                 [0,1,2,3,4].map((o, i) => (
-                        this.renderEmptyCell(i, renderFirstAsPlus)
+                    <EmptyCell key={`key-${i}`} style={{marginRight: 10}}>
+                        {i === 0 && renderFirstAsPlus && this.renderInnerPlus()}
+                    </EmptyCell>
                     )
                 )
             }</View>
         )
     }
 
-    static renderEmptyCell(i: number, renderFirstAsPlus: boolean = false) {
-        return (
-            <EmptyCell key={`key-${i}`} style={
-                [
-                    {
-                        marginRight: 10,
-                        backgroundColor: `rgba(200,200,200,${0.2 * i})`,
-                    },
-                    i === 0 && {borderWidth: 0}
-                ]
-            }>
-                {i === 0 && renderFirstAsPlus && this.renderPlus(Colors.greyishBrown)}
-            </EmptyCell>
-        )
+    static renderPlus(props: any = {}) {
+        return (<EmptyCell key={`key-${0}`} {...props}> {this.renderInnerPlus()}</EmptyCell>)
     }
 
-    static renderPlus(plusColor) {
-        const size = '90%';
-        const plusThickness = '3%'
+    static renderInnerPlus() {
+        const size = "60%"
+        const plusThickness = '8%'
+        let plusColor = Colors.white
         return <View style={{
             position: 'absolute',
             width: size,

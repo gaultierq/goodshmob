@@ -151,8 +151,11 @@ export default class MyGoodsh extends Screen<Props, State> {
                         skipAuthor={true}
                     />
                 )}
-
-
+                ListHeaderComponent={(
+                    <GTouchable onPress={() => startAddItem(navigator, item.id)}>
+                        {LineupHorizontal.renderPlus({style:{marginRight: 10}})}
+                    </GTouchable>)
+                }
                 style={[
                     {paddingTop: 8, paddingBottom: 12},
                     {backgroundColor: index % 2 === 1 ? 'transparent' : 'rgba(255, 255, 255, 0.3)'}
