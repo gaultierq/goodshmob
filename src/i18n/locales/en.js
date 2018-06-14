@@ -185,7 +185,8 @@ export default {
         "empty_screen": "The goodsh of your friends are here.\nInvite them to share your tips with them."
     },
     "my_interests_screen":{
-        "empty_screen": "You will find every list you follow here.\nExplore your friends lists, and find them here !"
+        "empty_screen": "You will find every list you follow here.\nExplore your friends lists, and find them here !",
+        "search_lists": "Find lists to follow"
     },
     "comments_screen":{
         "title": "Comments"
