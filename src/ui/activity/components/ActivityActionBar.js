@@ -68,7 +68,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                 res.push(
                     this.renderButton(
                         a,
-                        this.renderTextButton(a, activity),
+                        this.getButtonText(a, activity),
                         //$FlowFixMe
                         ()=>this['exec' + toUppercase(a)](activity),
                         a === 'unlike' || a === 'unsave'
@@ -82,7 +82,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
         return <View style={styles.actionBar}>{buttons}</View>;
     }
 
-    renderTextButton(action: ActivityActionType, activity: Activity) {
+    getButtonText(action: ActivityActionType, activity: Activity) {
 
 
         switch(action) {
@@ -119,7 +119,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
 
 
-    renderImageIcon(action: ActivityActionType, size: number, color: Color, style:[] ) {
+    renderImageIcon(action: ActivityActionType, size: number, color: Color, style?: any) {
         switch(action) {
             case 'comment':
                 return <Icon style={style} name={'comment'} size={size} color={color}/>
@@ -205,12 +205,12 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
 
 
-    renderButton(key: string, icon: String, text: string, handler: ()=>void, active:boolean = false) {
+    renderButton(action: ActivityActionType, text: string, handler: ()=>void, active:boolean = false) {
         let color = active ? Colors.green: Colors.greyishBrown;
-        return (<GTouchable onPress={handler} key={key}>
+        return (<GTouchable onPress={handler} key={action}>
                 <View style={styles.button}>
-                    {this.renderImageIcon(key, 24, Colors.brownishGrey, [styles.buttonImage, {tintColor: color}])}
-                    <Text style={[styles.buttonText, {color: color}]}>{text}</Text>
+                    {this.renderImageIcon(action, 24, color, [styles.buttonImage])}
+                    <Text style={[styles.buttonText, {color}]}>{text}</Text>
                 </View>
             </GTouchable>
         );
