@@ -29,6 +29,7 @@ import {RequestManager} from "../../managers/request";
 import Spinner from 'react-native-spinkit';
 import Config from "react-native-config"
 import {FullScreenLoader} from "../UIComponents";
+import LineupHorizontal from "./LineupHorizontal"
 
 export type FeedSource = {
     callFactory: ()=>Api.Call,
