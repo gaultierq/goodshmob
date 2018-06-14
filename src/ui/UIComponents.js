@@ -2,17 +2,18 @@
 
 import React, {Component} from 'react';
 import {Image, LayoutAnimation, StyleSheet, Text, UIManager, View} from 'react-native';
-import {Colors} from "./colors";
-import User from "react-native-firebase/lib/modules/auth/User";
+import {Colors, AVATAR_BACKGROUNDS} from "./colors";
 import GTouchable from "./GTouchable";
 import {BACKGROUND_COLOR, LINEUP_PADDING, STYLES} from "./UIStyles";
 import Spinner from 'react-native-spinkit';
-import type {Id, Lineup, RNNNavigator} from "../types";
+import type {Id, Lineup, RNNNavigator, User} from "../types"
 import {displayLineupActionMenu, seeList, startAddItem} from "./Nav";
 import LineupHorizontal from "./components/LineupHorizontal";
 import LineupTitle2 from "./components/LineupTitle2";
 import {ViewStyle} from "../types";
 import GImage from "./components/GImage"
+import {firstLetter, hashCode} from "../helpers/StringUtils"
+import {SFP_TEXT_REGULAR} from "./fonts"
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
@@ -54,8 +55,30 @@ export class Avatar extends Component<Props, State> {
     render() {
         const {user, style, size, ...attributes} = this.props;
 
-        let uri = user && user.image
-        uri = _.isNull(uri) ? '' : uri
+        let uri = user.image
+        const colorId = hashCode(user.id) % AVATAR_BACKGROUNDS.length
+        const color = AVATAR_BACKGROUNDS[colorId]
+
+        if (_.isNull(uri)) {
+            const initials = firstLetter(user.firstName) + firstLetter(user.lastName)
+            if (initials.length === 0) return null
+
+            return <View style={[{
+                height: size,
+                width: size,
+                borderRadius: size / 2,
+                backgroundColor: color,
+                paddingLeft: size / 20,
+                alignItems: 'center',
+                justifyContent: 'center',
+            }, style]}>
+                <Text style={{
+                    color: Colors.white,
+                    fontFamily: SFP_TEXT_REGULAR,
+                    fontSize: size / 2.3
+                }}>{initials.toUpperCase()}</Text>
+            </View>
+        }
 
         //TODO: image placeholder
         return (<GImage

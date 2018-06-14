@@ -23,6 +23,7 @@ import ApiAction from "../../helpers/ApiAction";
 import * as Api from "../../managers/Api";
 import * as authActions from '../../auth/actions'
 
+import {Avatar} from "../UIComponents";
 import {openLinkSafely, renderLink, renderSimpleButton, stylePadding} from "../UIStyles";
 import SmartInput from "../components/SmartInput";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
@@ -222,10 +223,7 @@ export default class Profile extends Component<Props, State> {
             alignItems: 'center',
         }}
         >
-            {user && user.image && <GImage source={{uri: user.image}}
-                                           fallbackSource={require('../../img/avatar-missing.png')}
-                                           style={styles.userAvatar}
-            />}
+            <Avatar user={user} />
             {user && <Text style={styles.userName}>{user.firstName + " " + user.lastName}</Text>}
 
         </View>;
