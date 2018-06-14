@@ -29,8 +29,7 @@ export default class MyAvatar extends Component<Props, State> {
 
         let imageDim = 32;
 
-        console.log('userId', this.props.currentUser)
-        let user = _.get(this.props, 'currentUser.attributes', null)
+        let user = {..._.get(this.props, 'currentUser.attributes', null)}
         user.id = _.get(this.props, 'currentUser.id', null)
 
         return (
