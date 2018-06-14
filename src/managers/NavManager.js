@@ -78,6 +78,7 @@ class _NavManager implements NavManager {
             if (url.query && url.query.origin === 'long_press') {
                 this.showModal({
                     screen: 'goodsh.UserSheet', // unique ID registered with Navigation.registerScreen
+                    animationType: 'none',
                     passProps: {
                         userId: id,
                     },
