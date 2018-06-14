@@ -608,6 +608,10 @@ export const reduceList2 = (state: STATE<SHELL>, action: REDUX_ACTION<SHELL>, ap
         case apiAction.success():
 
             let {mergeOptions = {}} = action.options
+            if (mergeOptions.drop) {
+                console.debug("droping data");
+                state = {...state, list: []}
+            }
 
             let newList = action.payload.data.map(f => {
                 let {id, type} = f;

@@ -79,7 +79,7 @@ type State = {
 
 type FeedFetchOption = {
     // afterId?: Id,
-    loadMore: boolean,
+    loadMore?: boolean,
     trigger?: any,
     drop?: boolean
 }
@@ -434,7 +434,7 @@ export default class Feed extends Component<Props, State>  {
         return false;
     }
 
-    fetchIt(options?: FeedFetchOption = {loadMore: false}) {
+    fetchIt(options?: FeedFetchOption = {}) {
         let {loadMore, trigger, drop} = options;
         let requestName = loadMore ? 'isFetchingMore' : 'isFetchingFirst';
 
