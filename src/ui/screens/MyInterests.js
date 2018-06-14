@@ -115,7 +115,7 @@ export default class MyInterests extends Screen<Props, State> {
         navigator.showModal({
             screen: 'goodsh.NetworkSearchScreen',
             passProps:{
-                onClickClose: () => navigator.dismissModal({animationType: 'none'}),
+                onClickClose: () => navigator.dismissModal(),
             },
             navigatorButtons: CANCELABLE_MODAL2,
         });
