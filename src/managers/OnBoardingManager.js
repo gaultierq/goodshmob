@@ -210,7 +210,7 @@ class _OnBoardingManager implements OnBoardingManager {
                 if (!__WITH_NOTIFICATIONS__) return false
                 return !NotificationManager.hasPermissionsSync(true)
             case "popular":
-                const user = currentUser(false)
+                const user = currentUser()
                 let sCount = _.get(user, 'meta.savingsCount', -1);
                 return sCount === 0
             case "noise":

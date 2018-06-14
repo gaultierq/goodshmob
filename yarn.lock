@@ -5624,6 +5624,10 @@ react-native-popup-menu@^0.9.0:
   version "0.9.1"
   resolved "https://registry.yarnpkg.com/react-native-popup-menu/-/react-native-popup-menu-0.9.1.tgz#9d6e3619aff437718e6baa9c48a277577bbeea00"
 
+react-native-progresshub@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/react-native-progresshub/-/react-native-progresshub-0.1.3.tgz#db58a82fb2dd1d595e5f9c7696c7a9bd6aa74264"
+
 react-native-root-siblings@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/react-native-root-siblings/-/react-native-root-siblings-2.2.0.tgz#57bb2f7b0a5399c48e14b36d5f3ae7015cd3fb95"

@@ -1,7 +1,7 @@
 // @flow
 
 import type {Store} from 'redux';
-import {buildNonNullData} from "../helpers/DataUtils";
+import {buildData, buildNonNullData} from "../helpers/DataUtils"
 import type {Id, ms, User} from "../types";
 import Scope from "./Scope";
 import watch from 'redux-watch'
@@ -21,7 +21,7 @@ class CurrentUser {
         store.subscribe(w((newVal, oldVal, objectPath) => {
             console.info(`auth: currentUserId changed old=${oldVal}, new=${newVal}`);
 
-            const user = this.buildUser(newVal, false);
+            const user = this.buildUser(newVal);
             console.info(`auth: new user=${JSON.stringify(user)}`);
 
             EventBus.dispatch(USER_CHANGE, {user});
@@ -32,13 +32,14 @@ class CurrentUser {
         return this.store ? this.store.getState().auth.currentUserId : null;
     }
 
-    user(assertNotNull: boolean = true) {
-        return this.buildUser(this.id(), assertNotNull);
+    user() {
+        return this.buildUser(this.id());
     }
 
     //this shoulw always return something !== null if user is logged
-    buildUser(id: Id, assertNotNull: boolean) {
-        return id ? buildNonNullData(this.store.getState().data, "users", id, assertNotNull) || {id} : null;
+    buildUser(id: Id) {
+        const user = buildData(this.store.getState().data, "users", id)
+        return id ? user || {id, dummy: true} : null;
     }
 
     currentGoodshboxId() {
@@ -66,8 +67,9 @@ export function currentUserId() : Id {
     return instance.id();
 }
 
-export function currentUser(assertNotNull: boolean = true) : User {
-    return instance.user(assertNotNull);
+// by default, will always return something !== null if user is logged
+export function currentUser() : User {
+    return instance.user();
 }
 
 export function currentGoodshboxId() {
@@ -104,7 +106,7 @@ export function listenToUserChange(options: {onUser?:(user: User) => void, onNoU
 
     if (triggerOnListen) {
         triggering = true;
-        callback(currentUser(false));
+        callback(currentUser());
         triggering = false;
     }
 }
