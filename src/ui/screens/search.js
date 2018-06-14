@@ -173,6 +173,7 @@ export default class SearchScreen extends Component<Props, State> {
                         onSubmitEditing={() => this.tryPerformSearch(this.state.input, 0)}
                         placeholder={this.props.placeholder}
                         value={this.state.input}
+                        autoFocus
                         style={{
                             paddingTop: 10,
                             paddingBottom: 5,
