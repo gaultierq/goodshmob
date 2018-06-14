@@ -205,8 +205,8 @@ export class Merge<T, K> {
     mutated = false;
 
     constructor(target: Array<T>, source: Array<T>) {
-        this.target = target;
-        this.source = source.slice();
+        this.target = target || []
+        this.source = source ? source.slice() : []
     }
 
     setAfterKey(afterId: K): Merge<T, K> {
@@ -283,7 +283,7 @@ export class Merge<T, K> {
 
         this.processOptions();
 
-        let result = this.target.slice();
+        let result = this.target.slice()
 
         if (this.reverse) {
             this.afterId = this.beforeId;

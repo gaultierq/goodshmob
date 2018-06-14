@@ -23,7 +23,7 @@ import UserScreen from './screens/user';
 import NetworkSearchScreen from './screens/networksearch';
 import HomeSearchScreen from './screens/homesearch';
 import AddItemScreen from './screens/additem';
-import TestScreen from './screens/test';
+import TestScreen from './screens/devtest';
 import UserSheet from './screens/userSheet';
 import MyAvatar from './components/MyAvatar';
 import {InteractionScreen} from './screens/interactions';

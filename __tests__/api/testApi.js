@@ -97,8 +97,9 @@ test('testing meta', () => {
     let result = parse(require("./activities_fixtures2.json"), "./activities_fixtures2.json");
     let post: Post = result[1];
     //expect(post).toBeInstanceOf(Models.Post);
+    console.log("post:", post)
     expect(post.meta).toBeDefined();
-    expect(post.meta["comments-count"]).toBe(6);
+    expect(post.meta["commentsCount"]).toBe(6);
 });
 
 function parse(response, fixtureFile) {
