@@ -133,9 +133,9 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                 }
                 return <Icon style={style} name={'share'} size={size} color={color}/>
             case 'save':
-                return <Icon style={style} name={'bookmark_border'} size={size} color={color}/>
+                return <Icon style={style} name={'bookmark'} size={size} color={color}/>
             case 'unsave':
-                return <Icon style={style} name={'bookmark_border'} size={size} color={color}/>
+                return <Icon style={style} name={'bookmark'} size={size} color={color}/>
             case 'see':
                 return <Icon style={style} name={'playlist_add'} size={size} color={color}/>
             case 'buy':
