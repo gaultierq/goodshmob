@@ -2,7 +2,7 @@
 
 import React, {Component} from 'react';
 import {Image, LayoutAnimation, StyleSheet, Text, UIManager, View} from 'react-native';
-import {Colors} from "./colors";
+import {Colors, AVATAR_BACKGROUNDS} from "./colors";
 import User from "react-native-firebase/lib/modules/auth/User";
 import GTouchable from "./GTouchable";
 import {BACKGROUND_COLOR, LINEUP_PADDING, STYLES} from "./UIStyles";
@@ -13,6 +13,7 @@ import LineupHorizontal from "./components/LineupHorizontal";
 import LineupTitle2 from "./components/LineupTitle2";
 import {ViewStyle} from "../types";
 import GImage from "./components/GImage"
+import {hashCode} from "../helpers/StringUtils"
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
@@ -55,7 +56,25 @@ export class Avatar extends Component<Props, State> {
         const {user, style, size, ...attributes} = this.props;
 
         let uri = user && user.image
-        uri = _.isNull(uri) ? '' : uri
+
+        const colorId = hashCode(user.id) % AVATAR_BACKGROUNDS.length
+        const color = AVATAR_BACKGROUNDS[colorId]
+
+        if (_.isNull(uri)) {
+            const initials = user.firstName[0] + user.lastName[0]
+
+            return <View style={[{
+                height: size,
+                width: size,
+                borderRadius: size / 2,
+                backgroundColor: color,
+                paddingLeft: size / 20,
+                alignItems: 'center',
+                justifyContent: 'center',
+            }, style]}>
+                <Text style={{color: Colors.white, fontSize: size / 2.3}}>{initials.toUpperCase()}</Text>
+            </View>
+        }
 
         //TODO: image placeholder
         return (<GImage

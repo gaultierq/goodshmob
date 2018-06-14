@@ -42,7 +42,6 @@ export default class UserRowI extends React.Component<Props, State> {
         //FIXME: rm flex: 1 ?
         return <View style={[{flex:1, }, style, styles.userContainer]}>
             {
-                !!uri &&
                 !noImage &&
 
                 <GTouchable

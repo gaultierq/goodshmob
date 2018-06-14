@@ -29,7 +29,9 @@ export default class MyAvatar extends Component<Props, State> {
 
         let imageDim = 32;
 
-        const user = _.get(this.props, 'currentUser.attributes', null)
+        console.log('userId', this.props.currentUser)
+        let user = _.get(this.props, 'currentUser.attributes', null)
+        user.id = _.get(this.props, 'currentUser.id', null)
 
         return (
             <GTouchable onPress={()=>{

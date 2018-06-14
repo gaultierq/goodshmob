@@ -7,6 +7,14 @@ export function toLowercase(type) {
     return type.substr(0, 1).toLowerCase() + type.substr(1, type.length - 1);
 }
 
+export function hashCode(str) { // java String#hashCode
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return Math.abs(hash);
+}
+
 // Decorator function for logging
 export function logger(target, name, descriptor) {
 
