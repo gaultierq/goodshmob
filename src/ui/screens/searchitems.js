@@ -22,6 +22,7 @@ import SearchScreen from "./search";
 import normalize from 'json-api-normalizer';
 import GTouchable from "../GTouchable";
 import Screen from "../components/Screen";
+import EmptySearch from "../components/EmptySearch";
 import type {Color, Item, RNNNavigator} from "../../types";
 import {Colors} from "../colors";
 import Geolocation from "../../managers/GeoLocation"
@@ -29,9 +30,6 @@ import type {SearchPlacesProps} from "./searchplacesoption";
 import {SearchPlacesOption} from "./searchplacesoption";
 import OpenAppSettings from 'react-native-app-settings'
 import SearchPage from "./SearchPage";
-import {SFP_TEXT_MEDIUM} from "../fonts";
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
 
@@ -70,7 +68,6 @@ class SearchItem extends Screen<Props, State> {
                 renderResults: ({query, results}) => {
 
                     if (this.displayBlank(query, results)) {
-                        const color = Colors.brownishGrey;
                         return (
                             <KeyboardAwareScrollView
                                 contentContainerStyle={{flex:1}}
@@ -78,25 +75,9 @@ class SearchItem extends Screen<Props, State> {
                                 keyboardShouldPersistTaps='always'
                                 // style={{position: 'absolute', bottom:0, top: 0}}
                             >
-                                <View style={{
-                                    flex:1,
-                                    alignItems:'center',
-                                    alignSelf: 'center',
-                                    justifyContent:'center',
+                                <EmptySearch categ={categ}/>
 
-                                }}>
-                                    {
-                                        this.renderBlankIcon(categ, 50, color)
-                                    }
-                                    <Text style={{
-                                        textAlign: 'center',
-                                        fontSize: 17,
-                                        margin: 15,
-                                        fontFamily: SFP_TEXT_MEDIUM,
-                                        color: color
 
-                                    }}>{i18n.t("search_item_screen.placeholder." + categ)}</Text>
-                                </View>
                             </KeyboardAwareScrollView>
                         )
                     }
@@ -140,20 +121,6 @@ class SearchItem extends Screen<Props, State> {
             {...this.props}
             style={{backgroundColor: Colors.white}}
         />;
-    }
-
-    renderBlankIcon(category: SearchItemCategoryType, size: number, color: Color) {
-
-        switch (category) {
-            case 'places':
-                return <MaterialIcons name="restaurant" size={size} color={color}/>;
-            case 'musics':
-                return <MaterialIcons name="library-music" size={size} color={color}/>;
-            case 'consumer_goods':
-                return <SimpleLineIcons name="present" size={size} color={color}/>;
-            case 'movies':
-                return <MaterialIcons name="movie" size={size} color={color}/>;
-        }
     }
 
 
