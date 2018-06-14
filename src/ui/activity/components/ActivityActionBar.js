@@ -10,6 +10,9 @@ import * as activityAction from "../actions";
 import {unsave} from "../actions";
 import {fullName, toUppercase} from "../../../helpers/StringUtils";
 import {buildData, buildNonNullData, sanitizeActivityType} from "../../../helpers/DataUtils";
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import {default as FeatherIcon} from 'react-native-vector-icons/Feather';
+
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
 import {canPerformAction, getPendingLikeStatus, A_BUY, A_SAVE, A_UNLIKE, A_UNSAVE, A_LIKE} from "../../rights";
 import {CREATE_COMMENT} from "../../screens/comments";
@@ -63,7 +66,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                 res.push(
                     this.renderButton(
                         a,
-                        this.renderImageButton(a),
+                        this.renderImageIcon(a),
                         this.renderTextButton(a, activity),
                         //$FlowFixMe
                         ()=>this['exec' + toUppercase(a)](activity),
@@ -115,26 +118,27 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
 
 
-    renderImageButton(action: ActivityActionType) {
+    renderImageIcon(action: ActivityActionType) {
+
         switch(action) {
             case 'comment':
-                return require('../../../img2/commentIcon.png');
+                return {iconName: 'comment', useFeather: false};
             case 'like':
-                return require('../../../img2/yeaahIcon.png');
+                return {iconName: 'favorite', useFeather: false};
             case 'unlike':
-                return require('../../../img2/yeaahIcon.png');
+                return {iconName: 'favorite', useFeather: false};
             case 'share':
-                return require('../../../img2/sendIcon.png');
+                return __IS_IOS__ ? {iconName: 'share', useFeather: true} : {iconName: 'share', useFeather: false};
             case 'save':
-                return require('../../../img2/bookmarkIcon.png');
+                return {iconName: 'bookmark_border', useFeather: false};
             case 'unsave':
-                return require('../../../img2/bookmarkIcon.png');
+                return {iconName: 'bookmark_border', useFeather: false};
             case 'see':
-                return require('../../../img/save-icon.png');
+                return {iconName: 'playlist_add', useFeather: false};
             case 'buy':
-                return require('../../../img/buy-icon.png');
+                return {iconName: 'shopping_cart', useFeather: false};
             case 'answer':
-                return require('../../../img2/commentIcon.png');
+                return {iconName: 'mode_comment', useFeather: false};
         }
         throw "Unknown action: " +action
     }
@@ -198,11 +202,18 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
 
 
-    renderButton(key: string, img: Url, text: string, handler: ()=>void, active:boolean = false) {
+    renderButton(key: string, iconConfig: Object, text: string, handler: ()=>void, active:boolean = false) {
         let color = active ? Colors.green: Colors.greyishBrown;
+        let {iconName, useFeather} = iconConfig;
+
         return (<GTouchable onPress={handler} key={key}>
                 <View style={styles.button}>
-                    <Image source={img} style={[styles.buttonImage, {tintColor: color}]}/>
+                    {useFeather && <FeatherIcon
+                        style={[styles.buttonImage, {tintColor: color}]}
+                        name={iconName} size={24} color={Colors.brownishGrey}/>}
+                    {!useFeather && <Icon
+                        style={[styles.buttonImage, {tintColor: color}]}
+                        name={iconName} size={24} color={Colors.brownishGrey}/>}
                     <Text style={[styles.buttonText, {color: color}]}>{text}</Text>
                 </View>
             </GTouchable>
