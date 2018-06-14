@@ -28,12 +28,15 @@ import * as Api from "../../managers/Api"
 import {Call, reduceList2} from "../../managers/Api"
 import ApiAction from "../../helpers/ApiAction"
 import type {Id} from "../../types"
-import {STYLES} from "../UIStyles"
+import {renderSimpleButton, STYLES} from "../UIStyles"
 import {GoodshContext, LINEUP_SECTIONS} from "../UIComponents"
 import {buildData, updateSplice0} from "../../helpers/DataUtils"
 import {FOLLOW_LINEUP, UNFOLLOW_LINEUP} from "../lineup/actions"
 import {mergeItemsAndPendings, mergeItemsAndPendings2} from "../../helpers/ModelUtils"
 import ShareButton from "../components/ShareButton"
+import {Colors} from "../colors"
+import {CANCELABLE_MODAL2} from "../Nav"
+import {SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "../fonts"
 
 
 type Props = {
@@ -84,7 +87,16 @@ export default class MyInterests extends Screen<Props, State> {
                     displayName={"MyInterests"}
                     renderSectionHeader={({section}) => section.renderSectionHeader()}
                     sections={sections}
-                    empty={<View><Text style={STYLES.empty_message}>{i18n.t('my_interests_screen.empty_screen')}</Text><ShareButton text={i18n.t('actions.invite')}/></View>}
+                    empty={<View><Text style={STYLES.empty_message}>{i18n.t('my_interests_screen.empty_screen')}</Text>
+                        {renderSimpleButton(
+                            i18n.t('my_interests_screen.search_lists'),
+                            () => this.showSearch(),
+                            {loading: false,
+                                style: {backgroundColor: Colors.green, borderWidth: 0, borderRadius: 4, margin: 12},
+                                textStyle: {fontWeight: "bold", fontSize: 18, color: Colors.white, fontFamily: SFP_TEXT_REGULAR, }})
+                        }
+                    </View>}
+
                     fetchSrc={this.fetchSrc(userId)}
                     decorateLoadMoreCall={(sections: any[], call: Call) => {
                         const lastLineup = _.last(sections).data[0];
@@ -95,6 +107,18 @@ export default class MyInterests extends Screen<Props, State> {
                 />
             </GoodshContext.Provider>
         )
+    }
+
+    showSearch() {
+        let navigator = this.props.navigator;
+
+        navigator.showModal({
+            screen: 'goodsh.NetworkSearchScreen',
+            passProps:{
+                onClickClose: () => navigator.dismissModal({animationType: 'none'}),
+            },
+            navigatorButtons: CANCELABLE_MODAL2,
+        });
     }
 
     fetchSrc(userId: Id): FeedSource {

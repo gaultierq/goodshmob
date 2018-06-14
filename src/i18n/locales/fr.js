@@ -184,7 +184,8 @@ export default {
         "empty_screen": "Découvre ici les goodsh de tes contacts.\nTap Ask pour leur poser des questions."
     },
     "my_interests_screen":{
-        "empty_screen": "Tu retrouveras les listes que tu suis ici.\nExplore les listes de tes amis, et suis les plus intéressantes !"
+        "empty_screen": "Tu retrouveras les listes que tu suis ici.\nExplore les listes de tes amis, et suis les plus intéressantes !",
+        "search_lists": "Trouver des listes à suivre"
     },
     "comments_screen":{
         "title": "Commentaires"
