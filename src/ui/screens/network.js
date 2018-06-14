@@ -161,6 +161,7 @@ class NetworkScreen extends Screen<Props, State> {
                     sections={sections}
                     renderItem={({item, index}) => this.renderItem(item, index)}
                     renderSectionFooter={({section}) => this.renderSectionFooter(section)}
+                    ListHeaderComponent={<View style={{height: 100, width: 100, backgroundColor: 'red'}}></View>}
                     listRef={ref => this.feed = ref}
                     fetchSrc={{
                         callFactory: fetchMyNetwork,
