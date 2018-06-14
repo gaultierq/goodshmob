@@ -4,7 +4,7 @@ import {ActivityIndicator, Image, ScrollView, StyleSheet, Text, TextInput, Touch
 import {CheckBox} from "react-native-elements";
 import {renderSimpleButton, STYLES} from "../UIStyles";
 import type {Id, Item, ItemType} from "../../types";
-import {SAVE_ITEM_PRENDING, fetchItemCall} from "../lineup/actions";
+import {CREATE_SAVING, fetchItemCall} from "../lineup/actions";
 import {logged} from "../../managers/CurrentUser";
 import {connect} from "react-redux";
 import {buildData, buildNonNullData} from "../../helpers/DataUtils";
@@ -20,7 +20,6 @@ import {CANCELABLE_MODAL} from "../Nav";
 import _Messenger from "../../managers/Messenger";
 import {SFP_TEXT_ITALIC, SFP_TEXT_REGULAR} from "../fonts"
 import GTouchable from "../GTouchable";
-import {pendingActionWrapper} from "../../helpers/ModelUtils";
 
 type Props = {
     defaultLineupId: Id,

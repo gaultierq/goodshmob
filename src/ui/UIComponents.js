@@ -45,6 +45,7 @@ type Props = {
 }
 type State = {}
 
+//TODO: own class
 export class Avatar extends Component<Props, State> {
 
 
@@ -55,43 +56,51 @@ export class Avatar extends Component<Props, State> {
     render() {
         const {user, style, size, ...attributes} = this.props;
 
-        let uri = user.image
-        const colorId = hashCode(user.id) % AVATAR_BACKGROUNDS.length
-        const color = AVATAR_BACKGROUNDS[colorId]
+        let uri = null
 
-        if (_.isNull(uri)) {
-            const initials = firstLetter(user.firstName) + firstLetter(user.lastName)
-            if (initials.length === 0) return null
+        if (user) {
+            uri = user.image
 
-            return <View style={[{
-                height: size,
-                width: size,
-                borderRadius: size / 2,
-                backgroundColor: color,
-                paddingLeft: size / 20,
-                alignItems: 'center',
-                justifyContent: 'center',
-            }, style]}>
-                <Text style={{
-                    color: Colors.white,
-                    fontFamily: SFP_TEXT_REGULAR,
-                    fontSize: size / 2.3
-                }}>{initials.toUpperCase()}</Text>
-            </View>
+            if (_.isNull(uri)) {
+
+                const colorId = hashCode(user.id) % AVATAR_BACKGROUNDS.length
+                const color = AVATAR_BACKGROUNDS[colorId]
+
+                const initials = firstLetter(user.firstName) + firstLetter(user.lastName)
+                if (initials.length === 0) return null
+
+                return <View style={[{
+                    height: size,
+                    width: size,
+                    borderRadius: size / 2,
+                    backgroundColor: color,
+                    paddingLeft: size / 20,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }, style]}>
+                    <Text style={{
+                        color: Colors.white,
+                        fontFamily: SFP_TEXT_REGULAR,
+                        fontSize: size / 2.3
+                    }}>{initials.toUpperCase()}</Text>
+                </View>
+            }
         }
 
         //TODO: image placeholder
-        return (<GImage
-            source={{uri: uri}}
-            fallbackSource={require('../img/avatar-missing.png')}
-            style={[{
-                height: size,
-                width: size,
-                borderRadius: size / 2,
+        return (
+            <GImage
+                source={{ uri }}
+                fallbackSource={require('../img/avatar-missing.png')}
+                style={[{
+                    height: size,
+                    width: size,
+                    borderRadius: size / 2,
 
-            }, style]}
-            {...attributes}
-        />)
+                }, style]}
+                {...attributes}
+            />
+        )
     }
 }
 
