@@ -31,9 +31,10 @@ export default class SaveScreen extends Component<Props, State> {
         const {description, visibility} = this.state;
 
         let grey = Colors.greyishBrown;
+        const item = activity.resource
         return (
             <View style={[styles.container, containerStyle]}>
-                <ItemBody item={activity.resource} noGoodshButton />
+                <ItemBody itemType={item} itemId={item.id} noGoodshButton />
 
                 <CheckBox
                     right

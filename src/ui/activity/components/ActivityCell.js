@@ -107,6 +107,7 @@ export default class ActivityCell extends React.Component<Props, State> {
                                 <Text style={{margin: 12, fontSize: 30}}>{activity.content}</Text>
                                 :
                                 <ItemBody
+                                    // item={activity.resource}
                                     item={activity.resource}
                                     liked={this.isLiked(activity)}
                                     navigator={this.props.navigator}

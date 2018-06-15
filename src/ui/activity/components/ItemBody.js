@@ -14,14 +14,15 @@ import {
 } from 'react-native'
 import {connect} from "react-redux"
 import {logged} from "../../../managers/CurrentUser"
-import type {Item} from "../../../types"
+import type {Id, Item} from "../../../types"
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors"
 import {SFP_TEXT_ITALIC} from "../../fonts"
 import GImage from '../../components/GImage'
 
 import {firstName} from "../../../helpers/StringUtils"
 import Carousel from 'react-native-looped-carousel'
-
+import { createSelector } from 'reselect'
+import {buildData, sanitizeActivityType} from "../../../helpers/DataUtils"
 
 type Props = {
     item: Item,
@@ -35,13 +36,28 @@ type State = {
     width?: number,
 };
 
-@connect()
+const getItemSelector = createSelector(
+    [
+        (state, props) => _.get(state, `data.${sanitizeActivityType(props.item.type)}.${props.item.id}`),
+        state => state.data
+    ],
+    (rawItem, data) => rawItem && buildData(data, rawItem.type, rawItem.id)
+
+)
+
+//i want to listen to "data" but only for "itemType x itemId" store update
+@connect((state, props) => ({
+        item: getItemSelector(state, props)
+    })
+)
 @logged
 export default class ItemBody extends React.Component<Props, State> {
 
     static defaultProps = {
         showAllImages: false
-    };
+    }
+
+    state = {}
 
     componentWillReceiveProps(nextProps: Props) {
         if (nextProps.liked && !this.props.liked) {
@@ -49,11 +65,10 @@ export default class ItemBody extends React.Component<Props, State> {
         }
     }
 
-    state = {}
-
     render() {
 
         const {item, bodyStyle} = this.props;
+        if (!item) return null
         return (
             <View onLayout={this._onLayoutDidChange}>
                 {/*Image And Button*/}

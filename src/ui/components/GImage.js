@@ -22,7 +22,7 @@ export default class GImage extends Component<Props, State>  {
     };
 
     render() {
-        logger.info("render", this.props)
+        // logger.debug("render", this.props)
         if (DISABLE_IMAGE_CACHE === 'true') {
             return (
                 <Image
