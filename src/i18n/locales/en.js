@@ -314,10 +314,15 @@ export default {
             title: "Replies"
         }
     },
-    "load_more_activities": {
+    "more_activities": {
         zero: "",
-        one: "See %{count} more activity",
-        other: "See %{count} more activities",
+        one: "%{count} more activity",
+        other: "%{count} more activities",
+    },
+    "there_are_activities": {
+        zero: "",
+        one: "There is",
+        other: "There are",
     },
     add_item_screen: {
         title: "Select list"

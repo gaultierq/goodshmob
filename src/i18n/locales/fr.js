@@ -313,10 +313,15 @@ export default {
             title: "Réponses"
         }
     },
-    "load_more_activities": {
+    "more_activities": {
         zero: "",
-        one: "Voir %{count} activité supplémentaire",
-        other: "Voir %{count} activités supplémentaires",
+        one: "%{count} activité supplémentaire",
+        other: "%{count} activités supplémentaires",
+    },
+    "there_are_activities": {
+        zero: "",
+        one: "Il y a",
+        other: "Il y a",
     },
     add_item_screen: {
         title: "Choisir une liste"
