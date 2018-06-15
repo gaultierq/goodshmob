@@ -194,7 +194,7 @@ export default class LineupHorizontal extends Component<Props, State> {
     }
 
     static renderPlus(props: any = {}) {
-        return (<EmptyCell key={`key-${0}`} {...props}> {this.renderInnerPlus()}</EmptyCell>)
+        return (<EmptyCell key={`key-${0}`} {...props}>{this.renderInnerPlus()}</EmptyCell>)
     }
 
     static renderInnerPlus() {
