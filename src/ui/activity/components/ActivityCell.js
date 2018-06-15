@@ -7,7 +7,7 @@ import {connect} from "react-redux";
 import {logged} from "../../../managers/CurrentUser"
 import {buildNonNullData, getAskBackgroundColor, sanitizeActivityType} from "../../../helpers/DataUtils";
 import type {Activity, ActivityType, Id, RNNNavigator} from "../../../types"
-import ActivityBody from "./ActivityBody";
+import ItemBody from "./ItemBody";
 import ActivityActionBar from "./ActivityActionBar";
 import {Avatar} from "../../UIComponents";
 import {seeUser} from "../../Nav";
@@ -106,8 +106,8 @@ export default class ActivityCell extends React.Component<Props, State> {
                             activity.type === 'asks' ?
                                 <Text style={{margin: 12, fontSize: 30}}>{activity.content}</Text>
                                 :
-                                <ActivityBody
-                                    activity={activity}
+                                <ItemBody
+                                    item={activity.resource}
                                     liked={this.isLiked(activity)}
                                     navigator={this.props.navigator}
                                     bodyStyle={{
