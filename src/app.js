@@ -1,6 +1,6 @@
 // @flow
 /* global ErrorUtils */
-
+import {init as initGlobal} from "./global";
 import {applyMiddleware, combineReducers, compose, createStore} from "redux";
 import {Navigation} from 'react-native-navigation';
 import * as reducers from "./reducers/allReducers";
@@ -18,7 +18,7 @@ import * as notification from './managers/NotificationManager';
 import NotificationManager from './managers/NotificationManager';
 import * as DeviceManager from "./managers/DeviceManager";
 import * as UI from "./ui/UIStyles";
-import {init as initGlobal} from "./global";
+
 import {AlgoliaClient} from "./helpers/AlgoliaUtils";
 import {Statistics} from "./managers/Statistics";
 import {CLEAR_CACHE, INIT_CACHE, UPGRADE_CACHE} from "./auth/actionTypes";

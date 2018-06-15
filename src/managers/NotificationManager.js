@@ -16,7 +16,7 @@ class _NotificationManager implements NotificationManager {
     }
 
     init() {
-        this.logger = logger.createLogger('notifications')
+        this.logger = rootlogger.createLogger('notifications')
         if (!__WITH_NOTIFICATIONS__) return;
         this.logger.info("fcm:load");
         this.configureSafe();

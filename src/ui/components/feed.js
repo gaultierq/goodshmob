@@ -120,7 +120,7 @@ export default class Feed extends Component<Props, State>  {
         }
         // this.console = props.displayName ? createConsole(props.displayName) : console
         // this.console = console.createLogger({group: 'feed', groupName: props.displayName})
-        this.console = logger.createLogger('feed')
+        this.console = rootlogger.createLogger('feed')
 
         this.createdAt = Date.now();
         this.postFetchFirst();

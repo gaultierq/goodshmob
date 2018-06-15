@@ -155,28 +155,13 @@ export default class ActivityBody extends React.Component<Props, State> {
 
             {/*<BoxShadow setting={shadowOpt}>*/}
 
-            {this.props.showAllImages && <Carousel
-                delay={4000}
-                style={styles.imageContainer}
-                autoplay
-                swipe={this.props.showAllImages}
-                bullets={false}>
-                {images.map((image, i) => {
-                    return <GImage
-                        source={image ? {uri: image} : require('../../../img/goodsh_placeholder.png')}
-                        key={image}
-                        resizeMode={resize}
-                        style={[styles.image, {height: imageHeight, width: this.state.width}]}
-                    />
-
-                }) }
-            </Carousel>}
-            {!this.props.showAllImages &&
-                <GImage
-                source={resource.image ? {uri: resource.image} : require('../../../img/goodsh_placeholder.png')}
+            <GImage
+                lol={"main_activity_image"}
+                source={{uri: resource.image}}
+                fallbackSource={require('../../../img/goodsh_placeholder.png')}
                 resizeMode={resize}
                 style={[styles.image, {height: imageHeight, width: this.state.width}]}
-                />}
+            />
 
             {
                 <Animated.View style={[styles.yheaaContainer, {opacity}]} pointerEvents={this.props.showAllImages ? 'none' : 'auto'}>
