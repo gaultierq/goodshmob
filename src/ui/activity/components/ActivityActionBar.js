@@ -141,7 +141,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
             case 'buy':
                 return <Icon style={style} name={'shopping_cart'} size={size} color={color}/>
             case 'answer':
-                return <Icon style={style} name={'mode_comment'} size={size} color={color}/>
+                return <Icon style={style} name={'comment'} size={size} color={color}/>
         }
         throw "Unknown action: " +action
     }
