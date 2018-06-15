@@ -13,7 +13,7 @@ import {Avatar} from "../../UIComponents";
 import {seeUser} from "../../Nav";
 import GTouchable from "../../GTouchable";
 import * as activityAction from "../actions";
-import {getPendingLikeStatus} from "../../rights";
+import {A_BUY, canPerformAction, getPendingLikeStatus} from "../../rights"
 import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC} from "../../fonts";
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
 import User from "react-native-firebase/lib/modules/auth/User";
@@ -22,10 +22,10 @@ import {firstName} from "../../../helpers/StringUtils";
 import ActivityStatus from "./ActivityStatus";
 import FeedSeparator from "./FeedSeparator";
 import {UpdateTracker} from "../../UpdateTracker";
+import * as UI from "../../UIStyles"
+import Button from 'apsl-react-native-button';
+import Icon from 'react-native-vector-icons/Feather';
 
-export type ActivityDisplayContext = {
-
-}
 
 type Props = {
     data?: any,
@@ -102,17 +102,21 @@ export default class ActivityCell extends React.Component<Props, State> {
                         const toggleLike = liked ? activityAction.unlike : activityAction.like;
                         this.props.dispatch(toggleLike(activity.id, activity.type));
                     }}>
-                        <ActivityBody
-                            activity={activity}
-                            liked={this.isLiked(activity)}
-                            navigator={this.props.navigator}
-                            skipLineup={this.props.skipLineup}
-                            bodyStyle={{
-                                padding: 23,
-                                paddingTop: 12,
-
-                            }}
-                        />
+                        {
+                            activity.type === 'asks' ?
+                                <Text style={{margin: 12, fontSize: 30}}>{activity.content}</Text>
+                                :
+                                <ActivityBody
+                                    activity={activity}
+                                    liked={this.isLiked(activity)}
+                                    navigator={this.props.navigator}
+                                    bodyStyle={{
+                                        padding: 23,
+                                        paddingTop: 12,
+                                    }}
+                                    rightComponent={this.renderBuyButton(activity)}
+                                />
+                        }
 
                     </GTouchable>
 
@@ -129,6 +133,32 @@ export default class ActivityCell extends React.Component<Props, State> {
         )
     }
 
+    renderBuyButton(activity:Activity) {
+        return canPerformAction(A_BUY, {activity}) /*new ActionRights(activity).canBuy()*/ && <Button
+            onPress={() => {
+                this.execBuy(activity)
+            }}
+            style={[{borderRadius: 10, backgroundColor: Colors.blue, borderWidth: 0}]}
+        >
+            <Icon name="shopping-cart" size={22} color={Colors.white} style={UI.stylePadding(10,1,10,1)}/>
+            {/*<Text style={[UI.SIDE_MARGINS(10), {color: Colors.white, fontFamily: SFP_TEXT_MEDIUM, fontSize: 14}]}>
+
+                i18n.t("actions.buy")
+            </Text>*/}
+        </Button>;
+    }
+
+
+    execBuy(activity: Activity) {
+        let url = _.get(activity, 'resource.url');
+        Linking.canOpenURL(url).then(supported => {
+            if (supported) {
+                Linking.openURL(url);
+            } else {
+                console.log("Don't know how to open URI: " + url);
+            }
+        });
+    }
 
     renderDebugActivityInfo(activity: Activity) {
         return (

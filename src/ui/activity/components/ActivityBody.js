@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, {type Node} from 'react';
 import {
     Animated,
     Easing,
@@ -17,25 +17,23 @@ import {connect} from "react-redux";
 import {logged} from "../../../managers/CurrentUser"
 import type {Activity} from "../../../types"
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
-import ActionRights, {canPerformAction, A_BUY} from "../../rights";
-import Button from 'apsl-react-native-button';
 import {SFP_TEXT_ITALIC} from "../../fonts";
 import GImage from '../../components/GImage'
-import Icon from 'react-native-vector-icons/Feather';
+
 import {firstName} from "../../../helpers/StringUtils";
 import Carousel from 'react-native-looped-carousel';
 
 
 type Props = {
     activity: Activity,
-    onPressItem: (any) => void,
     showAllImages?: boolean,
     liked: boolean,
-    bodyStyle?: *
+    bodyStyle?: *,
+    rightComponent?: Node
 };
 
 type State = {
-    width: number,
+    width?: number,
 };
 
 @connect()
@@ -55,7 +53,10 @@ export default class ActivityBody extends React.Component<Props, State> {
     state = {}
 
     render() {
+
         const {activity, bodyStyle} = this.props;
+
+        if (activity.type === 'asks') throw "Illegal"
         let resource = activity.resource;
 
         return (
@@ -69,45 +70,15 @@ export default class ActivityBody extends React.Component<Props, State> {
                             <View style={styles.flex1}>
                                 <Text style={[styles.title]} numberOfLines={2}>{resource.title}</Text>
                                 <Text style={[styles.subtitle]}>{resource.subtitle}</Text>
-
-                                {__DEBUG_SHOW_IDS__ &&
-                                <Text style={UI.TEXT_LESS_IMPORTANT}>{activity.type + " " + activity.id}</Text>}
+                                {__DEBUG_SHOW_IDS__ && <Text style={UI.TEXT_LESS_IMPORTANT}>{activity.type + " " + activity.id}</Text>}
                             </View>
-                            {this.renderBuyButton(activity)}
+                            {this.props.rightComponent}
                         </View>
                         {/*{this.renderDescription(activity)}*/}
                     </View>
                 )}
             </View>
         )
-    }
-
-
-    renderBuyButton(activity:Activity) {
-        return canPerformAction(A_BUY, {activity}) /*new ActionRights(activity).canBuy()*/ && <Button
-            onPress={() => {
-                this.execBuy(activity)
-            }}
-            style={[{borderRadius: 10, backgroundColor: Colors.blue, borderWidth: 0}]}
-        >
-            <Icon name="shopping-cart" size={22} color={Colors.white} style={UI.stylePadding(10,1,10,1)}/>
-            {/*<Text style={[UI.SIDE_MARGINS(10), {color: Colors.white, fontFamily: SFP_TEXT_MEDIUM, fontSize: 14}]}>
-
-                i18n.t("actions.buy")
-            </Text>*/}
-        </Button>;
-    }
-
-
-    execBuy(activity: Activity) {
-        let url = _.get(activity, 'resource.url');
-        Linking.canOpenURL(url).then(supported => {
-            if (supported) {
-                Linking.openURL(url);
-            } else {
-                console.log("Don't know how to open URI: " + url);
-            }
-        });
     }
 
     _onLayoutDidChange = e => {
@@ -118,11 +89,6 @@ export default class ActivityBody extends React.Component<Props, State> {
     renderImage() {
 
         const {activity} = this.props;
-        if (activity.type === 'asks'){
-            let content = activity.content;
-            if (__DEBUG_SHOW_IDS__) content += ` (id=${activity.id.substr(0, 5)})`;
-            return <Text style={styles.askText}>{content}</Text>;
-        }
 
         let resource = activity.resource;
         let images = _.get(resource, 'images', [])
@@ -155,13 +121,28 @@ export default class ActivityBody extends React.Component<Props, State> {
 
             {/*<BoxShadow setting={shadowOpt}>*/}
 
+            {this.props.showAllImages && <Carousel
+                delay={4000}
+                style={styles.imageContainer}
+                autoplay
+                swipe={this.props.showAllImages}
+                bullets={false}>
+                {images.map((image, i) => {
+                    return <GImage
+                        source={image ? {uri: image} : require('../../../img/goodsh_placeholder.png')}
+                        key={image}
+                        resizeMode={resize}
+                        style={[styles.image, {height: imageHeight, width: this.state.width}]}
+                    />
+
+                }) }
+            </Carousel>}
+            {!this.props.showAllImages &&
             <GImage
-                lol={"main_activity_image"}
-                source={{uri: resource.image}}
-                fallbackSource={require('../../../img/goodsh_placeholder.png')}
+                source={resource.image ? {uri: resource.image} : require('../../../img/goodsh_placeholder.png')}
                 resizeMode={resize}
                 style={[styles.image, {height: imageHeight, width: this.state.width}]}
-            />
+            />}
 
             {
                 <Animated.View style={[styles.yheaaContainer, {opacity}]} pointerEvents={this.props.showAllImages ? 'none' : 'auto'}>
@@ -201,5 +182,4 @@ const styles = StyleSheet.create({
     image: {alignSelf: 'center', backgroundColor: ACTIVITY_CELL_BACKGROUND, width: "100%"},
     yheaaContainer: {position: 'absolute', width: "100%", height: "100%",backgroundColor: 'rgba(0,0,0,0.3)',alignItems: 'center',justifyContent: 'center'},
     tag: {flexDirection:'row', alignItems: 'center'},
-    askText: {margin: 12, fontSize: 30}
 });
