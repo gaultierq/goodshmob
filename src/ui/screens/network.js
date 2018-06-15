@@ -180,17 +180,28 @@ class NetworkScreen extends Screen<Props, State> {
     }
 
     renderSectionFooter(section: NetworkSection) {
+        const count = section.activityCount - section.data.length
+        const loading = this.state['reqFetchMore' + section.id] === 'sending'
         return (
-            renderSimpleButton(
-                i18n.t('load_more_activities', {count: section.activityCount - section.data.length}),
-                ()=> safeDispatchAction.call(
-                    this,
-                    this.props.dispatch,
-                    fetchMyNetwork({limit: 1, activity_by_group: section.activityCount, id_lte: section.id}).createActionDispatchee(FETCH_ACTIVITIES, {userId: currentUserId()}),
-                    'reqFetchMore' + section.id
-                ).then(() => scheduleOpacityAnimation()),
-                {loading: this.state['reqFetchMore' + section.id] === 'sending'}
-            )
+            <View style={{flexDirection: 'row', alignItems: 'center',
+                backgroundColor: Colors.white,
+                paddingHorizontal: 20, marginBottom: 35}}>
+                {!loading && <Text>{i18n.t('there_are_activities', {count})}</Text>}
+
+                {renderSimpleButton(
+                    ' ' + i18n.t('more_activities', {count}),
+                    ()=> safeDispatchAction.call(
+                        this,
+                        this.props.dispatch,
+                        fetchMyNetwork({limit: 1, activity_by_group: section.activityCount, id_lte: section.id}).createActionDispatchee(FETCH_ACTIVITIES, {userId: currentUserId()}),
+                        'reqFetchMore' + section.id
+                    ).then(() => scheduleOpacityAnimation()),
+                    {loading: loading,
+                        textStyle: {fontSize: 14,},
+                        style: {margin: 0, height: 30}}
+                )}
+            </View>
+
         )
     }
 
