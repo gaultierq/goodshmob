@@ -15,7 +15,7 @@ import {
 import type {RequestState} from "../../types"
 import {CheckBox} from "react-native-elements"
 import {connect} from "react-redux"
-import {currentUser, logged} from "../../managers/CurrentUser"
+import {currentUser, currentUserId, logged} from "../../managers/CurrentUser"
 import * as Api from "../../managers/Api"
 import ApiAction from "../../helpers/ApiAction"
 
@@ -24,6 +24,7 @@ import {Colors} from "../colors"
 import {SFP_TEXT_BOLD} from "../fonts"
 import {renderSimpleButton} from "../UIStyles"
 import {Avatar, registerLayoutAnimation, scheduleOpacityAnimation} from "../UIComponents"
+import {FETCH_ACTIVITIES, fetchMyNetwork} from "../networkActions"
 
 type Props = {
 };
@@ -45,8 +46,7 @@ export default class AskInput extends Component<Props, State> {
         let askContent = this.state.askContent;
         const asking = this.state.reqCreateAsk === 'sending'
         let buttonDisabled = asking || !askContent;
-        const ok = this.state.reqCreateAsk === 'ok'
-        const notEditable = asking || ok;
+        const notEditable = asking
 
 
         const buttonCollor = Colors.greyish
@@ -85,7 +85,7 @@ export default class AskInput extends Component<Props, State> {
 
                 {
                     (this.state.isFocused || !!this.state.askContent) && (
-                        <View style={{flex: 1, marginTop: 15, alignItems: 'flex-end', opacity: !ok ? 1 : 0}}>
+                        <View style={{flex: 1, marginTop: 15, alignItems: 'flex-end'}}>
                             {renderSimpleButton(
                                 i18n.t("actions.ask_button"),
                                 () => this.createAsk(),
@@ -124,9 +124,7 @@ export default class AskInput extends Component<Props, State> {
 
     createAsk() {
         let content = this.state.askContent;
-        if (!content) return;
-
-        if (content.length < 10) {
+        if (!content || content.length < 10) {
             Alert.alert(i18n.t('actions.ask'), i18n.t('ask.minimal_length'))
             return
         }
@@ -135,8 +133,18 @@ export default class AskInput extends Component<Props, State> {
             this.props.dispatch,
             createAskAction(content).createActionDispatchee(CREATE_ASK),
             'reqCreateAsk'
-        ).then(function () {
+        ).then(() => {
             _Messenger.sendMessage(i18n.t('ask.sent'));
+            this.setState({askContent: ''})
+
+            //TODO: this is a hack, use firebase messagine service
+            setTimeout(() => {
+                this.props.dispatch(
+                    fetchMyNetwork()
+                    .createActionDispatchee(FETCH_ACTIVITIES, {userId: currentUserId(), mergeOptions: {drop: true}}))
+            }, 1000)
+
+
         })
 
     }
