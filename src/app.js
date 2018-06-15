@@ -251,7 +251,9 @@ export default class App {
                 headerBackgroundColor: Color.hex(Colors.green),
                 headerButtonTextColor: Color.hex(Colors.white),
                 headerTextColor: Color.hex(Colors.white),
-                // // Others
+                // Others
+                iconColor: Color.hex(Colors.white),
+                titleColor: Color.hex(Colors.white),
                 textColor: Color.hex(Colors.white),
             }})
 
