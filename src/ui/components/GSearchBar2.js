@@ -92,8 +92,6 @@ export default class GSearchBar2 extends Component<Props, State> {
                             }}>{this.props.cancelTitle}</Text>
                         </GTouchable>)
                 }
-
-                )
             </View>
         )
     }
