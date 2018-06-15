@@ -49,7 +49,8 @@ export default class AskInput extends Component<Props, State> {
         const notEditable = asking
 
 
-        const buttonCollor = Colors.greyish
+        const buttonColor = Colors.brownishGrey
+
         return <View style={{padding: 10}}>
 
             <View style={{
@@ -94,10 +95,10 @@ export default class AskInput extends Component<Props, State> {
                                     style: {alignSelf: 'flex-end'},
                                     disabled: buttonDisabled,
                                     textStyle: {
-                                        color: buttonCollor,
+                                        color: buttonColor,
                                         fontSize: 16,
                                         borderWidth: 1,
-                                        borderColor: buttonCollor,
+                                        borderColor: buttonColor,
                                         borderRadius: 6,
                                         padding: 4,
                                         paddingHorizontal: 6
@@ -107,7 +108,7 @@ export default class AskInput extends Component<Props, State> {
 
                             {<Text style={{
                                 opacity: !!this.state.askContent && !notEditable ? 1 : 0,
-                                color: buttonCollor,
+                                color: buttonColor,
                                 fontSize: 11,
                             }}>{`${200 - (askContent || "").length}`}</Text>}
                         </View>
