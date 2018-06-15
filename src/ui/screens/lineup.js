@@ -95,7 +95,6 @@ class LineupScreen extends Screen<Props, State> {
         return (
             <View style={styles.container}>
                 {lineup && lineup.description && <Text style={[styles.description]}>{lineup.description}</Text>}
-                {this.renderHeader(lineup)}
                 <Feed
                     data={savings}
                     renderItem={item => this.renderItem(item, lineup)}
