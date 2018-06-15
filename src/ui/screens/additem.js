@@ -187,7 +187,7 @@ export default class AddItemScreen extends Screen<Props, State> {
             });
         };
 
-        let tag = lineup.name;
+        let tag = lineup && lineup.name;
         tag = tag || i18n.t('create_list_controller.choose_list');
 
         return (

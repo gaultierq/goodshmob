@@ -28,16 +28,21 @@ import LineupCellSaving from "../components/LineupCellSaving";
 
 import GTouchable from "../GTouchable";
 import {UpdateTracker} from "../UpdateTracker";
-import StoreManager from "../../managers/StoreManager";
+import StoreManager from "../../managers/StoreManager"
 import {EmptyCell} from "./LineupCellSaving";
 import {LINEUP_PADDING} from "../UIStyles";
 import {renderLineupMenu} from "../UIComponents";
 import LineupTitle2 from "./LineupTitle2";
 import {ViewStyle} from "../../types";
+import {buildData, sanitizeActivityType} from "../../helpers/DataUtils"
+import {createSelector} from "reselect"
+import {CREATE_LINEUP, SAVE_ITEM} from "../lineup/actionTypes"
 
 // $FlowFixMe
 type Props = {
     lineupId: Id,
+    lineup: Lineup,
+    savings?: Saving[],
     dataResolver: Id => {lineup: Lineup, savings: Array<Saving>},
     renderMenuButton?: () => Node,
     skipLineupTitle?: boolean,
@@ -54,10 +59,55 @@ type State = {
 
 export const ITEM_SEP = 10
 
+let lineupId = function (props) {
+    return props.lineupId || props.lineup.id
+}
+const getLineupSelector = createSelector(
+    [
+        (state, props) => _.get(state, `data.lists.${lineupId(props)}`),
+        (state, props) => _.head(state.pending[CREATE_LINEUP], pending => pending.id === lineupId(props)),
+        (state, props) => _.filter(state.pending[SAVE_ITEM], pending => pending.payload.lineupId === lineupId(props)),
+        state => state.data
+    ],
+    (syncList, rawPendingList, rawPendingSavings, data) => {
+        let lineup = (syncList && buildData(data, syncList.type, syncList.id) || rawPendingList)
+        let savings
+        if (lineup) {
+            if (!_.isEmpty(rawPendingSavings)) {
+                savings = rawPendingSavings.map(pending => {
+                        const result = {
+                            id: pending.id,
+                            lineupId: pending.payload.lineupId,
+                            itemId: pending.payload.itemId,
+                            pending: true
+                        }
 
-@connect(state => ({
-    data: state.data,
+                        // $FlowFixMe
+                        Object.defineProperty(
+                            result,
+                            'resource',
+                            {
+                                get: () => {
+                                    return buildData(data, pending.payload.itemType, pending.payload.itemId)
+                                },
+                            },
+                        )
+                        return result
+                    }
+                )
+            }
+            if (lineup.savings) {
+                if (savings) savings = savings.concat(lineup.savings)
+                else savings = lineup.savings
+            }
+        }
+        return {lineup, savings}
+    }
+)
+
+@connect((state, props) => ({
     pending: state.pending,
+    ...getLineupSelector(state, props)
 }))
 @logged
 export default class LineupHorizontal extends Component<Props, State> {
@@ -68,7 +118,6 @@ export default class LineupHorizontal extends Component<Props, State> {
         skipLineupTitle: false,
         renderTitle: default_renderTitle,
         renderSaving: saving => <LineupCellSaving item={saving.resource} />,
-        dataResolver: lineupId => StoreManager.getLineupAndSavings(lineupId),
         renderEmpty: (list: Lineup) => LineupHorizontal.defaultRenderEmpty()
     }
 
@@ -82,9 +131,8 @@ export default class LineupHorizontal extends Component<Props, State> {
     render() {
         this.updateTracker.onRender(this.props);
 
-        const {renderTitle, renderMenuButton, skipLineupTitle, lineupId, style, data, ...attributes} = this.props;
-
-        let {lineup, savings} = this.props.dataResolver(lineupId);
+        const {lineup, savings, renderTitle, renderMenuButton, skipLineupTitle, lineupId, style, ...attributes} = this.props;
+        //let {lineup, savings} = this.props.dataResolver(lineupId);
         if (!lineup) {
             console.warn('lineup not found for id', lineupId)
             return null;
@@ -122,9 +170,9 @@ export default class LineupHorizontal extends Component<Props, State> {
         return (
             <View style={{flexDirection: 'row', paddingLeft: LINEUP_PADDING}}>{
                 [0,1,2,3,4].map((o, i) => (
-                    <EmptyCell key={`key-${i}`} style={{marginRight: 10}}>
-                        {i === 0 && renderFirstAsPlus && this.renderInnerPlus()}
-                    </EmptyCell>
+                        <EmptyCell key={`key-${i}`} style={{marginRight: 10}}>
+                            {i === 0 && renderFirstAsPlus && this.renderInnerPlus()}
+                        </EmptyCell>
                     )
                 )
             }</View>
