@@ -189,8 +189,8 @@ export default {
         "savings":"LISTS",
         "users":"MEMBERS"
     },
-    "community_screen":{
-        "tabs": {
+    "community":{
+        "screens": {
             "friends":"MY CONTACTS",
             "notifications":"NOTIFICATIONS",
         },

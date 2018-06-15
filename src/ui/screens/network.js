@@ -51,7 +51,12 @@ class NetworkScreen extends Screen<Props, State> {
         ],
         leftButtons: [
             {
-                id: 'community', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
+                id: 'interactions', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
+                icon: require('../../img2/notificationIcon.png'),
+                title: i18n.t("home_search_screen.community.title")
+            },
+            {
+                id: 'friends', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
                 icon: require('../../img2/goodshersHeaderIcon.png'),
                 title: i18n.t("home_search_screen.community.title")
             }
@@ -98,17 +103,29 @@ class NetworkScreen extends Screen<Props, State> {
         }
 
         if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
-            if (event.id === 'community') { // this is the same id field from the static navigatorButtons definition
+            if (event.id === 'interactions') { // this is the same id field from the static navigatorButtons definition
 
                 navigator.showModal({
-                    screen: 'goodsh.CommunityScreen', // unique ID registered with Navigation.registerScreen
-                    title: i18n.t("home_search_screen.community.title"),
+                    screen: 'goodsh.InteractionScreen', // unique ID registered with Navigation.registerScreen
+                    title: i18n.t("community.screens.notifications"),
                     passProps:{
                         style: {marginTop: 38},
                     },
                     navigatorButtons: Nav.CANCELABLE_MODAL,
                 });
             }
+
+            if (event.id === 'friends') {
+                navigator.showModal({
+                    screen: 'goodsh.CommunityScreen',
+                    title: i18n.t("community.screens.friends"),
+                    passProps:{
+                        style: {marginTop: 38},
+                    },
+                    navigatorButtons: Nav.CANCELABLE_MODAL,
+                });
+            }
+
             if (event.id === 'search') {
                 this.showSearch();
             }
@@ -160,7 +177,7 @@ class NetworkScreen extends Screen<Props, State> {
                     }}
                     hasMore={!network1.hasNoMore}
                     scrollUpOnBack={scrollUpOnBack}
-                    ListEmptyComponent={<View><Text style={STYLES.empty_message}>{i18n.t('community_screen.empty_screen')}</Text><ShareButton text={i18n.t('actions.invite')}/></View>}
+                    ListEmptyComponent={<View><Text style={STYLES.empty_message}>{i18n.t('community.empty_screen')}</Text><ShareButton text={i18n.t('actions.invite')}/></View>}
                     initialNumToRender={5}
                     decorateLoadMoreCall={(sections: any[], call: Call) => call.addQuery({id_lt: _.last(sections).id})}
                     visibility={super.getVisibility()}

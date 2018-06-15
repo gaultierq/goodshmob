@@ -188,8 +188,8 @@ export default {
         "savings":"LISTES",
         "users":"MEMBRES"
     },
-    "community_screen":{
-        "tabs": {
+    "community":{
+        "screens": {
             "friends":"MES CONTACTS",
             "notifications":"NOTIFICATIONS",
         },
