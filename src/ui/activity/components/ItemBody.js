@@ -14,7 +14,7 @@ import {
 } from 'react-native'
 import {connect} from "react-redux"
 import {logged} from "../../../managers/CurrentUser"
-import type {Id, Item} from "../../../types"
+import type {Id, Item, ItemType} from "../../../types"
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors"
 import {SFP_TEXT_ITALIC} from "../../fonts"
 import GImage from '../../components/GImage'
@@ -23,9 +23,14 @@ import {firstName} from "../../../helpers/StringUtils"
 import Carousel from 'react-native-looped-carousel'
 import { createSelector } from 'reselect'
 import {buildData, sanitizeActivityType} from "../../../helpers/DataUtils"
+import * as Api from "../../../managers/Api"
+import {FETCH_ITEM} from "../../lineup/actionTypes"
+import {fetchItemCall} from "../../lineup/actions"
 
 type Props = {
     item: Item,
+    itemId: Item,
+    itemType: ItemType,
     showAllImages?: boolean,
     liked?: boolean,
     bodyStyle?: *,
@@ -47,6 +52,7 @@ const getItemSelector = createSelector(
 
 //i want to listen to "data" but only for "itemType x itemId" store update
 @connect((state, props) => ({
+        itemId: props.itemId || props.item.id,
         item: getItemSelector(state, props)
     })
 )
@@ -58,6 +64,17 @@ export default class ItemBody extends React.Component<Props, State> {
     }
 
     state = {}
+
+    componentDidMount() {
+        if (!this.props.item) {
+            Api.safeDispatchAction.call(
+                this,
+                this.props.dispatch,
+                fetchItemCall(this.props.itemId).createActionDispatchee(FETCH_ITEM),
+                'fetchItem'
+            )
+        }
+    }
 
     componentWillReceiveProps(nextProps: Props) {
         if (nextProps.liked && !this.props.liked) {

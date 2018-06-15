@@ -46,7 +46,6 @@ class LineupScreen extends Screen<Props, State> {
         navBarSubTitleTextCentered: true,
     };
 
-
     render() {
         const lineup = this.getLineup();
 
