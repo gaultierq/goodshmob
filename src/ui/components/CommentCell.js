@@ -9,6 +9,7 @@ import {timeSinceActivity} from "../../helpers/DataUtils";
 import {Colors} from "../colors";
 import {SFP_TEXT_REGULAR} from "../fonts";
 import {Col, Grid, Row} from "react-native-easy-grid";
+import {currentUserId} from "../../managers/CurrentUser";
 
 type Props = {
     comment: Comment | Array<Comment>,
@@ -33,7 +34,7 @@ export default class CommentCell extends Component<Props, State> {
 
         const dimension = 32;
         const rightDisplay = this.props.rightDisplay;
-
+        const isCurrentUser = currentUserId() === user.id;
 
         let borderStyle = (i, radius) => {
 
@@ -61,8 +62,11 @@ export default class CommentCell extends Component<Props, State> {
 
         return (
             <Grid>
-                <Row style={{ }}>
-                    <Col style={{ width: dimension, justifyContent: 'flex-start'}}>
+                {!isCurrentUser && <Text style={styles.username}>{user.firstName + ' ' + user.lastName}</Text>}
+
+                <Row>
+
+                    <Col style={{ width: dimension, justifyContent: 'flex-start',}}>
                         {!rightDisplay && <Avatar user={user} size={24} style={{marginTop: 3}}/>}
                     </Col>
                     <Col style={{ alignItems: rightDisplay ? 'flex-end': 'flex-start', }}>
@@ -111,5 +115,11 @@ const styles = StyleSheet.create({
         lineHeight: 10,
         color: Colors.greyish,
     },
+    username: {
+        fontSize: 12,
+        marginLeft: 32,
+        marginBottom: 4,
+        color: Colors.greyish,
+    }
 });
 
