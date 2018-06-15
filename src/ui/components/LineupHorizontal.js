@@ -36,7 +36,9 @@ import LineupTitle2 from "./LineupTitle2";
 import {ViewStyle} from "../../types";
 import {buildData, sanitizeActivityType} from "../../helpers/DataUtils"
 import {createSelector} from "reselect"
-import {CREATE_LINEUP, SAVE_ITEM} from "../lineup/actionTypes"
+import {CREATE_LINEUP, FETCH_ITEM, SAVE_ITEM} from "../lineup/actionTypes"
+import * as Api from "../../managers/Api"
+import {FETCH_LINEUP, fetchItemCall, fetchLineup} from "../lineup/actions"
 
 // $FlowFixMe
 type Props = {
@@ -59,9 +61,8 @@ type State = {
 
 export const ITEM_SEP = 10
 
-let lineupId = function (props) {
-    return props.lineupId || props.lineup.id
-}
+let lineupId = props => props.lineupId || props.lineup.id
+
 const getLineupSelector = createSelector(
     [
         (state, props) => _.get(state, `data.lists.${lineupId(props)}`),
@@ -126,6 +127,19 @@ export default class LineupHorizontal extends Component<Props, State> {
         this.updateTracker = new UpdateTracker(
             nextProps => this.makeRefObject(nextProps),
         );
+    }
+
+    componentDidMount() {
+        if (!this.props.lineup || !this.props.savings) {
+            console.info("missing data, fetching the lineup")
+            const listId = lineupId(this.props)
+            Api.safeDispatchAction.call(
+                this,
+                this.props.dispatch,
+                fetchLineup(listId).createActionDispatchee(FETCH_LINEUP, {listId: listId}),
+                'fetchLineup'
+            )
+        }
     }
 
     render() {
