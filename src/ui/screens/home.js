@@ -49,6 +49,7 @@ type State = {
     isActionButtonVisible: boolean,
     filterFocused?: boolean,
     currentTip?:TipConfig,
+    popularDisplayCount?: number,
     index: number,
 }
 
@@ -92,15 +93,13 @@ export default class HomeScreen extends Screen<Props, State> {
         focusedSaving: false,
         isActionButtonVisible: true,
         index: 0,
+        popularDisplayCount: 0,
         routes: [
             {key: `my_goodsh`, title: i18n.t("home.tabs.my_goodsh")},
             {key: `my_interests`, title: i18n.t("home.tabs.my_interests")},
         ],
         // currentTip: TEST_TIP
     }
-
-
-
 
     constructor(props: Props){
         super(props);
@@ -174,29 +173,33 @@ export default class HomeScreen extends Screen<Props, State> {
         //TODO: rm this settimeout
         setTimeout(() => {
 
-            let result = OnBoardingManager.getPendingInfo(this.props.onBoarding, {group: "full_focus", persistBeforeDisplay: true});
+            let info = OnBoardingManager.getInfoToDisplay(this.props.onBoarding, {group: "full_focus", persistBeforeDisplay: true});
+            if (!info) return
 
-
-            if (result) {
-                let {type} = result
-                this.logger.debug("get pending info", type)
-                switch (type) {
-                    case "focus_add":
-                        this.onBoardingHelper.handleFocusAdd()
-                        break
-                    case "notification_permissions":
-                        NotificationManager.requestPermissionsForLoggedUser()
-                        break
-                    case "popular":
-                        this.props.navigator.showModal({
-                            screen: 'goodsh.PopularItemsScreen',
-                            passProps: {onFinished: ()=> {
-                                    OnBoardingManager.postOnDismissed("popular")
-                                    this.props.navigator.dismissModal()
-                                }},
+            let {type} = info
+            this.logger.debug("found info to display:", type)
+            switch (type) {
+                case "focus_add":
+                    this.onBoardingHelper.handleFocusAdd()
+                    break
+                case "notification_permissions":
+                    NotificationManager.requestPermissionsForLoggedUser()
+                    break
+                case "popular":
+                    if (this.state.popularDisplayCount === 0) {
+                        this.setState({popularDisplayCount: 1}, () => {
+                            this.props.navigator.showModal({
+                                screen: 'goodsh.PopularItemsScreen',
+                                passProps: {
+                                    onFinished: () => {
+                                        OnBoardingManager.postOnDismissed("popular")
+                                        this.props.navigator.dismissModal()
+                                    }
+                                },
+                            })
                         })
-                        break
-                }
+                    }
+                    break
             }
         })
 
@@ -287,7 +290,7 @@ export default class HomeScreen extends Screen<Props, State> {
     static getDerivedStateFromProps(props: Props, state: State) {
         let current = state.currentTip
 
-        let nextTip = OnBoardingManager.getPendingInfo(props.onBoarding, {group: 'tip', persistBeforeDisplay: true})
+        let nextTip = OnBoardingManager.getInfoToDisplay(props.onBoarding, {group: 'tip', persistBeforeDisplay: true})
         if (_.get(current, 'type') === _.get(nextTip, 'extraData.type')) {
             return null
         }

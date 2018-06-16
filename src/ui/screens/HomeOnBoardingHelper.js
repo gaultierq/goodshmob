@@ -46,6 +46,8 @@ export class HomeOnBoardingHelper {
         if (this.appTourTargets.size  === 0) return
 
         this.focusAddJob = setTimeout(() => {
+            OnBoardingManager.onDisplayed('focus_add')
+
             let appTourSequence = new AppTourSequence();
             this.appTourTargets.forEach((appTourTarget, view) => {
                 appTourSequence.add(appTourTarget);
@@ -56,9 +58,7 @@ export class HomeOnBoardingHelper {
 
             //as we don't have a callback on when the tour is finished,
             // we are using a 10s timer, to go to the next onBoardingStep
-            this.focusAddJob = setTimeout(() => {
-                OnBoardingManager.onDisplayed('focus_add')
-            }, 10000);
+            OnBoardingManager.postOnDismissed('focus_add', 10000)
 
         }, 2000);
     }

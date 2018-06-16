@@ -317,7 +317,7 @@ export default class App {
         else {
             config.mode = isLogged() ? 'logged' : 'unlogged'
             const user = currentUser()
-            if (config.hasUser = !user.dummy) {
+            if (config.hasUser = user && !user.dummy) {
                 config.userHasVitalInfo = !_.isEmpty(user.firstName)  && !_.isEmpty(user.lastName)
             }
         }
