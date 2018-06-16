@@ -8,6 +8,7 @@ import URL from "url-parse"
 import Config from 'react-native-config';
 import {displayLineupActionMenu} from "../ui/Nav";
 import {getLineup} from "../helpers/DataAccessors";
+import {CANCELABLE_MODAL} from "../ui/Nav"
 
 // export const DEEPLINK_OPEN_SCREEN_IN_MODAL = 'DEEPLINK_OPEN_SCREEN_IN_MODAL';
 
@@ -109,10 +110,25 @@ class _NavManager implements NavManager {
                 });
                 return true;
             }
-            this.showModal({
-                screen: 'goodsh.ActivityDetailScreen',
-                passProps: {activityId: id, activityType}
-            });
+            if (activityType === 'asks') {
+                this.showModal({
+                    screen: 'goodsh.CommentsScreen', // unique ID registered with Navigation.registerScreen
+                    // title: fullName(user),
+                    passProps: {
+                        activityId: id,
+                        activityType: activityType,
+                        autoFocus: true
+                    },
+                    navigatorButtons: CANCELABLE_MODAL
+                })
+            }
+            else {
+                this.showModal({
+                    screen: 'goodsh.ActivityDetailScreen',
+                    passProps: {activityId: id, activityType}
+                })
+            }
+
 
         }
     }
