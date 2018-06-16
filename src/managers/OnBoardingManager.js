@@ -4,8 +4,7 @@ import {currentUser} from "./CurrentUser"
 import Config from 'react-native-config'
 import type {ms} from "../types"
 import NotificationManager from './NotificationManager'
-import {TipConfig} from "../ui/components/Tip"
-import * as __ from "lodash";
+import * as __ from "lodash"
 
 const DISPLAYED = 'DISPLAYED';
 const DISMISSED = 'DISMISSED';
@@ -20,6 +19,7 @@ type InfoConfig = {
     type: InfoType,
     group: InfoGroup,
     maxDisplay?: ms,
+    timeAfter?: ms,
     priority: number,
     extraData?: any
 }
@@ -53,6 +53,7 @@ const ALL_INFOS = [
         group: 'tip',
         maxDisplay: 30000,
         priority: 4,
+        timeAfter: TIME_BETWEEN_TIPS_MS,
         extraData: {
             type: 'visibility',
             keys: 'tips.visibility',
@@ -64,6 +65,7 @@ const ALL_INFOS = [
         group: 'tip',
         maxDisplay: 30000,
         priority: 5,
+        timeAfter: TIME_BETWEEN_TIPS_MS,
         extraData: {
             type: 'noise',
             keys: 'tips.noise',
@@ -75,6 +77,7 @@ const ALL_INFOS = [
         group: 'tip',
         maxDisplay: 30000,
         priority: 6,
+        timeAfter: TIME_BETWEEN_TIPS_MS,
         extraData: {
             type: 'private',
             keys: 'tips.full_private',
@@ -109,18 +112,26 @@ class _OnBoardingManager implements OnBoardingManager {
         let previous: Array<InfoConfig> = []
         let {group, persistBeforeDisplay} = options || {}
 
-        const now = new Date()
-        let rand = now.getMinutes() + ":" +now.getSeconds() + ":" +now.getMilliseconds()
         // $FlowFixMe
         for (;; previous.push(result)) {
             result = candidates.shift()
             if (result) {
-                let notDisplayable = this.notDisplayable(result, state, previous)
+                let notDisplayable = this.notDisplayable(result, state)
                 if (notDisplayable) {
                     this.logger.debug(result.type, "cannot be displayed:", notDisplayable)
                     continue
                 }
+                //we have the info we want to display, but maybe it's not possible right now
+
+                //we asked for another group
                 if (group && group !== result.group) result = null
+
+                //the last displayed info was dismissed not long ago
+                let last
+                if (result && (last = _.last(previous)) && 'timeAfter' in last && this._synthDismissed(last, state) + last.timeAfter > Date.now()) {
+                    this.logger.debug(result.type, "cannot be displayed:", "too soon")
+                    result = null
+                }
                 break
             }
             break
@@ -140,13 +151,19 @@ class _OnBoardingManager implements OnBoardingManager {
         return result
     }
 
-    notDisplayable(info: InfoConfig, state: OnBoardingState, previous: InfoConfig[]) {
+    notDisplayable(info: InfoConfig, state: OnBoardingState) {
         let reason = null
         let stat = state[info.type]
         if (!stat || !stat.displayedAt) return null
         if (stat.dismissedAt) return "dismissed"
         if ('maxDisplay' in info && (stat.displayedAt + info.maxDisplay < Date.now())) return "too long"
+
         return reason
+    }
+
+    _synthDismissed = (info: InfoConfig, state: OnBoardingState) => {
+        let stat = state[info.type]
+        return stat.dismissedAt || 'maxDisplay' in info && stat.displayedAt + info.maxDisplay
     }
 
     hasBeenDismissed(type: InfoType, state: OnBoardingState) {
@@ -154,63 +171,10 @@ class _OnBoardingManager implements OnBoardingManager {
         return stat && stat.dismissedAt
     }
 
-    hasBeenHereForTooLong(config: InfoConfig, state: OnBoardingState) {
-        let lastStat = state[config.type]
-        if ('maxDisplay' in config) {
-            return lastStat && (lastStat.displayedAt + config.maxDisplay < Date.now())
-        }
-        return this.hasBeenDismissed(config.type, state)
-    }
 
     hasBeenDisplayed(type: InfoType, state: OnBoardingState) {
         let stat = state[type]
         return stat && stat.displayedAt
-    }
-
-    //based on visibility rules
-    shouldBeDisplayed(type: InfoType, state: OnBoardingState, previous: Array<InfoConfig>) {
-        let stat = state[type]
-        switch (type) {
-            case 'notification_permissions':
-                return true
-            // case 'focus_add':
-            // case 'popular':
-            //     //not already displayed, is head of group queue
-            //     return !(stat && stat.displayedAt);
-            //
-            // case "noise":
-            // case "visibility":
-            // case "private":
-            //     return this.shouldTipBeDisplayed(type, state, previous)
-            default:
-                return !(stat && stat.displayedAt);
-
-
-        }
-    }
-
-
-    shouldTipBeDisplayed(type: InfoType, state: OnBoardingState, previous: Array<InfoConfig>) {
-
-        let result
-        let last = _.last(previous)
-        //please leave some space between infos
-        if (last) {
-            let lastStat = state[last.type]
-            let lastDismissed = lastStat.dismissedAt || (lastStat.displayedAt + TIP_DISPLAY_MAX_MS)
-            if (lastDismissed + TIME_BETWEEN_TIPS_MS > Date.now()) return false
-        }
-
-        let stat = state[type]
-        if (stat) {
-            //not already displayed
-            if (!stat.displayedAt) result = true
-            //please honor maxDisplayTime
-            else result = stat.displayedAt + TIME_BETWEEN_TIPS_MS > Date.now()
-
-        }
-        else result = true
-        return result
     }
 
     //logic which decide if a info is interesting for this user x device configuration
