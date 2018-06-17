@@ -3,13 +3,18 @@
 import React from 'react';
 
 import {Alert, Image, Linking, Platform, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import type {Activity, ActivityType, Id, Item, Saving, Url, User} from "../../../types";
+import type {
+    Activity, ActivityType, Color, Id, Item, Saving, Url,
+    User
+} from "../../../types";
 import {connect} from "react-redux";
 import {currentGoodshboxId, isCurrentUser, logged} from "../../../managers/CurrentUser"
 import * as activityAction from "../actions";
 import {unsave} from "../actions";
 import {fullName, toUppercase} from "../../../helpers/StringUtils";
 import {buildData, buildNonNullData, sanitizeActivityType} from "../../../helpers/DataUtils";
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import {default as FeatherIcon} from 'react-native-vector-icons/Feather';
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
 import {canPerformAction, getPendingLikeStatus, A_BUY, A_SAVE, A_UNLIKE, A_UNSAVE, A_LIKE} from "../../rights";
 import {CREATE_COMMENT} from "../../screens/comments";
@@ -63,8 +68,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                 res.push(
                     this.renderButton(
                         a,
-                        this.renderImageButton(a),
-                        this.renderTextButton(a, activity),
+                        this.getButtonText(a, activity),
                         //$FlowFixMe
                         ()=>this['exec' + toUppercase(a)](activity),
                         a === 'unlike' || a === 'unsave'
@@ -78,7 +82,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
         return <View style={styles.actionBar}>{buttons}</View>;
     }
 
-    renderTextButton(action: ActivityActionType, activity: Activity) {
+    getButtonText(action: ActivityActionType, activity: Activity) {
 
 
         switch(action) {
@@ -115,26 +119,29 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
 
 
-    renderImageButton(action: ActivityActionType) {
+    renderImageIcon(action: ActivityActionType, size: number, color: Color, style?: any) {
         switch(action) {
             case 'comment':
-                return require('../../../img2/commentIcon.png');
+                return <Icon style={style} name={'comment'} size={size} color={color}/>
             case 'like':
-                return require('../../../img2/yeaahIcon.png');
+                return <Icon style={style} name={'favorite'} size={size} color={color}/>
             case 'unlike':
-                return require('../../../img2/yeaahIcon.png');
+                return <Icon style={style} name={'favorite'} size={size} color={color}/>
             case 'share':
-                return require('../../../img2/sendIcon.png');
+                if (__IS_IOS__) {
+                    return <FeatherIcon style={style} name={'share'} size={size} color={color}/>
+                }
+                return <Icon style={style} name={'share'} size={size} color={color}/>
             case 'save':
-                return require('../../../img2/bookmarkIcon.png');
+                return <Icon style={style} name={'bookmark'} size={size} color={color}/>
             case 'unsave':
-                return require('../../../img2/bookmarkIcon.png');
+                return <Icon style={style} name={'bookmark'} size={size} color={color}/>
             case 'see':
-                return require('../../../img/save-icon.png');
+                return <Icon style={style} name={'playlist_add'} size={size} color={color}/>
             case 'buy':
-                return require('../../../img/buy-icon.png');
+                return <Icon style={style} name={'shopping_cart'} size={size} color={color}/>
             case 'answer':
-                return require('../../../img2/commentIcon.png');
+                return <Icon style={style} name={'comment'} size={size} color={color}/>
         }
         throw "Unknown action: " +action
     }
@@ -198,12 +205,12 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
 
 
-    renderButton(key: string, img: Url, text: string, handler: ()=>void, active:boolean = false) {
+    renderButton(action: ActivityActionType, text: string, handler: ()=>void, active:boolean = false) {
         let color = active ? Colors.green: Colors.greyishBrown;
-        return (<GTouchable onPress={handler} key={key}>
+        return (<GTouchable onPress={handler} key={action}>
                 <View style={styles.button}>
-                    <Image source={img} style={[styles.buttonImage, {tintColor: color}]}/>
-                    <Text style={[styles.buttonText, {color: color}]}>{text}</Text>
+                    {this.renderImageIcon(action, 24, color, [styles.buttonImage])}
+                    <Text style={[styles.buttonText, {color}]}>{text}</Text>
                 </View>
             </GTouchable>
         );
@@ -462,10 +469,7 @@ const styles = StyleSheet.create({
         padding: 6
     },
     buttonImage: {
-        width: 24,
-        height: 24,
         margin: 8,
-        resizeMode: 'contain'
     },
     buttonText: {
         textAlign: 'center',

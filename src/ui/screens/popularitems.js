@@ -1,7 +1,7 @@
 // @flow
 
-import type {Node} from 'react';
-import React from 'react';
+import type {Node} from 'react'
+import React from 'react'
 import {
     ActivityIndicator,
     Button,
@@ -13,28 +13,27 @@ import {
     TextInput,
     TouchableOpacity,
     View
-} from 'react-native';
+} from 'react-native'
 
-import {connect} from "react-redux";
-import {logged} from "../../managers/CurrentUser"
+import {connect} from "react-redux"
+import {currentUser, logged} from "../../managers/CurrentUser"
 import {SearchBar} from 'react-native-elements'
-import {GListState} from "../../types";
-import Screen from "../components/Screen";
-import * as Api from "../../managers/Api";
-import {reduceList2} from "../../managers/Api";
-import ApiAction from "../../helpers/ApiAction";
-import type {FeedSource} from "../components/feed";
-import Feed from "../components/feed";
-import ItemCell from "../components/ItemCell";
-import {buildData, buildNonNullData} from "../../helpers/DataUtils";
-import type {Id, RequestState} from "../../types";
-import GTouchable from "../GTouchable";
-import {Colors} from "../colors";
-import {SFP_TEXT_REGULAR} from "../fonts";
-import {LINEUP_PADDING, renderSimpleButton} from "../UIStyles";
-import {fetchActivity} from "../activity/actions";
-import * as types from "../activity/actionTypes";
+import type {Id, RequestState} from "../../types"
+import {GListState} from "../../types"
+import Screen from "../components/Screen"
+import * as Api from "../../managers/Api"
+import {reduceList2} from "../../managers/Api"
+import ApiAction from "../../helpers/ApiAction"
+import type {FeedSource} from "../components/feed"
+import Feed from "../components/feed"
+import ItemCell from "../components/ItemCell"
+import {buildNonNullData} from "../../helpers/DataUtils"
+import GTouchable from "../GTouchable"
+import {Colors} from "../colors"
+import {SFP_TEXT_REGULAR} from "../fonts"
+import {LINEUP_PADDING, renderSimpleButton} from "../UIStyles"
 import {hexToRgbaWithHalpha} from "../../helpers/DebugUtils"
+import {findBestLineup} from "../../helpers/Classifier"
 
 
 export type Props = {
@@ -51,7 +50,7 @@ type State = {
         data: state.data,
         popular_items: state.popular_items,
     }), dispatch => ({
-        saveManyItems: (itemsIds) => dispatch(saveManyItems(itemsIds))
+        saveManyItems: (itemsIds, listByItemId) => dispatch(saveManyItems(itemsIds, listByItemId))
     })
 )
 export default class PopularItemsScreen extends Screen<Props, State> {
@@ -67,7 +66,7 @@ export default class PopularItemsScreen extends Screen<Props, State> {
     }
 
     render() {
-        const data = this.props.popular_items.list.map(i => buildNonNullData(this.props.data, i.type, i.id))
+        const items = this.props.popular_items.list.map(i => buildNonNullData(this.props.data, i.type, i.id))
 
         const empty = _.isEmpty(this.state.selectedItems)
         return (
@@ -79,7 +78,7 @@ export default class PopularItemsScreen extends Screen<Props, State> {
                     }}>{i18n.t("popular_screen.main_explanation")}</Text>
                 </View>
                 <Feed
-                    data={data}
+                    data={items}
                     renderItem={({item}) => (
                         <GTouchable
                             style={{backgroundColor: this.state.selectedItems.includes(item.id) ? hexToRgbaWithHalpha(Colors.green, 0.3) : "transparent" }}
@@ -133,12 +132,18 @@ export default class PopularItemsScreen extends Screen<Props, State> {
     }
 
     saveMany(itemIds: Id[]) {
-        const call = itemIds.length > 0 ? Api.safeExecBlock.call(
+        const items = this.props.popular_items.list.map(i => buildNonNullData(this.props.data, i.type, i.id))
+
+        let listByItemId = items.filter(i => itemIds.indexOf(i.id ) >=0).reduce((res, item) => {
+            res[item.id] = _.get(findBestLineup(item, currentUser().lists), 'id')
+            return res
+        }, {})
+
+        Api.safeExecBlock.call(
             this,
-            () => this.props.saveManyItems(itemIds),
+            () => this.props.saveManyItems(itemIds, listByItemId),
             'reqAdd'
-        ) : Promise.resolve()
-        call.then(this.props.onFinished)
+        ).then(this.props.onFinished)
     }
 
     _finish = () => {
@@ -154,11 +159,11 @@ const fetchFollowedLineups =  () => new Api.Call()
 const FETCH_POPULAR_ITEMS = ApiAction.create("fetch_popular_items", "retrieve popular items");
 
 
-const saveManyItems =  (itemIds: Id[]) => new Api.Call()
+const saveManyItems =  (itemIds: Id[], listByItemsId?: {[Id]: Id}) => new Api.Call()
     .withMethod('POST')
     .withRoute(`items/save`)
     .include('savings')
-    .withBody({savings: itemIds.map(item_id=>({item_id}))})
+    .withBody({savings: itemIds.map(item_id=>({item_id, list_id: _.get(listByItemsId, item_id)}))})
     .createActionDispatchee(SAVE_MANY_ITEMS)
 
 

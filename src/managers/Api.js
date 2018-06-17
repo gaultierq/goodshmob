@@ -544,7 +544,7 @@ export function safeExecBlock(block, stateName: string) {
 
     };
     // $FlowFixMe
-    if (this.state[stateName] !== 'sending') {
+    if (_.get(this.state, stateName) !== 'sending') {
 
         // $FlowFixMe
         return setRequestState('sending')()
@@ -608,6 +608,10 @@ export const reduceList2 = (state: STATE<SHELL>, action: REDUX_ACTION<SHELL>, ap
         case apiAction.success():
 
             let {mergeOptions = {}} = action.options
+            if (mergeOptions.drop) {
+                console.debug("droping data");
+                state = {...state, list: []}
+            }
 
             let newList = action.payload.data.map(f => {
                 let {id, type} = f;

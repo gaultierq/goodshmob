@@ -1,6 +1,6 @@
 //@flow
 
-import {findSuitableLineup} from "../src/helpers/Classifier"
+import {findBestLineup} from "../src/helpers/Classifier"
 
 
 test('item with lineup', () => {
@@ -18,7 +18,7 @@ test('item with lineup', () => {
         l1
     ]
 
-    let suitable = findSuitableLineup(item, lineups)
+    let suitable = findBestLineup(item, lineups)
     expect(suitable).toBe(l1);
 })
 

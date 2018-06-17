@@ -14,6 +14,7 @@ export const Colors = Object.freeze({
     white: '#FFFFFF',
 
     green: '#01DEB1',
+    darkerGreen: '#01b687',
     pink: 'rgb(220,124,223)',
     grey142: 'rgb(142,142,147)',
 });
@@ -21,3 +22,17 @@ export const Colors = Object.freeze({
 
 export const ACTIVITY_CELL_BACKGROUND = Colors.white;
 export const SEARCH_PLACEHOLDER_COLOR = Colors.grey3;
+
+export const AVATAR_BACKGROUNDS = ['#660594',
+    '#07209b',
+    '#573E00',
+    '#FD0055',
+    '#F66B75',
+    '#435F9B',
+    '#DF3900',
+    '#006F3A',
+    '#648B00',
+    '#0D4AD7',
+    '#976A00',
+    '#E97B00',
+    '#C90B06',]

@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import {connect} from "react-redux";
 import {currentUserId, logged} from "../../managers/CurrentUser"
-import type {Id, List, NavigableProps, Saving} from "../../types";
+import type {Id, List, NavigableProps, Saving, SearchToken} from "../../types"
 import ItemCell from "../components/ItemCell";
 import {
     AlgoliaClient,
@@ -24,6 +24,7 @@ import {
 import UserConnectItem from "./userConnectItem";
 import {SearchStyles} from "../UIStyles";
 import Screen from "../components/Screen";
+import EmptySearch from "../components/EmptySearch";
 import Config from 'react-native-config'
 import SearchScreen from "./search";
 import GTouchable from "../GTouchable";
@@ -33,6 +34,7 @@ import {renderLineupFromOtherPeople} from "../UIComponents";
 import {Colors} from "../colors"
 
 type Props = NavigableProps & {
+    token ?: SearchToken
 };
 
 type State = {
@@ -85,12 +87,16 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                 tabName: "network_search_tabs.savings",
                 placeholder: "search_bar.network_placeholder",
                 parseResponse: createResultFromHit,
-                renderResults: ({query, results}) => (
-                    <SearchPage
+                renderResults: ({query, results}) => {
+                    if (!results) {
+                        return <EmptySearch categ={'savings'}/>
+                    }
+
+                    return <SearchPage
                         search={results}
                         renderItem={renderItem}
                     />
-                )
+                }
             },
             {
                 type: "users",
@@ -102,12 +108,16 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                 tabName: "network_search_tabs.users",
                 placeholder: "search_bar.network_placeholder",
                 parseResponse: createResultFromHit2,
-                renderResults: ({query, results}) => (
-                    <SearchPage
+                renderResults: ({query, results}) => {
+                    if (!results) {
+                        return <EmptySearch categ={'users'}/>
+                    }
+
+                    return <SearchPage
                         search={results}
                         renderItem={renderUser}
                     />
-                )
+                }
             },
 
         ];
@@ -120,6 +130,7 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
             navigator={navigator}
             placeholder={i18n.t('search.in_network')}
             style={{backgroundColor: Colors.white}}
+            token={this.props.token}
         />;
     }
 

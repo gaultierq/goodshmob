@@ -10,6 +10,7 @@ import {FOLLOW_LINEUP, UNFOLLOW_LINEUP} from "../ui/lineup/actions"
 
 // export const DEEPLINK_OPEN_SCREEN_IN_MODAL = 'DEEPLINK_OPEN_SCREEN_IN_MODAL';
 
+
 class _StoreManager implements StoreManager {
 
     store: *;
@@ -92,34 +93,7 @@ class _StoreManager implements StoreManager {
             savings.push(...lineup.savings);
         }
 
-        // pending savings
-        const predicate = pending => pending.payload.lineupId === lineupId;
-
-        //mergeItemsAndPendings2
-
-        const pendingCreation = _.filter(storePending[SAVE_ITEM], predicate);
-        savings = pendingCreation.map(pending => {
-            const result = {
-                id: pending.id,
-                lineupId: pending.payload.lineupId,
-                itemId: pending.payload.itemId,
-                pending: true
-            };
-
-            Object.defineProperty(
-                result,
-                'resource',
-                {
-                    get: () => {
-                        return buildData(storeData, pending.payload.itemType, pending.payload.itemId);
-                    },
-                },
-            );
-
-
-            return result
-            }
-        ).concat(savings);
+        savings = this.synthetizePendingSavings(storeData, storePending, lineupId).concat(savings)
 
         savings = _.filter(savings, saving => {
             return _.findIndex(storePending[UNSAVE], o => o.payload.savingId === saving.id) < 0;
@@ -135,6 +109,30 @@ class _StoreManager implements StoreManager {
 
     getStore(): any {
         return this.store
+    }
+
+    synthetizePendingSavings(storeData, storePending, lineupId) {
+        const rawPending = _.filter(storePending[SAVE_ITEM], pending => pending.payload.lineupId === lineupId)
+        return rawPending.map(pending => {
+                const result = {
+                    id: pending.id,
+                    lineupId: pending.payload.lineupId,
+                    itemId: pending.payload.itemId,
+                    pending: true
+                }
+
+                Object.defineProperty(
+                    result,
+                    'resource',
+                    {
+                        get: () => {
+                            return buildData(storeData, pending.payload.itemType, pending.payload.itemId)
+                        },
+                    },
+                )
+                return result
+            }
+        )
     }
 
 }

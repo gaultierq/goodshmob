@@ -70,7 +70,7 @@ export default {
     search: {
         in_items: "Saisir le nom à enregistrer",
         in_network: "Rechercher dans mon réseau",
-        in_feed: "Rechercher",
+        in_feed: "Dans mes listes",
         by: "par"
     },
     "shared":{
@@ -196,7 +196,8 @@ export default {
         "empty_screen": "Découvre ici les goodsh de tes contacts.\nTap Ask pour leur poser des questions."
     },
     "my_interests_screen":{
-        "empty_screen": "Tu retrouveras les listes que tu suis ici.\nExplore les listes de tes amis, et suis les plus intéressantes !"
+        "empty_screen": "Tu retrouveras les listes que tu suis ici.\nExplore les listes de tes amis, et suis les plus intéressantes !",
+        "search_lists": "Trouver des listes à suivre"
     },
     "comments_screen":{
         "title": "Commentaires"
@@ -215,7 +216,9 @@ export default {
             "consumer_goods":"Plein de trucs : livres, cadeaux, gadgets, chaussures, vin, jouets, produits...",
             "places":"Plein d'adresses : restaurants, cafés, boutiques, hôtels, musées, villes, plages, lieux à visiter, docteurs, plombiers...",
             "movies":"Plein de films, séries, documentaires, émissions... ",
-            "musics":"Plein de sons : artistes, albums, titres..."
+            "musics":"Plein de sons : artistes, albums, titres...",
+            "savings": "Cherche des listes qui t'intéressent pour les suivre",
+            "users": "Cherche des membres à suivre",
         },
         "search_options":  {
             "around_me": "Autour de moi"
@@ -322,10 +325,15 @@ export default {
             title: "Réponses"
         }
     },
-    "load_more_activities": {
+    "more_activities": {
         zero: "",
-        one: "Voir %{count} activité supplémentaire",
-        other: "Voir %{count} activités supplémentaires",
+        one: "%{count} activité supplémentaire",
+        other: "%{count} activités supplémentaires",
+    },
+    "there_are_activities": {
+        zero: "",
+        one: "Il y a",
+        other: "Il y a",
     },
     add_item_screen: {
         title: "Choisir une liste"

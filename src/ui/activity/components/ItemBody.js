@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, {type Node} from 'react'
 import {
     Animated,
     Easing,
@@ -11,40 +11,70 @@ import {
     TouchableHighlight,
     TouchableOpacity,
     View
-} from 'react-native';
-import * as UI from "../../UIStyles";
-import {connect} from "react-redux";
+} from 'react-native'
+import {connect} from "react-redux"
 import {logged} from "../../../managers/CurrentUser"
-import type {Activity} from "../../../types"
-import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
-import ActionRights, {canPerformAction, A_BUY} from "../../rights";
-import Button from 'apsl-react-native-button';
-import {SFP_TEXT_ITALIC} from "../../fonts";
+import type {Id, Item, ItemType} from "../../../types"
+import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors"
+import {SFP_TEXT_ITALIC} from "../../fonts"
 import GImage from '../../components/GImage'
-import Icon from 'react-native-vector-icons/Feather';
-import {firstName} from "../../../helpers/StringUtils";
-import Carousel from 'react-native-looped-carousel';
 
+import {firstName} from "../../../helpers/StringUtils"
+import Carousel from 'react-native-looped-carousel'
+import { createSelector } from 'reselect'
+import {buildData, sanitizeActivityType} from "../../../helpers/DataUtils"
+import * as Api from "../../../managers/Api"
+import {FETCH_ITEM} from "../../lineup/actionTypes"
+import {fetchItemCall} from "../../lineup/actions"
 
 type Props = {
-    activity: Activity,
-    onPressItem: (any) => void,
+    item: Item,
+    itemId: Item,
+    itemType: ItemType,
     showAllImages?: boolean,
-    liked: boolean,
-    bodyStyle?: *
+    liked?: boolean,
+    bodyStyle?: *,
+    rightComponent?: Node
 };
 
 type State = {
-    width: number,
+    width?: number,
 };
 
-@connect()
+const getItemSelector = createSelector(
+    [
+        (state, props) => _.get(state, `data.${sanitizeActivityType(props.item.type)}.${props.item.id}`),
+        state => state.data
+    ],
+    (rawItem, data) => rawItem && buildData(data, rawItem.type, rawItem.id)
+
+)
+
+//i want to listen to "data" but only for "itemType x itemId" store update
+@connect((state, props) => ({
+        itemId: props.itemId || props.item.id,
+        item: getItemSelector(state, props)
+    })
+)
 @logged
-export default class ActivityBody extends React.Component<Props, State> {
+export default class ItemBody extends React.Component<Props, State> {
 
     static defaultProps = {
         showAllImages: false
-    };
+    }
+
+    state = {}
+
+    componentDidMount() {
+        if (!this.props.item) {
+            Api.safeDispatchAction.call(
+                this,
+                this.props.dispatch,
+                fetchItemCall(this.props.itemId).createActionDispatchee(FETCH_ITEM),
+                'fetchItem'
+            )
+        }
+    }
 
     componentWillReceiveProps(nextProps: Props) {
         if (nextProps.liked && !this.props.liked) {
@@ -52,62 +82,28 @@ export default class ActivityBody extends React.Component<Props, State> {
         }
     }
 
-    state = {}
-
     render() {
-        const {activity, bodyStyle} = this.props;
-        let resource = activity.resource;
 
+        const {item, bodyStyle} = this.props;
+        if (!item) return null
         return (
             <View onLayout={this._onLayoutDidChange}>
                 {/*Image And Button*/}
                 {this.renderImage()}
 
-                {resource && (
+                {(
                     <View style={[styles.body, bodyStyle]}>
                         <View style={styles.bodyInner}>
                             <View style={styles.flex1}>
-                                <Text style={[styles.title]} numberOfLines={2}>{resource.title}</Text>
-                                <Text style={[styles.subtitle]}>{resource.subtitle}</Text>
-
-                                {__DEBUG_SHOW_IDS__ &&
-                                <Text style={UI.TEXT_LESS_IMPORTANT}>{activity.type + " " + activity.id}</Text>}
+                                <Text style={[styles.title]} numberOfLines={2}>{item.title}</Text>
+                                <Text style={[styles.subtitle]}>{item.subtitle}</Text>
                             </View>
-                            {this.renderBuyButton(activity)}
+                            {this.props.rightComponent}
                         </View>
-                        {/*{this.renderDescription(activity)}*/}
                     </View>
                 )}
             </View>
         )
-    }
-
-
-    renderBuyButton(activity:Activity) {
-        return canPerformAction(A_BUY, {activity}) /*new ActionRights(activity).canBuy()*/ && <Button
-            onPress={() => {
-                this.execBuy(activity)
-            }}
-            style={[{borderRadius: 10, backgroundColor: Colors.blue, borderWidth: 0}]}
-        >
-            <Icon name="shopping-cart" size={22} color={Colors.white} style={UI.stylePadding(10,1,10,1)}/>
-            {/*<Text style={[UI.SIDE_MARGINS(10), {color: Colors.white, fontFamily: SFP_TEXT_MEDIUM, fontSize: 14}]}>
-
-                i18n.t("actions.buy")
-            </Text>*/}
-        </Button>;
-    }
-
-
-    execBuy(activity: Activity) {
-        let url = _.get(activity, 'resource.url');
-        Linking.canOpenURL(url).then(supported => {
-            if (supported) {
-                Linking.openURL(url);
-            } else {
-                console.log("Don't know how to open URI: " + url);
-            }
-        });
     }
 
     _onLayoutDidChange = e => {
@@ -116,34 +112,25 @@ export default class ActivityBody extends React.Component<Props, State> {
     };
 
     renderImage() {
-
-        const {activity} = this.props;
-        if (activity.type === 'asks'){
-            let content = activity.content;
-            if (__DEBUG_SHOW_IDS__) content += ` (id=${activity.id.substr(0, 5)})`;
-            return <Text style={styles.askText}>{content}</Text>;
-        }
-
-        let resource = activity.resource;
-        let images = _.get(resource, 'images', [])
+        const {item} = this.props;
+        let images = _.get(item, 'images', [])
 
         // When resource is a book, to show cover first
-        if (images && resource.provider === 'Amazon') {
-            images.unshift(resource.image)
+        if (images && item.provider === 'Amazon') {
+            images.unshift(item.image)
             images = _.uniq(images)
         }
 
         // For when resource is a Spotify song
         if (images && images.length === 0) {
-            images = [resource.image]
+            images = [item.image]
         }
-
         let imageHeight = 288;
 
         const resize = images && (
-            resource.type === 'CreativeWork'
-            || resource.type === 'TvShow'
-            || resource.type === 'Movie'
+            item.type === 'CreativeWork'
+            || item.type === 'TvShow'
+            || item.type === 'Movie'
         )? 'contain' : 'cover';
 
         const opacity = this.animatedValue.interpolate({
@@ -172,11 +159,11 @@ export default class ActivityBody extends React.Component<Props, State> {
                 }) }
             </Carousel>}
             {!this.props.showAllImages &&
-                <GImage
-                source={resource.image ? {uri: resource.image} : require('../../../img/goodsh_placeholder.png')}
+            <GImage
+                source={item.image ? {uri: item.image} : require('../../../img/goodsh_placeholder.png')}
                 resizeMode={resize}
                 style={[styles.image, {height: imageHeight, width: this.state.width}]}
-                />}
+            />}
 
             {
                 <Animated.View style={[styles.yheaaContainer, {opacity}]} pointerEvents={this.props.showAllImages ? 'none' : 'auto'}>
@@ -216,5 +203,4 @@ const styles = StyleSheet.create({
     image: {alignSelf: 'center', backgroundColor: ACTIVITY_CELL_BACKGROUND, width: "100%"},
     yheaaContainer: {position: 'absolute', width: "100%", height: "100%",backgroundColor: 'rgba(0,0,0,0.3)',alignItems: 'center',justifyContent: 'center'},
     tag: {flexDirection:'row', alignItems: 'center'},
-    askText: {margin: 12, fontSize: 30}
 });

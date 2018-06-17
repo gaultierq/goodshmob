@@ -59,7 +59,7 @@ export default {
     },
     home: {
         wizard: {
-            action_button_label : "Add a coup de coeur\nor a wish.",
+            action_button_label : "Add a coup de coeur,\n, a wish, a tip.",
             action_button_body : "Book, movie, tvshow, restaurant, music...",
         },
         tabs: {
@@ -70,7 +70,7 @@ export default {
     search:{
         in_items: "Find anything",
         in_network: "Search in my network",
-        in_feed: "Search",
+        in_feed: "In my lists",
         by: "by",
     },
     "shared":{
@@ -197,7 +197,8 @@ export default {
         "empty_screen": "The goodsh of your friends are here.\nInvite them to share your tips with them."
     },
     "my_interests_screen":{
-        "empty_screen": "You will find every list you follow here.\nExplore your friends lists, and find them here !"
+        "empty_screen": "You will find every list you follow here.\nExplore your friends lists, and find them here !",
+        "search_lists": "Find lists to follow"
     },
     "comments_screen":{
         "title": "Comments"
@@ -216,7 +217,9 @@ export default {
             "consumer_goods":"Stuff: books, gifts, shoes, wine, games, products...",
             "places":"Restaurants, cafés, shops, hotels, museums, cities, beaches, places to visit, doctors, plumbers...",
             "movies":"Movies, TV shows",
-            "musics":"Musics, artists, albums, tracks"
+            "musics":"Musics, artists, albums, tracks",
+            "savings": "Search for interesting lists to follow",
+            "users": "Search for users to follow",
         },
         "search_options":  {
             "around_me": "Around me"
@@ -323,10 +326,15 @@ export default {
             title: "Replies"
         }
     },
-    "load_more_activities": {
+    "more_activities": {
         zero: "",
-        one: "See %{count} more activity",
-        other: "See %{count} more activities",
+        one: "%{count} more activity",
+        other: "%{count} more activities",
+    },
+    "there_are_activities": {
+        zero: "",
+        one: "There is",
+        other: "There are",
     },
     add_item_screen: {
         title: "Select list"

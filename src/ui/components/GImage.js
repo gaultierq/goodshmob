@@ -13,6 +13,8 @@ type State = {
 
 const DISABLE_IMAGE_CACHE = Config.DISABLE_IMAGE_CACHE;
 
+const logger = rootlogger.createLogger({group: 'image'})
+
 export default class GImage extends Component<Props, State>  {
 
     static defaultProps = {
@@ -20,6 +22,7 @@ export default class GImage extends Component<Props, State>  {
     };
 
     render() {
+        // logger.debug("render", this.props)
         if (DISABLE_IMAGE_CACHE === 'true') {
             return (
                 <Image

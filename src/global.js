@@ -37,7 +37,7 @@ const ALL_KEYS = [
     'API_PAGINATION_PER_PAGE',
 ];
 
-export function init(hotReload: boolean) {
+export function init() {
     global._ = __;
     global.i18n = _i18n;
     global.__ENABLE_BACK_HANDLER__ = false;
@@ -78,7 +78,7 @@ export function init(hotReload: boolean) {
         }
     }
 
-    global.logger = createLogger(global.console, {
+    global.rootlogger = createLogger(global.console, {
         group: 'root',
         groupName: '',
         format: logFormat,
@@ -110,3 +110,6 @@ let confToGlobal = function (config, throwIfAlreadyDefined) {
         setGlobalFromConfig(k, config[k]);
     });
 };
+
+
+init()

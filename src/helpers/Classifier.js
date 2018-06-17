@@ -41,23 +41,25 @@ let getBestCategory = function (itemScore) {
     })
 }
 
-export function findSuitableLineup(item: Item, lineups: Lineup[]): ?Lineup {
-    if (!item) return null
+/*
+lineupScores: {
+     1234-5678: {
+            music: 19
+            films: 1
+            restaurant: 0
+        },
+     5321-1234: {
+            music: 15
+            films: 23
+            restaurant: 0
+        },
+    }
+ */
 
-    /*
-    lineupScores: {
-         1234-5678: {
-                music: 19
-                films: 1
-                restaurant: 0
-            },
-         5321-1234: {
-                music: 15
-                films: 23
-                restaurant: 0
-            },
-        }
-     */
+// const logger = mainLogger.createLogger('classifier')
+
+export function findBestLineup(item: Item, lineups: Lineup[]): ?Lineup {
+    if (!item) return null
 
     let lineupScores = getScores(lineups.map(lineup => new Token(lineup.id, lineup.name, 1)))
     let itemScore = getScore(new Token(item.id, item.title, 1))
@@ -75,7 +77,7 @@ export function findSuitableLineup(item: Item, lineups: Lineup[]): ?Lineup {
     console.log("Classifier:", "item", item, "itemScore", itemScore, "bestItemCategory", bestItemCategory)
 
     // $FlowFixMe
-    var iterator1 = lineupScores[Symbol.iterator]();
+    let iterator1 = lineupScores[Symbol.iterator]()
 
     for (let item of iterator1) {
         let score = item[1]

@@ -5,7 +5,7 @@ import {ActivityIndicator, FlatList, Platform, RefreshControl, Text, TouchableOp
 import {connect} from "react-redux";
 import {currentUserId, logged} from "../../managers/CurrentUser"
 import ActivityCell from "../activity/components/ActivityCell";
-import {activityFeedProps, floatingButtonScrollListener, scheduleOpacityAnimation} from "../UIComponents"
+import {activityFeedProps, scheduleOpacityAnimation} from "../UIComponents"
 import Feed from "../components/feed"
 import type {Activity, ActivityGroup, Id, NavigableProps} from "../../types";
 import ActionButton from 'react-native-action-button';
@@ -22,11 +22,11 @@ import ActivityStatus from "../activity/components/ActivityStatus";
 import {SFP_TEXT_MEDIUM} from "../fonts";
 import {CANCELABLE_MODAL} from "../Nav"
 import {CANCELABLE_MODAL2} from "../Nav"
+import AskInput from "../components/AskInput"
 
 type Props = NavigableProps;
 
 type State = {
-    isActionButtonVisible: boolean
 };
 
 type NetworkSection = {
@@ -67,7 +67,6 @@ class NetworkScreen extends Screen<Props, State> {
     };
 
     state = {
-        isActionButtonVisible: true
     };
 
     feed: any
@@ -114,22 +113,6 @@ class NetworkScreen extends Screen<Props, State> {
         }
     }
 
-
-    showAsk() {
-        let {navigator} = this.props;
-
-//TODO: rm platform specific rules when [1] is solved.
-        //1: https://github.com/wix/react-native-navigation/issues/1502
-        navigator.showModal({
-            screen: 'goodsh.AskScreen', // unique ID registered with Navigation.registerScreen
-            animationType: 'none'
-        });
-    }
-
-    //hack to skip the first render
-    // hasBeenRenderedOnce = false;
-
-
     render() {
 
         const {network, data, navigator, ...attr} = this.props
@@ -161,6 +144,7 @@ class NetworkScreen extends Screen<Props, State> {
                     sections={sections}
                     renderItem={({item, index}) => this.renderItem(item, index)}
                     renderSectionFooter={({section}) => this.renderSectionFooter(section)}
+                    ListHeaderComponent={<AskInput/>}
                     listRef={ref => this.feed = ref}
                     fetchSrc={{
                         callFactory: fetchMyNetwork,
@@ -173,7 +157,6 @@ class NetworkScreen extends Screen<Props, State> {
                     empty={<View><Text style={STYLES.empty_message}>{i18n.t('community_screen.empty_screen')}</Text><ShareButton text={i18n.t('actions.invite')}/></View>}
                     {...activityFeedProps()}
                     initialNumToRender={3}
-                    onScroll={floatingButtonScrollListener.call(this)}
                     decorateLoadMoreCall={(sections: any[], call: Call) => call.addQuery({id_lt: _.last(sections).id})}
                     visibility={super.getVisibility()}
                     ItemSeparatorComponent={({leadingItem, trailingItem, section}) => {
@@ -192,29 +175,33 @@ class NetworkScreen extends Screen<Props, State> {
                     {...attr}
                 />
 
-
-                {this.state.isActionButtonVisible && <ActionButton
-                    icon={<Icon name="comment-question-outline" size={30} color={Colors.white} style={{paddingTop: 5}}/>}
-                    buttonColor={Colors.green}
-                    onPress={() => { this.onFloatingButtonPressed() }}
-                />}
-
             </View>
         );
     }
 
     renderSectionFooter(section: NetworkSection) {
+        const count = section.activityCount - section.data.length
+        const loading = this.state['reqFetchMore' + section.id] === 'sending'
         return (
-            renderSimpleButton(
-                i18n.t('load_more_activities', {count: section.activityCount - section.data.length}),
-                ()=> safeDispatchAction.call(
-                    this,
-                    this.props.dispatch,
-                    fetchMyNetwork({limit: 1, activity_by_group: section.activityCount, id_lte: section.id}).createActionDispatchee(FETCH_ACTIVITIES, {userId: currentUserId()}),
-                    'reqFetchMore' + section.id
-                ).then(() => scheduleOpacityAnimation()),
-                {loading: this.state['reqFetchMore' + section.id] === 'sending'}
-            )
+            <View style={{flexDirection: 'row', alignItems: 'center',
+                backgroundColor: Colors.white,
+                paddingHorizontal: 20, marginBottom: 35}}>
+                {!loading && <Text>{i18n.t('there_are_activities', {count})}</Text>}
+
+                {renderSimpleButton(
+                    ' ' + i18n.t('more_activities', {count}),
+                    ()=> safeDispatchAction.call(
+                        this,
+                        this.props.dispatch,
+                        fetchMyNetwork({limit: 1, activity_by_group: section.activityCount, id_lte: section.id}).createActionDispatchee(FETCH_ACTIVITIES, {userId: currentUserId()}),
+                        'reqFetchMore' + section.id
+                    ).then(() => scheduleOpacityAnimation()),
+                    {loading: loading,
+                        textStyle: {fontSize: 14,},
+                        style: {margin: 0, height: 30}}
+                )}
+            </View>
+
         )
     }
 
@@ -225,17 +212,13 @@ class NetworkScreen extends Screen<Props, State> {
         });
     }
 
-    onFloatingButtonPressed() {
-        this.showAsk();
-    }
-
     showSearch() {
         let navigator = this.props.navigator;
 
         navigator.showModal({
             screen: 'goodsh.NetworkSearchScreen',
             passProps:{
-                onClickClose: () => navigator.dismissModal({animationType: 'none'}),
+                onClickClose: () => navigator.dismissModal(),
             },
             navigatorButtons: CANCELABLE_MODAL2,
         });

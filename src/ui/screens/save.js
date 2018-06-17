@@ -2,7 +2,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
 import type {Activity, Save} from "../../types";
-import ActivityBody from "../activity/components/ActivityBody";
+import ItemBody from "../activity/components/ItemBody";
 import {CheckBox} from "react-native-elements";
 import {Colors} from "../colors";
 
@@ -31,9 +31,10 @@ export default class SaveScreen extends Component<Props, State> {
         const {description, visibility} = this.state;
 
         let grey = Colors.greyishBrown;
+        const item = activity.resource
         return (
             <View style={[styles.container, containerStyle]}>
-                <ActivityBody activity={activity} noGoodshButton />
+                <ItemBody itemType={item} itemId={item.id} noGoodshButton />
 
                 <CheckBox
                     right

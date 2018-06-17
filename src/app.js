@@ -1,11 +1,13 @@
 // @flow
 /* global ErrorUtils */
+import {init as initGlobal} from "./global"
 
 import {applyMiddleware, combineReducers, compose, createStore} from "redux"
 import {Navigation} from 'react-native-navigation'
 import * as reducers from "./reducers/allReducers"
 import {createWithReducers} from "./auth/reducer"
 import thunk from "redux-thunk"
+
 
 import * as Api from './managers/Api'
 import {autoRehydrate, createTransform, persistStore} from 'redux-persist'
@@ -17,7 +19,6 @@ import * as globalProps from 'react-native-global-props'
 import NotificationManager from './managers/NotificationManager'
 import * as DeviceManager from "./managers/DeviceManager"
 import * as UI from "./ui/UIStyles"
-import {init as initGlobal} from "./global"
 import {AlgoliaClient} from "./helpers/AlgoliaUtils"
 import {Statistics} from "./managers/Statistics"
 import {CLEAR_CACHE, INIT_CACHE, UPGRADE_CACHE} from "./auth/actionTypes"
@@ -32,9 +33,8 @@ import * as appActions from "./auth/actions"
 import OnBoardingManager from "./managers/OnBoardingManager"
 import StoreManager from "./managers/StoreManager"
 import BugsnagManager from "./managers/BugsnagManager"
-import type {User} from "./types"
 import RNAccountKit, {Color,} from 'react-native-facebook-account-kit'
-import RNProgressHUB from 'react-native-progresshub';
+import RNProgressHUB from 'react-native-progresshub'
 import {actions as userActions, actionTypes as userActionTypes} from "./redux/UserActions"
 
 type AppMode = 'idle' | 'init_cache' | 'logged' | 'unlogged' | 'upgrading_cache' | 'unknown'
@@ -66,6 +66,7 @@ export default class App {
 
 
     constructor() {
+        initGlobal()
         this.spawn();
 
         //when store is ready
@@ -82,8 +83,8 @@ export default class App {
         //     // });
         // }
 
-        initGlobal(false);
-        this.logger = logger.createLogger("app")
+        // initGlobal(false);
+        this.logger = rootlogger.createLogger("app")
         this.logger.log(`spawning app with env`, Config);
         //this.hydrated = false;
 
@@ -253,7 +254,9 @@ export default class App {
                 headerBackgroundColor: Color.hex(Colors.green),
                 headerButtonTextColor: Color.hex(Colors.white),
                 headerTextColor: Color.hex(Colors.white),
-                // // Others
+                // Others
+                iconColor: Color.hex(Colors.white),
+                titleColor: Color.hex(Colors.white),
                 textColor: Color.hex(Colors.white),
             }})
 

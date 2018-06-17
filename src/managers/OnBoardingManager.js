@@ -97,7 +97,7 @@ class _OnBoardingManager implements OnBoardingManager {
     }
 
     init(store: any) {
-        this.logger = logger.createLogger('OnBoarding')
+        this.logger = rootlogger.createLogger('OnBoarding')
         this.store = store;
     }
 

@@ -16,7 +16,7 @@ import {
 import * as actions from './actions'
 import {connect} from "react-redux";
 import {currentUser, currentUserId, logged} from "../../managers/CurrentUser"
-import ActivityBody from "./components/ActivityBody";
+import ItemBody from "./components/ItemBody";
 import {buildData, getAskBackgroundColor, sanitizeActivityType, timeSinceActivity} from "../../helpers/DataUtils";
 import {Avatar, FullScreenLoader, MainBackground} from "../UIComponents";
 import type {Activity, ActivityType, Id, RequestState, RNNNavigator} from "../../types";
@@ -144,8 +144,8 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                 <GTouchable
                                     onPress={() => this.goBuy(activity)}
                                 >
-                                    <ActivityBody
-                                        activity={activity}
+                                    <ItemBody
+                                        item={activity.resource}
                                         navigator={this.props.navigator}
                                         onPressItem={() => this.goBuy(activity)}
                                         showAllImages

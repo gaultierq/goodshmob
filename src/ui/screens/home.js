@@ -86,7 +86,7 @@ export default class HomeScreen extends Screen<Props, State> {
         ],
     }
 
-    logger = logger.createLogger("home")
+    logger = rootlogger.createLogger("home")
     feed: any
     onBoardingHelper = new HomeOnBoardingHelper()
     state = {

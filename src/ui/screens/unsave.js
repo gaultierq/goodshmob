@@ -41,7 +41,6 @@ export default class UnsaveScreen extends Screen<Props, State> {
                 'fetch'
             )
         }
-
     }
 
     render() {

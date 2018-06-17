@@ -13,7 +13,7 @@ export type GLogger = Logger & {
     createLogger: (conf: GLoggerConfig | string) => GLogger
 }
 
-declare var logger: GLogger;
+declare var rootlogger: GLogger;
 
 export type GLoggerLevel = 'log'| 'debug'| 'info'| 'warn'| 'error'
 export type GLoggerGroup = string

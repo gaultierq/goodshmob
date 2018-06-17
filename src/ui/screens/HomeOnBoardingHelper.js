@@ -2,7 +2,6 @@
 
 import {Colors} from "../colors"
 import OnBoardingManager from "../../managers/OnBoardingManager"
-import {TipConfig} from "../components/Tip"
 import {AppTour, AppTourSequence, AppTourView} from "../../../vendors/taptarget"
 
 
@@ -60,31 +59,6 @@ export class HomeOnBoardingHelper {
             // we are using a 10s timer, to go to the next onBoardingStep
             OnBoardingManager.postOnDismissed('focus_add', 10000)
 
-        }, 2000);
+        }, 100);
     }
-
-
-    listenTipChange(onTip: TipConfig => void) {
-        //if a new onBoarding step is broadcasted, then display it
-        // OnBoardingManager.listenToStepChange({
-        //     triggerOnListen: true,
-        //     callback: (step: ?OnBoardingStep) => {
-        //         let newTip = null;
-        //         switch (step) {
-        //             case 'privacy':
-        //                 newTip = TIP_PRIVACY;
-        //                 break
-        //             case 'noise':
-        //                 newTip = TIP_NOISE;
-        //                 break
-        //             case 'private':
-        //                 newTip = TIP_FULL_PRIVATE;
-        //                 break
-        //         }
-        //         onTip(newTip)
-        //
-        //     }
-        // })
-    }
-
 }

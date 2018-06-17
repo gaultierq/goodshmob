@@ -29,6 +29,7 @@ import {RequestManager} from "../../managers/request";
 import Spinner from 'react-native-spinkit';
 import Config from "react-native-config"
 import {FullScreenLoader} from "../UIComponents";
+import LineupHorizontal from "./LineupHorizontal"
 
 export type FeedSource = {
     callFactory: ()=>Api.Call,
@@ -79,7 +80,7 @@ type State = {
 
 type FeedFetchOption = {
     // afterId?: Id,
-    loadMore: boolean,
+    loadMore?: boolean,
     trigger?: any,
     drop?: boolean
 }
@@ -119,7 +120,7 @@ export default class Feed extends Component<Props, State>  {
         }
         // this.console = props.displayName ? createConsole(props.displayName) : console
         // this.console = console.createLogger({group: 'feed', groupName: props.displayName})
-        this.console = logger.createLogger('feed')
+        this.console = rootlogger.createLogger('feed')
 
         this.createdAt = Date.now();
         this.postFetchFirst();
@@ -434,7 +435,7 @@ export default class Feed extends Component<Props, State>  {
         return false;
     }
 
-    fetchIt(options?: FeedFetchOption = {loadMore: false}) {
+    fetchIt(options?: FeedFetchOption = {}) {
         let {loadMore, trigger, drop} = options;
         let requestName = loadMore ? 'isFetchingMore' : 'isFetchingFirst';
 

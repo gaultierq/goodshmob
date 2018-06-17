@@ -157,6 +157,9 @@ export const networkSearchScreen = {
         screen: 'goodsh.NetworkSearchScreen',
         title: 'Test network search',
     },
+    passProps: {
+        token: "Série"
+    }
 };
 
 export const searchItemsScreen = {
