@@ -18,10 +18,12 @@ class Token {
     }
 }
 
-let getScore = tok => {
+let getScore = tokens => {
     let score = new Map()
+
     ALL_CATEGORIES.forEach(category => {
-        score.set(category, category.score(tok))
+        let totalScore = tokens.reduce((score, tok) => score + category.score(tok), 0)
+        score.set(category, totalScore)
     })
     return score
 }
@@ -29,16 +31,20 @@ let getScore = tok => {
 let getScores = function (tokens) {
     let scores = new Map()
     tokens.forEach(tok => {
-        scores.set(tok.id, getScore(tok))
+        scores.set(tok.id, getScore([tok]))
     })
     return scores
 }
 
 let getBestCategory = function (itemScore) {
-    let bestCateg, currentBest = -1
+    let bestCateg = null, currentBest = -1
     itemScore.forEach((value, key) => {
-        if (value > currentBest) bestCateg = key
+        if (value > currentBest) {
+            bestCateg = key
+            currentBest = value
+        }
     })
+    return bestCateg
 }
 
 /*
@@ -56,28 +62,58 @@ lineupScores: {
     }
  */
 
-// const logger = mainLogger.createLogger('classifier')
+const logger = rootlogger.createLogger('classifier')
+
+let logScores = function (name, score) {
+    logger.debug("score for", name, ":")
+    if (score) {
+        let log = "      >>"
+        score.forEach((value, categ) => log += `${categ.name}: ${value}, `)
+        logger.debug(log)
+    }
+}
+
+let tokenizeItem = function (item) {
+    const result = [
+        new Token(item.id, item.title, 1),
+        new Token(item.id, item.subtitle, 1),
+        new Token(item.id, item.provider, 3),
+    ]
+    let desc
+    if (desc = item.description) {
+        if (desc.tags) {
+            result.push(new Token(item.id, desc.tags.join(" "), 1))
+        }
+        if (desc.types) {
+            result.push(new Token(item.id, desc.types.join(" "), 1))
+        }
+    }
+    return result
+}
 
 export function findBestLineup(item: Item, lineups: Lineup[]): ?Lineup {
     if (!item) return null
 
-    let lineupScores = getScores(lineups.map(lineup => new Token(lineup.id, lineup.name, 1)))
-    let itemScore = getScore(new Token(item.id, item.title, 1))
+    let lineupsScores = getScores(lineups.map(lineup => new Token(lineup.id, lineup.name, 1)))
+    let itemScore = getScore(tokenizeItem(item))
 
     let bestItemCategory = getBestCategory(itemScore)
 
-    lineupScores.forEach((score, lineupId) => {
+    lineupsScores.forEach((score, lineupId) => {
         let categ = getBestCategory(score)
         if (categ === bestItemCategory) {
             return lineups.find(l=>l.id === lineupId)
         }
     })
 
-    console.log("Classifier:", "lineups", lineups, "lineupScores", lineupScores)
-    console.log("Classifier:", "item", item, "itemScore", itemScore, "bestItemCategory", bestItemCategory)
+    logger.debug("lineups", _.map(lineups, l => l.title), "lineupsScores", lineupsScores)
+    lineups.forEach(lineup => {
+        logScores(lineup.name, lineupsScores.get(lineup.id))
+    })
+    logScores(item.title + ":" + item.id.substr(0, 4), itemScore)
 
     // $FlowFixMe
-    let iterator1 = lineupScores[Symbol.iterator]()
+    let iterator1 = lineupsScores[Symbol.iterator]()
 
     for (let item of iterator1) {
         let score = item[1]
@@ -136,5 +172,8 @@ class Category {
     }
 }
 
-Category.create("music", ["album", "music", "artist", "spotify"])
+Category.create("music", ["album", "music", "musique", "artist", "spotify"])
 Category.create("restaurant", ["restaurant", "food", "café"])
+Category.create("tv shows", ["tv-shows", "séries"])
+Category.create("movies", ["movie", "film"])
+Category.create("books", ["book", "livre"])
