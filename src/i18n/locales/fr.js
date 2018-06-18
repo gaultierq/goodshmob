@@ -409,7 +409,7 @@ export default {
         }
     },
     dev: {
-        label: "Dev mode",
+        label: "Menu de développement",
         title: "DevMenu"
     },
     congrats: {
