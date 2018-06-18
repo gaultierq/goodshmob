@@ -37,6 +37,7 @@ import {createSelector} from "reselect"
 import {CREATE_LINEUP, SAVE_ITEM} from "../lineup/actionTypes"
 import * as Api from "../../managers/Api"
 import {FETCH_LINEUP, fetchLineup} from "../lineup/actions"
+import {UNSAVE} from "../activity/actionTypes"
 
 // $FlowFixMe
 type Props = {
@@ -66,14 +67,15 @@ const getLineupSelector = createSelector(
         (state, props) => _.get(state, `data.lists.${lineupId(props)}`),
         (state, props) => _.head(state.pending[CREATE_LINEUP], pending => pending.id === lineupId(props)),
         (state, props) => _.filter(state.pending[SAVE_ITEM], pending => pending.payload.lineupId === lineupId(props)),
+        (state, props) => _.filter(state.pending[UNSAVE], pending => pending.payload.lineupId === lineupId(props)),
         state => state.data
     ],
-    (syncList, rawPendingList, rawPendingSavings, data) => {
+    (syncList, rawPendingList, rawPendingCreatedSavings, rawPendingDeletedSavings, data) => {
         let lineup = (syncList && buildData(data, syncList.type, syncList.id) || {...rawPendingList, savings: []})
         let savings
         if (lineup) {
-            if (!_.isEmpty(rawPendingSavings)) {
-                savings = rawPendingSavings.map(pending => {
+            if (!_.isEmpty(rawPendingCreatedSavings)) {
+                savings = rawPendingCreatedSavings.map(pending => {
                         const result = {
                             id: pending.id,
                             lineupId: pending.payload.lineupId,
@@ -95,10 +97,15 @@ const getLineupSelector = createSelector(
                     }
                 )
             }
+
             if (lineup.savings) {
                 if (savings) savings = savings.concat(lineup.savings)
                 else savings = [].concat(lineup.savings) //?
             }
+            if (!_.isEmpty(rawPendingDeletedSavings)) {
+                _.remove(savings, saving => rawPendingDeletedSavings.some(pending => pending.payload.savingId === saving.id))
+            }
+
         }
         return {lineup, savings}
     }
