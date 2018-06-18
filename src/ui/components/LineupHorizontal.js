@@ -1,7 +1,7 @@
 // @flow
 
-import type {Node} from 'react';
-import React, {Component} from 'react';
+import type {Node} from 'react'
+import React, {Component} from 'react'
 import {
     Alert,
     BackHandler,
@@ -15,30 +15,28 @@ import {
     TextInput,
     TouchableOpacity,
     View
-} from 'react-native';
+} from 'react-native'
 
-import {connect} from "react-redux";
-import type {Id, Lineup, RNNNavigator, Saving} from "../../types";
+import {connect} from "react-redux"
+import type {Id, Lineup, RNNNavigator, Saving} from "../../types"
+import {ViewStyle} from "../../types"
 import {logged} from "../../managers/CurrentUser"
-import {Navigation} from 'react-native-navigation';
-import {displayActivityActions, seeActivityDetails, seeList} from "../Nav";
-import {Colors} from "../colors";
-import Feed from "../components/feed";
-import LineupCellSaving from "../components/LineupCellSaving";
+import {Navigation} from 'react-native-navigation'
+import {displayActivityActions, seeActivityDetails, seeList} from "../Nav"
+import {Colors} from "../colors"
+import Feed from "../components/feed"
+import LineupCellSaving from "../components/LineupCellSaving"
 
-import GTouchable from "../GTouchable";
-import {UpdateTracker} from "../UpdateTracker";
-import StoreManager from "../../managers/StoreManager"
-import {EmptyCell} from "./LineupCellSaving";
-import {LINEUP_PADDING} from "../UIStyles";
-import {renderLineupMenu} from "../UIComponents";
-import LineupTitle2 from "./LineupTitle2";
-import {ViewStyle} from "../../types";
-import {buildData, sanitizeActivityType} from "../../helpers/DataUtils"
+import GTouchable from "../GTouchable"
+import {EmptyCell} from "./LineupCellSaving"
+import {LINEUP_PADDING} from "../UIStyles"
+import {renderLineupMenu} from "../UIComponents"
+import LineupTitle2 from "./LineupTitle2"
+import {buildData} from "../../helpers/DataUtils"
 import {createSelector} from "reselect"
-import {CREATE_LINEUP, FETCH_ITEM, SAVE_ITEM} from "../lineup/actionTypes"
+import {CREATE_LINEUP, SAVE_ITEM} from "../lineup/actionTypes"
 import * as Api from "../../managers/Api"
-import {FETCH_LINEUP, fetchItemCall, fetchLineup} from "../lineup/actions"
+import {FETCH_LINEUP, fetchLineup} from "../lineup/actions"
 
 // $FlowFixMe
 type Props = {
@@ -71,7 +69,7 @@ const getLineupSelector = createSelector(
         state => state.data
     ],
     (syncList, rawPendingList, rawPendingSavings, data) => {
-        let lineup = (syncList && buildData(data, syncList.type, syncList.id) || rawPendingList)
+        let lineup = (syncList && buildData(data, syncList.type, syncList.id) || {...rawPendingList, savings: []})
         let savings
         if (lineup) {
             if (!_.isEmpty(rawPendingSavings)) {
