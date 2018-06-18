@@ -16,76 +16,25 @@ import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
 import {TabBar, TabViewAnimated, TabViewPagerPan} from 'react-native-tab-view'
 
-import type {i18Key, List, Saving, SearchToken} from "../../types"
+import type {SearchToken} from "../../types"
 import Button from 'apsl-react-native-button'
 import {LINEUP_PADDING, NAV_BACKGROUND_COLOR, TAB_BAR_PROPS} from "../UIStyles"
 import {Navigation} from 'react-native-navigation'
 import update from "immutability-helper"
 import {Colors} from "../colors"
 import GSearchBar2 from "../components/GSearchBar2"
-
-export type SearchCategoryType = string;
-
-export type SearchCategory = {
-    type: SearchCategoryType,
-    query: *,
-    parseResponse: (hits: []) => *,
-    renderItem: (item: *) => Node,
-    tabName: i18Key,
-    placeholder: i18Key,
-    onItemSelected?: () => void,
-    searchOptions: SearchOptions,
-    renderResults: ({query: SearchQuery, results: SearchState}) => Node,
-    renderBlank?: () => Node,
-}
-
-export type SearchResult = {
-    [SearchCategoryType]: {
-        results: Array<*>,
-        page: number,
-        nbPages: number,
-    }
-}
-export type SearchOptions = {
-    renderOptions: (any, any => void, void => void) => Node
-}
-
-
-
-export type SearchQuery = {
-    token: SearchToken,
-    categoryType: SearchCategoryType,
-    options?: any
-}
-
-export type SearchEngine = {
-    search:
-        (
-            token: SearchToken,
-            category: SearchCategoryType,
-            page: number,
-            searchOptions?:any
-
-        ) => Promise<SearchResult>,
-    canSearch: (
-        token: SearchToken,
-        category: SearchCategoryType,
-        trigger: SearchTrigger,
-        searchOptions?:any
-    ) => boolean
-
-};
-
+import type {
+    SearchCategory,
+    SearchCategoryType,
+    SearchEngine,
+    SearchQuery,
+    SearchResult,
+    SearchState,
+    SearchTrigger
+} from "../../helpers/SearchHelper"
 
 
 //token -> {data, hasMore, isSearching}
-export type SearchState = {
-    searchState: number, //0,1,2,3
-    page: number,
-    nbPages: number,
-    data: Array<List|Saving>,
-    token: string,
-};
 
 //search query KEY: token x category x options
 //options: page x location? x
@@ -106,8 +55,6 @@ export type Props = {
     index: number,
 };
 
-export type SearchTrigger = 'unknown' | 'button' | 'input_changed' | 'tab_changed' | 'intial_token'
-
 @connect()
 @logged
 export default class SearchScreen extends Component<Props, State> {
@@ -125,7 +72,7 @@ export default class SearchScreen extends Component<Props, State> {
             input: props.token,
             searches: {},
             index: props.index,
-            routes: props.categories.map((c, i) => ({key: `${i}`, title: c.tabName ? i18n.t(c.tabName) : null})),
+            routes: props.categories.map((c, i) => ({key: `${i}`, title: c.tabName})),
         };
 
         if (props.token) {

@@ -249,6 +249,12 @@ export const editUserProfile = {
     },
 }
 
+export const popularItemsScreen = {
+    screen: {
+        screen: 'goodsh.PopularItemsScreen',
+    },
+}
+
 export const test = {
     screen: {
         label: 'test',

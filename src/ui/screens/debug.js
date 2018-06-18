@@ -12,6 +12,8 @@ import _Messenger from "../../managers/Messenger"
 import Config from 'react-native-config'
 import {Colors} from "../colors";
 import BugsnagManager from "../../managers/BugsnagManager";
+import * as Nav from "../Nav"
+import {Navigation} from "react-native-navigation"
 
 type Props = {
 }
@@ -63,7 +65,7 @@ export default class DebugScreen extends Screen<Props, State> {
                         title="send storage"
                         onPress={this.copyStorage.bind(this)}
                     />
-                    
+
                     <Button
                         title="show build information"
                         onPress={this.showBuildInfo.bind(this)}
@@ -78,6 +80,13 @@ export default class DebugScreen extends Screen<Props, State> {
 
                     <Button title="notify bugsnag" onPress={() => {
                         BugsnagManager.notify(new Error("debug notify"))
+                    }}/>
+
+                    <Button title="see populars" onPress={() => {
+                        Navigation.showModal({
+                            screen: 'goodsh.PopularItemsScreen', // unique ID registered with Navigation.registerScreen
+                            navigatorButtons: Nav.CANCELABLE_MODAL,
+                        })
                     }}/>
 
                     <Text>{this.state.text}</Text>

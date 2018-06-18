@@ -1,5 +1,8 @@
 //import * as Api from "../src/utils/Api";
 
+import {createLogger, logFormat} from "../src/helpers/LogUtil"
+import * as __ from "lodash"
+
 let makeI18nPlease = function () {
     const i18njs = require('i18n-js')
     const en = require('../src/i18n/locales/en')
@@ -21,7 +24,15 @@ global.I18n = I18nMock;
 
 global.i18n = makeI18nPlease()
 
+global.rootlogger = createLogger(global.console, {
+    group: 'root',
+    groupName: '',
+    // format: logFormat,
+    // filter: logFilter(logConfig)
+})
+
 console.debug = console.log;
+global._ = __
 
 jest.mock('react-native-cached-image', () => {
     return {

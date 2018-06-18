@@ -13,6 +13,7 @@ import {statReducer as stat} from '../managers/Statistics';
 import {authReducer as auth, deviceReducer as device} from '../auth/reducer';
 import OnBoardingManager from "../managers/OnBoardingManager";
 import {reducer as followed_lists} from "../ui/screens/MyInterests";
+import {reducer as popular_items} from "../ui/screens/popularitems";
 
 
 import app from './app';
@@ -51,6 +52,7 @@ export {
     config,
     pending,
     onBoarding,
-    followed_lists
+    followed_lists,
+    popular_items
     // search,
 };

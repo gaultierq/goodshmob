@@ -55,15 +55,27 @@ export const CANCELABLE_SEARCH_MODAL = () => ({
     leftButtons: []
 });
 
-export function startAddItem(navigator: *, defaultLineupId: Id) {
+export function startAddItem(navigator: *, defaultLineup: Id | Lineup) {
     let cancel = () => {
         navigator.dismissAllModals()
     };
+
+    let defaultLineupId
+
+    if (_.isString(defaultLineup)) {
+        defaultLineupId = defaultLineup
+        defaultLineup = null
+    }
+    else {
+        defaultLineupId = defaultLineup.id
+    }
+
 
     navigator.showModal({
         screen: 'goodsh.SearchItemsScreen', // unique ID registered with Navigation.registerScreen
         navigatorButtons: CANCELABLE_MODAL2,
         passProps: {
+            defaultLineup,
             onItemSelected: (item: Item, navigator: RNNNavigator) => {
 
                 navigator.showModal({

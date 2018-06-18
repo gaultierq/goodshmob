@@ -1,7 +1,7 @@
 'use strict';
 // @flow
 
-import React, {Component} from 'react';
+import React, {Component} from 'react'
 
 import {
     ActivityIndicator,
@@ -14,29 +14,25 @@ import {
     TextInput,
     TouchableOpacity,
     View
-} from 'react-native';
-import {connect} from 'react-redux';
+} from 'react-native'
+import {connect} from 'react-redux'
 import {currentUserId, logged} from "../../managers/CurrentUser"
-import type {Id, RequestState} from "../../types";
-import {buildData} from "../../helpers/DataUtils";
-import ApiAction from "../../helpers/ApiAction";
-import * as Api from "../../managers/Api";
+import type {Id, ms, RequestState, User} from "../../types"
+import {buildData} from "../../helpers/DataUtils"
+import * as Api from "../../managers/Api"
 import * as authActions from '../../auth/actions'
 
-import {Avatar} from "../UIComponents";
-import {openLinkSafely, renderLink, renderSimpleButton, stylePadding} from "../UIStyles";
-import SmartInput from "../components/SmartInput";
+import {Avatar} from "../UIComponents"
+import {openLinkSafely, renderSimpleButton, stylePadding} from "../UIStyles"
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-import Toast from 'react-native-root-toast';
-import {CONFIG_SET} from "../../reducers/dataReducer";
-import * as Nav from "../Nav";
-import {Colors} from "../colors";
-import GTouchable from "../GTouchable";
-import GImage from '../components/GImage'
-import Icon from "react-native-vector-icons/SimpleLineIcons";
-import {SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "../fonts";
-import FeedSeparator from "../activity/components/FeedSeparator";
-import {getDeviceInfo} from "../../managers/DeviceManager";
+import Toast from 'react-native-root-toast'
+import {CONFIG_SET} from "../../reducers/dataReducer"
+import * as Nav from "../Nav"
+import {Colors} from "../colors"
+import GTouchable from "../GTouchable"
+import {SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "../fonts"
+import FeedSeparator from "../activity/components/FeedSeparator"
+import {getDeviceInfo} from "../../managers/DeviceManager"
 import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
 
 type Props = {
@@ -136,7 +132,7 @@ export default class Profile extends Component<Props, State> {
                     }
 
                     {
-                        this.props.config.devMenu &&
+                        (this.props.config.devMenu || __DEV__ )&&
                         renderSimpleButton(i18n.t("dev.label"),
                             () => this.props.navigator.showModal({
                                     screen: 'goodsh.DebugScreen', // unique ID registered with Navigation.registerScreen
@@ -158,7 +154,7 @@ export default class Profile extends Component<Props, State> {
         );
     }
 
-
+    clicksMs: ms
 
     renderVersion() {
         let handler = () => {
@@ -217,7 +213,7 @@ export default class Profile extends Component<Props, State> {
 // clicksMs;
 
 
-    renderUser(user) {
+    renderUser(user: User) {
         return <View style={{
             flexDirection: 'column',
             alignItems: 'center',

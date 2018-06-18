@@ -148,6 +148,18 @@ export default {
         "slider_intro_4": "Discover books, movies, music, restaurants, gift ideas, things to do, to visit...and buy in a blink of an eye.",
         "credentials": "Handcrafted in 2018",
     },
+    "popular_screen":{
+        "title": "Bienvenue",
+        "main_explanation": "Choisissez vos premiers goodsh dans la liste suivante:",
+        "empty": "No popular items found",
+        item_selected: {
+            zero: "Sélectionnez un goodsh",
+            one: "Ajouter 1 élément",
+            other: "Ajouter %{count} éléments"
+        },
+        "button_skip": "Passer",
+        "button_next": "Ajouter",
+    },
     "profile_screen":{
         "title":"Feedback",
         "subtitle":"##Is this what you've been dreaming of? How good do you feel? What's badly missing? We can't wait to know…"
@@ -398,7 +410,7 @@ export default {
         }
     },
     dev: {
-        label: "Dev mode",
+        label: "Development menu",
         title: "DevMenu"
     },
     congrats: {

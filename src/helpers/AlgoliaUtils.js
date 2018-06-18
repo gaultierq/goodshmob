@@ -2,10 +2,11 @@
 
 import React from 'react';
 import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import type {SearchCategoryType, SearchTrigger} from "../ui/screens/search";
+import type {SearchTrigger} from "./SearchHelper";
 import type {RNNNavigator, SearchToken} from "../types";
 import algoliasearch from 'algoliasearch/reactnative';
 import * as appActions from "../auth/actions";
+import type {SearchCategoryType} from "./SearchHelper"
 
 type AlgoliaIndexName = string;
 type AlgoliaIndex = *;

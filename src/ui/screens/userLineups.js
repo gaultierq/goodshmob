@@ -78,8 +78,6 @@ export default class UserLineups extends Screen<Props, State> {
 
     render() {
 
-        // if (onBoardingStep === 'no_spam') return <NoSpamDialog/>
-
         const navigator = this.props.navigator;
 
         return (
@@ -101,7 +99,7 @@ export default class UserLineups extends Screen<Props, State> {
                             if (this.props.listRef) this.props.listRef(ref)
                         }
                         }
-                        ListHeaderComponent={this.renderFilter()}
+                        ListHeaderComponent={<View>{[this.renderFilter(), this.props.ListHeaderComponent]}</View>}
                     />
                     {/*{_.isEmpty(this.state.filter) && this.state.isFilterFocused && this.renderSearchOverlay()}*/}
                 </View>

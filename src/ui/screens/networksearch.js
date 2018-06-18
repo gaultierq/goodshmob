@@ -84,7 +84,7 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                 type: "savings",
                 index,
                 query,
-                tabName: "network_search_tabs.savings",
+                tabName: i18n.t("network_search_tabs.savings"),
                 placeholder: "search_bar.network_placeholder",
                 parseResponse: createResultFromHit,
                 renderResults: ({query, results}) => {
@@ -105,7 +105,7 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                     filters: `NOT objectID:${currentUserId()}`,
 
                 },
-                tabName: "network_search_tabs.users",
+                tabName: i18n.t("network_search_tabs.users"),
                 placeholder: "search_bar.network_placeholder",
                 parseResponse: createResultFromHit2,
                 renderResults: ({query, results}) => {

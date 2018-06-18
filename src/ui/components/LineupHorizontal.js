@@ -1,7 +1,7 @@
 // @flow
 
-import type {Node} from 'react';
-import React, {Component} from 'react';
+import type {Node} from 'react'
+import React, {Component} from 'react'
 import {
     Alert,
     BackHandler,
@@ -15,30 +15,29 @@ import {
     TextInput,
     TouchableOpacity,
     View
-} from 'react-native';
+} from 'react-native'
 
-import {connect} from "react-redux";
-import type {Id, Lineup, RNNNavigator, Saving} from "../../types";
+import {connect} from "react-redux"
+import type {Id, Lineup, RNNNavigator, Saving} from "../../types"
+import {ViewStyle} from "../../types"
 import {logged} from "../../managers/CurrentUser"
-import {Navigation} from 'react-native-navigation';
-import {displayActivityActions, seeActivityDetails, seeList} from "../Nav";
-import {Colors} from "../colors";
-import Feed from "../components/feed";
-import LineupCellSaving from "../components/LineupCellSaving";
+import {Navigation} from 'react-native-navigation'
+import {displayActivityActions, seeActivityDetails, seeList} from "../Nav"
+import {Colors} from "../colors"
+import Feed from "../components/feed"
+import LineupCellSaving from "../components/LineupCellSaving"
 
-import GTouchable from "../GTouchable";
-import {UpdateTracker} from "../UpdateTracker";
-import StoreManager from "../../managers/StoreManager"
-import {EmptyCell} from "./LineupCellSaving";
-import {LINEUP_PADDING} from "../UIStyles";
-import {renderLineupMenu} from "../UIComponents";
-import LineupTitle2 from "./LineupTitle2";
-import {ViewStyle} from "../../types";
-import {buildData, sanitizeActivityType} from "../../helpers/DataUtils"
+import GTouchable from "../GTouchable"
+import {EmptyCell} from "./LineupCellSaving"
+import {LINEUP_PADDING} from "../UIStyles"
+import {renderLineupMenu} from "../UIComponents"
+import LineupTitle2 from "./LineupTitle2"
+import {buildData} from "../../helpers/DataUtils"
 import {createSelector} from "reselect"
-import {CREATE_LINEUP, FETCH_ITEM, SAVE_ITEM} from "../lineup/actionTypes"
+import {CREATE_LINEUP, SAVE_ITEM} from "../lineup/actionTypes"
 import * as Api from "../../managers/Api"
-import {FETCH_LINEUP, fetchItemCall, fetchLineup} from "../lineup/actions"
+import {FETCH_LINEUP, fetchLineup} from "../lineup/actions"
+import {UNSAVE} from "../activity/actionTypes"
 
 // $FlowFixMe
 type Props = {
@@ -68,14 +67,15 @@ const getLineupSelector = createSelector(
         (state, props) => _.get(state, `data.lists.${lineupId(props)}`),
         (state, props) => _.head(state.pending[CREATE_LINEUP], pending => pending.id === lineupId(props)),
         (state, props) => _.filter(state.pending[SAVE_ITEM], pending => pending.payload.lineupId === lineupId(props)),
+        (state, props) => _.filter(state.pending[UNSAVE], pending => pending.payload.lineupId === lineupId(props)),
         state => state.data
     ],
-    (syncList, rawPendingList, rawPendingSavings, data) => {
-        let lineup = (syncList && buildData(data, syncList.type, syncList.id) || rawPendingList)
+    (syncList, rawPendingList, rawPendingCreatedSavings, rawPendingDeletedSavings, data) => {
+        let lineup = (syncList && buildData(data, syncList.type, syncList.id) || {...rawPendingList, savings: []})
         let savings
         if (lineup) {
-            if (!_.isEmpty(rawPendingSavings)) {
-                savings = rawPendingSavings.map(pending => {
+            if (!_.isEmpty(rawPendingCreatedSavings)) {
+                savings = rawPendingCreatedSavings.map(pending => {
                         const result = {
                             id: pending.id,
                             lineupId: pending.payload.lineupId,
@@ -97,10 +97,15 @@ const getLineupSelector = createSelector(
                     }
                 )
             }
+
             if (lineup.savings) {
                 if (savings) savings = savings.concat(lineup.savings)
-                else savings = lineup.savings
+                else savings = [].concat(lineup.savings) //?
             }
+            if (!_.isEmpty(rawPendingDeletedSavings)) {
+                _.remove(savings, saving => rawPendingDeletedSavings.some(pending => pending.payload.savingId === saving.id))
+            }
+
         }
         return {lineup, savings}
     }
@@ -113,7 +118,7 @@ const getLineupSelector = createSelector(
 @logged
 export default class LineupHorizontal extends Component<Props, State> {
 
-    updateTracker: UpdateTracker;
+    // updateTracker: UpdateTracker;
 
     static defaultProps = {
         skipLineupTitle: false,
@@ -124,9 +129,9 @@ export default class LineupHorizontal extends Component<Props, State> {
 
     constructor(props: Props) {
         super(props);
-        this.updateTracker = new UpdateTracker(
-            nextProps => this.makeRefObject(nextProps),
-        );
+        // this.updateTracker = new UpdateTracker(
+        //     nextProps => this.makeRefObject(nextProps),
+        // );
     }
 
     componentDidMount() {
@@ -143,7 +148,7 @@ export default class LineupHorizontal extends Component<Props, State> {
     }
 
     render() {
-        this.updateTracker.onRender(this.props);
+        // this.updateTracker.onRender(this.props);
 
         const {lineup, savings, renderTitle, renderMenuButton, skipLineupTitle, lineupId, style, ...attributes} = this.props;
         //let {lineup, savings} = this.props.dataResolver(lineupId);
@@ -222,42 +227,42 @@ export default class LineupHorizontal extends Component<Props, State> {
         </View>;
     }
 
-    makeRefObject(nextProps:Props) {
-        // return null;
-        const lineupId = _.get(nextProps, 'lineupId');
-        if (!lineupId) return null;
-
-        let getRefKeys = () => {
-            let base = `data.lists.${lineupId}`;
-            return [base, `${base}.meta`];
-        };
-
-        let result = getRefKeys().map(k=>_.get(nextProps, k));
-
-        //TODO: deal with pendings
-        let allPendings = _.values(_.get(nextProps, 'pending', {}));
-        // //[[create_ask1, create_ask2, ...], [create_comment1, create_comment2, ...], ...]
-        //
-        let scopedPendings = [];
-        _.reduce(allPendings, (res, pendingList) => {
-
-            let filteredPendingList = _.filter(pendingList, pending => {
-                const scope = _.get(pending, "options.scope");
-                if (!scope) return false;
-                return scope.lineupId === lineupId;
-            });
-
-            res.push(...filteredPendingList);
-            return res;
-        }, scopedPendings);
-        result.push(...scopedPendings);
-
-        return result;
-    }
-
-    shouldComponentUpdate(nextProps: Props, nextState: State) {
-        return this.updateTracker.shouldComponentUpdate(nextProps);
-    }
+    // makeRefObject(nextProps:Props) {
+    //     // return null;
+    //     const lineupId = _.get(nextProps, 'lineupId');
+    //     if (!lineupId) return null;
+    //
+    //     let getRefKeys = () => {
+    //         let base = `data.lists.${lineupId}`;
+    //         return [base, `${base}.meta`];
+    //     };
+    //
+    //     let result = getRefKeys().map(k=>_.get(nextProps, k));
+    //
+    //     //TODO: deal with pendings
+    //     let allPendings = _.values(_.get(nextProps, 'pending', {}));
+    //     // //[[create_ask1, create_ask2, ...], [create_comment1, create_comment2, ...], ...]
+    //     //
+    //     let scopedPendings = [];
+    //     _.reduce(allPendings, (res, pendingList) => {
+    //
+    //         let filteredPendingList = _.filter(pendingList, pending => {
+    //             const scope = _.get(pending, "options.scope");
+    //             if (!scope) return false;
+    //             return scope.lineupId === lineupId;
+    //         });
+    //
+    //         res.push(...filteredPendingList);
+    //         return res;
+    //     }, scopedPendings);
+    //     result.push(...scopedPendings);
+    //
+    //     return result;
+    // }
+    //
+    // shouldComponentUpdate(nextProps: Props, nextState: State) {
+    //     return this.updateTracker.shouldComponentUpdate(nextProps);
+    // }
 
 }
 
