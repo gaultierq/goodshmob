@@ -1,6 +1,6 @@
 // @flow
 /* global ErrorUtils */
-import {init as initGlobal} from "./global";
+require("./global")
 import {applyMiddleware, combineReducers, compose, createStore} from "redux";
 import {Navigation} from 'react-native-navigation';
 import * as reducers from "./reducers/allReducers";
@@ -36,6 +36,7 @@ import StoreManager from "./managers/StoreManager";
 import BugsnagManager from "./managers/BugsnagManager";
 import type {User} from "./types";
 import RNAccountKit, { Color, StatusBarStyle,} from 'react-native-facebook-account-kit'
+
 
 type AppMode = 'idle' | 'init_cache' | 'logged' | 'unlogged' | 'upgrading_cache' | 'unknown'
 type AppConfig = {
@@ -81,7 +82,7 @@ export default class App {
             // });
         }
 
-        initGlobal(false);
+        //initGlobal(false);
         console.log(`spawning app with env`, Config);
         //this.hydrated = false;
 

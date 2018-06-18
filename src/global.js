@@ -7,11 +7,6 @@ import {Dimensions, Platform} from 'react-native';
 import {createLogger, logFilter, logFormat} from "./helpers/LogUtil";
 
 
-declare var superConsole: any;
-// declare var ENABLE_PERF_OPTIM: boolean;
-declare var ensureNotNull: () => void;
-
-
 const ALL_KEYS = [
     'ENV',
     'SERVER_URL',
@@ -37,7 +32,7 @@ const ALL_KEYS = [
     'API_PAGINATION_PER_PAGE',
 ];
 
-export function init() {
+export function initGlobal() {
     global._ = __;
     global.i18n = _i18n;
     global.__ENABLE_BACK_HANDLER__ = false;
@@ -112,4 +107,9 @@ let confToGlobal = function (config, throwIfAlreadyDefined) {
 };
 
 
-init()
+export default function() {
+    console.debug('global imported')
+}
+
+
+initGlobal()

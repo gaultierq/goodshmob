@@ -11,9 +11,10 @@ import ApiAction from "../../helpers/ApiAction";
 import {connect} from "react-redux";
 import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions";
 import {buildData} from "../../helpers/DataUtils";
-import {Avatar, FullScreenLoader, Http404} from "../UIComponents";
+import {Avatar, FullScreenLoader} from "../UIComponents";
 import {Colors} from "../colors"
 import _Messenger from "../../managers/Messenger"
+import Http404 from "./errors/404"
 
 type Props = LineupProps & {
     userId: Id

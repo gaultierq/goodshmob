@@ -3,7 +3,7 @@ import React from 'react';
 import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
 import {connect} from "react-redux";
 import {currentUser, isCurrentUser, logged} from "../../managers/CurrentUser"
-import {FullScreenLoader, Http404, MainBackground} from "../UIComponents";
+import {FullScreenLoader, MainBackground} from "../UIComponents";
 import Immutable from 'seamless-immutable';
 import * as Api from "../../managers/Api";
 import {Call} from "../../managers/Api";
@@ -20,6 +20,7 @@ import {component as CommentInput} from "../components/CommentInput"
 import ActivityStatus from "../activity/components/ActivityStatus";
 import CommentCell from "../components/CommentCell";
 import MultiMap from "multimap";
+import Http404 from "./errors/404"
 
 
 const LOAD_COMMENTS = ApiAction.create("load_comments", "retrieve the comments of an item");

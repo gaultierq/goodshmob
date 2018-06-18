@@ -20,13 +20,15 @@ export function logoutOffline(dispatch) {
 
 //if user lost auth, then offline logout
 export function logout(dispatch) {
+    logoutOffline(dispatch);
+
     return dispatch(
         new Api.Call()
             .withMethod('POST')
             .withRoute(`logout`)
             .createActionDispatchee(actionTypes.USER_LOGOUT)
     ).then(()=> {
-        logoutOffline(dispatch);
+
     }, err => {console.error(err)});
 }
 
