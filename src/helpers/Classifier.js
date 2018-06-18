@@ -144,7 +144,19 @@ let classify = (input: ClassifierInput<any, any>) => {
     return result
 }
 
-//reference, among
+export function findBestSearchCategory(lineup: Lineup, categories: string[]): ?Lineup {
+    let input: ClassifierInput<Item, Lineup> = {
+        reference: lineup,
+        referenceToTokens: LINEUP_TOKENIZER,
+        referenceToString: item => item.name,
+        among: categories,
+        amongToTokens: s => [new Token(s, 1)],
+        amongToString: s => s,
+    }
+
+    return classify(input)
+}
+
 export function findBestLineup(item: Item, lineups: Lineup[]): ?Lineup {
 
     let input: ClassifierInput<Item, Lineup> = {

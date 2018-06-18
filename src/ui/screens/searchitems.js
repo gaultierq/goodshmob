@@ -23,7 +23,7 @@ import normalize from 'json-api-normalizer';
 import GTouchable from "../GTouchable";
 import Screen from "../components/Screen";
 import EmptySearch from "../components/EmptySearch";
-import type {Color, Item, RNNNavigator} from "../../types";
+import type {Color, Item, Lineup, RNNNavigator} from "../../types"
 import {Colors} from "../colors";
 import Geolocation from "../../managers/GeoLocation"
 import type {SearchPlacesProps} from "./searchplacesoption";
@@ -31,17 +31,19 @@ import {SearchPlacesOption} from "./searchplacesoption";
 import OpenAppSettings from 'react-native-app-settings'
 import SearchPage from "./SearchPage";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import {findBestSearchCategory} from "../../helpers/Classifier"
 
 
 
 type SearchItemCategoryType = "consumer_goods" | "places" | "musics" | "movies";
 type SearchToken = string;
 
-const SEARCH_CATEGORIES : Array<SearchItemCategoryType> = [ "consumer_goods", "places", "musics", "movies"];
+const SEARCH_CATEGORIES : SearchItemCategoryType[] = [ "consumer_goods", "places", "musics", "movies"];
 
 
 type Props = {
-    onItemSelected?: (item: Item, navigator: RNNNavigator) => void
+    onItemSelected?: (item: Item, navigator: RNNNavigator) => void,
+    defaultLineup?: Lineup
 };
 
 type State = {
@@ -114,19 +116,29 @@ class SearchItem extends Screen<Props, State> {
                 return !_.isEmpty(token);
             }
         }
-
-
-
-
         return <SearchScreen
             searchEngine={searchEngine}
             categories={categories}
             placeholder={i18n.t('search.in_items')}
+            index={this.findBestIndex()}
             {...this.props}
             style={{backgroundColor: Colors.white}}
         />;
     }
 
+
+    findBestIndex() {
+        let index
+        if (this.props.defaultLineup) {
+            let ffs: string[] = [].concat(SEARCH_CATEGORIES)
+            let best = findBestSearchCategory(this.props.defaultLineup, ffs)
+            if (best) {
+                index = ffs.indexOf(best)
+                if (index < 0) index = 0
+            }
+        }
+        return index
+    }
 
     displayBlank(query: SearchQuery, results: SearchResult) {
         const {
