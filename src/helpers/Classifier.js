@@ -3,7 +3,7 @@
 
 import type {Lineup, Item} from "../types"
 import Fuse from "fuse.js"
-import type {SearchCategory} from "../ui/screens/search"
+import type {SearchCategory} from "./SearchHelper"
 
 class Token {
 
@@ -17,17 +17,19 @@ class Token {
     }
 }
 
-let getScore = (tokens: Token[]) => {
+let getScore = (tokens: Token[]): Score => {
     let score = new Map()
 
-    ALL_CATEGORIES.forEach(category => {
+    CLASSIFIER_CATEGORIES.forEach(category => {
         let totalScore = tokens.reduce((score, tok) => score + category.score(tok), 0)
         score.set(category, totalScore)
     })
     return score
 }
 
-let getScores = <T> (objects: T[], tokenizer: Tokenizer<T>) => {
+type Score = Map<Category, number>
+
+let getScores = <T> (objects: T[], tokenizer: Tokenizer<T>): Map<T, Score> => {
     let scores = new Map()
     objects.forEach(obj => {
         scores.set(obj, getScore(tokenizer(obj)))
@@ -35,16 +37,16 @@ let getScores = <T> (objects: T[], tokenizer: Tokenizer<T>) => {
     return scores
 }
 
-let getBestCategory = itemScore => {
-    let bestCateg = null, currentBest = 0
-    itemScore.forEach((value, key) => {
-        if (value > currentBest) {
-            bestCateg = key
-            currentBest = value
-        }
-    })
-    return bestCateg
-}
+// let getBestCategory = itemScore => {
+//     let bestCateg = null, currentBest = 0
+//     itemScore.forEach((value, key) => {
+//         if (value > currentBest) {
+//             bestCateg = key
+//             currentBest = value
+//         }
+//     })
+//     return bestCateg
+// }
 
 /*
 lineupScores: {
@@ -113,10 +115,7 @@ type ClassifierInput<R, A> = {
 
 let classify = (input: ClassifierInput<any, any>) => {
 
-    let refScore = getScore(input.referenceToTokens(input.reference))
-
-    let bestItemCategory = getBestCategory(refScore)
-
+    let refScore: Score = getScore(input.referenceToTokens(input.reference))
 
     //<log reference
     if (input.referenceToString) {
@@ -136,19 +135,35 @@ let classify = (input: ClassifierInput<any, any>) => {
     //log/>
 
 
-    let iterator, result = null
-    // $FlowFixMe
-    for (let next of (iterator = amongScores[Symbol.iterator]())) {
-        let score = next[1]
-        let among = next[0]
-        let categ = getBestCategory(score)
-        logger.debug('best category for (among)', input.amongToString(among), "-> (CCateg)", _.get(categ, 'name'))
-        if (categ === bestItemCategory) {
-            result = input.among.find(l => l === among)
-            break
-        }
-    }
+    let totalScores = []
+    amongScores.forEach((amongScore, among) => {
+        let mult = multiply(refScore, amongScore)
+        totalScores.push({
+            among,
+            totalScore: sum(mult)
+        })
+    })
 
+
+    const bestAmong = _.get(_.maxBy(totalScores.filter(o => o.totalScore > 0), o => o.totalScore), 'among')
+    logger.debug("best category:", "*" + (bestAmong && input.amongToString(bestAmong)) + "*", "total scores", totalScores)
+    return bestAmong
+}
+
+function multiply(left: Score, right: Score): Score {
+    let result = new Map
+    left.forEach((lv, lk) => {
+        let rv = right.get(lk) || 0
+        result.set(lk, rv * lv)
+    })
+    return result
+}
+
+function sum(score) {
+    let result = 0
+    score.forEach(value => {
+        result += value
+    })
     return result
 }
 
@@ -179,7 +194,7 @@ export function findBestLineup(item: Item, lineups: Lineup[]): ?Lineup {
     return classify(input)
 }
 
-let ALL_CATEGORIES : Category[] = []
+let CLASSIFIER_CATEGORIES : Category[] = []
 
 class Category {
 
@@ -207,7 +222,7 @@ class Category {
 
     static create(name: string, tokens: string[]) {
         const category = new Category(name, tokens)
-        ALL_CATEGORIES.push(category)
+        CLASSIFIER_CATEGORIES.push(category)
         return category
     }
 
