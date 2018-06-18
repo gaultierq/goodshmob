@@ -113,7 +113,11 @@ class SearchItem extends Screen<Props, State> {
                 }
                 return !_.isEmpty(token);
             }
-        };
+        }
+
+
+
+
         return <SearchScreen
             searchEngine={searchEngine}
             categories={categories}

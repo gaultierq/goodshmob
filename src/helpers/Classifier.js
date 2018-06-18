@@ -6,19 +6,17 @@ import Fuse from "fuse.js"
 
 class Token {
 
-    id: string
     value: string
     weight: number
 
-
-    constructor(id: string, value: string, weight: number) {
-        this.id = id
-        this.value = value
+    constructor(value: string, weight: number) {
+        // if (!value) throw "invalid param"
+        this.value = value || ''
         this.weight = weight
     }
 }
 
-let getScore = tokens => {
+let getScore = (tokens: Token[]) => {
     let score = new Map()
 
     ALL_CATEGORIES.forEach(category => {
@@ -28,10 +26,10 @@ let getScore = tokens => {
     return score
 }
 
-let getScores = function (tokens) {
+let getScores = (objects: any[], tokenizer: Tokenizer) => {
     let scores = new Map()
-    tokens.forEach(tok => {
-        scores.set(tok.id, getScore([tok]))
+    objects.forEach(obj => {
+        scores.set(obj, getScore(tokenizer(obj)))
     })
     return scores
 }
@@ -64,70 +62,102 @@ lineupScores: {
 
 const logger = rootlogger.createLogger('classifier')
 
-let logScores = function (name, score) {
-    logger.debug("score for", name, ":")
+let logScores = (name, score) => {
+    logger.debug("score for '", name, "' :")
     if (score) {
-        let log = "      >>"
+        let log = "      "
         score.forEach((value, categ) => log += `${categ.name}: ${value}, `)
         logger.debug(log)
     }
+    else {
+        logger.debug('no score found')
+    }
 }
 
-let tokenizeItem = function (item) {
+const LINEUP_TOKENIZER: Tokenizer<Lineup> = (lineup: Lineup) => [new Token(lineup.name, 1)]
+
+const ITEM_TOKENIZER: Tokenizer<Item> = (item: Item) => {
     const result = [
-        new Token(item.id, item.title, 1),
-        new Token(item.id, item.subtitle, 1),
-        new Token(item.id, item.provider, 3),
+        new Token(item.title, 1),
+        new Token(item.subtitle, 1),
+        new Token(item.provider, 3),
     ]
     let desc
     if (desc = item.description) {
         if (desc.tags) {
-            result.push(new Token(item.id, desc.tags.join(" "), 1))
+            result.push(new Token(desc.tags.join(" "), 1))
         }
         if (desc.types) {
-            result.push(new Token(item.id, desc.types.join(" "), 1))
+            result.push(new Token(desc.types.join(" "), 1))
         }
     }
     return result
 }
 
-export function findBestLineup(item: Item, lineups: Lineup[]): ?Lineup {
-    if (!item) return null
+type Tokenizer<R> = R => Token[]
 
-    let lineupsScores = getScores(lineups.map(lineup => new Token(lineup.id, lineup.name, 1)))
-    let itemScore = getScore(tokenizeItem(item))
+type ClassifierInput<R, A> = {
+    reference: R,
+    referenceToTokens: Tokenizer<R>,
+    referenceToString?: R => string,
 
-    let bestItemCategory = getBestCategory(itemScore)
+    among: A[],
+    amongToTokens: Tokenizer<A>,
+    amongToString?: A => string,
+}
 
-    lineupsScores.forEach((score, lineupId) => {
-        let categ = getBestCategory(score)
-        if (categ === bestItemCategory) {
-            return lineups.find(l=>l.id === lineupId)
-        }
-    })
+let classify = (input: ClassifierInput<any, any>) => {
+    let amongScores = getScores(input.among, input.amongToTokens)
 
-    logger.debug("lineups", _.map(lineups, l => l.title), "lineupsScores", lineupsScores)
-    lineups.forEach(lineup => {
-        logScores(lineup.name, lineupsScores.get(lineup.id))
-    })
-    logScores(item.title + ":" + item.id.substr(0, 4), itemScore)
+    //<log amongs
+    const amongToString = input.amongToString
+    if (amongToString) {
+        input.among.forEach(among => {
+            logScores(amongToString(among), amongScores.get(among))
+        })
+    }
+    //log/>
 
+    let refScore = getScore(input.referenceToTokens(input.reference))
+
+    let bestItemCategory = getBestCategory(refScore)
+
+
+    //<log reference
+    if (input.referenceToString) {
+        logScores(input.referenceToString(input.reference), refScore)
+    }
+    //log/>
+
+    let iterator, result = null
     // $FlowFixMe
-    let iterator1 = lineupsScores[Symbol.iterator]()
-
-    for (let item of iterator1) {
-        let score = item[1]
-        let lineupId = item[0]
+    for (let next of (iterator = amongScores[Symbol.iterator]())) {
+        let score = next[1]
+        let among = next[0]
         let categ = getBestCategory(score)
         if (categ === bestItemCategory) {
-            return lineups.find(l=>l.id === lineupId)
+            result = input.among.find(l => l === among)
+            break
         }
     }
 
-    return null
+    return result
 }
 
+//reference, among
+export function findBestLineup(item: Item, lineups: Lineup[]): ?Lineup {
 
+    let input: ClassifierInput<Item, Lineup> = {
+        reference: item,
+        referenceToTokens: ITEM_TOKENIZER,
+        referenceToString: item => item.title,
+        among: lineups,
+        amongToTokens: LINEUP_TOKENIZER,
+        amongToString: item => item.name,
+    }
+
+    return classify(input)
+}
 
 let ALL_CATEGORIES : Category[] = []
 
