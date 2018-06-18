@@ -149,16 +149,16 @@ export default {
         "credentials": "Handcrafted in 2018",
     },
     "popular_screen":{
-        "title": "@Bienvenue",
-        "main_explanation": "@Choisissez vos premiers goodsh dans la liste suivante:",
-        "empty": "@No popular items found",
+        "title": "Bienvenue",
+        "main_explanation": "Choisissez vos premiers goodsh dans la liste suivante:",
+        "empty": "No popular items found",
         item_selected: {
-            zero: "@Sélectionnez un goodsh",
-            one: "@Ajouter 1 élément",
-            other: "@Ajouter %{count} éléments"
+            zero: "Sélectionnez un goodsh",
+            one: "Ajouter 1 élément",
+            other: "Ajouter %{count} éléments"
         },
-        "button_skip": "@Passer",
-        "button_next": "@Ajouter",
+        "button_skip": "Passer",
+        "button_next": "Ajouter",
     },
     "profile_screen":{
         "title":"Feedback",
