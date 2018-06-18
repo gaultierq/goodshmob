@@ -1,45 +1,49 @@
 // @flow
 
-import React from 'react';
+import React from 'react'
 import {
-    ActivityIndicator, Alert,
-    Animated, Linking,
+    ActivityIndicator,
+    Alert,
+    Animated,
     Easing,
     FlatList,
+    Linking,
     StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
     View,
-
-} from 'react-native';
-import * as Api from "../../managers/Api";
-import {Call} from "../../managers/Api";
-import ItemCell from "../components/ItemCell";
-import {buildData} from "../../helpers/DataUtils";
-import type {SearchCategoryType, SearchEngine, SearchQuery, SearchState, SearchTrigger} from "./search";
-import SearchScreen from "./search";
-import normalize from 'json-api-normalizer';
-import GTouchable from "../GTouchable";
-import Screen from "../components/Screen";
-import EmptySearch from "../components/EmptySearch";
-import type {Color, Item, Lineup, RNNNavigator} from "../../types"
-import {Colors} from "../colors";
+} from 'react-native'
+import * as Api from "../../managers/Api"
+import {Call} from "../../managers/Api"
+import ItemCell from "../components/ItemCell"
+import {buildData} from "../../helpers/DataUtils"
+import type {
+    SearchCategory,
+    SearchCategoryType,
+    SearchEngine,
+    SearchQuery,
+    SearchResult,
+    SearchTrigger
+} from "../../helpers/SearchHelper"
+import {SEARCH_CATEGORIES_TYPE} from "../../helpers/SearchHelper"
+import SearchScreen from "./search"
+import normalize from 'json-api-normalizer'
+import GTouchable from "../GTouchable"
+import Screen from "../components/Screen"
+import EmptySearch from "../components/EmptySearch"
+import type {Item, Lineup, RNNNavigator} from "../../types"
+import {Colors} from "../colors"
 import Geolocation from "../../managers/GeoLocation"
-import type {SearchPlacesProps} from "./searchplacesoption";
-import {SearchPlacesOption} from "./searchplacesoption";
+import type {SearchPlacesProps} from "./searchplacesoption"
+import {SearchPlacesOption} from "./searchplacesoption"
 import OpenAppSettings from 'react-native-app-settings'
-import SearchPage from "./SearchPage";
-import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import SearchPage from "./SearchPage"
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import {findBestSearchCategory} from "../../helpers/Classifier"
 
 
-
-type SearchItemCategoryType = "consumer_goods" | "places" | "musics" | "movies";
 type SearchToken = string;
-
-const SEARCH_CATEGORIES : SearchItemCategoryType[] = [ "consumer_goods", "places", "musics", "movies"];
-
 
 type Props = {
     onItemSelected?: (item: Item, navigator: RNNNavigator) => void,
@@ -56,14 +60,13 @@ class SearchItem extends Screen<Props, State> {
         topBarElevationShadowEnabled: false
     };
 
-
-
     render() {
 
-        let categories = SEARCH_CATEGORIES.map(categ=>{
+        let categories = SEARCH_CATEGORIES_TYPE.map(categ=>{
             return {
                 type: categ,
-                tabName: "search_item_screen.tabs." + categ,
+                tabName: i18n.t("search_item_screen.tabs." + categ),
+                description: i18n.t("search_item_screen.placeholder." + categ),
                 // placeholder: "search_item_screen.placeholder." + categ,
 
                 searchOptions: this.renderSearchOptions(categ),
@@ -120,20 +123,19 @@ class SearchItem extends Screen<Props, State> {
             searchEngine={searchEngine}
             categories={categories}
             placeholder={i18n.t('search.in_items')}
-            index={this.findBestIndex()}
+            index={this.findBestIndex(categories)}
             {...this.props}
             style={{backgroundColor: Colors.white}}
         />;
     }
 
 
-    findBestIndex() {
+    findBestIndex(categories: SearchCategory[]) {
         let index
         if (this.props.defaultLineup) {
-            let ffs: string[] = [].concat(SEARCH_CATEGORIES)
-            let best = findBestSearchCategory(this.props.defaultLineup, ffs)
+            let best = findBestSearchCategory(this.props.defaultLineup, categories)
             if (best) {
-                index = ffs.indexOf(best)
+                index = categories.indexOf(best)
                 if (index < 0) index = 0
             }
         }

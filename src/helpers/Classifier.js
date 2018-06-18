@@ -3,6 +3,7 @@
 
 import type {Lineup, Item} from "../types"
 import Fuse from "fuse.js"
+import type {SearchCategory} from "../ui/screens/search"
 
 class Token {
 
@@ -26,7 +27,7 @@ let getScore = (tokens: Token[]) => {
     return score
 }
 
-let getScores = (objects: any[], tokenizer: Tokenizer) => {
+let getScores = <T> (objects: T[], tokenizer: Tokenizer<T>) => {
     let scores = new Map()
     objects.forEach(obj => {
         scores.set(obj, getScore(tokenizer(obj)))
@@ -34,8 +35,8 @@ let getScores = (objects: any[], tokenizer: Tokenizer) => {
     return scores
 }
 
-let getBestCategory = function (itemScore) {
-    let bestCateg = null, currentBest = -1
+let getBestCategory = itemScore => {
+    let bestCateg = null, currentBest = 0
     itemScore.forEach((value, key) => {
         if (value > currentBest) {
             bestCateg = key
@@ -63,15 +64,9 @@ lineupScores: {
 const logger = rootlogger.createLogger('classifier')
 
 let logScores = (name, score) => {
-    logger.debug("score for '", name, "' :")
-    if (score) {
-        let log = "      "
-        score.forEach((value, categ) => log += `${categ.name}: ${value}, `)
-        logger.debug(log)
-    }
-    else {
-        logger.debug('no score found')
-    }
+    let log = "score for '"+ name + "' :"
+    score && score.forEach((value, categ) => log += `${categ.name}: ${value}, `)
+    logger.debug(log)
 }
 
 const LINEUP_TOKENIZER: Tokenizer<Lineup> = (lineup: Lineup) => [new Token(lineup.name, 1)]
@@ -94,6 +89,16 @@ const ITEM_TOKENIZER: Tokenizer<Item> = (item: Item) => {
     return result
 }
 
+const SEARCH_CATEGORY_TOKENIZER: Tokenizer<SearchCategory> = (category: SearchCategory) => {
+    const result = [
+        new Token(category.tabName, 3),
+    ]
+    if (category.description) {
+        result.push(new Token(category.description, 1))
+    }
+    return result
+}
+
 type Tokenizer<R> = R => Token[]
 
 type ClassifierInput<R, A> = {
@@ -107,6 +112,18 @@ type ClassifierInput<R, A> = {
 }
 
 let classify = (input: ClassifierInput<any, any>) => {
+
+    let refScore = getScore(input.referenceToTokens(input.reference))
+
+    let bestItemCategory = getBestCategory(refScore)
+
+
+    //<log reference
+    if (input.referenceToString) {
+        logScores("ref=" + input.referenceToString(input.reference), refScore)
+    }
+    //log/>
+
     let amongScores = getScores(input.among, input.amongToTokens)
 
     //<log amongs
@@ -118,16 +135,6 @@ let classify = (input: ClassifierInput<any, any>) => {
     }
     //log/>
 
-    let refScore = getScore(input.referenceToTokens(input.reference))
-
-    let bestItemCategory = getBestCategory(refScore)
-
-
-    //<log reference
-    if (input.referenceToString) {
-        logScores(input.referenceToString(input.reference), refScore)
-    }
-    //log/>
 
     let iterator, result = null
     // $FlowFixMe
@@ -135,6 +142,7 @@ let classify = (input: ClassifierInput<any, any>) => {
         let score = next[1]
         let among = next[0]
         let categ = getBestCategory(score)
+        logger.debug('best category for (among)', input.amongToString(among), "-> (CCateg)", _.get(categ, 'name'))
         if (categ === bestItemCategory) {
             result = input.among.find(l => l === among)
             break
@@ -144,14 +152,14 @@ let classify = (input: ClassifierInput<any, any>) => {
     return result
 }
 
-export function findBestSearchCategory(lineup: Lineup, categories: string[]): ?Lineup {
-    let input: ClassifierInput<Item, Lineup> = {
+export function findBestSearchCategory(lineup: Lineup, categories: SearchCategory[]): ?Lineup {
+    let input: ClassifierInput<Item, SearchCategory> = {
         reference: lineup,
         referenceToTokens: LINEUP_TOKENIZER,
         referenceToString: item => item.name,
         among: categories,
-        amongToTokens: s => [new Token(s, 1)],
-        amongToString: s => s,
+        amongToTokens: SEARCH_CATEGORY_TOKENIZER,
+        amongToString: s => s.type,
     }
 
     return classify(input)
@@ -208,14 +216,14 @@ class Category {
 
         const values = token.value.split(" ")
         values.forEach(word => {
-            score += this.fuse.search(word).length
+            score += this.fuse.search(word).length * token.weight
         })
         return score
     }
 }
 
 Category.create("music", ["album", "music", "musique", "artist", "spotify"])
-Category.create("restaurant", ["restaurant", "food", "café"])
+Category.create("restaurant", ["restaurant", "food", "café", "place", "terrasse"])
 Category.create("tv shows", ["tv-shows", "séries"])
 Category.create("movies", ["movie", "film"])
 Category.create("books", ["book", "livre"])
