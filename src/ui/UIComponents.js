@@ -7,7 +7,7 @@ import GTouchable from "./GTouchable";
 import {BACKGROUND_COLOR, LINEUP_PADDING, renderSimpleButton, STYLES} from "./UIStyles"
 import Spinner from 'react-native-spinkit';
 import type {Id, Lineup, RNNNavigator, User} from "../types"
-import {displayLineupActionMenu, seeList, startAddItem} from "./Nav";
+import {displayLineupActionMenu, seeList} from "./Nav";
 import LineupHorizontal from "./components/LineupHorizontal";
 import LineupTitle2 from "./components/LineupTitle2";
 import {ViewStyle} from "../types";

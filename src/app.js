@@ -1,47 +1,45 @@
 // @flow
 /* global ErrorUtils */
-require("./global")
-import {applyMiddleware, combineReducers, compose, createStore} from "redux";
-import {Navigation} from 'react-native-navigation';
-import * as reducers from "./reducers/allReducers";
-import {createWithReducers} from "./auth/reducer";
-import thunk from "redux-thunk";
+import {applyMiddleware, combineReducers, compose, createStore} from "redux"
+import {Navigation} from 'react-native-navigation'
+import * as reducers from "./reducers/allReducers"
+import {createWithReducers} from "./auth/reducer"
+import thunk from "redux-thunk"
 
-import * as Api from './managers/Api';
+import * as Api from './managers/Api'
 import {autoRehydrate, createTransform, persistStore} from 'redux-persist'
 import {Alert, AsyncStorage, Dimensions, Linking, StyleSheet, TouchableOpacity} from 'react-native'
 import immutableTransform from './immutableTransform'
 import * as CurrentUser from './managers/CurrentUser'
 import {currentUser, currentUserId, isLogged} from './managers/CurrentUser'
-import * as globalProps from 'react-native-global-props';
-import * as notification from './managers/NotificationManager';
-import NotificationManager from './managers/NotificationManager';
-import * as DeviceManager from "./managers/DeviceManager";
-import * as UI from "./ui/UIStyles";
-
-import {AlgoliaClient} from "./helpers/AlgoliaUtils";
-import {Statistics} from "./managers/Statistics";
-import {CLEAR_CACHE, INIT_CACHE, UPGRADE_CACHE} from "./auth/actionTypes";
+import * as globalProps from 'react-native-global-props'
+import NotificationManager from './managers/NotificationManager'
+import * as DeviceManager from "./managers/DeviceManager"
+import * as UI from "./ui/UIStyles"
+import {AlgoliaClient} from "./helpers/AlgoliaUtils"
+import {Statistics} from "./managers/Statistics"
+import {CLEAR_CACHE, INIT_CACHE, UPGRADE_CACHE} from "./auth/actionTypes"
 import Config from 'react-native-config'
-import {Provider} from "react-redux";
+import {Provider} from "react-redux"
 import {Messenger} from "./managers/Messenger"
-import {Colors} from "./ui/colors";
-import {SFP_TEXT_REGULAR} from "./ui/fonts";
-import NavManager from "./managers/NavManager";
-import Analytics from "./managers/Analytics";
-import * as appActions from "./auth/actions";
-import type {OnBoardingStep} from "./managers/OnBoardingManager";
-import OnBoardingManager from "./managers/OnBoardingManager";
-import StoreManager from "./managers/StoreManager";
-import BugsnagManager from "./managers/BugsnagManager";
-import type {User} from "./types";
-import RNAccountKit, { Color, StatusBarStyle,} from 'react-native-facebook-account-kit'
+import {Colors} from "./ui/colors"
+import {SFP_TEXT_REGULAR} from "./ui/fonts"
+import NavManager from "./managers/NavManager"
+import Analytics from "./managers/Analytics"
+import * as appActions from "./auth/actions"
+import OnBoardingManager from "./managers/OnBoardingManager"
+import StoreManager from "./managers/StoreManager"
+import BugsnagManager from "./managers/BugsnagManager"
+import RNAccountKit, {Color,} from 'react-native-facebook-account-kit'
+import RNProgressHUB from 'react-native-progresshub'
+import {actions as userActions, actionTypes as userActionTypes} from "./redux/UserActions"
 
 
 type AppMode = 'idle' | 'init_cache' | 'logged' | 'unlogged' | 'upgrading_cache' | 'unknown'
 type AppConfig = {
     mode: AppMode,
-    userValid?: boolean
+    hasUser?: boolean,
+    userHasVitalInfo?: boolean,
 }
 
 
@@ -62,6 +60,8 @@ export default class App {
 
     hydrated: boolean;
 
+    logger
+
 
     constructor() {
         this.spawn();
@@ -71,9 +71,7 @@ export default class App {
     }
 
     spawn() {
-
-
-
+        this.logger = rootlogger.createLogger("app")
         if (module && module.hot) {
             global.reloads = 0;
             // module.hot.accept(() => {
@@ -83,7 +81,7 @@ export default class App {
         }
 
         //initGlobal(false);
-        console.log(`spawning app with env`, Config);
+        this.logger.log(`spawning app with env`, Config);
         //this.hydrated = false;
 
         //see the network requests in the debugger
@@ -100,21 +98,21 @@ export default class App {
         //TODO: find a better way of delaying this Linking init
         setTimeout(()=> {
             Linking.addEventListener('url', ({url}) => {
-                if (url) console.log('Linking: url event: ', url);
+                if (url) this.logger.log('Linking: url event: ', url);
                 NavManager.goToDeeplink(url);
             })
 
             Linking.getInitialURL().then(url => {
-                if (url) console.log('Linking:Initial url is: ', url);
+                if (url) this.logger.log('Linking:Initial url is: ', url);
                 NavManager.goToDeeplink(url);
-            }).catch(err => console.error('Linking:An error occurred', err));
+            }).catch(err => this.logger.error('Linking:An error occurred', err));
         }, 500)
     };
 
     prepareUI() {
 
         const {height, width} = Dimensions.get('window');
-        console.info(`window dimensions=${width}x${height}`);
+        this.logger.info(`window dimensions=${width}x${height}`);
 
         globalProps.setCustomText({
             style: {
@@ -155,7 +153,7 @@ export default class App {
         persistStore(this.store,
             persistConfig,
             () => {
-                console.log("persist store complete");
+                this.logger.log("persist store complete");
                 this.hydrated = true;
                 //configureApp();
             }
@@ -163,7 +161,7 @@ export default class App {
 
         this.getCurrentCacheVersion().then(cacheVersion => {
             this.cacheVersion = cacheVersion || 0;
-            console.info(`cache version=${this.cacheVersion}`);
+            this.logger.info(`cache version=${this.cacheVersion}`);
         });
         // since react-redux only works on components, we need to subscribe this class manually
         // FIXME: we should listen only part of the store, not all dispatchs
@@ -177,7 +175,7 @@ export default class App {
             this.initialize();
         }
 
-        console.log('app store update :)');
+        this.logger.log('app store update :)');
 
         setTimeout(() => {
             this.refreshApp();
@@ -186,24 +184,24 @@ export default class App {
 
     initialize() {
         if (this.initializing) {
-            console.debug("app already initializing");
+            this.logger.debug("app already initializing");
             return;
         }
         if (this.initialized) {
-            console.debug("app already initialized");
+            this.logger.debug("app already initialized");
             return;
         }
         //waiting rehydration before starting app
         let rehydrated = this.store.getState().app.rehydrated;
         if (!rehydrated) {
-            console.debug("waiting for rehydration");
+            this.logger.debug("waiting for rehydration");
             return;
         }
         if (this.cacheVersion === undefined) {
-            console.debug("waiting for cache version");
+            this.logger.debug("waiting for cache version");
             return;
         }
-        console.debug("== app init ==");
+        this.logger.debug("== app init ==");
         this.initializing = true;
 
 
@@ -265,7 +263,7 @@ export default class App {
 
         this.prepareUI();
 
-        console.info("== app initialized ==");
+        this.logger.info("== app initialized ==");
 
         this.initialized = true;
         this.initializing = false;
@@ -273,22 +271,22 @@ export default class App {
     }
 
     onAppReady() {
-        OnBoardingManager.listenToStepChange({
-            triggerOnListen: true,
-            callback: (step?:OnBoardingStep) => {
-                if (step === 'notification') {
-                    if (isLogged()) {
-                        let callback = () => {
-                            OnBoardingManager.onDisplayed('notification')
-                        }
-                        NotificationManager.requestPermissionsForLoggedUser()
-                            .catch(callback)
-                            .then(callback)
-                    }
-
-                }
-            }
-        })
+        // OnBoardingManager.listenToStepChange({
+        //     triggerOnListen: true,
+        //     callback: (step?:OnBoardingStep) => {
+        //         if (step === 'notification') {
+        //             if (isLogged()) {
+        //                 let callback = () => {
+        //                     OnBoardingManager.onDisplayed('notification')
+        //                 }
+        //                 NotificationManager.requestPermissionsForLoggedUser()
+        //                     .catch(callback)
+        //                     .then(callback)
+        //             }
+        //
+        //         }
+        //     }
+        // })
     }
 
     registerScreens() {
@@ -302,12 +300,12 @@ export default class App {
     refreshApp() {
         // let mode: AppMode = 'unknown';
         let config = {}
-            //invalidate cache if needed
+        //invalidate cache if needed
         let cacheVersion = this.cacheVersion;
         if (cacheVersion === undefined) {
-            console.debug("waiting for cache version (resolveMode)");
+            this.logger.debug("waiting for cache version (resolveMode)");
         }
-        //console.debug(`current cache version=${cacheVersion}, config cache version=${Config.CACHE_VERSION}`);
+        //this.logger.debug(`current cache version=${cacheVersion}, config cache version=${Config.CACHE_VERSION}`);
 
         if (!cacheVersion) {
             config.mode = 'init_cache';
@@ -317,7 +315,10 @@ export default class App {
         }
         else {
             config.mode = isLogged() ? 'logged' : 'unlogged'
-            config.userValid = this.isValidUser(currentUser(false))
+            const user = currentUser()
+            if (config.hasUser = user && !user.dummy) {
+                config.userHasVitalInfo = !_.isEmpty(user.firstName)  && !_.isEmpty(user.lastName)
+            }
         }
 
         //TODO: use navigation to resolve the current screen
@@ -325,7 +326,9 @@ export default class App {
             let oldConfig = this.config;
             this.config = config;
 
-            this.onAppConfigChanged(oldConfig);
+            setTimeout(async () => {
+                await this.onAppConfigChanged(oldConfig)
+            })
         }
     }
 
@@ -338,11 +341,9 @@ export default class App {
         AsyncStorage.setItem('@goodsh:cacheVersion', ""+version);
     }
 
-//type AppMode = 'idle' | 'logged' | 'unlogged' | 'upgrading_cache'
+    async onAppConfigChanged(oldConfig: AppConfig) {
 
-    onAppConfigChanged(oldConfig: AppConfig) {
-
-        console.debug(`app mode changed: new mode=${this.config} (old mode=${oldConfig})`);
+        this.logger.debug(`app mode changed: new mode`, this.config, '(old mode', oldConfig,`)`);
 
         let testScreen;
         let testScreenName = (__IS_IOS__ ? __TEST_SCREEN_IOS__ : __TEST_SCREEN_ANDROID__)
@@ -351,7 +352,7 @@ export default class App {
         if (testScreenName) {
             testScreen = require("./testScreen")[testScreenName];
             if (!testScreen) {
-                console.warn(`test screen not found${testScreenName}`);
+                this.logger.warn(`test screen not found${testScreenName}`);
             }
         }
         let navigatorStyle = {...UI.NavStyles};
@@ -361,27 +362,26 @@ export default class App {
             case 'idle':
                 break;
             case 'logged':
+                let userId = currentUserId()
                 if (testScreen) {
                     Object.assign(testScreen.screen, {navigatorStyle});
                     Navigation.startSingleScreenApp(testScreen);
                 }
                 else {
-                    const user = currentUser(false)
+                    if (!this.config.hasUser) {
+                        //load user
+                        RNProgressHUB.showSpinIndeterminate()
 
-                    if (this.config.userValid) {
-                        //TODO: move
-                        NotificationManager.init()
+                        const action = userActions
+                            .getUser(currentUserId())
+                            .createActionDispatchee(userActionTypes.GET_USER)
 
-                        //this probably shouldn't be here
-                        NotificationManager.requestPermissionsForLoggedUser()
+                        this.store.dispatch(action).then(() => {
+                            RNProgressHUB.dismiss()
+                        })
 
-                        BugsnagManager.setUser(user);
-
-                        DeviceManager.checkAndSendDiff();
-
-                        this.launchMain(navigatorStyle);
                     }
-                    else {
+                    else if (!this.config.userHasVitalInfo) {
 
                         Navigation.startSingleScreenApp({
                             screen: {
@@ -392,10 +392,22 @@ export default class App {
 
                             },
                             passProps: {
-                                userId: user.id
+                                userId
                             }
                         });
 
+                    }
+                    else {
+                        //TODO: move
+                        await NotificationManager.init()
+                        //this probably shouldn't be here
+                        //NotificationManager.requestPermissionsForLoggedUser()
+
+                        BugsnagManager.setUser(currentUser());
+
+                        DeviceManager.checkAndSendDiff();
+
+                        this.launchMain(navigatorStyle);
                     }
                 }
                 break;
@@ -430,10 +442,6 @@ export default class App {
 
                 break;
         }
-    }
-
-    isValidUser(user: User) {
-        return user && !_.isEmpty(user.firstName)  && !_.isEmpty(user.lastName)
     }
 
     launchMain(navigatorStyle) {

@@ -137,7 +137,7 @@ export default class MyGoodsh extends Screen<Props, State> {
             <LineupH1
                 lineup={item} navigator={navigator}
                 withMenuButton={true}
-                onPressEmptyLineup={() => startAddItem(navigator, item.id)}
+                onPressEmptyLineup={() => startAddItem(navigator, item)}
                 renderEmpty={this.renderEmptyLineup(navigator, item)}
                 renderMenuButton={() => {
                     //TODO: dubious 15
@@ -152,7 +152,7 @@ export default class MyGoodsh extends Screen<Props, State> {
                     />
                 )}
                 ListHeaderComponent={(
-                    <GTouchable onPress={() => startAddItem(navigator, item.id)}>
+                    <GTouchable onPress={() => startAddItem(navigator, item)}>
                         {LineupHorizontal.renderPlus({style:{marginRight: 10}})}
                     </GTouchable>)
                 }
@@ -166,7 +166,7 @@ export default class MyGoodsh extends Screen<Props, State> {
     renderEmptyLineup(navigator: RNNNavigator, item: Lineup) {
         return (list: Lineup) => (
             <GTouchable
-                onPress={() => startAddItem(navigator, item.id)}
+                onPress={() => startAddItem(navigator, item)}
                 deactivated={item.pending}
             >
                 {

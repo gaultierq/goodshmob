@@ -147,6 +147,18 @@ export default {
         "slider_intro_4": "Je découvre livres, films, musiques, restos, idées cadeau, choses à faire...et j'achète en un clin d'oeil.",
         "credentials": "Fait main en 2018",
     },
+    "popular_screen":{
+        "title": "Bienvenue",
+        "main_explanation": "Choisissez vos premiers goodsh dans la liste suivante:",
+        "empty": "No popular items found",
+        item_selected: {
+            zero: "Sélectionnez un goodsh",
+            one: "Ajouter 1 élément",
+            other: "Ajouter %{count} éléments"
+        },
+        "button_skip": "Passer",
+        "button_next": "Ajouter",
+    },
     "profile_screen":{
         "title":"Feedback",
         "subtitle":"##Comment tu la trouves ? Tu la kiffes ? Qu'est-ce qui manque cruellement ? On a très envie de savoir...",
@@ -397,7 +409,7 @@ export default {
         }
     },
     dev: {
-        label: "Dev mode",
+        label: "Menu de développement",
         title: "DevMenu"
     },
     congrats: {

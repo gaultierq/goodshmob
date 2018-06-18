@@ -17,13 +17,14 @@ import type {Id, List, NavigableProps, Saving, SearchToken} from "../../types";
 import ItemCell from "../components/ItemCell";
 import {AlgoliaClient, createResultFromHit, makeAlgoliaSearchEngine} from "../../helpers/AlgoliaUtils";
 import Screen from "../components/Screen";
-import type {SearchCategory, SearchState} from "./search";
-import SearchScreen, {SearchQuery} from "./search";
+import type {SearchCategory} from "./search";
+import SearchScreen from "./search";
 import {SearchStyles} from "../UIStyles";
 import GTouchable from "../GTouchable";
 import Config from 'react-native-config'
 import SearchPage from "./SearchPage";
 import {renderLineupFromOtherPeople} from "../UIComponents";
+import type {SearchQuery, SearchState} from "../../helpers/SearchHelper"
 
 type Props = NavigableProps & {
     token?:SearchToken,

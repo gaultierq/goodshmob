@@ -1,47 +1,53 @@
 // @flow
 
-import React from 'react';
+import React from 'react'
 import {
-    ActivityIndicator, Alert,
-    Animated, Linking,
+    ActivityIndicator,
+    Alert,
+    Animated,
     Easing,
     FlatList,
+    Linking,
     StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
     View,
-
-} from 'react-native';
-import * as Api from "../../managers/Api";
-import {Call} from "../../managers/Api";
-import ItemCell from "../components/ItemCell";
-import {buildData} from "../../helpers/DataUtils";
-import type {SearchCategoryType, SearchEngine, SearchQuery, SearchState, SearchTrigger} from "./search";
-import SearchScreen from "./search";
-import normalize from 'json-api-normalizer';
-import GTouchable from "../GTouchable";
-import Screen from "../components/Screen";
-import EmptySearch from "../components/EmptySearch";
-import type {Color, Item, RNNNavigator} from "../../types";
-import {Colors} from "../colors";
+} from 'react-native'
+import * as Api from "../../managers/Api"
+import {Call} from "../../managers/Api"
+import ItemCell from "../components/ItemCell"
+import {buildData} from "../../helpers/DataUtils"
+import type {
+    SearchCategory,
+    SearchCategoryType,
+    SearchEngine,
+    SearchQuery,
+    SearchResult,
+    SearchTrigger
+} from "../../helpers/SearchHelper"
+import {SEARCH_CATEGORIES_TYPE} from "../../helpers/SearchHelper"
+import SearchScreen from "./search"
+import normalize from 'json-api-normalizer'
+import GTouchable from "../GTouchable"
+import Screen from "../components/Screen"
+import EmptySearch from "../components/EmptySearch"
+import type {Item, Lineup, RNNNavigator} from "../../types"
+import {Colors} from "../colors"
 import Geolocation from "../../managers/GeoLocation"
-import type {SearchPlacesProps} from "./searchplacesoption";
-import {SearchPlacesOption} from "./searchplacesoption";
+import type {SearchPlacesProps} from "./searchplacesoption"
+import {SearchPlacesOption} from "./searchplacesoption"
 import OpenAppSettings from 'react-native-app-settings'
-import SearchPage from "./SearchPage";
-import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import SearchPage from "./SearchPage"
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
+import {findBestSearchCategory} from "../../helpers/Classifier"
 
 
-
-type SearchItemCategoryType = "consumer_goods" | "places" | "musics" | "movies";
 type SearchToken = string;
 
-const SEARCH_CATEGORIES : Array<SearchItemCategoryType> = [ "consumer_goods", "places", "musics", "movies"];
-
-
 type Props = {
-    onItemSelected?: (item: Item, navigator: RNNNavigator) => void
+    onItemSelected?: (item: Item, navigator: RNNNavigator) => void,
+    defaultLineup?: Lineup
 };
 
 type State = {
@@ -54,14 +60,13 @@ class SearchItem extends Screen<Props, State> {
         topBarElevationShadowEnabled: false
     };
 
-
-
     render() {
 
-        let categories = SEARCH_CATEGORIES.map(categ=>{
+        let categories = SEARCH_CATEGORIES_TYPE.map(categ=>{
             return {
                 type: categ,
-                tabName: "search_item_screen.tabs." + categ,
+                tabName: i18n.t("search_item_screen.tabs." + categ),
+                description: i18n.t("search_item_screen.placeholder." + categ),
                 // placeholder: "search_item_screen.placeholder." + categ,
 
                 searchOptions: this.renderSearchOptions(categ),
@@ -113,16 +118,29 @@ class SearchItem extends Screen<Props, State> {
                 }
                 return !_.isEmpty(token);
             }
-        };
+        }
         return <SearchScreen
             searchEngine={searchEngine}
             categories={categories}
             placeholder={i18n.t('search.in_items')}
+            index={this.findBestIndex(categories)}
             {...this.props}
             style={{backgroundColor: Colors.white}}
         />;
     }
 
+
+    findBestIndex(categories: SearchCategory[]) {
+        let index
+        if (this.props.defaultLineup) {
+            let best = findBestSearchCategory(this.props.defaultLineup, categories)
+            if (best) {
+                index = categories.indexOf(best)
+                if (index < 0) index = 0
+            }
+        }
+        return index
+    }
 
     displayBlank(query: SearchQuery, results: SearchResult) {
         const {
@@ -140,8 +158,6 @@ class SearchItem extends Screen<Props, State> {
             default:
                 return _.isEmpty(token);
         }
-
-
     }
 
     renderSearchOptions(category: SearchCategoryType) {
@@ -175,19 +191,6 @@ class SearchItem extends Screen<Props, State> {
                 call.addQuery({'search[term]': token});
             }
 
-
-            // if (category === 'places') {
-            //     if (options) {
-            //         if (!_.isEmpty(options.city)) {
-            //             call.addQuery({'search[city]': options.city})
-            //         }
-            //         else {
-            //             let {latitude, longitude} = Geolocation.getPosition() || {};
-            //             call.addQuery(latitude && {'search[lat]': latitude})
-            //                 .addQuery(longitude && {'search[lng]': longitude})
-            //         }
-            //     }
-            // }
             this.fillOptions(category, call, options)
                 .then(call=> {
                     //maybe use redux here ?
@@ -256,26 +259,9 @@ class SearchItem extends Screen<Props, State> {
                         ],
                         { cancelable: true }
                     );
-
-
                     reject(err)
                 });
 
-                // if (options.aroundMe) {
-                //     Geolocation.getPosition().then(({latitude, longitude}) => {
-                //         call.addQuery(latitude && {'search[lat]': latitude})
-                //             .addQuery(longitude && {'search[lng]': longitude});
-                //         resolve(call);
-                //     }, err => reject(err));
-                // }
-                // else {
-                //     if (!_.isEmpty(options.lat)) {
-                //         // call.addQuery({'search[city]': options.city});
-                //         call.addQuery(latitude && {'search[lat]': options.lat})
-                //             .addQuery(longitude && {'search[lng]': options.lng});
-                //     }
-                //     resolve(call);
-                // }
             }
             else {
                 resolve(call);

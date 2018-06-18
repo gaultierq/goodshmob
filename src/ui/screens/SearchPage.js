@@ -16,7 +16,7 @@ import {
 import type {Item, List} from "../../types"
 import {Navigation} from 'react-native-navigation'
 import {FullScreenLoader} from "../UIComponents"
-import type {SearchState} from "./search"
+import type {SearchState} from "../../helpers/SearchHelper"
 
 
 type PageProps = {

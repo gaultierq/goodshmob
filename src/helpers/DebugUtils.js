@@ -23,3 +23,12 @@ export function hexToRgb(hex) {
         b: parseInt(result[3], 16)
     } : null;
 }
+
+export function hexToRgbaWithHalpha(hex:string, alpha: number) {
+    const rgb = hexToRgb(hex)
+    if (!rgb) return null
+    let {r, g, b} = rgb
+    return `rgba(${r},${g},${b},${alpha})`
+
+}
+

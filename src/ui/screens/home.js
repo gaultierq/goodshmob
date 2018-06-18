@@ -23,12 +23,12 @@ import {TAB_BAR_PROPS} from "../UIStyles";
 import {currentGoodshboxId, currentUser, currentUserId, logged} from "../../managers/CurrentUser"
 import {CheckBox} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation';
-import {displayHomeSearch, startAddItem} from "../Nav";
+import {CANCELABLE_MODAL, displayHomeSearch, startAddItem} from "../Nav"
 import Screen from "../components/Screen";
 import {Colors} from "../colors";
 import {PROFILE_CLICKED} from "../components/MyAvatar";
 import OnBoardingManager from "../../managers/OnBoardingManager";
-import {floatingButtonScrollListener, registerLayoutAnimation} from "../UIComponents";
+import {floatingButtonScrollListener, registerLayoutAnimation, scheduleOpacityAnimation} from "../UIComponents"
 import {Tip, TipConfig} from "../components/Tip";
 import {HomeOnBoardingHelper} from "./HomeOnBoardingHelper";
 import {TabBar, TabViewAnimated} from "react-native-tab-view";
@@ -37,7 +37,7 @@ import MyGoodsh from "./MyGoodsh";
 import MyInterests from "./MyInterests";
 import {fullName2} from "../../helpers/StringUtils";
 import {currentUserFilter} from "../../redux/selectors";
-
+import NotificationManager from '../../managers/NotificationManager'
 
 type Props = {
     userId: Id,
@@ -49,6 +49,7 @@ type State = {
     isActionButtonVisible: boolean,
     filterFocused?: boolean,
     currentTip?:TipConfig,
+    popularDisplayCount?: number,
     index: number,
 }
 
@@ -85,20 +86,20 @@ export default class HomeScreen extends Screen<Props, State> {
         ],
     }
 
-
+    logger = rootlogger.createLogger("home")
+    feed: any
+    onBoardingHelper = new HomeOnBoardingHelper()
     state = {
         focusedSaving: false,
         isActionButtonVisible: true,
         index: 0,
+        popularDisplayCount: 0,
         routes: [
             {key: `my_goodsh`, title: i18n.t("home.tabs.my_goodsh")},
             {key: `my_interests`, title: i18n.t("home.tabs.my_interests")},
         ],
         // currentTip: TEST_TIP
     }
-
-    onBoardingHelper = new HomeOnBoardingHelper()
-
 
     constructor(props: Props){
         super(props);
@@ -115,7 +116,7 @@ export default class HomeScreen extends Screen<Props, State> {
         this.props.navigator.setDrawerEnabled({side: 'left', enabled: false});
     }
 
-    feed: any
+
 
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
         //console.debug("home:onNavigatorEvent" , event);
@@ -157,19 +158,61 @@ export default class HomeScreen extends Screen<Props, State> {
 
     componentDidAppear() {
 
-        this.onBoardingHelper.listenTipChange(tip => {
-            if (tip !== this.state.currentTip) {
-                console.debug(`new tip`, tip)
-                registerLayoutAnimation("opacity")
-                this.setState({currentTip: tip})
+        // this.onBoardingHelper.listenTipChange(tip => {
+        //     if (tip !== this.state.currentTip) {
+        //         console.debug(`new tip`, tip)
+        //         registerLayoutAnimation("opacity")
+        //         this.setState({currentTip: tip})
+        //     }
+        // })
+        this.refreshOnBoarding()
+    }
+
+    refreshOnBoarding() {
+
+        //TODO: rm this settimeout
+        setTimeout(() => {
+
+            let info = OnBoardingManager.getInfoToDisplay(this.props.onBoarding, {group: "full_focus", persistBeforeDisplay: true});
+            if (!info) return
+
+            let {type} = info
+            this.logger.debug("found info to display:", type)
+            switch (type) {
+                case "focus_add":
+                    this.onBoardingHelper.handleFocusAdd()
+                    break
+                case "notification_permissions":
+                    NotificationManager.requestPermissionsForLoggedUser()
+                    break
+                case "popular":
+                    if (this.state.popularDisplayCount === 0) {
+                        this.setState({popularDisplayCount: 1}, () => {
+                            this.props.navigator.showModal({
+                                screen: 'goodsh.PopularItemsScreen',
+                                passProps: {
+                                    onFinished: () => {
+                                        OnBoardingManager.postOnDismissed("popular")
+                                        this.props.navigator.dismissModal()
+                                    }
+                                },
+                            })
+                        })
+                    }
+                    break
             }
         })
 
-        this.onBoardingHelper.handleFocusAdd()
+    }
+
+    componentDidUpdate() {
+        this.refreshOnBoarding()
     }
 
 
     render() {
+
+        this.logger.debug("rendering home", this.state)
 
         this.setNavigatorTitle(this.props.navigator, {title: fullName2(_.get(this.props, 'currentUser.attributes'))})
 
@@ -233,17 +276,29 @@ export default class HomeScreen extends Screen<Props, State> {
         ['title', 'text', 'button'].forEach(k=> {
             res[k] = i18n.t(`${keys}.${k}`)
         })
-
-        ;
         return <Tip
             {...res}
             materialIcon={currentTip.materialIcon}
             style={{margin: 10}}
             onClickClose={() => {
-                OnBoardingManager.onDisplayed(currentTip.type)
+                OnBoardingManager.postOnDismissed(currentTip.type)
             }}
 
         />;
+    }
+
+    static getDerivedStateFromProps(props: Props, state: State) {
+        let current = state.currentTip
+
+        let nextTip = OnBoardingManager.getInfoToDisplay(props.onBoarding, {group: 'tip', persistBeforeDisplay: true})
+        if (_.get(current, 'type') === _.get(nextTip, 'extraData.type')) {
+            return null
+        }
+        else {
+            scheduleOpacityAnimation()
+            return {...state, currentTip: _.get(nextTip, 'extraData')}
+        }
+
     }
 
     _targetRef = (primaryText, secondaryText) => ref => {

@@ -10,6 +10,7 @@ import android.app.Application;
 import android.content.Intent;
 
 import com.facebook.react.ReactApplication;
+import com.amsoft.RNProgressHUB.RNProgressHUBPackage;
 import io.underscope.react.fbak.RNAccountKitPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.krazylabs.OpenAppSettingsPackage;
@@ -60,6 +61,7 @@ public class MainApplication extends NavigationApplication implements ReactAppli
   protected List<ReactPackage> getPackages() {
     return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new RNProgressHUBPackage(),
             new RNAccountKitPackage(),
             new RNDeviceInfo(),
             new OpenAppSettingsPackage(),
