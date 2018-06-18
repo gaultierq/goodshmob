@@ -158,8 +158,6 @@ class SearchItem extends Screen<Props, State> {
             default:
                 return _.isEmpty(token);
         }
-
-
     }
 
     renderSearchOptions(category: SearchCategoryType) {
@@ -193,19 +191,6 @@ class SearchItem extends Screen<Props, State> {
                 call.addQuery({'search[term]': token});
             }
 
-
-            // if (category === 'places') {
-            //     if (options) {
-            //         if (!_.isEmpty(options.city)) {
-            //             call.addQuery({'search[city]': options.city})
-            //         }
-            //         else {
-            //             let {latitude, longitude} = Geolocation.getPosition() || {};
-            //             call.addQuery(latitude && {'search[lat]': latitude})
-            //                 .addQuery(longitude && {'search[lng]': longitude})
-            //         }
-            //     }
-            // }
             this.fillOptions(category, call, options)
                 .then(call=> {
                     //maybe use redux here ?
@@ -274,26 +259,9 @@ class SearchItem extends Screen<Props, State> {
                         ],
                         { cancelable: true }
                     );
-
-
                     reject(err)
                 });
 
-                // if (options.aroundMe) {
-                //     Geolocation.getPosition().then(({latitude, longitude}) => {
-                //         call.addQuery(latitude && {'search[lat]': latitude})
-                //             .addQuery(longitude && {'search[lng]': longitude});
-                //         resolve(call);
-                //     }, err => reject(err));
-                // }
-                // else {
-                //     if (!_.isEmpty(options.lat)) {
-                //         // call.addQuery({'search[city]': options.city});
-                //         call.addQuery(latitude && {'search[lat]': options.lat})
-                //             .addQuery(longitude && {'search[lng]': options.lng});
-                //     }
-                //     resolve(call);
-                // }
             }
             else {
                 resolve(call);
