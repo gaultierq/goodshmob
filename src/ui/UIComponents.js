@@ -248,8 +248,7 @@ export function renderLineupFromOtherPeople(navigator: RNNNavigator, lineup: Lin
         onPress={() => seeList(navigator, lineup)}>
 
         <LineupHorizontal
-            lineupId={lineup.id}
-            dataResolver={() => ({lineup: lineup, savings: lineup.savings})}
+            lineup={lineup}
             style={{paddingBottom: 10}}
             renderTitle={(lineup: Lineup) => <LineupTitle2 dataResolver={id => lineup} lineupId={lineup.id}/>}
         />

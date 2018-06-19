@@ -158,7 +158,7 @@ export const networkSearchScreen = {
         title: 'Test network search',
     },
     passProps: {
-        token: "Série"
+        token: "films"
     }
 };
 

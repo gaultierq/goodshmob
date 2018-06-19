@@ -61,7 +61,7 @@ export default class GSearchBar2 extends Component<Props, State> {
                             blurOnSubmit={true}
                             returnKeyType={'search'}
                             keyboardType={'default'}
-                            autoCapitalize={false}
+                            autoCapitalize={'none'}
                             {...this.props}
                             value={this.state.value}
                             onChangeText={this.onChangeText.bind(this)}

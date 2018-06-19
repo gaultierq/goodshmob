@@ -41,10 +41,12 @@ import {UNSAVE} from "../activity/actionTypes"
 
 // $FlowFixMe
 type Props = {
+    //merge these 2 into one
     lineupId: Id,
-    lineup: Lineup,
+    lineup?: Lineup, //incomplete data (coming from algolia ?)
+
     savings?: Saving[],
-    dataResolver: Id => {lineup: Lineup, savings: Array<Saving>},
+    // dataResolver: Id => {lineup: Lineup, savings: Array<Saving>},
     renderMenuButton?: () => Node,
     skipLineupTitle?: boolean,
     onPressEmptyLineup?: () => void,
@@ -64,14 +66,26 @@ let lineupId = props => props.lineupId || props.lineup.id
 
 const getLineupSelector = createSelector(
     [
+        (state, props) => props.lineup,
         (state, props) => _.get(state, `data.lists.${lineupId(props)}`),
         (state, props) => _.head(state.pending[CREATE_LINEUP], pending => pending.id === lineupId(props)),
         (state, props) => _.filter(state.pending[SAVE_ITEM], pending => pending.payload.lineupId === lineupId(props)),
         (state, props) => _.filter(state.pending[UNSAVE], pending => pending.payload.lineupId === lineupId(props)),
         state => state.data
     ],
-    (syncList, rawPendingList, rawPendingCreatedSavings, rawPendingDeletedSavings, data) => {
+    (propLineup, syncList, rawPendingList, rawPendingCreatedSavings, rawPendingDeletedSavings, data) => {
+
         let lineup = (syncList && buildData(data, syncList.type, syncList.id) || {...rawPendingList, savings: []})
+        if (syncList) {
+            lineup = buildData(data, syncList.type, syncList.id)
+        }
+        else if (rawPendingList) {
+            lineup = {...rawPendingList, savings: []}
+        }
+        else if (propLineup) {
+            lineup = propLineup
+        }
+
         let savings
         if (lineup) {
             if (!_.isEmpty(rawPendingCreatedSavings)) {
