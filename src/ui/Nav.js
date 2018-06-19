@@ -18,9 +18,10 @@ import React from "react"
 import LineupHorizontal from "./components/LineupHorizontal"
 import LineupCellSaving from "./components/LineupCellSaving"
 import {deleteLineup, followLineupPending, unfollowLineupPending} from "./lineup/actions"
-import {L_DELETE, L_FOLLOW, L_RENAME, L_SHARE, L_UNFOLLOW, LineupRights} from "./rights"
+import {LineupRights} from "./lineupRights"
 import {BACKGROUND_COLOR} from "./UIStyles"
 import LineupTitle2 from "./components/LineupTitle2"
+import {L_DELETE, L_FOLLOW, L_RENAME, L_SHARE, L_UNFOLLOW} from "./lineupRights"
 
 export const CLOSE_MODAL = 'close_modal';
 
