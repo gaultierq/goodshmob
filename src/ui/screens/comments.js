@@ -80,6 +80,10 @@ class CommentsScreen extends Screen<Props, State> {
             })
         );
 
+        comments = _.sortBy(comments, c => new Date(c.createdAt))
+        comments = _.reverse(comments)
+
+        console.debug("rendering comments list:", comments)
         const fullComments = comments.filter( c => c.built || c.pending);
 
         this.setNavigatorTitle(this.props.navigator, {
