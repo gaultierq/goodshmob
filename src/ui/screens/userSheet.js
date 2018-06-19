@@ -35,6 +35,7 @@ import {
 import {fullName} from "../../helpers/StringUtils"
 import Http404 from "./errors/404"
 import {SFP_TEXT_MEDIUM} from "../fonts"
+import {canExecUserAction, getUserActions, U_CONNECT, U_DISCONNECT} from "../userRights"
 
 type Props = {
     user?: User,
@@ -46,6 +47,8 @@ type State = {
     connect?: RequestState,
     disconnect?: RequestState,
     reqFetchUser?: RequestState,
+    reqConnect?: RequestState,
+    reqDisconnect?: RequestState,
 };
 
 
@@ -124,11 +127,6 @@ export default class UserSheet extends Component<Props, State> {
             console.warn('rendering hole')
             return null
         }
-
-        let alreadyFriends = !!_.find(user.friends, (f)=>f.id === currentUserId());
-        let remainingAction = alreadyFriends ? 'disconnect' : 'connect';
-
-        const action = this.state[remainingAction]
         return <View>
 
             <View style={styles.avatarWrapper}>
@@ -139,22 +137,28 @@ export default class UserSheet extends Component<Props, State> {
 
             {this.renderInfos(user)}
 
-            {renderSimpleButton(
-                i18n.t(`friends.` + (action === 'ok' ? 'messages' : 'buttons') + `.${remainingAction}`),
-                alreadyFriends ? () => this.disconnectWith(user) : () => this.connectWith(user),
-                {
-                    loading: action === 'sending',
-                    disabled: action === 'ok',
-                    style: {
-                        borderColor: Colors.green,
-                        borderWidth: 1,
-                        width: 100,
-                        marginTop: 20,
-                        alignSelf: 'center'
-                    },
-                    textStyle: {fontFamily: SFP_TEXT_MEDIUM, fontSize: 14, color: Colors.green}
-                }
-            )}
+            {
+                canExecUserAction(U_CONNECT, user) && renderSimpleButton(
+                    i18n.t(`friends.buttons.connect`),
+                    () => this.connectWith(user),
+                    {
+                        loading: this.state.reqConnect === 'sending',
+                        style: styles.connectButton,
+                        textStyle: styles.connectText
+                    }
+                )
+            }
+            {
+                canExecUserAction(U_DISCONNECT, user) && renderSimpleButton(
+                    i18n.t(`friends.buttons.disconnect`),
+                    () => this.disconnectWith(user),
+                    {
+                        loading: this.state.reqDisconnect === 'sending',
+                        style: styles.connectButton,
+                        textStyle: styles.connectText
+                    }
+                )
+            }
 
         </View>
     }
@@ -184,7 +188,7 @@ export default class UserSheet extends Component<Props, State> {
             this,
             this.props.dispatch,
             action,
-            'connect'
+            'reqConnect'
         ).then(()=> {
                 _Messenger.sendMessage(i18n.t("friends.messages.connect"));
             }
@@ -203,7 +207,7 @@ export default class UserSheet extends Component<Props, State> {
                             this,
                             this.props.dispatch,
                             action,
-                            'disconnect'
+                            'reqDisconnect'
                         ).then(()=> {
                                 _Messenger.sendMessage(i18n.t("friends.messages.disconnect"));
                             }
@@ -279,7 +283,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 30,
-    }
+    },
+    connectButton: {
+        borderColor: Colors.green,
+        borderWidth: 1,
+        width: 100,
+        marginTop: 20,
+        alignSelf: 'center'
+    },
+    connectText: {
+        fontFamily: SFP_TEXT_MEDIUM, fontSize: 14, color: Colors.green
+    },
+
+
 
 
 });
