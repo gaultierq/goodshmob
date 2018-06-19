@@ -82,8 +82,6 @@ export default class HomeScreen extends Screen<Props, State> {
                     id: 'profile',
                 }
         ],
-        rightButtons: [
-        ],
     }
 
     logger = rootlogger.createLogger("home")
@@ -116,8 +114,6 @@ export default class HomeScreen extends Screen<Props, State> {
         this.props.navigator.setDrawerEnabled({side: 'left', enabled: false});
     }
 
-
-
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
         //console.debug("home:onNavigatorEvent" , event);
 
@@ -126,7 +122,10 @@ export default class HomeScreen extends Screen<Props, State> {
             this.setState({index: 0})
             this.feed.scrollToLocation({sectionIndex: 0, itemIndex: 0, viewOffset: 50})
         }
-
+        if (event.id === 'add') {
+            startAddItem(this.props.navigator, currentGoodshboxId())
+            return
+        }
         //HACK
         if (event.type === 'DeepLink') {
             switch (event.link) {
@@ -166,6 +165,7 @@ export default class HomeScreen extends Screen<Props, State> {
         //     }
         // })
         this.refreshOnBoarding()
+        this.refreshRightButtons()
     }
 
     refreshOnBoarding() {
@@ -224,7 +224,9 @@ export default class HomeScreen extends Screen<Props, State> {
                     navigationState={{...this.state, visible: this.isVisible()}}
                     renderScene={this.renderScene.bind(this)}
                     renderHeader={props => <TabBar {...TAB_BAR_PROPS} {...props}/>}
-                    onIndexChange={index => this.setState({index})}
+                    onIndexChange={index => {
+                        this.setState({index}, () => this.refreshRightButtons())
+                    }}
                 />
                 {this.displayFloatingButton() && this.renderFloatingButton()}
             </View>
@@ -232,8 +234,19 @@ export default class HomeScreen extends Screen<Props, State> {
     }
 
 
+    refreshRightButtons() {
+        this.props.navigator.setButtons({
+            rightButtons: __IS_IOS__ && this.state.index === 0 ? [
+                {
+                    systemItem: 'add',
+                    id: 'add'
+                }
+            ] : [],
+        })
+    }
+
     displayFloatingButton() {
-        return !this.state.filterFocused && this.state.isActionButtonVisible && this.state.index === 0;
+        return __IS_ANDROID__  && !this.state.filterFocused && this.state.isActionButtonVisible && this.state.index === 0;
     }
 
     renderScene({ route, focused }: *) {

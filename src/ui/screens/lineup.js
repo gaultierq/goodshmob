@@ -1,9 +1,9 @@
 // @flow
 
 import React from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Keyboard, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {connect} from "react-redux";
-import {currentUserId, logged} from "../../managers/CurrentUser"
+import {currentGoodshboxId, currentUserId, logged} from "../../managers/CurrentUser"
 import {activityFeedProps} from "../UIComponents";
 import Immutable from 'seamless-immutable';
 import * as Api from "../../managers/Api";
@@ -12,7 +12,7 @@ import type {Lineup, List, Saving} from "../../types";
 import {buildData, doDataMergeInState} from "../../helpers/DataUtils";
 import ActivityCell from "../activity/components/ActivityCell";
 import ActionButton from 'react-native-action-button';
-import {startAddItem} from "../Nav";
+import {displayHomeSearch, startAddItem} from "../Nav"
 import {Colors} from "../colors";
 import Screen from "./../components/Screen";
 import * as UI from "../UIStyles";
@@ -23,6 +23,7 @@ import {UNSAVE} from "../activity/actionTypes";
 import * as authActions from "../../auth/actions";
 import FollowButton from "../activity/components/FollowButton";
 import * as TimeUtils from "../../helpers/TimeUtils";
+import {PROFILE_CLICKED} from "../components/MyAvatar"
 
 type Props = {
     lineupId: string,
@@ -44,7 +45,33 @@ class LineupScreen extends Screen<Props, State> {
         // those props only affect Android
         navBarTitleTextCentered: true,
         navBarSubTitleTextCentered: true,
-    };
+    }
+
+    constructor(props: Props) {
+        super(props);
+        props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+    }
+
+
+    componentDidMount() {
+        if (this.canAdd()) {
+            this.props.navigator.setButtons({
+                rightButtons: __IS_IOS__ ? [
+                    {
+                        systemItem: 'add',
+                        id: 'add'
+                    }
+                ] : [],
+            })
+        }
+    }
+
+    onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
+        if (event.id === 'add') {
+            startAddItem(this.props.navigator, currentGoodshboxId())
+            return
+        }
+    }
 
     render() {
         const lineup = this.getLineup();
@@ -105,7 +132,7 @@ class LineupScreen extends Screen<Props, State> {
                     {...activityFeedProps()}
                 />
                 {
-                    this.displayFloatingButton() &&
+                    this.canAdd() && __IS_ANDROID__ &&
                     <ActionButton
                         buttonColor={Colors.green}
                         onPress={() => { this.onFloatingButtonPressed() }}
@@ -138,9 +165,8 @@ class LineupScreen extends Screen<Props, State> {
     }
 
 
-    displayFloatingButton() {
+    canAdd() {
         let lineup = this.getLineup();
-
         return lineup && lineup.user && lineup.user.id === currentUserId();
     }
 
