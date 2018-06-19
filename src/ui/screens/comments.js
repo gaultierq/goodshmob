@@ -64,10 +64,12 @@ class CommentsScreen extends Screen<Props, State> {
         if (!activity) {
             if (this.state.reqFetchActivity === 'sending') return <FullScreenLoader/>
             if (this.state.reqFetchActivity === 'ko') return <Http404/>
+            console.warn('rendering hole')
+            return null
         }
         let comments = mergeItemsAndPendings(
             activity ? activity.comments : [],
-            this.props.pending[CREATE_COMMENT],
+            _.filter(this.props.pending[CREATE_COMMENT], p => _.get(p, 'payload.activityId') === activity.id),
             [],
             (pending) => ({
                 id: pending.id,

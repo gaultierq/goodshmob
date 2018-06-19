@@ -240,7 +240,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
         let comments = mergeItemsAndPendings(
             activity ? activity.comments : [],
-            this.props.pending[CREATE_COMMENT],
+            _.filter(this.props.pending[CREATE_COMMENT], p => _.get(p, 'payload.activityId') === _.get(activity, 'id')),
             [],
             (pending) => ({
                 id: pending.id,
