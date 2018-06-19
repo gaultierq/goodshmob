@@ -293,11 +293,12 @@ export default class Feed extends Component<Props, State>  {
     getFlatItems() {
         if (this.debugOnlyEmptyFeeds()) return []
         if (this.props.getFlatItems) return this.props.getFlatItems()
+        const sections = this.props.sections
         if (sections) {
             let datas = sections.map(s => s.data)
             return Array.prototype.concat.apply([], datas)
         }
-        else return data
+        else return this.props.data
 
     }
 
