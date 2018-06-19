@@ -124,9 +124,11 @@ class CommentsScreen extends Screen<Props, State> {
                         <Feed
                             decorateLoadMoreCall={(sections: any[], call: Call) => {
                                 if (!_.isEmpty(sections)) {
-                                    let lastGroup = _.head(sections).data;
-                                    let last = _.head(_.head(lastGroup))
-                                    call.addQuery({id_after: last.id})
+                                    let last = _.head(_.filter(this.toFlat(sections), f => !f.pending))
+                                    if (last) {
+                                        call.addQuery({id_after: last.id})
+                                    }
+
                                 }
 
                             }}
