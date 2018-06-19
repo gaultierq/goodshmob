@@ -23,7 +23,7 @@ import {currentUserId, logged} from "../../managers/CurrentUser"
 import GTouchable from "../GTouchable";
 import Sheet from "../components/sheet";
 import _Messenger from "../../managers/Messenger"
-import {Avatar, FullScreenLoader, Http404} from "../UIComponents";
+import {Avatar, FullScreenLoader} from "../UIComponents";
 import {Colors} from "../colors"
 import * as Api from "../../managers/Api"
 import ApiAction from "../../helpers/ApiAction"
@@ -32,6 +32,9 @@ import {
     actions as userActions,
     actionTypes as userActionTypes
 } from "../../redux/UserActions"
+import {fullName} from "../../helpers/StringUtils"
+import Http404 from "./errors/404"
+import {SFP_TEXT_MEDIUM} from "../fonts"
 
 type Props = {
     user?: User,
@@ -66,17 +69,23 @@ export default class UserSheet extends Component<Props, State> {
     }
 
 
+    componentDidMount() {
+        Api.safeDispatchAction.call(
+            this,
+            this.props.dispatch,
+            userActions.getUserAndTheirFriends(this.props.userId).createActionDispatchee(userActionTypes.GET_USER),
+            'reqFetchUser'
+        )
+    }
+
+    getUser() {
+        return buildData(this.props.data, "users", this.props.userId) || this.props.user
+    }
+
+
     render() {
 
-        let user = this.getUser() || this.props.user;
-
-        let username = user.firstName + " " + user.lastName;
-        let alreadyFriends = !!_.find(user.friends, (f)=>f.id === currentUserId());
-        let remainingAction = alreadyFriends ? 'disconnect' : 'connect';
-        let reqState = this.state[remainingAction];
-        let ok = reqState === 'ok';
-
-        let userLoaded = this.state.reqFetchUser === 'ok'
+        let user = this.getUser()
 
         return <KeyboardAvoidingView
             contentContainerStyle={{flex:1}}
@@ -95,47 +104,78 @@ export default class UserSheet extends Component<Props, State> {
                             <Image style={{width: 15, height: 15}} source={require('../../img2/closeXGrey.png')}/>
                         </GTouchable>
                     </View>
-                    <View style={styles.avatarWrapper}>
-                        <Avatar user={user} size={50} style={styles.avatar}/>
-                        <Text style={styles.username}>{username}</Text>
-                        <Text style={styles.city}>Paris, France</Text>
-                    </View>
 
-                    {!userLoaded && <View style={styles.loaderWrapper}>
-                        <Spinner size={40} type={"9CubeGrid"} color={Colors.grey3}/>
-                    </View>}
-
-                    {userLoaded && <View>
-
-                        <View style={styles.row}>
-                            <View style={styles.column}>
-                                <Text style={styles.title}>Goodsh</Text>
-                                <Text style={styles.subtitle}>258</Text>
-                            </View>
-                            <View style={styles.column}>
-                                <Text style={styles.title}>Goodsh</Text>
-                                <Text style={styles.subtitle}>258</Text>
-                            </View>
-                            <View style={styles.column}>
-                                <Text style={styles.title}>Goodsh</Text>
-                                <Text style={styles.subtitle}>258</Text>
-                            </View>
-
-                        </View>
-
-                        {renderSimpleButton(
-                            i18n.t(`friends.` + (ok ? 'messages' : 'buttons') + `.${remainingAction}`),
-                            alreadyFriends ? ()=> this.disconnectWith(user) : ()=> this.connectWith(user),
-                            {loading: reqState === 'sending', disabled: ok, style: {borderColor: Colors.green, borderWidth: 0.5, width: 100, marginTop: 20, alignSelf: 'center'}, textStyle: {fontWeight: "normal", fontSize: 14, color: Colors.green}}
-                        )}
-
-                    </View>}
-
+                    {this.renderBody(user)}
 
                 </View>
 
             </Sheet>
         </KeyboardAvoidingView>
+    }
+
+    renderSpinner() {
+        return (<View style={styles.loaderWrapper}><Spinner size={40} type={"9CubeGrid"} color={Colors.grey3}/></View>)
+    }
+
+    renderBody(user: User) {
+        if (!user) {
+            if (this.state.reqFetchUser === 'sending') return <FullScreenLoader/>
+            if (this.state.reqFetchUser === 'ko') return <Http404/>
+            console.warn('rendering hole')
+            return null
+        }
+
+        let alreadyFriends = !!_.find(user.friends, (f)=>f.id === currentUserId());
+        let remainingAction = alreadyFriends ? 'disconnect' : 'connect';
+
+        const action = this.state[remainingAction]
+        return <View>
+
+            <View style={styles.avatarWrapper}>
+                <Avatar user={user} size={50} style={styles.avatar}/>
+                <Text style={styles.username}>{fullName(user)}</Text>
+                {/*<Text style={styles.city}>#Paris, France</Text>*/}
+            </View>
+
+            {this.renderInfos(user)}
+
+            {renderSimpleButton(
+                i18n.t(`friends.` + (action === 'ok' ? 'messages' : 'buttons') + `.${remainingAction}`),
+                alreadyFriends ? () => this.disconnectWith(user) : () => this.connectWith(user),
+                {
+                    loading: action === 'sending',
+                    disabled: action === 'ok',
+                    style: {
+                        borderColor: Colors.green,
+                        borderWidth: 1,
+                        width: 100,
+                        marginTop: 20,
+                        alignSelf: 'center'
+                    },
+                    textStyle: {fontFamily: SFP_TEXT_MEDIUM, fontSize: 14, color: Colors.green}
+                }
+            )}
+
+        </View>
+    }
+
+    renderInfos(user: User) {
+        let {savingsCount, lineupsCount, friendsCount} = user.meta || {}
+
+        return <View style={styles.row}>
+            <View style={styles.column}>
+                <Text style={styles.title}>{i18n.t("user_sheet.goodsh_count")}</Text>
+                <Text style={styles.subtitle}>{savingsCount}</Text>
+            </View>
+            <View style={styles.column}>
+                <Text style={styles.title}>{i18n.t("user_sheet.lineup_count")}</Text>
+                <Text style={styles.subtitle}>{lineupsCount}</Text>
+            </View>
+            <View style={styles.column}>
+                <Text style={styles.title}>{i18n.t("user_sheet.friend_count")}</Text>
+                <Text style={styles.subtitle}>{friendsCount}</Text>
+            </View>
+        </View>
     }
 
     connectWith(user: User) {
@@ -174,18 +214,6 @@ export default class UserSheet extends Component<Props, State> {
         )
     }
 
-
-    componentDidMount() {
-        Api.safeDispatchAction.call(
-            this,
-            this.props.dispatch,
-            userActions.getUserAndTheirFriends(this.props.userId).createActionDispatchee(userActionTypes.GET_USER),
-            'reqFetchUser'
-        )
-    }
-    getUser() {
-        return buildData(this.props.data, "users", this.props.userId);
-    }
 
 
 

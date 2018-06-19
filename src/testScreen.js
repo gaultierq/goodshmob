@@ -254,6 +254,16 @@ export const popularItemsScreen = {
         screen: 'goodsh.PopularItemsScreen',
     },
 }
+export const userSheetScreen = {
+    screen: {
+        screen: 'goodsh.UserSheet',
+    },
+    animationType: 'none',
+    passProps: {
+        userId: "5c73fe0f-f0c1-40fe-869f-3a00b55e2f1b"
+    }
+}
+
 
 export const test = {
     screen: {

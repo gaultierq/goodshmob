@@ -431,5 +431,10 @@ export default {
         description: {
             user_name: 'Veuillez indiquer vos noms et prénoms'
         }
+    },
+    user_sheet: {
+        goodsh_count: "Goodshs",
+        lineup_count: "Listes",
+        friend_count: "Contacts",
     }
 };

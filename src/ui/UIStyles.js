@@ -107,7 +107,7 @@ export function renderSimpleButton(
             style={[{marginBottom: 0}, STYLES.button, style]}
             disabledStyle={STYLES.disabledButton}
         >
-            <Text style={[{fontWeight: "bold", fontSize: 18}, textStyle, ]}>{text}</Text>
+            <Text style={[{fontFamily: SFP_TEXT_MEDIUM, fontSize: 18}, textStyle, ]}>{text}</Text>
         </Button>
     );
 }
@@ -157,6 +157,7 @@ export const STYLES = StyleSheet.create({
     button: {
         padding: 0,
         borderColor: "transparent",
+        borderRadius: 4
     },
     disabledButton: {
         borderColor: "transparent",
