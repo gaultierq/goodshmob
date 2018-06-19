@@ -80,7 +80,7 @@ const getLineupSelector = createSelector(
             lineup = buildData(data, syncList.type, syncList.id)
         }
         else if (rawPendingList) {
-            lineup = {...rawPendingList, savings: []}
+            lineup = {id: rawPendingList.id, name: rawPendingList.payload.listName, savings: []}
         }
         else if (propLineup) {
             lineup = propLineup

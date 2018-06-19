@@ -122,7 +122,7 @@ export default class AddLineupSheet extends Component<Props, State> {
             .then((pendingId)=> {
                 const onFinished = this.props.onFinished;
                 const lineup = {
-                    id: pendingId.data.id,
+                    id: pendingId,
                 }
                 onFinished && onFinished(lineup);
 
@@ -134,7 +134,6 @@ export default class AddLineupSheet extends Component<Props, State> {
                 }
 
                 sendMessage(
-                    //MagicString
                     i18n.t('create_list_controller.created'),
                     {
                         timeout: delayMs,

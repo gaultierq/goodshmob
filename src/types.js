@@ -36,7 +36,7 @@ export type List =  Base & {
     primary: any,
     privacy: any,
     savings: List<Saving>,
-    user: any,
+    user: User,
 }
 
 export type Lineup = List;
