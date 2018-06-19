@@ -197,8 +197,8 @@ class Api {
 
         return new Promise((resolve, reject) => {
 
-            if (!this.isConnected()) {
-                reject(new Error("Error: not connected"));
+            if (Config.SKIP_API_CONNEXION_CHECK !== 'true' && !this.isConnected()) {
+                reject(new Error("not connected"));
             }
             else {
                 let options = Object.assign({
