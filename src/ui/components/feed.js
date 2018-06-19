@@ -56,6 +56,7 @@ export type Props = {
     listRef ?:(any => void | string),
     doNotDisplayFetchMoreLoader?: boolean,
     decorateLoadMoreCall?: (sections: any[], call: Call) => Call,
+    getFlatItems?: () => any[]
 };
 
 export type FilterConfig<T> = {
@@ -290,12 +291,14 @@ export default class Feed extends Component<Props, State>  {
     }
 
     getFlatItems() {
-        if (this.debugOnlyEmptyFeeds()) return [];
-        if (this.props.sections) {
-            let datas = this.props.sections.map(s=>s.data);
+        if (this.debugOnlyEmptyFeeds()) return []
+        if (this.props.getFlatItems) return this.props.getFlatItems()
+        if (sections) {
+            let datas = sections.map(s => s.data)
             return Array.prototype.concat.apply([], datas)
         }
-        return this.props.data;
+        else return data
+
     }
 
     getItems() {

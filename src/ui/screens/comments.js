@@ -81,9 +81,8 @@ class CommentsScreen extends Screen<Props, State> {
         );
 
         comments = _.sortBy(comments, c => new Date(c.createdAt))
-        comments = _.reverse(comments)
+        // comments = _.reverse(comments)
 
-        console.debug("rendering comments list:", comments)
         const fullComments = comments.filter( c => c.built || c.pending);
 
         this.setNavigatorTitle(this.props.navigator, {
@@ -133,6 +132,7 @@ class CommentsScreen extends Screen<Props, State> {
                             ListFooterComponent={this.renderDescription(activity)}
                             sections={sections}
                             keyExtractor={item => _.head(item).id}
+                            getFlatItems={() => this.toFlat(sections)}
                             doNotDisplayFetchMoreLoader={true}
                             SectionSeparatorComponent={()=> <View style={{margin: 4}} />}
                             // style={{backgroundColor: 'red'}}
@@ -189,7 +189,20 @@ class CommentsScreen extends Screen<Props, State> {
         );
     }
 
-    renderDescription(activity) {
+
+    toFlat(sections: any) {
+        let concat = datas => Array.prototype.concat.apply([], datas)
+
+        //datas = [date1, date2, date3, date4]
+        let datas = sections.map(s => s.data)
+        let byDate = concat(datas)
+        let byAuthor = concat(byDate)
+        let comments = concat(byAuthor)
+        return comments
+
+    }
+
+    renderDescription(activity: Activity) {
         return <ActivityStatus
             activity={activity}
             // skipLineup={this.props.skipLineup}
@@ -223,6 +236,7 @@ class CommentsScreen extends Screen<Props, State> {
     //sections[0].data[0][0]
     // list of sections, each section as its data: D
     // here D is an array !
+    //sections: date > author > comments
     splitCommentsInSections(comments: Array<Comment>) {
 
         const sectionsMap = new MultiMap();
@@ -248,7 +262,7 @@ class CommentsScreen extends Screen<Props, State> {
                     //pushing old group
                     if (lastAuthorIx !== null) {
                         let commentsFor1Author = _.slice(comments, lastAuthorIx, i);
-                        commentsFor1Author = _.reverse(commentsFor1Author);
+                        // commentsFor1Author = _.reverse(commentsFor1Author);
                         grouped.push(commentsFor1Author);
                     }
 
