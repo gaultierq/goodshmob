@@ -148,11 +148,11 @@ export default {
         "credentials": "Fait main en 2018",
     },
     "popular_screen":{
-        "title": "Bienvenue",
-        "main_explanation": "Choisissez vos premiers goodsh dans la liste suivante:",
+        "title": "Ajouter à mes listes",
+        "main_explanation": "Choisis parmi les tendances de cette semaine:",
         "empty": "No popular items found",
         item_selected: {
-            zero: "Sélectionnez un goodsh",
+            zero: "Sélectionne des goodshs",
             one: "Ajouter 1 élément",
             other: "Ajouter %{count} éléments"
         },
