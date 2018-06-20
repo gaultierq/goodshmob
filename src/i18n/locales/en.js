@@ -186,8 +186,8 @@ export default {
         "network_placeholder":"##Browse your network"
     },
     "network_search_tabs":{
-        "savings":"GOODSH & LIST",
-        "users":"MEMBER"
+        "savings":"LISTS",
+        "users":"MEMBERS"
     },
     "community_screen":{
         "tabs": {
@@ -208,7 +208,7 @@ export default {
     },
     "search_item_screen":{
         "tabs": {
-            "consumer_goods":"STUFF",
+            "consumer_goods":"BOOK & PRODUCT",
             "places":"PLACE",
             "movies":"MOVIE",
             "musics":"MUSIC"
@@ -218,7 +218,7 @@ export default {
             "places":"Restaurants, cafés, shops, hotels, museums, cities, beaches, places to visit, doctors, plumbers...",
             "movies":"Movies, TV shows",
             "musics":"Musics, artists, albums, tracks",
-            "savings": "Search for interesting lists to follow",
+            "savings": "Tap keywords for interesting lists to follow",
             "users": "Search for users to follow",
         },
         "search_options":  {
