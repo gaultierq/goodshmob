@@ -83,7 +83,7 @@ class CommentsScreen extends Screen<Props, State> {
         );
 
         comments = _.sortBy(comments, c => new Date(c.createdAt))
-        // comments = _.reverse(comments)
+        comments = _.reverse(comments)
 
         const fullComments = comments.filter( c => c.built || c.pending);
 
@@ -266,7 +266,7 @@ class CommentsScreen extends Screen<Props, State> {
                     //pushing old group
                     if (lastAuthorIx !== null) {
                         let commentsFor1Author = _.slice(comments, lastAuthorIx, i);
-                        // commentsFor1Author = _.reverse(commentsFor1Author);
+                        commentsFor1Author = _.reverse(commentsFor1Author);
                         grouped.push(commentsFor1Author);
                     }
 
@@ -284,7 +284,7 @@ class CommentsScreen extends Screen<Props, State> {
         // group authors
         sectionsMap.forEachEntry((value, k) => {
             let groupedByAuthor = groupByAuthor(value);
-            groupedByAuthor = _.reverse(groupedByAuthor);
+            // groupedByAuthor = _.reverse(groupedByAuthor);
             authorGrouped.set(k, ...groupedByAuthor);
         });
 
