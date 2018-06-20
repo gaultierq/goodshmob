@@ -28,7 +28,12 @@ import Screen from "../components/Screen";
 import {Colors} from "../colors";
 import {PROFILE_CLICKED} from "../components/MyAvatar";
 import OnBoardingManager from "../../managers/OnBoardingManager";
-import {floatingButtonScrollListener, registerLayoutAnimation, scheduleOpacityAnimation} from "../UIComponents"
+import {
+    floatingButtonScrollListener,
+    getAddButton,
+    registerLayoutAnimation,
+    scheduleOpacityAnimation
+} from "../UIComponents"
 import {Tip, TipConfig} from "../components/Tip";
 import {HomeOnBoardingHelper} from "./HomeOnBoardingHelper";
 import {TabBar, TabViewAnimated} from "react-native-tab-view";
@@ -228,21 +233,13 @@ export default class HomeScreen extends Screen<Props, State> {
                         this.setState({index}, () => this.refreshRightButtons())
                     }}
                 />
-                {this.displayFloatingButton() && this.renderFloatingButton()}
             </View>
         )
     }
 
 
     refreshRightButtons() {
-        this.props.navigator.setButtons({
-            rightButtons: __IS_IOS__ && this.state.index === 0 ? [
-                {
-                    systemItem: 'add',
-                    id: 'add'
-                }
-            ] : [],
-        })
+        this.props.navigator.setButtons(getAddButton(this.state.index === 0))
     }
 
     displayFloatingButton() {
@@ -319,15 +316,4 @@ export default class HomeScreen extends Screen<Props, State> {
         this.onBoardingHelper.registerTapTarget(ref, primaryText, secondaryText)
     };
 
-    renderFloatingButton() {
-
-        return (
-            <ActionButton
-                buttonColor={Colors.green}
-                onPress={() => {startAddItem(this.props.navigator, currentGoodshboxId())}}
-                mainRef={this._targetRef(i18n.t("home.wizard.action_button_label"), i18n.t("home.wizard.action_button_body"))}
-                buttonTextStyle={{fontSize: 26, fontWeight: 'bold', marginTop: -5}}
-            />
-        );
-    }
 }

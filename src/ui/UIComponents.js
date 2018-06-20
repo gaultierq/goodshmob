@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react';
-import {Image, LayoutAnimation, StyleSheet, Text, UIManager, View} from 'react-native';
+import {Image, LayoutAnimation, Platform, StyleSheet, Text, UIManager, View} from 'react-native'
 import {Colors, AVATAR_BACKGROUNDS} from "./colors";
 import GTouchable from "./GTouchable";
 import {BACKGROUND_COLOR, LINEUP_PADDING, renderSimpleButton, STYLES} from "./UIStyles"
@@ -257,3 +257,27 @@ export function renderLineupFromOtherPeople(navigator: RNNNavigator, lineup: Lin
 }
 
 export const GoodshContext = React.createContext({userOwnResources: true});
+
+
+export let getAddButton = (display: boolean) => {
+    return {
+        ...Platform.select({
+            ios: {
+                rightButtons: display ? [
+                    {
+                        systemItem: 'add',
+                        id: 'add'
+                    }
+                ] : [],
+            },
+            android: {
+                fab: display ? {
+                    collapsedId: 'add',
+                    collapsedIcon: require('./../img/plus.png'),
+                    collapsedIconColor: Colors.white,
+                    backgroundColor: Colors.green
+                } : {}
+            },
+        }),
+    }
+}
