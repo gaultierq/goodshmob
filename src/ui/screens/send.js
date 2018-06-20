@@ -14,6 +14,8 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import {MainBackground, TRANSPARENT_SPACER} from "../UIComponents";
 import GTouchable from "../GTouchable";
 import {userFirstName} from "../../helpers/StringUtils";
+import {Colors} from "../colors"
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 type Props = {
     data?: any,
@@ -112,6 +114,7 @@ export default class SendScreen extends Component<Props, State> {
                     numberOfLines={1}
                     canSendDefault={true}
                     returnKeyType={'send'}
+                    button={<MaterialIcons name="send" size={this.props.height / 2} color={Colors.greyishBrown} />}
                 />
             </View>;
     }

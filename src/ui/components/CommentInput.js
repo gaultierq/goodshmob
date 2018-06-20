@@ -14,12 +14,14 @@ import type {PendingAction} from "../../helpers/ModelUtils";
 import {pendingActionWrapper} from "../../helpers/ModelUtils";
 import {connect} from "react-redux";
 import type { MapStateToProps } from "react-redux"
+import {Colors} from "../colors"
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 export const CREATE_COMMENT = ApiAction.create("create_comment", "add a comment");
 
-type Props = {
+type Props = SmartInputProps & {
     activity: Activity,
-    ...SmartInputProps
+    disableOffline?: boolean
 };
 
 type State = {
@@ -35,6 +37,7 @@ class CommentInput extends Component<Props, State> {
             <SmartInput
                 returnKeyType={'send'}
                 execAction={(input: string) => this.addComment(activity, input)}
+                button={<MaterialIcons name="send" size={this.props.height / 2} color={Colors.greyishBrown} />}
                 {...attributes}
             />
         );
@@ -49,7 +52,7 @@ class CommentInput extends Component<Props, State> {
         let payload = {activityId, activityType, content};
         let options = {delayMs, activityId, activityType, scope: {activityId}};
 
-        return this.props.dispatch(COMMENT_CREATION.pending(payload, options))
+        return this.props.dispatch(COMMENT_CREATION[[this.props.disableOffline ? 'exec' : 'pending']](payload, options))
     }
 }
 

@@ -18,6 +18,7 @@ import * as authActions from "../auth/actions"
 import {logout} from "../auth/actions"
 import {connect} from "react-redux"
 
+
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
 //         style={{

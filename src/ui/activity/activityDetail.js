@@ -35,6 +35,7 @@ import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import {CLOSE_MODAL, displayActivityActions} from "../Nav";
 import * as Api from "../../managers/Api";
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 type Props = {
     activityId: Id,
@@ -270,7 +271,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                     <CommentInput
                         activity={activity}
                         placeholder={i18n.t("activity_screen.comments.no_comments")}
-                        {...this.commentInputStyles()}
+                        {...this.commentInputProps()}
                     />
                 </View>
             );
@@ -337,7 +338,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                         activity={activity}
                                         containerStyle={{marginLeft: 30}}
                                         placeholder={i18n.t("activity_comments_screen.add_comment_placeholder")}
-                                        {...this.commentInputStyles()}
+                                        {...this.commentInputProps()}
                                     />
 
                                 </View>
@@ -356,10 +357,12 @@ class ActivityDetailScreen extends Screen<Props, State> {
             </GTouchable>);
     }
 
-    commentInputStyles() {
+    commentInputProps() {
         return {
-            height:28,
+            height:30,
             inputStyle:{fontSize: 13},
+            button: <MaterialIcons name="send" size={26} color={Colors.greyishBrown} />,
+            disableOffline: true
             // inputContainerStyle: {
             // borderBottomWidth: 0,
             // borderTopWidth: 0,
