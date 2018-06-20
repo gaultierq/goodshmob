@@ -1,29 +1,27 @@
 // @flow
 
-import React from 'react';
+import React from 'react'
 import {Keyboard, ScrollView, StyleSheet, Text, View} from 'react-native'
-import {connect} from "react-redux";
+import {connect} from "react-redux"
 import {currentGoodshboxId, currentUserId, logged} from "../../managers/CurrentUser"
-import {activityFeedProps} from "../UIComponents";
-import Immutable from 'seamless-immutable';
-import * as Api from "../../managers/Api";
-import Feed from "../components/feed";
-import type {Lineup, List, Saving} from "../../types";
-import {buildData, doDataMergeInState} from "../../helpers/DataUtils";
-import ActivityCell from "../activity/components/ActivityCell";
-import ActionButton from 'react-native-action-button';
-import {displayHomeSearch, startAddItem} from "../Nav"
-import {Colors} from "../colors";
-import Screen from "./../components/Screen";
-import * as UI from "../UIStyles";
-import {LINEUP_PADDING, STYLES, TEXT_LESS_IMPORTANT} from "../UIStyles";
-import {fullName} from "../../helpers/StringUtils";
-import {FETCH_LINEUP, FETCH_SAVINGS, fetchLineup} from "../lineup/actions";
-import {UNSAVE} from "../activity/actionTypes";
-import * as authActions from "../../auth/actions";
-import FollowButton from "../activity/components/FollowButton";
-import * as TimeUtils from "../../helpers/TimeUtils";
-import {PROFILE_CLICKED} from "../components/MyAvatar"
+import {activityFeedProps, getAddButton} from "../UIComponents"
+import Immutable from 'seamless-immutable'
+import * as Api from "../../managers/Api"
+import Feed from "../components/feed"
+import type {Lineup, List, Saving} from "../../types"
+import {buildData, doDataMergeInState} from "../../helpers/DataUtils"
+import ActivityCell from "../activity/components/ActivityCell"
+import {startAddItem} from "../Nav"
+import {Colors} from "../colors"
+import Screen from "./../components/Screen"
+import * as UI from "../UIStyles"
+import {LINEUP_PADDING, STYLES, TEXT_LESS_IMPORTANT} from "../UIStyles"
+import {fullName} from "../../helpers/StringUtils"
+import {FETCH_LINEUP, FETCH_SAVINGS, fetchLineup} from "../lineup/actions"
+import {UNSAVE} from "../activity/actionTypes"
+import * as authActions from "../../auth/actions"
+import FollowButton from "../activity/components/FollowButton"
+import * as TimeUtils from "../../helpers/TimeUtils"
 
 type Props = {
     lineupId: string,
@@ -53,17 +51,8 @@ class LineupScreen extends Screen<Props, State> {
     }
 
 
-    componentDidMount() {
-        if (this.canAdd()) {
-            this.props.navigator.setButtons({
-                rightButtons: __IS_IOS__ ? [
-                    {
-                        systemItem: 'add',
-                        id: 'add'
-                    }
-                ] : [],
-            })
-        }
+    componentDidAppear() {
+        this.props.navigator.setButtons(getAddButton(this.canAdd()))
     }
 
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
@@ -131,14 +120,6 @@ class LineupScreen extends Screen<Props, State> {
                     empty={<Text style={STYLES.empty_message}>{i18n.t("empty.lineup")}</Text>}
                     {...activityFeedProps()}
                 />
-                {
-                    this.canAdd() && __IS_ANDROID__ &&
-                    <ActionButton
-                        buttonColor={Colors.green}
-                        onPress={() => { this.onFloatingButtonPressed() }}
-                    />
-                }
-
             </View>
         );
     }
@@ -169,11 +150,6 @@ class LineupScreen extends Screen<Props, State> {
         let lineup = this.getLineup();
         return lineup && lineup.user && lineup.user.id === currentUserId();
     }
-
-    onFloatingButtonPressed() {
-        startAddItem(this.props.navigator, this.props.lineupId);
-    }
-
 
     getLineup() : List {
         return buildData(this.props.data, "lists", this.props.lineupId);
