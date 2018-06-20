@@ -24,6 +24,9 @@ export const NavStyles = {
     navBarTitleFontFamily: SFP_TEXT_MEDIUM,
     navBarInputBackgroundColor: Colors.greying,
     screenBackgroundColor: BACKGROUND_COLOR,
+    navigationBarColor: Colors.white,
+    statusBarColor: NAV_BACKGROUND_COLOR,
+    statusBarTextColorScheme: 'dark',
     // screenBackgroundColor: '#AEAEAE'
 };
 

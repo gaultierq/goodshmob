@@ -535,6 +535,8 @@ export default class App {
                 navigatorStyle: {
                     ...navigatorStyle,
                     navBarHidden: true,
+                    navigationBarColor: Colors.green,
+                    statusBarColor: Colors.green,
                 },
             }
         });
