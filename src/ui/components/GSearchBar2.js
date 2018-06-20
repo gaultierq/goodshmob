@@ -62,6 +62,7 @@ export default class GSearchBar2 extends Component<Props, State> {
                             returnKeyType={'search'}
                             keyboardType={'default'}
                             autoCapitalize={'none'}
+                            underlineColorAndroid={'transparent'}
                             {...this.props}
                             value={this.state.value}
                             onChangeText={this.onChangeText.bind(this)}
@@ -112,6 +113,7 @@ const styles = StyleSheet.create({
     input: {
         fontSize: 17,
         fontFamily: SFP_TEXT_REGULAR,
+        padding: 0,
 
 
     },
