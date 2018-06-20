@@ -149,16 +149,16 @@ export default {
         "credentials": "Handcrafted in 2018",
     },
     "popular_screen":{
-        "title": "Bienvenue",
-        "main_explanation": "Choisissez vos premiers goodsh dans la liste suivante:",
+        "title": "Add in my lists",
+        "main_explanation": "Trending this week:",
         "empty": "No popular items found",
         item_selected: {
-            zero: "Sélectionnez un goodsh",
-            one: "Ajouter 1 élément",
-            other: "Ajouter %{count} éléments"
+            zero: "Add some items",
+            one: "Add 1 item",
+            other: "Add %{count} items"
         },
-        "button_skip": "Passer",
-        "button_next": "Ajouter",
+        "button_skip": "Skip",
+        "button_next": "Add",
     },
     "profile_screen":{
         "title":"Feedback",
@@ -186,8 +186,8 @@ export default {
         "network_placeholder":"##Browse your network"
     },
     "network_search_tabs":{
-        "savings":"GOODSH & LIST",
-        "users":"MEMBER"
+        "savings":"LISTS",
+        "users":"MEMBERS"
     },
     "community_screen":{
         "tabs": {
@@ -208,7 +208,7 @@ export default {
     },
     "search_item_screen":{
         "tabs": {
-            "consumer_goods":"STUFF",
+            "consumer_goods":"BOOK & PRODUCT",
             "places":"PLACE",
             "movies":"MOVIE",
             "musics":"MUSIC"
@@ -218,7 +218,7 @@ export default {
             "places":"Restaurants, cafés, shops, hotels, museums, cities, beaches, places to visit, doctors, plumbers...",
             "movies":"Movies, TV shows",
             "musics":"Musics, artists, albums, tracks",
-            "savings": "Search for interesting lists to follow",
+            "savings": "Tap keywords for interesting lists to follow",
             "users": "Search for users to follow",
         },
         "search_options":  {

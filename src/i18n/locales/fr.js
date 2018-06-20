@@ -148,11 +148,11 @@ export default {
         "credentials": "Fait main en 2018",
     },
     "popular_screen":{
-        "title": "Bienvenue",
-        "main_explanation": "Choisissez vos premiers goodsh dans la liste suivante:",
+        "title": "Ajouter à mes listes",
+        "main_explanation": "Choisis parmi les tendances de cette semaine:",
         "empty": "No popular items found",
         item_selected: {
-            zero: "Sélectionnez un goodsh",
+            zero: "Sélectionne des goodshs",
             one: "Ajouter 1 élément",
             other: "Ajouter %{count} éléments"
         },
@@ -185,15 +185,15 @@ export default {
         "network_placeholder":"##Rechercher dans mon réseau"
     },
     "network_search_tabs":{
-        "savings":"GOODSH & LISTE",
-        "users":"MEMBRE"
+        "savings":"LISTES",
+        "users":"MEMBRES"
     },
     "community_screen":{
         "tabs": {
             "friends":"MES CONTACTS",
             "notifications":"NOTIFICATIONS",
         },
-        "empty_screen": "Découvre ici les goodsh de tes contacts.\nTap Ask pour leur poser des questions."
+        "empty_screen": "Découvre ici les actus de tes contacts."
     },
     "my_interests_screen":{
         "empty_screen": "Tu retrouveras les listes que tu suis ici.\nExplore les listes de tes amis, et suis les plus intéressantes !",
@@ -207,7 +207,7 @@ export default {
     },
     "search_item_screen":{
         "tabs": {
-            "consumer_goods":"TRUC",
+            "consumer_goods":"LIVRE & AUTRE",
             "places":"LIEU",
             "movies":"FILM",
             "musics":"SON"
@@ -217,7 +217,7 @@ export default {
             "places":"Plein d'adresses : restaurants, cafés, boutiques, hôtels, musées, villes, plages, lieux à visiter, docteurs, plombiers...",
             "movies":"Plein de films, séries, documentaires, émissions... ",
             "musics":"Plein de sons : artistes, albums, titres...",
-            "savings": "Cherche des listes qui t'intéressent pour les suivre",
+            "savings": "Tape des mots clefs pour trouver des listes à suivre",
             "users": "Cherche des membres à suivre",
         },
         "search_options":  {
@@ -373,7 +373,7 @@ export default {
         skip: "OK",
         ask: "Demander à mon réseau",
         ask_button: "Ask",
-        invite: "Inviter un ami",
+        invite: "Inviter des ami",
         load_more: "Charger la suite",
         unsave: "Supprimer",
         save: "Enregistrer",
