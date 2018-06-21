@@ -149,7 +149,7 @@ export default {
     },
     "popular_screen":{
         "title": "Créer mes premiers goodshs",
-        "main_explanation": "En choisissant parmi le palmarès du mmoment\nje pourrais les supprimer après:",
+        "main_explanation": "En choisissant parmi le palmarès du moment :",
         "empty": "No popular items found",
         item_selected: {
             zero: "Sélectionner des goodshs",
@@ -213,10 +213,10 @@ export default {
             "musics":"SON"
         },
         "placeholder": {
-            "consumer_goods":"Chercher parmi 60 M de livres, cadeaux, gadgets, chaussures, vin, jouets, produits...",
-            "places":"Chercher parmi 80 M de restaurants, cafés, boutiques, hôtels, musées, villes, plages, lieux à visiter, docteurs, plombiers...",
-            "movies":"Chercher parmi 20 M  de films, séries, documentaires, émissions... ",
-            "musics":"Chercher parmi 40 M  de titres, artistes, albums...",
+            "consumer_goods":"livre, cadeau, gadget, chaussures, vin, jouet, produit...",
+            "places":"restaurant, café, boutique, hôtel, musée, ville, plage, lieu à visiter...",
+            "movies":"film, série, documentaire, émission... ",
+            "musics":"titre, artiste, album...",
             "savings": "Taper des mots clefs pour trouver des listes à suivre",
             "users": "Chercher des membres à suivre",
         },
