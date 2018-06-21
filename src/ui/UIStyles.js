@@ -181,14 +181,14 @@ export const STYLES = StyleSheet.create({
         color: Colors.greyish,
         alignSelf: 'stretch',
         borderRadius: 10,
-        height: 22,
-        lineHeight: 20,
+        height: 24,
+        // lineHeight: 20,
         textAlignVertical: 'center',
         // padding: 2,
         borderWidth: StyleSheet.hairlineWidth,
         borderColor: Colors.greyish,
         fontFamily: SFP_TEXT_ITALIC,
-        fontSize: 15,
+        fontSize: 18,
 
     },
     tag2: {
