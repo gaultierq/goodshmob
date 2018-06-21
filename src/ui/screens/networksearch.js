@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import React from 'react'
 import {
     ActivityIndicator,
     FlatList,
@@ -10,27 +10,26 @@ import {
     Text,
     TouchableOpacity,
     View
-} from 'react-native';
-import {connect} from "react-redux";
+} from 'react-native'
+import {connect} from "react-redux"
 import {currentUserId, logged} from "../../managers/CurrentUser"
 import type {Id, List, NavigableProps, Saving, SearchToken} from "../../types"
-import ItemCell from "../components/ItemCell";
+import ItemCell from "../components/ItemCell"
 import {
     AlgoliaClient,
     createResultFromHit,
     createResultFromHit2,
     makeAlgoliaSearchEngine
-} from "../../helpers/AlgoliaUtils";
-import UserConnectItem from "./userConnectItem";
-import {SearchStyles} from "../UIStyles";
-import Screen from "../components/Screen";
-import EmptySearch from "../components/EmptySearch";
+} from "../../helpers/AlgoliaUtils"
+import UserConnectItem from "./userConnectItem"
+import Screen from "../components/Screen"
+import EmptySearch from "../components/EmptySearch"
 import Config from 'react-native-config'
-import SearchScreen from "./search";
-import GTouchable from "../GTouchable";
-import {seeActivityDetails, seeUser} from "../Nav";
-import SearchPage from "./SearchPage";
-import {renderLineupFromOtherPeople} from "../UIComponents";
+import SearchScreen from "./search"
+import GTouchable from "../GTouchable"
+import {seeActivityDetails, seeUser} from "../Nav"
+import SearchPage from "./SearchPage"
+import {GoodshContext, renderLineupFromOtherPeople} from "../UIComponents"
 import {Colors} from "../colors"
 
 type Props = NavigableProps & {
@@ -124,14 +123,18 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
 
         let search = makeAlgoliaSearchEngine(categories, navigator);
 
-        return <SearchScreen
-            searchEngine={search}
-            categories={categories}
-            navigator={navigator}
-            placeholder={i18n.t('search.in_network')}
-            style={{backgroundColor: Colors.white}}
-            token={this.props.token}
-        />;
+        return (
+            <GoodshContext.Provider value={{userOwnResources: false}}>
+                <SearchScreen
+                    searchEngine={search}
+                    categories={categories}
+                    navigator={navigator}
+                    placeholder={i18n.t('search.in_network')}
+                    style={{backgroundColor: Colors.white}}
+                    token={this.props.token}
+                />
+            </GoodshContext.Provider>
+        )
     }
 
 
