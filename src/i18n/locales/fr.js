@@ -213,8 +213,8 @@ export default {
             "musics":"SON"
         },
         "placeholder": {
-            "consumer_goods":"livre, cadeau, gadget, chaussures, vin, jouet, produit...",
-            "places":"restaurant, café, boutique, hôtel, musée, ville, plage, lieu à visiter...",
+            "consumer_goods":"livre, cadeau, gadget,\nchaussures, vin, jouet...",
+            "places":"restaurant, café,\nboutique, hôtel, musée,\nville, plage, lieu touristique...",
             "movies":"film, série, documentaire, émission... ",
             "musics":"titre, artiste, album...",
             "savings": "Taper des mots clefs pour trouver des listes à suivre",
