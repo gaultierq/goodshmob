@@ -332,3 +332,5 @@ export let getClearButton = function () {
         android: {fab: {}}
     })
 }
+
+export const RED_SQUARE = (size = 100) => () => <View style={{width: size, height: size, backgroundColor: 'red'}} />

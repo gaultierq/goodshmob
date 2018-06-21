@@ -222,9 +222,14 @@ export default class Feed extends Component<Props, State>  {
         if (!this.hasItems()) {
             if (this.manager.isSending('isFetchingFirst', this)) return <FullScreenLoader/>
             if (this.manager.isFail('isFetchingFirst', this)) return this.renderFail(()=>this.tryFetchIt())
-            if (this.manager.isSuccess('isFetchingFirst', this)) return this.renderEmpty()
-            this.console.warn("rendering hole", this.state)
-            return null
+
+            //FIX: this line would ignore header & footer + empty component (comments ActivityDescription on 1st comment)
+            // if (this.manager.isSuccess('isFetchingFirst', this)) return this.renderEmpty()
+
+            if (!ListFooterComponent && !ListHeaderComponent) {
+                this.console.warn("rendering hole", this.state)
+                return null
+            }
         }
 
         const filter = this.props.filter;
@@ -246,7 +251,7 @@ export default class Feed extends Component<Props, State>  {
         const style1 = [style];
         if ((this.state.isFetchingFirst === 'sending' || this.state.isFetchingFirst === 'idle') && !this.hasItems()) style1.push({minHeight: 150});
 
-        const someCondition = !((this.state.isFetchingFirst === 'sending' || this.state.isFetchingFirst === 'idle') && !this.hasItems())
+        const someCondition = this.state.isFetchingFirst !== 'sending' && this.state.isFetchingFirst !== 'idle' || this.hasItems()
         let params =  {
             ref: listRef,
             renderItem,
