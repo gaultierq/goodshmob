@@ -28,6 +28,13 @@ export const communityScreen = {
     }
 };
 
+export const networkScreen = {
+    screen: {
+        screen: 'goodsh.NetworkScreen',
+        title: 'Test goodsh.NetworkScreen',
+    },
+};
+
 export const activityDetail3 = {
     screen: {
         screen: 'goodsh.ActivityDetailScreen',
@@ -88,7 +95,6 @@ export const profileScreen = {
         userId: "662a61d0-5473-4d09-9410-c63aadc12e6c"
     }
 };
-
 export const sendScreen = {
     screen: {
         label: 'test',
@@ -98,6 +104,7 @@ export const sendScreen = {
         itemId: "8ab94a3c-43b2-4e5c-acfb-d4ff268f93b1",
     }
 };
+
 export const interactionsScreen = {
     screen: {
         label: 'test',
@@ -128,8 +135,6 @@ export const addItemScreen = {
         defaultLineupId: "37e67b05-c86c-4aeb-b3af-bf1c34862cd0"
     }
 };
-
-// export const addItemScreen2 = {
 //     screen: {
 //         label: 'test',
 //         screen: 'goodsh.AddItemScreen',
@@ -139,6 +144,7 @@ export const addItemScreen = {
 //         itemType: 'CreativeWork',
 //         defaultLineupId: '37e67b05-c86c-4aeb-b3af-bf1c34862cd0'
 //     }
+
 // };
 export const lineupScreen = {
     screen: {
@@ -172,17 +178,10 @@ export const searchItemsScreen = {
         // index: 1,
     }
 };
-
 export const homeSearchItemsScreen = {
     screen: {
         screen: 'goodsh.HomeSearchScreen',
         title: 'Test goodsh.HomeSearchScreen',
-    },
-};
-export const networkScreen = {
-    screen: {
-        screen: 'goodsh.NetworkScreen',
-        title: 'Test goodsh.NetworkScreen',
     },
 };
 

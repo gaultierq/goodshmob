@@ -5,7 +5,7 @@ import {ActivityIndicator, FlatList, Platform, RefreshControl, Text, TouchableOp
 import {connect} from "react-redux";
 import {currentUserId, logged} from "../../managers/CurrentUser"
 import ActivityCell from "../activity/components/ActivityCell";
-import {activityFeedProps, scheduleOpacityAnimation} from "../UIComponents"
+import {activityFeedProps, scheduleOpacityAnimation, TRANSPARENT_SPACER} from "../UIComponents"
 import Feed from "../components/feed"
 import type {Activity, ActivityGroup, Id, NavigableProps} from "../../types";
 import ActionButton from 'react-native-action-button';
@@ -155,10 +155,18 @@ class NetworkScreen extends Screen<Props, State> {
                     hasMore={!network1.hasNoMore}
                     scrollUpOnBack={scrollUpOnBack}
                     empty={<View><Text style={STYLES.empty_message}>{i18n.t('community_screen.empty_screen')}</Text><ShareButton text={i18n.t('actions.invite')}/></View>}
-                    {...activityFeedProps()}
-                    initialNumToRender={3}
+                    initialNumToRender={5}
                     decorateLoadMoreCall={(sections: any[], call: Call) => call.addQuery({id_lt: _.last(sections).id})}
                     visibility={super.getVisibility()}
+                    SectionSeparatorComponent={({leadingItem, trailingItem, leadingSection, section, trailingSection}) => {
+                        // return <View style={{height: 10, backgroundColor: 'blue'}}/>
+                        if (!leadingItem && trailingItem === _.get(section, 'data[0]')) {
+                           return TRANSPARENT_SPACER(20)()
+                        }
+                        return null
+                    }}
+                    style={{backgroundColor: Colors.greying}}
+
                     ItemSeparatorComponent={({leadingItem, trailingItem, section}) => {
                         if (leadingItem === section.data[0]) {
                             return (
@@ -181,11 +189,14 @@ class NetworkScreen extends Screen<Props, State> {
 
     renderSectionFooter(section: NetworkSection) {
         const count = section.activityCount - section.data.length
+        if (!count) return null
         const loading = this.state['reqFetchMore' + section.id] === 'sending'
         return (
             <View style={{flexDirection: 'row', alignItems: 'center',
                 backgroundColor: Colors.white,
-                paddingHorizontal: 20, marginBottom: 35}}>
+                paddingHorizontal: LINEUP_PADDING,
+                paddingVertical: 4,
+            }}>
                 {!loading && <Text>{i18n.t('there_are_activities', {count})}</Text>}
 
                 {renderSimpleButton(
