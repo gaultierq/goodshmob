@@ -360,7 +360,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
     commentInputProps() {
         return {
             height:30,
-            inputStyle:{fontSize: 13},
+            inputStyle:{fontSize: 15},
             button: <MaterialIcons name="send" size={26} color={Colors.greyishBrown} />,
             disableOffline: true
             // inputContainerStyle: {
