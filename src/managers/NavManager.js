@@ -9,6 +9,7 @@ import Config from 'react-native-config';
 import {displayLineupActionMenu} from "../ui/Nav";
 import {getLineup} from "../helpers/DataAccessors";
 import {CANCELABLE_MODAL} from "../ui/Nav"
+import {openUserSheet} from "../ui/Nav"
 
 // export const DEEPLINK_OPEN_SCREEN_IN_MODAL = 'DEEPLINK_OPEN_SCREEN_IN_MODAL';
 

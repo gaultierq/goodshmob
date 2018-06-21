@@ -385,3 +385,16 @@ export function displayLineupActionMenu(navigator: RNNNavigator, dispatch: any, 
         }
     );
 }
+
+
+
+export function openUserSheet(navigator: RNNNavigator, user: User) {
+    navigator.showModal({
+        screen: 'goodsh.UserSheet',
+        animationType: 'none',
+        passProps: {
+            user: user,
+            userId: user.id
+        }
+    })
+}

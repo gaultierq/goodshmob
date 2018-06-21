@@ -51,7 +51,7 @@ export default class UserConnectItem extends Component<Props, State> {
                     style={styles.userRow}
                 />
                 <View style={{ alignItems:'flex-end', justifyContent: 'center', paddingHorizontal: 10}}>{
-                    <GTouchable onPress={() => this.openConnectModal(user)}>
+                    <GTouchable onPress={() => this.openUserSheet(user)}>
                         <View style={{padding: 12}}>
                             <Image source={require('../../img2/moreDotsGrey.png')} resizeMode="contain"/>
                         </View>
@@ -62,15 +62,8 @@ export default class UserConnectItem extends Component<Props, State> {
         )
     }
 
-    openConnectModal(user) {
-        this.props.navigator.showModal({
-            screen: 'goodsh.UserSheet',
-            animationType: 'none',
-            passProps: {
-                user: user,
-                userId: user.id
-            }
-        });
+    openUserSheet(user: User) {
+        openUserSheet(this.props.navigator, user)
     }
 
 }

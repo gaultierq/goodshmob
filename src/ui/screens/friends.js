@@ -11,7 +11,7 @@ import type {Id, Item, User} from "../../types";
 import {buildData, doDataMergeInState} from "../../helpers/DataUtils";
 import Screen from "../components/Screen";
 import GTouchable from "../GTouchable";
-import {seeUser} from "../Nav";
+import {openUserSheet, seeUser} from "../Nav"
 import {LINEUP_PADDING, STYLES} from "../UIStyles"
 import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions";
 
@@ -78,7 +78,9 @@ export default class FriendsScreen extends Screen<Props, State> {
     renderItem(item: Item) : Node {
         let user = buildData(this.props.data, "users", item.id);
         return (
-            <GTouchable onPress={()=> {seeUser(this.props.navigator, user)}}>
+            <GTouchable
+                onLongPress={() => {openUserSheet(this.props.navigator, user)}}
+                onPress={()=> {seeUser(this.props.navigator, user)}}>
                 <FriendCell friend={user} containerStyle={{paddingHorizontal: LINEUP_PADDING, paddingVertical: 10}}/>
             </GTouchable>
         )
