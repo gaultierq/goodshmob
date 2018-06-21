@@ -12,7 +12,7 @@ import {buildData, doDataMergeInState} from "../../helpers/DataUtils";
 import Screen from "../components/Screen";
 import GTouchable from "../GTouchable";
 import {seeUser} from "../Nav";
-import {STYLES} from "../UIStyles";
+import {LINEUP_PADDING, STYLES} from "../UIStyles"
 import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions";
 
 
@@ -79,7 +79,7 @@ export default class FriendsScreen extends Screen<Props, State> {
         let user = buildData(this.props.data, "users", item.id);
         return (
             <GTouchable onPress={()=> {seeUser(this.props.navigator, user)}}>
-                <FriendCell friend={user} containerStyle={{padding: 16}}/>
+                <FriendCell friend={user} containerStyle={{paddingHorizontal: LINEUP_PADDING, paddingVertical: 10}}/>
             </GTouchable>
         )
     }
