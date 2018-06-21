@@ -378,7 +378,7 @@ export class Call {
                                 // dispatch(errorAction);
                                 //logout(dispatch);
                                 logoutOffline(dispatch);
-                                reject("user lost authentification");
+                                reject("user lost authentification: " + apiAction.name());
                                 return;
                             }
                             // dispatch(errorAction);

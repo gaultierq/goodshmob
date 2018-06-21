@@ -30,6 +30,10 @@ export class RequestManager {
         return this.isLast(caller, action, 'ko');
     }
 
+    isIdle(action: string, caller: any) {
+        return this.isLast(caller, action, 'idle');
+    }
+
     isLast(caller, action, stat) {
         let events = this.getEvents(caller, action);
         let last;

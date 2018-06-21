@@ -222,6 +222,8 @@ export default class Feed extends Component<Props, State>  {
         if (!this.hasItems()) {
             if (this.manager.isSending('isFetchingFirst', this)) return <FullScreenLoader/>
             if (this.manager.isFail('isFetchingFirst', this)) return this.renderFail(()=>this.tryFetchIt())
+            if (this.state.isFetchingFirst === 'idle' && fetchSrc) return null
+
 
             //FIX: this line would ignore header & footer + empty component (comments ActivityDescription on 1st comment)
             // if (this.manager.isSuccess('isFetchingFirst', this)) return this.renderEmpty()

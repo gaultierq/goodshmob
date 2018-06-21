@@ -54,7 +54,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
         //let activity: Model.Activity = this.props.activity;
 
 
-        let leftButtons = this.getButtons(['comment', 'like', 'unlike', 'share'], activity);
+        let leftButtons = this.getButtons(['comment', 'answer', 'like', 'unlike', 'share'], activity);
         let rightButtons = this.getButtons(['save', 'unsave'], activity);
 
 
