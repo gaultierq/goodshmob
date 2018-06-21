@@ -87,15 +87,13 @@ export default class MyInterests extends Screen<Props, State> {
                     displayName={"MyInterests"}
                     renderSectionHeader={({section}) => section.renderSectionHeader()}
                     sections={sections}
-                    ListEmptyComponent={<View><Text style={STYLES.empty_message}>{i18n.t('my_interests_screen.empty_screen')}</Text>
-                        {renderSimpleButton(
-                            i18n.t('my_interests_screen.search_lists'),
-                            () => this.showSearch(),
-                            {loading: false,
-                                style: {backgroundColor: Colors.green, borderWidth: 0, borderRadius: 4, margin: 12},
-                                textStyle: {fontWeight: "bold", fontSize: 18, color: Colors.white, fontFamily: SFP_TEXT_REGULAR, }})
-                        }
-                    </View>}
+                    ListHeaderComponent={() => renderSimpleButton(
+                        i18n.t('my_interests_screen.search_lists'),
+                        () => this.showSearch(),
+                        {loading: false,
+                            style: {backgroundColor: Colors.green, borderWidth: 0, borderRadius: 4, margin: 12},
+                            textStyle: {fontWeight: "bold", fontSize: 18, color: Colors.white, fontFamily: SFP_TEXT_REGULAR, }})}
+                    ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t('my_interests_screen.empty_screen')}</Text>}
 
                     fetchSrc={this.fetchSrc(userId)}
                     decorateLoadMoreCall={(sections: any[], call: Call) => {
