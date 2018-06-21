@@ -13,7 +13,9 @@ import * as activityAction from "../actions";
 import {unsave} from "../actions";
 import {fullName, toUppercase} from "../../../helpers/StringUtils";
 import {buildData, buildNonNullData, sanitizeActivityType} from "../../../helpers/DataUtils";
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {default as FeatherIcon} from 'react-native-vector-icons/Feather';
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
 import {canPerformAction, getPendingLikeStatus, A_BUY, A_SAVE, A_UNLIKE, A_UNSAVE, A_LIKE} from "../../rights";
@@ -70,7 +72,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                         a,
                         this.getButtonText(a, activity),
                         //$FlowFixMe
-                        ()=>this['exec' + toUppercase(a)](activity),
+                        () => this['exec' + toUppercase(a)](activity),
                         a === 'unlike' || a === 'unsave'
                     )
                 );
@@ -122,26 +124,26 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     renderImageIcon(action: ActivityActionType, size: number, color: Color, style?: any) {
         switch(action) {
             case 'comment':
-                return <Icon style={style} name={'comment'} size={size} color={color}/>
+                return <FontAwesome style={style} name={'comment-o'} size={size} color={color}/>
             case 'like':
-                return <Icon style={style} name={'favorite'} size={size} color={color}/>
+                return <FontAwesome style={style} name={'heart-o'} size={size} color={color}/>
             case 'unlike':
-                return <Icon style={style} name={'favorite'} size={size} color={color}/>
+                return <FontAwesome style={style} name={'heart'} size={size} color={color}/>
             case 'share':
                 if (__IS_IOS__) {
                     return <FeatherIcon style={style} name={'share'} size={size} color={color}/>
                 }
-                return <Icon style={style} name={'share'} size={size} color={color}/>
+                return <MaterialIcon style={style} name={'share'} size={size} color={color}/>
             case 'save':
-                return <Icon style={style} name={'bookmark'} size={size} color={color}/>
+                return <FontAwesome style={style} name={'bookmark-o'} size={size} color={color}/>
             case 'unsave':
-                return <Icon style={style} name={'bookmark'} size={size} color={color}/>
+                return <FontAwesome style={style} name={'bookmark'} size={size} color={color}/>
             case 'see':
-                return <Icon style={style} name={'playlist_add'} size={size} color={color}/>
+                return <MaterialIcon style={style} name={'playlist_add'} size={size} color={color}/>
             case 'buy':
-                return <Icon style={style} name={'shopping_cart'} size={size} color={color}/>
+                return <MaterialIcon style={style} name={'shopping_cart'} size={size} color={color}/>
             case 'answer':
-                return <Icon style={style} name={'comment'} size={size} color={color}/>
+                return <FontAwesome style={style} name={'comments-o'} size={size} color={color}/>
         }
         throw "Unknown action: " +action
     }
