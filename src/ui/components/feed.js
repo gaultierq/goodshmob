@@ -205,7 +205,7 @@ export default class Feed extends Component<Props, State>  {
             renderItem,
             fetchSrc,
             hasMore,
-            ListEmptyComponent,
+            // ListEmptyComponent,
             ListHeaderComponent,
             ListFooterComponent,
             renderSectionHeader,
@@ -226,10 +226,10 @@ export default class Feed extends Component<Props, State>  {
             //FIX: this line would ignore header & footer + empty component (comments ActivityDescription on 1st comment)
             // if (this.manager.isSuccess('isFetchingFirst', this)) return this.renderEmpty()
 
-            if (!ListFooterComponent && !ListHeaderComponent) {
-                this.console.warn("rendering hole", this.state)
-                return this.renderEmpty()
-            }
+            // if (!ListFooterComponent && !ListHeaderComponent) {
+            //     this.console.warn("rendering hole", this.state)
+            //     return this.renderEmpty()
+            // }
         }
 
         const filter = this.props.filter;

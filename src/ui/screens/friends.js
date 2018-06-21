@@ -14,6 +14,7 @@ import GTouchable from "../GTouchable";
 import {openUserSheet, seeUser} from "../Nav"
 import {LINEUP_PADDING, STYLES} from "../UIStyles"
 import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions";
+import ShareButton from "../components/ShareButton"
 
 
 type Props = {
@@ -69,6 +70,7 @@ export default class FriendsScreen extends Screen<Props, State> {
                         options: {userId}
                     }}
                     ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t('friends.empty_screen')}</Text>}
+                    ListHeaderComponent={<ShareButton text={i18n.t('actions.invite')}/>}
                     ItemSeparatorComponent={ItemSeparatorComponent}
                     visibility={this.getVisibility()}
                 />
