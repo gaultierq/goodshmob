@@ -188,6 +188,7 @@ export default class HomeScreen extends Screen<Props, State> {
                         this.setState({popularDisplayCount: 1}, () => {
                             this.props.navigator.showModal({
                                 screen: 'goodsh.PopularItemsScreen',
+                                backButtonHidden: true,
                                 passProps: {
                                     onFinished: () => {
                                         OnBoardingManager.postOnDismissed("popular")
