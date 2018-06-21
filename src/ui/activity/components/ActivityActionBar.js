@@ -1,36 +1,27 @@
 // @flow
 
-import React from 'react';
+import React from 'react'
 
-import {Alert, Image, Linking, Platform, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import type {
-    Activity, ActivityType, Color, Id, Item, Saving, Url,
-    User
-} from "../../../types";
-import {connect} from "react-redux";
+import {Alert, Image, Linking, Platform, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import type {Activity, ActivityType, Color, Id, Saving} from "../../../types"
+import {connect} from "react-redux"
 import {currentGoodshboxId, isCurrentUser, logged} from "../../../managers/CurrentUser"
-import * as activityAction from "../actions";
-import {unsave} from "../actions";
-import {fullName, toUppercase} from "../../../helpers/StringUtils";
-import {buildData, buildNonNullData, sanitizeActivityType} from "../../../helpers/DataUtils";
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {default as FeatherIcon} from 'react-native-vector-icons/Feather';
-import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
-import {canPerformAction, getPendingLikeStatus, A_BUY, A_SAVE, A_UNLIKE, A_UNSAVE, A_LIKE} from "../../rights";
-import {CREATE_COMMENT} from "../../screens/comments";
-import GTouchable from "../../GTouchable";
-import * as Nav from "../../Nav";
-import {CREATE_SAVING, doUnsave, SAVING_DELETION} from "../../lineup/actions";
-import StoreManager from "../../../managers/StoreManager";
-import _Messenger from "../../../managers/Messenger";
-import Config from "react-native-config";
-import ItemCell from "../../components/ItemCell";
-import type {Description, Visibility} from "../../screens/save";
-import * as Api from "../../../managers/Api";
-import ApiAction from "../../../helpers/ApiAction";
-import {displayShareItem} from "../../Nav";
+import * as activityAction from "../actions"
+import {unsave} from "../actions"
+import {fullName, toUppercase} from "../../../helpers/StringUtils"
+import {buildNonNullData, sanitizeActivityType} from "../../../helpers/DataUtils"
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import {default as FeatherIcon} from 'react-native-vector-icons/Feather'
+import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors"
+import {A_BUY, A_LIKE, A_SAVE, A_UNLIKE, A_UNSAVE, canPerformAction, getPendingLikeStatus} from "../../rights"
+import {CREATE_COMMENT} from "../../screens/comments"
+import GTouchable from "../../GTouchable"
+import * as Nav from "../../Nav"
+import {displayShareItem} from "../../Nav"
+import {CREATE_SAVING, doUnsave, SAVING_DELETION} from "../../lineup/actions"
+import StoreManager from "../../../managers/StoreManager"
+import _Messenger from "../../../managers/Messenger"
 
 export type ActivityActionType = 'comment'| 'like'| 'unlike'| 'share'| 'save'| 'unsave'| 'see'| 'buy'| 'answer';
 const ACTIONS = ['comment', 'like', 'unlike','share', 'save', 'unsave', 'see', 'buy', 'answer'];
@@ -63,9 +54,19 @@ export default class ActivityActionBar extends React.Component<Props, State> {
         //let activity: Model.Activity = this.props.activity;
 
 
-        const possibleActions = ['comment', 'like', 'unlike', 'share', 'save', 'unsave', 'see', 'answer'];
+        let leftButtons = this.getButtons(['comment', 'like', 'unlike', 'share'], activity);
+        let rightButtons = this.getButtons(['save', 'unsave'], activity);
 
-        let buttons = possibleActions.reduce((res, a) => {
+
+        return (
+            <View style={{flexDirection: 'row', paddingHorizontal: 10, backgroundColor: ACTIVITY_CELL_BACKGROUND, justifyContent: 'space-between',}}>
+                <View style={styles.actionBar}>{leftButtons}</View>
+                <View style={[styles.actionBar]}>{rightButtons}</View>
+            </View>)
+    }
+
+    getButtons(possibleActions, activity) {
+        return possibleActions.reduce((res, a) => {
             if (this.canExec(a, activity)) {
                 res.push(
                     this.renderButton(
@@ -75,13 +76,10 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                         () => this['exec' + toUppercase(a)](activity),
                         a === 'unlike' || a === 'unsave'
                     )
-                );
+                )
             }
-            return res;
-        },[]);
-
-
-        return <View style={styles.actionBar}>{buttons}</View>;
+            return res
+        }, [])
     }
 
     getButtonText(action: ActivityActionType, activity: Activity) {
@@ -456,11 +454,11 @@ export function unsaveOnce(saving: Saving, dispatch: *) {
 
 const styles = StyleSheet.create({
     actionBar: {
-        flex: 1,
+        // flex: 1,
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingLeft: 10,
-        paddingRight: 10,
+        // justifyContent: 'space-between',
+        // paddingLeft: 10,
+        // paddingRight: 10,
         backgroundColor: ACTIVITY_CELL_BACKGROUND,
     },
     button: {

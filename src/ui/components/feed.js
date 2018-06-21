@@ -228,7 +228,7 @@ export default class Feed extends Component<Props, State>  {
 
             if (!ListFooterComponent && !ListHeaderComponent) {
                 this.console.warn("rendering hole", this.state)
-                return null
+                return this.renderEmpty()
             }
         }
 

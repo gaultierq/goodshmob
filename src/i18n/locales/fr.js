@@ -70,7 +70,7 @@ export default {
     search: {
         in_items: "Saisir le nom à enregistrer",
         in_network: "Rechercher dans mon réseau",
-        in_feed: "Dans mes listes",
+        in_feed: "Rechercher dans mes listes",
         by: "par"
     },
     "shared":{
@@ -148,11 +148,11 @@ export default {
         "credentials": "Fait main en 2018",
     },
     "popular_screen":{
-        "title": "Créer mes premiers goodshs",
+        "title": "Enregistrer vos premières envies",
         "main_explanation": "En choisissant parmi le palmarès du moment :",
         "empty": "No popular items found",
         item_selected: {
-            zero: "Sélectionner des goodshs",
+            zero: "",
             one: "Ajouter 1 élément",
             other: "Ajouter %{count} éléments"
         },
@@ -196,7 +196,7 @@ export default {
         "empty_screen": "Découvre ici les actus de tes contacts."
     },
     "my_interests_screen":{
-        "empty_screen": "Tu retrouveras les listes que tu suis ici.\nExplore les listes de tes amis, et suis les plus intéressantes !",
+        "empty_screen": "Explore les listes de tes amis, et suis les plus intéressantes !",
         "search_lists": "Trouver des listes à suivre"
     },
     "comments_screen":{

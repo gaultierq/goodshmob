@@ -153,7 +153,7 @@ export default {
         "main_explanation": "By choosing among the best of this week:",
         "empty": "No popular items found",
         item_selected: {
-            zero: "Select some items",
+            zero: "",
             one: "Add 1 item",
             other: "Add %{count} items"
         },
