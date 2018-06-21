@@ -73,6 +73,8 @@ class NetworkScreen extends Screen<Props, State> {
 
     feed: any
 
+    lastRenderedLength: ?number
+
     constructor(props: Props){
         super(props);
         props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
@@ -94,7 +96,10 @@ class NetworkScreen extends Screen<Props, State> {
         if (__IS_IOS__ && event.id === 'bottomTabReselected' && this.feed) {
             //__IS_IOS__ because of: scrollToIndex should be used in conjunction with getItemLayout or onScrollToIndexFailed
             // this.feed.scrollToOffset({x: 0, y: 0, animated: true});
-            this.feed.scrollToLocation({sectionIndex: 0, itemIndex: 0, viewOffset: 50})
+            if (this.lastRenderedLength && this.lastRenderedLength > 0) {
+                this.feed.scrollToLocation({sectionIndex: 0, itemIndex: 0, viewOffset: 50})
+            }
+
         }
 
         if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
@@ -138,6 +143,8 @@ class NetworkScreen extends Screen<Props, State> {
             });
             return true;
         } : null;
+
+        this.lastRenderedLength = sections.length
 
         return (
             <View style={{flex:1}}>
