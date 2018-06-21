@@ -148,11 +148,11 @@ export default {
         "credentials": "Fait main en 2018",
     },
     "popular_screen":{
-        "title": "Ajouter à mes listes",
-        "main_explanation": "Choisis parmi les tendances de cette semaine:",
+        "title": "Créer mes premiers goodshs",
+        "main_explanation": "En choisissant parmi le palmarès du mmoment\nje pourrais les supprimer après:",
         "empty": "No popular items found",
         item_selected: {
-            zero: "Sélectionne des goodshs",
+            zero: "Sélectionner des goodshs",
             one: "Ajouter 1 élément",
             other: "Ajouter %{count} éléments"
         },
@@ -209,16 +209,16 @@ export default {
         "tabs": {
             "consumer_goods":"LIVRE & AUTRE",
             "places":"LIEU",
-            "movies":"FILM",
+            "movies":"FILM & SERIE",
             "musics":"SON"
         },
         "placeholder": {
-            "consumer_goods":"Plein de trucs : livres, cadeaux, gadgets, chaussures, vin, jouets, produits...",
-            "places":"Plein d'adresses : restaurants, cafés, boutiques, hôtels, musées, villes, plages, lieux à visiter, docteurs, plombiers...",
-            "movies":"Plein de films, séries, documentaires, émissions... ",
-            "musics":"Plein de sons : artistes, albums, titres...",
-            "savings": "Tape des mots clefs pour trouver des listes à suivre",
-            "users": "Cherche des membres à suivre",
+            "consumer_goods":"Chercher parmi 60 M de livres, cadeaux, gadgets, chaussures, vin, jouets, produits...",
+            "places":"Chercher parmi 80 M de restaurants, cafés, boutiques, hôtels, musées, villes, plages, lieux à visiter, docteurs, plombiers...",
+            "movies":"Chercher parmi 20 M  de films, séries, documentaires, émissions... ",
+            "musics":"Chercher parmi 40 M  de titres, artistes, albums...",
+            "savings": "Taper des mots clefs pour trouver des listes à suivre",
+            "users": "Chercher des membres à suivre",
         },
         "search_options":  {
             "around_me": "Autour de moi"
@@ -373,7 +373,7 @@ export default {
         skip: "OK",
         ask: "Demander à mon réseau",
         ask_button: "Ask",
-        invite: "Inviter des ami",
+        invite: "Inviter des amis",
         load_more: "Charger la suite",
         unsave: "Supprimer",
         save: "Enregistrer",
