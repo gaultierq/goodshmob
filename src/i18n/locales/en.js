@@ -214,8 +214,8 @@ export default {
             "musics":"MUSIC"
         },
         "placeholder": {
-            "consumer_goods":"books, gifts, shoes, wine, games, products...",
-            "places":"restaurants, cafés, shops, hotels, museums, cities, beaches, places to visit, doctors, plumbers...",
+            "consumer_goods":"books, gifts, shoes,\nwine, games, products...",
+            "places":"restaurants, cafés,\nshops, hotels, museums,\ncities, beaches, places to visit...",
             "movies":"movies, TV shows",
             "musics":"tracks, artists, albums",
             "savings": "Tap keywords for interesting lists to follow",
