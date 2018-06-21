@@ -108,7 +108,7 @@ export class Avatar extends Component<Props, State> {
     }
 }
 
-export const TRANSPARENT_SPACER = (height: number) => ()=><View style={{height, backgroundColor: 'transparent'}}/>
+export const TRANSPARENT_SPACER = (height: number = 20) => ()=><View style={{height, backgroundColor: 'transparent'}}/>
 
 
 export function activityFeedProps() {

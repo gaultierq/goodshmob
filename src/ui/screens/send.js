@@ -16,6 +16,7 @@ import GTouchable from "../GTouchable";
 import {userFirstName} from "../../helpers/StringUtils";
 import {Colors} from "../colors"
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {LINEUP_PADDING} from "../UIStyles"
 
 type Props = {
     data?: any,
@@ -46,7 +47,7 @@ export default class SendScreen extends Component<Props, State> {
         return (
             <MainBackground>
                 <KeyboardAwareScrollView
-                    contentContainerStyle={{flex:1}}
+                    contentContainerStyle={{padding: LINEUP_PADDING, flex:1}}
                     scrollEnabled={false}
                     keyboardShouldPersistTaps='always'
                 >
@@ -54,7 +55,7 @@ export default class SendScreen extends Component<Props, State> {
                         userId={currentUserId()}
                         navigator={navigator}
                         renderItem={(friend) => this.renderItem(friend)}
-                        ItemSeparatorComponent={TRANSPARENT_SPACER(16)}
+                        ItemSeparatorComponent={TRANSPARENT_SPACER()}
                     />
 
                 </KeyboardAwareScrollView>
@@ -74,7 +75,6 @@ export default class SendScreen extends Component<Props, State> {
                 disabled={sent}
                 onPress={()=>this.setState({selected: isSelected ? null : id})}>
                 <FriendCell
-                    containerStyle={{padding: 16}}
                     friend={friend}
                     childrenBelow={!sent}
                 >
@@ -96,7 +96,7 @@ export default class SendScreen extends Component<Props, State> {
                         // backgroundColor: 'red'
                     }}
                     inputStyle={{
-                        fontSize: 15
+                        fontSize: 16
                     }}
                     // inputContainerStyle={{borderRadius: 1}}
                     execAction={(input: string) => {
@@ -114,7 +114,7 @@ export default class SendScreen extends Component<Props, State> {
                     numberOfLines={1}
                     canSendDefault={true}
                     returnKeyType={'send'}
-                    button={<MaterialIcons name="send" size={this.props.height / 2} color={Colors.greyishBrown} />}
+                    button={<MaterialIcons name="send" size={28} color={Colors.greyishBrown} />}
                 />
             </View>;
     }
