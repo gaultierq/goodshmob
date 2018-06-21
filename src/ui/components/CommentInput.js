@@ -52,7 +52,7 @@ class CommentInput extends Component<Props, State> {
         let payload = {activityId, activityType, content};
         let options = {delayMs, activityId, activityType, scope: {activityId}};
 
-        return this.props.dispatch(COMMENT_CREATION[[this.props.disableOffline ? 'exec' : 'pending']](payload, options))
+        return this.props.dispatch(COMMENT_CREATION[this.props.disableOffline ? 'exec' : 'pending'](payload, options))
     }
 }
 
