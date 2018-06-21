@@ -3,7 +3,7 @@
 import React from 'react';
 import {ActivityIndicator, FlatList, Platform, RefreshControl, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from "react-redux";
-import {currentUserId, logged} from "../../managers/CurrentUser"
+import {currentUser, currentUserId, logged} from "../../managers/CurrentUser"
 import ActivityCell from "../activity/components/ActivityCell";
 import {activityFeedProps, scheduleOpacityAnimation, TRANSPARENT_SPACER} from "../UIComponents"
 import Feed from "../components/feed"
@@ -45,7 +45,6 @@ type NetworkSection = {
     activity: state.activity
 }))
 class NetworkScreen extends Screen<Props, State> {
-
 
     static navigatorButtons = {
         rightButtons: [
@@ -146,6 +145,8 @@ class NetworkScreen extends Screen<Props, State> {
 
         this.lastRenderedLength = sections.length
 
+        let fc = _.get(currentUser(), 'meta.friendsCount')
+
         return (
             <View style={{flex:1}}>
                 <Feed
@@ -153,7 +154,7 @@ class NetworkScreen extends Screen<Props, State> {
                     sections={sections}
                     renderItem={({item, index}) => this.renderItem(item, index)}
                     renderSectionFooter={({section}) => this.renderSectionFooter(section)}
-                    ListHeaderComponent={<GTouchable onPress={() => this.showAsk()}><AskInput editable={false} pointerEvents='none'/></GTouchable>}
+                    ListHeaderComponent={fc !== 0 && this.renderAskInput()}
                     listRef={ref => this.feed = ref}
                     fetchSrc={{
                         callFactory: fetchMyNetwork,
@@ -195,6 +196,10 @@ class NetworkScreen extends Screen<Props, State> {
 
             </View>
         );
+    }
+
+    renderAskInput() {
+        return <GTouchable onPress={() => this.showAsk()}><AskInput editable={false} pointerEvents='none'/></GTouchable>
     }
 
     showAsk() {
