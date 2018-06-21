@@ -216,17 +216,17 @@ const htmlStyles = StyleSheet.create({
 
     div: {
         fontFamily: SFP_TEXT_MEDIUM,
-        fontSize: 12,
+        fontSize: 14,
         color: Colors.greyishBrown
     },
     a: {
         fontFamily: SFP_TEXT_BOLD,
-        fontSize: 14,
+        fontSize: 16,
         color: Colors.black,
     },
     i: {
         fontFamily: SFP_TEXT_ITALIC,
-        fontSize: 14,
+        fontSize: 15,
         color: Colors.black
     },
 })

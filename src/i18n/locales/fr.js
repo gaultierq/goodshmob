@@ -80,7 +80,7 @@ export default {
     },
     "activity_item": {
         header: {
-            in: "%{adder} a ajouté %{what} dans %{lineup}",
+            in: "%{adder} dans %{lineup}",
             added_somewhere: "l'a ajouté",
             to: "%{from} a envoyé %{what} à %{to}",
             ask: "a besoin de recos !",
