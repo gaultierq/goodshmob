@@ -66,9 +66,12 @@ export default class MyInterests extends Screen<Props, State> {
 
         let lists = []
         followed.forEach(f => {
-            let list = buildData(data, 'follows', f.id).list
-            lists.push(list)
-            this.followIdsByListIds[list.id] = f.id
+            const follow = buildData(data, 'follows', f.id)
+            if (follow) {
+                let list = follow.list
+                lists.push(list)
+                this.followIdsByListIds[list.id] = f.id
+            }
         })
 
         lists = mergeItemsAndPendings2(
