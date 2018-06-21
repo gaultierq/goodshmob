@@ -1,28 +1,26 @@
 // @flow
-import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {currentUser, currentUserId, logged} from "../../managers/CurrentUser";
-import {Navigation} from 'react-native-navigation';
-import {connect} from "react-redux";
-import {currentUserFilter} from "../../redux/selectors";
-import type {Color, Id} from "../../types";
+import React, {Component} from 'react'
+import type {Node} from 'react'
+import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {logged} from "../../managers/CurrentUser"
+import {Navigation} from 'react-native-navigation'
 import {SFP_TEXT_MEDIUM} from "../fonts"
 import {Colors} from "../colors"
 
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
+import type {SearchItemCategoryType} from "../../helpers/SearchHelper"
+import {RED_SQUARE} from "../UIComponents"
 
 type Props = {
-    categ: string,
+    text: string,
+    icon?: Node,
 };
 
 type State = {
 };
 
 @logged
-@connect((state, props)=>({
-    currentUser: currentUserFilter(state, {userId: currentUserId()})
-}))
 export default class EmptySearch extends Component<Props, State> {
 
     render() {
@@ -30,14 +28,14 @@ export default class EmptySearch extends Component<Props, State> {
         const color = Colors.greyish;
         return (
             <View style={{
-                flex:1,
-                alignItems:'center',
+                flex: 1,
+                alignItems: 'center',
                 alignSelf: 'center',
-                justifyContent:'center',
+                justifyContent: 'center',
 
             }}>
                 {
-                    this.renderBlankIcon(this.props.categ, 50, color)
+                    this.props.icon
                 }
                 <Text style={{
                     textAlign: 'center',
@@ -46,27 +44,29 @@ export default class EmptySearch extends Component<Props, State> {
                     fontFamily: SFP_TEXT_MEDIUM,
                     color: color
 
-                }}>{i18n.t("search_item_screen.placeholder." + this.props.categ)}</Text>
+                }}>{this.props.text}</Text>
             </View>
         )
 
     }
+}
 
-    renderBlankIcon(category: SearchItemCategoryType, size: number, color: Color) {
+export function renderBlankIcon(category: string): Node {
+    const color = Colors.greyish
+    const size = 50
 
-        switch (category) {
-            case 'places':
-                return <MaterialIcons name="restaurant" size={size} color={color}/>;
-            case 'musics':
-                return <MaterialIcons name="library-music" size={size} color={color}/>;
-            case 'consumer_goods':
-                return <SimpleLineIcons name="present" size={size} color={color}/>;
-            case 'movies':
-                return <MaterialIcons name="movie" size={size} color={color}/>;
-            case 'users':
-                return <MaterialIcons name="face" size={size} color={color}/>;
-            case 'savings':
-                return <MaterialIcons name="list" size={size} color={color}/>;
-        }
+    switch (category) {
+        case 'places':
+            return <MaterialIcons name="restaurant" size={size} color={color}/>;
+        case 'musics':
+            return <MaterialIcons name="library-music" size={size} color={color}/>;
+        case 'consumer_goods':
+            return <SimpleLineIcons name="present" size={size} color={color}/>;
+        case 'movies':
+            return <MaterialIcons name="movie" size={size} color={color}/>;
+        case 'users':
+            return <MaterialIcons name="face" size={size} color={color}/>;
+        case 'savings':
+            return <MaterialIcons name="list" size={size} color={color}/>;
     }
 }

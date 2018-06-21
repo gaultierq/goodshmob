@@ -23,7 +23,7 @@ import {
 } from "../../helpers/AlgoliaUtils"
 import UserConnectItem from "./userConnectItem"
 import Screen from "../components/Screen"
-import EmptySearch from "../components/EmptySearch"
+import EmptySearch, {renderBlankIcon} from "../components/EmptySearch"
 import Config from 'react-native-config'
 import SearchScreen from "./search"
 import GTouchable from "../GTouchable"
@@ -88,7 +88,10 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                 parseResponse: createResultFromHit,
                 renderResults: ({query, results}) => {
                     if (!results) {
-                        return <EmptySearch categ={'savings'}/>
+                        return <EmptySearch
+                            icon={renderBlankIcon('savings')}
+                            text={i18n.t("search_item_screen.placeholder.savings")}
+                        />
                     }
 
                     return <SearchPage
@@ -109,7 +112,10 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                 parseResponse: createResultFromHit2,
                 renderResults: ({query, results}) => {
                     if (!results) {
-                        return <EmptySearch categ={'users'}/>
+                        return <EmptySearch
+                            icon={renderBlankIcon('users')}
+                            text={i18n.t("search_item_screen.placeholder.users")}
+                        />
                     }
 
                     return <SearchPage

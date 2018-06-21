@@ -30,12 +30,6 @@ export const NavStyles = {
     // screenBackgroundColor: '#AEAEAE'
 };
 
-export const SearchStyles = {
-    screenBackgroundColor: 'rgba(0,0,0,0.3)',
-    modalPresentationStyle: 'overCurrentContext',
-    topBarElevationShadowEnabled: false
-};
-
 
 //http://colormind.io/
 export const RandomColors = Object.freeze([

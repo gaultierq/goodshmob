@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import React from 'react'
 import {
     ActivityIndicator,
     FlatList,
@@ -10,21 +10,21 @@ import {
     Text,
     TouchableOpacity,
     View
-} from 'react-native';
-import {connect} from "react-redux";
+} from 'react-native'
+import {connect} from "react-redux"
 import {currentUserId, logged} from "../../managers/CurrentUser"
-import type {Id, List, NavigableProps, Saving, SearchToken} from "../../types";
-import ItemCell from "../components/ItemCell";
-import {AlgoliaClient, createResultFromHit, makeAlgoliaSearchEngine} from "../../helpers/AlgoliaUtils";
-import Screen from "../components/Screen";
-import type {SearchCategory} from "./search";
-import SearchScreen from "./search";
-import {SearchStyles} from "../UIStyles";
-import GTouchable from "../GTouchable";
+import type {Id, List, NavigableProps, Saving, SearchToken} from "../../types"
+import ItemCell from "../components/ItemCell"
+import {AlgoliaClient, createResultFromHit, makeAlgoliaSearchEngine} from "../../helpers/AlgoliaUtils"
+import Screen from "../components/Screen"
+import type {SearchCategory} from "./search"
+import SearchScreen from "./search"
+import GTouchable from "../GTouchable"
 import Config from 'react-native-config'
-import SearchPage from "./SearchPage";
-import {renderLineupFromOtherPeople} from "../UIComponents";
-import type {SearchQuery, SearchState} from "../../helpers/SearchHelper"
+import SearchPage from "./SearchPage"
+import {renderLineupFromOtherPeople} from "../UIComponents"
+import EmptySearch from "../components/EmptySearch"
+import {Colors} from "../colors"
 
 type Props = NavigableProps & {
     token?:SearchToken,
@@ -38,7 +38,10 @@ type State = {
 @logged
 export default class HomeSearchScreen extends Screen<Props, State> {
 
-    static navigatorStyle = SearchStyles;
+    static navigatorStyle = {
+        navBarNoBorder: true,
+        topBarElevationShadowEnabled: false
+    };
 
     static defaultProps = {
         userId: currentUserId()
@@ -57,17 +60,6 @@ export default class HomeSearchScreen extends Screen<Props, State> {
 
                 let lineup: List = item;
                 return renderLineupFromOtherPeople(this.props.navigator, lineup)
-                // return (
-                //
-                //     <GTouchable onPress={()=>seeList(this.props.navigator, lineup)}>
-                //         <LineupHorizontal
-                //             skipLineupTitle={true}
-                //             lineupId={lineup.id}
-                //             renderSaving={saving => <GTouchable onPress={() => seeActivityDetails(this.props.navigator, saving)}><LineupCellSaving item={saving.resource} /></GTouchable>}
-                //         />
-                //     </GTouchable>
-                //
-                // )
             }
             else {
                 let saving = item;
@@ -113,23 +105,21 @@ export default class HomeSearchScreen extends Screen<Props, State> {
                 query,
                 placeholder: "search_bar.me_placeholder",
                 parseResponse: createResultFromHit,
-                renderResults: ({query, results}) => (
-                    <SearchPage
-                        query={query}
-                        search={results}
-                        renderItem={renderItem}
-                    />
-                )
+                renderResults: ({query, results}) => {
+                    if (!results || _.isEmpty(results.data)) {
+                        return <EmptySearch text={i18n.t("lineups.search.empty")}/>
+                    }
+                    return (
+                        <SearchPage
+                            query={query}
+                            search={results}
+                            renderItem={renderItem}
+                        />
+                    )
+                }
             }
         ];
-
         let navigator = this.props.navigator;
-        // return (
-        //     <AlgoliaSearchScreen
-        //         categories={categories}
-        //         navigator={navigator}
-        //     />
-        // );
         let search = makeAlgoliaSearchEngine(categories, navigator);
 
         return (
@@ -139,6 +129,7 @@ export default class HomeSearchScreen extends Screen<Props, State> {
                 navigator={navigator}
                 token={this.props.token}
                 placeholder={i18n.t('search.in_feed')}
+                style={{backgroundColor: Colors.white}}
             />
         );
     }

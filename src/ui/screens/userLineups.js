@@ -28,6 +28,7 @@ import {Navigation} from 'react-native-navigation'
 import type {Visibility} from "./additem"
 import type {FilterConfig} from "../components/feed"
 import GSearchBar2 from "../components/GSearchBar2"
+import {displayHomeSearch} from "../Nav"
 
 
 type Props = LineupListProps & {
@@ -47,34 +48,6 @@ export default class UserLineups extends Screen<Props, State> {
 
     cancelSearch: Function
     listRef: Node
-
-    launchSearch(token?: SearchToken) {
-        let navigator = this.props.navigator;
-
-        navigator.showModal({
-            screen: 'goodsh.HomeSearchScreen', // unique ID registered with Navigation.registerScreen
-            animationType: 'none',
-            backButtonHidden: true,
-            passProps: {
-                onClickClose: () => navigator.dismissModal({animationType: 'none'}),
-                userId: this.props.userId,
-                token
-            },
-            backButtonHidden: true,
-            navigatorButtons: {
-                leftButtons: [],
-                rightButtons: [
-                    {
-                        id: Nav.CLOSE_MODAL,
-                        title: i18n.t("actions.cancel")
-                    }
-                ],
-            },
-            //
-            // navigatorButtons: Nav.CANCELABLE_SEARCH_MODAL(),
-        });
-    }
-
 
     render() {
 
@@ -148,7 +121,7 @@ export default class UserLineups extends Screen<Props, State> {
             emptyFilterResult: (searchToken: string) => (
                 <View>
                     <Text style={STYLES.empty_message}>{i18n.t('lineups.filter.empty')}</Text>
-                    {renderSimpleButton(i18n.t('lineups.filter.deepsearch'), () => this.launchSearch(searchToken))}
+                    {renderSimpleButton(i18n.t('lineups.filter.deepsearch'), () => displayHomeSearch(this.props.navigator, searchToken))}
 
                 </View>
             ),

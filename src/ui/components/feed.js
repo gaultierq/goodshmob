@@ -205,7 +205,7 @@ export default class Feed extends Component<Props, State>  {
             renderItem,
             fetchSrc,
             hasMore,
-            // ListEmptyComponent,
+            ListEmptyComponent,
             ListHeaderComponent,
             ListFooterComponent,
             renderSectionHeader,
@@ -253,6 +253,7 @@ export default class Feed extends Component<Props, State>  {
         const style1 = [style];
         if ((this.state.isFetchingFirst === 'sending' || this.state.isFetchingFirst === 'idle') && !this.hasItems()) style1.push({minHeight: 150});
 
+
         const someCondition = this.state.isFetchingFirst !== 'sending' && this.state.isFetchingFirst !== 'idle' || this.hasItems()
         let params =  {
             ref: listRef,
@@ -261,13 +262,15 @@ export default class Feed extends Component<Props, State>  {
             refreshControl: this.renderRefreshControl(),
             onEndReached: this.onEndReached.bind(this),
             onEndReachedThreshold: 0.1,
-            ListFooterComponent: (filter && emptyFilter) ? filter.emptyFilterResult(filter.token) : someCondition && this.renderFetchMoreLoader(ListFooterComponent),
             style: style1,
             ListHeaderComponent: someCondition && ListHeaderComponent,
+            ListEmptyComponent: (filter && filter.token) ? filter.emptyFilterResult(filter.token) : ListEmptyComponent,
+            ListFooterComponent: someCondition && this.renderFetchMoreLoader(ListFooterComponent),
             renderSectionHeader: someCondition && renderSectionHeader,
             onScroll: this._handleScroll,
             onScrollBeginDrag: Keyboard.dismiss,
             keyboardShouldPersistTaps: 'always',
+
             ...attributes,
         };
 
@@ -326,10 +329,6 @@ export default class Feed extends Component<Props, State>  {
         return this.getElementCount() === 0
     }
 
-    renderEmpty() {
-        return <ScrollView refreshControl={this.renderRefreshControl()}>{this.props.ListEmptyComponent}</ScrollView>;
-    }
-
     isFetchingFirst() {
         return this.state.isFetchingFirst === 'sending';
     }
@@ -339,11 +338,6 @@ export default class Feed extends Component<Props, State>  {
     }
 
     lastEvent: any;
-
-    getScrollY() {
-        if (!this.lastEvent) return this.lastEvent.contentOffset.y;
-        return 0;
-    }
 
     _handleScroll = (event: Object) => {
         if (this.props.onScroll) {

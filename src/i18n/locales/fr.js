@@ -15,7 +15,7 @@ export default {
     },
     lineups: {
         filter: {
-            empty: "Chercher dans mes listes sur le serveur.",
+            empty: "Pas de résultat",
             deepsearch: "Chercher dans toutes mes listes",
         },
         search: {
@@ -219,6 +219,7 @@ export default {
             "musics":"titre, artiste, album...",
             "savings": "Taper des mots clefs pour trouver des listes à suivre",
             "users": "Chercher des membres à suivre",
+
         },
         "search_options":  {
             "around_me": "Autour de moi"
