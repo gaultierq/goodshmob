@@ -150,10 +150,10 @@ export default {
     },
     "popular_screen":{
         "title": "Add in my lists",
-        "main_explanation": "Trending this week:",
+        "main_explanation": "By choosing among the best of this week\nI can delete them later",
         "empty": "No popular items found",
         item_selected: {
-            zero: "Add some items",
+            zero: "Select some items",
             one: "Add 1 item",
             other: "Add %{count} items"
         },
@@ -208,16 +208,16 @@ export default {
     },
     "search_item_screen":{
         "tabs": {
-            "consumer_goods":"BOOK & PRODUCT",
+            "consumer_goods":"BOOK & OTHER",
             "places":"PLACE",
-            "movies":"MOVIE",
+            "movies":"MOVIE & TV",
             "musics":"MUSIC"
         },
         "placeholder": {
-            "consumer_goods":"Stuff: books, gifts, shoes, wine, games, products...",
-            "places":"Restaurants, cafés, shops, hotels, museums, cities, beaches, places to visit, doctors, plumbers...",
-            "movies":"Movies, TV shows",
-            "musics":"Musics, artists, albums, tracks",
+            "consumer_goods":"Search among 60 M books, gifts, shoes, wine, games, products...",
+            "places":"Search among 80 M restaurants, cafés, shops, hotels, museums, cities, beaches, places to visit, doctors, plumbers...",
+            "movies":"Search among 20 M movies, TV shows",
+            "musics":"Search among 40 M tracks, artists, albums",
             "savings": "Tap keywords for interesting lists to follow",
             "users": "Search for users to follow",
         },
