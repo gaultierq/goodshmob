@@ -174,7 +174,7 @@ export default class ActivityCell extends React.Component<Props, State> {
         let navigator: RNNNavigator = this.props.navigator;
         return this.wrapUserAvatar(
             <GTouchable onPress={() => seeUser(navigator, user)}>
-                <Avatar user={user} />
+                <Avatar user={user} size={AVATAR_DIM}/>
             </GTouchable>,
             styles
         )
