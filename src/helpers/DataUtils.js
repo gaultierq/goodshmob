@@ -55,6 +55,9 @@ export let sanitizeActivityType = activityType => {
         case "artist":
         case "artists":
             return "artists";
+        case "list":
+        case "lists":
+            return "lists";
     }
     return activityType;
 };
@@ -74,16 +77,27 @@ export function buildNonNullData(store, type, id: Id, assertNonNull?: boolean = 
     let start = Date.now();
     // let result = build(store, type, id, {includeType: true});
     let sanitized = sanitizeActivityType(type);
-    let result = build(store, sanitized, id, {includeType: true});
+    let result = build(store, sanitized, id, {includeType: true, decorator: item => decorate(item)});
 
 
     if (assertNonNull && !result && __WITH_ASSERTS__) throw new Error(`resource not found for type=${type} id=${id}`);
     //Statistics.record('build', Date.now()-start);
+
+    decorate(result)
     Statistics.recordTime(`buildData`, Date.now()-start);
     return result;
 }
 
-export function assertUnique(data: Array<>) {
+function decorate(object: ?any) {
+    if (!object) return
+    if (sanitizeActivityType(object.type) === 'lists' && object.primary === true) {
+        object.name = i18n.t('lineups.goodsh.title')
+    }
+    object.built = 'true'
+
+}
+
+export function assertUnique(data: Array<*>) {
     let ids = [];
     data && data.forEach((d) => {
         if (ids.indexOf(d.id)>=0) {

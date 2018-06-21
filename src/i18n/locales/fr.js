@@ -23,7 +23,7 @@ export default {
             empty: "Pas de résultat.",
         },
         goodsh : {
-            title: "A ranger plus tard"
+            title: "À ranger plus tard"
         },
         mine : {
             title: "Mes listes"
