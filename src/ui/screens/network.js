@@ -24,6 +24,7 @@ import {CANCELABLE_MODAL} from "../Nav"
 import {CANCELABLE_MODAL2} from "../Nav"
 import AskInput from "../components/AskInput"
 import GTouchable from "../GTouchable"
+import {seeActivityDetails} from "../Nav"
 
 type Props = NavigableProps;
 
@@ -162,7 +163,7 @@ class NetworkScreen extends Screen<Props, State> {
                     SectionSeparatorComponent={({leadingItem, trailingItem, leadingSection, section, trailingSection}) => {
                         // return <View style={{height: 10, backgroundColor: 'blue'}}/>
                         if (!leadingItem && trailingItem === _.get(section, 'data[0]')) {
-                           return TRANSPARENT_SPACER(20)()
+                            return TRANSPARENT_SPACER(20)()
                         }
                         return null
                     }}
@@ -259,14 +260,20 @@ class NetworkScreen extends Screen<Props, State> {
             )
         }
         else {
-            return (<ActivityStatus
-                activity={activity}
-                descriptionNumberOfLines={3}
-                navigator={this.props.navigator}
-                cardStyle={{
-                    paddingHorizontal: LINEUP_PADDING,
-                    paddingVertical: 10,}}
-            />)
+            return (
+                <GTouchable onPress={() => {
+                    seeActivityDetails(this.props.navigator, activity)
+                }}>
+                    <ActivityStatus
+                        activity={activity}
+                        descriptionNumberOfLines={3}
+                        navigator={this.props.navigator}
+                        cardStyle={{
+                            paddingHorizontal: LINEUP_PADDING,
+                            paddingVertical: 10,}}
+                    />
+                </GTouchable>
+            )
         }
     }
 }
