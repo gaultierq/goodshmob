@@ -20,6 +20,8 @@ class GLineupAction extends GAction {
 
 }
 
+// add_item_into
+export const L_ADD_ITEM: GLineupAction = new GLineupAction('add item')
 export const L_SHARE: GLineupAction = new GLineupAction('share list')
 export const L_RENAME: GLineupAction = new GLineupAction('rename list')
 export const L_DELETE: GLineupAction = new GLineupAction('delete list')
@@ -34,10 +36,6 @@ export class LineupRights {
         this.lineup = lineup
     }
 
-    canShare() {
-        return true
-    }
-
     canExec(action: GLineupAction): boolean {
         const l = this.lineup
         if (!l) return false
@@ -48,6 +46,8 @@ export class LineupRights {
             case L_SHARE:
                 return true
             case L_RENAME:
+                return isMine
+            case L_ADD_ITEM:
                 return isMine
             case L_DELETE:
                 return isMine

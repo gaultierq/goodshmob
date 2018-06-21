@@ -259,25 +259,76 @@ export function renderLineupFromOtherPeople(navigator: RNNNavigator, lineup: Lin
 export const GoodshContext = React.createContext({userOwnResources: true});
 
 
-export let getAddButton = (display: boolean) => {
+export let getAddButton = (lineup: Lineup) => {
     return {
         ...Platform.select({
             ios: {
-                rightButtons: display ? [
+                rightButtons: [
                     {
                         systemItem: 'add',
                         id: 'add'
                     }
-                ] : [],
+                ],
             },
             android: {
-                fab: display ? {
+                fab: {
                     collapsedId: 'add',
                     collapsedIcon: require('./../img/plus.png'),
                     collapsedIconColor: Colors.white,
                     backgroundColor: Colors.green
-                } : {}
+                }
             },
         }),
     }
+}
+
+export let getFollowButton = (lineup: Lineup) => {
+    return {
+        ...Platform.select({
+            ios: {
+                rightButtons: [FOLLOW_RIGHT_BUTTON(lineup.id)],
+            },
+            android: {
+                fab: {
+                    collapsedId: 'add',
+                    collapsedIcon: require('./../img/plus.png'),
+                    collapsedIconColor: Colors.white,
+                    backgroundColor: Colors.green
+                }
+            },
+        }),
+    }
+}
+
+export const FOLLOW_RIGHT_BUTTON = (id: string) => ({
+    title: i18n.t('actions.follow'),
+    id: 'follow_' + id
+})
+
+export const UNFOLLOW_RIGHT_BUTTON = (id: string) => ({
+    title: i18n.t('actions.unfollow'),
+    id: 'unfollow_' + id
+})
+
+export let getUnfollowButton = (lineup: Lineup) => {
+    return Platform.select({
+        ios: {
+            rightButtons: [UNFOLLOW_RIGHT_BUTTON],
+        },
+        android: {
+            fab: {
+                collapsedId: 'add',
+                collapsedIcon: require('./../img/plus.png'),
+                collapsedIconColor: Colors.white,
+                backgroundColor: Colors.green
+            }
+        },
+    })
+}
+
+export let getClearButton = function () {
+    return Platform.select({
+        ios: {rightButtons: []},
+        android: {fab: {}}
+    })
 }

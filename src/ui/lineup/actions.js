@@ -143,7 +143,7 @@ export const FOLLOW_LINEUP_PENDING: PendingAction<List>  = pendingActionWrapper(
 export function followLineupPending(dispatch, lineup) {
     let delayMs = 4000;
 
-    dispatch(FOLLOW_LINEUP_PENDING.pending({id: lineup.id}, {
+    return dispatch(FOLLOW_LINEUP_PENDING.pending({id: lineup.id}, {
             scope: {lineupId: lineup.id},
             delayMs: delayMs
         }

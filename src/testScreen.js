@@ -146,8 +146,9 @@ export const lineupScreen = {
         screen: 'goodsh.LineupScreen',
     },
     passProps: {
-        lineupId: 'c460d35f-e78c-410e-810c-27a7f198e28d',
+        // lineupId: 'c460d35f-e78c-410e-810c-27a7f198e28d',
         // lineupId: '37e67b05-c86c-4aeb-b3af-bf1c34862cd0',
+        lineupId: '071fe3d5-bfeb-40ea-aae2-f867d4855ad1', //a benoit
     }
 };
 

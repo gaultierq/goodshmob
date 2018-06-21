@@ -3,25 +3,30 @@
 import React from 'react'
 import {Keyboard, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {connect} from "react-redux"
-import {currentGoodshboxId, currentUserId, logged} from "../../managers/CurrentUser"
-import {activityFeedProps, getAddButton} from "../UIComponents"
+import {currentUserId, logged} from "../../managers/CurrentUser"
+import {
+    activityFeedProps,
+    FOLLOW_RIGHT_BUTTON,
+    getAddButton,
+    getClearButton,
+    UNFOLLOW_RIGHT_BUTTON
+} from "../UIComponents"
 import Immutable from 'seamless-immutable'
 import * as Api from "../../managers/Api"
 import Feed from "../components/feed"
-import type {Lineup, List, Saving} from "../../types"
+import type {List, Saving} from "../../types"
 import {buildData, doDataMergeInState} from "../../helpers/DataUtils"
 import ActivityCell from "../activity/components/ActivityCell"
 import {startAddItem} from "../Nav"
 import {Colors} from "../colors"
 import Screen from "./../components/Screen"
 import * as UI from "../UIStyles"
-import {LINEUP_PADDING, STYLES, TEXT_LESS_IMPORTANT} from "../UIStyles"
+import {STYLES} from "../UIStyles"
 import {fullName} from "../../helpers/StringUtils"
-import {FETCH_LINEUP, FETCH_SAVINGS, fetchLineup} from "../lineup/actions"
+import {FETCH_LINEUP, FETCH_SAVINGS, fetchLineup, followLineupPending, unfollowLineupPending2} from "../lineup/actions"
 import {UNSAVE} from "../activity/actionTypes"
 import * as authActions from "../../auth/actions"
-import FollowButton from "../activity/components/FollowButton"
-import * as TimeUtils from "../../helpers/TimeUtils"
+import {L_ADD_ITEM, L_FOLLOW, L_UNFOLLOW, LineupRights} from "../lineupRights"
 
 type Props = {
     lineupId: string,
@@ -45,20 +50,50 @@ class LineupScreen extends Screen<Props, State> {
         navBarSubTitleTextCentered: true,
     }
 
-    constructor(props: Props) {
-        super(props);
-        props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+    unsubscribe: ?() => void
+
+    componentWillMount() {
+        this.unsubscribe = this.props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
+    componentWillUnmount() {
+        if (this.unsubscribe) this.unsubscribe()
+    }
 
     componentDidAppear() {
-        this.props.navigator.setButtons(getAddButton(this.canAdd()))
+        this.refreshNavigatorButtons()
     }
 
-    onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
-        if (event.id === 'add') {
-            startAddItem(this.props.navigator, currentGoodshboxId())
+    refreshNavigatorButtons() {
+        console.debug('refreshNavigatorButtons')
+        this.props.navigator.setButtons(this.getMainActionButton())
+
+    }
+
+    //TODO: improve code
+    getMainActionButton(): any {
+        const lineup = this.getLineup()
+        if (lineup) {
+            let actions = LineupRights.getActions(lineup)
+            if (actions.indexOf(L_ADD_ITEM) >= 0) return getAddButton(lineup)
+            if (actions.indexOf(L_FOLLOW) >= 0) return {rightButtons: [FOLLOW_RIGHT_BUTTON(lineup.id)],}
+            // if (actions.indexOf(L_UNFOLLOW) >= 0) return {rightButtons: [UNFOLLOW_RIGHT_BUTTON(lineup.id)],}
+        }
+        return {rightButtons: [], fab: {}}
+    }
+
+    // FIXME: terrible hack: watch store, refresh accordingly
+    onNavigatorEvent(event) {
+        let lineup = this.getLineup()
+        if (!lineup) {
+            console.warn("lineup not found")
             return
+        }
+        if (event.id === 'add') {
+            startAddItem(this.props.navigator, lineup)
+        }
+        else if (event.id === 'follow_' + lineup.id) {
+            followLineupPending(this.props.dispatch, lineup).then(()=> this.refreshNavigatorButtons())
         }
     }
 
@@ -115,24 +150,12 @@ class LineupScreen extends Screen<Props, State> {
                     data={savings}
                     renderItem={item => this.renderItem(item, lineup)}
                     fetchSrc={fetchSrc}
-                    ListHeaderComponent={this.renderHeader(lineup)}
                     hasMore={true}
                     empty={<Text style={STYLES.empty_message}>{i18n.t("empty.lineup")}</Text>}
                     {...activityFeedProps()}
                 />
             </View>
         );
-    }
-
-    //TODO: need a design for this
-    renderHeader(lineup: Lineup) {
-        if (!lineup) return null
-        return (
-            <View style={{alignItems: 'flex-end', justifyContent: 'flex-end', paddingHorizontal: LINEUP_PADDING, paddingTop: 6}}>
-                <Text style={TEXT_LESS_IMPORTANT}>{`${TimeUtils.timeSince(Date.parse(lineup.createdAt))}`}</Text>
-                <View><FollowButton lineup={lineup} /></View>
-            </View>
-        )
     }
 
     follow() {

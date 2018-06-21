@@ -30,7 +30,7 @@ import {PROFILE_CLICKED} from "../components/MyAvatar";
 import OnBoardingManager from "../../managers/OnBoardingManager";
 import {
     floatingButtonScrollListener,
-    getAddButton,
+    getAddButton, getClearButton,
     registerLayoutAnimation,
     scheduleOpacityAnimation
 } from "../UIComponents"
@@ -239,7 +239,7 @@ export default class HomeScreen extends Screen<Props, State> {
 
 
     refreshRightButtons() {
-        this.props.navigator.setButtons(getAddButton(this.state.index === 0))
+        this.props.navigator.setButtons(this.state.index === 0 ? getAddButton() : getClearButton())
     }
 
     displayFloatingButton() {
