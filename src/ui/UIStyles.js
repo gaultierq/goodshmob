@@ -232,7 +232,7 @@ export const STYLES = StyleSheet.create({
 export const FEED_INITIAL_LOADER_DURATION = 400;
 
 
-export const SEARCH_INPUT_RADIUS = 4;
+export const SEARCH_INPUT_RADIUS = 10;
 
 export const SEARCH_STYLES_OBJ = {
     container: {
@@ -250,10 +250,6 @@ export const SEARCH_STYLES_OBJ = {
         fontSize: 15,
         height: 40,
         ...Platform.select({
-            ios: {
-                height: 30,
-
-            },
             android: {
                 borderWidth: 0,
             },

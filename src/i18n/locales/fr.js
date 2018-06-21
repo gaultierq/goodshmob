@@ -436,5 +436,6 @@ export default {
         goodsh_count: "Goodshs",
         lineup_count: "Listes",
         friend_count: "Contacts",
-    }
+    },
+    current_location: "Autour de moi"
 };

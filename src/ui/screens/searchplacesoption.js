@@ -35,8 +35,8 @@ type SearchPlacesState = {
 
 export const SEARCH_OPTIONS_PADDINGS = {
 
-    paddingLeft: __IS_IOS__ ? 16 : 80,
-    paddingRight: __IS_IOS__ ? 16 : 8,
+    paddingLeft: __IS_IOS__ ? 16 : 16,
+    paddingRight: __IS_IOS__ ? 16 : 16,
     paddingVertical: 8,
 };
 

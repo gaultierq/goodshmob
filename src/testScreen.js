@@ -1,5 +1,6 @@
 import {currentUserId} from "./managers/CurrentUser";
 import EditUserProfileScreen from "./ui/screens/edituserprofile";
+import {CANCELABLE_SEARCH_MODAL} from "./ui/Nav"
 
 export const homeScreen = {
     screen: {
@@ -175,7 +176,7 @@ export const searchItemsScreen = {
         title: 'Test SearchItemsScreen',
     },
     passProps: {
-        // index: 1,
+        index: 1,
     }
 };
 export const homeSearchItemsScreen = {
@@ -263,7 +264,11 @@ export const userSheetScreen = {
         userId: "5c73fe0f-f0c1-40fe-869f-3a00b55e2f1b"
     }
 }
-
+export const searchAutoCompleteScreen = {
+    screen: {
+        screen: 'goodsh.PlacesAutocomplete',
+    },
+}
 
 export const test = {
     screen: {

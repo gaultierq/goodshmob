@@ -83,16 +83,23 @@ export default class PlacesAutocomplete extends Screen<Props, State> {
                     container: {
                         borderTopWidth: 0,
                         borderBottomWidth: 0,
+                        marginBottom: 10,
                         backgroundColor: 'transparent',
+
                     },
                     textInputContainer: {
                         width: '100%',
                         backgroundColor: NavStyles.navBarBackgroundColor,
                         borderTopWidth: 0,
-                        borderBottomWidth: 0,
+                        // borderBottomWidth: 0,
 
-                        ...SEARCH_OPTIONS_PADDINGS
-                        // backgroundColor:'red',
+                        ...SEARCH_OPTIONS_PADDINGS,
+
+
+                        // backgroundColor: 'red',
+                        // paddingVertical: 180,
+                        // marginBottom: 15,
+                        paddingBottom: 55
                     },
                     textInput: [SEARCH_STYLES.searchInput, {
                         ...styleMargin(0,0),
@@ -107,7 +114,7 @@ export default class PlacesAutocomplete extends Screen<Props, State> {
                 }}
 
                 currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
-                currentLocationLabel="Current location"
+                currentLocationLabel={i18n.t('current_location')}
                 nearbyPlacesAPI='None' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
                 GoogleReverseGeocodingQuery={{
                     // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro

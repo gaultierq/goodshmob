@@ -6,6 +6,7 @@ import GTouchable from "../GTouchable"
 import {Colors} from "../colors"
 import Octicons from "react-native-vector-icons/Octicons"
 import {SFP_TEXT_REGULAR} from "../fonts"
+import {SEARCH_INPUT_RADIUS} from "../UIStyles"
 
 type State = {
     value: string
@@ -121,7 +122,7 @@ const styles = StyleSheet.create({
         height: 36,
         paddingHorizontal: 14,
         paddingVertical: 4,
-        borderRadius: 10,
+        borderRadius: SEARCH_INPUT_RADIUS,
         backgroundColor: 'rgba(142,142,142,0.12)',
     },
 });
