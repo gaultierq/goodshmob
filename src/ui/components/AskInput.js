@@ -41,8 +41,10 @@ type State = {
 export default class AskInput extends Component<Props, State> {
     state= {};
 
+
     render() {
 
+        const {editable, ...attr} = this.props
         let askContent = this.state.askContent;
         const asking = this.state.reqCreateAsk === 'sending'
         let buttonDisabled = asking || !askContent;
@@ -58,7 +60,7 @@ export default class AskInput extends Component<Props, State> {
                 flexDirection: 'row', borderBottomWidth: StyleSheet.hairlineWidth, borderColor: Colors.greyish}}>
                 <Avatar user={currentUser()}/>
                 <TextInput
-                    editable={!notEditable}
+                    editable={editable && !notEditable}
                     onSubmitEditing={this.createAsk.bind(this)}
                     value={askContent}
                     multiline={true}
@@ -78,6 +80,7 @@ export default class AskInput extends Component<Props, State> {
                         {minHeight: 50}
                     ]}
                     returnKeyType={'send'}
+                    {...attr}
                 />
             </View>
 
@@ -164,11 +167,10 @@ export const CREATE_ASK = ApiAction.create("create_ask", "asked for network");
 const styles = StyleSheet.create({
     input:{
         fontSize: 20,
-        // lineHeight: 35,
-        // textAlign: 'center',
         fontFamily: SFP_TEXT_BOLD,
         borderRadius: 10,
-        margin: 10,
+        marginHorizontal: 10,
+        marginVertical: 3,
         color: Colors.greyishBrown,
         borderColor: Colors.greyishBrown,
 

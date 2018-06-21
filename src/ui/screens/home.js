@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import React from 'react'
 import {
     Alert,
     BackHandler,
@@ -15,33 +15,26 @@ import {
     TextInput,
     TouchableOpacity,
     View,
-} from 'react-native';
+} from 'react-native'
 
-import {connect} from "react-redux";
-import type {Id, RNNNavigator, Saving} from "../../types";
-import {TAB_BAR_PROPS} from "../UIStyles";
-import {currentGoodshboxId, currentUser, currentUserId, logged} from "../../managers/CurrentUser"
+import {connect} from "react-redux"
+import type {Id, RNNNavigator, Saving} from "../../types"
+import {TAB_BAR_PROPS} from "../UIStyles"
+import {currentGoodshboxId, currentUser, logged} from "../../managers/CurrentUser"
 import {CheckBox} from 'react-native-elements'
-import {Navigation} from 'react-native-navigation';
-import {CANCELABLE_MODAL, displayHomeSearch, startAddItem} from "../Nav"
-import Screen from "../components/Screen";
-import {Colors} from "../colors";
-import {PROFILE_CLICKED} from "../components/MyAvatar";
-import OnBoardingManager from "../../managers/OnBoardingManager";
-import {
-    floatingButtonScrollListener,
-    getAddButton, getClearButton,
-    registerLayoutAnimation,
-    scheduleOpacityAnimation
-} from "../UIComponents"
-import {Tip, TipConfig} from "../components/Tip";
-import {HomeOnBoardingHelper} from "./HomeOnBoardingHelper";
-import {TabBar, TabViewAnimated} from "react-native-tab-view";
-import ActionButton from 'react-native-action-button';
-import MyGoodsh from "./MyGoodsh";
-import MyInterests from "./MyInterests";
-import {fullName2} from "../../helpers/StringUtils";
-import {currentUserFilter} from "../../redux/selectors";
+import {Navigation} from 'react-native-navigation'
+import {displayHomeSearch, startAddItem} from "../Nav"
+import Screen from "../components/Screen"
+import {PROFILE_CLICKED} from "../components/MyAvatar"
+import OnBoardingManager from "../../managers/OnBoardingManager"
+import {floatingButtonScrollListener, getAddButton, getClearButton, scheduleOpacityAnimation} from "../UIComponents"
+import {Tip, TipConfig} from "../components/Tip"
+import {HomeOnBoardingHelper} from "./HomeOnBoardingHelper"
+import {TabBar, TabViewAnimated} from "react-native-tab-view"
+import MyGoodsh from "./MyGoodsh"
+import MyInterests from "./MyInterests"
+import {fullName2} from "../../helpers/StringUtils"
+import {currentUserFilter} from "../../redux/selectors"
 import NotificationManager from '../../managers/NotificationManager'
 
 type Props = {

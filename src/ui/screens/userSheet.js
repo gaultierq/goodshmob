@@ -93,7 +93,7 @@ export default class UserSheet extends Component<Props, State> {
         return <KeyboardAvoidingView
             contentContainerStyle={{flex:1}}
             scrollEnabled={false}
-            extraScrollHeight={20}
+            extratlHeight={20}
             keyboardShouldPersistTaps='always'
             style={{position: 'absolute', bottom:0, top: 0, left: 0, right: 0}}>
             <Sheet

@@ -23,6 +23,7 @@ import NetworkSearchScreen from './screens/networksearch';
 import HomeSearchScreen from './screens/homesearch';
 import AddItemScreen from './screens/additem';
 import TestScreen from './screens/devtest';
+import AskScreen from './screens/asksheet';
 import UserSheet from './screens/userSheet';
 import MyAvatar from './components/MyAvatar';
 import {InteractionScreen} from './screens/interactions';
@@ -110,5 +111,6 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.MyInterestsScreen', () => MyInterestsScreen, store, Provider);
     wrap('goodsh.MyGoodshsScreen', () => MyGoodshsScreen, store, Provider);
     wrap('goodsh.PopularItemsScreen', () => PopularItemsScreen, store, Provider);
+    wrap('goodsh.AskScreen', () => AskScreen, store, Provider);
 
 }

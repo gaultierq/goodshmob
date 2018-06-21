@@ -23,6 +23,7 @@ import {SFP_TEXT_MEDIUM} from "../fonts";
 import {CANCELABLE_MODAL} from "../Nav"
 import {CANCELABLE_MODAL2} from "../Nav"
 import AskInput from "../components/AskInput"
+import GTouchable from "../GTouchable"
 
 type Props = NavigableProps;
 
@@ -144,7 +145,7 @@ class NetworkScreen extends Screen<Props, State> {
                     sections={sections}
                     renderItem={({item, index}) => this.renderItem(item, index)}
                     renderSectionFooter={({section}) => this.renderSectionFooter(section)}
-                    ListHeaderComponent={<AskInput/>}
+                    ListHeaderComponent={<GTouchable onPress={() => this.showAsk()}><AskInput editable={false} pointerEvents='none'/></GTouchable>}
                     listRef={ref => this.feed = ref}
                     fetchSrc={{
                         callFactory: fetchMyNetwork,
@@ -181,10 +182,20 @@ class NetworkScreen extends Screen<Props, State> {
 
                     }}
                     {...attr}
+                    contentOffset={{x: 0, y: 100}}
                 />
 
             </View>
         );
+    }
+
+    showAsk() {
+        let {navigator} = this.props;
+        //1: https://github.com/wix/react-native-navigation/issues/1502
+        navigator.showModal({
+            screen: 'goodsh.AskScreen', // unique ID registered with Navigation.registerScreen
+            animationType: 'none'
+        });
     }
 
     renderSectionFooter(section: NetworkSection) {
