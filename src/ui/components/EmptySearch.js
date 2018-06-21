@@ -27,7 +27,7 @@ export default class EmptySearch extends Component<Props, State> {
 
     render() {
 
-        const color = Colors.brownishGrey;
+        const color = Colors.greyish;
         return (
             <View style={{
                 flex:1,

@@ -286,6 +286,7 @@ let TAB_BAR_STYLES = StyleSheet.create({
     },
     label: {
         color: '#000000',
+        textAlign: 'center',
     },
 
 })
