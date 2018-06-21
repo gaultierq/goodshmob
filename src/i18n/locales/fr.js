@@ -363,7 +363,7 @@ export default {
         send: "Envoyer",
         create: "Créer",
         try_again: "Réessayer",
-        ask_friend: "Poser une\nquestion à\nmon réseau",
+        ask_friend: "Poser une question à mon réseau",
         logout: "Déconnexion",
         follow: "Suivre",
         unfollow: "Ne plus suivre",

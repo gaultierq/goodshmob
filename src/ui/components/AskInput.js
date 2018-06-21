@@ -56,7 +56,7 @@ export default class AskInput extends Component<Props, State> {
         return <View style={{padding: 10}}>
 
             <View style={{
-                // backgroundColor: Colors.white,
+                // backgroundColor: 'red',
                 flexDirection: 'row', borderBottomWidth: StyleSheet.hairlineWidth, borderColor: Colors.greyish}}>
                 <Avatar user={currentUser()}/>
                 <TextInput
@@ -64,7 +64,7 @@ export default class AskInput extends Component<Props, State> {
                     onSubmitEditing={this.createAsk.bind(this)}
                     value={askContent}
                     multiline={true}
-                    numberOfLines={6}
+                    numberOfLines={3}
                     maxLength={200}
                     blurOnSubmit
                     onFocus={()=> {this.setFocused(true)}}
@@ -74,10 +74,17 @@ export default class AskInput extends Component<Props, State> {
                     // placeholderTextColor={"rgba(255,255,255,0.6)"}
                     // textAlignVertical={'top'}
                     // selectionColor={'transparent'}
+                    underlineColorAndroid={'transparent'}
                     style={[
                         styles.input,
                         {opacity: (notEditable ? 0.5 : 1)},
-                        {minHeight: 50}
+                        {
+                            minHeight: 50,
+                            // backgroundColor: 'blue',
+                            flex:1,
+                            textAlignVertical: 'top',
+                            paddingTop: 0,
+                        }
                     ]}
                     returnKeyType={'send'}
                     {...attr}
