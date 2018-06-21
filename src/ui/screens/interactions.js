@@ -62,7 +62,7 @@ export class InteractionScreen extends Screen<Props, State> {
                     hasMore={!interaction.hasNoMore}
                     ItemSeparatorComponent={TRANSPARENT_SPACER(12)}
                     contentContainerStyle={{paddingTop: 10}}
-                    empty={
+                    ListEmptyComponent={
                         <View>
                             <ShareButton text={i18n.t('actions.invite')}/>
                             <Text style={STYLES.empty_message}>{i18n.t('interactions.empty_screen')}</Text>

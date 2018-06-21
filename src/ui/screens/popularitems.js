@@ -94,7 +94,7 @@ export default class PopularItemsScreen extends Screen<Props, State> {
                     listRef={ref=>ref}
                     displayName={"PopularItems"}
                     fetchSrc={this.fetchSrc()}
-                    empty={<Text>{i18n.t("popular_screen.empty")}</Text>}
+                    ListEmptyComponent={<Text>{i18n.t("popular_screen.empty")}</Text>}
                 />
                 <View style={{
                     padding: LINEUP_PADDING,

@@ -151,7 +151,7 @@ class LineupScreen extends Screen<Props, State> {
                     renderItem={item => this.renderItem(item, lineup)}
                     fetchSrc={fetchSrc}
                     hasMore={true}
-                    empty={<Text style={STYLES.empty_message}>{i18n.t("empty.lineup")}</Text>}
+                    ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t("empty.lineup")}</Text>}
                     {...activityFeedProps()}
                 />
             </View>

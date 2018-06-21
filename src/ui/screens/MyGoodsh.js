@@ -72,7 +72,7 @@ export default class MyGoodsh extends Screen<Props, State> {
                 feedId={"home list"}
                 userId={userId}
                 navigator={navigator}
-                empty={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
+                ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
                 renderSectionHeader={({section}) => section.renderSectionHeader()}
                 sectionMaker={(lineups)=> {
                     const goodshbox = _.head(lineups);

@@ -87,7 +87,7 @@ export default class MyInterests extends Screen<Props, State> {
                     displayName={"MyInterests"}
                     renderSectionHeader={({section}) => section.renderSectionHeader()}
                     sections={sections}
-                    empty={<View><Text style={STYLES.empty_message}>{i18n.t('my_interests_screen.empty_screen')}</Text>
+                    ListEmptyComponent={<View><Text style={STYLES.empty_message}>{i18n.t('my_interests_screen.empty_screen')}</Text>
                         {renderSimpleButton(
                             i18n.t('my_interests_screen.search_lists'),
                             () => this.showSearch(),

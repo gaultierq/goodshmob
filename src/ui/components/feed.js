@@ -46,7 +46,7 @@ export type Props = {
     hasMore?: boolean,
     ListHeaderComponent?: Node,
     ListFooterComponent?: Node,
-    empty: Node,
+    ListEmptyComponent?: Node,
     style?: ViewStyle,
     scrollUpOnBack?:() => ?boolean,
     visibility?: ScreenVisibility,
@@ -205,7 +205,7 @@ export default class Feed extends Component<Props, State>  {
             renderItem,
             fetchSrc,
             hasMore,
-            empty,
+            ListEmptyComponent,
             ListHeaderComponent,
             ListFooterComponent,
             renderSectionHeader,
@@ -325,7 +325,7 @@ export default class Feed extends Component<Props, State>  {
     }
 
     renderEmpty() {
-        return <ScrollView refreshControl={this.renderRefreshControl()}>{this.props.empty}</ScrollView>;
+        return <ScrollView refreshControl={this.renderRefreshControl()}>{this.props.ListEmptyComponent}</ScrollView>;
     }
 
     isFetchingFirst() {

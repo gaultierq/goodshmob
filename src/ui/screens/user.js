@@ -91,7 +91,7 @@ export default class UserScreen extends Screen<Props, State> {
                     feedId={"user list"}
                     userId={userId}
                     navigator={this.props.navigator}
-                    empty={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
+                    ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
                     renderSectionHeader={({section}) => section.renderSectionHeader()}
                     sectionMaker={LINEUP_SECTIONS(this.props.navigator, this.props.dispatch, userId)}
 

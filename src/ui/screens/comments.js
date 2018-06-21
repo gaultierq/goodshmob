@@ -161,7 +161,7 @@ class CommentsScreen extends Screen<Props, State> {
                                 paddingVertical: 15,
                                 // backgroundColor: Colors.greying
                             }}
-                            // empty={<Text style={[STYLES.empty_message, {fontSize: 20, paddingBottom: 50}]}>{i18n.t('activity_screen.comments.no_comments')}</Text>}
+                            // ListEmptyComponent={<Text style={[STYLES.empty_message, {fontSize: 20, paddingBottom: 50}]}>{i18n.t('activity_screen.comments.no_comments')}</Text>}
                         />
 
                         <View style={{height: 60, flex:0, backgroundColor: 'blue'}}>

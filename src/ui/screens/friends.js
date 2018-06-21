@@ -68,7 +68,7 @@ export default class FriendsScreen extends Screen<Props, State> {
                         action,
                         options: {userId}
                     }}
-                    empty={<Text style={STYLES.empty_message}>{i18n.t('friends.empty_screen')}</Text>}
+                    ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t('friends.empty_screen')}</Text>}
                     ItemSeparatorComponent={ItemSeparatorComponent}
                     visibility={this.getVisibility()}
                 />
