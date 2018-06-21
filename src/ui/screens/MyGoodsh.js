@@ -147,7 +147,11 @@ export default class MyGoodsh extends Screen<Props, State> {
                     <LineupTitle2
                         lineupId={lineup.id}
                         dataResolver={id => lineup}
-                        style={{marginBottom: 10, paddingRight: 30}}
+                        style={{
+                            marginBottom: 10,
+                            paddingRight: 30,
+                            // backgroundColor: 'blue',
+                        }}
                         skipAuthor={true}
                     />
                 )}
@@ -158,7 +162,7 @@ export default class MyGoodsh extends Screen<Props, State> {
                 }
                 style={[
                     {paddingTop: 8, paddingBottom: 12},
-                    {backgroundColor: index % 2 === 1 ? 'transparent' : 'rgba(255, 255, 255, 0.3)'}
+                    {backgroundColor: index % 2 === 1 ? 'transparent' : 'rgba(255, 255, 255, 0.3)'},
                 ]}
             />)
     }
@@ -181,8 +185,13 @@ export default class MyGoodsh extends Screen<Props, State> {
         if (!item || item.id === currentGoodshboxId()) return null;
 
         return (
-            <GTouchable style={{position: "absolute", right: 0, margin: 0}} onPress={() => displayLineupActionMenu(this.props.navigator, this.props.dispatch, item)}>
-                <View style={{...stylePadding(padding, 14)}}>
+            <GTouchable style={{}} onPress={() => displayLineupActionMenu(this.props.navigator, this.props.dispatch, item)}>
+                <View style={{
+                    paddingHorizontal: padding,
+                    paddingVertical: 16,
+                    // paddingBottom: 8,
+                    // backgroundColor: 'red',
+                }}>
                     <Image
                         source={require('../../img2/moreDotsGrey.png')} resizeMode="contain"/>
                 </View>

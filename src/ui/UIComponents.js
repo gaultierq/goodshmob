@@ -227,15 +227,12 @@ export const LINEUP_SECTIONS = (navigator: RNNNavigator, dispatch: any) => (line
 export function renderLineupMenu(navigator: RNNNavigator, dispatch: any, lineup: Lineup) {
     return (
         <GTouchable style={{
-            position: "absolute",
-            right: 0,
-            margin: 0,
             // backgroundColor: 'red'
         }}
                     onPress={() => displayLineupActionMenu(navigator, dispatch, lineup)}>
             <View style={{
                 paddingHorizontal: LINEUP_PADDING,
-                paddingVertical: 14,
+                paddingVertical: 12,
             }}>
                 <Image source={require('../img2/moreDotsGrey.png')} resizeMode="contain"/>
             </View>
