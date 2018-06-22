@@ -7,7 +7,7 @@ import {GAction} from "./rights"
 
 const GLineupActions = []
 
-class GLineupAction extends GAction {
+export class GLineupAction extends GAction {
 
     constructor(name: string) {
         super(name)
@@ -30,17 +30,19 @@ export const L_UNFOLLOW: GLineupAction = new GLineupAction('unfollow list')
 
 export class LineupRights {
     lineup: Lineup
+    pending: ?any
 
-    constructor(lineup: Lineup) {
+    constructor(lineup: Lineup, pending?: any) {
         if (!lineup) throw "invalid params"
         this.lineup = lineup
+        this.pending = pending
     }
 
     canExec(action: GLineupAction): boolean {
         const l = this.lineup
         if (!l) return false
         let isMine = isCurrentUser(l.user)
-        const followed = isFollowed(l)
+        const followed = isFollowed(l, this.pending)
 
         switch (action) {
             case L_SHARE:
@@ -60,8 +62,8 @@ export class LineupRights {
         }
     }
 
-    static getActions(lineup: Lineup): GLineupAction[] {
-        let rights = new LineupRights(lineup)
+    static getActions(lineup: Lineup, pending?: any): GLineupAction[] {
+        let rights = new LineupRights(lineup, pending)
         return GLineupActions.filter(a => rights.canExec(a))
     }
 }

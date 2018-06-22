@@ -69,8 +69,8 @@ export default class FollowButton extends Component<Props, State> {
 
 //TODO: create decorators when building
 // return null if we don't know (eg: when item is pending)
-export function isFollowed(lineup: Lineup) {
-    if (StoreManager.isListPendingFollowOrUnfollow(lineup.id)) return null
+export function isFollowed(lineup: Lineup, pending?: any) {
+    if (StoreManager.isListPendingFollowOrUnfollow(lineup.id, pending)) return null
     return _.get(lineup, 'meta.followed')
 }
 

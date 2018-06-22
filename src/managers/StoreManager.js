@@ -35,10 +35,15 @@ class _StoreManager implements StoreManager {
         return !_.isEmpty(_.filter(result, pending => pending.itemId === itemId));
     }
 
-    isListPendingFollowOrUnfollow(listId: Id): boolean {
-        const pending = this.store.getState().pending
-        let finder = pendings => _.some(pendings, p => _.get(p, 'payload.id') === listId)
+    isListPendingFollowOrUnfollow(listId: Id, pending?: any): boolean {
+        if (!pending) {
+            pending = this.store.getState().pending
+        }
+        return _StoreManager.isPendingFoU(listId, pending)
+    }
 
+    static isPendingFoU(listId, pending) {
+        let finder = pendings => _.some(pendings, p => _.get(p, 'payload.id') === listId)
         return finder(pending[FOLLOW_LINEUP]) || finder(pending[UNFOLLOW_LINEUP])
     }
 

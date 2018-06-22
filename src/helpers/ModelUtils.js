@@ -6,6 +6,10 @@ import {Call} from "../managers/Api";
 import type {Id} from "../types";
 import type {PendingItem} from "../reducers/dataReducer";
 import {CREATE_PENDING_ACTION, REMOVE_PENDING_ACTION} from "../reducers/dataReducer";
+import {createSelector} from "reselect"
+import {buildData} from "./DataUtils"
+import {CREATE_LINEUP, SAVE_ITEM} from "../ui/lineup/actionTypes"
+import {UNSAVE} from "../ui/activity/actionTypes"
 /*
 
 export function parse(data: any) {
@@ -530,76 +534,83 @@ export function mergeItemsAndPendings2<T>(
     return items;
 }
 
+let lineupId = props => props.lineupId || _.get(props, 'lineup.id')
 
-// export function isItemPending(item: Object, pending: []) {
-//
-//     if (!pending) return false
-//
-//     let foundPendingItem = false
-//
-//     _.forEach(pending, (pendingItem) => {
-//         if (item.id === pendingItem.payload.id) {
-//             foundPendingItem = true
-//             return false
-//         }
-//     })
-//     return foundPendingItem
-// }
+export const LINEUP_SECLECTOR = createSelector(
+    [
+        (state, props) => props.lineup,
+        (state, props) => _.get(state, `data.lists.${lineupId(props)}`),
+        (state, props) => _.head(state.pending[CREATE_LINEUP], pending => pending.id === lineupId(props)),
+        state => state.data
+    ],
+    (
+        propLineup, //lineup
+        syncList, //lineup
+        rawPendingList, //lineup
+        data
+    ) => {
+        let lineup = (syncList && buildData(data, syncList.type, syncList.id) || {...rawPendingList, savings: []})
+        if (syncList) {
+            lineup = buildData(data, syncList.type, syncList.id)
+        }
+        else if (rawPendingList) {
+            lineup = {id: rawPendingList.id, name: rawPendingList.payload.listName, savings: []}
+        }
+        else if (propLineup) {
+            lineup = propLineup
+        }
+        return lineup
+    }
+)
 
+export const LINEUP_AND_SAVING_SELECTOR = createSelector(
+    [
+        LINEUP_SECLECTOR,
+        (state, props) => _.filter(state.pending[SAVE_ITEM], pending => pending.payload.lineupId === lineupId(props)),
+        (state, props) => _.filter(state.pending[UNSAVE], pending => pending.payload.lineupId === lineupId(props)),
+        state => state.data
+    ],
+    (
+        lineup, //lineup
+        rawPendingCreatedSavings,
+        rawPendingDeletedSavings,
+        data
+    ) => {
+        let savings
+        if (lineup) {
+            if (!_.isEmpty(rawPendingCreatedSavings)) {
+                savings = rawPendingCreatedSavings.map(pending => {
+                        const result = {
+                            id: pending.id,
+                            lineupId: pending.payload.lineupId,
+                            itemId: pending.payload.itemId,
+                            pending: true
+                        }
 
+                        // $FlowFixMe
+                        Object.defineProperty(
+                            result,
+                            'resource',
+                            {
+                                get: () => {
+                                    return buildData(data, pending.payload.itemType, pending.payload.itemId)
+                                },
+                            },
+                        )
+                        return result
+                    }
+                )
+            }
 
-// export function includePendingFollowItems<T>(
-//     items: Array<T>,
-//     pendingFollow: [],
-//     pendingUnfollow: []) {
-//
-//     const filteredItems = _.map(items, (item) => {
-//         // To avoid altering the fields in the original object
-//         return alterList(item,
-//             isItemPending(item, pendingFollow),
-//             isItemPending(item, pendingUnfollow))
-//     })
-//
-//     return filteredItems
-// }
+            if (lineup.savings) {
+                if (savings) savings = savings.concat(lineup.savings)
+                else savings = [].concat(lineup.savings) //?
+            }
+            if (!_.isEmpty(rawPendingDeletedSavings)) {
+                _.remove(savings, saving => rawPendingDeletedSavings.some(pending => pending.payload.savingId === saving.id))
+            }
 
-// function alterList(list: Object, pendingFollow: boolean, pendingUnfollow: boolean,
-//                    removePendingUnfollow: boolean = false){
-//     list.meta = _.cloneDeep(list.meta)
-//
-//     if (pendingFollow) {
-//         list.meta.followed = true
-//         list.meta.followersCount += 1
-//     }
-//
-//     if (pendingUnfollow) {
-//         list.meta.followed = false
-//         list.meta.followersCount -= 1
-//         if (removePendingUnfollow) {
-//             return false
-//         }
-//     }
-//     return list
-// }
-
-// export function includePendingFollow<T>(
-//     section: Object,
-//     pendingFollow: [],
-//     pendingUnfollow: [],
-//     removePendingUnfollow: boolean = false
-// ) {
-//     const filteredItems = _.compact(_.map(section.data, (item) => {
-//         return alterList(item,
-//             isItemPending(item, pendingFollow),
-//             isItemPending(item, pendingUnfollow),
-//             removePendingUnfollow)
-//     }))
-//
-//     if (_.isEmpty(filteredItems)){
-//         return false
-//     }
-//     section.data = filteredItems
-//
-//     return section
-// }
-
+        }
+        return {lineup, savings}
+    }
+)

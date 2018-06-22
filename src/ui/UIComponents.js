@@ -49,7 +49,6 @@ type Props = {
 }
 type State = {}
 
-//TODO: own class
 export class Avatar extends Component<Props, State> {
 
 

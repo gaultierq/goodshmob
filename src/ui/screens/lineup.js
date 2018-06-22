@@ -4,44 +4,65 @@ import React from 'react'
 import {Keyboard, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {connect} from "react-redux"
 import {currentUserId, logged} from "../../managers/CurrentUser"
-import {
-    activityFeedProps,
-    FOLLOW_RIGHT_BUTTON,
-    getAddButton,
-    getClearButton,
-    UNFOLLOW_RIGHT_BUTTON
-} from "../UIComponents"
+import {activityFeedProps, FOLLOW_RIGHT_BUTTON, getAddButton, UNFOLLOW_RIGHT_BUTTON} from "../UIComponents"
 import Immutable from 'seamless-immutable'
 import * as Api from "../../managers/Api"
 import Feed from "../components/feed"
-import type {List, Saving} from "../../types"
+import type {Activity, Id, Lineup, List, RNNNavigator, Saving, User} from "../../types"
 import {buildData, doDataMergeInState} from "../../helpers/DataUtils"
 import ActivityCell from "../activity/components/ActivityCell"
-import {startAddItem} from "../Nav"
+import {seeActivityDetails, startAddItem} from "../Nav"
 import {Colors} from "../colors"
 import Screen from "./../components/Screen"
 import * as UI from "../UIStyles"
 import {STYLES} from "../UIStyles"
 import {fullName} from "../../helpers/StringUtils"
-import {FETCH_LINEUP, FETCH_SAVINGS, fetchLineup, followLineupPending, unfollowLineupPending2} from "../lineup/actions"
+import {
+    FETCH_LINEUP,
+    FETCH_SAVINGS,
+    fetchLineup,
+    followLineupPending,
+    unfollowLineupPending,
+    unfollowLineupPending2
+} from "../lineup/actions"
 import {UNSAVE} from "../activity/actionTypes"
 import * as authActions from "../../auth/actions"
-import {L_ADD_ITEM, L_FOLLOW, L_UNFOLLOW, LineupRights} from "../lineupRights"
+import {GLineupAction, L_ADD_ITEM, L_FOLLOW, L_UNFOLLOW, LineupRights} from "../lineupRights"
+import {LINEUP_AND_SAVING_SELECTOR, LINEUP_SECLECTOR} from "../../helpers/ModelUtils"
+import {createSelector} from "reselect"
+
 
 type Props = {
     lineupId: string,
-    navigator: any
+    navigator: any,
+    lineup: ?Lineup,
+    saving: ?Saving[],
 };
 
 type State = {
-    title: null|{title: string, titleImage: string},
-    titleSet: boolean
+    title?: {title: string, titleImage: string},
+    titleSet?: boolean,
 };
 
+export const selector = createSelector(
+    [
+        LINEUP_AND_SAVING_SELECTOR,
+        state => state.pending
+    ],
+    ({lineup, savings}, pending) => {
+
+        let actions = LineupRights.getActions(lineup, pending)
+        let action = null
+        if (actions.indexOf(L_ADD_ITEM) >= 0) action = L_ADD_ITEM
+        if (actions.indexOf(L_FOLLOW) >= 0) action = L_FOLLOW
+        if (actions.indexOf(L_UNFOLLOW) >= 0) action = L_UNFOLLOW
+
+        return {lineup, savings, action}
+    }
+)
+
 @logged
-@connect((state, ownProps) => ({
-    data: state.data,
-}))
+@connect(selector)
 class LineupScreen extends Screen<Props, State> {
 
     static navigatorStyle = {
@@ -52,6 +73,10 @@ class LineupScreen extends Screen<Props, State> {
 
     unsubscribe: ?() => void
 
+    state = {
+        navBarState: {}
+    }
+
     componentWillMount() {
         this.unsubscribe = this.props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
@@ -61,18 +86,17 @@ class LineupScreen extends Screen<Props, State> {
     }
 
     componentDidAppear() {
-        this.refreshNavigatorButtons()
+        LineupScreen.refreshNavBar(this.props.navigator, this.props.lineupId)
     }
 
     refreshNavigatorButtons() {
         console.debug('refreshNavigatorButtons')
-        this.props.navigator.setButtons(this.getMainActionButton())
-
+        this.props.navigator.setButtons(this.getMainActionButton2(this.props.action, this.props.lineupId))
     }
 
     //TODO: improve code
     getMainActionButton(): any {
-        const lineup = this.getLineup()
+        const lineup = this.props.lineup
         if (lineup) {
             let actions = LineupRights.getActions(lineup)
             if (actions.indexOf(L_ADD_ITEM) >= 0) return getAddButton(lineup)
@@ -81,10 +105,20 @@ class LineupScreen extends Screen<Props, State> {
         }
         return {rightButtons: [], fab: {}}
     }
+    //TODO: improve code
+    getMainActionButton2(action: GLineupAction, lineupId: Id): any {
+
+        if (action) {
+            if (action === L_ADD_ITEM) return getAddButton(lineupId)
+            if (action === L_FOLLOW) return {rightButtons: [FOLLOW_RIGHT_BUTTON(lineupId)],}
+            if (action === L_UNFOLLOW) return {rightButtons: [UNFOLLOW_RIGHT_BUTTON(lineupId)],}
+        }
+        return {rightButtons: [], fab: {}}
+    }
 
     // FIXME: terrible hack: watch store, refresh accordingly
     onNavigatorEvent(event) {
-        let lineup = this.getLineup()
+        let lineup = this.props.lineup
         if (!lineup) {
             console.warn("lineup not found")
             return
@@ -93,41 +127,51 @@ class LineupScreen extends Screen<Props, State> {
             startAddItem(this.props.navigator, lineup)
         }
         else if (event.id === 'follow_' + lineup.id) {
-            followLineupPending(this.props.dispatch, lineup).then(()=> this.refreshNavigatorButtons())
+            followLineupPending(this.props.dispatch, lineup)
+        }
+        else if (event.id === 'unfollow_' + lineup.id) {
+            unfollowLineupPending(this.props.dispatch, lineup)
         }
     }
 
-    render() {
-        const lineup = this.getLineup();
-
-        // this.setNavigatorTitle(this.props.navigator, {title: _.get(lineup, 'name'), subtitle: subtitle()});
+    static refreshNavBar(navigator: RNNNavigator, lineupId: Id) {
         //FIXME: rm platform specific code, https://github.com/wix/react-native-navigation/issues/1871
-        if (this.isVisible() && lineup) {
-            if (__IS_IOS__) {
-                this.props.navigator.setStyle({
-                    ...UI.NavStyles,
-                    navBarCustomView: 'goodsh.LineupNav',
-                    navBarCustomViewInitialProps: {
-                        user: lineup.user,
-                        lineupName: _.get(lineup, 'name'),
-                        lineupCount: _.get(lineup, `meta.savingsCount`, null)
-                    }
-                });
-            }
-            else {
-                let subtitle = () => {
-                    const user = _.get(lineup, 'user');
-                    //FIXME: MagicString
-                    return user && "par " + fullName(user)
-                };
-                this.setNavigatorTitle(this.props.navigator, {title: _.get(lineup, 'name'), subtitle: subtitle()});
-            }
+        // console.debug('refreshing navbar', navBarState)
+        if (__IS_IOS__||true) {
+            // if (!navBarState.lineupName) return
+            navigator.setStyle({
+                ...UI.NavStyles,
+                navBarCustomView: 'goodsh.LineupNav',
+                navBarCustomViewInitialProps: {
+                    lineupId
+                    // user: navBarState.user,
+                    // lineupName: navBarState.lineupName,
+                    // lineupCount: navBarState.lineupSavingCount,
+                }
+            });
         }
+        else {
+            // let subtitle = () => {
+            //     const user = navBarState.user
+            //     //FIXME: MagicString
+            //     return user && "par " + fullName(user)
+            // };
+            // navigator.setTitle({title: navBarState.lineupName});
+            // navigator.setSubTitle({subtitle: subtitle()});
+        }
+    }
+
+    // static getDerivedStateFromProps(props: Props, state: State) {
+    // }
 
 
-        let savings, fetchSrc;
+    render() {
+        const {lineup, savings} = this.props
+
+        this.refreshNavigatorButtons()
+
+        let fetchSrc;
         if (lineup && lineup.savings) {
-            savings = lineup.savings;
             fetchSrc = {
                 callFactory:()=>actions.fetchSavings(this.props.lineupId),
                 action:FETCH_SAVINGS,
@@ -135,7 +179,6 @@ class LineupScreen extends Screen<Props, State> {
             };
         }
         else {
-            savings = [];
             fetchSrc = {
                 callFactory:() => fetchLineup(this.props.lineupId),
                 action: FETCH_LINEUP,
@@ -168,16 +211,6 @@ class LineupScreen extends Screen<Props, State> {
         );
     }
 
-
-    canAdd() {
-        let lineup = this.getLineup();
-        return lineup && lineup.user && lineup.user.id === currentUserId();
-    }
-
-    getLineup() : List {
-        return buildData(this.props.data, "lists", this.props.lineupId);
-    }
-
     renderItem(item, lineup) {
         let saving: Saving = item.item;
 
@@ -185,34 +218,14 @@ class LineupScreen extends Screen<Props, State> {
 
         return (
             <ActivityCell
-                activityId={saving.id}
+                activity={saving}
                 activityType={saving.type}
                 // skipLineup={true}
                 // skipDescription={true}
-                onPressItem={() => this.navToSavingDetail(saving)}
+                onPressItem={() => seeActivityDetails(this.props.navigator, saving)}
                 navigator={this.props.navigator}
             />
         )
-    }
-
-    deleteSaving(saving) {
-        this.props.dispatch(actions.deleteSaving(saving));
-    }
-
-    navToSavingDetail(saving) {
-        let activity = saving;
-
-
-        this.props.navigator.push({
-            screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
-            passProps: {activityId: activity.id, activityType: activity.type}, // Object that will be passed as props to the pushed screen (optional)
-            animated: true, // does the push have transition animation or does it happen immediately (optional)
-            animationType: 'slide-up', // 'fade' (for both) / 'slide-horizontal' (for android) does the push have different transition animation (optional)
-            backButtonTitle: undefined, // override the back button title (optional)
-            backButtonHidden: false, // hide the back button altogether (optional)
-            navigatorStyle: {}, // override the navigator style for the pushed screen (optional)
-            navigatorButtons: {} // override the nav buttons for the pushed screen (optional)
-        });
     }
 }
 

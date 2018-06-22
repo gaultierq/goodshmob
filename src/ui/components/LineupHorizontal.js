@@ -32,12 +32,10 @@ import {EmptyCell} from "./LineupCellSaving"
 import {LINEUP_PADDING} from "../UIStyles"
 import {renderLineupMenu} from "../UIComponents"
 import LineupTitle2 from "./LineupTitle2"
-import {buildData} from "../../helpers/DataUtils"
 import {createSelector} from "reselect"
-import {CREATE_LINEUP, SAVE_ITEM} from "../lineup/actionTypes"
 import * as Api from "../../managers/Api"
 import {FETCH_LINEUP, fetchLineup} from "../lineup/actions"
-import {UNSAVE} from "../activity/actionTypes"
+import {LINEUP_AND_SAVING_SELECTOR} from "../../helpers/ModelUtils"
 
 // $FlowFixMe
 type Props = {
@@ -64,70 +62,10 @@ export const ITEM_SEP = 10
 
 let lineupId = props => props.lineupId || props.lineup.id
 
-const getLineupSelector = createSelector(
-    [
-        (state, props) => props.lineup,
-        (state, props) => _.get(state, `data.lists.${lineupId(props)}`),
-        (state, props) => _.head(state.pending[CREATE_LINEUP], pending => pending.id === lineupId(props)),
-        (state, props) => _.filter(state.pending[SAVE_ITEM], pending => pending.payload.lineupId === lineupId(props)),
-        (state, props) => _.filter(state.pending[UNSAVE], pending => pending.payload.lineupId === lineupId(props)),
-        state => state.data
-    ],
-    (propLineup, syncList, rawPendingList, rawPendingCreatedSavings, rawPendingDeletedSavings, data) => {
-
-        let lineup = (syncList && buildData(data, syncList.type, syncList.id) || {...rawPendingList, savings: []})
-        if (syncList) {
-            lineup = buildData(data, syncList.type, syncList.id)
-        }
-        else if (rawPendingList) {
-            lineup = {id: rawPendingList.id, name: rawPendingList.payload.listName, savings: []}
-        }
-        else if (propLineup) {
-            lineup = propLineup
-        }
-
-        let savings
-        if (lineup) {
-            if (!_.isEmpty(rawPendingCreatedSavings)) {
-                savings = rawPendingCreatedSavings.map(pending => {
-                        const result = {
-                            id: pending.id,
-                            lineupId: pending.payload.lineupId,
-                            itemId: pending.payload.itemId,
-                            pending: true
-                        }
-
-                        // $FlowFixMe
-                        Object.defineProperty(
-                            result,
-                            'resource',
-                            {
-                                get: () => {
-                                    return buildData(data, pending.payload.itemType, pending.payload.itemId)
-                                },
-                            },
-                        )
-                        return result
-                    }
-                )
-            }
-
-            if (lineup.savings) {
-                if (savings) savings = savings.concat(lineup.savings)
-                else savings = [].concat(lineup.savings) //?
-            }
-            if (!_.isEmpty(rawPendingDeletedSavings)) {
-                _.remove(savings, saving => rawPendingDeletedSavings.some(pending => pending.payload.savingId === saving.id))
-            }
-
-        }
-        return {lineup, savings}
-    }
-)
 
 @connect((state, props) => ({
     pending: state.pending,
-    ...getLineupSelector(state, props)
+    ...LINEUP_AND_SAVING_SELECTOR(state, props)
 }))
 @logged
 export default class LineupHorizontal extends Component<Props, State> {
@@ -240,44 +178,6 @@ export default class LineupHorizontal extends Component<Props, State> {
             }}/>
         </View>;
     }
-
-    // makeRefObject(nextProps:Props) {
-    //     // return null;
-    //     const lineupId = _.get(nextProps, 'lineupId');
-    //     if (!lineupId) return null;
-    //
-    //     let getRefKeys = () => {
-    //         let base = `data.lists.${lineupId}`;
-    //         return [base, `${base}.meta`];
-    //     };
-    //
-    //     let result = getRefKeys().map(k=>_.get(nextProps, k));
-    //
-    //     //TODO: deal with pendings
-    //     let allPendings = _.values(_.get(nextProps, 'pending', {}));
-    //     // //[[create_ask1, create_ask2, ...], [create_comment1, create_comment2, ...], ...]
-    //     //
-    //     let scopedPendings = [];
-    //     _.reduce(allPendings, (res, pendingList) => {
-    //
-    //         let filteredPendingList = _.filter(pendingList, pending => {
-    //             const scope = _.get(pending, "options.scope");
-    //             if (!scope) return false;
-    //             return scope.lineupId === lineupId;
-    //         });
-    //
-    //         res.push(...filteredPendingList);
-    //         return res;
-    //     }, scopedPendings);
-    //     result.push(...scopedPendings);
-    //
-    //     return result;
-    // }
-    //
-    // shouldComponentUpdate(nextProps: Props, nextState: State) {
-    //     return this.updateTracker.shouldComponentUpdate(nextProps);
-    // }
-
 }
 
 export type Props1 = {
