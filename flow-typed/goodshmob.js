@@ -2,6 +2,7 @@ declare var i18n: any;
 declare var _: any;
 declare var __WITH_NOTIFICATIONS__: boolean
 declare var __IS_IOS__: boolean
+declare var __IS_ANDROID__: boolean
 
 export type Logger = {
     log: (m: string, ...args) => void,

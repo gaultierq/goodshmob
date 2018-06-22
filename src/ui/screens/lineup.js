@@ -92,19 +92,34 @@ class LineupScreen extends Screen<Props, State> {
     refreshNavigatorButtons() {
         console.debug('refreshNavigatorButtons')
         this.props.navigator.setButtons(this.getMainActionButton2(this.props.action, this.props.lineupId))
+
     }
 
-    //TODO: improve code
-    getMainActionButton(): any {
-        const lineup = this.props.lineup
-        if (lineup) {
-            let actions = LineupRights.getActions(lineup)
-            if (actions.indexOf(L_ADD_ITEM) >= 0) return getAddButton(lineup)
-            if (actions.indexOf(L_FOLLOW) >= 0) return {rightButtons: [FOLLOW_RIGHT_BUTTON(lineup.id)],}
-            // if (actions.indexOf(L_UNFOLLOW) >= 0) return {rightButtons: [UNFOLLOW_RIGHT_BUTTON(lineup.id)],}
+    static refreshNavBar(navigator: RNNNavigator, lineupId: ?Id, lineup: ?Lineup) {
+        //FIXME: rm platform specific code, https://github.com/wix/react-native-navigation/issues/1871
+        // console.debug('refreshing navbar', navBarState)
+        if (__IS_IOS__ && lineupId) {
+            // if (!navBarState.lineupName) return
+            navigator.setStyle({
+                ...UI.NavStyles,
+                navBarCustomView: 'goodsh.LineupNav',
+                navBarCustomViewInitialProps: {
+                    lineupId
+                }
+            });
         }
-        return {rightButtons: [], fab: {}}
+        else if (__IS_ANDROID__ && lineup) {
+            const user = lineup.user
+            let subtitle = () => {
+                //FIXME: MagicString
+                return user && "par " + fullName(user)
+            };
+            navigator.setTitle({title: lineup.name});
+            navigator.setSubTitle({subtitle: subtitle()});
+        }
+
     }
+
     //TODO: improve code
     getMainActionButton2(action: GLineupAction, lineupId: Id): any {
 
@@ -134,33 +149,6 @@ class LineupScreen extends Screen<Props, State> {
         }
     }
 
-    static refreshNavBar(navigator: RNNNavigator, lineupId: Id) {
-        //FIXME: rm platform specific code, https://github.com/wix/react-native-navigation/issues/1871
-        // console.debug('refreshing navbar', navBarState)
-        if (__IS_IOS__||true) {
-            // if (!navBarState.lineupName) return
-            navigator.setStyle({
-                ...UI.NavStyles,
-                navBarCustomView: 'goodsh.LineupNav',
-                navBarCustomViewInitialProps: {
-                    lineupId
-                    // user: navBarState.user,
-                    // lineupName: navBarState.lineupName,
-                    // lineupCount: navBarState.lineupSavingCount,
-                }
-            });
-        }
-        else {
-            // let subtitle = () => {
-            //     const user = navBarState.user
-            //     //FIXME: MagicString
-            //     return user && "par " + fullName(user)
-            // };
-            // navigator.setTitle({title: navBarState.lineupName});
-            // navigator.setSubTitle({subtitle: subtitle()});
-        }
-    }
-
     // static getDerivedStateFromProps(props: Props, state: State) {
     // }
 
@@ -168,6 +156,7 @@ class LineupScreen extends Screen<Props, State> {
     render() {
         const {lineup, savings} = this.props
 
+        LineupScreen.refreshNavBar(this.props.navigator, null, lineup)
         this.refreshNavigatorButtons()
 
         let fetchSrc;
