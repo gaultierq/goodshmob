@@ -247,7 +247,7 @@ export function renderLineupFromOtherPeople(navigator: RNNNavigator, lineup: Lin
         <LineupHorizontal
             lineup={lineup}
             style={{paddingBottom: 10}}
-            renderTitle={(lineup: Lineup) => <LineupTitle2 dataResolver={id => lineup} lineupId={lineup.id}/>}
+            renderTitle={(l: Lineup) => <LineupTitle2 dataResolver={id => lineup} lineupId={lineup.id}/>}
         />
     </GTouchable>);
 }
