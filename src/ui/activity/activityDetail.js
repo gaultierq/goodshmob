@@ -135,6 +135,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
             <MainBackground>
                 <KeyboardAwareScrollView
                     contentContainerStyle={{flexGrow: 1, paddingBottom: 20}}
+                    keyboardShouldPersistTaps='always'
                 >
                     <View style={styles.container}>
 
