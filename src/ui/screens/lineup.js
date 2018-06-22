@@ -124,7 +124,7 @@ class LineupScreen extends Screen<Props, State> {
             return
         }
         if (event.id === 'add') {
-            startAddItem(this.props.navigator, lineup)
+            startAddItem(this.props.navigator, lineup.id)
         }
         else if (event.id === 'follow_' + lineup.id) {
             followLineupPending(this.props.dispatch, lineup)

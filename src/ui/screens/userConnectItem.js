@@ -1,29 +1,25 @@
 // @flow
 
-import React, {Component} from 'react';
+import React, {Component} from 'react'
 import {
     ActivityIndicator,
+    Alert,
     FlatList,
+    Image,
     Platform,
     RefreshControl,
-    Image,
     StyleSheet,
     Text,
     TouchableOpacity,
-    View,
-    Alert
-} from 'react-native';
-import {connect} from "react-redux";
-import {currentUserId, logged} from "../../managers/CurrentUser"
-import type {NavigableProps, RequestState, User} from "../../types";
-import * as Api from "../../managers/Api";
-import ApiAction from "../../helpers/ApiAction";
-import {renderSimpleButton, stylePadding} from "../UIStyles";
-import UserRowI from "../activity/components/UserRowI";
-import {Colors} from "../colors";
-import _Messenger from "../../managers/Messenger";
+    View
+} from 'react-native'
+import {connect} from "react-redux"
+import {logged} from "../../managers/CurrentUser"
+import type {NavigableProps, RequestState, User} from "../../types"
+import UserRowI from "../activity/components/UserRowI"
+import {Colors} from "../colors"
 import GTouchable from "../GTouchable"
-import {displayLineupActionMenu} from "../Nav"
+import {openUserSheet} from "../Nav"
 
 
 type Props = NavigableProps & {
@@ -51,7 +47,7 @@ export default class UserConnectItem extends Component<Props, State> {
                     style={styles.userRow}
                 />
                 <View style={{ alignItems:'flex-end', justifyContent: 'center', paddingHorizontal: 10}}>{
-                    <GTouchable onPress={() => this.openUserSheet(user)}>
+                    <GTouchable onPress={() => openUserSheet(this.props.navigator, user)}>
                         <View style={{padding: 12}}>
                             <Image source={require('../../img2/moreDotsGrey.png')} resizeMode="contain"/>
                         </View>
@@ -60,10 +56,6 @@ export default class UserConnectItem extends Component<Props, State> {
                 }</View>
             </View>
         )
-    }
-
-    openUserSheet(user: User) {
-        openUserSheet(this.props.navigator, user)
     }
 
 }
