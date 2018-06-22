@@ -149,11 +149,11 @@ export default {
         "credentials": "Handcrafted in 2018",
     },
     "popular_screen":{
-        "title": "Add in my lists",
+        "title": "Add your first wishs",
         "main_explanation": "By choosing among the best of this week:",
         "empty": "No popular items found",
         item_selected: {
-            zero: "",
+            zero: "Select some wishes",
             one: "Add 1 item",
             other: "Add %{count} items"
         },

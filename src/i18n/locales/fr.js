@@ -152,7 +152,7 @@ export default {
         "main_explanation": "En choisissant parmi le palmarès du moment :",
         "empty": "No popular items found",
         item_selected: {
-            zero: "",
+            zero: "Sélectionner des envies",
             one: "Ajouter 1 élément",
             other: "Ajouter %{count} éléments"
         },
