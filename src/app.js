@@ -370,14 +370,19 @@ export default class App {
                 else {
                     if (!this.config.hasUser) {
                         //load user
-                        RNProgressHUB.showSpinIndeterminate()
+                        if (!__IS_ANDROID__) {
+                            RNProgressHUB.showSpinIndeterminate()
+                        }
+
 
                         const action = userActions
                             .getUser(currentUserId())
                             .createActionDispatchee(userActionTypes.GET_USER)
 
                         this.store.dispatch(action).then(() => {
-                            RNProgressHUB.dismiss()
+                            if (!__IS_ANDROID__) {
+                                RNProgressHUB.dismiss()
+                            }
                         })
 
                     }

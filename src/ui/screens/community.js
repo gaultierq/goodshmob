@@ -6,7 +6,7 @@ import {connect} from "react-redux";
 import {currentUserId, logged} from "../../managers/CurrentUser"
 import type {Id} from "../../types";
 import FriendsScreen from "./friends";
-import {TabBar, TabViewAnimated} from 'react-native-tab-view';
+import {TabBar, TabView} from 'react-native-tab-view';
 
 import ApiAction from "../../helpers/ApiAction";
 import * as Api from "../../managers/Api";
@@ -56,7 +56,7 @@ export class CommunityScreen extends Screen<Props, State> {
     render() {
         return (
 
-            <TabViewAnimated
+            <TabView
                 style={
                     [
                         {flex: 1},
@@ -66,7 +66,7 @@ export class CommunityScreen extends Screen<Props, State> {
                 }
                 navigationState={{...this.state, visible: this.isVisible()}}
                 renderScene={this.renderScene.bind(this)}
-                renderHeader={props => <TabBar {...TAB_BAR_PROPS} {...props}/>}
+                renderTabBar={props => <TabBar {...TAB_BAR_PROPS} {...props}/>}
                 onIndexChange={index => this.setState({index})}
             />
         )

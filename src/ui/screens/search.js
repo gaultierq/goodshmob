@@ -14,7 +14,7 @@ import {
 } from 'react-native'
 import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
-import {TabBar, TabViewAnimated, TabViewPagerPan} from 'react-native-tab-view'
+import {TabBar, TabView, PagerPan} from 'react-native-tab-view'
 
 import type {SearchToken} from "../../types"
 import Button from 'apsl-react-native-button'
@@ -92,7 +92,7 @@ export default class SearchScreen extends Component<Props, State> {
         this.setState({index}, () => this.tryPerformSearch(this.state.input, 0));
     }
 
-    _renderPager = props => <TabViewPagerPan {...props} />;
+    _renderPager = props => <PagerPan {...props} />;
 
 
     render() {
@@ -138,11 +138,11 @@ export default class SearchScreen extends Component<Props, State> {
                     )
                 }
 
-                { showTabs && <TabViewAnimated
+                { showTabs && <TabView
                     style={styles.container}
                     navigationState={this.state}
                     renderScene={this.renderScene.bind(this)}
-                    renderHeader={this.renderHeader.bind(this)}
+                    renderTabBar={this.renderHeader.bind(this)}
                     onIndexChange={this.handleIndexChange.bind(this)}
                     keyboardShouldPersistTaps='always'
                     renderPager={this._renderPager}

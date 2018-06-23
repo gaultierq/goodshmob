@@ -30,7 +30,7 @@ import OnBoardingManager from "../../managers/OnBoardingManager"
 import {floatingButtonScrollListener, getAddButton, getClearButton, scheduleOpacityAnimation} from "../UIComponents"
 import {Tip, TipConfig} from "../components/Tip"
 import {HomeOnBoardingHelper} from "./HomeOnBoardingHelper"
-import {TabBar, TabViewAnimated} from "react-native-tab-view"
+import {TabBar, TabView} from "react-native-tab-view"
 import MyGoodsh from "./MyGoodsh"
 import MyInterests from "./MyInterests"
 import {fullName2} from "../../helpers/StringUtils"
@@ -52,6 +52,10 @@ type State = {
 }
 
 
+const ROUTES = [
+    {key: `my_goodsh`, title: i18n.t("home.tabs.my_goodsh")},
+    {key: `my_interests`, title: i18n.t("home.tabs.my_interests")},
+]
 @logged
 @connect((state, props)=>({
     config: state.config,
@@ -90,10 +94,7 @@ export default class HomeScreen extends Screen<Props, State> {
         isActionButtonVisible: true,
         index: 0,
         popularDisplayCount: 0,
-        routes: [
-            {key: `my_goodsh`, title: i18n.t("home.tabs.my_goodsh")},
-            {key: `my_interests`, title: i18n.t("home.tabs.my_interests")},
-        ],
+        routes: ROUTES,
         // currentTip: TEST_TIP
     }
 
@@ -218,11 +219,11 @@ export default class HomeScreen extends Screen<Props, State> {
         return (
             <View style={{flex:1}}>
 
-                <TabViewAnimated
+                <TabView
                     style={{flex: 1}}
                     navigationState={{...this.state, visible: this.isVisible()}}
                     renderScene={this.renderScene.bind(this)}
-                    renderHeader={props => <TabBar {...TAB_BAR_PROPS} {...props}/>}
+                    renderTabBar={props => <TabBar {...TAB_BAR_PROPS} {...props}/>}
                     onIndexChange={index => {
                         this.setState({index}, () => this.refreshRightButtons())
                     }}
@@ -240,8 +241,11 @@ export default class HomeScreen extends Screen<Props, State> {
         return __IS_ANDROID__  && !this.state.filterFocused && this.state.isActionButtonVisible && this.state.index === 0;
     }
 
-    renderScene({ route, focused }: *) {
+    renderScene({ route}: *) {
+        let ix = ROUTES.indexOf(route)
+        let focused = this.state.index === ix
         switch (route.key) {
+
             case 'my_goodsh':
                 return (
                     <MyGoodsh
@@ -263,7 +267,6 @@ export default class HomeScreen extends Screen<Props, State> {
             case 'my_interests':
                 return (
                     <MyInterests
-
                         navigator={this.props.navigator}
                         visibility={focused ? 'visible' : 'hidden'}
                     />
