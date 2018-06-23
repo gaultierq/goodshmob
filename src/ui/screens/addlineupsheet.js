@@ -16,6 +16,8 @@ import {SFP_TEXT_REGULAR} from "../fonts";
 import GTouchable from "../GTouchable";
 import ModalTextInput from "./modalTextInput";
 import {sendMessage} from "../../managers/Messenger";
+import {buildData} from "../../helpers/DataUtils"
+import normalize from 'json-api-normalizer'
 
 type Props = {
     disableOffline?:boolean,
@@ -118,30 +120,44 @@ export default class AddLineupSheet extends Component<Props, State> {
 
     createLineup(name: string) {
         let delayMs = 4000;
-        return this.props.dispatch(LINEUP_CREATION[this.props.disableOffline ? 'exec' : 'pending']({listName: name}, {delayMs}))
-            .then((pendingId)=> {
-                const onFinished = this.props.onFinished;
-                const lineup = {
-                    id: pendingId,
-                }
-                onFinished && onFinished(lineup);
+        if (this.props.disableOffline) {
+            return this.props.dispatch(LINEUP_CREATION.exec({listName: name}, {delayMs}))
+                .then(rawLineup => {
+                    let data = normalize(rawLineup);
+                    let d = rawLineup.data
+                    let lineup = buildData(data, d.type, d.id)
 
-                const action = this.props.disableOffline ? {} : {
-                    title: i18n.t('actions.undo'),
-                    onPress: () => {
-                        this.props.dispatch(LINEUP_CREATION.undo(pendingId))
-                    },
-                }
+                    this.props.onFinished && this.props.onFinished(lineup);
+                    sendMessage(i18n.t('create_list_controller.created'), {timeout: delayMs})
 
-                sendMessage(
-                    i18n.t('create_list_controller.created'),
-                    {
-                        timeout: delayMs,
-                        action
+                });
+        }
+        else {
+            return this.props.dispatch(LINEUP_CREATION.pending({listName: name}, {delayMs}))
+                .then((pendingId)=> {
+                    const onFinished = this.props.onFinished;
+                    const lineup = {
+                        id: pendingId,
                     }
-                );
+                    onFinished && onFinished(lineup);
 
-            });
+                    const action = this.props.disableOffline ? {} : {
+                        title: i18n.t('actions.undo'),
+                        onPress: () => {
+                            this.props.dispatch(LINEUP_CREATION.undo(pendingId))
+                        },
+                    }
+
+                    sendMessage(
+                        i18n.t('create_list_controller.created'),
+                        {
+                            timeout: delayMs,
+                            action
+                        }
+                    );
+
+                });
+        }
     }
 
 }

@@ -179,7 +179,13 @@ export default class AddItemScreen extends Screen<Props, State> {
                 title: i18n.t('create_list_controller.choose_another_list'),
                 passProps: {
                     onListSelected: list => {
-                        this.setState({selectedLineupId:list.id});
+
+                        //just a quick fix
+                        setTimeout(() => {
+                            console.log("onListSelected", list)
+                            this.setState({selectedLineupId:list.id});
+                        }, 1000)
+
                         this.props.navigator.dismissModal();
                     }
                 },
