@@ -10,10 +10,9 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    User,
     View
 } from 'react-native'
-import type {Id, RequestState, RNNNavigator} from "../../types"
+import type {Id, RequestState, RNNNavigator, User} from "../../types"
 import {CheckBox} from "react-native-elements"
 import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
@@ -65,7 +64,7 @@ const selector = createSelector(
         if (user) {
             let actions = getUserActions(user, pending)
             if (actions.indexOf(U_CONNECT) >= 0) action = U_CONNECT
-            if (actions.indexOf(U_DISCONNECT) >= 0) action = U_DISCONNECT
+            // if (actions.indexOf(U_DISCONNECT) >= 0) action = U_DISCONNECT
         }
         return {user, action}
     }
@@ -178,9 +177,7 @@ export default class UserScreen extends Screen<Props, State> {
             if (__IS_IOS__) {
                 this.props.navigator.setStyle({...UI.NavStyles,
                     navBarCustomView: 'goodsh.UserNav',
-                    navBarCustomViewInitialProps: {
-                        user: user,
-                    }
+                    navBarCustomViewInitialProps: { user }
                 });
             }
             else {

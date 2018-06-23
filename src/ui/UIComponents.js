@@ -1,23 +1,20 @@
 // @flow
 
-import React, {Component} from 'react';
+import React, {Component} from 'react'
 import {Image, LayoutAnimation, Platform, StyleSheet, Text, UIManager, View} from 'react-native'
-import {Colors, AVATAR_BACKGROUNDS} from "./colors";
-import GTouchable from "./GTouchable";
-import {BACKGROUND_COLOR, LINEUP_PADDING, renderSimpleButton, STYLES} from "./UIStyles"
-import Spinner from 'react-native-spinkit';
-import type {Id, Lineup, RNNNavigator, User} from "../types"
-import {displayLineupActionMenu, seeList} from "./Nav";
-import LineupHorizontal from "./components/LineupHorizontal";
-import LineupTitle2 from "./components/LineupTitle2";
-import {ViewStyle} from "../types";
+import {AVATAR_BACKGROUNDS, Colors} from "./colors"
+import GTouchable from "./GTouchable"
+import {BACKGROUND_COLOR, LINEUP_PADDING, STYLES} from "./UIStyles"
+import Spinner from 'react-native-spinkit'
+import type {Lineup, RNNNavigator, User} from "../types"
+import {ViewStyle} from "../types"
+import {displayLineupActionMenu, seeList} from "./Nav"
+import LineupHorizontal from "./components/LineupHorizontal"
+import LineupTitle2 from "./components/LineupTitle2"
 import GImage from "./components/GImage"
 import {firstLetter, hashCode} from "../helpers/StringUtils"
 import {SFP_TEXT_REGULAR} from "./fonts"
-import * as authActions from "../auth/actions"
-import {logout} from "../auth/actions"
-import {connect} from "react-redux"
-
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
@@ -310,9 +307,18 @@ export const RIGHT_BUTTON_SPINNER = {
     component: 'goodsh.NavBarButtonIndicator',
 }
 
+
+let PERSON_ADD
+Promise.all([
+    Icon.getImageSource('person-add', 24, 'black')
+]).then(sources => {
+    PERSON_ADD = sources[0]
+})
+
 export const CONNECT_RIGHT_BUTTON = (id: string) => ({
-    title: i18n.t('actions.follow'),
-    id: 'connect_' + id
+    // title: i18n.t('actions.follow'),
+    id: 'connect_' + id,
+    icon: PERSON_ADD
 })
 
 export const DISCONNECT_RIGHT_BUTTON = (id: string) => ({

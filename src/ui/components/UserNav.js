@@ -21,7 +21,7 @@ export default class UserNav extends Component<Props, State> {
 
     render() {
 
-        let imageDim = 32;
+        let imageDim = 30
 
         const user = this.props.user;
 
@@ -38,7 +38,7 @@ export default class UserNav extends Component<Props, State> {
                 <Text style={{
                     fontSize: 17,
                     fontFamily: SFP_TEXT_MEDIUM,
-                    marginLeft: 8,
+                    marginLeft: 12,
                 }}>{fullName(user)}</Text>
             </View>
         )
