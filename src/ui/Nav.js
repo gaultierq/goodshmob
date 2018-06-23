@@ -258,7 +258,7 @@ export function displayShareLineup({navigator, lineup}: LineupActionParams) {
                         <LineupTitle2
                             lineupId={lineup.id}
                             dataResolver={id => lineup}
-                            style={{backgroundColor: BACKGROUND_COLOR,}}
+                            // style={{backgroundColor: BACKGROUND_COLOR,}}
                         />
                     )}
                 />),
