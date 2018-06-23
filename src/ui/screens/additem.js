@@ -2,7 +2,7 @@
 import React from 'react';
 import {ActivityIndicator, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {CheckBox} from "react-native-elements";
-import {renderSimpleButton, STYLES} from "../UIStyles";
+import {openLinkSafely, renderSimpleButton, STYLES} from "../UIStyles"
 import type {Id, Item, ItemType} from "../../types";
 import {CREATE_SAVING, fetchItemCall} from "../lineup/actions";
 import {logged} from "../../managers/CurrentUser";
@@ -139,20 +139,24 @@ export default class AddItemScreen extends Screen<Props, State> {
                                 uncheckedColor={Colors.brownishGrey}
                             />
                         </View>
-                        <ItemCell item={item}>
-                            <TextInput
-                                editable={editable}
-                                ref={(r) => this.textInput = r}
-                                style={[styles.input, (editable ? {color: Colors.greyish} : {color: "grey"})]}
-                                value={description}
-                                onChangeText={description => this.setState({description})}
-                                placeholder={i18n.t("create_list_controller.add_description")}
-                                returnKeyType={selectedLineupId ? 'go' : 'next'}
-                                onSubmitEditing={() => {selectedLineupId && this._doAdd(selectedLineupId)}}
-                                multiline={true}
-                                autoFocus={true}
-                            />
-                        </ItemCell>
+                        <GTouchable  onPress={() => {openLinkSafely(item.url)}} style={{flex:1}}>
+                            <ItemCell item={item}/>
+                        </GTouchable>
+
+                        <TextInput
+                            editable={editable}
+                            ref={(r) => this.textInput = r}
+                            style={[styles.input, {padding: 8}, (editable ? {color: Colors.greyish} : {color: Colors.brownishGrey})]}
+                            value={description}
+                            onChangeText={description => this.setState({description})}
+                            placeholder={i18n.t("create_list_controller.add_description")}
+                            returnKeyType={selectedLineupId ? 'go' : 'next'}
+                            onSubmitEditing={() => {selectedLineupId && this._doAdd(selectedLineupId)}}
+                            multiline={true}
+                            autoFocus={true}
+                        />
+
+
                         {this.renderListSelector(selectedLineupId)}
                         {renderSimpleButton(
                             i18n.t('shared.add'),

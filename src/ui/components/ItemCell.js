@@ -28,26 +28,23 @@ export default class ItemCell extends React.Component<Props, State> {
         let image = resource ? resource.image : undefined;
 
         return (
-            <View style={styles.container}>
-                <View style={styles.containerInner}>
-                    <View style={[styles.image, UI.STYLES.lightBorder, {backgroundColor: Colors.dirtyWhite}]}>
-                        {
-                            image && <GImage
-                                source={{uri: image}}
-                                resizeMode='cover'
-                                style={[styles.image, UI.STYLES.lightBorder]}/>
+            <View style={[styles.container, styles.containerInner]}>
+                <View style={[styles.image, UI.STYLES.lightBorder, {backgroundColor: Colors.dirtyWhite}]}>
+                    {
+                        image && <GImage
+                            source={{uri: image}}
+                            resizeMode='cover'
+                            style={[styles.image, UI.STYLES.lightBorder]}/>
 
-                        }
-                    </View>
-                    <View style={styles.containerText}>
-                        <Text
-                            style={styles.title}
-                            numberOfLines={this.props.displayDetails ? 7 : 3}
-                        >{resource.title}</Text>
-                        <Text style={styles.subtitle}>{resource.subtitle}</Text>
-                    </View>
+                    }
                 </View>
-                {this.props.children}
+                <View style={styles.containerText}>
+                    <Text
+                        style={styles.title}
+                        numberOfLines={this.props.displayDetails ? 7 : 3}
+                    >{resource.title}</Text>
+                    <Text style={styles.subtitle}>{resource.subtitle}</Text>
+                </View>
             </View>
         )
     }
