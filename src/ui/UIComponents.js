@@ -306,6 +306,16 @@ export const UNFOLLOW_RIGHT_BUTTON = (id: string) => ({
     id: 'unfollow_' + id
 })
 
+export const CONNECT_RIGHT_BUTTON = (id: string) => ({
+    title: i18n.t('actions.follow'),
+    id: 'connect_' + id
+})
+
+export const DISCONNECT_RIGHT_BUTTON = (id: string) => ({
+    title: i18n.t('actions.unfollow'),
+    id: 'disconnect_' + id
+})
+
 export let getUnfollowButton = (lineup: Lineup) => {
     return Platform.select({
         ios: {

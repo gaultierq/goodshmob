@@ -57,3 +57,19 @@ export const actions = (() => {
         }
     };
 })();
+
+
+export const CONNECT = ApiAction.create("connect", "add a friend");
+export const DISCONNECT = ApiAction.create("disconnect", "delete a friend");
+
+export const createFriendship =  (userId: string) => {
+    return new Api.Call().withMethod('POST')
+        .withRoute(`users/${userId}/friendships`);
+
+}
+
+export const deleteFriendship = (userId: string) => {
+    return new Api.Call().withMethod('DELETE')
+        .withRoute(`users/${userId}/friendships`);
+
+}

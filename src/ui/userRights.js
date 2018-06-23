@@ -6,7 +6,7 @@ import {GAction} from "./rights"
 
 const GUserActions = []
 
-class GUserAction extends GAction {
+export class GUserAction extends GAction {
 
     constructor(name: string) {
         super(name)
@@ -21,12 +21,15 @@ class GUserAction extends GAction {
 export const U_CONNECT: GUserAction = new GUserAction('connect to user')
 export const U_DISCONNECT: GUserAction = new GUserAction('disconnect from user')
 
+
 export class UserRights {
     user: User
+    pending: any
 
-    constructor(user: User) {
+    constructor(user: User, pending?: any) {
         if (!user) throw "invalid params"
         this.user = user
+        this.pending = pending
     }
 
     canExec(action: GUserAction): boolean {
@@ -41,13 +44,13 @@ export class UserRights {
             case U_DISCONNECT:
                 return !isMe && connected === true
             default:
-                throw `unknown action ${action}`
+                throw `unknown action` + action
         }
     }
 }
 
-export function getUserActions(user: User): GUserAction[] {
-    let rights = new UserRights(user)
+export function getUserActions(user: User, pending?: any): GUserAction[] {
+    let rights = new UserRights(user, pending)
     return GUserActions.filter(a => rights.canExec(a))
 }
 export function canExecUserAction(action: GUserAction, user: User): boolean {

@@ -34,7 +34,7 @@ import {displayHomeSearch} from "../Nav"
 type Props = LineupListProps & {
     userId: Id,
     navigator: RNNNavigator,
-    listRef: any => void | string
+    listRef?: any => void | string
 };
 
 type State = {

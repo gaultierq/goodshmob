@@ -34,13 +34,12 @@ import * as Api from "../../managers/Api"
 import GTouchable from "../GTouchable"
 
 
-export type Props = FeedProps<List> & {
+export type Props = FeedProps & {
     userId: Id,
     data?: any,
     onCancel?: ()=>void,
     sectionMaker?: (lineups: List<List>) => Array<*>,
     ListHeaderComponent?: Node,
-    renderItem: (item: *)=>Node,
     navigator: *,
     listRef: any => void | string
 };

@@ -535,6 +535,7 @@ export function mergeItemsAndPendings2<T>(
 }
 
 let lineupId = props => props.lineupId || _.get(props, 'lineup.id')
+let userId = props => props.userId || _.get(props, 'user.id')
 
 export const LINEUP_SECLECTOR = createSelector(
     [
@@ -560,6 +561,23 @@ export const LINEUP_SECLECTOR = createSelector(
             lineup = propLineup
         }
         return lineup
+    }
+)
+
+export const USER_SECLECTOR = createSelector(
+    [
+        (state, props) => props.user,
+        (state, props) => _.get(state, `data.users.${userId(props)}`),
+        state => state.data
+    ],
+    (
+        propUser,
+        syncUser,
+        data
+    ) => {
+        if (syncUser) return buildData(data, syncUser.type, syncUser.id)
+        else if (propUser) return propUser
+        return null
     }
 )
 

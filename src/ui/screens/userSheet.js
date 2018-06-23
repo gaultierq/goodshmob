@@ -30,7 +30,7 @@ import ApiAction from "../../helpers/ApiAction"
 import {buildData} from "../../helpers/DataUtils"
 import {
     actions as userActions,
-    actionTypes as userActionTypes
+    actionTypes as userActionTypes, CONNECT, createFriendship, deleteFriendship, DISCONNECT
 } from "../../redux/UserActions"
 import {fullName} from "../../helpers/StringUtils"
 import Http404 from "./errors/404"
@@ -183,7 +183,8 @@ export default class UserSheet extends Component<Props, State> {
     }
 
     connectWith(user: User) {
-        let action = actions.createFriendship(user.id).createActionDispatchee(CONNECT);
+        let action = createFriendship(user.id).createActionDispatchee(CONNECT);
+
         Api.safeDispatchAction.call(
             this,
             this.props.dispatch,
@@ -202,7 +203,7 @@ export default class UserSheet extends Component<Props, State> {
             [
                 {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
                 {text: i18n.t("actions.ok"), onPress: () => {
-                        let action = actions.deleteFriendship(user.id).createActionDispatchee(DISCONNECT);
+                        let action = deleteFriendship(user.id).createActionDispatchee(DISCONNECT);
                         Api.safeDispatchAction.call(
                             this,
                             this.props.dispatch,
@@ -217,29 +218,7 @@ export default class UserSheet extends Component<Props, State> {
             { cancelable: true }
         )
     }
-
-
-
-
 }
-
-export const CONNECT = ApiAction.create("connect", "add a friend");
-export const DISCONNECT = ApiAction.create("disconnect", "delete a friend");
-
-const actions = {
-    createFriendship: (userId: string) => {
-        return new Api.Call().withMethod('POST')
-            .withRoute(`users/${userId}/friendships`);
-
-    },
-
-    deleteFriendship: (userId: string) => {
-        return new Api.Call().withMethod('DELETE')
-            .withRoute(`users/${userId}/friendships`);
-
-    }
-};
-
 
 
 const styles = StyleSheet.create({
