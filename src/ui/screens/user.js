@@ -18,7 +18,13 @@ import {CheckBox} from "react-native-elements"
 import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
 import Screen from "../components/Screen"
-import {CONNECT_RIGHT_BUTTON, DISCONNECT_RIGHT_BUTTON, LINEUP_SECTIONS, MainBackground} from "../UIComponents"
+import {
+    CONNECT_RIGHT_BUTTON,
+    DISCONNECT_RIGHT_BUTTON,
+    LINEUP_SECTIONS,
+    MainBackground,
+    RIGHT_BUTTON_SPINNER
+} from "../UIComponents"
 import * as UI from "../UIStyles"
 import {STYLES} from "../UIStyles"
 import UserLineups from "./userLineups"
@@ -43,7 +49,9 @@ type Props = {
 };
 
 type State = {
-    reqFetchUser?: RequestState
+    reqFetchUser?: RequestState,
+    reqConnect?: RequestState,
+    reqDisconnect?: RequestState,
 };
 
 
@@ -149,6 +157,9 @@ export default class UserScreen extends Screen<Props, State> {
     }
 
     getButtons(action: GUserAction, userId: Id): any {
+        if (this.state.reqConnect === 'sending' || this.state.reqDisconnect === 'sending') {
+            return {rightButtons: [RIGHT_BUTTON_SPINNER],}
+        }
         if (action) {
             if (action === U_CONNECT) return {rightButtons: [CONNECT_RIGHT_BUTTON(userId)],}
             if (action === U_DISCONNECT) return {rightButtons: [DISCONNECT_RIGHT_BUTTON(userId)],}

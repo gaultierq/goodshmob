@@ -44,6 +44,7 @@ import MyInterestsScreen from "./screens/MyInterests";
 import MyGoodshsScreen from "./screens/MyGoodsh";
 import EditUserProfileScreen from "./screens/edituserprofile";
 import PopularItemsScreen from "./screens/popularitems";
+import GIndicator from "./screens/indicator"
 
 
 function wrap(screenName,screenCreator,store,provider) {
@@ -112,5 +113,6 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.MyGoodshsScreen', () => MyGoodshsScreen, store, Provider);
     wrap('goodsh.PopularItemsScreen', () => PopularItemsScreen, store, Provider);
     wrap('goodsh.AskScreen', () => AskScreen, store, Provider);
+    wrap('goodsh.NavBarButtonIndicator', () => GIndicator, store, Provider);
 
 }

@@ -306,6 +306,10 @@ export const UNFOLLOW_RIGHT_BUTTON = (id: string) => ({
     id: 'unfollow_' + id
 })
 
+export const RIGHT_BUTTON_SPINNER = {
+    component: 'goodsh.NavBarButtonIndicator',
+}
+
 export const CONNECT_RIGHT_BUTTON = (id: string) => ({
     title: i18n.t('actions.follow'),
     id: 'connect_' + id
