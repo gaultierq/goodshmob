@@ -294,10 +294,10 @@ const styles = StyleSheet.create({
     lineupSelectorText: { fontWeight:'normal', color: Colors.white },
     input: {
         backgroundColor: 'transparent',
-        marginTop: 15,
+        marginVertical: 15,
         fontSize: 15,
         fontFamily: SFP_TEXT_ITALIC,
-        height: 40,
+        // height: 40,
         borderWidth: 0,
     }
 });
