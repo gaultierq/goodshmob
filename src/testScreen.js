@@ -1,6 +1,7 @@
 import {currentUserId} from "./managers/CurrentUser";
 import EditUserProfileScreen from "./ui/screens/edituserprofile";
 import {CANCELABLE_SEARCH_MODAL} from "./ui/Nav"
+import type {Item} from "./types"
 
 export const homeScreen = {
     screen: {
@@ -176,7 +177,21 @@ export const searchItemsScreen = {
         title: 'Test SearchItemsScreen',
     },
     passProps: {
-        index: 1,
+        onItemSelected: (item: Item, navigator: RNNNavigator) => {
+
+            navigator.showModal({
+                screen: 'goodsh.AddItemScreen',
+                title: i18n.t("add_item_screen.title"),
+                animationType: 'none',
+                passProps: {
+                    token: 'h',
+                    itemId: item.id,
+                    itemType: item.type,
+                    item,
+                },
+            });
+
+        },
     }
 };
 export const homeSearchItemsScreen = {

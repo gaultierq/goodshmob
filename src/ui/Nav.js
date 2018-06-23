@@ -57,9 +57,7 @@ export const CANCELABLE_SEARCH_MODAL = () => ({
 });
 
 export function startAddItem(navigator: *, defaultLineup: Id | Lineup) {
-    let cancel = () => {
-        navigator.dismissAllModals()
-    };
+
 
     let defaultLineupId
 
@@ -70,6 +68,8 @@ export function startAddItem(navigator: *, defaultLineup: Id | Lineup) {
     else {
         defaultLineupId = defaultLineup.id
     }
+
+    let cancel = navigator.dismissAllModals
 
 
     navigator.showModal({
@@ -96,7 +96,7 @@ export function startAddItem(navigator: *, defaultLineup: Id | Lineup) {
             },
             onCancel: cancel
         }, // Object that will be passed as props to the pushed screen (optional)
-    });
+    })
 }
 
 
