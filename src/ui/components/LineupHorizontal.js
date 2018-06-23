@@ -165,17 +165,7 @@ export default class LineupHorizontal extends Component<Props, State> {
             alignItems: 'center',
             justifyContent: 'center',
         }}>
-            <View style={{
-                width: plusThickness,
-                height: size,
-                backgroundColor: plusColor,
-            }}/>
-            <View style={{
-                height: plusThickness,
-                width: size,
-                backgroundColor: plusColor,
-                position: 'absolute',
-            }}/>
+            <Image source={require('./../../img2/plus_white.png')} />
         </View>;
     }
 }

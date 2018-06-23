@@ -269,7 +269,7 @@ export let getAddButton = (lineup: Lineup) => {
             android: {
                 fab: {
                     collapsedId: 'add',
-                    collapsedIcon: require('./../img/plus.png'),
+                    collapsedIcon: require('./../img2/plus_white.png'),
                     collapsedIconColor: Colors.white,
                     backgroundColor: Colors.green
                 }
