@@ -1,10 +1,10 @@
 // @flow
-import React, {Component} from 'react';
-import {StyleSheet, Text, TextInput, View} from 'react-native';
-import type {Activity, Save} from "../../types";
-import ItemBody from "../activity/components/ItemBody";
-import {CheckBox} from "react-native-elements";
-import {Colors} from "../colors";
+import React, {Component} from 'react'
+import {StyleSheet, Text, TextInput, View} from 'react-native'
+import type {Activity, Save} from "../../types"
+import ItemBody from "../activity/components/ItemBody"
+import {CheckBox} from "react-native-elements"
+import {Colors} from "../colors"
 
 
 export type Description = string;

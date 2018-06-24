@@ -1,11 +1,11 @@
 // @flow
 
-import React from 'react';
-import {Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {isEmpty} from "lodash";
-import type {Item} from "../../types";
-import {Colors} from "../colors";
-import GImage from './GImage';
+import React from 'react'
+import {Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {isEmpty} from "lodash"
+import type {Item} from "../../types"
+import {Colors} from "../colors"
+import GImage from './GImage'
 
 
 type Props = {

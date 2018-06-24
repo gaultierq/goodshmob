@@ -1,30 +1,30 @@
 // @flow
 
-import type {Node} from 'react';
-import React from 'react';
-import {Image, Linking, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {connect} from "react-redux";
+import type {Node} from 'react'
+import React from 'react'
+import {Image, Linking, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {connect} from "react-redux"
 import {logged} from "../../../managers/CurrentUser"
-import {buildNonNullData, getAskBackgroundColor, sanitizeActivityType} from "../../../helpers/DataUtils";
+import {buildNonNullData, getAskBackgroundColor, sanitizeActivityType} from "../../../helpers/DataUtils"
 import type {Activity, ActivityType, Id, RNNNavigator} from "../../../types"
-import ItemBody from "./ItemBody";
-import ActivityActionBar from "./ActivityActionBar";
-import {Avatar} from "../../UIComponents";
-import {seeUser} from "../../Nav";
-import GTouchable from "../../GTouchable";
-import * as activityAction from "../actions";
+import ItemBody from "./ItemBody"
+import ActivityActionBar from "./ActivityActionBar"
+import {Avatar} from "../../UIComponents"
+import {seeUser} from "../../Nav"
+import GTouchable from "../../GTouchable"
+import * as activityAction from "../actions"
 import {A_BUY, canPerformAction, getPendingLikeStatus} from "../../rights"
-import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC} from "../../fonts";
-import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
-import User from "react-native-firebase/lib/modules/auth/User";
-import {LINEUP_PADDING, stylePadding} from "../../UIStyles";
-import {firstName} from "../../../helpers/StringUtils";
-import ActivityStatus from "./ActivityStatus";
-import FeedSeparator from "./FeedSeparator";
-import {UpdateTracker} from "../../UpdateTracker";
+import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC} from "../../fonts"
+import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors"
+import User from "react-native-firebase/lib/modules/auth/User"
 import * as UI from "../../UIStyles"
-import Button from 'apsl-react-native-button';
-import Icon from 'react-native-vector-icons/Feather';
+import {LINEUP_PADDING, stylePadding} from "../../UIStyles"
+import {firstName} from "../../../helpers/StringUtils"
+import ActivityStatus from "./ActivityStatus"
+import FeedSeparator from "./FeedSeparator"
+import {UpdateTracker} from "../../UpdateTracker"
+import Button from 'apsl-react-native-button'
+import Icon from 'react-native-vector-icons/Feather'
 
 
 type Props = {

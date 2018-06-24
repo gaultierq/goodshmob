@@ -1,7 +1,7 @@
 // @flow
-import React, {Component} from 'react';
-import {CheckBox} from "react-native-elements";
-import {connect} from "react-redux";
+import React, {Component} from 'react'
+import {CheckBox} from "react-native-elements"
+import {connect} from "react-redux"
 import {
     Alert,
     Clipboard,
@@ -13,29 +13,31 @@ import {
     TextInput,
     TouchableOpacity,
     View
-} from 'react-native';
-import Spinner from 'react-native-spinkit';
+} from 'react-native'
+import Spinner from 'react-native-spinkit'
 
-import {renderSimpleButton, stylePadding} from "../UIStyles";
-import type {Id, RequestState} from "../../types";
-import type {User} from "../../types";
-import {currentUserId, logged} from "../../managers/CurrentUser"
-import GTouchable from "../GTouchable";
-import Sheet from "../components/sheet";
+import {renderSimpleButton} from "../UIStyles"
+import type {Id, RequestState, User} from "../../types"
+import {logged} from "../../managers/CurrentUser"
+import GTouchable from "../GTouchable"
+import Sheet from "../components/sheet"
 import _Messenger from "../../managers/Messenger"
-import {Avatar, FullScreenLoader} from "../UIComponents";
+import {Avatar, FullScreenLoader} from "../UIComponents"
 import {Colors} from "../colors"
 import * as Api from "../../managers/Api"
-import ApiAction from "../../helpers/ApiAction"
 import {buildData} from "../../helpers/DataUtils"
 import {
     actions as userActions,
-    actionTypes as userActionTypes, CONNECT, createFriendship, deleteFriendship, DISCONNECT
+    actionTypes as userActionTypes,
+    CONNECT,
+    createFriendship,
+    deleteFriendship,
+    DISCONNECT
 } from "../../redux/UserActions"
 import {fullName} from "../../helpers/StringUtils"
 import Http404 from "./errors/404"
 import {SFP_TEXT_MEDIUM} from "../fonts"
-import {canExecUserAction, getUserActions, U_CONNECT, U_DISCONNECT} from "../userRights"
+import {canExecUserAction, U_CONNECT, U_DISCONNECT} from "../userRights"
 
 type Props = {
     user?: User,

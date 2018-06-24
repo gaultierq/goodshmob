@@ -3,7 +3,7 @@
 import type {Node} from 'react'
 import React, {Component} from 'react'
 import {Colors} from "../colors"
-import Spinner from 'react-native-spinkit';
+import Spinner from 'react-native-spinkit'
 
 export type State = {}
 export type Props = {

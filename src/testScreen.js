@@ -1,6 +1,4 @@
-import {currentUserId} from "./managers/CurrentUser";
-import EditUserProfileScreen from "./ui/screens/edituserprofile";
-import {CANCELABLE_SEARCH_MODAL} from "./ui/Nav"
+import {currentUserId} from "./managers/CurrentUser"
 import type {Item} from "./types"
 
 export const homeScreen = {

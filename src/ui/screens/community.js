@@ -1,22 +1,21 @@
 // @flow
 
-import React from 'react';
-import {Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {connect} from "react-redux";
+import React from 'react'
+import {Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {connect} from "react-redux"
 import {currentUserId, logged} from "../../managers/CurrentUser"
-import type {Id} from "../../types";
-import FriendsScreen from "./friends";
+import {ViewStyle} from "../../types"
+import FriendsScreen from "./friends"
 import {PagerPan, TabBar, TabView} from 'react-native-tab-view'
 
-import ApiAction from "../../helpers/ApiAction";
-import * as Api from "../../managers/Api";
-import Immutable from 'seamless-immutable';
-import {InteractionScreen} from "./interactions";
-import Screen from "../components/Screen";
-import {Colors} from "../colors";
-import {NavStyles, TAB_BAR_PROPS} from "../UIStyles";
-import ShareButton from "../components/ShareButton";
-import {ViewStyle} from "../../types";
+import ApiAction from "../../helpers/ApiAction"
+import * as Api from "../../managers/Api"
+import Immutable from 'seamless-immutable'
+import {InteractionScreen} from "./interactions"
+import Screen from "../components/Screen"
+import {Colors} from "../colors"
+import {TAB_BAR_PROPS} from "../UIStyles"
+import ShareButton from "../components/ShareButton"
 
 type Props = {
     navigator:any,

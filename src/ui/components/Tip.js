@@ -1,12 +1,11 @@
-import React, {Component} from 'react';
-import {View, Image, StyleSheet, Text, TextInput, TouchableOpacity} from 'react-native';
-import {Colors} from "../colors";
-import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "../fonts";
-import GTouchable from "../GTouchable";
-import type {i18Key} from "../../types";
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import {Col, Grid, Row} from "react-native-easy-grid";
-import {ViewStyle} from "../../types";
+import React from 'react'
+import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import {Colors} from "../colors"
+import {SFP_TEXT_MEDIUM} from "../fonts"
+import GTouchable from "../GTouchable"
+import {ViewStyle} from "../../types"
+import Icon from 'react-native-vector-icons/MaterialIcons'
+import {Col, Grid, Row} from "react-native-easy-grid"
 
 type Props = {
     text: string,

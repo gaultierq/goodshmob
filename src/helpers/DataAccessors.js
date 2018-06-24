@@ -1,8 +1,8 @@
 // @flow
 
-import type {Id, Lineup} from "../types";
-import {FETCH_LINEUP, fetchLineup} from "../ui/lineup/actions";
-import StoreManager from "../managers/StoreManager";
+import type {Id, Lineup} from "../types"
+import {FETCH_LINEUP, fetchLineup} from "../ui/lineup/actions"
+import StoreManager from "../managers/StoreManager"
 
 export function getLineup(lineupId: Id, options?: any): Promise<Lineup> {
 

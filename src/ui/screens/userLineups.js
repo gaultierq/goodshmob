@@ -17,18 +17,16 @@ import {
     View
 } from 'react-native'
 import {CheckBox} from 'react-native-elements'
-import type {Id, Lineup, RNNNavigator, SearchToken} from "../../types"
+import type {Id, Lineup, RNNNavigator} from "../../types"
 import {LINEUP_PADDING, renderSimpleButton, STYLES} from "../UIStyles"
 import Screen from "../components/Screen"
-import * as Nav from "../Nav"
-import {seeActivityDetails, seeList} from "../Nav"
+import {displayHomeSearch, seeActivityDetails, seeList} from "../Nav"
 import type {Props as LineupListProps} from './lineuplist'
 import {LineupListScreen} from './lineuplist'
 import {Navigation} from 'react-native-navigation'
 import type {Visibility} from "./additem"
 import type {FilterConfig} from "../components/feed"
 import GSearchBar2 from "../components/GSearchBar2"
-import {displayHomeSearch} from "../Nav"
 
 
 type Props = LineupListProps & {

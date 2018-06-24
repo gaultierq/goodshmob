@@ -1,9 +1,9 @@
 // @flow
 
-import type {Store} from 'redux';
-import {buildData, buildNonNullData} from "../helpers/DataUtils"
-import type {Id, ms, User} from "../types";
-import Scope from "./Scope";
+import type {Store} from 'redux'
+import {buildData} from "../helpers/DataUtils"
+import type {Id, ms, User} from "../types"
+import Scope from "./Scope"
 import watch from 'redux-watch'
 import EventBus from 'eventbusjs'
 

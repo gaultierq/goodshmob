@@ -1,11 +1,11 @@
 // @flow
-import type {Node} from 'react';
-import React from 'react';
-import {Button, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import * as UI from "../UIStyles";
-import type {Item} from "../../types";
-import {Colors} from "../colors";
-import GImage from './GImage';
+import type {Node} from 'react'
+import React from 'react'
+import {Button, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import * as UI from "../UIStyles"
+import type {Item} from "../../types"
+import {Colors} from "../colors"
+import GImage from './GImage'
 
 
 type Props = {

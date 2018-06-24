@@ -11,8 +11,7 @@ import {renderSimpleButton} from "../../UIStyles"
 import {followLineupPending, unfollowLineupPending} from "../../lineup/actions"
 import {SFP_TEXT_REGULAR} from "../../fonts"
 import StoreManager from "../../../managers/StoreManager"
-import {LineupRights} from "../../lineupRights"
-import {L_FOLLOW, L_UNFOLLOW} from "../../lineupRights"
+import {L_FOLLOW, L_UNFOLLOW, LineupRights} from "../../lineupRights"
 
 type Props = {
     lineup: Lineup,

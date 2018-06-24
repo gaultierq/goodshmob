@@ -1,17 +1,17 @@
 // @flow
 
-import * as Api from "../../managers/Api";
-import {Call} from "../../managers/Api";
-import type {Dispatchee, Id, ItemType, List, ms} from "../../types";
-import {CREATE_LINEUP, DELETE_LINEUP, EDIT_LINEUP, SAVE_ITEM} from "./actionTypes";
-import type {PendingAction} from "../../helpers/ModelUtils";
-import {pendingActionWrapper} from "../../helpers/ModelUtils";
-import type {Visibility} from "../screens/additem";
-import ApiAction from "../../helpers/ApiAction";
-import {UNSAVE} from "../activity/actionTypes";
-import {Alert} from "react-native";
-import Snackbar from "react-native-snackbar";
-import type {LineupActionParams} from "../Nav";
+import * as Api from "../../managers/Api"
+import {Call} from "../../managers/Api"
+import type {Id, ItemType, List, ms} from "../../types"
+import {CREATE_LINEUP, DELETE_LINEUP, EDIT_LINEUP, SAVE_ITEM} from "./actionTypes"
+import type {PendingAction} from "../../helpers/ModelUtils"
+import {pendingActionWrapper} from "../../helpers/ModelUtils"
+import type {Visibility} from "../screens/additem"
+import ApiAction from "../../helpers/ApiAction"
+import {UNSAVE} from "../activity/actionTypes"
+import {Alert} from "react-native"
+import Snackbar from "react-native-snackbar"
+import type {LineupActionParams} from "../Nav"
 import _Messenger from "../../managers/Messenger"
 
 export const FETCH_LINEUP = ApiAction.create("fetch_lineup", "retrieve a lineup details");

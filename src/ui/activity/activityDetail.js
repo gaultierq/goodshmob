@@ -1,41 +1,41 @@
 // @flow
 
-import React from 'react';
+import React from 'react'
 import {
     ActivityIndicator,
     FlatList,
     Image,
+    Keyboard,
     Linking,
     ScrollView,
     StyleSheet,
     Text,
-    Keyboard,
     TouchableOpacity,
     View
-} from 'react-native';
+} from 'react-native'
 import * as actions from './actions'
-import {connect} from "react-redux";
+import {connect} from "react-redux"
 import {currentUser, currentUserId, logged} from "../../managers/CurrentUser"
-import ItemBody from "./components/ItemBody";
-import {buildData, getAskBackgroundColor, sanitizeActivityType, timeSinceActivity} from "../../helpers/DataUtils";
-import {Avatar, FullScreenLoader, MainBackground} from "../UIComponents";
-import type {Activity, ActivityType, Id, RequestState, RNNNavigator} from "../../types";
-import Screen from "../components/Screen";
-import {Colors} from "../colors";
-import GTouchable from "../GTouchable";
-import ActivityStatus from "./components/ActivityStatus";
-import {component as CommentInput, CREATE_COMMENT} from '../components/CommentInput';
-import {userFirstName} from "../../helpers/StringUtils";
-import CommentCell from "../components/CommentCell";
-import {styleMargin, stylePadding} from "../UIStyles";
-import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts";
-import ActivityActionBar from "./components/ActivityActionBar";
-import FeedSeparator from "./components/FeedSeparator";
-import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
-import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
-import {CLOSE_MODAL, displayActivityActions} from "../Nav";
-import * as Api from "../../managers/Api";
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import ItemBody from "./components/ItemBody"
+import {buildData, getAskBackgroundColor, sanitizeActivityType, timeSinceActivity} from "../../helpers/DataUtils"
+import {Avatar, FullScreenLoader, MainBackground} from "../UIComponents"
+import type {Activity, ActivityType, Id, RequestState} from "../../types"
+import Screen from "../components/Screen"
+import {Colors} from "../colors"
+import GTouchable from "../GTouchable"
+import ActivityStatus from "./components/ActivityStatus"
+import {component as CommentInput, CREATE_COMMENT} from '../components/CommentInput'
+import {userFirstName} from "../../helpers/StringUtils"
+import CommentCell from "../components/CommentCell"
+import {styleMargin, stylePadding} from "../UIStyles"
+import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts"
+import ActivityActionBar from "./components/ActivityActionBar"
+import FeedSeparator from "./components/FeedSeparator"
+import {mergeItemsAndPendings} from "../../helpers/ModelUtils"
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
+import {CLOSE_MODAL, displayActivityActions} from "../Nav"
+import * as Api from "../../managers/Api"
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 type Props = {
     activityId: Id,

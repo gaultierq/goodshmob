@@ -1,10 +1,10 @@
 // @flow
 
-import * as Api from "../managers/Api";
+import * as Api from "../managers/Api"
 import * as actionTypes from "./actionTypes"
 import {SET_USER_NULL} from "./actionTypes"
-import {LoginManager as FacebookLoginManager} from "react-native-fbsdk";
-import type {Device} from "../types";
+import {LoginManager as FacebookLoginManager} from "react-native-fbsdk"
+import type {Device} from "../types"
 import {ImageCacheManager} from 'react-native-cached-image'
 
 export function logoutOffline(dispatch) {

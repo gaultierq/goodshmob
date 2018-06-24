@@ -1,10 +1,10 @@
 // @flow
 
-import React from 'react';
-import {Button, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import type {User} from "../../types";
-import {Avatar} from "../UIComponents";
-import {ViewStyle} from "../../types";
+import React from 'react'
+import {Button, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import type {User} from "../../types"
+import {ViewStyle} from "../../types"
+import {Avatar} from "../UIComponents"
 
 
 type Props = {

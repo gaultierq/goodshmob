@@ -14,14 +14,14 @@ import {
 } from 'react-native'
 import {connect} from "react-redux"
 import {logged} from "../../../managers/CurrentUser"
-import type {Id, Item, ItemType} from "../../../types"
+import type {Item, ItemType} from "../../../types"
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors"
 import {SFP_TEXT_ITALIC} from "../../fonts"
 import GImage from '../../components/GImage'
 
 import {firstName} from "../../../helpers/StringUtils"
 import Carousel from 'react-native-looped-carousel'
-import { createSelector } from 'reselect'
+import {createSelector} from 'reselect'
 import {buildData, sanitizeActivityType} from "../../../helpers/DataUtils"
 import * as Api from "../../../managers/Api"
 import {FETCH_ITEM} from "../../lineup/actionTypes"

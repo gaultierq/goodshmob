@@ -1,6 +1,6 @@
 // @flow
 
-import React, {Component} from 'react';
+import React, {Component} from 'react'
 import {
     Alert,
     BackHandler,
@@ -14,13 +14,13 @@ import {
     TouchableOpacity,
     TouchableWithoutFeedback,
     View
-} from 'react-native';
-import {Navigation} from 'react-native-navigation';
-import {Colors} from "../colors";
-import {SFP_TEXT_MEDIUM} from "../fonts";
-import PopupDialog, {DialogButton, DialogTitle, ScaleAnimation,} from 'react-native-popup-dialog';
-import OnBoardingManager from "../../managers/OnBoardingManager";
-import Markdown from "react-native-showdown";
+} from 'react-native'
+import {Navigation} from 'react-native-navigation'
+import {Colors} from "../colors"
+import {SFP_TEXT_MEDIUM} from "../fonts"
+import PopupDialog, {DialogButton, DialogTitle, ScaleAnimation,} from 'react-native-popup-dialog'
+import OnBoardingManager from "../../managers/OnBoardingManager"
+import Markdown from "react-native-showdown"
 
 
 type Props = {

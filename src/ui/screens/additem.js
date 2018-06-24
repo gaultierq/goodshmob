@@ -1,25 +1,24 @@
 // @flow
-import React from 'react';
-import {ActivityIndicator, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import {CheckBox} from "react-native-elements";
+import React from 'react'
+import {ActivityIndicator, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import {CheckBox} from "react-native-elements"
 import {openLinkSafely, renderSimpleButton, STYLES} from "../UIStyles"
-import type {Id, Item, ItemType} from "../../types";
-import {CREATE_SAVING, fetchItemCall} from "../lineup/actions";
-import {logged} from "../../managers/CurrentUser";
-import {connect} from "react-redux";
-import {buildData, buildNonNullData} from "../../helpers/DataUtils";
-import ItemCell from "../components/ItemCell";
-import Screen from "../components/Screen";
-import {safeDispatchAction} from "../../managers/Api";
-import {renderTag} from "../UIComponents";
-import {FETCH_ITEM} from "../lineup/actionTypes";
-import {Colors} from "../colors";
-import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
-import Sheet from "../components/sheet";
-import {CANCELABLE_MODAL} from "../Nav";
-import _Messenger from "../../managers/Messenger";
+import type {Id, Item, ItemType} from "../../types"
+import {CREATE_SAVING, fetchItemCall} from "../lineup/actions"
+import {logged} from "../../managers/CurrentUser"
+import {connect} from "react-redux"
+import {buildData} from "../../helpers/DataUtils"
+import ItemCell from "../components/ItemCell"
+import Screen from "../components/Screen"
+import {safeDispatchAction} from "../../managers/Api"
+import {FETCH_ITEM} from "../lineup/actionTypes"
+import {Colors} from "../colors"
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
+import Sheet from "../components/sheet"
+import {CANCELABLE_MODAL} from "../Nav"
+import _Messenger from "../../managers/Messenger"
 import {SFP_TEXT_ITALIC, SFP_TEXT_REGULAR} from "../fonts"
-import GTouchable from "../GTouchable";
+import GTouchable from "../GTouchable"
 
 type Props = {
     defaultLineupId: Id,

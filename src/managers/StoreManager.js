@@ -1,11 +1,11 @@
 // @flow
-import {Navigation} from 'react-native-navigation';
-import type {Id, ItemType, Saving} from "../types";
-import {mergeItemsAndPendings} from "../helpers/ModelUtils";
-import {CREATE_LINEUP, SAVE_ITEM} from "../ui/lineup/actionTypes";
-import {buildData} from "../helpers/DataUtils";
-import {UNSAVE} from "../ui/activity/actionTypes";
-import {isId} from "../helpers/StringUtils";
+import {Navigation} from 'react-native-navigation'
+import type {Id, ItemType, Saving} from "../types"
+import {mergeItemsAndPendings} from "../helpers/ModelUtils"
+import {CREATE_LINEUP, SAVE_ITEM} from "../ui/lineup/actionTypes"
+import {buildData} from "../helpers/DataUtils"
+import {UNSAVE} from "../ui/activity/actionTypes"
+import {isId} from "../helpers/StringUtils"
 import {FOLLOW_LINEUP, UNFOLLOW_LINEUP} from "../ui/lineup/actions"
 
 // export const DEEPLINK_OPEN_SCREEN_IN_MODAL = 'DEEPLINK_OPEN_SCREEN_IN_MODAL';

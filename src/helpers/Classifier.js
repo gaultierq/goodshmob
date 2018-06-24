@@ -1,7 +1,7 @@
 //@flow
 
 
-import type {Lineup, Item} from "../types"
+import type {Item, Lineup} from "../types"
 import Fuse from "fuse.js"
 import type {SearchCategory} from "./SearchHelper"
 

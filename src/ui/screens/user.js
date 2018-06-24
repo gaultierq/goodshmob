@@ -1,17 +1,7 @@
 // @flow
 
 import React from 'react'
-import {
-    Alert,
-    Clipboard,
-    Dimensions,
-    Image,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
-} from 'react-native'
+import {Alert, Clipboard, Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
 import type {Id, RequestState, RNNNavigator, User} from "../../types"
 import {CheckBox} from "react-native-elements"
 import {connect} from "react-redux"
@@ -31,9 +21,11 @@ import {fullName} from "../../helpers/StringUtils"
 import * as Api from "../../managers/Api"
 import {
     actions as userActions,
-    actionTypes as userActionTypes, CONNECT,
+    actionTypes as userActionTypes,
+    CONNECT,
     createFriendship,
-    deleteFriendship, DISCONNECT
+    deleteFriendship,
+    DISCONNECT
 } from "../../redux/UserActions"
 import {getUserActions, GUserAction, U_CONNECT, U_DISCONNECT} from "../userRights"
 import {createSelector} from "reselect"

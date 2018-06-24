@@ -23,7 +23,7 @@ import _Messenger from "../../managers/Messenger"
 import {Colors} from "../colors"
 import {SFP_TEXT_BOLD} from "../fonts"
 import {renderSimpleButton} from "../UIStyles"
-import {Avatar, registerLayoutAnimation, scheduleOpacityAnimation} from "../UIComponents"
+import {Avatar, scheduleOpacityAnimation} from "../UIComponents"
 import {FETCH_ACTIVITIES, fetchMyNetwork} from "../networkActions"
 
 type Props = {

@@ -1,9 +1,6 @@
 // @flow
-import {
-    Platform,
-    PermissionsAndroid
-} from 'react-native';
-import type {Position} from "../types";
+import {PermissionsAndroid, Platform} from 'react-native'
+import type {Position} from "../types"
 
 class _GeoLocation implements GeoLocation {
 

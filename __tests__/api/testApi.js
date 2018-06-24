@@ -1,8 +1,8 @@
-import Immutable from 'seamless-immutable';
+import Immutable from 'seamless-immutable'
 import util from 'util'
-import normalize from 'json-api-normalizer';
-import build from 'redux-object';
-import type {Place, Sending} from "../../src/types";
+import normalize from 'json-api-normalizer'
+import build from 'redux-object'
+import type {Place, Sending} from "../../src/types"
 
 let logObject = function (result2) {
     console.log(util.inspect(result2, false, null));

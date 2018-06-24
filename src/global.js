@@ -1,10 +1,10 @@
 /* @flow */
 
-import * as __ from "lodash";
+import * as __ from "lodash"
 import _i18n from './i18n/i18n'
 import Config from 'react-native-config'
-import {Dimensions, Platform} from 'react-native';
-import {createLogger, logFilter, logFormat} from "./helpers/LogUtil";
+import {Dimensions, Platform} from 'react-native'
+import {createLogger, logFilter, logFormat} from "./helpers/LogUtil"
 
 
 const ALL_KEYS = [

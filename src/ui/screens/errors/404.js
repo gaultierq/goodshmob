@@ -2,12 +2,7 @@
 
 import type {Node} from 'react'
 import React, {Component} from 'react'
-import {
-    Button,
-    Dimensions,
-    Text,
-    View
-} from 'react-native'
+import {Button, Dimensions, Text, View} from 'react-native'
 
 import {connect} from "react-redux"
 import {Navigation} from 'react-native-navigation'

@@ -1,25 +1,25 @@
 // @flow
-import React from 'react';
-import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
-import {connect} from "react-redux";
+import React from 'react'
+import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native'
+import {connect} from "react-redux"
 import {currentUser, isCurrentUser, logged} from "../../managers/CurrentUser"
-import {FullScreenLoader, MainBackground} from "../UIComponents";
-import Immutable from 'seamless-immutable';
-import * as Api from "../../managers/Api";
-import {Call} from "../../managers/Api";
-import Feed from "../components/feed";
-import type {Activity, ActivityGroup, ActivityType, Comment, Id, RequestState} from "../../types";
-import ApiAction from "../../helpers/ApiAction";
-import {buildData, doDataMergeInState, sanitizeActivityType} from "../../helpers/DataUtils";
-import {fetchActivity} from "../activity/actions";
+import {FullScreenLoader, MainBackground} from "../UIComponents"
+import Immutable from 'seamless-immutable'
+import * as Api from "../../managers/Api"
+import {Call} from "../../managers/Api"
+import Feed from "../components/feed"
+import type {Activity, ActivityType, Comment, Id, RequestState} from "../../types"
+import ApiAction from "../../helpers/ApiAction"
+import {buildData, doDataMergeInState, sanitizeActivityType} from "../../helpers/DataUtils"
+import {fetchActivity} from "../activity/actions"
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
-import {Colors} from "../colors";
-import Screen from "../components/Screen";
+import {mergeItemsAndPendings} from "../../helpers/ModelUtils"
+import {Colors} from "../colors"
+import Screen from "../components/Screen"
 import {component as CommentInput} from "../components/CommentInput"
-import ActivityStatus from "../activity/components/ActivityStatus";
-import CommentCell from "../components/CommentCell";
-import MultiMap from "multimap";
+import ActivityStatus from "../activity/components/ActivityStatus"
+import CommentCell from "../components/CommentCell"
+import MultiMap from "multimap"
 import Http404 from "./errors/404"
 
 

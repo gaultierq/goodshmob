@@ -1,9 +1,8 @@
 // @flow
 
-import ApiAction from "../helpers/ApiAction";
-import * as Api from "../managers/Api";
-import {reduceList2} from "../managers/Api";
-import {Call} from "../managers/Api";
+import ApiAction from "../helpers/ApiAction"
+import * as Api from "../managers/Api"
+import {Call, reduceList2} from "../managers/Api"
 
 export const FETCH_ACTIVITIES = ApiAction.create("network/fetch_activities", "retrieve the network activities");
 

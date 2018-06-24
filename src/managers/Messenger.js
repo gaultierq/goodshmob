@@ -1,8 +1,8 @@
 // @flow
 import EventBus from 'eventbusjs'
-import {EVENT_MESSAGE} from "../events";
+import {EVENT_MESSAGE} from "../events"
 import Snackbar from "react-native-snackbar"
-import {Colors} from "../ui/colors";
+import {Colors} from "../ui/colors"
 
 class _Messenger implements Messenger {
 

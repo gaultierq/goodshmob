@@ -1,15 +1,13 @@
 // @flow
-import {Navigation} from 'react-native-navigation';
-import type {Activity, Deeplink} from "../types";
-import {isId} from "../helpers/StringUtils";
-import {isActivityType, sanitizeActivityType} from "../helpers/DataUtils";
-import * as Nav from "../ui/Nav";
+import {Navigation} from 'react-native-navigation'
+import type {Activity, Deeplink} from "../types"
+import {isId} from "../helpers/StringUtils"
+import {isActivityType, sanitizeActivityType} from "../helpers/DataUtils"
+import * as Nav from "../ui/Nav"
+import {CANCELABLE_MODAL, displayLineupActionMenu} from "../ui/Nav"
 import URL from "url-parse"
-import Config from 'react-native-config';
-import {displayLineupActionMenu} from "../ui/Nav";
-import {getLineup} from "../helpers/DataAccessors";
-import {CANCELABLE_MODAL} from "../ui/Nav"
-import {openUserSheet} from "../ui/Nav"
+import Config from 'react-native-config'
+import {getLineup} from "../helpers/DataAccessors"
 
 // export const DEEPLINK_OPEN_SCREEN_IN_MODAL = 'DEEPLINK_OPEN_SCREEN_IN_MODAL';
 

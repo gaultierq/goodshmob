@@ -1,13 +1,13 @@
 //@flow
-import {Linking, StyleSheet, Text, TouchableOpacity, Platform} from 'react-native';
+import {Linking, Platform, StyleSheet, Text, TouchableOpacity} from 'react-native'
 import Button from 'apsl-react-native-button'
-import * as React from "react";
-import {toUppercase} from "../helpers/StringUtils";
-import {Colors, SEARCH_PLACEHOLDER_COLOR} from "./colors";
-import {SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "./fonts";
-import GTouchable from "./GTouchable";
-import type {ViewStyle} from "../types";
-import {TextStyle} from "../types";
+import * as React from "react"
+import {toUppercase} from "../helpers/StringUtils"
+import {Colors, SEARCH_PLACEHOLDER_COLOR} from "./colors"
+import {SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "./fonts"
+import GTouchable from "./GTouchable"
+import type {ViewStyle} from "../types"
+import {TextStyle} from "../types"
 
 export const BACKGROUND_COLOR = Colors.dirtyWhite2;
 export const NAV_BACKGROUND_COLOR = Colors.dirtyWhite;

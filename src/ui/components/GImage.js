@@ -1,7 +1,7 @@
 //@flow
-import React, {Component} from 'react';
-import {Image} from 'react-native';
-import {CachedImage} from 'react-native-cached-image';
+import React, {Component} from 'react'
+import {Image} from 'react-native'
+import {CachedImage} from 'react-native-cached-image'
 import Config from 'react-native-config'
 
 export type Props = {

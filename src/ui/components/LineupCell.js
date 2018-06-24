@@ -1,19 +1,19 @@
 // @flow
 
-import type {Node} from 'react';
-import React from 'react';
-import {Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import * as UI from "../UIStyles";
-import {stylePadding} from "../UIStyles";
-import {assertUnique, buildData} from "../../helpers/DataUtils";
-import {isEmpty} from "lodash";
-import type {List, Saving} from "../../types";
-import {Colors} from "../colors";
-import LineupCellSaving from "./LineupCellSaving";
-import {connect} from "react-redux";
+import type {Node} from 'react'
+import React from 'react'
+import {Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import * as UI from "../UIStyles"
+import {stylePadding} from "../UIStyles"
+import {assertUnique, buildData} from "../../helpers/DataUtils"
+import {isEmpty} from "lodash"
+import type {List, Saving} from "../../types"
+import {Colors} from "../colors"
+import LineupCellSaving from "./LineupCellSaving"
+import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
-import {isId} from "../../helpers/StringUtils";
-import LineupTitle2 from "./LineupTitle2";
+import {isId} from "../../helpers/StringUtils"
+import LineupTitle2 from "./LineupTitle2"
 //;
 
 type Props = {

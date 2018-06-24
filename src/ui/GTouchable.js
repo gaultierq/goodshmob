@@ -1,9 +1,9 @@
 //@flow
 
-import React, {Component} from 'react';
-import {TouchableNativeFeedback, TouchableOpacity, View,} from 'react-native';
+import React, {Component} from 'react'
+import {TouchableNativeFeedback, TouchableOpacity, View,} from 'react-native'
 
-import type {ms} from "../types";
+import type {ms} from "../types"
 
 export type Props = {
     onPress?: () => void,

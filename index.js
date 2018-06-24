@@ -1,5 +1,5 @@
 //@flow
-import 'es6-symbol/implement';
+import 'es6-symbol/implement'
 import glob from "./src/global"
 import App from './src/app'
 

@@ -14,7 +14,7 @@ import {
 } from 'react-native'
 import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
-import {TabBar, TabView, PagerPan} from 'react-native-tab-view'
+import {PagerPan, TabBar, TabView} from 'react-native-tab-view'
 
 import type {SearchToken} from "../../types"
 import Button from 'apsl-react-native-button'

@@ -1,13 +1,13 @@
 // @flow
-import React, {Component} from 'react';
-import type {Id} from "../../types";
-import {CheckBox} from "react-native-elements";
-import {connect} from "react-redux";
+import React, {Component} from 'react'
+import type {Id} from "../../types"
+import {CheckBox} from "react-native-elements"
+import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
 
 import _Messenger from "../../managers/Messenger"
-import ModalTextInput from "./modalTextInput";
-import {patchLineup} from "../lineup/actions";
+import ModalTextInput from "./modalTextInput"
+import {patchLineup} from "../lineup/actions"
 
 type Props = {
     lineupId: Id,

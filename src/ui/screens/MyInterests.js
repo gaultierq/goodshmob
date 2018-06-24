@@ -32,11 +32,10 @@ import {renderSimpleButton, STYLES} from "../UIStyles"
 import {GoodshContext, LINEUP_SECTIONS} from "../UIComponents"
 import {buildData, updateSplice0} from "../../helpers/DataUtils"
 import {FOLLOW_LINEUP, UNFOLLOW_LINEUP} from "../lineup/actions"
-import {mergeItemsAndPendings, mergeItemsAndPendings2} from "../../helpers/ModelUtils"
-import ShareButton from "../components/ShareButton"
+import {mergeItemsAndPendings2} from "../../helpers/ModelUtils"
 import {Colors} from "../colors"
 import {CANCELABLE_MODAL2} from "../Nav"
-import {SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "../fonts"
+import {SFP_TEXT_REGULAR} from "../fonts"
 
 
 type Props = {

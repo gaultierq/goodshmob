@@ -1,18 +1,19 @@
 // @flow
-import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, Text, TextInput, View} from 'react-native';
-import type {Id, ItemType, RequestState, RNNNavigator, Save} from "../../types";
-import {CheckBox} from "react-native-elements";
-import Screen from "../components/Screen";
-import {buildData} from "../../helpers/DataUtils";
-import {connect} from "react-redux";
-import {renderSimpleButton} from "../UIStyles";
-import * as Api from "../../managers/Api";
+import React, {Component} from 'react'
+import {ActivityIndicator, FlatList, StyleSheet, Text, TextInput, View} from 'react-native'
+import type {Id, ItemType, RequestState, RNNNavigator, Save} from "../../types"
+import {CheckBox} from "react-native-elements"
+import Screen from "../components/Screen"
+import {buildData} from "../../helpers/DataUtils"
+import {connect} from "react-redux"
+import {renderSimpleButton} from "../UIStyles"
+import * as Api from "../../managers/Api"
 import {Colors} from "../colors"
-import {doUnsave, fetchItemCall} from "../lineup/actions";
-import {FETCH_ITEM} from "../lineup/actionTypes";
-import StoreManager from "../../managers/StoreManager";
-import {fetchActivity} from "../activity/actions";
+import {doUnsave, fetchItemCall} from "../lineup/actions"
+import {FETCH_ITEM} from "../lineup/actionTypes"
+import StoreManager from "../../managers/StoreManager"
+import {fetchActivity} from "../activity/actions"
+
 type Props = {
     itemId: Id,
     itemType: ItemType,

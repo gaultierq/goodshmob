@@ -1,17 +1,17 @@
 // @flow
 
-import type {Node} from 'react';
-import React from 'react';
+import type {Node} from 'react'
+import React from 'react'
 
 
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import type {TextStyle, User} from "../../../types";
-import {ViewStyle} from "../../../types";
-import {Colors} from "../../colors";
-import {SFP_TEXT_BOLD} from "../../fonts";
-import GTouchable from "../../GTouchable";
-import {fullName} from "../../../helpers/StringUtils";
-import {Avatar} from "../../UIComponents";
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import type {TextStyle, User} from "../../../types"
+import {ViewStyle} from "../../../types"
+import {Colors} from "../../colors"
+import {SFP_TEXT_BOLD} from "../../fonts"
+import GTouchable from "../../GTouchable"
+import {fullName} from "../../../helpers/StringUtils"
+import {Avatar} from "../../UIComponents"
 
 type Props = {
     user: User,

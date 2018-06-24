@@ -1,4 +1,9 @@
-import type {MergeOptions} from "./helpers/ModelUtils";
+import type {MergeOptions} from "./helpers/ModelUtils"
+import type {
+    ImageStyle as ____ImageStyleProp_Internal,
+    TextStyle as ____TextStyleProp_Internal,
+    ViewStyle as ____ViewStyleProp_Internal,
+} from 'react-native/Libraries/StyleSheet/StyleSheetTypes'
 
 export type Url = string;
 
@@ -180,12 +185,6 @@ export interface Dispatchee {
 }
 
 export type Color = string
-
-import type {
-    ViewStyle as ____ViewStyleProp_Internal,
-    TextStyle as ____TextStyleProp_Internal,
-    ImageStyle as ____ImageStyleProp_Internal,
-} from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
 
 export type ViewStyle = ____ViewStyleProp_Internal
 export type TextStyle = ____TextStyleProp_Internal

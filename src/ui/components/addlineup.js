@@ -1,18 +1,18 @@
 // @flow
 
-import React, {Component} from 'react';
-import {Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View,} from 'react-native';
+import React, {Component} from 'react'
+import {Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View,} from 'react-native'
 
-import {connect} from "react-redux";
+import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
 
 import {CheckBox, SearchBar} from 'react-native-elements'
-import {Navigation} from 'react-native-navigation';
-import {Menu, MenuContext, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
-import {Colors} from "../colors";
-import GTouchable from "../GTouchable";
-import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
-import type {RNNNavigator} from "../../types";
+import {Navigation} from 'react-native-navigation'
+import {Menu, MenuContext, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu'
+import {Colors} from "../colors"
+import GTouchable from "../GTouchable"
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
+import type {RNNNavigator} from "../../types"
 
 
 type Props = {

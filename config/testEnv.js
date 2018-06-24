@@ -1,6 +1,6 @@
 //import * as Api from "../src/utils/Api";
 
-import {createLogger, logFormat} from "../src/helpers/LogUtil"
+import {createLogger} from "../src/helpers/LogUtil"
 import * as __ from "lodash"
 
 let makeI18nPlease = function () {

@@ -1,12 +1,12 @@
 // @flow
-import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {currentUser, currentUserId, logged} from "../../managers/CurrentUser";
-import {Navigation} from 'react-native-navigation';
-import GTouchable from "../GTouchable";
-import {connect} from "react-redux";
-import {currentUserFilter} from "../../redux/selectors";
-import type {Id} from "../../types";
+import React, {Component} from 'react'
+import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {currentUser, currentUserId, logged} from "../../managers/CurrentUser"
+import {Navigation} from 'react-native-navigation'
+import GTouchable from "../GTouchable"
+import {connect} from "react-redux"
+import {currentUserFilter} from "../../redux/selectors"
+import type {Id} from "../../types"
 import {Avatar} from "../UIComponents"
 
 

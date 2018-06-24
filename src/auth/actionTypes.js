@@ -1,4 +1,4 @@
-import ApiAction from "../helpers/ApiAction";
+import ApiAction from "../helpers/ApiAction"
 
 export const USER_LOGIN = ApiAction.create('user_login', 'user logged in with facebook');
 export const SAVE_DEVICE = ApiAction.create('save_device', 'save new device information');

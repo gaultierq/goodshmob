@@ -1,7 +1,7 @@
 // @flow
-import {Navigation} from 'react-native-navigation';
-import {Configuration, Client} from 'bugsnag-react-native';
-import type {User} from "../types";
+import {Navigation} from 'react-native-navigation'
+import {Client, Configuration} from 'bugsnag-react-native'
+import type {User} from "../types"
 
 // export const DEEPLINK_OPEN_SCREEN_IN_MODAL = 'DEEPLINK_OPEN_SCREEN_IN_MODAL';
 

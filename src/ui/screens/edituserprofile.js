@@ -1,17 +1,17 @@
 // @flow
-import React from 'react';
-import {Platform, StyleSheet, Text, TextInput, View} from 'react-native';
-import type {Props as LineupProps} from "./lineuplist";
-import Screen from "../components/Screen";
-import type {Id, RequestState, User} from "../../types";
-import {renderSimpleButton} from "../UIStyles";
-import * as Api from "../../managers/Api";
-import {safeDispatchAction} from "../../managers/Api";
-import ApiAction from "../../helpers/ApiAction";
-import {connect} from "react-redux";
-import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions";
-import {buildData} from "../../helpers/DataUtils";
-import {Avatar, FullScreenLoader} from "../UIComponents";
+import React from 'react'
+import {Platform, StyleSheet, Text, TextInput, View} from 'react-native'
+import type {Props as LineupProps} from "./lineuplist"
+import Screen from "../components/Screen"
+import type {Id, RequestState} from "../../types"
+import {renderSimpleButton} from "../UIStyles"
+import * as Api from "../../managers/Api"
+import {safeDispatchAction} from "../../managers/Api"
+import ApiAction from "../../helpers/ApiAction"
+import {connect} from "react-redux"
+import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
+import {buildData} from "../../helpers/DataUtils"
+import {Avatar, FullScreenLoader} from "../UIComponents"
 import {Colors} from "../colors"
 import _Messenger from "../../managers/Messenger"
 import Http404 from "./errors/404"

@@ -1,19 +1,19 @@
 // @flow
 
-import type {Node} from 'react';
-import React from 'react';
-import {Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {connect} from "react-redux";
+import type {Node} from 'react'
+import React from 'react'
+import {Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
-import FriendCell from "../components/FriendCell";
+import FriendCell from "../components/FriendCell"
 import Feed from "../components/feed"
-import type {Id, Item, User} from "../../types";
-import {buildData, doDataMergeInState} from "../../helpers/DataUtils";
-import Screen from "../components/Screen";
-import GTouchable from "../GTouchable";
+import type {Id, Item, User} from "../../types"
+import {buildData, doDataMergeInState} from "../../helpers/DataUtils"
+import Screen from "../components/Screen"
+import GTouchable from "../GTouchable"
 import {openUserSheet, seeUser} from "../Nav"
 import {LINEUP_PADDING, STYLES} from "../UIStyles"
-import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions";
+import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
 import ShareButton from "../components/ShareButton"
 
 

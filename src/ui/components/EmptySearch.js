@@ -1,6 +1,6 @@
+import type {Node} from 'react'
 // @flow
 import React, {Component} from 'react'
-import type {Node} from 'react'
 import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {logged} from "../../managers/CurrentUser"
 import {Navigation} from 'react-native-navigation'
@@ -9,8 +9,6 @@ import {Colors} from "../colors"
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
-import type {SearchItemCategoryType} from "../../helpers/SearchHelper"
-import {RED_SQUARE} from "../UIComponents"
 
 type Props = {
     text: string,

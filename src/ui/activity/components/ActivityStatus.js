@@ -1,21 +1,21 @@
 // @flow
-import React from 'react';
-import {Image, Linking, StyleSheet, Text, View} from 'react-native';
-import {Colors} from "../../colors";
-import {stylePadding} from "../../UIStyles";
-import type {Activity, Lineup, RNNNavigator, User} from "../../../types";
-import {ViewStyle} from "../../../types";
-import Octicons from "react-native-vector-icons/Octicons";
-import {seeUser} from "../../Nav";
-import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "../../fonts";
-import GTouchable from "../../GTouchable";
-import {isAsking, isSaving, isSending, timeSinceActivity} from "../../../helpers/DataUtils";
-import {fullName, savingCount} from "../../../helpers/StringUtils";
-import {Avatar} from "../../UIComponents";
-import HTMLView from "react-native-htmlview/HTMLView";
+import React from 'react'
+import {Image, Linking, StyleSheet, Text, View} from 'react-native'
+import {Colors} from "../../colors"
+import {stylePadding} from "../../UIStyles"
+import type {Activity, Lineup, RNNNavigator, User} from "../../../types"
+import {ViewStyle} from "../../../types"
+import Octicons from "react-native-vector-icons/Octicons"
+import {seeUser} from "../../Nav"
+import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "../../fonts"
+import GTouchable from "../../GTouchable"
+import {isAsking, isSaving, isSending, timeSinceActivity} from "../../../helpers/DataUtils"
+import {fullName, savingCount} from "../../../helpers/StringUtils"
+import {Avatar} from "../../UIComponents"
+import HTMLView from "react-native-htmlview/HTMLView"
 import URL from "url-parse"
-import NavManager from "../../../managers/NavManager";
-import {connect} from "react-redux";
+import NavManager from "../../../managers/NavManager"
+import {connect} from "react-redux"
 
 type Props = {
     activity: Activity,

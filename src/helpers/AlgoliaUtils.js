@@ -1,12 +1,11 @@
 // @flow
 
-import React from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import type {SearchTrigger} from "./SearchHelper";
-import type {RNNNavigator, SearchToken} from "../types";
-import algoliasearch from 'algoliasearch/reactnative';
-import * as appActions from "../auth/actions";
-import type {SearchCategoryType} from "./SearchHelper"
+import React from 'react'
+import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import type {SearchCategoryType, SearchTrigger} from "./SearchHelper"
+import type {RNNNavigator, SearchToken} from "../types"
+import algoliasearch from 'algoliasearch/reactnative'
+import * as appActions from "../auth/actions"
 
 type AlgoliaIndexName = string;
 type AlgoliaIndex = *;

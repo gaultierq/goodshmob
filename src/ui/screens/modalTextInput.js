@@ -1,5 +1,5 @@
 // @flow
-import React, {Component} from 'react';
+import React, {Component} from 'react'
 import {
     Alert,
     Clipboard,
@@ -11,18 +11,18 @@ import {
     TextInput,
     TouchableOpacity,
     View
-} from 'react-native';
-import {CheckBox} from "react-native-elements";
-import {connect} from "react-redux";
+} from 'react-native'
+import {CheckBox} from "react-native-elements"
+import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
-import {Colors} from "../colors";
-import Sheet from "../components/sheet";
-import {SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "../fonts";
-import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
-import GTouchable from "../GTouchable";
-import {renderSimpleButton} from "../UIStyles";
-import {safeExecBlock} from "../../managers/Api";
-import type {RequestState} from "../../types";
+import {Colors} from "../colors"
+import Sheet from "../components/sheet"
+import {SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "../fonts"
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
+import GTouchable from "../GTouchable"
+import {renderSimpleButton} from "../UIStyles"
+import {safeExecBlock} from "../../managers/Api"
+import type {RequestState} from "../../types"
 
 type Props = {
     initialText: string,

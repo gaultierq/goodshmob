@@ -1,21 +1,21 @@
 // @flow
-import React, {Component} from 'react';
-import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
-import Immutable from 'seamless-immutable';
-import * as Api from "../../managers/Api";
-import {Call} from "../../managers/Api";
-import type {Activity, ActivityType, Id} from "../../types";
-import ApiAction from "../../helpers/ApiAction";
-import {doDataMergeInState, sanitizeActivityType} from "../../helpers/DataUtils";
-import type {Props as SmartInputProps} from "../components/SmartInput";
-import SmartInput from "../components/SmartInput";
+import React, {Component} from 'react'
+import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native'
+import Immutable from 'seamless-immutable'
+import * as Api from "../../managers/Api"
+import {Call} from "../../managers/Api"
+import type {Activity, ActivityType, Id} from "../../types"
+import ApiAction from "../../helpers/ApiAction"
+import {doDataMergeInState, sanitizeActivityType} from "../../helpers/DataUtils"
+import type {Props as SmartInputProps} from "../components/SmartInput"
+import SmartInput from "../components/SmartInput"
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-import type {PendingAction} from "../../helpers/ModelUtils";
-import {pendingActionWrapper} from "../../helpers/ModelUtils";
-import {connect} from "react-redux";
-import type { MapStateToProps } from "react-redux"
+import type {PendingAction} from "../../helpers/ModelUtils"
+import {pendingActionWrapper} from "../../helpers/ModelUtils"
+import type {MapStateToProps} from "react-redux"
+import {connect} from "react-redux"
 import {Colors} from "../colors"
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 export const CREATE_COMMENT = ApiAction.create("create_comment", "add a comment");
 

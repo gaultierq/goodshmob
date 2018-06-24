@@ -1,19 +1,18 @@
 // @flow
-import React, {Component} from 'react';
-import {Clipboard, Dimensions, Image, Share, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import type {Dispatchee, Id, Item, ItemType, Url, User} from "../../types";
-import {CheckBox} from "react-native-elements";
+import React, {Component} from 'react'
+import {Clipboard, Dimensions, Image, Share, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import type {Dispatchee, Url, User} from "../../types"
+import {CheckBox} from "react-native-elements"
 import _Messenger from "../../managers/Messenger"
 
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import {currentUserId, logged} from "../../managers/CurrentUser"
-import {connect} from "react-redux";
-import {buildNonNullData} from "../../helpers/DataUtils";
-import * as Nav from "../Nav";
-import {Colors} from "../colors";
-import GTouchable from "../GTouchable";
-import Sheet from "../components/sheet";
-import type { MapStateToProps } from "react-redux"
+import type {MapStateToProps} from "react-redux"
+import {connect} from "react-redux"
+import * as Nav from "../Nav"
+import {Colors} from "../colors"
+import GTouchable from "../GTouchable"
+import Sheet from "../components/sheet"
 
 
 type Props = {

@@ -1,26 +1,26 @@
 'use strict';
 // @flow
-import React, {Component} from 'react';
+import React, {Component} from 'react'
 
-import {ActivityIndicator, Image, ImageBackground, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {ActivityIndicator, Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import * as appActions from "../../auth/actions"
-import {connect} from 'react-redux';
-import {AccessToken, LoginManager} from 'react-native-fbsdk';
-import Config from 'react-native-config';
+import {connect} from 'react-redux'
+import {AccessToken, LoginManager} from 'react-native-fbsdk'
+import Config from 'react-native-config'
 import RNAccountKit from 'react-native-facebook-account-kit'
 import Button from 'apsl-react-native-button'
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/FontAwesome'
 
-import SwiperNav from "../components/SwiperNav";
-import {Colors} from "../colors";
+import SwiperNav from "../components/SwiperNav"
+import {Colors} from "../colors"
 
-import Swiper from 'react-native-swiper';
-import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts";
+import Swiper from 'react-native-swiper'
+import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts"
 
 import i18n from '../../i18n'
 import * as Api from "../../managers/Api"
 import {renderSimpleButton} from "../UIStyles"
-import type {RequestState, User} from "../../types";
+import type {RequestState, User} from "../../types"
 
 type Props = {
     initialIndex: number

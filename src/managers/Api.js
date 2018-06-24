@@ -1,20 +1,20 @@
 // @flow
 
 import URL from "url-parse"
-import * as Util from "../helpers/ModelUtils";
-import normalize from 'json-api-normalizer';
+import * as Util from "../helpers/ModelUtils"
+import normalize from 'json-api-normalizer'
 //hack for tests. FIXME: remove circular dep
-import {logoutOffline} from "../auth/actions";
-import ApiAction from "../helpers/ApiAction";
-import fetch from 'react-native-fetch-polyfill';
-import type {Dispatchee, Id, ms, RequestState} from "../types";
+import {logoutOffline} from "../auth/actions"
+import ApiAction from "../helpers/ApiAction"
+import fetch from 'react-native-fetch-polyfill'
+import type {Dispatchee, Id, ms, RequestState} from "../types"
 import Config from 'react-native-config'
-import {Statistics} from "./Statistics";
-import {REMOVE_PENDING_ACTION} from "../reducers/dataReducer";
-import {NetInfo} from "react-native";
-import {sendMessage} from "./Messenger";
-import {CONNECTIVITY_CHANGE} from "../reducers/app";
-import {sleeper} from "../helpers/TimeUtils";
+import {Statistics} from "./Statistics"
+import {REMOVE_PENDING_ACTION} from "../reducers/dataReducer"
+import {NetInfo} from "react-native"
+import {sendMessage} from "./Messenger"
+import {CONNECTIVITY_CHANGE} from "../reducers/app"
+import {sleeper} from "../helpers/TimeUtils"
 
 import analytics from './Analytics'
 

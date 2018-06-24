@@ -1,35 +1,35 @@
 //@flow
 
-import type {Node} from 'react';
-import React, {Component} from 'react';
+import type {Node} from 'react'
+import React, {Component} from 'react'
 import {
     ActivityIndicator,
     BackHandler,
     FlatList,
     Keyboard,
-    RefreshControl, ScrollView,
+    RefreshControl,
+    ScrollView,
     SectionList,
     Text,
     TouchableWithoutFeedback,
     View
-} from 'react-native';
-import {connect} from "react-redux";
-import {assertUnique} from "../../helpers/DataUtils";
-import ApiAction from "../../helpers/ApiAction";
-import * as Api from "../../managers/Api";
-import {Call, TRIGGER_USER_DIRECT_ACTION, TRIGGER_USER_INDIRECT_ACTION} from "../../managers/Api";
-import {isEmpty} from "lodash";
-import type {i18Key, ms, RequestState, Url} from "../../types";
-import {ViewStyle} from "../../types";
-import {renderSimpleButton} from "../UIStyles";
-import type {ScreenVisibility} from "./Screen";
-import {Colors} from "../colors";
+} from 'react-native'
+import {connect} from "react-redux"
+import {assertUnique} from "../../helpers/DataUtils"
+import ApiAction from "../../helpers/ApiAction"
+import * as Api from "../../managers/Api"
+import {Call, TRIGGER_USER_DIRECT_ACTION, TRIGGER_USER_INDIRECT_ACTION} from "../../managers/Api"
+import {isEmpty} from "lodash"
+import type {i18Key, ms, RequestState, Url} from "../../types"
+import {ViewStyle} from "../../types"
+import {renderSimpleButton} from "../UIStyles"
+import type {ScreenVisibility} from "./Screen"
+import {Colors} from "../colors"
 import {getLanguages} from 'react-native-i18n'
-import {RequestManager} from "../../managers/request";
-import Spinner from 'react-native-spinkit';
+import {RequestManager} from "../../managers/request"
+import Spinner from 'react-native-spinkit'
 import Config from "react-native-config"
-import {FullScreenLoader} from "../UIComponents";
-import LineupHorizontal from "./LineupHorizontal"
+import {FullScreenLoader} from "../UIComponents"
 
 export type FeedSource = {
     callFactory: ()=>Api.Call,

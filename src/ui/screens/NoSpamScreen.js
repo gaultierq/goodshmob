@@ -1,6 +1,6 @@
 // @flow
 
-import React, {Component} from 'react';
+import React, {Component} from 'react'
 import {
     Alert,
     BackHandler,
@@ -13,10 +13,9 @@ import {
     TextInput,
     TouchableOpacity,
     View
-} from 'react-native';
-import {Navigation} from 'react-native-navigation';
-import {Colors} from "../colors";
-import NoSpamDialog from "./NoSpamDialog";
+} from 'react-native'
+import {Navigation} from 'react-native-navigation'
+import NoSpamDialog from "./NoSpamDialog"
 
 
 type Props = {

@@ -1,11 +1,11 @@
 // @flow
 import build from '../../vendors/redux-object'
-import type {Activity, Id, MergeOpts} from "../types";
-import {mergeLists} from "./ModelUtils";
+import type {Activity, Id, MergeOpts} from "../types"
+import {mergeLists} from "./ModelUtils"
 import dotprop from "dot-prop-immutable"
 import {Statistics} from "../managers/Statistics"
-import update from "immutability-helper";
-import * as TimeUtils from "./TimeUtils";
+import update from "immutability-helper"
+import * as TimeUtils from "./TimeUtils"
 import {Colors} from "../ui/colors"
 
 //ask backend to sanitize types

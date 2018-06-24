@@ -1,17 +1,17 @@
 // @flow
 
-import React from 'react';
-import {AsyncStorage, Clipboard, Button, ScrollView, StyleSheet, Text, View} from 'react-native';
-import {connect} from "react-redux";
-import {currentUser, logged} from "../../managers/CurrentUser"
-import {CheckBox} from "react-native-elements";
-import {CONFIG_SET} from "../../reducers/dataReducer";
-import Screen from "../components/Screen";
+import React from 'react'
+import {AsyncStorage, Button, Clipboard, ScrollView, StyleSheet, Text, View} from 'react-native'
+import {connect} from "react-redux"
+import {logged} from "../../managers/CurrentUser"
+import {CheckBox} from "react-native-elements"
+import {CONFIG_SET} from "../../reducers/dataReducer"
+import Screen from "../components/Screen"
 // import codePush from "react-native-code-push";
 import _Messenger from "../../managers/Messenger"
 import Config from 'react-native-config'
-import {Colors} from "../colors";
-import BugsnagManager from "../../managers/BugsnagManager";
+import {Colors} from "../colors"
+import BugsnagManager from "../../managers/BugsnagManager"
 import * as Nav from "../Nav"
 import {Navigation} from "react-native-navigation"
 

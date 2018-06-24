@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component} from 'react'
 import {
     ActivityIndicator,
     Animated,
@@ -9,15 +9,15 @@ import {
     TextInput,
     TouchableOpacity,
     View
-} from 'react-native';
+} from 'react-native'
 import {CheckBox} from 'react-native-elements'
-import GTouchable from "../GTouchable";
-import {Colors} from "../colors";
-import {NavStyles, SEARCH_INPUT_PROPS, SEARCH_INPUT_RADIUS, SEARCH_STYLES, SEARCH_STYLES_OBJ} from "../UIStyles";
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import {Navigation} from 'react-native-navigation';
-import {CANCELABLE_SEARCH_MODAL} from "../Nav";
-import type {RNNNavigator} from "../../types";
+import GTouchable from "../GTouchable"
+import {Colors} from "../colors"
+import {NavStyles, SEARCH_INPUT_PROPS, SEARCH_INPUT_RADIUS, SEARCH_STYLES, SEARCH_STYLES_OBJ} from "../UIStyles"
+import Icon from 'react-native-vector-icons/MaterialIcons'
+import {Navigation} from 'react-native-navigation'
+import {CANCELABLE_SEARCH_MODAL} from "../Nav"
+import type {RNNNavigator} from "../../types"
 
 
 export type SearchPlacesProps = {

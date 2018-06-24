@@ -1,10 +1,10 @@
 // @flow
 
 import {Linking} from 'react-native'
-import type {Notification, NotificationOpen} from 'react-native-firebase';
+import type {Notification, NotificationOpen} from 'react-native-firebase'
 import RNFirebase from 'react-native-firebase'
-import {Navigation} from 'react-native-navigation';
-import NavManager from "./NavManager";
+import {Navigation} from 'react-native-navigation'
+import NavManager from "./NavManager"
 
 
 class _NotificationManager implements NotificationManager {

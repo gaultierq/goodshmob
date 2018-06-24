@@ -1,23 +1,23 @@
 // @flow
 
-import React from 'react';
+import React from 'react'
 
-import {ScrollView, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {connect} from "react-redux";
+import {ScrollView, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
-import Immutable from 'seamless-immutable';
-import * as Api from "../../managers/Api";
-import Feed from "../components/feed";
-import ApiAction from "../../helpers/ApiAction";
-import UserActivity from "../activity/components/UserActivity";
-import {buildNonNullData, sanitizeActivityType} from "../../helpers/DataUtils";
-import type {Activity} from "../../types";
-import Screen from "../components/Screen";
-import NavManager from "../../managers/NavManager";
-import GTouchable from "../GTouchable";
-import ShareButton from "../components/ShareButton";
-import {STYLES} from "../UIStyles";
-import {TRANSPARENT_SPACER} from "../UIComponents";
+import Immutable from 'seamless-immutable'
+import * as Api from "../../managers/Api"
+import Feed from "../components/feed"
+import ApiAction from "../../helpers/ApiAction"
+import UserActivity from "../activity/components/UserActivity"
+import {buildNonNullData, sanitizeActivityType} from "../../helpers/DataUtils"
+import type {Activity} from "../../types"
+import Screen from "../components/Screen"
+import NavManager from "../../managers/NavManager"
+import GTouchable from "../GTouchable"
+import ShareButton from "../components/ShareButton"
+import {STYLES} from "../UIStyles"
+import {TRANSPARENT_SPACER} from "../UIComponents"
 
 type Props = {
     navigator: *,

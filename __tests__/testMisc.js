@@ -1,5 +1,5 @@
 import * as Time from "../src/helpers/TimeUtils"
-import * as Api from "../src/managers/Api";
+import * as Api from "../src/managers/Api"
 
 test('testing times', () => {
 

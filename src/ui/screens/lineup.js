@@ -3,13 +3,13 @@
 import React from 'react'
 import {Keyboard, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {connect} from "react-redux"
-import {currentUserId, logged} from "../../managers/CurrentUser"
+import {logged} from "../../managers/CurrentUser"
 import {activityFeedProps, FOLLOW_RIGHT_BUTTON, getAddButton, UNFOLLOW_RIGHT_BUTTON} from "../UIComponents"
 import Immutable from 'seamless-immutable'
 import * as Api from "../../managers/Api"
 import Feed from "../components/feed"
-import type {Activity, Id, Lineup, List, RNNNavigator, Saving, User} from "../../types"
-import {buildData, doDataMergeInState} from "../../helpers/DataUtils"
+import type {Id, Lineup, RNNNavigator, Saving} from "../../types"
+import {doDataMergeInState} from "../../helpers/DataUtils"
 import ActivityCell from "../activity/components/ActivityCell"
 import {seeActivityDetails, startAddItem} from "../Nav"
 import {Colors} from "../colors"
@@ -28,7 +28,7 @@ import {
 import {UNSAVE} from "../activity/actionTypes"
 import * as authActions from "../../auth/actions"
 import {GLineupAction, L_ADD_ITEM, L_FOLLOW, L_UNFOLLOW, LineupRights} from "../lineupRights"
-import {LINEUP_AND_SAVING_SELECTOR, LINEUP_SECLECTOR} from "../../helpers/ModelUtils"
+import {LINEUP_AND_SAVING_SELECTOR} from "../../helpers/ModelUtils"
 import {createSelector} from "reselect"
 
 

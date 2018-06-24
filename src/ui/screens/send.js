@@ -1,22 +1,22 @@
 // @flow
 
-import type {Node} from 'react';
-import React, {Component} from 'react';
-import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import {connect} from "react-redux";
+import type {Node} from 'react'
+import React, {Component} from 'react'
+import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import {connect} from "react-redux"
 import {currentUserId, logged} from "../../managers/CurrentUser"
-import type {Dispatchee, Id, Item, User} from "../../types";
-import FriendsFeed from "./friends";
-import FriendCell from "../components/FriendCell";
-import * as UI from "../UIStyles";
-import SmartInput from "../components/SmartInput";
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-import {MainBackground, TRANSPARENT_SPACER} from "../UIComponents";
-import GTouchable from "../GTouchable";
-import {userFirstName} from "../../helpers/StringUtils";
-import {Colors} from "../colors"
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import type {Dispatchee, Id, Item, User} from "../../types"
+import FriendsFeed from "./friends"
+import FriendCell from "../components/FriendCell"
+import * as UI from "../UIStyles"
 import {LINEUP_PADDING} from "../UIStyles"
+import SmartInput from "../components/SmartInput"
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
+import {MainBackground, TRANSPARENT_SPACER} from "../UIComponents"
+import GTouchable from "../GTouchable"
+import {userFirstName} from "../../helpers/StringUtils"
+import {Colors} from "../colors"
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 type Props = {
     data?: any,

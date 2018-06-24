@@ -1,7 +1,7 @@
 // @flow
 
-import React from 'react';
-import type {Node} from 'react';
+import type {Node} from 'react'
+import React from 'react'
 import {
     Alert,
     BackHandler,
@@ -16,25 +16,23 @@ import {
     TextInput,
     TouchableOpacity,
     View,
-} from 'react-native';
+} from 'react-native'
 
-import {connect} from "react-redux";
-import type {Id, Lineup, RNNNavigator, Saving} from "../../types";
-import {BACKGROUND_COLOR, LINEUP_PADDING, stylePadding, STYLES} from "../UIStyles";
+import {connect} from "react-redux"
+import type {Lineup, RNNNavigator} from "../../types"
+import {BACKGROUND_COLOR, LINEUP_PADDING, STYLES} from "../UIStyles"
 import {currentGoodshboxId, currentUserId, logged} from "../../managers/CurrentUser"
-import {Navigation} from 'react-native-navigation';
-import {displayLineupActionMenu, seeList, startAddItem} from "../Nav";
-import Screen from "../components/Screen";
+import {Navigation} from 'react-native-navigation'
+import {displayLineupActionMenu, seeList, startAddItem} from "../Nav"
+import Screen from "../components/Screen"
 
-import GTouchable from "../GTouchable";
-import AddLineupComponent from "../components/addlineup";
-import OnBoardingManager from "../../managers/OnBoardingManager";
-import LineupHorizontal, {LineupH1} from "../components/LineupHorizontal";
-import UserLineups from "./userLineups";
-import {Tip, TipConfig} from "../components/Tip";
-import LineupTitle2 from "../components/LineupTitle2";
-import {RENDER_SECTION_HEADER, renderLineupMenu} from "../UIComponents";
-import {SFP_TEXT_MEDIUM} from "../fonts";
+import GTouchable from "../GTouchable"
+import AddLineupComponent from "../components/addlineup"
+import LineupHorizontal, {LineupH1} from "../components/LineupHorizontal"
+import UserLineups from "./userLineups"
+import {TipConfig} from "../components/Tip"
+import LineupTitle2 from "../components/LineupTitle2"
+import {SFP_TEXT_MEDIUM} from "../fonts"
 
 
 type Props = {

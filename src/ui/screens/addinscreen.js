@@ -1,19 +1,18 @@
 // @flow
-import React from 'react';
-import {StyleSheet, Text, TextInput, View} from 'react-native';
-import {CheckBox} from "react-native-elements";
-import type {Props as LineupProps} from "./lineuplist";
-import {LineupListScreen} from './lineuplist';
-import AddLineupComponent from "../components/addlineup";
-import {Colors} from "../colors";
-import LineupCell from "../components/LineupCell";
-import GTouchable from "../GTouchable";
-import {currentUserId} from "../../managers/CurrentUser";
-import Screen from "../components/Screen";
-import LineupHorizontal from "../components/LineupHorizontal";
-import LineupCellSaving from "../components/LineupCellSaving";
-import type {Lineup} from "../../types";
-import LineupTitle2 from "../components/LineupTitle2";
+import React from 'react'
+import {StyleSheet, Text, TextInput, View} from 'react-native'
+import {CheckBox} from "react-native-elements"
+import type {Props as LineupProps} from "./lineuplist"
+import {LineupListScreen} from './lineuplist'
+import AddLineupComponent from "../components/addlineup"
+import {Colors} from "../colors"
+import GTouchable from "../GTouchable"
+import {currentUserId} from "../../managers/CurrentUser"
+import Screen from "../components/Screen"
+import LineupHorizontal from "../components/LineupHorizontal"
+import LineupCellSaving from "../components/LineupCellSaving"
+import type {Lineup} from "../../types"
+import LineupTitle2 from "../components/LineupTitle2"
 
 type Props = LineupProps & {
     onListSelected: ()=>void

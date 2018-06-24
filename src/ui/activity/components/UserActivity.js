@@ -1,13 +1,13 @@
 // @flow
 
-import type {Node} from 'react';
-import React from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import type {Node} from 'react'
+import React from 'react'
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import * as TimeUtils from '../../../helpers/TimeUtils'
-import type {User} from "../../../types";
-import {Colors} from "../../colors";
-import UserRowI from "./UserRowI";
-import {ViewStyle} from "../../../types";
+import type {User} from "../../../types"
+import {ViewStyle} from "../../../types"
+import {Colors} from "../../colors"
+import UserRowI from "./UserRowI"
 
 type Props = {
     activityTime: string,

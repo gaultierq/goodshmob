@@ -5,8 +5,6 @@ import {toUppercase} from "../../helpers/StringUtils"
 import * as Nav from "../Nav"
 import {sendMessage} from "../../managers/Messenger"
 import Config from "react-native-config"
-import BugsnagManager from "../../managers/BugsnagManager"
-import StoreManager from "../../managers/StoreManager"
 
 export type ScreenVisibility = 'unknown' | 'visible' | 'hidden';
 

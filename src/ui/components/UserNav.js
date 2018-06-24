@@ -1,11 +1,10 @@
 // @flow
-import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {Navigation} from 'react-native-navigation';
-import GImage from './GImage';
-import type {Id, User} from "../../types";
-import {fullName} from "../../helpers/StringUtils";
-import {SFP_TEXT_MEDIUM} from "../fonts";
+import React, {Component} from 'react'
+import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Navigation} from 'react-native-navigation'
+import type {User} from "../../types"
+import {fullName} from "../../helpers/StringUtils"
+import {SFP_TEXT_MEDIUM} from "../fonts"
 import {Avatar} from "../UIComponents"
 
 
