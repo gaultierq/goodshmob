@@ -1,25 +1,23 @@
 // @flow
 
-import React from 'react';
+import React from 'react'
 
-import {ScrollView, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {connect} from "react-redux";
+import {ScrollView, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
-import Immutable from 'seamless-immutable';
-import * as Api from "../../managers/Api";
-import Feed from "../components/feed";
-import ApiAction from "../../helpers/ApiAction";
-import UserActivity from "../activity/components/UserActivity";
-import {buildNonNullData, sanitizeActivityType} from "../../helpers/DataUtils";
-import type {Activity, Deeplink} from "../../types";
-
-import FeedSeparator from "../activity/components/FeedSeparator";
-import Screen from "../components/Screen";
-import NavManager from "../../managers/NavManager";
-import GTouchable from "../GTouchable";
-import ShareButton from "../components/ShareButton";
-import {STYLES} from "../UIStyles";
-import Config from 'react-native-config';
+import Immutable from 'seamless-immutable'
+import * as Api from "../../managers/Api"
+import Feed from "../components/feed"
+import ApiAction from "../../helpers/ApiAction"
+import UserActivity from "../activity/components/UserActivity"
+import {buildNonNullData, sanitizeActivityType} from "../../helpers/DataUtils"
+import type {Activity} from "../../types"
+import Screen from "../components/Screen"
+import NavManager from "../../managers/NavManager"
+import GTouchable from "../GTouchable"
+import ShareButton from "../components/ShareButton"
+import {STYLES} from "../UIStyles"
+import {TRANSPARENT_SPACER} from "../UIComponents"
 
 type Props = {
     navigator: *,
@@ -46,17 +44,15 @@ export class InteractionScreen extends Screen<Props, State> {
     state = {};
 
     render() {
-        let interaction = this.props.interaction;
-        let data = interaction.list;
-
-        console.log('interaction', interaction);
-        console.log('data', data);
+        let {interaction} = this.props
+        let list = interaction.list
 
         return (
             <View style={styles.container}>
 
                 <Feed
-                    data={data}
+                    initialNumToRender={10}
+                    data={list}
                     renderItem={this.renderItem.bind(this)}
                     fetchSrc={{
                         callFactory: this.fetchInteractions.bind(this),
@@ -64,14 +60,15 @@ export class InteractionScreen extends Screen<Props, State> {
                         action: FETCH_INTERACTIONS,
                     }}
                     hasMore={!interaction.hasNoMore}
-                    ItemSeparatorComponent={()=> <FeedSeparator vMargin={12} />}
+                    ItemSeparatorComponent={TRANSPARENT_SPACER(12)}
                     contentContainerStyle={{paddingTop: 10}}
-                    empty={
+                    ListEmptyComponent={
                         <View>
                             <ShareButton text={i18n.t('actions.invite')}/>
                             <Text style={STYLES.empty_message}>{i18n.t('interactions.empty_screen')}</Text>
-                        </View>}
-                    // cannotFetch={!super.isVisible()}
+                        </View>
+                    }
+                    visibility={this.getVisibility()}
                 />
 
             </View>

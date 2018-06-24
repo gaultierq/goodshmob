@@ -1,17 +1,20 @@
 //@flow
-import {Linking, StyleSheet, Text, TouchableOpacity, Platform} from 'react-native';
+import {Linking, Platform, StyleSheet, Text, TouchableOpacity} from 'react-native'
 import Button from 'apsl-react-native-button'
-import * as React from "react";
-import {toUppercase} from "../helpers/StringUtils";
-import {Colors, SEARCH_PLACEHOLDER_COLOR} from "./colors";
-import {SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "./fonts";
-import GTouchable from "./GTouchable";
+import * as React from "react"
+import {toUppercase} from "../helpers/StringUtils"
+import {Colors, SEARCH_PLACEHOLDER_COLOR} from "./colors"
+import {SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "./fonts"
+import GTouchable from "./GTouchable"
+import type {ViewStyle} from "../types"
+import {TextStyle} from "../types"
 
 export const BACKGROUND_COLOR = Colors.dirtyWhite2;
+export const NAV_BACKGROUND_COLOR = Colors.dirtyWhite;
 
 export const NavStyles = {
     navBarButtonColor: Colors.greyishBrown,
-    navBarBackgroundColor: Colors.dirtyWhite,
+    navBarBackgroundColor: NAV_BACKGROUND_COLOR,
     navBarTextFontSize: 17,
     navBarSubtitleFontSize: 14,
     navBarSubtitleColor: Colors.brownishGrey,
@@ -21,13 +24,10 @@ export const NavStyles = {
     navBarTitleFontFamily: SFP_TEXT_MEDIUM,
     navBarInputBackgroundColor: Colors.greying,
     screenBackgroundColor: BACKGROUND_COLOR,
+    navigationBarColor: Colors.white,
+    statusBarColor: NAV_BACKGROUND_COLOR,
+    statusBarTextColorScheme: 'dark',
     // screenBackgroundColor: '#AEAEAE'
-};
-
-export const SearchStyles = {
-    screenBackgroundColor: 'rgba(0,0,0,0.3)',
-    modalPresentationStyle: 'overCurrentContext',
-    topBarElevationShadowEnabled: false
 };
 
 
@@ -85,17 +85,16 @@ export function styleMargin(left?: number, top?: number, right?: number, bottom?
 }
 
 //TODO: convert to stylesheet
-export const TEXT_LIST = {fontSize: 14, color: Colors.blue};
 export const TEXT_LESS_IMPORTANT = {fontSize: 12, color: Colors.greyish};
-export const TEXT_LEAST_IMPORTANT = {fontSize: 9, color: Colors.greyish};
 
+export const LINEUP_PADDING = 15
 
-type ButtonOptions = {disabled?: boolean, loading?: boolean, style?: *};
+type ButtonOptions = {disabled?: boolean, loading?: boolean, style?: ViewStyle, textStyle?: TextStyle};
 
 export function renderSimpleButton(
     text: string,
-    onPress: ()=> void ,
-    {disabled = false, loading = false, style = {}, textStyle = {}} : ButtonOptions = {}) {
+    onPress: ()=> any ,
+    {disabled = false, loading = false, style, textStyle} : ButtonOptions = {}) {
 
     return (
         <Button
@@ -105,7 +104,7 @@ export function renderSimpleButton(
             style={[{marginBottom: 0}, STYLES.button, style]}
             disabledStyle={STYLES.disabledButton}
         >
-            <Text style={[{fontWeight: "bold", fontSize: 18}, textStyle, ]}>{text}</Text>
+            <Text style={[{fontFamily: SFP_TEXT_MEDIUM, fontSize: 18}, textStyle, ]}>{text}</Text>
         </Button>
     );
 }
@@ -155,6 +154,7 @@ export const STYLES = StyleSheet.create({
     button: {
         padding: 0,
         borderColor: "transparent",
+        borderRadius: 4
     },
     disabledButton: {
         borderColor: "transparent",
@@ -175,14 +175,14 @@ export const STYLES = StyleSheet.create({
         color: Colors.greyish,
         alignSelf: 'stretch',
         borderRadius: 10,
-        height: 22,
-        lineHeight: 20,
+        height: 24,
+        // lineHeight: 20,
         textAlignVertical: 'center',
         // padding: 2,
         borderWidth: StyleSheet.hairlineWidth,
         borderColor: Colors.greyish,
         fontFamily: SFP_TEXT_ITALIC,
-        fontSize: 15,
+        fontSize: 18,
 
     },
     tag2: {
@@ -216,13 +216,17 @@ export const STYLES = StyleSheet.create({
         position: 'absolute',
         zIndex: 1000,
         backgroundColor: 'rgba(255, 255, 255, 0.65)'
+    },
+    SECTION_TITLE: {
+        fontSize: 20,
+        fontFamily: SFP_TEXT_MEDIUM
     }
 });
 
 export const FEED_INITIAL_LOADER_DURATION = 400;
 
 
-export const SEARCH_INPUT_RADIUS = 4;
+export const SEARCH_INPUT_RADIUS = 10;
 
 export const SEARCH_STYLES_OBJ = {
     container: {
@@ -240,10 +244,6 @@ export const SEARCH_STYLES_OBJ = {
         fontSize: 15,
         height: 40,
         ...Platform.select({
-            ios: {
-                height: 30,
-
-            },
             android: {
                 borderWidth: 0,
             },
@@ -264,3 +264,32 @@ export const SEARCH_INPUT_PROPS = {
     returnKeyType: 'search',
     underlineColorAndroid: 'transparent'
 };
+
+
+let TAB_BAR_STYLES = StyleSheet.create({
+    tabbar: {
+        // backgroundColor: Colors.white,
+        backgroundColor: NavStyles.navBarBackgroundColor,
+        zIndex: 0,
+    },
+    indicator: {
+        backgroundColor: Colors.green,
+    },
+    tab: {
+        opacity: 1,
+        //width: 90,
+    },
+    label: {
+        color: '#000000',
+        textAlign: 'center',
+    },
+
+})
+
+export const TAB_BAR_PROPS = {
+    indicatorStyle: TAB_BAR_STYLES.indicator,
+    style: TAB_BAR_STYLES.tabbar,
+    tabStyle: TAB_BAR_STYLES.tab,
+    labelStyle: TAB_BAR_STYLES.label,
+}
+

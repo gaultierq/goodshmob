@@ -1,7 +1,7 @@
 'use strict';
 // @flow
 
-import React, {Component} from 'react';
+import React, {Component} from 'react'
 
 import {
     ActivityIndicator,
@@ -14,28 +14,26 @@ import {
     TextInput,
     TouchableOpacity,
     View
-} from 'react-native';
-import {connect} from 'react-redux';
+} from 'react-native'
+import {connect} from 'react-redux'
 import {currentUserId, logged} from "../../managers/CurrentUser"
-import type {Id, RequestState} from "../../types";
-import {buildData} from "../../helpers/DataUtils";
-import ApiAction from "../../helpers/ApiAction";
-import * as Api from "../../managers/Api";
+import type {Id, ms, RequestState, User} from "../../types"
+import {buildData} from "../../helpers/DataUtils"
+import * as Api from "../../managers/Api"
 import * as authActions from '../../auth/actions'
 
-import {openLinkSafely, renderLink, renderSimpleButton, stylePadding} from "../UIStyles";
-import SmartInput from "../components/SmartInput";
+import {Avatar} from "../UIComponents"
+import {openLinkSafely, renderSimpleButton, stylePadding} from "../UIStyles"
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-import Toast from 'react-native-root-toast';
-import {CONFIG_SET} from "../../reducers/dataReducer";
-import * as Nav from "../Nav";
-import {Colors} from "../colors";
-import GTouchable from "../GTouchable";
-import {CachedImage} from "react-native-img-cache";
-import Icon from "react-native-vector-icons/SimpleLineIcons";
-import {SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "../fonts";
-import FeedSeparator from "../activity/components/FeedSeparator";
-import {getDeviceInfo} from "../../managers/DeviceManager";
+import Toast from 'react-native-root-toast'
+import {CONFIG_SET} from "../../reducers/dataReducer"
+import * as Nav from "../Nav"
+import {Colors} from "../colors"
+import GTouchable from "../GTouchable"
+import {SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "../fonts"
+import FeedSeparator from "../activity/components/FeedSeparator"
+import {getDeviceInfo} from "../../managers/DeviceManager"
+import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
 
 type Props = {
     // userId: Id,
@@ -67,9 +65,10 @@ export default class Profile extends Component<Props, State> {
         let userId = currentUserId();
 
         if (!this.getUser(userId)) {
-            this.props.dispatch(actions.getUserAndTheirLists(userId).createActionDispatchee(GET_USER)).then(({data})=>{
-                //let user = this.getUser(userId);
-                //this.setState({user});
+            this.props.dispatch(userActions.getUser(userId)
+                .createActionDispatchee(userActionTypes.GET_USER)).then(({data})=>{
+                // let user = this.getUser(userId);
+                // this.setState({user});
             });
         }
     }
@@ -120,18 +119,20 @@ export default class Profile extends Component<Props, State> {
                     bottom: 52,
                     left: 17
                 }}>
-                    {renderSimpleButton(
-                        i18n.t("actions.logout"),
-                        this.logout.bind(this),
-                        {
-                            loading: this.state.reqLogout === 'sending',
-                            style: {alignSelf: 'flex-start'},
-                            textStyle: styles.footerButton
-                        }
-                    )}
+                    {
+                        renderSimpleButton(
+                            i18n.t("actions.logout"),
+                            this.logout.bind(this),
+                            {
+                                loading: this.state.reqLogout === 'sending',
+                                style: {alignSelf: 'flex-start'},
+                                textStyle: styles.footerButton
+                            }
+                        )
+                    }
 
                     {
-                        this.props.config.devMenu &&
+                        (this.props.config.devMenu || __DEV__ )&&
                         renderSimpleButton(i18n.t("dev.label"),
                             () => this.props.navigator.showModal({
                                     screen: 'goodsh.DebugScreen', // unique ID registered with Navigation.registerScreen
@@ -153,7 +154,7 @@ export default class Profile extends Component<Props, State> {
         );
     }
 
-
+    clicksMs: ms
 
     renderVersion() {
         let handler = () => {
@@ -212,15 +213,13 @@ export default class Profile extends Component<Props, State> {
 // clicksMs;
 
 
-    renderUser(user) {
+    renderUser(user: User) {
         return <View style={{
             flexDirection: 'column',
             alignItems: 'center',
         }}
         >
-            {user && user.image && <CachedImage source={{uri: user.image}}
-                                                style={styles.userAvatar}
-            />}
+            <Avatar user={user} />
             {user && <Text style={styles.userName}>{user.firstName + " " + user.lastName}</Text>}
 
         </View>;
@@ -262,22 +261,6 @@ export default class Profile extends Component<Props, State> {
         return buildData(data, "users", userId);
     }
 }
-
-const GET_USER = ApiAction.create("get_user(profile)", "get the user profile information");
-
-const actions = (() => {
-
-    const include = "";
-
-    return {
-        getUserAndTheirLists: (userId: Id) => new Api.Call()
-            .withMethod('GET')
-            .withRoute(`users/${userId}`)
-            .addQuery({include}),
-
-    };
-})();
-
 
 const styles = StyleSheet.create({
     userName: {

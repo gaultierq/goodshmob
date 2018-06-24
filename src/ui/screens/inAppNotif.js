@@ -1,16 +1,16 @@
 // @flow
-import React from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
-import GTouchable from "../GTouchable";
-import {Colors} from "../colors";
-import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "../fonts";
-import type {Deeplink} from "../../types";
-import NavManager from "../../managers/NavManager";
+import React from 'react'
+import {Platform, StyleSheet, Text, View} from 'react-native'
+import GTouchable from "../GTouchable"
+import {Colors} from "../colors"
+import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "../fonts"
+import type {Deeplink} from "../../types"
+import NavManager from "../../managers/NavManager"
 
 type Props = {
     title: string,
     body?: string,
-    deeplink: ?Deeplink
+    deeplink?:Deeplink
 };
 
 type State = {

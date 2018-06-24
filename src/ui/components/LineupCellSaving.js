@@ -1,16 +1,16 @@
 // @flow
 
-import React from 'react';
-import {Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {isEmpty} from "lodash";
-import type {Item} from "../../types";
-import {Colors} from "../colors";
-import {CachedImage} from "react-native-img-cache";
+import React from 'react'
+import {Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {isEmpty} from "lodash"
+import type {Item} from "../../types"
+import {Colors} from "../colors"
+import GImage from './GImage'
 
 
 type Props = {
     item: Item,
-    style?: ?*,
+    style?:*,
 };
 
 type State = {
@@ -39,7 +39,7 @@ export default class LineupCellSaving extends React.PureComponent<Props, State> 
         let image = item && item.image;
 
         if (image) {
-            return <CachedImage
+            return <GImage
                 source={{uri: image}}
                 resizeMode="cover"
                 style={[LineupCellSaving.styles.cell, this.props.style, ]}

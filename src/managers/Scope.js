@@ -1,8 +1,8 @@
 'use strict';
-import {currentUserId} from "./CurrentUser";
+import {currentUserId} from "./CurrentUser"
+import hoistNonReactStatic from 'hoist-non-react-statics'
 
 let React = require('react');
-import hoistNonReactStatic from 'hoist-non-react-statics';
 
 
 function Scope(DecoratedComponent) {

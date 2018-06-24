@@ -1,10 +1,10 @@
 // @flow
 
-import React from 'react';
-import {StyleSheet, Text, View, Share} from 'react-native';
+import React from 'react'
+import {Share, StyleSheet, Text, View} from 'react-native'
 import Button from 'apsl-react-native-button'
-import {Colors} from "../colors";
-import {SFP_TEXT_MEDIUM} from "../fonts";
+import {Colors} from "../colors"
+import {SFP_TEXT_MEDIUM} from "../fonts"
 
 type Props = {
     text?: string

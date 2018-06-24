@@ -1,7 +1,7 @@
 // @flow
 //import update from "immutability-helper";
 import merge from 'deepmerge'
-import type {ms} from "../types";
+import type {ms} from "../types"
 
 export const STAT_DURATION = 'STAT_API_REQUEST_TIME';
 

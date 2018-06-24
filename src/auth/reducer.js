@@ -1,8 +1,8 @@
 // @flow
 
-import Immutable from 'seamless-immutable';
-import * as types from "./actionTypes";
-import {INIT_CACHE, SET_USER_NULL, UPGRADE_CACHE, CLEAR_CACHE} from "./actionTypes";
+import Immutable from 'seamless-immutable'
+import * as types from "./actionTypes"
+import {CLEAR_CACHE, INIT_CACHE, SET_USER_NULL, UPGRADE_CACHE} from "./actionTypes"
 import {camelize} from 'camelize-object-key'
 
 export function createWithReducers(appReducers) {

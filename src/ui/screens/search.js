@@ -1,7 +1,7 @@
 // @flow
 
-import type {Node} from 'react';
-import React, {Component} from 'react';
+import type {Node} from 'react'
+import React, {Component} from 'react'
 import {
     ActivityIndicator,
     FlatList,
@@ -11,84 +11,30 @@ import {
     Text,
     TouchableOpacity,
     View
-} from 'react-native';
-import {connect} from "react-redux";
+} from 'react-native'
+import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
-import {TabBar, TabViewAnimated, TabViewPagerPan} from 'react-native-tab-view';
+import {PagerPan, TabBar, TabView} from 'react-native-tab-view'
 
-import {SearchBar} from 'react-native-elements'
-
-import type {i18Key, List, Saving, SearchToken} from "../../types";
+import type {SearchToken} from "../../types"
 import Button from 'apsl-react-native-button'
-import * as UI from "../UIStyles";
-import {NavStyles} from "../UIStyles";
-import {Navigation} from 'react-native-navigation';
-import update from "immutability-helper";
-import {Colors} from "../colors";
-import {DEEPLINK_SEARCH_CLOSE, DEEPLINK_SEARCH_SUBMITED, DEEPLINK_SEARCH_TEXT_CHANGED} from "./SearchNavBar";
-
-export type SearchCategoryType = string;
-
-export type SearchCategory = {
-    type: SearchCategoryType,
-    query: *,
-    parseResponse: (hits: []) => *,
-    renderItem: (item: *) => Node,
-    tabName: i18Key,
-    placeholder: i18Key,
-    onItemSelected?: () => void,
-    searchOptions: SearchOptions,
-    renderResults: ({query: SearchQuery, results: SearchState}) => Node,
-    renderBlank?: () => Node,
-}
-
-export type SearchResult = {
-    [SearchCategoryType]: {
-        results: Array<*>,
-        page: number,
-        nbPages: number,
-    }
-}
-export type SearchOptions = {
-    renderOptions: (any, any => void, void => void) => Node
-}
-
-
-
-export type SearchQuery = {
-    token: SearchToken,
-    categoryType: SearchCategoryType,
-    options?: any
-}
-
-export type SearchEngine = {
-    search:
-        (
-            token: SearchToken,
-            category: SearchCategoryType,
-            page: number,
-            searchOptions: ?any
-
-        ) => Promise<SearchResult>,
-    canSearch: (
-        token: SearchToken,
-        category: SearchCategoryType,
-        trigger: SearchTrigger,
-        searchOptions: ?any
-    ) => boolean
-
-};
-
+import {LINEUP_PADDING, NAV_BACKGROUND_COLOR, TAB_BAR_PROPS} from "../UIStyles"
+import {Navigation} from 'react-native-navigation'
+import update from "immutability-helper"
+import {Colors} from "../colors"
+import GSearchBar2 from "../components/GSearchBar2"
+import type {
+    SearchCategory,
+    SearchCategoryType,
+    SearchEngine,
+    SearchQuery,
+    SearchResult,
+    SearchState,
+    SearchTrigger
+} from "../../helpers/SearchHelper"
 
 
 //token -> {data, hasMore, isSearching}
-export type SearchState = {
-    searchState: number, //0,1,2,3
-    page: number,
-    nbPages: number,
-    data: Array<List|Saving>,
-    token: string,
-};
 
 //search query KEY: token x category x options
 //options: page x location? x
@@ -104,12 +50,10 @@ export type Props = {
     categories: Array<SearchCategory>,
     navigator: *,
     searchEngine: SearchEngine,
-    token?: ?SearchToken,
-    style?: ? *,
+    token?:SearchToken,
+    style?: *,
     index: number,
 };
-
-export type SearchTrigger = 'unknown' | 'button' | 'input_changed' | 'tab_changed' | 'intial_token'
 
 @connect()
 @logged
@@ -124,38 +68,29 @@ export default class SearchScreen extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
 
-        props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-
         this.state = {
-            input: '',
+            input: props.token,
             searches: {},
             index: props.index,
-            routes: props.categories.map((c, i) => ({key: `${i}`, title: c.tabName ? i18n.t(c.tabName) : null})),
+            routes: props.categories.map((c, i) => ({key: `${i}`, title: c.tabName})),
         };
-
-        props.navigator.setStyle({...UI.NavStyles,
-            navBarCustomView: 'goodsh.SearchNavBar',
-            navBarCustomViewInitialProps: {initialInput: props.token, placeholder: props.placeholder}
-        });
 
         if (props.token) {
             const token = props.token;
             //weak
-            this.state.input = token;
+            this.state.input = token
 
             setTimeout(()=> {
                 this.tryPerformSearch(token, 0);
             });
         }
+        this.props.navigator.setTitle({title: i18n.t("search_screen.title")})
     }
 
     handleIndexChange(index: number) {
         console.log(`tab changed to ${index}`);
         this.setState({index}, () => this.tryPerformSearch(this.state.input, 0));
     }
-
-    _renderPager = props => <TabViewPagerPan {...props} />;
-
 
     render() {
 
@@ -177,6 +112,20 @@ export default class SearchScreen extends Component<Props, State> {
                                   style={[{width:"100%", height: "100%", backgroundColor: "transparent"},this.props.style]}>
 
                 {
+                    <GSearchBar2
+                        onChangeText={input => this.setState({input}, input => this._debounceSearch(input))}
+                        onSubmitEditing={() => this.tryPerformSearch(this.state.input, 0)}
+                        placeholder={this.props.placeholder}
+                        value={this.state.input}
+                        autoFocus
+                        style={{
+                            paddingTop: 10,
+                            paddingBottom: 5,
+                            paddingHorizontal: LINEUP_PADDING, backgroundColor: NAV_BACKGROUND_COLOR}}
+                    />
+                }
+
+                {
                     cat && cat.searchOptions && (
                         cat.searchOptions.renderOptions(
                             this.getSearchOptions(cat.type),
@@ -186,14 +135,14 @@ export default class SearchScreen extends Component<Props, State> {
                     )
                 }
 
-                { showTabs && <TabViewAnimated
+                { showTabs && <TabView
                     style={styles.container}
                     navigationState={this.state}
                     renderScene={this.renderScene.bind(this)}
-                    renderHeader={this.renderHeader.bind(this)}
+                    renderTabBar={this.renderHeader.bind(this)}
                     onIndexChange={this.handleIndexChange.bind(this)}
                     keyboardShouldPersistTaps='always'
-                    renderPager={this._renderPager}
+                    renderPager={props => <PagerPan {...props} />}
                 />}
 
                 {
@@ -210,11 +159,7 @@ export default class SearchScreen extends Component<Props, State> {
     }
 
     renderHeader(props: *) {
-        return <TabBar {...props}
-                       indicatorStyle={styles.indicator}
-                       style={styles.tabbar}
-                       tabStyle={styles.tab}
-                       labelStyle={styles.label}/>;
+        return <TabBar {...TAB_BAR_PROPS} {...props}/>
     }
 
     renderScene({ route }: *) {
@@ -236,6 +181,7 @@ export default class SearchScreen extends Component<Props, State> {
     }
 
 
+    //FIXME: restore
     renderSearchFooter(search: SearchState) {
         //let search = this.props.search;
         if (!search) return null;
@@ -259,33 +205,7 @@ export default class SearchScreen extends Component<Props, State> {
     }
 
 
-    onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
-
-        //HACK
-        if (event.type === 'DeepLink') {
-            const payload = event.payload; // (optional) The payload
-
-            switch (event.link) {
-                case DEEPLINK_SEARCH_TEXT_CHANGED:
-                    this.onSearchInputChange(payload);
-                    break;
-                case DEEPLINK_SEARCH_SUBMITED:
-                    this.tryPerformSearch(this.state.input, 0);
-                    break;
-                case DEEPLINK_SEARCH_CLOSE:
-                    // this.setState({isSearching: false});
-                    break;
-            }
-        }
-    }
-
     _debounceSearch = _.debounce(() => this.tryPerformSearch(this.state.input, 0), 500);
-
-    onSearchInputChange(input: string) {
-        //this.setState({input});
-        this.setState({input}, input => this._debounceSearch(input));
-    }
-
 
     tryPerformSearch(token: SearchToken, page: number, trigger: SearchTrigger = 'unknown') {
 
@@ -361,21 +281,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    indicator: {
-        backgroundColor: Colors.green,
-    },
-    activityIndicator: {
-        position: "absolute",
-        top: 30, left: 0, right: 0, justifyContent: 'center',
-        zIndex: 3000
-    },
-    tab: {
-        opacity: 1,
-        //width: 90,
-    },
-    label: {
-        color: '#000000',
-    },
     button: {
         padding: 8,
         height: 30,
@@ -385,24 +290,10 @@ const styles = StyleSheet.create({
     searchInput: {
         backgroundColor: Colors.white,
     },
-    tabbar: {
-        // backgroundColor: Colors.white,
-        backgroundColor: NavStyles.navBarBackgroundColor,
-    },
-    indicator: {
-        backgroundColor: Colors.green,
-    },
     activityIndicator: {
         position: "absolute",
         top: 30, left: 0, right: 0, justifyContent: 'center',
         zIndex: 3000
-    },
-    tab: {
-        opacity: 1,
-        //width: 90,
-    },
-    label: {
-        color: '#000000',
     },
 });
 

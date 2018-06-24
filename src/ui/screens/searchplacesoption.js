@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component} from 'react'
 import {
     ActivityIndicator,
     Animated,
@@ -9,19 +9,19 @@ import {
     TextInput,
     TouchableOpacity,
     View
-} from 'react-native';
-import {CheckBox, SearchBar} from 'react-native-elements'
-import GTouchable from "../GTouchable";
-import {Colors} from "../colors";
-import {NavStyles, SEARCH_INPUT_PROPS, SEARCH_INPUT_RADIUS, SEARCH_STYLES, SEARCH_STYLES_OBJ} from "../UIStyles";
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import {Navigation} from 'react-native-navigation';
-import {CANCELABLE_SEARCH_MODAL} from "../Nav";
-import type {RNNNavigator} from "../../types";
+} from 'react-native'
+import {CheckBox} from 'react-native-elements'
+import GTouchable from "../GTouchable"
+import {Colors} from "../colors"
+import {NavStyles, SEARCH_INPUT_PROPS, SEARCH_INPUT_RADIUS, SEARCH_STYLES, SEARCH_STYLES_OBJ} from "../UIStyles"
+import Icon from 'react-native-vector-icons/MaterialIcons'
+import {Navigation} from 'react-native-navigation'
+import {CANCELABLE_SEARCH_MODAL} from "../Nav"
+import type {RNNNavigator} from "../../types"
 
 
 export type SearchPlacesProps = {
-    aroundMe: ?boolean,
+    aroundMe?:boolean,
     onNewOptions: any => void,
     onSearchSubmited: void => void,
     navigator: RNNNavigator
@@ -35,8 +35,8 @@ type SearchPlacesState = {
 
 export const SEARCH_OPTIONS_PADDINGS = {
 
-    paddingLeft: __IS_IOS__ ? 16 : 80,
-    paddingRight: __IS_IOS__ ? 16 : 8,
+    paddingLeft: __IS_IOS__ ? 16 : 16,
+    paddingRight: __IS_IOS__ ? 16 : 16,
     paddingVertical: 8,
 };
 

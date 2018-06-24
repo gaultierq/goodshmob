@@ -1,5 +1,4 @@
-
-import {areNotEquals} from "../helpers/ArrayUtil";
+import {areNotEquals} from "../helpers/ArrayUtil"
 
 export class UpdateTracker {
 

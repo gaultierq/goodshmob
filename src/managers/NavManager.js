@@ -1,11 +1,13 @@
 // @flow
-import {Navigation} from 'react-native-navigation';
-import type {Activity, Deeplink} from "../types";
-import {isId} from "../helpers/StringUtils";
-import {isActivityType, sanitizeActivityType} from "../helpers/DataUtils";
-import * as Nav from "../ui/Nav";
+import {Navigation} from 'react-native-navigation'
+import type {Activity, Deeplink} from "../types"
+import {isId} from "../helpers/StringUtils"
+import {isActivityType, sanitizeActivityType} from "../helpers/DataUtils"
+import * as Nav from "../ui/Nav"
+import {CANCELABLE_MODAL, displayLineupActionMenu} from "../ui/Nav"
 import URL from "url-parse"
-import Config from 'react-native-config';
+import Config from 'react-native-config'
+import {getLineup} from "../helpers/DataAccessors"
 
 // export const DEEPLINK_OPEN_SCREEN_IN_MODAL = 'DEEPLINK_OPEN_SCREEN_IN_MODAL';
 
@@ -35,11 +37,12 @@ class _NavManager implements NavManager {
         return "Messenger-" + this.id;
     }
 
-    goToDeeplink(deeplink: Deeplink) {
+    //options is a quick fix
+    goToDeeplink(deeplink: Deeplink, options?: any) {
         console.info('goToDeeplink: ' + deeplink);
         if (!deeplink) return false;
 
-        let url = new URL(deeplink);
+        let url = new URL(deeplink, "", true);
         //gds://goodsh.io/lineup/15
         let pathname = url.pathname;
         if (!pathname) return false;
@@ -53,10 +56,40 @@ class _NavManager implements NavManager {
             let id = _.nth(parts, 2);
             if (!isId(id)) return false;
 
+            if (url.query && url.query.origin === 'long_press') {
+                if (options) {
+                    let {dispatch, navigator} = options
+                    getLineup(id).then(lineup => displayLineupActionMenu(navigator, dispatch, lineup))
+                }
+                return
+            }
             this.showModal({
                 screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
                 passProps: {
                     lineupId: id,
+                },
+            });
+            return true;
+        }
+        if (main === 'users') {
+            let id = _.nth(parts, 2);
+            if (!isId(id)) return false;
+
+            if (url.query && url.query.origin === 'long_press') {
+                this.showModal({
+                    screen: 'goodsh.UserSheet', // unique ID registered with Navigation.registerScreen
+                    animationType: 'none',
+                    passProps: {
+                        userId: id,
+                    },
+                });
+                return
+            }
+
+            this.showModal({
+                screen: 'goodsh.UserScreen', // unique ID registered with Navigation.registerScreen
+                passProps: {
+                    userId: id,
                 },
             });
             return true;
@@ -76,10 +109,25 @@ class _NavManager implements NavManager {
                 });
                 return true;
             }
-            this.showModal({
-                screen: 'goodsh.ActivityDetailScreen',
-                passProps: {activityId: id, activityType}
-            });
+            if (activityType === 'asks') {
+                this.showModal({
+                    screen: 'goodsh.CommentsScreen', // unique ID registered with Navigation.registerScreen
+                    // title: fullName(user),
+                    passProps: {
+                        activityId: id,
+                        activityType: activityType,
+                        autoFocus: true
+                    },
+                    navigatorButtons: CANCELABLE_MODAL
+                })
+            }
+            else {
+                this.showModal({
+                    screen: 'goodsh.ActivityDetailScreen',
+                    passProps: {activityId: id, activityType}
+                })
+            }
+
 
         }
     }

@@ -1,31 +1,37 @@
 // @flow
 
-import React from 'react';
-import {Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {connect} from "react-redux";
+import React from 'react'
+import {Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {connect} from "react-redux"
 import {currentUserId, logged} from "../../managers/CurrentUser"
-import type {Id} from "../../types";
-import FriendsScreen from "./friends";
-import {TabBar, TabViewAnimated} from 'react-native-tab-view';
+import {ViewStyle} from "../../types"
+import FriendsScreen from "./friends"
+import {PagerPan, TabBar, TabView} from 'react-native-tab-view'
 
-import ApiAction from "../../helpers/ApiAction";
-import * as Api from "../../managers/Api";
-import Immutable from 'seamless-immutable';
-import {InteractionScreen} from "./interactions";
-import Screen from "../components/Screen";
-import {Colors} from "../colors";
-import {NavStyles} from "../UIStyles";
-import ShareButton from "../components/ShareButton";
+import ApiAction from "../../helpers/ApiAction"
+import * as Api from "../../managers/Api"
+import Immutable from 'seamless-immutable'
+import {InteractionScreen} from "./interactions"
+import Screen from "../components/Screen"
+import {Colors} from "../colors"
+import {TAB_BAR_PROPS} from "../UIStyles"
+import ShareButton from "../components/ShareButton"
 
 type Props = {
     navigator:any,
-    style?: any
+    style?: ViewStyle
 };
 
 type State = {
+    index?: number
 };
 
 const FETCH_PEOPLE_YOU_MAY_KNOW = ApiAction.create("people_you_may_know", "retrieve the user network he might know");
+
+const ROUTES = [
+    {key: `interactions`, title: i18n.t("community_screen.tabs.notifications")},
+    {key: `friends`, title: i18n.t("community_screen.tabs.friends")},
+]
 
 @logged
 @connect((state, ownProps) => ({
@@ -41,10 +47,7 @@ export class CommunityScreen extends Screen<Props, State> {
 
     state = {
         index: 0,
-        routes: [
-            {key: `interactions`, title: i18n.t("community_screen.tabs.notifications")},
-            {key: `friends`, title: i18n.t("community_screen.tabs.friends")},
-        ],
+        routes: ROUTES,
     };
 
     //FIXME: when in displayed within a drawer, everything is fucked up
@@ -55,125 +58,51 @@ export class CommunityScreen extends Screen<Props, State> {
     render() {
         return (
 
-            <TabViewAnimated
+            <TabView
                 style={
                     [
-                        styles.container,
+                        {flex: 1},
                         //bug: drawer passProps not working [https://github.com/wix/react-native-navigation/issues/663]
                         //this.props.style || __IS_IOS__? {marginTop: 38} : {}
                     ]
                 }
                 navigationState={{...this.state, visible: this.isVisible()}}
                 renderScene={this.renderScene.bind(this)}
-                renderHeader={this.renderHeader.bind(this)}
-                onIndexChange={this.handleIndexChange.bind(this)}
+                renderTabBar={props => <TabBar {...TAB_BAR_PROPS} {...props}/>}
+                onIndexChange={index => this.setState({index})}
+                renderPager={props => <PagerPan {...props} />}
             />
         )
     }
 
-    renderFriends() {
-        const {navigator} = this.props;
-        return (
-            <FriendsScreen
-                userId={currentUserId()}
-                navigator={navigator}
-                //renderItem={(item) => this.renderItem(item)}
-                ListHeaderComponent={<ShareButton text={i18n.t('actions.invite')}/>}
-                ListFooterComponent={this.renderFriendsSuggestion.bind(this)}
-                style={{backgroundColor: Colors.white}}
-                //bug: drawer passProps not working [https://github.com/wix/react-native-navigation/issues/663]
-                // visible={this.isVisible()}
-                visible={true}
-            />
-        )
-    }
 
-    renderInteractions() {
-        const {navigator} = this.props;
-        return (
-            <InteractionScreen
-                navigator={navigator}
-                visible={true}
-                //bug: drawer passProps not working [https://github.com/wix/react-native-navigation/issues/663]
-                // visible={this.isVisible()}
-            />
-        )
-    }
-
-    renderFriendsSuggestion() {
-        let peopleYouMayKnow = this.props.peopleYouMayKnow.list;
-        return (
-            <View>
-                {/*<Text>People you may know</Text>*/}
-                {/*<Feed*/}
-                    {/*data={peopleYouMayKnow}*/}
-                    {/*renderItem={this.renderItem.bind(this)}*/}
-                    {/*fetchSrc={{*/}
-                        {/*callFactory: ()=> this.fetchPeopleYouMayKnow(currentUserId()),*/}
-                        {/*action: FETCH_PEOPLE_YOU_MAY_KNOW,*/}
-                    {/*}}*/}
-                    {/*hasMore={false}*/}
-                {/*/>*/}
-            </View>
-        );
-    }
-
-    handleIndexChange(index: number) {
-        this.setState({ index });
-    }
-
-    fetchPeopleYouMayKnow(user_id: Id) {
-        console.info("==fetchPeopleYouMayKnow==");
-        return new Api.Call()
-            .withMethod('GET')
-            .withRoute(`users/${user_id}/people_you_may_know`);
-    }
-
-    renderHeader(props: *) {
-        return <TabBar {...props}
-                       indicatorStyle={styles.indicator}
-                       style={styles.tabbar}
-                       tabStyle={styles.tab}
-                       labelStyle={styles.label}/>;
-    }
-
-    renderScene({ route }: *) {
-        if (route.key === 'friends') {
-            return this.renderFriends();
+    renderScene({route}: *) {
+        let ix = ROUTES.indexOf(route)
+        let focused = this.state.index === ix
+        const navigator = this.props.navigator;
+        switch (route.key) {
+            case 'friends':
+                return (
+                    <FriendsScreen
+                        userId={currentUserId()}
+                        navigator={navigator}
+                        //renderItem={(item) => this.renderItem(item)}
+                        ListHeaderComponent={<ShareButton text={i18n.t('actions.invite')}/>}
+                        style={{backgroundColor: Colors.white}}
+                        visibility={focused ? 'visible' : 'hidden'}
+                    />
+                )
+            case 'interactions':
+                return (
+                    <InteractionScreen
+                        navigator={navigator}
+                        visibility={focused ? 'visible' : 'hidden'}
+                    />
+                )
+            default: throw "unexpected"
         }
-        if (route.key === 'interactions') {
-            return this.renderInteractions();
-        }
-        throw "unexpected"
-    };
+    }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    indicator: {
-        backgroundColor: Colors.green,
-    },
-    tab: {
-        opacity: 1,
-    },
-    label: {
-        color: '#000000',
-    },
-    tabbar: {
-        backgroundColor: NavStyles.navBarBackgroundColor,
-    },
-    indicator: {
-        backgroundColor: Colors.green,
-    },
-    tab: {
-        opacity: 1,
-    },
-    label: {
-        color: '#000000',
-    },
-});
 
 export const reducer = (() => {
     const initialState = Immutable(Api.initialListState());

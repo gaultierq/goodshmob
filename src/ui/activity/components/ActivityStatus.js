@@ -1,19 +1,235 @@
 // @flow
-import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
-import {Colors} from "../../colors";
-import {stylePadding} from "../../UIStyles";
-import type {Activity, RNNNavigator} from "../../../types";
-import Octicons from "react-native-vector-icons/Octicons";
-import {CANCELABLE_MODAL, seeComments, seeList, seeUser} from "../../Nav";
-import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "../../fonts";
-import GTouchable from "../../GTouchable";
-import {isAsking, isSaving, isSending, timeSinceActivity} from "../../../helpers/DataUtils";
-import UserRowI from "./UserRowI";
-import {userFirstName} from "../../../helpers/StringUtils";
-import {currentUserId} from "../../../managers/CurrentUser";
+import React from 'react'
+import {Image, Linking, StyleSheet, Text, View} from 'react-native'
+import {Colors} from "../../colors"
+import {stylePadding} from "../../UIStyles"
+import type {Activity, Lineup, RNNNavigator, User} from "../../../types"
+import {ViewStyle} from "../../../types"
+import Octicons from "react-native-vector-icons/Octicons"
+import {seeUser} from "../../Nav"
+import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "../../fonts"
+import GTouchable from "../../GTouchable"
+import {isAsking, isSaving, isSending, timeSinceActivity} from "../../../helpers/DataUtils"
+import {fullName, savingCount} from "../../../helpers/StringUtils"
+import {Avatar} from "../../UIComponents"
+import HTMLView from "react-native-htmlview/HTMLView"
+import URL from "url-parse"
+import NavManager from "../../../managers/NavManager"
+import {connect} from "react-redux"
+
+type Props = {
+    activity: Activity,
+    navigator: RNNNavigator,
+    skipLineup?: boolean,
+    style?:*,
+    cardStyle?: ViewStyle,
+    descriptionContainerStyle?:*,
+    descriptionStyle?: ViewStyle,
+    children?:Node,
+    descriptionNumberOfLines?: number
+};
+
+type State = {
+};
+
+@connect()
+export default class ActivityStatus extends React.Component<Props, State> {
+
+    static defaultProps = {
+        descriptionNumberOfLines: 50
+    };
+
+    render() {
+        const {activity, navigator, skipLineup, style, cardStyle, children} = this.props;
+
+        let {content, textNode} = this.getParams(activity, skipLineup)();
+
+        return (
+            <View style={[styles.mainContainer, style]}>
+                <View style={[{
+                    backgroundColor: 'white',
+                    padding: 6,
+                }, cardStyle
+                ]}>
+                    <View style={{
+                        flexDirection: 'row', flex: 1,
+                        // backgroundColor: 'purple',
+                    }}>
+                        <GTouchable onPress={() => seeUser(navigator, activity.user)}>
+                            <Avatar user={activity.user} />
+                        </GTouchable>
+                        <View style={{
+                            // backgroundColor: 'red',
+                            // alignItems: 'center',
+                            justifyContent:'center',
+                            flex: 1,
+                            marginLeft: 8,
+                        }}>
+                            { textNode }
+                            <Text style={[styles.userText, {alignSelf: 'flex-start', ...stylePadding(0, 3)}]}>{timeSinceActivity(activity)}</Text>
+                        </View>
+                    </View>
+
+                    {
+                        this.renderContent(content)
+                    }
+                </View>
+                {children}
+
+            </View>
+        )
+    }
+
+    getParams(activity:Activity, skipLineup?: boolean): () => any {
+        if (isSaving(activity) && !skipLineup) return this._renderSavedInList
+        else if (isSending(activity)) return this._renderSendTo
+        else if (isAsking(activity)) return this.renderAsk;
+        else throw "christ"
+    }
+
+    renderContent(content: string) {
+        if (!content) return null
+        return <View style={{flex: 1, flexDirection: 'row'}}>
+            <View style={[styles.descriptionContainer, this.props.descriptionContainerStyle]}>
+
+                <Octicons name="quote" size={10} color={Colors.brownishGrey} style={{alignSelf: 'flex-start'}}/>
+                <Text numberOfLines={this.props.descriptionNumberOfLines} style={[
+                    styles.description,
+                    {
+                        flex: 1,
+                        alignItems: 'center',
+                        textAlignVertical: 'center',
+                        paddingHorizontal: 2,
+                    },
+                    this.props.descriptionStyle
+                ]}>{_.upperFirst(content)}
+                </Text>
+            </View>
+        </View>;
+    }
 
 
+    _renderSavedInList = () => {
+        const {activity} = this.props;
+        let target = activity.target;
+
+        const user = activity.user;
+        let textNode = (
+            <HTMLView
+                // renderNode={renderNode}
+                onLinkLongPress={pressed => {
+                    let url: URL
+                    try {
+                        url = new URL(pressed)
+                        const q = url.query;
+                        url.set('query', {... (q || {}), origin: 'long_press'})
+                    }
+                    catch (e) {
+                        console.log("failed to parse url", e)
+                    }
+                    if (url) {
+                        //this doesnt quite work as we need {navigator, dispatch}
+                        //follow: https://github.com/wix/react-native-navigation/issues/3260
+
+                        //Linking.openURL(url.toString())
+                        const {navigator, dispatch} = this.props
+                        NavManager.goToDeeplink(url, {navigator, dispatch})
+
+                    }
+
+                }
+                }
+                value={`<div>${i18n.t("activity_item.header.in",
+                    {
+                        adder: this.getUserHtml(user),
+                        lineup: this.getLineupHtml(target),
+                        what: this.getItemHtml(activity)
+                    }
+                )}</div>`}
+                stylesheet={htmlStyles}
+            />
+        )
+
+        return {
+            textNode,
+            content: activity.description
+        };
+    }
+
+    getItemHtml(activity: Activity) {
+        return `<i>${this.truncate(activity.resource.title)}</i>`;
+    }
+
+    truncate(string: string) {
+        return _.truncate(string, {
+            'length': 40,
+            'separator': /,? +/
+        });
+    }
+
+    _renderSendTo = () => {
+        const {activity} = this.props;
+        let target = activity.target;
+        const user = activity.user;
+        let textNode = <HTMLView
+            // renderNode={renderNode}
+            value={`<div>${i18n.t("activity_item.header.to",
+                {
+                    from: this.getUserHtml(user),
+                    to: this.getUserHtml(target),
+                    what: this.getItemHtml(activity)
+                }
+            )}</div>`}
+            stylesheet={htmlStyles}
+        />
+
+        return {
+            textNode,
+            content: activity.description
+        };
+    }
+
+    getUserHtml(user: User) {
+        return `<a href="goodsh://it/users/${user.id}">${fullName(user)}</a>`;
+    }
+
+    getLineupHtml(lineup: Lineup) {
+        return `<a href="goodsh://it/lists/${lineup.id}">${this.truncate(lineup.name)}</a> (${savingCount(lineup)})`;
+    }
+
+
+    renderAsk = () => {
+        const {activity} = this.props;
+
+        let textNode = <HTMLView
+            // renderNode={renderNode}
+            value={`<div>${i18n.t("activity_item.header.ask", {asker: this.getUserHtml(activity.user)})}</div>`}
+            stylesheet={htmlStyles}
+        />
+
+        return {textNode, content: activity.content}
+    }
+}
+
+
+const htmlStyles = StyleSheet.create({
+
+    div: {
+        fontFamily: SFP_TEXT_MEDIUM,
+        fontSize: 14,
+        color: Colors.greyishBrown
+    },
+    a: {
+        fontFamily: SFP_TEXT_BOLD,
+        fontSize: 16,
+        color: Colors.black,
+    },
+    i: {
+        fontFamily: SFP_TEXT_ITALIC,
+        fontSize: 15,
+        color: Colors.black
+    },
+})
 const styles = StyleSheet.create({
     // description: {fontSize: 14, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey},
     tag: {flex:1, flexDirection:'row', alignItems: 'center'},
@@ -43,189 +259,4 @@ const styles = StyleSheet.create({
         elevation: 3,
     }
 });
-
-type Props = {
-    activity: Activity,
-    navigator: RNNNavigator,
-    skipLineup?: boolean,
-    style?: ?*,
-    cardStyle?: ?*,
-    descriptionContainerStyle?: ?*,
-    descriptionStyle?: ?*,
-    children?: ?Node,
-    descriptionNumberOfLines?: number
-
-};
-
-type State = {
-};
-
-export default class ActivityStatus extends React.Component<Props, State> {
-
-    static defaultProps = {
-        descriptionNumberOfLines: 50
-    };
-
-    render() {
-        const {activity, skipLineup, style, cardStyle, children, navigator} = this.props;
-        let renderMethod;
-        let content;
-        let statusLineHandler;
-        if (isSaving(activity) && !skipLineup) {
-            renderMethod = this.renderSavedInList.bind(this);
-            content = activity.description;
-            statusLineHandler = () => this.statusLineHandler(activity)
-        }
-        else if (isSending(activity)) {
-            renderMethod = this.renderSendTo.bind(this);
-            content = activity.description;
-            statusLineHandler = () => this.statusLineHandler(activity)
-        }
-        else if (isAsking(activity)) {
-            renderMethod = this.renderAsk.bind(this);
-            content = activity.content;
-        }
-
-
-        let {rightText, rightHandler} = renderMethod && renderMethod() || {};
-        return (
-            <View style={[styles.mainContainer, style]}>
-                <View style={[{
-                    backgroundColor: 'white',
-                    padding: 6,
-                },cardStyle
-                ]}>
-                    <GTouchable onPress={rightHandler}>
-                        <UserRowI
-                            // activityTime={activity.createdAt}
-                            onPressAvatar={()=> seeUser(this.props.navigator, activity.user)}
-                            user={activity.user}
-                            rightText={rightText}
-                        >
-                            <Text style={[styles.userText, {alignSelf: 'flex-start', ...stylePadding(0, 3)}]}>{timeSinceActivity(activity)}</Text>
-
-                        </UserRowI>
-
-                    </GTouchable>
-                    {!!content && (
-                        <GTouchable onPress={statusLineHandler}>
-                            {this.renderDescription2(content)}
-                        </GTouchable>
-                    )}
-                </View>
-                {children}
-
-            </View>
-        )
-    }
-
-    statusLineHandler(activity) {
-        if (activity.user && activity.user.id === currentUserId()) {
-            //edit description
-            this.props.navigator.showModal({
-                screen: 'goodsh.ChangeDescriptionScreen',
-                animationType: 'none',
-                passProps: {
-                    activityId: activity.id,
-                    activityType: activity.type,
-                    initialDescription: activity.description
-                }
-            });
-        }
-        else {
-            //open comments
-            this.props.navigator.showModal({
-                screen: 'goodsh.CommentsScreen',
-                title: i18n.t("activity_action_bar.comment.title"),
-                passProps: {
-                    activityId: activity.id,
-                    activityType: activity.type,
-                    autoFocus: true
-                },
-                navigatorButtons: CANCELABLE_MODAL,
-            });
-        }
-    }
-
-    renderDescription2(content: string) {
-        return <View style={{flex: 1, flexDirection: 'row'}}>
-            <View style={[styles.descriptionContainer, this.props.descriptionContainerStyle]}>
-
-                <Octicons name="quote" size={10} color={Colors.brownishGrey} style={{alignSelf: 'flex-start'}}/>
-                <Text numberOfLines={this.props.descriptionNumberOfLines} style={[
-                    styles.description,
-                    {
-                        flex: 1,
-                        alignItems: 'center',
-                        textAlignVertical: 'center',
-                        paddingHorizontal: 2,
-                    },
-                    this.props.descriptionStyle
-                ]}>{_.upperFirst(content)}
-                </Text>
-            </View>
-        </View>;
-    }
-
-    renderSendTo() {
-        const {activity} = this.props;
-        let target = activity.target;
-        let rightText = this.renderStatusLine(
-            i18n.t("activity_item.header.to"),
-            userFirstName(target)
-        );
-        let rightHandler = target && (() => seeUser(this.props.navigator, target));
-        return {rightText, rightHandler};
-    }
-
-    renderSavedInList() {
-        const {activity} = this.props;
-        let target = activity.target;
-
-        let count = target && target.meta ? target.meta["savingsCount"] : 0;
-        let targetName = target && target.name;
-        if (count) targetName += " (" + count + ")";
-
-        let rightText = this.renderStatusLine(
-            i18n.t(!!target ? "activity_item.header.in" : "activity_item.header.added_somewhere"),
-            targetName
-        );
-        return {rightText, rightHandler: target && (() => seeList(this.props.navigator, target))};
-    }
-
-    renderAsk() {
-        const {activity} = this.props;
-
-        let rightText = this.renderStatusLine(
-            i18n.t("activity_item.header.ask"),
-        );
-        return {rightText, rightHandler: (() => seeComments(this.props.navigator, activity))};
-    }
-
-    renderStatusLine(statusLine: string, statusTarget?: string) {
-
-        return (
-            <Text style={{
-                textAlign: 'center',
-                marginRight: 8,
-                marginLeft: 6,
-                fontFamily: SFP_TEXT_MEDIUM,
-                fontSize: 12,
-                color: Colors.greyishBrown}}>
-                {" " + statusLine}
-
-                {statusTarget && <Text style={[{
-                    color: Colors.black,
-                    fontFamily: SFP_TEXT_BOLD,
-                }]}>{" " + statusTarget}</Text>
-                }
-
-            </Text>
-        );
-
-    }
-}
-
-
-
 

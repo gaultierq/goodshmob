@@ -1,5 +1,6 @@
 // @flow
-import {ScreenVisibilityListener as RNNScreenVisibilityListener} from 'react-native-navigation';
+import {ScreenVisibilityListener as RNNScreenVisibilityListener} from 'react-native-navigation'
+
 let Answers;
 
 class _Analytics implements Analytics {

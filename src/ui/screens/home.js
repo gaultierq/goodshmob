@@ -1,55 +1,41 @@
 // @flow
 
-import React from 'react';
+import React from 'react'
 import {
     Alert,
     BackHandler,
     Button,
     Dimensions,
     Image,
-    Platform,
+    Keyboard,
     KeyboardAvoidingView,
+    Platform,
     StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
     View,
-    Keyboard,
-} from 'react-native';
+} from 'react-native'
 
-import {connect} from "react-redux";
-import ActionButton from 'react-native-action-button';
-import type {Id, Lineup, RNNNavigator, Saving, SearchToken} from "../../types";
-import {List} from "../../types"
-import Snackbar from "react-native-snackbar"
-import {stylePadding, STYLES} from "../UIStyles";
-import {currentGoodshboxId, currentUserId, isCurrentUserId, logged} from "../../managers/CurrentUser"
-import {CheckBox, SearchBar} from 'react-native-elements'
-import {Navigation} from 'react-native-navigation';
-import {LINEUP_DELETION, patchLineup} from "../lineup/actions";
-import * as Nav from "../Nav";
-import {startAddItem} from "../Nav";
-import Screen from "../components/Screen";
-import {Colors} from "../colors";
-import {PROFILE_CLICKED} from "../components/MyAvatar";
-import LineupTitle from "../components/LineupTitle";
-import LineupCellSaving, {ITEM_DIM} from "../components/LineupCellSaving";
-
-import GTouchable from "../GTouchable";
-import AddLineupComponent from "../components/addlineup";
-import type {OnBoardingStep} from "../../managers/OnBoardingManager";
-import OnBoardingManager from "../../managers/OnBoardingManager";
-// $FlowFixMe
-import {AppTour, AppTourSequence, AppTourView} from "../../../vendors/taptarget";
-import LineupHorizontal, {ITEM_SEP, LineupH1} from "../components/LineupHorizontal";
-import {seeList} from "../Nav";
-import {seeActivityDetails} from "../Nav";
-import UserLineups from "./userLineups";
-import {floatingButtonScrollListener, registerLayoutAnimation} from "../UIComponents";
-import BottomSheet from "react-native-bottomsheet";
-import {displayShareLineup} from "../Nav";
-import {Tip, TipConfig} from "../components/Tip";
-
+import {connect} from "react-redux"
+import type {Id, RNNNavigator, Saving} from "../../types"
+import {TAB_BAR_PROPS} from "../UIStyles"
+import {currentGoodshboxId, currentUser, logged} from "../../managers/CurrentUser"
+import {CheckBox} from 'react-native-elements'
+import {Navigation} from 'react-native-navigation'
+import {displayHomeSearch, startAddItem} from "../Nav"
+import Screen from "../components/Screen"
+import {PROFILE_CLICKED} from "../components/MyAvatar"
+import OnBoardingManager from "../../managers/OnBoardingManager"
+import {floatingButtonScrollListener, getAddButton, getClearButton, scheduleOpacityAnimation} from "../UIComponents"
+import {Tip, TipConfig} from "../components/Tip"
+import {HomeOnBoardingHelper} from "./HomeOnBoardingHelper"
+import {PagerPan, TabBar, TabView} from "react-native-tab-view"
+import MyGoodsh from "./MyGoodsh"
+import MyInterests from "./MyInterests"
+import {fullName2} from "../../helpers/StringUtils"
+import {currentUserFilter} from "../../redux/selectors"
+import NotificationManager from '../../managers/NotificationManager'
 
 type Props = {
     userId: Id,
@@ -60,33 +46,29 @@ type State = {
     focusedSaving?: Saving,
     isActionButtonVisible: boolean,
     filterFocused?: boolean,
-    currentTip?: TipConfig
-};
+    currentTip?:TipConfig,
+    popularDisplayCount?: number,
+    index: number,
+}
 
-const TIP_PRIVACY: TipConfig = {
-    type: 'visibility',
-    keys: 'tips.visibility',
-    materialIcon: 'lock',
-}
-const TIP_NOISE: TipConfig = {
-    type: 'noise',
-    keys: 'tips.noise',
-    materialIcon: 'notifications-off',
-}
-const TIP_FULL_PRIVATE: TipConfig = {
-    type: 'full_private',
-    keys: 'tips.full_private',
-    materialIcon: 'lock',
-}
-// const TEST_TIP = TIP_PRIVACY;
-// const TEST_TIP = TIP_PRIVACY;
 
+const ROUTES = [
+    {key: `my_goodsh`, title: i18n.t("home.tabs.my_goodsh")},
+    {key: `my_interests`, title: i18n.t("home.tabs.my_interests")},
+]
 @logged
-@connect(state=>({
+@connect((state, props)=>({
     config: state.config,
     onBoarding: state.onBoarding,
+    currentUser: currentUserFilter(state, props)
 }))
-class HomeScreen extends Screen<Props, State> {
+export default class HomeScreen extends Screen<Props, State> {
+
+    static navigatorStyle = {
+        navBarNoBorder: true,
+        topBarElevationShadowEnabled: false
+    };
+
 
     static navigatorButtons = {
 
@@ -102,27 +84,19 @@ class HomeScreen extends Screen<Props, State> {
                     id: 'profile',
                 }
         ],
-        rightButtons: [
-            // {
-            //     icon: require('../../img2/searchHeaderIcon.png'),
-            //     id: 'search'
-            // }
-        ],
-    };
+    }
 
+    logger = rootlogger.createLogger("home")
+    feed: any
+    onBoardingHelper = new HomeOnBoardingHelper()
     state = {
         focusedSaving: false,
         isActionButtonVisible: true,
+        index: 0,
+        popularDisplayCount: 0,
+        routes: ROUTES,
         // currentTip: TEST_TIP
     }
-
-    static navigatorStyle = {
-        navBarNoBorder: true,
-        topBarElevationShadowEnabled: false
-    };
-
-    appTourTargets = new Map();
-
 
     constructor(props: Props){
         super(props);
@@ -142,7 +116,15 @@ class HomeScreen extends Screen<Props, State> {
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
         //console.debug("home:onNavigatorEvent" , event);
 
-
+        if (__IS_IOS__ && event.id === 'bottomTabReselected' && this.feed) {
+            //__IS_IOS__ because of: scrollToIndex should be used in conjunction with getItemLayout or onScrollToIndexFailed
+            this.setState({index: 0})
+            this.feed.scrollToLocation({sectionIndex: 0, itemIndex: 0, viewOffset: 50})
+        }
+        if (event.id === 'add') {
+            startAddItem(this.props.navigator, currentGoodshboxId())
+            return
+        }
         //HACK
         if (event.type === 'DeepLink') {
             switch (event.link) {
@@ -166,214 +148,134 @@ class HomeScreen extends Screen<Props, State> {
                     });
                     break;
                 case 'search':
-                    this.launchSearch();
+                    displayHomeSearch(this.props.navigator, "")
                     break;
             }
         }
     }
 
-
-    launchSearch(token?: SearchToken) {
-        let navigator = this.props.navigator;
-
-        navigator.showModal({
-            screen: 'goodsh.HomeSearchScreen', // unique ID registered with Navigation.registerScreen
-            animationType: 'none',
-            backButtonHidden: true,
-            passProps: {
-                onClickClose: () => navigator.dismissModal({animationType: 'none'}),
-                token
-            },
-            backButtonHidden: true,
-            navigatorButtons: {
-                leftButtons: [],
-                rightButtons: [
-                    {
-                        id: Nav.CLOSE_MODAL,
-                        title: i18n.t("actions.cancel")
-                    }
-                ],
-            },
-            //
-            // navigatorButtons: Nav.CANCELABLE_SEARCH_MODAL(),
-        });
-    }
-
     componentDidAppear() {
 
-        //if a new onBoarding step is broadcasted, then display it
-        OnBoardingManager.listenToStepChange({
-            triggerOnListen: true,
-            callback: (step?: ?OnBoardingStep) => {
-                const visible = this.isVisible();
-                console.debug(`OnBoardingManager:step=${step} visible=${visible}`);
-                if (!visible) return;
-                let oldTip = this.state.currentTip;
-                let newTip = null;
-                switch (step) {
-                    case 'focus_add':
-                        setTimeout(() => {
-                            this.displayFocusAdd();
-                        }, 2000);
-                        break;
-                    case 'privacy':
-                        newTip = TIP_PRIVACY;
-                        break
-                    case 'noise':
-                        newTip = TIP_NOISE;
-                        break
-                    case 'private':
-                        newTip = TIP_FULL_PRIVATE;
-                        break
-                }
-                if (newTip !== oldTip) {
-                    registerLayoutAnimation("opacity")
-                    this.setState({currentTip: newTip})
-                }
+        // this.onBoardingHelper.listenTipChange(tip => {
+        //     if (tip !== this.state.currentTip) {
+        //         console.debug(`new tip`, tip)
+        //         registerLayoutAnimation("opacity")
+        //         this.setState({currentTip: tip})
+        //     }
+        // })
+        this.refreshOnBoarding()
+        this.refreshRightButtons()
+    }
 
+    refreshOnBoarding() {
+
+        //TODO: rm this settimeout
+        setTimeout(() => {
+
+            let info = OnBoardingManager.getInfoToDisplay(this.props.onBoarding, {group: "full_focus", persistBeforeDisplay: true});
+            if (!info) return
+
+            let {type} = info
+            this.logger.debug("found info to display:", type)
+            switch (type) {
+                case "focus_add":
+                    this.onBoardingHelper.handleFocusAdd()
+                    break
+                case "notification_permissions":
+                    NotificationManager.requestPermissionsForLoggedUser()
+                    break
+                case "popular":
+                    if (this.state.popularDisplayCount === 0) {
+                        this.setState({popularDisplayCount: 1}, () => {
+                            this.props.navigator.showModal({
+                                screen: 'goodsh.PopularItemsScreen',
+                                backButtonHidden: true,
+                                passProps: {
+                                    onFinished: () => {
+                                        OnBoardingManager.postOnDismissed("popular")
+                                        this.props.navigator.dismissModal()
+                                    }
+                                },
+                            })
+                        })
+                    }
+                    break
             }
         })
+
     }
 
-    displayFocusAdd() {
-        if (!this.isVisible()) {
-            console.warn('home is not visible anymore. aborting');
-            return false;
-        }
-
-        if (this.appTourTargets.size > 0) {
-            let appTourSequence = new AppTourSequence();
-            this.appTourTargets.forEach((appTourTarget, view) => {
-                appTourSequence.add(appTourTarget);
-            });
-            AppTour.ShowSequence(appTourSequence);
-
-
-            //as we don't have a callback on when the tour is finished,
-            // we are using a 10s timer, to go to the next onBoardingStep
-            setTimeout(() => {
-                OnBoardingManager.onDisplayed('focus_add')
-            }, 10000);
-
-        }
-        else {
-            console.warn('appTourTargets.size === 0. aborting');
-        }
-        return true;
+    componentDidUpdate() {
+        this.refreshOnBoarding()
     }
 
-    // _onScroll = floatingButtonScrollListener.call(this);
 
     render() {
 
-        const userId = currentUserId();
-        const navigator = this.props.navigator;
+        this.logger.debug("rendering home", this.state)
+
+        this.setNavigatorTitle(this.props.navigator, {title: fullName2(_.get(this.props, 'currentUser.attributes'))})
 
         return (
-            // FIXME: workflow w/ padding bottom to fix the last cutted item
-            // in the lineups list, a better solution might come with #371
-            // 70 is the size of a lineup cell
             <View style={{flex:1}}>
 
-                <UserLineups
-                    displayName={"home feed"}
-                    feedId={"home list"}
-                    userId={userId}
-                    navigator={navigator}
-                    empty={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
-                    initialLoaderDelay={0}
-                    onScroll={floatingButtonScrollListener.call(this)}
-                    // ItemSeparatorComponent={() => <View style={{height: StyleSheet.hairlineWidth, backgroundColor: Colors.white}} />}
-                    ItemSeparatorComponent={() => null}
-                    ListHeaderComponent={
-                        !this.state.filterFocused && this.state.currentTip && this.renderTip()
-                    }
-                    onFilterFocusChange={focused => new Promise(resolved => {
-                        this.setState({filterFocused: focused}, resolved())
-                    })
-                    }
-
-                    sectionMaker={(lineups)=> {
-                        const goodshbox = _.head(lineups);
-                        let savingCount = _.get(goodshbox, `meta.savingsCount`, null) || 0;
-                        return [
-                            {
-                                data: goodshbox ? [goodshbox] : [],
-                                title: i18n.t("lineups.goodsh.title"),
-                                subtitle: ` (${savingCount})`,
-                                onPress: () => seeList(navigator, goodshbox),
-                                renderItem: ({item, index}) => (
-                                    <LineupH1
-                                        lineup={item}
-                                        navigator={navigator}
-                                        skipLineupTitle={true}
-                                        renderEmpty={this.renderEmptyLineup(navigator, item)}
-                                    />
-                                )
-                            },
-                            {
-                                data: _.slice(lineups, 1),
-                                title: i18n.t("lineups.mine.title"),
-                                renderSectionHeaderChildren:() => <AddLineupComponent navigator={this.props.navigator}/>,
-                                renderItem: ({item, index})=>(
-                                    <LineupH1 lineup={item} navigator={navigator}
-                                              withMenuButton={true}
-                                              onPressEmptyLineup={() => startAddItem(navigator, item.id)}
-                                              renderEmpty={this.renderEmptyLineup(navigator, item)}
-                                              // TODO: watch https://github.com/facebook/react-native/issues/13202
-                                              // ListHeaderComponent={
-                                              //     () => <GTouchable
-                                              //         onPress={() => startAddItem(navigator, item.id)}
-                                              //         deactivated={item.pending}
-                                              //     >
-                                              //         {
-                                              //             LineupHorizontal.renderEmptyCell(0, true)
-                                              //         }
-                                              //     </GTouchable>
-                                              //
-                                              // }
-                                              // initialScrollIndex={1}
-                                              // initialNumToRender={6}
-                                              // getItemLayout={(data, index) => (
-                                              //     {length: ITEM_DIM, offset: (ITEM_DIM + ITEM_SEP)* index, index}
-                                              // )}
-                                              // onScrollToIndexFailed={err=>{console.warn('onScrollToIndexFailed',err)}}
-                                              // contentOffset={{y: ITEM_DIM + ITEM_SEP, x: ITEM_DIM + ITEM_SEP}}
-                                              // contentOffset={{x: 30, y: 10, }}
-                                              renderMenuButton={() => {
-                                                  //TODO: dubious 15
-                                                  return this.renderMenuButton(item, 15)
-                                              }}
-                                              renderTitle={(lineup: Lineup) => <LineupTitle lineup={lineup} style={{marginBottom: 10,}}/>}
-                                              style={[
-                                                  {paddingTop: 8, paddingBottom: 12},
-                                                  {backgroundColor: index % 2 === 1 ? 'transparent' : 'rgba(255, 255, 255, 0.3)'}
-                                              ]}
-                                    />
-                                )
-                            },
-                        ];
+                <TabView
+                    style={{flex: 1}}
+                    navigationState={{...this.state, visible: this.isVisible()}}
+                    renderScene={this.renderScene.bind(this)}
+                    renderTabBar={props => <TabBar {...TAB_BAR_PROPS} {...props}/>}
+                    renderPager={props => <PagerPan {...props} />}
+                    onIndexChange={index => {
+                        this.setState({index}, () => this.refreshRightButtons())
                     }}
-
                 />
-
-                {!this.state.filterFocused && this.state.isActionButtonVisible && this.renderFloatingButton()}
             </View>
-        );
+        )
     }
 
-    renderEmptyLineup(navigator, item) {
-        return (list: Lineup) => (
-            <GTouchable
-                onPress={() => startAddItem(navigator, item.id)}
-                deactivated={item.pending}
-            >
-                {
-                    LineupHorizontal.defaultRenderEmpty(true)
-                }
-            </GTouchable>
-        );
+
+    refreshRightButtons() {
+        this.props.navigator.setButtons(this.state.index === 0 ? getAddButton() : getClearButton())
     }
+
+    displayFloatingButton() {
+        return __IS_ANDROID__  && !this.state.filterFocused && this.state.isActionButtonVisible && this.state.index === 0;
+    }
+
+    renderScene({ route}: *) {
+        let ix = ROUTES.indexOf(route)
+        let focused = this.state.index === ix
+        switch (route.key) {
+
+            case 'my_goodsh':
+                return (
+                    <MyGoodsh
+                        visibility={focused ? 'visible' : 'hidden'}
+                        navigator={this.props.navigator}
+                        listRef={ref => this.feed = ref}
+                        onScroll={floatingButtonScrollListener.call(this)}
+                        // ItemSeparatorComponent={() => <View style={{height: StyleSheet.hairlineWidth, backgroundColor: Colors.white}} />}
+                        ItemSeparatorComponent={() => null}
+                        ListHeaderComponent={
+                            !this.state.filterFocused && this.state.currentTip && this.renderTip()
+                        }
+                        onFilterFocusChange={filterFocused => new Promise(resolved => {
+                            this.setState({filterFocused}, resolved())
+                        })
+                        }
+                    />
+                )
+            case 'my_interests':
+                return (
+                    <MyInterests
+                        navigator={this.props.navigator}
+                        visibility={focused ? 'visible' : 'hidden'}
+                    />
+                )
+            default: throw "unexpected"
+        }
+    }
+
 
     renderTip() {
         const currentTip = this.state.currentTip;
@@ -382,179 +284,34 @@ class HomeScreen extends Screen<Props, State> {
         ['title', 'text', 'button'].forEach(k=> {
             res[k] = i18n.t(`${keys}.${k}`)
         })
-
-        ;
         return <Tip
             {...res}
             materialIcon={currentTip.materialIcon}
             style={{margin: 10}}
             onClickClose={() => {
-                // registerLayoutAnimation("opacity")
-                // this.setState({currentTip: null})
-                OnBoardingManager.onDisplayed(currentTip.type)
+                OnBoardingManager.postOnDismissed(currentTip.type)
             }}
 
         />;
     }
 
-//TODO: use right manager
-    renderMenuButton(item: Lineup, padding: number) {
-        if (!item) return null;
+    static getDerivedStateFromProps(props: Props, state: State) {
+        let current = state.currentTip
 
-        //TODO: use right manager
-        if (item.id === currentGoodshboxId()) return null;
+        let nextTip = OnBoardingManager.getInfoToDisplay(props.onBoarding, {group: 'tip', persistBeforeDisplay: true})
+        if (_.get(current, 'type') === _.get(nextTip, 'extraData.type')) {
+            return null
+        }
+        else {
+            scheduleOpacityAnimation()
+            return {...state, currentTip: _.get(nextTip, 'extraData')}
+        }
 
-        // console.log("paddings:" + stylePadding(padding, 12));
-        let handler = () => {
-            BottomSheet.showBottomSheetWithOptions({
-                options: [
-                    i18n.t("actions.change_title"),
-                    i18n.t("actions.share_list"),
-                    i18n.t("actions.delete"),
-                    i18n.t("actions.cancel")
-                ],
-                title: item.name,
-                dark: true,
-                destructiveButtonIndex: 2,
-                cancelButtonIndex: 3,
-            }, (value) => {
-                switch (value) {
-                    case 0:
-                        this.changeTitle(item);
-                        break;
-                    case 1:
-                        displayShareLineup(this.props.navigator, item)
-                        break;
-                    case 2:
-                        this.deleteLineup(item);
-                        break;
-
-                }
-            });
-        };
-        return (<View style={{position: "absolute", right: 0, margin: 0}}>
-            <GTouchable onPress={handler}>
-                <View style={{...stylePadding(padding, 14)}}>
-                    <Image
-                        source={require('../../img2/moreDotsGrey.png')} resizeMode="contain"/>
-                </View>
-            </GTouchable>
-        </View>);
     }
-
-
-    //TODO: move out of home
-    deleteLineup(lineup: List) {
-        let delayMs = 3000;
-        //deleteLineup(lineup.id, delayMs)
-        const lineupId = lineup.id;
-        return Alert.alert(
-            i18n.t("alert.delete.title"),
-            i18n.t("alert.delete.label"),
-            [
-                {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-                {text: i18n.t("actions.ok"), onPress: () => {
-                        this.props.dispatch(LINEUP_DELETION.pending({lineupId}, {delayMs, lineupId}))
-                            .then(pendingId => {
-                                Snackbar.show({
-                                        title: i18n.t("activity_item.buttons.deleted_list"),
-                                        duration: Snackbar.LENGTH_LONG,
-                                        action: {
-                                            title: i18n.t("actions.undo"),
-                                            color: 'green',
-                                            onPress: () => {
-                                                this.props.dispatch(LINEUP_DELETION.undo(pendingId))
-                                            },
-                                        },
-                                    }
-                                );
-                            });
-                    }
-                },
-            ],
-            { cancelable: true }
-        );
-    }
-
-    //TODO: move out of home
-    changeTitle(lineup: List) {
-        let {id, name} = lineup;
-
-        this.props.navigator.showModal({
-            screen: 'goodsh.ChangeLineupName',
-            animationType: 'none',
-            passProps: {
-                lineupId: id,
-                initialLineupName: name
-            }
-        });
-    }
-
-
-    renderSaving(saving: Saving) {
-        return (
-            <GTouchable
-                onPress={() => seeActivityDetails(this.props.navigator, saving)}
-            >
-                <LineupCellSaving item={saving.resource} />
-            </GTouchable>
-        );
-    }
-
-    // render() {return <View style={{width: 50, height: 50, backgroundColor: BACKGROUND_COLOR}}/>}
 
     _targetRef = (primaryText, secondaryText) => ref => {
         if (!ref) return;
-
-        if (!this.appTourTargets.has(ref)) {
-            let params;
-            if (__IS_IOS__) {
-                params = {
-                    primaryText,
-                    secondaryText,
-                    targetHolderColor: Colors.blue,
-                    targetTintColor: Colors.white,
-                    primaryTextColor: Colors.white,
-                }
-            }
-            else {
-                params = {
-                    title: primaryText,
-                    description: secondaryText,
-                    //defined in android/app/src/main/res/values/colors.xml
-                    outerCircleColor: 'outerCircleColorPrimary',
-                    targetCircleColor: 'outerCircleColorSecondary',
-                }
-            }
-
-            let appTourTarget = AppTourView.for(ref, params);
-            this.appTourTargets.set(ref, appTourTarget);
-        }
+        this.onBoardingHelper.registerTapTarget(ref, primaryText, secondaryText)
     };
 
-    renderFloatingButton() {
-
-        return (
-            <ActionButton
-                buttonColor={Colors.green}
-                onPress={() => {
-                    this.onFloatingButtonPressed()
-                }}
-                mainRef={this._targetRef(i18n.t("home.wizard.action_button_label"), i18n.t("home.wizard.action_button_body"))}
-                buttonTextStyle={{fontSize: 26, fontWeight: 'bold', marginTop: -5}}
-            />
-        );
-    }
-
-
-    onFloatingButtonPressed() {
-        startAddItem(this.props.navigator, currentGoodshboxId());
-    }
 }
-
-
-
-const screen = HomeScreen;
-
-
-export {screen};

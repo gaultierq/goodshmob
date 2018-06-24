@@ -1,130 +1,232 @@
 // @flow
 
-import CurrentUser, {listenToUserChange} from "./CurrentUser";
-import watch from 'redux-watch'
-import EventBus from 'eventbusjs'
+import {currentUser} from "./CurrentUser"
+import Config from 'react-native-config'
+import type {ms} from "../types"
+import NotificationManager from './NotificationManager'
+import * as __ from "lodash"
 
-const NEXT_STEP = 'NEXT_STEP';
-const SET_STEP = 'SET_STEP';
+const DISPLAYED = 'DISPLAYED';
+const DISMISSED = 'DISMISSED';
 
-export type OnBoardingStep = 'focus_add' | 'notification' | 'privacy' | 'noise' | 'private';
+export type InfoType = 'popular' | 'focus_add' | 'visibility' | 'noise' | 'private' | 'notification_permissions'
+type InfoGroup = 'full_focus' | 'tip'
 
+const TIME_BETWEEN_TIPS_MS = __.toNumber(Config.TIME_BETWEEN_TIPS_MS)
+const TIP_DISPLAY_MAX_MS = __.toNumber(Config.TIP_DISPLAY_MAX_MS)
 
-export const ON_BOARDING_STEP_CHANGED = 'ON_BOARDING_STEP_CHANGED';
+type InfoConfig = {
+    type: InfoType,
+    group: InfoGroup,
+    maxDisplay?: ms,
+    timeAfter?: ms,
+    priority: number,
+    extraData?: any
+}
+type OnBoardingState = {
+    [string]: {
+        displayedAt?: ms,
+        dismissedAt?: ms,
+        skipped?: boolean
+    }
+}
+
+const ALL_INFOS = [
+    {
+        type: 'popular',
+        group: 'full_focus',
+        priority: 1,
+    },
+    {
+        type: 'focus_add',
+        group: 'full_focus',
+        priority: 2
+    },
+    {
+        type: 'notification_permissions',
+        group: 'full_focus',
+        maxDisplay: 0,
+        priority: 3
+    },
+    {
+        type: 'visibility',
+        group: 'tip',
+        maxDisplay: 30000,
+        priority: 4,
+        timeAfter: TIME_BETWEEN_TIPS_MS,
+        extraData: {
+            type: 'visibility',
+            keys: 'tips.visibility',
+            materialIcon: 'lock',
+        }
+    },
+    {
+        type: 'noise',
+        group: 'tip',
+        maxDisplay: 30000,
+        priority: 5,
+        timeAfter: TIME_BETWEEN_TIPS_MS,
+        extraData: {
+            type: 'noise',
+            keys: 'tips.noise',
+            materialIcon: 'notifications-off',
+        }
+    },
+    {
+        type: 'private',
+        group: 'tip',
+        maxDisplay: 30000,
+        priority: 6,
+        timeAfter: TIME_BETWEEN_TIPS_MS,
+        extraData: {
+            type: 'private',
+            keys: 'tips.full_private',
+            materialIcon: 'lock',
+        }
+    }
+]
 
 class _OnBoardingManager implements OnBoardingManager {
     id = Math.random();
 
     store: any;
 
-    ALL_STEPS: OnBoardingStep[];
+    logger: GLogger
 
     constructor() {
     }
 
     init(store: any) {
+        this.logger = rootlogger.createLogger('OnBoarding')
         this.store = store;
+    }
 
-        this.ALL_STEPS = ['focus_add'];
-        if (__WITH_NOTIFICATIONS__ && __IS_IOS__) {
-            this.ALL_STEPS.push('notification')
-        }
-        this.ALL_STEPS.push('privacy', 'noise', 'private')
+    getInfoToDisplay(state: any, options: any) {
 
-        //TODO: let current user implement this, and warn everybody when something is changing
-        // on user (now, or later):
+        let candidates: InfoConfig[] = ALL_INFOS
+            .sort((l, r) => l.priority - r.priority)
+            // .filter(i => i.group === group)
+            .filter(this._displayableByRule)
 
-        // on no_user (now, or later)
+        let result
+        let previous: Array<InfoConfig> = []
+        let {group, persistBeforeDisplay} = options || {}
 
-        //this should trigger th onboarding on user login
-        listenToUserChange({
-            onUser: user => {
-
-                let {forceOnBoardingCycle, onBoardingOnEveryLogin} = this.store.getState().config;
-                //step to set
-                if (forceOnBoardingCycle || (onBoardingOnEveryLogin || true) && CurrentUser.loggedSince() < 5000) {
-                    this.store.dispatch({type: SET_STEP, step: this.ALL_STEPS[0]});
+        // $FlowFixMe
+        for (;; previous.push(result)) {
+            result = candidates.shift()
+            if (result) {
+                let notDisplayable = this.notDisplayable(result, state)
+                if (notDisplayable) {
+                    this.logger.debug(result.type, "cannot be displayed:", notDisplayable)
+                    continue
                 }
-                //getPendingStep must be ok after init
-                //
-                // if (this.getPendingStep() === null) {
-                //     requestPermissionsForLoggedUser();
-                // }
-                // else {
-                //     let unsubscribe = this.store.subscribe(() => {
-                //         if (!this.getPendingStep()) {
-                //             requestPermissionsForLoggedUser();
-                //             unsubscribe();
-                //         }
-                //     });
-                // }
+                //we have the info we want to display, but maybe it's not possible right now
 
-            }, triggerOnListen: true});
+                //we asked for another group
+                if (group && group !== result.group) result = null
+
+                //the last displayed info was dismissed not long ago
+                let last
+                if (result && (last = _.last(previous)) && 'timeAfter' in last && this._synthDismissed(last, state) + last.timeAfter > Date.now()) {
+                    this.logger.debug(result.type, "cannot be displayed:", "too soon")
+                    result = null
+                }
+                break
+            }
+            break
+        }
 
 
-        let w = watch(store.getState, 'onBoarding.nextStep');
-        store.subscribe(w((newVal, oldVal, objectPath) => {
-                console.info(`onBoarding: next step changed old=${oldVal}, new=${newVal}`);
+        let type = null
+        if (result && persistBeforeDisplay) {
+            type = result.type
+            if (!this.hasBeenDisplayed(type, state)) {
+                this.onDisplayed(type)
+            }
+        }
+        else type = null
 
-                EventBus.dispatch(ON_BOARDING_STEP_CHANGED, {step: newVal});
-            })
-        );
+        this.logger.debug("pending for", group, ": ", type)
+        return result
     }
 
-    getPendingStep(): ?OnBoardingStep {
-        return this.store.getState().onBoarding.nextStep;
+    notDisplayable(info: InfoConfig, state: OnBoardingState) {
+        let reason = null
+        let stat = state[info.type]
+        if (!stat || !stat.displayedAt) return null
+        if (stat.dismissedAt) return "dismissed"
+        if ('maxDisplay' in info && (stat.displayedAt + info.maxDisplay < Date.now())) return "too long"
+
+        return reason
     }
 
-    toString() {
-        return "OnBoardingManager-" + this.id;
+    _synthDismissed = (info: InfoConfig, state: OnBoardingState) => {
+        let stat = state[info.type]
+        return stat.dismissedAt || 'maxDisplay' in info && stat.displayedAt + info.maxDisplay
+    }
+
+    hasBeenDismissed(type: InfoType, state: OnBoardingState) {
+        let stat = state[type]
+        return stat && stat.dismissedAt
+    }
+
+
+    hasBeenDisplayed(type: InfoType, state: OnBoardingState) {
+        let stat = state[type]
+        return stat && stat.displayedAt
+    }
+
+    //logic which decide if a info is interesting for this user x device configuration
+    _displayableByRule = (info: InfoConfig) => {
+        switch (info.type) {
+            case "focus_add":
+                // no conditions on user
+                return true
+            case "notification_permissions":
+                if (!__WITH_NOTIFICATIONS__) return false
+                return !NotificationManager.hasPermissionsSync(true)
+            case "popular":
+                const user = currentUser()
+                let sCount = _.get(user, 'meta.savingsCount', -1);
+                return sCount === 0
+            case "noise":
+            case "visibility":
+            case "private":
+                return true
+            default:
+                return false
+        }
     }
 
     createReducer() {
         return (state: any = {}, action: any) => {
 
-            let nextStep = (current: OnBoardingStep) => {
-                let i = this.ALL_STEPS.indexOf(current);
-                if (i > -1) {
-                    return _.nth(this.ALL_STEPS, ++i)
-                }
-                return null;
-            };
-
+            const stepName = action.step;
+            let step = state[stepName] || {}
             switch (action.type) {
-                case NEXT_STEP:
-                    state = {...state, nextStep: nextStep(state.nextStep)};
+                case DISPLAYED:
+                    state = {...state, [stepName]: {...step, displayedAt: action.at}}
                     break;
-                case SET_STEP:
-                    state = {...state, nextStep: action.step};
+                case DISMISSED:
+                    state = {...state, [stepName]: {...step, dismissedAt: action.at}}
                     break;
             }
             return state;
         }
     }
 
-    onDisplayed(step: OnBoardingStep): void {
-        this.store.dispatch({type: NEXT_STEP});
+    onDisplayed(step: InfoType): void {
+        this.store.dispatch({step, type: DISPLAYED, at: Date.now()});
     }
 
-    listenToStepChange(options: {callback: (step?: ?OnBoardingStep) => void, triggerOnListen: ?boolean}) {
-        const {callback, triggerOnListen} = options;
-        let triggering;
+    postOnDismissed(step: InfoType, delayMs: ms = 0): void {
+        setTimeout(()=> {
+            this.store.dispatch({step, type: DISMISSED, at: Date.now()});
+        }, delayMs)
 
-        EventBus.addEventListener(ON_BOARDING_STEP_CHANGED, event => {
-            if (triggering) {
-                console.warn("looping");
-                return;
-            }
-            const step: OnBoardingStep = event.target.step;
-            callback(step);
-        });
-
-        if (triggerOnListen) {
-            triggering = true;
-            callback(this.getPendingStep());
-            triggering = false;
-        }
     }
+
 }
 
 
@@ -132,13 +234,13 @@ export interface OnBoardingManager {
 
     init(store: any): void;
 
-    getPendingStep(): ?OnBoardingStep;
-
     createReducer(): any;
 
-    onDisplayed(step: OnBoardingStep): void;
+    onDisplayed(step: InfoType): void;
 
-    listenToStepChange(options: {callback: (step?: ?OnBoardingStep) => void, triggerOnListen: ?boolean}): void;
+    onDismissed(step: InfoType): void;
+
+    shouldDisplayFocusAdd(): boolean;
 
 }
 

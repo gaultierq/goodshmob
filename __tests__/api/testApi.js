@@ -1,8 +1,8 @@
-import Immutable from 'seamless-immutable';
+import Immutable from 'seamless-immutable'
 import util from 'util'
-import normalize from 'json-api-normalizer';
-import build from 'redux-object';
-import type {Place, Sending} from "../../src/types";
+import normalize from 'json-api-normalizer'
+import build from 'redux-object'
+import type {Place, Sending} from "../../src/types"
 
 let logObject = function (result2) {
     console.log(util.inspect(result2, false, null));
@@ -97,8 +97,9 @@ test('testing meta', () => {
     let result = parse(require("./activities_fixtures2.json"), "./activities_fixtures2.json");
     let post: Post = result[1];
     //expect(post).toBeInstanceOf(Models.Post);
+    console.log("post:", post)
     expect(post.meta).toBeDefined();
-    expect(post.meta["comments-count"]).toBe(6);
+    expect(post.meta["commentsCount"]).toBe(6);
 });
 
 function parse(response, fixtureFile) {

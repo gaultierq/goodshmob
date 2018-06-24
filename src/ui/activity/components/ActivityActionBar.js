@@ -1,29 +1,27 @@
 // @flow
 
-import React from 'react';
+import React from 'react'
 
-import {Alert, Image, Linking, Platform, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import type {Activity, ActivityType, Id, Item, Saving, Url, User} from "../../../types";
-import {connect} from "react-redux";
+import {Alert, Image, Linking, Platform, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import type {Activity, ActivityType, Color, Id, Saving} from "../../../types"
+import {connect} from "react-redux"
 import {currentGoodshboxId, isCurrentUser, logged} from "../../../managers/CurrentUser"
-import * as activityAction from "../actions";
-import {unsave} from "../actions";
-import {fullName, toUppercase} from "../../../helpers/StringUtils";
-import {buildData, buildNonNullData, sanitizeActivityType} from "../../../helpers/DataUtils";
-import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors";
-import {canPerformAction, getPendingLikeStatus, A_BUY, A_SAVE, A_UNLIKE, A_UNSAVE, A_LIKE} from "../../rights";
-import {CREATE_COMMENT} from "../../screens/comments";
-import GTouchable from "../../GTouchable";
-import * as Nav from "../../Nav";
-import {CREATE_SAVING, doUnsave, SAVING_DELETION} from "../../lineup/actions";
-import StoreManager from "../../../managers/StoreManager";
-import Messenger from "../../../managers/Messenger";
-import Config from "react-native-config";
-import ItemCell from "../../components/ItemCell";
-import type {Description, Visibility} from "../../screens/save";
-import * as Api from "../../../managers/Api";
-import ApiAction from "../../../helpers/ApiAction";
-import {displayShareItem} from "../../Nav";
+import * as activityAction from "../actions"
+import {unsave} from "../actions"
+import {fullName, toUppercase} from "../../../helpers/StringUtils"
+import {buildNonNullData, sanitizeActivityType} from "../../../helpers/DataUtils"
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import {default as FeatherIcon} from 'react-native-vector-icons/Feather'
+import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors"
+import {A_BUY, A_LIKE, A_SAVE, A_UNLIKE, A_UNSAVE, canPerformAction, getPendingLikeStatus} from "../../rights"
+import {CREATE_COMMENT} from "../../screens/comments"
+import GTouchable from "../../GTouchable"
+import * as Nav from "../../Nav"
+import {displayShareItem} from "../../Nav"
+import {CREATE_SAVING, doUnsave, SAVING_DELETION} from "../../lineup/actions"
+import StoreManager from "../../../managers/StoreManager"
+import _Messenger from "../../../managers/Messenger"
 
 export type ActivityActionType = 'comment'| 'like'| 'unlike'| 'share'| 'save'| 'unsave'| 'see'| 'buy'| 'answer';
 const ACTIONS = ['comment', 'like', 'unlike','share', 'save', 'unsave', 'see', 'buy', 'answer'];
@@ -56,29 +54,35 @@ export default class ActivityActionBar extends React.Component<Props, State> {
         //let activity: Model.Activity = this.props.activity;
 
 
-        const possibleActions = ['comment', 'like', 'unlike', 'share', 'save', 'unsave', 'see', 'answer'];
+        let leftButtons = this.getButtons(['comment', 'answer', 'like', 'unlike', 'share'], activity);
+        let rightButtons = this.getButtons(['save', 'unsave'], activity);
 
-        let buttons = possibleActions.reduce((res, a) => {
+
+        return (
+            <View style={{flexDirection: 'row', paddingHorizontal: 10, backgroundColor: ACTIVITY_CELL_BACKGROUND, justifyContent: 'space-between',}}>
+                <View style={styles.actionBar}>{leftButtons}</View>
+                <View style={[styles.actionBar]}>{rightButtons}</View>
+            </View>)
+    }
+
+    getButtons(possibleActions, activity) {
+        return possibleActions.reduce((res, a) => {
             if (this.canExec(a, activity)) {
                 res.push(
                     this.renderButton(
                         a,
-                        this.renderImageButton(a),
-                        this.renderTextButton(a, activity),
+                        this.getButtonText(a, activity),
                         //$FlowFixMe
-                        ()=>this['exec' + toUppercase(a)](activity),
+                        () => this['exec' + toUppercase(a)](activity),
                         a === 'unlike' || a === 'unsave'
                     )
-                );
+                )
             }
-            return res;
-        },[]);
-
-
-        return <View style={styles.actionBar}>{buttons}</View>;
+            return res
+        }, [])
     }
 
-    renderTextButton(action: ActivityActionType, activity: Activity) {
+    getButtonText(action: ActivityActionType, activity: Activity) {
 
 
         switch(action) {
@@ -115,26 +119,29 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
 
 
-    renderImageButton(action: ActivityActionType) {
+    renderImageIcon(action: ActivityActionType, size: number, color: Color, style?: any) {
         switch(action) {
             case 'comment':
-                return require('../../../img2/commentIcon.png');
+                return <FontAwesome style={style} name={'comment-o'} size={size} color={color}/>
             case 'like':
-                return require('../../../img2/yeaahIcon.png');
+                return <FontAwesome style={style} name={'heart-o'} size={size} color={color}/>
             case 'unlike':
-                return require('../../../img2/yeaahIcon.png');
+                return <FontAwesome style={style} name={'heart'} size={size} color={color}/>
             case 'share':
-                return require('../../../img2/sendIcon.png');
+                if (__IS_IOS__) {
+                    return <FeatherIcon style={style} name={'share'} size={size} color={color}/>
+                }
+                return <MaterialIcon style={style} name={'share'} size={size} color={color}/>
             case 'save':
-                return require('../../../img2/bookmarkIcon.png');
+                return <FontAwesome style={style} name={'bookmark-o'} size={size} color={color}/>
             case 'unsave':
-                return require('../../../img2/bookmarkIcon.png');
+                return <FontAwesome style={style} name={'bookmark'} size={size} color={color}/>
             case 'see':
-                return require('../../../img/save-icon.png');
+                return <MaterialIcon style={style} name={'playlist_add'} size={size} color={color}/>
             case 'buy':
-                return require('../../../img/buy-icon.png');
+                return <MaterialIcon style={style} name={'shopping_cart'} size={size} color={color}/>
             case 'answer':
-                return require('../../../img2/commentIcon.png');
+                return <FontAwesome style={style} name={'comments-o'} size={size} color={color}/>
         }
         throw "Unknown action: " +action
     }
@@ -198,12 +205,12 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
 
 
-    renderButton(key: string, img: Url, text: string, handler: ()=>void, active:boolean = false) {
+    renderButton(action: ActivityActionType, text: string, handler: ()=>void, active:boolean = false) {
         let color = active ? Colors.green: Colors.greyishBrown;
-        return (<GTouchable onPress={handler} key={key}>
+        return (<GTouchable onPress={handler} key={action}>
                 <View style={styles.button}>
-                    <Image source={img} style={[styles.buttonImage, {tintColor: color}]}/>
-                    <Text style={[styles.buttonText, {color: color}]}>{text}</Text>
+                    {this.renderImageIcon(action, 24, color, [styles.buttonImage])}
+                    <Text style={[styles.buttonText, {color}]}>{text}</Text>
                 </View>
             </GTouchable>
         );
@@ -227,12 +234,13 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                 description,
             }, {
                 scope: {itemId: item.id, lineupId},
+                lineupId: lineupId,
                 delayMs: delayMs
             }
         )).then(pendingId => {
             //console.info(`saving ${saving.id} unsaved`)
 
-            Messenger.sendMessage(
+            _Messenger.sendMessage(
                 //MagicString
                 i18n.t("activity_action_bar.goodsh_bookmarked", {lineup: "Goodshbox"}),
                 {
@@ -369,6 +377,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                 activityId: activity.id,
                 activityType: activity.type
             },
+            navigatorButtons: Nav.CANCELABLE_MODAL,
         });
     }
 
@@ -421,7 +430,7 @@ export function unsaveOnce(saving: Saving, dispatch: *) {
 
                     dispatch(doUnsave(saving.pending, saving.id, lineupId, delayMs)).then((pendingId) => {
                         //console.info(`saving ${saving.id} unsaved`)
-                        Messenger.sendMessage(
+                        _Messenger.sendMessage(
                             i18n.t("activity_action_bar.goodsh_deleted"),
                             {
                                 timeout: delayMs,
@@ -445,11 +454,11 @@ export function unsaveOnce(saving: Saving, dispatch: *) {
 
 const styles = StyleSheet.create({
     actionBar: {
-        flex: 1,
+        // flex: 1,
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingLeft: 10,
-        paddingRight: 10,
+        // justifyContent: 'space-between',
+        // paddingLeft: 10,
+        // paddingRight: 10,
         backgroundColor: ACTIVITY_CELL_BACKGROUND,
     },
     button: {
@@ -460,10 +469,7 @@ const styles = StyleSheet.create({
         padding: 6
     },
     buttonImage: {
-        width: 24,
-        height: 24,
         margin: 8,
-        resizeMode: 'contain'
     },
     buttonText: {
         textAlign: 'center',

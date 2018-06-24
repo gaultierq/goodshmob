@@ -1,14 +1,14 @@
 // @flow
 
-import type {Node} from 'react';
-import React from 'react';
-import {Image, Platform, StyleSheet, Text, TextInput, View} from 'react-native';
-import {isEmpty} from "lodash";
-import type {i18Key, RequestState} from "../../types";
-import {Colors} from "../colors";
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import GTouchable from "../GTouchable";
-import Spinner from 'react-native-spinkit';
+import type {Node} from 'react'
+import React from 'react'
+import {Image, Platform, StyleSheet, Text, TextInput, View} from 'react-native'
+import {isEmpty} from "lodash"
+import type {RequestState} from "../../types"
+import {Colors} from "../colors"
+import Icon from 'react-native-vector-icons/MaterialIcons'
+import GTouchable from "../GTouchable"
+import Spinner from 'react-native-spinkit'
 
 export type Props = {
     placeholder: string,

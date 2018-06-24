@@ -1,21 +1,25 @@
 // @flow
 
 
-import type {Activity, Lineup} from "../types";
-import {sanitizeActivityType} from "../helpers/DataUtils";
-import {currentUserId} from "../managers/CurrentUser";
-import {CREATE_LIKE, DELETE_LIKE} from "./activity/actionTypes";
-import StoreManager from "../managers/StoreManager";
+import type {Activity, Lineup} from "../types"
+import {sanitizeActivityType} from "../helpers/DataUtils"
+import {currentUserId} from "../managers/CurrentUser"
+import {CREATE_LIKE, DELETE_LIKE} from "./activity/actionTypes"
+import StoreManager from "../managers/StoreManager"
 
-class GAction {
-    actionName: string;
+export class GAction {
+    name: string;
 
     constructor(name: string) {
-        this.actionName = name;
+        this.name = name;
+    }
+
+    toString() {
+        return "GAction-" + this.name
     }
 
     isActivityAction() {
-        switch (this.actionName) {
+        switch (this.name) {
             case 'like':
             case 'unlike':
             case 'save':
@@ -27,7 +31,7 @@ class GAction {
         }
     }
     isListAction() {
-        switch (this.actionName) {
+        switch (this.name) {
             case 'share':
                 return true;
             default:return false
@@ -35,28 +39,17 @@ class GAction {
     }
 }
 
+
+
 //TODO: comments, see,
 export const A_LIKE : GAction = new GAction('like');
 export const A_UNLIKE : GAction = new GAction('unlike');
 export const A_SAVE : GAction = new GAction('save');
 export const A_UNSAVE : GAction = new GAction('unsave');
 export const A_BUY : GAction = new GAction('buy');
-export const L_SHARE : GAction = new GAction('share list');
-export const L_RENAME : GAction = new GAction('rename list');
-export const L_DELETE : GAction = new GAction('delete list');
 
-class LineupRights {
-    lineup: Lineup;
 
-    constructor(lineup: Lineup) {
-        if (!lineup) throw "invalid params";
-        this.lineup = lineup;
-    }
 
-    canShare() {
-        return true
-    }
-}
 
 class ActivityRights {
 
@@ -116,7 +109,7 @@ export function canPerformAction(action: GAction, payload: {activity:? Activity,
     if (action.isActivityAction()) {
         if (!payload || !payload.activity) throw 'invalid params 2';
         let ar = new ActivityRights(payload.activity);
-        switch (action.actionName) {
+        switch (action.name) {
             case 'like':
                 return ar.canLike();
             case 'unlike':
@@ -131,16 +124,18 @@ export function canPerformAction(action: GAction, payload: {activity:? Activity,
                 return false;
         }
     }
-    if (action.isListAction()) {
-        if (!payload || !payload.lineup) throw 'invalid params 3';
-        let ar = new LineupRights(payload.lineup);
-        switch (action.actionName) {
-            case 'share':
-                return ar.canShare();
-            default:
-                return false;
-        }
-    }
+    // if (action.isListAction()) {
+    //     throw 'invalid params 4';
+        // if (!payload || !payload.lineup) throw 'invalid params 3';
+        //
+        // let ar = new LineupRights(payload.lineup);
+        // switch (action.name) {
+        //     case 'share':
+        //         return ar.canShare();
+        //     default:
+        //         return false;
+        // }
+    // }
 }
 
 

@@ -1,17 +1,17 @@
 // @flow
 
-import type {Node} from 'react';
-import React from 'react';
+import type {Node} from 'react'
+import React from 'react'
 
 
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import type {User} from "../../../types";
-import {Colors} from "../../colors";
-import {CachedImage} from "react-native-img-cache";
-import {SFP_TEXT_BOLD} from "../../fonts";
-import GTouchable from "../../GTouchable";
-import {fullName} from "../../../helpers/StringUtils";
-import {Avatar} from "../../UIComponents";
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import type {TextStyle, User} from "../../../types"
+import {ViewStyle} from "../../../types"
+import {Colors} from "../../colors"
+import {SFP_TEXT_BOLD} from "../../fonts"
+import GTouchable from "../../GTouchable"
+import {fullName} from "../../../helpers/StringUtils"
+import {Avatar} from "../../UIComponents"
 
 type Props = {
     user: User,
@@ -20,8 +20,10 @@ type Props = {
     rightComponent?: Node,
     rightText?: Node,
     small?: boolean,
-    style?: any,
+    style?: ViewStyle,
+    textStyle?: TextStyle,
     onPressAvatar?: () => void,
+
 };
 
 type State = {
@@ -30,7 +32,8 @@ type State = {
 export default class UserRowI extends React.Component<Props, State> {
 
     render() {
-        const {small, user, style, noImage, rightComponent, rightText, onPressAvatar} = this.props;
+
+        const {small, user, style, textStyle, noImage, rightComponent, rightText, onPressAvatar} = this.props;
 
         let imageDim = small ? 20 : 30;
 
@@ -39,7 +42,6 @@ export default class UserRowI extends React.Component<Props, State> {
         //FIXME: rm flex: 1 ?
         return <View style={[{flex:1, }, style, styles.userContainer]}>
             {
-                !!uri &&
                 !noImage &&
 
                 <GTouchable
@@ -51,8 +53,8 @@ export default class UserRowI extends React.Component<Props, State> {
 
             <View style={{flex:1}}>
                 <View style={[styles.rightContainer]}>
-                    <Text style={styles.rightText}>
-                        {user && fullName(user)}
+                    <Text style={[styles.rightText, textStyle]}>
+                        {fullName(user)}
                         {rightText}
                     </Text>
                     {rightComponent}

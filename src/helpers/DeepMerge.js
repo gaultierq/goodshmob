@@ -1,6 +1,6 @@
 import merge from '../../vendors/deepmerge'
 // import merge from 'deepmerge'
-import {Merge} from "../helpers/ModelUtils";
+import {Merge} from "../helpers/ModelUtils"
 import isMergeableObject from "is-mergeable-object"
 
 import _ from "lodash"

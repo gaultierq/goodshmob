@@ -1,26 +1,24 @@
 // @flow
-import React from 'react';
-import {ActivityIndicator, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image} from 'react-native';
-import {CheckBox, SearchBar} from "react-native-elements";
-import {renderSimpleButton, STYLES} from "../UIStyles";
-import type {Id, Item, ItemType} from "../../types";
-import {fetchItemCall, saveItem} from "../lineup/actions";
-import {logged} from "../../managers/CurrentUser";
-import {connect} from "react-redux";
-import {buildData, buildNonNullData} from "../../helpers/DataUtils";
-import ItemCell from "../components/ItemCell";
-import Screen from "../components/Screen";
-import {safeDispatchAction} from "../../managers/Api";
-import {renderTag} from "../UIComponents";
-import {FETCH_ITEM} from "../lineup/actionTypes";
-import {Colors} from "../colors";
-import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
-import Sheet from "../components/sheet";
-import {CANCELABLE_MODAL} from "../Nav";
-import Snackbar from "react-native-snackbar"
+import React from 'react'
+import {ActivityIndicator, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import {CheckBox} from "react-native-elements"
+import {openLinkSafely, renderSimpleButton, STYLES} from "../UIStyles"
+import type {Id, Item, ItemType} from "../../types"
+import {CREATE_SAVING, fetchItemCall} from "../lineup/actions"
+import {logged} from "../../managers/CurrentUser"
+import {connect} from "react-redux"
+import {buildData} from "../../helpers/DataUtils"
+import ItemCell from "../components/ItemCell"
+import Screen from "../components/Screen"
+import {safeDispatchAction} from "../../managers/Api"
+import {FETCH_ITEM} from "../lineup/actionTypes"
+import {Colors} from "../colors"
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
+import Sheet from "../components/sheet"
+import {CANCELABLE_MODAL} from "../Nav"
+import _Messenger from "../../managers/Messenger"
 import {SFP_TEXT_ITALIC, SFP_TEXT_REGULAR} from "../fonts"
-import GTouchable from "../GTouchable";
-import {pendingActionWrapper} from "../../helpers/ModelUtils";
+import GTouchable from "../GTouchable"
 
 type Props = {
     defaultLineupId: Id,
@@ -43,7 +41,6 @@ type State = {
     reqAdd?: number,
     reqFetch?: number,
     selectedLineupId?: Id,
-    adding?: boolean
 };
 
 
@@ -61,6 +58,7 @@ export default class AddItemScreen extends Screen<Props, State> {
     };
 
     _sheet;
+    textInput: any
 
 
     constructor(props: Props) {
@@ -68,7 +66,6 @@ export default class AddItemScreen extends Screen<Props, State> {
 
         this.state = {
             visibility: 0,
-            adding: false,
             selectedLineupId: props.defaultLineupId,
             showLineupList: !props.defaultLineupId,
             description: props.defaultDescription
@@ -79,17 +76,17 @@ export default class AddItemScreen extends Screen<Props, State> {
         return this.props.item || buildData(this.props.data, this.props.itemType, this.props.itemId)
     }
 
-    componentWillAppear() {
-        if (!this.getItem()) {
-            safeDispatchAction.call(
-                this,
-                this.props.dispatch,
-                fetchItemCall(this.props.itemId).include('*').createActionDispatchee(FETCH_ITEM),
-                'reqFetch'
-            );
+    componentDidAppear() {
+        safeDispatchAction.call(
+            this,
+            this.props.dispatch,
+            fetchItemCall(this.props.itemId).include('*').createActionDispatchee(FETCH_ITEM),
+            'reqFetch'
+        )
+        if (this.textInput) {
+            this.textInput.focus()
         }
     }
-
 
     render() {
 
@@ -102,7 +99,6 @@ export default class AddItemScreen extends Screen<Props, State> {
         let grey = Colors.greyishBrown;
         let req = this.state.reqAdd;
         let editable = req !== 1;
-        let adding = this.state.adding;
         let xml = (<View style={[styles.container]}>
             <Text>{i18n.t('create_list_controller.all_list')}</Text>
         </View>);
@@ -142,24 +138,29 @@ export default class AddItemScreen extends Screen<Props, State> {
                                 uncheckedColor={Colors.brownishGrey}
                             />
                         </View>
-                        <ItemCell item={item}>
-                            <TextInput
-                                editable={editable}
-                                style={[styles.input, (editable ? {color: Colors.greyish} : {color: "grey"})]}
-                                value={description}
-                                onChangeText={description => this.setState({description})}
-                                placeholder={i18n.t("create_list_controller.add_description")}
-                                returnKeyType={selectedLineupId ? 'go' : 'next'}
-                                onSubmitEditing={() => {selectedLineupId && this._doAdd(selectedLineupId)}}
-                                multiline={true}
-                                autoFocus={true}
-                            />
-                        </ItemCell>
+                        <GTouchable  onPress={() => {openLinkSafely(item.url)}} style={{flex:1}}>
+                            <ItemCell item={item}/>
+                        </GTouchable>
+
+                        <TextInput
+                            editable={editable}
+                            ref={(r) => this.textInput = r}
+                            style={[styles.input, {padding: 8}, (editable ? {color: Colors.greyish} : {color: Colors.brownishGrey})]}
+                            value={description}
+                            onChangeText={description => this.setState({description})}
+                            placeholder={i18n.t("create_list_controller.add_description")}
+                            returnKeyType={selectedLineupId ? 'go' : 'next'}
+                            onSubmitEditing={() => {selectedLineupId && this._doAdd(selectedLineupId)}}
+                            multiline={true}
+                            autoFocus={true}
+                        />
+
+
                         {this.renderListSelector(selectedLineupId)}
                         {renderSimpleButton(
                             i18n.t('shared.add'),
                             ()=>this._doAdd(selectedLineupId),
-                            {disabled: !selectedLineupId, loading: adding, style: styles.lineupSelector, textStyle:styles.lineupSelectorText}
+                            {disabled: !selectedLineupId, style: styles.lineupSelector, textStyle:styles.lineupSelectorText}
                         )}
                     </View>
                 </Sheet>
@@ -181,7 +182,13 @@ export default class AddItemScreen extends Screen<Props, State> {
                 title: i18n.t('create_list_controller.choose_another_list'),
                 passProps: {
                     onListSelected: list => {
-                        this.setState({selectedLineupId:list.id});
+
+                        //just a quick fix
+                        setTimeout(() => {
+                            console.log("onListSelected", list)
+                            this.setState({selectedLineupId:list.id});
+                        }, 1000)
+
                         this.props.navigator.dismissModal();
                     }
                 },
@@ -189,7 +196,7 @@ export default class AddItemScreen extends Screen<Props, State> {
             });
         };
 
-        let tag = lineup.name;
+        let tag = lineup && lineup.name;
         tag = tag || i18n.t('create_list_controller.choose_list');
 
         return (
@@ -210,24 +217,59 @@ export default class AddItemScreen extends Screen<Props, State> {
 
     _doAdd = (lineupId: Id) => {
 
-        this.setState({adding: true});
-
         let {description, visibility} = this.state;
 
-        safeDispatchAction.call(
-            this,
-            this.props.dispatch,
-            saveItem(this.props.itemId, lineupId, visibility, description),
-            'reqAdd'
-        ).then(()=> {
-                Snackbar.show({
-                    title: i18n.t('shared.goodsh_saved'),
-                });
-                let onAdded = this.props.onAdded;
-                onAdded && onAdded();
-                this.setState({adding: false});
+        const delayMs = 4000;
+
+        this.props.dispatch(CREATE_SAVING.pending({
+                itemId: this.props.itemId,
+                itemType: this.props.itemType,
+                lineupId,
+                privacy: visibility,
+                description,
+            }, {
+                scope: {itemId: this.props.itemId, lineupId},
+                lineupId: lineupId,
+                delayMs: delayMs
             }
-        ).then(() => this.setState({selectedLineupId: null}))
+        )).then(pendingId => {
+
+            let onAdded = this.props.onAdded;
+            onAdded && onAdded();
+
+            _Messenger.sendMessage(
+                //MagicString
+                i18n.t("shared.goodsh_saved"),
+                {
+                    timeout: delayMs,
+                    action: {
+                        title: i18n.t('activity_action_bar.goodsh_bookmarked_change_lineup'),
+                        onPress: () => {
+                            //undo previous add
+                            console.info(`changing lineup: undo-ing pending=${pendingId}`);
+                            this.props.dispatch(CREATE_SAVING.undo(pendingId));
+
+                            let cancel = () => {
+                                this.props.navigator.dismissModal()
+                            };
+                            this.props.navigator.showModal({
+                                screen: 'goodsh.AddItemScreen',
+                                title: i18n.t("add_item_screen.title"),
+                                animationType: 'none',
+                                passProps: {
+                                    itemId: this.props.itemId,
+                                    itemType: this.props.itemType,
+                                    defaultLineupId: lineupId,
+                                    defaultDescription: description,
+                                    onCancel: cancel,
+                                    onAdded: cancel,
+                                },
+                            });
+
+                        },
+                    }}
+            );
+        });
     }
 }
 
@@ -251,10 +293,10 @@ const styles = StyleSheet.create({
     lineupSelectorText: { fontWeight:'normal', color: Colors.white },
     input: {
         backgroundColor: 'transparent',
-        marginTop: 15,
+        marginVertical: 15,
         fontSize: 15,
         fontFamily: SFP_TEXT_ITALIC,
-        height: 40,
+        // height: 40,
         borderWidth: 0,
     }
 });
