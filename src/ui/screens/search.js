@@ -92,9 +92,6 @@ export default class SearchScreen extends Component<Props, State> {
         this.setState({index}, () => this.tryPerformSearch(this.state.input, 0));
     }
 
-    _renderPager = props => <PagerPan {...props} />;
-
-
     render() {
 
         let nCat = this.props.categories.length;
@@ -145,7 +142,7 @@ export default class SearchScreen extends Component<Props, State> {
                     renderTabBar={this.renderHeader.bind(this)}
                     onIndexChange={this.handleIndexChange.bind(this)}
                     keyboardShouldPersistTaps='always'
-                    renderPager={this._renderPager}
+                    renderPager={props => <PagerPan {...props} />}
                 />}
 
                 {

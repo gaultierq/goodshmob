@@ -30,7 +30,7 @@ import OnBoardingManager from "../../managers/OnBoardingManager"
 import {floatingButtonScrollListener, getAddButton, getClearButton, scheduleOpacityAnimation} from "../UIComponents"
 import {Tip, TipConfig} from "../components/Tip"
 import {HomeOnBoardingHelper} from "./HomeOnBoardingHelper"
-import {TabBar, TabView} from "react-native-tab-view"
+import {PagerPan, TabBar, TabView} from "react-native-tab-view"
 import MyGoodsh from "./MyGoodsh"
 import MyInterests from "./MyInterests"
 import {fullName2} from "../../helpers/StringUtils"
@@ -224,6 +224,7 @@ export default class HomeScreen extends Screen<Props, State> {
                     navigationState={{...this.state, visible: this.isVisible()}}
                     renderScene={this.renderScene.bind(this)}
                     renderTabBar={props => <TabBar {...TAB_BAR_PROPS} {...props}/>}
+                    renderPager={props => <PagerPan {...props} />}
                     onIndexChange={index => {
                         this.setState({index}, () => this.refreshRightButtons())
                     }}

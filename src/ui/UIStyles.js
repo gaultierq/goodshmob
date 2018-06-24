@@ -270,6 +270,7 @@ let TAB_BAR_STYLES = StyleSheet.create({
     tabbar: {
         // backgroundColor: Colors.white,
         backgroundColor: NavStyles.navBarBackgroundColor,
+        zIndex: 0,
     },
     indicator: {
         backgroundColor: Colors.green,
