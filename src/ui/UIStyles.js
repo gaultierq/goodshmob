@@ -277,6 +277,8 @@ let TAB_BAR_STYLES = StyleSheet.create({
     },
     tab: {
         opacity: 1,
+        // IMPORTANT : without this there are bugs on Android
+        justifyContent: 'flex-start'
         //width: 90,
     },
     label: {
