@@ -259,6 +259,7 @@ export default class HomeScreen extends Screen<Props, State> {
                         ListHeaderComponent={
                             !this.state.filterFocused && this.state.currentTip && this.renderTip()
                         }
+                        targetRef={this._targetRef(i18n.t("home.wizard.action_button_label"), i18n.t("home.wizard.action_button_body"))}
                         onFilterFocusChange={filterFocused => new Promise(resolved => {
                             this.setState({filterFocused}, resolved())
                         })
