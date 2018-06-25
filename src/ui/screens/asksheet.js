@@ -19,7 +19,6 @@ import {currentUserId, logged} from "../../managers/CurrentUser"
 import * as Api from "../../managers/Api"
 import ApiAction from "../../helpers/ApiAction"
 
-import Snackbar from "react-native-snackbar"
 import {Colors} from "../colors"
 import Sheet from "../components/sheet"
 import {SFP_TEXT_BOLD} from "../fonts"
@@ -29,6 +28,7 @@ import type {PendingAction} from "../../helpers/ModelUtils"
 import {pendingActionWrapper} from "../../helpers/ModelUtils"
 import {renderSimpleButton} from "../UIStyles"
 import {FETCH_ACTIVITIES, fetchMyNetwork} from "../networkActions"
+import _Messenger from "../../managers/Messenger"
 
 type Props = {
     itemId: Id,
@@ -190,9 +190,7 @@ export default class AskScreen extends Component<Props, State> {
         this.setState({isAsking: true});
 
         this.props.dispatch(ASK_CREATION.exec({content}, {})).then(() =>{
-            Snackbar.show({
-                title: i18n.t('ask.sent'),
-            });
+            _Messenger.sendMessage(i18n.t('ask.sent'));
 
             setTimeout(() => {
                 this.props.dispatch(

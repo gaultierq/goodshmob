@@ -61,7 +61,6 @@ export default class MyGoodsh extends Screen<Props, State> {
         const userId = currentUserId();
         const {navigator, dispatch, ...attributes}= this.props;
 
-
         return (
             // $FlowFixMe
             <UserLineups
@@ -99,7 +98,7 @@ export default class MyGoodsh extends Screen<Props, State> {
                             data: _.slice(lineups, 1),
                             title: i18n.t("lineups.mine.title"),
                             // renderSectionHeaderChildren:() => <AddLineupComponent navigator={this.props.navigator}/>,
-                            renderItem: ({item, index})=> this.renderLineup(item, index, navigator),
+                            renderItem: ({item, index})=> this.renderLineup(item, index, navigator, index > 0 ? null : this.props.targetRef),
                             renderSectionHeader: () => this.renderSectionHeader(
                                 i18n.t("lineups.mine.title"),
                                 <AddLineupComponent navigator={this.props.navigator}/>
@@ -130,13 +129,13 @@ export default class MyGoodsh extends Screen<Props, State> {
         );
     }
 
-    renderLineup(item: Lineup, index: number, navigator: RNNNavigator) {
+    renderLineup(item: Lineup, index: number, navigator: RNNNavigator, targetRef?: any) {
         return (
             <LineupH1
                 lineup={item} navigator={navigator}
                 withMenuButton={true}
                 onPressEmptyLineup={() => startAddItem(navigator, item)}
-                renderEmpty={this.renderEmptyLineup(navigator, item)}
+                renderEmpty={this.renderEmptyLineup(navigator, item, targetRef)}
                 renderMenuButton={() => {
                     //TODO: dubious 15
                     return this.renderMenuButton(item, 15)
@@ -155,7 +154,7 @@ export default class MyGoodsh extends Screen<Props, State> {
                 )}
                 ListHeaderComponent={(
                     <GTouchable onPress={() => startAddItem(navigator, item)}>
-                        {LineupHorizontal.renderPlus({style:{marginRight: 10}})}
+                        {LineupHorizontal.renderPlus({style:{marginRight: 10}}, targetRef)}
                     </GTouchable>)
                 }
                 style={[
@@ -165,14 +164,14 @@ export default class MyGoodsh extends Screen<Props, State> {
             />)
     }
 
-    renderEmptyLineup(navigator: RNNNavigator, item: Lineup) {
+    renderEmptyLineup(navigator: RNNNavigator, item: Lineup, targetRefFirstElement?: () => void) {
         return (list: Lineup) => (
             <GTouchable
                 onPress={() => startAddItem(navigator, item)}
                 deactivated={item.pending}
             >
                 {
-                    LineupHorizontal.defaultRenderEmpty(true)
+                    LineupHorizontal.defaultRenderEmpty(true, targetRefFirstElement)
                 }
             </GTouchable>
         );
