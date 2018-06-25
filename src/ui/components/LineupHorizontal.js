@@ -137,14 +137,16 @@ export default class LineupHorizontal extends Component<Props, State> {
     }
 
 
-    static defaultRenderEmpty(renderFirstAsPlus: boolean = false) {
+    static defaultRenderEmpty(renderFirstAsPlus: boolean = false, targetRefFirstElement?: () => void) {
         return (
             <View style={{flexDirection: 'row', paddingLeft: LINEUP_PADDING}}>{
-                [0,1,2,3,4].map((o, i) => (
-                        <EmptyCell key={`key-${i}`} style={{marginRight: 10}}>
-                            {i === 0 && renderFirstAsPlus && this.renderInnerPlus()}
-                        </EmptyCell>
-                    )
+                [0,1,2,3,4].map((o, i) => {
+                        return <View key={`key-${i}`} ref={i === 0 ? targetRefFirstElement : undefined} >
+                            <EmptyCell style={{marginRight: 10}}>
+                                {i === 0 && renderFirstAsPlus && this.renderInnerPlus()}
+                            </EmptyCell>
+                        </View>
+                    }
                 )
             }</View>
         )
