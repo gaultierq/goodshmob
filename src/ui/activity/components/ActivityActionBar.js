@@ -222,7 +222,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
         const user = activity.user;
 
-        let description = isCurrentUser(user) ? "" : "via " +  fullName(user) + (activity.description && " - " + activity.description);
+        let description = isCurrentUser(user) ? "" : "via " +  fullName(user) + (activity.description ? (" - " + activity.description) : "");
         const delayMs = 4000;
 
         const lineupId = currentGoodshboxId();
