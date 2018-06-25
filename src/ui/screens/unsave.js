@@ -1,18 +1,18 @@
 // @flow
-import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, Text, TextInput, View} from 'react-native';
-import type {Id, ItemType, RequestState, RNNNavigator, Save} from "../../types";
-import {CheckBox} from "react-native-elements";
-import Screen from "../components/Screen";
-import {buildData} from "../../helpers/DataUtils";
-import {connect} from "react-redux";
-import {renderSimpleButton} from "../UIStyles";
-import * as Api from "../../managers/Api";
-import {fetchActivity} from "../activity/actions";
+import React, {Component} from 'react'
+import {ActivityIndicator, FlatList, StyleSheet, Text, TextInput, View} from 'react-native'
+import type {Id, ItemType, RequestState, RNNNavigator, Save} from "../../types"
+import {CheckBox} from "react-native-elements"
+import Screen from "../components/Screen"
+import {buildData} from "../../helpers/DataUtils"
+import {connect} from "react-redux"
+import {renderSimpleButton} from "../UIStyles"
+import * as Api from "../../managers/Api"
 import {Colors} from "../colors"
-import {doUnsave, fetchItemCall} from "../lineup/actions";
-import {FETCH_ITEM} from "../lineup/actionTypes";
-import StoreManager from "../../managers/StoreManager";
+import {doUnsave, fetchItemCall} from "../lineup/actions"
+import {FETCH_ITEM} from "../lineup/actionTypes"
+import StoreManager from "../../managers/StoreManager"
+import {fetchActivity} from "../activity/actions"
 
 type Props = {
     itemId: Id,
@@ -42,7 +42,6 @@ export default class UnsaveScreen extends Screen<Props, State> {
                 'fetch'
             )
         }
-
     }
 
     render() {
@@ -86,6 +85,8 @@ type Props2 = {
 @connect(state => ({
     data: state.data,
     pending: state.pending
+}), dispatch => ({
+    fetchActivity: (id, type, options) => dispatch(fetchActivity(id, type, options))
 }))
 class UnsaveSavingCell extends Component<Props2, State2> {
 
@@ -98,10 +99,9 @@ class UnsaveSavingCell extends Component<Props2, State2> {
     componentDidMount() {
         const saving = this.props.saving;
         if (!saving.pending && !this.getLineupBySavingId(saving.id)) {
-            Api.safeDispatchAction.call(
+            Api.safeExecBlock.call(
                 this,
-                this.props.dispatch,
-                fetchActivity(saving.id, 'savings', {include: 'target'}),
+                () => this.props.fetchActivity(saving.id, 'savings', {include: 'target'}),
                 'fetch'
             )
         }

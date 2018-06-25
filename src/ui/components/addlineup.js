@@ -1,23 +1,24 @@
 // @flow
 
-import React, {Component} from 'react';
-import {Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View,} from 'react-native';
+import React, {Component} from 'react'
+import {Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View,} from 'react-native'
 
-import {connect} from "react-redux";
+import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
 
 import {CheckBox, SearchBar} from 'react-native-elements'
-import {Navigation} from 'react-native-navigation';
-import {Menu, MenuContext, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
-import {Colors} from "../colors";
-import GTouchable from "../GTouchable";
-import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
-import type {RNNNavigator} from "../../types";
+import {Navigation} from 'react-native-navigation'
+import {Menu, MenuContext, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu'
+import {Colors} from "../colors"
+import GTouchable from "../GTouchable"
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
+import type {RNNNavigator} from "../../types"
 
 
 type Props = {
     navigator: RNNNavigator,
-    disableOffline?: ?boolean,
+    disableOffline?:boolean,
+    onListCreated?: Lineup =>void,
     style?: *,
     styleText?: *,
 };
@@ -40,8 +41,8 @@ export default class AddLineupComponent extends Component<Props, State> {
             animationType: 'none',
             passProps: {
                 disableOffline: this.props.disableOffline,
-                onFinished: () => {
-                    navigator.dismissModal({animationType: 'none'});
+                onFinished: (lineup) => {
+                    this.props.onListCreated && this.props.onListCreated(lineup)
                 }
             }
         });

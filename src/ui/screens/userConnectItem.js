@@ -1,26 +1,25 @@
 // @flow
 
-import React, {Component} from 'react';
+import React, {Component} from 'react'
 import {
     ActivityIndicator,
+    Alert,
     FlatList,
+    Image,
     Platform,
     RefreshControl,
     StyleSheet,
     Text,
     TouchableOpacity,
-    View,
-    Alert
-} from 'react-native';
-import {connect} from "react-redux";
-import {currentUserId, logged} from "../../managers/CurrentUser"
-import type {NavigableProps, RequestState, User} from "../../types";
-import * as Api from "../../managers/Api";
-import ApiAction from "../../helpers/ApiAction";
-import {renderSimpleButton} from "../UIStyles";
-import UserRowI from "../activity/components/UserRowI";
-import {Colors} from "../colors";
-import _Messenger from "../../managers/Messenger";
+    View
+} from 'react-native'
+import {connect} from "react-redux"
+import {logged} from "../../managers/CurrentUser"
+import type {NavigableProps, RequestState, User} from "../../types"
+import UserRowI from "../activity/components/UserRowI"
+import {Colors} from "../colors"
+import GTouchable from "../GTouchable"
+import {openUserSheet} from "../Nav"
 
 
 type Props = NavigableProps & {
@@ -39,72 +38,26 @@ export default class UserConnectItem extends Component<Props, State> {
     state : State = {};
 
     render() {
-        let item = this.props.user;
+        let user = this.props.user;
         return (
             <View style={{flex: 1, flexDirection: 'row'}}>
-                <UserRowI user={item}
+                <UserRowI user={user}
                     navigator={this.props.navigator}
                     //rightComponent={this.renderConnectButton(item)}
                     style={styles.userRow}
                 />
-                {this.renderConnectButton(item)}
+                <View style={{ alignItems:'flex-end', justifyContent: 'center', paddingHorizontal: 10}}>{
+                    <GTouchable onPress={() => openUserSheet(this.props.navigator, user)}>
+                        <View style={{padding: 12}}>
+                            <Image source={require('../../img2/moreDotsGrey.png')} resizeMode="contain"/>
+                        </View>
+                    </GTouchable>
+
+                }</View>
             </View>
         )
     }
 
-    renderConnectButton(user: User) {
-
-        let alreadyFriends = !!_.find(user.friends, (f)=>f.id === currentUserId());
-        let remainingAction = alreadyFriends ? 'disconnect' : 'connect';
-        let reqState = this.state[remainingAction];
-
-
-        let ok = reqState === 'ok';
-
-        return <View style={{ alignItems:'flex-end', justifyContent: 'center', paddingHorizontal: 10}}>{
-            renderSimpleButton(
-                i18n.t(`friends.` + (ok ? 'messages' : 'buttons') + `.${remainingAction}`),
-                alreadyFriends ? ()=> this.disconnectWith(user) : ()=> this.connectWith(user),
-                {loading: reqState === 'sending', disabled: ok, textStyle: {fontWeight: "normal", fontSize: 14, color: Colors.grey}}
-            )
-        }</View>
-    }
-
-    connectWith(user: User) {
-        let action = actions.createFriendship(user.id).createActionDispatchee(CONNECT);
-        Api.safeDispatchAction.call(
-            this,
-            this.props.dispatch,
-            action,
-            'connect'
-        ).then(()=> {
-                _Messenger.sendMessage(i18n.t("friends.messages.connect"));
-            }
-        );
-    }
-
-    disconnectWith(user: User) {
-        Alert.alert(
-            i18n.t("friends.alert.title"),
-            i18n.t("friends.alert.label"),
-            [
-                {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-                {text: i18n.t("actions.ok"), onPress: () => {
-                    let action = actions.deleteFriendship(user.id).createActionDispatchee(DISCONNECT);
-                    Api.safeDispatchAction.call(
-                        this,
-                        this.props.dispatch,
-                        action,
-                        'disconnect'
-                    ).then(()=> {
-                            _Messenger.sendMessage(i18n.t("friends.messages.disconnect"));
-                        }
-                    );
-                }},
-            ],
-            { cancelable: true }
-        )
-    }
 }
 
 
@@ -121,19 +74,3 @@ const styles = StyleSheet.create({
     }
 });
 
-export const CONNECT = ApiAction.create("connect", "add a friend");
-export const DISCONNECT = ApiAction.create("disconnect", "delete a friend");
-
-const actions = {
-    createFriendship: (userId: string) => {
-        return new Api.Call().withMethod('POST')
-            .withRoute(`users/${userId}/friendships`);
-
-    },
-
-    deleteFriendship: (userId: string) => {
-        return new Api.Call().withMethod('DELETE')
-            .withRoute(`users/${userId}/friendships`);
-
-    }
-};

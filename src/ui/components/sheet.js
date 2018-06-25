@@ -1,7 +1,7 @@
 // @flow
 
-import type {Node} from 'react';
-import React from 'react';
+import type {Node} from 'react'
+import React from 'react'
 import {
     Animated,
     Dimensions,
@@ -12,8 +12,8 @@ import {
     TouchableOpacity,
     TouchableWithoutFeedback,
     View
-} from 'react-native';
-import Modal from 'react-native-modalbox';
+} from 'react-native'
+import Modal from 'react-native-modalbox'
 
 
 type Props = {
@@ -25,7 +25,7 @@ type Props = {
 
 type State = {
     height: number,
-    opened?: ? boolean
+    opened?: boolean
 };
 
 export default class Sheet extends React.Component<Props, State> {

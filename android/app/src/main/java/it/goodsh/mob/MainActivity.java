@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Handler;
 import android.support.annotation.Dimension;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.graphics.Color;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.view.Gravity;
 import android.util.TypedValue;
@@ -41,6 +43,7 @@ public class MainActivity extends SplashActivity {
 
             LinearLayout view = new LinearLayout(this);
             view.setGravity(Gravity.CENTER);
+            view.setOrientation(LinearLayout.VERTICAL);
             view.setBackgroundColor(Color.parseColor("#01DEB1"));
 
 
@@ -58,6 +61,21 @@ public class MainActivity extends SplashActivity {
 
 
             view.addView(goodsh);
+
+            final ProgressBar progressBar = new ProgressBar(this, null, android.R.attr.progressBarStyleLarge);
+            progressBar.setIndeterminate(true);
+            progressBar.setVisibility(View.INVISIBLE);
+            progressBar.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    progressBar.setVisibility(View.VISIBLE);
+                }
+            }, 1000);
+
+            view.addView(progressBar, 150, 150);
+
             return view;
         }
 }

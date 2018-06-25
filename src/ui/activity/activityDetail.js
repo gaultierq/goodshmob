@@ -1,39 +1,41 @@
 // @flow
 
-import React from 'react';
+import React from 'react'
 import {
     ActivityIndicator,
     FlatList,
     Image,
+    Keyboard,
     Linking,
     ScrollView,
     StyleSheet,
     Text,
-    Keyboard,
     TouchableOpacity,
     View
-} from 'react-native';
+} from 'react-native'
 import * as actions from './actions'
-import {connect} from "react-redux";
+import {connect} from "react-redux"
 import {currentUser, currentUserId, logged} from "../../managers/CurrentUser"
-import ActivityBody from "./components/ActivityBody";
-import {buildData, getAskBackgroundColor, sanitizeActivityType, timeSinceActivity} from "../../helpers/DataUtils";
-import {Avatar, FullScreenLoader, MainBackground} from "../UIComponents";
-import type {Activity, ActivityType, Id, RNNNavigator} from "../../types";
-import Screen from "../components/Screen";
-import {Colors} from "../colors";
-import GTouchable from "../GTouchable";
-import ActivityStatus from "./components/ActivityStatus";
-import {component as CommentInput, CREATE_COMMENT} from '../components/CommentInput';
-import {userFirstName} from "../../helpers/StringUtils";
-import CommentCell from "../components/CommentCell";
-import {styleMargin, stylePadding} from "../UIStyles";
-import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts";
-import ActivityActionBar from "./components/ActivityActionBar";
-import FeedSeparator from "./components/FeedSeparator";
-import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
-import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
-import {CLOSE_MODAL, displayActivityActions} from "../Nav";
+import ItemBody from "./components/ItemBody"
+import {buildData, getAskBackgroundColor, sanitizeActivityType, timeSinceActivity} from "../../helpers/DataUtils"
+import {Avatar, FullScreenLoader, MainBackground} from "../UIComponents"
+import type {Activity, ActivityType, Id, RequestState} from "../../types"
+import Screen from "../components/Screen"
+import {Colors} from "../colors"
+import GTouchable from "../GTouchable"
+import ActivityStatus from "./components/ActivityStatus"
+import {component as CommentInput, CREATE_COMMENT} from '../components/CommentInput'
+import {userFirstName} from "../../helpers/StringUtils"
+import CommentCell from "../components/CommentCell"
+import {styleMargin, stylePadding} from "../UIStyles"
+import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts"
+import ActivityActionBar from "./components/ActivityActionBar"
+import FeedSeparator from "./components/FeedSeparator"
+import {mergeItemsAndPendings} from "../../helpers/ModelUtils"
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
+import {CLOSE_MODAL, displayActivityActions} from "../Nav"
+import * as Api from "../../managers/Api"
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 type Props = {
     activityId: Id,
@@ -42,7 +44,7 @@ type Props = {
 };
 
 type State = {
-    isLoading?: boolean
+    reqFetch?: RequestState
 };
 
 const EDIT_SAVING = "EDIT_SAVING";
@@ -75,7 +77,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
         rightButtons: []
     };
 
-    constructor(props) {
+    constructor(props: Props) {
         super(props);
         props.navigator.addOnNavigatorEvent((event) => {
 
@@ -89,11 +91,13 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
 
     componentDidMount() {
+
+        this.prepareNavButton();
+
         this.load();
     }
 
-    load() {
-
+    prepareNavButton() {
         let activity = this.makeActivity();
         if (activity) {
             let isMine = activity.user && activity.user.id === currentUserId();
@@ -108,30 +112,30 @@ class ActivityDetailScreen extends Screen<Props, State> {
                 })
             }
         }
-
-        if (this.state.isLoading) return;
-        this.setState({isLoading: true});
-        this.props.dispatch(
-            actions.fetchActivity(this.props.activityId, this.props.activityType)
-        ).catch((err)=>console.log(err))
-            .then(()=>{
-                this.setState({isLoading: false})
-            })
-
     }
 
+    load() {
+        Api.safeExecBlock.call(
+            this,
+            () => this.props.dispatch(
+                actions.fetchActivity(this.props.activityId, this.props.activityType, {include: 'user,resource,target,comments,commentators,related_activities,related_activities.commentators,related_activities.target,related_activities.user'})
+            ),
+            'reqFetch'
+        )
+    }
 
     render() {
         let activity = this.makeActivity();
 
         const isAsk = activity && sanitizeActivityType(activity.type) === 'asks';
 
-        if (!activity && this.state.isLoading) return <FullScreenLoader/>;
+        if (!activity && this.state.reqFetch === 'sending') return <FullScreenLoader/>;
 
         return (
             <MainBackground>
                 <KeyboardAwareScrollView
                     contentContainerStyle={{flexGrow: 1, paddingBottom: 20}}
+                    keyboardShouldPersistTaps='always'
                 >
                     <View style={styles.container}>
 
@@ -142,10 +146,11 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                 <GTouchable
                                     onPress={() => this.goBuy(activity)}
                                 >
-                                    <ActivityBody
-                                        activity={activity}
+                                    <ItemBody
+                                        item={activity.resource}
                                         navigator={this.props.navigator}
                                         onPressItem={() => this.goBuy(activity)}
+                                        showAllImages
                                     />
                                 </GTouchable>}
                                 {isAsk &&
@@ -237,7 +242,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
         let comments = mergeItemsAndPendings(
             activity ? activity.comments : [],
-            this.props.pending[CREATE_COMMENT],
+            _.filter(this.props.pending[CREATE_COMMENT], p => _.get(p, 'payload.activityId') === _.get(activity, 'id')),
             [],
             (pending) => ({
                 id: pending.id,
@@ -267,7 +272,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                     <CommentInput
                         activity={activity}
                         placeholder={i18n.t("activity_screen.comments.no_comments")}
-                        {...this.commentInputStyles()}
+                        {...this.commentInputProps()}
                     />
                 </View>
             );
@@ -334,7 +339,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                         activity={activity}
                                         containerStyle={{marginLeft: 30}}
                                         placeholder={i18n.t("activity_comments_screen.add_comment_placeholder")}
-                                        {...this.commentInputStyles()}
+                                        {...this.commentInputProps()}
                                     />
 
                                 </View>
@@ -353,18 +358,20 @@ class ActivityDetailScreen extends Screen<Props, State> {
             </GTouchable>);
     }
 
-    commentInputStyles() {
+    commentInputProps() {
         return {
-            height:28,
-            inputStyle:{fontSize: 13},
+            height:30,
+            inputStyle:{fontSize: 15},
+            button: <MaterialIcons name="send" size={26} color={Colors.greyishBrown} />,
+            disableOffline: true
             // inputContainerStyle: {
-                // borderBottomWidth: 0,
-                // borderTopWidth: 0,
-                // borderLeftWidth: 0,
-                // borderRightWidth: 0,
-                // paddingHorizontal: 0,
-                // borderColor: Colors.greying,
-                // borderWidth: 1,
+            // borderBottomWidth: 0,
+            // borderTopWidth: 0,
+            // borderLeftWidth: 0,
+            // borderRightWidth: 0,
+            // paddingHorizontal: 0,
+            // borderColor: Colors.greying,
+            // borderWidth: 1,
             // },
             // buttonStyle: {paddingRight: 0}
         };
@@ -397,19 +404,20 @@ class ActivityDetailScreen extends Screen<Props, State> {
     }
 
     renderMedals(othersCommentators) {
-        const dim = 20;
+        const size = 20;
         const shift = 0.5;
         const n = othersCommentators.length;
-        const width  = dim + (dim * shift) * Math.max(n-1, 0) + 5;
-        return <View style={{width, height: 18}}>
+        const width  = size + (size * shift) * Math.max(n-1, 0) + 5;
+        return <View style={{flexDirection: 'row', marginRight: 10, height: 18}}>
             {
-                othersCommentators.map((user, i) => user && <Avatar user={user} size={dim} style={{
-                    position: 'absolute',
-                    left: dim * shift * i,
-                    zIndex: (10 - i),
-                    borderWidth: StyleSheet.hairlineWidth,
-                    borderColor: Colors.white
-                }}/>)
+                othersCommentators.map((user, i) => user && <Avatar key={`med-${i}`} user={user} size={size} style={{
+                        // position: 'absolute',
+                        // left: size * shift * i,
+                        // zIndex: (10 - i),
+                        borderWidth: StyleSheet.hairlineWidth,
+                        borderColor: Colors.white
+                    }} />
+                )
             }
         </View>;
     }

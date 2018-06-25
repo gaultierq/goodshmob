@@ -1,4 +1,9 @@
-import type {MergeOptions} from "./helpers/ModelUtils";
+import type {MergeOptions} from "./helpers/ModelUtils"
+import type {
+    ImageStyle as ____ImageStyleProp_Internal,
+    TextStyle as ____TextStyleProp_Internal,
+    ViewStyle as ____ViewStyleProp_Internal,
+} from 'react-native/Libraries/StyleSheet/StyleSheetTypes'
 
 export type Url = string;
 
@@ -9,7 +14,7 @@ export type ActivityType = 'saving' | 'post' | 'sending' | 'ask';
 export type ItemType = 'movie' | 'place';
 
 export type NavigableProps = {
-    navigator: any
+    navigator: RNNNavigator
 };
 
 export type Item = Base & {
@@ -36,7 +41,7 @@ export type List =  Base & {
     primary: any,
     privacy: any,
     savings: List<Saving>,
-    user: any,
+    user: User,
 }
 
 export type Lineup = List;
@@ -47,6 +52,17 @@ export type Base = {
     type: String, //doesn't make sense though
     links: any,
     meta: any,
+}
+
+export type ActivityGroup = {
+    id: Id,
+    activityCount: number,
+    actorCount: number,
+    created_at: Date,
+    group: string,
+    updatedAt: any,
+    verb: string,
+    firstActivity: Activity,
 }
 
 export type Activity = Base & {
@@ -165,7 +181,17 @@ export type Position = {
 
 }
 
-
-export type Dispatchee = any;
+export interface Dispatchee {
+}
 
 export type Color = string
+
+export type ViewStyle = ____ViewStyleProp_Internal
+export type TextStyle = ____TextStyleProp_Internal
+export type ImageStyle = ____ImageStyleProp_Internal
+
+
+export type GListState = {
+    list: Array<any>,
+    hasMore?: boolean
+}

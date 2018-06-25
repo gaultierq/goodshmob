@@ -1,9 +1,9 @@
-import {API_DATA_SUCCESS} from '../managers/Api';
-import Immutable from 'seamless-immutable';
-import {Statistics} from "../managers/Statistics";
-import update from "immutability-helper";
-import {updateSplice0} from "../helpers/DataUtils";
-import type {ApiActionName} from "../helpers/ApiAction";
+import {API_DATA_SUCCESS} from '../managers/Api'
+import Immutable from 'seamless-immutable'
+import {Statistics} from "../managers/Statistics"
+import update from "immutability-helper"
+import {updateSplice0} from "../helpers/DataUtils"
+import type {ApiActionName} from "../helpers/ApiAction"
 import merge from "../helpers/DeepMerge"
 
 const initialState = Immutable({

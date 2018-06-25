@@ -1,11 +1,15 @@
 // @flow
 
-import ApiAction from "./ApiAction";
-import * as Api from "../managers/Api";
-import {Call} from "../managers/Api";
-import type {Id} from "../types";
-import type {PendingItem} from "../reducers/dataReducer";
-import {CREATE_PENDING_ACTION, REMOVE_PENDING_ACTION} from "../reducers/dataReducer";
+import ApiAction from "./ApiAction"
+import * as Api from "../managers/Api"
+import {Call} from "../managers/Api"
+import type {Id} from "../types"
+import type {PendingItem} from "../reducers/dataReducer"
+import {CREATE_PENDING_ACTION, REMOVE_PENDING_ACTION} from "../reducers/dataReducer"
+import {createSelector} from "reselect"
+import {buildData} from "./DataUtils"
+import {CREATE_LINEUP, SAVE_ITEM} from "../ui/lineup/actionTypes"
+import {UNSAVE} from "../ui/activity/actionTypes"
 /*
 
 export function parse(data: any) {
@@ -164,13 +168,13 @@ export function createObject(source: Source, store: any): Base {
 */
 
 export type MergeOptions<K> = {
-    afterId:? K,
-    beforeId:? K,
+    afterId?: K,
+    beforeId?: K,
 
     //has more and has less are used to know if we should extends segment to remove to list boundaries
-    hasMore:? boolean,
-    hasLess:? boolean,
-    reverse:? boolean
+    hasMore?: boolean,
+    hasLess?: boolean,
+    reverse?: boolean
 }
 
 
@@ -205,8 +209,8 @@ export class Merge<T, K> {
     mutated = false;
 
     constructor(target: Array<T>, source: Array<T>) {
-        this.target = target;
-        this.source = source.slice();
+        this.target = target || []
+        this.source = source ? source.slice() : []
     }
 
     setAfterKey(afterId: K): Merge<T, K> {
@@ -283,7 +287,7 @@ export class Merge<T, K> {
 
         this.processOptions();
 
-        let result = this.target.slice();
+        let result = this.target.slice()
 
         if (this.reverse) {
             this.afterId = this.beforeId;
@@ -457,7 +461,7 @@ export function pendingActionWrapper<Payload>(
             });
             resolve();
         }),
-        exec: (payload: Payload) => callFactory(payload).createActionDispatchee(action)
+        exec: (payload: Payload, options?: any) => callFactory(payload).createActionDispatchee(action, options)
     };
 }
 
@@ -472,10 +476,27 @@ export interface PendingAction<T> {
     exec: (payload: T) => (dispatch: any) => Promise<T>;
 }
 
+
 export function mergeItemsAndPendings<T>(
     syncedItems: Array<T>,
     pendingCreate: [],
     pendingDelete: [],
+    pendingToItem: (pending: PendingItem) => T,
+    options: any = {}
+) {
+    return  mergeItemsAndPendings2(
+        syncedItems,
+        pendingCreate,
+        cand => _.findIndex(pendingDelete, (o) => o.payload.lineupId === cand.id) >= 0,
+        pendingToItem,
+        options)
+}
+
+
+export function mergeItemsAndPendings2<T>(
+    syncedItems: Array<T>,
+    pendingCreate: [],
+    filterItem: T => boolean,
     pendingToItem: (pending: PendingItem) => T,
     options: any = {}
 ) {
@@ -487,7 +508,6 @@ export function mergeItemsAndPendings<T>(
     let addPendingCreate = () => {
         _.forEach(pendingCreate, pending => {
             if (pending.state === 'pending' || pending.state === 'processing') {
-
                 items.push(pendingToItem(pending));
             }
         })
@@ -504,7 +524,8 @@ export function mergeItemsAndPendings<T>(
         if (!l) break;
 
         //do not display items with pending deletion
-        if (_.findIndex(pendingDelete, (o) => o.payload.lineupId === l.id) >= 0) continue;
+
+        if (filterItem && filterItem(l)) continue;
 
         items.push(l);
 
@@ -513,3 +534,101 @@ export function mergeItemsAndPendings<T>(
     return items;
 }
 
+let lineupId = props => props.lineupId || _.get(props, 'lineup.id')
+let userId = props => props.userId || _.get(props, 'user.id')
+
+export const LINEUP_SECLECTOR = createSelector(
+    [
+        (state, props) => props.lineup,
+        (state, props) => _.get(state, `data.lists.${lineupId(props)}`),
+        (state, props) => _.head(state.pending[CREATE_LINEUP], pending => pending.id === lineupId(props)),
+        state => state.data
+    ],
+    (
+        propLineup, //lineup
+        syncList, //lineup
+        rawPendingList, //lineup
+        data
+    ) => {
+        let lineup = (syncList && buildData(data, syncList.type, syncList.id) || {...rawPendingList, savings: []})
+        if (syncList) {
+            lineup = buildData(data, syncList.type, syncList.id)
+        }
+        else if (rawPendingList) {
+            lineup = {id: rawPendingList.id, name: rawPendingList.payload.listName, savings: []}
+        }
+        else if (propLineup) {
+            lineup = propLineup
+        }
+        return lineup
+    }
+)
+
+export const USER_SECLECTOR = createSelector(
+    [
+        (state, props) => props.user,
+        (state, props) => _.get(state, `data.users.${userId(props)}`),
+        state => state.data
+    ],
+    (
+        propUser,
+        syncUser,
+        data
+    ) => {
+        if (syncUser) return buildData(data, syncUser.type, syncUser.id)
+        else if (propUser) return propUser
+        return null
+    }
+)
+
+export const LINEUP_AND_SAVING_SELECTOR = createSelector(
+    [
+        LINEUP_SECLECTOR,
+        (state, props) => _.filter(state.pending[SAVE_ITEM], pending => pending.payload.lineupId === lineupId(props)),
+        (state, props) => _.filter(state.pending[UNSAVE], pending => pending.payload.lineupId === lineupId(props)),
+        state => state.data
+    ],
+    (
+        lineup, //lineup
+        rawPendingCreatedSavings,
+        rawPendingDeletedSavings,
+        data
+    ) => {
+        let savings
+        if (lineup) {
+            if (!_.isEmpty(rawPendingCreatedSavings)) {
+                savings = rawPendingCreatedSavings.map(pending => {
+                        const result = {
+                            id: pending.id,
+                            lineupId: pending.payload.lineupId,
+                            itemId: pending.payload.itemId,
+                            pending: true
+                        }
+
+                        // $FlowFixMe
+                        Object.defineProperty(
+                            result,
+                            'resource',
+                            {
+                                get: () => {
+                                    return buildData(data, pending.payload.itemType, pending.payload.itemId)
+                                },
+                            },
+                        )
+                        return result
+                    }
+                )
+            }
+
+            if (lineup.savings) {
+                if (savings) savings = savings.concat(lineup.savings)
+                else savings = [].concat(lineup.savings) //?
+            }
+            if (!_.isEmpty(rawPendingDeletedSavings)) {
+                _.remove(savings, saving => rawPendingDeletedSavings.some(pending => pending.payload.savingId === saving.id))
+            }
+
+        }
+        return {lineup, savings}
+    }
+)

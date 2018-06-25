@@ -7,10 +7,10 @@ export default {
     },
     "tabs": {
         home: {
-            title: "My goodsh"
+            title: "My lists"
         },
         network: {
-            title: "My network"
+            title: "News feed"
         }
     },
     lineups: {
@@ -19,8 +19,8 @@ export default {
             empty: "No result",
         },
         filter: {
-            empty: "No result. Try launching a deep search.",
-            deepsearch: "Deep search",
+            empty: "Search in my lists on the server",
+            deepsearch: "Search in all my lists",
         },
         goodsh : {
             title: "GoodshBox"
@@ -59,14 +59,18 @@ export default {
     },
     home: {
         wizard: {
-            action_button_label : "Add a coup de coeur\nor a wish.",
+            action_button_label : "Add a coup de coeur,\n, a wish, a tip.",
             action_button_body : "Book, movie, tvshow, restaurant, music...",
+        },
+        tabs: {
+            my_goodsh: "My lists",
+            my_interests: "Follows",
         }
     },
     search:{
-        in_items: "What would you like to save?",
+        in_items: "Find anything",
         in_network: "Search in my network",
-        in_feed: "Search",
+        in_feed: "In my lists",
         by: "by",
     },
     "shared":{
@@ -76,10 +80,10 @@ export default {
     },
     "activity_item":{
         header: {
-            in: "added in",
+            in: "%{adder} added %{what} in %{lineup}",
             added_somewhere: "added it",
-            to: "sent it to",
-            ask: "needs some tips!",
+            to: "%{from} sent %{what} to %{to}",
+            ask: "%{asker} needs some tips!",
         },
         buttons:{
             "comment": {
@@ -133,6 +137,7 @@ export default {
     "login_screen":{
         "facebook_signin":"SIGN IN WITH FACEBOOK",
         "no_publication":"Goodsh does not post anything on Facebook.",
+        "account_kit_signin":"Sign in without Facebook",
         "definition":{
             "example":"##Bouquin, restaurant, film, série, artiste,lieu, musique, gadget, fringue, vin, …"
         },
@@ -143,6 +148,18 @@ export default {
         "slider_intro_4": "Discover books, movies, music, restaurants, gift ideas, things to do, to visit...and buy in a blink of an eye.",
         "credentials": "Handcrafted in 2018",
     },
+    "popular_screen":{
+        "title": "Add your first wishs",
+        "main_explanation": "By choosing among the best of this week:",
+        "empty": "No popular items found",
+        item_selected: {
+            zero: "Select some wishes",
+            one: "Add 1 item",
+            other: "Add %{count} items"
+        },
+        "button_skip": "Skip",
+        "button_next": "Add",
+    },
     "profile_screen":{
         "title":"Feedback",
         "subtitle":"##Is this what you've been dreaming of? How good do you feel? What's badly missing? We can't wait to know…"
@@ -151,7 +168,7 @@ export default {
         "related_activities_title": "Related activities"
     },
     "create_list_controller":{
-        "title":"Add new",
+        "title":"+ New list",
         "subtitle":"##Be creative;)",
         "placeholder":"Be creative;)",
         "action":"Add new list",
@@ -169,31 +186,40 @@ export default {
         "network_placeholder":"##Browse your network"
     },
     "network_search_tabs":{
-        "savings":"GOODSH & LIST",
-        "users":"MEMBER"
+        "savings":"LISTS",
+        "users":"MEMBERS"
     },
     "community_screen":{
         "tabs": {
             "friends":"MY CONTACTS",
             "notifications":"NOTIFICATIONS",
         },
-        "empty_screen": "The goodsh of your friends are here.\nGo to MY CONTACTS to invite and connect."
+        "empty_screen": "The goodsh of your friends are here.\nInvite them to share your tips with them."
+    },
+    "my_interests_screen":{
+        "empty_screen": "You will find every list you follow here.\nExplore your friends lists, and find them here !",
+        "search_lists": "Find lists to follow"
     },
     "comments_screen":{
         "title": "Comments"
     },
+    "search_screen":{
+        "title": "Search"
+    },
     "search_item_screen":{
         "tabs": {
-            "consumer_goods":"STUFF",
+            "consumer_goods":"BOOK & OTHER",
             "places":"PLACE",
-            "movies":"MOVIE",
+            "movies":"MOVIE & TV",
             "musics":"MUSIC"
         },
         "placeholder": {
-            "consumer_goods":"Stuff: books, gifts, shoes, wine, games, products...",
-            "places":"Restaurants, cafés, shops, hotels, museums, cities, beaches, places to visit, doctors, plumbers...",
-            "movies":"Movies, TV shows",
-            "musics":"Musics, ortists, albums, tracks"
+            "consumer_goods":"books, gifts, shoes,\nwine, games, products...",
+            "places":"restaurants, cafés,\nshops, hotels, museums,\ncities, beaches, places to visit...",
+            "movies":"movies, TV shows",
+            "musics":"tracks, artists, albums",
+            "savings": "Tap keywords for interesting lists to follow",
+            "users": "Search for users to follow",
         },
         "search_options":  {
             "around_me": "Around me"
@@ -267,6 +293,16 @@ export default {
             label: "Are you sure?"
         }
     },
+    follow: {
+        alert: {
+            title_unfollow: "Unfollow",
+            label: "Are you sure ?",
+        },
+        messages: {
+            unfollowed: "Unfollowed",
+            followed: "Followed"
+        }
+    },
     unsave_screen: {
         unsave_button: {
             idle: "Delete",
@@ -276,7 +312,7 @@ export default {
         }
     },
     empty: {
-        lineup: "This list is empty, what a shame!"
+        lineup: "This list is empty, add what you love!"
     },
     activity_action_bar: {
         goodsh_deleted: "Goodsh deleted",
@@ -289,6 +325,16 @@ export default {
         response: {
             title: "Replies"
         }
+    },
+    "more_activities": {
+        zero: "",
+        one: "%{count} more activity",
+        other: "%{count} more activities",
+    },
+    "there_are_activities": {
+        zero: "",
+        one: "There is",
+        other: "There are",
     },
     add_item_screen: {
         title: "Select list"
@@ -323,6 +369,8 @@ export default {
         try_again: "Try Again",
         ask_friend: "Ask my network",
         logout: "Logout",
+        follow: "Follow",
+        unfollow: "Unfollow",
         terms: "Terms and personal data",
         copy_link: "Copy link",
         send_to_goodsher: "Send to another\nuser",
@@ -337,7 +385,7 @@ export default {
     common: {
         empty_feed_generic: "If you love it, share it.\nWhy don't you invite some friends to goodsh?",
         api: {
-            generic_error: "Oops... Something went wrong"
+            generic_error: "Oops... Problem with the internet."
         }
     },
     ask: {
@@ -362,7 +410,7 @@ export default {
         }
     },
     dev: {
-        label: "Dev mode",
+        label: "Development menu",
         title: "DevMenu"
     },
     congrats: {
@@ -370,5 +418,24 @@ export default {
     },
     errors: {
         unavailable: 'Content not available',
-    }
+        generic: "Oops... Something went wrong"
+    },
+    form: {
+        label: {
+            last_name: 'Last name',
+            first_name: 'First name'
+        },
+        warning: {
+            fill_all_fields: 'Please fill all the fields',
+        },
+        description: {
+            user_name: 'Please fill in your first and last name'
+        }
+    },
+    user_sheet: {
+        goodsh_count: "Goodshs",
+        lineup_count: "Lists",
+        friend_count: "Contacts",
+    },
+    "current_location": "Around me"
 };

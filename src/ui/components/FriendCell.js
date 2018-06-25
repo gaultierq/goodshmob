@@ -1,17 +1,17 @@
 // @flow
 
-import React from 'react';
-import {Button, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import type {User} from "../../types";
-import {CachedImage} from "react-native-img-cache";
-import {Avatar} from "../UIComponents";
+import React from 'react'
+import {Button, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import type {User} from "../../types"
+import {ViewStyle} from "../../types"
+import {Avatar} from "../UIComponents"
 
 
 type Props = {
     friend: User,
     children?: Node,
     childrenBelow?: boolean,
-    containerStyle?: any
+    containerStyle?: ViewStyle
 
 };
 

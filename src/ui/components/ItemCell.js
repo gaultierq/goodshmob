@@ -1,11 +1,11 @@
 // @flow
-import type {Node} from 'react';
-import React from 'react';
-import {Button, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import * as UI from "../UIStyles";
-import type {Item} from "../../types";
-import {Colors} from "../colors";
-import {CachedImage} from "react-native-img-cache";
+import type {Node} from 'react'
+import React from 'react'
+import {Button, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import * as UI from "../UIStyles"
+import type {Item} from "../../types"
+import {Colors} from "../colors"
+import GImage from './GImage'
 
 
 type Props = {
@@ -28,26 +28,23 @@ export default class ItemCell extends React.Component<Props, State> {
         let image = resource ? resource.image : undefined;
 
         return (
-            <View style={styles.container}>
-                <View style={styles.containerInner}>
-                    <View style={[styles.image, UI.STYLES.lightBorder, {backgroundColor: Colors.dirtyWhite}]}>
-                        {
-                            image && <CachedImage
-                                source={{uri: image}}
-                                resizeMode='cover'
-                                style={[styles.image, UI.STYLES.lightBorder]}/>
+            <View style={[styles.container, styles.containerInner]}>
+                <View style={[styles.image, UI.STYLES.lightBorder, {backgroundColor: Colors.dirtyWhite}]}>
+                    {
+                        image && <GImage
+                            source={{uri: image}}
+                            resizeMode='cover'
+                            style={[styles.image, UI.STYLES.lightBorder]}/>
 
-                        }
-                    </View>
-                    <View style={styles.containerText}>
-                        <Text
-                            style={styles.title}
-                            numberOfLines={this.props.displayDetails ? 7 : 3}
-                        >{resource.title}</Text>
-                        <Text style={styles.subtitle}>{resource.subtitle}</Text>
-                    </View>
+                    }
                 </View>
-                {this.props.children}
+                <View style={styles.containerText}>
+                    <Text
+                        style={styles.title}
+                        numberOfLines={this.props.displayDetails ? 7 : 3}
+                    >{resource.title}</Text>
+                    <Text style={styles.subtitle}>{resource.subtitle}</Text>
+                </View>
             </View>
         )
     }

@@ -1,39 +1,69 @@
 // @flow
-import React from 'react';
-import {Clipboard, Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpacity, User, View} from 'react-native';
-import type {Id} from "../../types";
-import {CheckBox} from "react-native-elements";
-import {connect} from "react-redux";
-import {isCurrentUserId, logged} from "../../managers/CurrentUser"
-import Feed from "../components/feed";
-import {FETCH_ACTIVITIES, fetchUserNetwork} from "../networkActions";
-import ActivityCell from "../activity/components/ActivityCell";
-import Screen from "../components/Screen";
-import {activityFeedProps, MainBackground} from "../UIComponents";
-import {STYLES} from "../UIStyles";
-import ShareButton from "../components/ShareButton";
-import UserLineups from "./userLineups";
-import LineupHorizontal, {LineupH1} from "../components/LineupHorizontal";
-import {seeActivityDetails, seeList, startAddItem} from "../Nav";
-import * as UI from "../UIStyles";
-import {fullName} from "../../helpers/StringUtils";
+
+import React from 'react'
+import {Alert, Clipboard, Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import type {Id, RequestState, RNNNavigator, User} from "../../types"
+import {CheckBox} from "react-native-elements"
+import {connect} from "react-redux"
+import {logged} from "../../managers/CurrentUser"
+import Screen from "../components/Screen"
+import {
+    CONNECT_RIGHT_BUTTON,
+    DISCONNECT_RIGHT_BUTTON,
+    LINEUP_SECTIONS,
+    MainBackground,
+    RIGHT_BUTTON_SPINNER
+} from "../UIComponents"
+import * as UI from "../UIStyles"
+import {STYLES} from "../UIStyles"
+import UserLineups from "./userLineups"
+import {fullName} from "../../helpers/StringUtils"
+import * as Api from "../../managers/Api"
+import {
+    actions as userActions,
+    actionTypes as userActionTypes,
+    CONNECT,
+    createFriendship,
+    deleteFriendship,
+    DISCONNECT
+} from "../../redux/UserActions"
+import {getUserActions, GUserAction, U_CONNECT, U_DISCONNECT} from "../userRights"
+import {createSelector} from "reselect"
+import {USER_SECLECTOR} from "../../helpers/ModelUtils"
+import _Messenger from "../../managers/Messenger"
 
 type Props = {
     userId: Id,
-    user:? User,
-    navigator: any,
-    network: *
+    navigator?: RNNNavigator,
+    user?: ?User,
+    action?: GUserAction
 };
 
 type State = {
+    reqFetchUser?: RequestState,
+    reqConnect?: RequestState,
+    reqDisconnect?: RequestState,
 };
 
-const mapStateToProps = (state, ownProps) => ({
-    data: state.data,
-});
+
+const selector = createSelector(
+    [
+        USER_SECLECTOR,
+        state => state.pending
+    ],
+    (user, pending) => {
+        let action = null
+        if (user) {
+            let actions = getUserActions(user, pending)
+            if (actions.indexOf(U_CONNECT) >= 0) action = U_CONNECT
+            // if (actions.indexOf(U_DISCONNECT) >= 0) action = U_DISCONNECT
+        }
+        return {user, action}
+    }
+)
 
 @logged
-@connect(mapStateToProps)
+@connect(selector)
 export default class UserScreen extends Screen<Props, State> {
 
     static navigatorStyle = {
@@ -44,26 +74,106 @@ export default class UserScreen extends Screen<Props, State> {
         navBarSubTitleTextCentered: true,
     };
 
-    constructor(props: Props) {
-        super(props);
+    unsubscribe: ?() => void
+
+
+
+    componentDidMount() {
+        this.unsubscribe = this.props.navigator.addOnNavigatorEvent(event => {
+            let user = this.getUser()
+            if (user) {
+                if (event.id === 'connect_' + user.id) {
+                    //followLineupPending(this.props.dispatch, user)
+                    this.connectWith(user)
+                }
+                else if (event.id === 'disconnect_' + user.id) {
+                    // unfollowLineupPending(this.props.dispatch, user)
+                    this.disconnectWith(user)
+                }
+            }
+        });
+
+        Api.safeDispatchAction.call(
+            this,
+            this.props.dispatch,
+            userActions.getUser(this.props.userId).createActionDispatchee(userActionTypes.GET_USER),
+            'reqFetchUser'
+        )
+    }
+
+    connectWith(user: User) {
+        let action = createFriendship(user.id).createActionDispatchee(CONNECT);
+
+        Api.safeDispatchAction.call(
+            this,
+            this.props.dispatch,
+            action,
+            'reqConnect'
+        ).then(()=> {
+                _Messenger.sendMessage(i18n.t("friends.messages.connect"));
+            }
+        );
+    }
+
+    disconnectWith(user: User) {
+        Alert.alert(
+            i18n.t("friends.alert.title"),
+            i18n.t("friends.alert.label"),
+            [
+                {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                {text: i18n.t("actions.ok"), onPress: () => {
+                        let action = deleteFriendship(user.id).createActionDispatchee(DISCONNECT);
+                        Api.safeDispatchAction.call(
+                            this,
+                            this.props.dispatch,
+                            action,
+                            'reqDisconnect'
+                        ).then(()=> {
+                                _Messenger.sendMessage(i18n.t("friends.messages.disconnect"));
+                            }
+                        );
+                    }},
+            ],
+            { cancelable: true }
+        )
     }
 
 
+    componentWillUnmount() {
+        if (this.unsubscribe) this.unsubscribe()
+    }
+
+    getUser() {
+        return this.props.user
+    }
+
+    getButtons(action: GUserAction, userId: Id): any {
+        if (this.state.reqConnect === 'sending' || this.state.reqDisconnect === 'sending') {
+            return {rightButtons: [RIGHT_BUTTON_SPINNER],}
+        }
+        if (action) {
+            if (action === U_CONNECT) return {rightButtons: [CONNECT_RIGHT_BUTTON(userId)],}
+            if (action === U_DISCONNECT) return {rightButtons: [DISCONNECT_RIGHT_BUTTON(userId)],}
+        }
+        return {rightButtons: []}
+    }
+
     render() {
+        let user = this.getUser();
+
+        this.props.navigator.setButtons(this.getButtons(this.props.action, this.props.userId))
 
         let userId = this.props.userId;
         //FIXME: rm platform specific code, https://github.com/wix/react-native-navigation/issues/1871
-        if (this.isVisible() && this.props.user) {
+        if (this.isVisible() && user) {
             if (__IS_IOS__) {
                 this.props.navigator.setStyle({...UI.NavStyles,
                     navBarCustomView: 'goodsh.UserNav',
-                    navBarCustomViewInitialProps: {
-                        user: this.props.user,
-                    }
+                    navBarCustomViewInitialProps: { user }
                 });
             }
             else {
-                this.setNavigatorTitle(this.props.navigator, {title: fullName(this.props.user)})
+                this.setNavigatorTitle(this.props.navigator, {title: fullName(user)})
             }
         }
 
@@ -74,43 +184,12 @@ export default class UserScreen extends Screen<Props, State> {
                     feedId={"user list"}
                     userId={userId}
                     navigator={this.props.navigator}
-                    empty={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
-                    initialLoaderDelay={500}
-
-                    sectionMaker={(lineups)=> {
-                        // const goodshbox = _.head(lineups);
-                        // let savingCount = _.get(goodshbox, `meta.savingsCount`, null) || 0;
-                        const navigator = this.props.navigator;
-                        return lineups.map(lineup => ({
-                            data: [lineup],
-                            title:lineup.name,
-                            subtitle: ` (${_.get(lineup, `meta.savingsCount`, null) || 0})`,
-                            onPress: () => seeList(navigator, lineup),
-                            renderItem: ({item}) => (
-                                <LineupH1
-                                    lineup={item}
-                                    navigator={navigator}
-                                    skipLineupTitle={true}
-                                    onPressEmptyLineup={isCurrentUserId(userId) ? ()=>startAddItem(navigator, item.id): null } />
-                            )
-                        }));
-                    }}
+                    ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
+                    renderSectionHeader={({section}) => section.renderSectionHeader()}
+                    sectionMaker={LINEUP_SECTIONS(this.props.navigator, this.props.dispatch, userId)}
 
                 />
             </MainBackground>
         );
-    }
-
-
-    renderItem({item}) {
-
-        return (
-            <ActivityCell
-                onPressItem={() => this.navToActivity(item)}
-                activityId={item.id}
-                activityType={item.type}
-                navigator={this.props.navigator}
-            />
-        )
     }
 }

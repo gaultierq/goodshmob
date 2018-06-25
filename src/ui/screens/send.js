@@ -1,19 +1,22 @@
 // @flow
 
-import type {Node} from 'react';
-import React, {Component} from 'react';
-import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import {connect} from "react-redux";
+import type {Node} from 'react'
+import React, {Component} from 'react'
+import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import {connect} from "react-redux"
 import {currentUserId, logged} from "../../managers/CurrentUser"
-import type {Dispatchee, Id, Item, User} from "../../types";
-import FriendsFeed from "./friends";
-import FriendCell from "../components/FriendCell";
-import * as UI from "../UIStyles";
-import SmartInput from "../components/SmartInput";
+import type {Dispatchee, Id, Item, User} from "../../types"
+import FriendsFeed from "./friends"
+import FriendCell from "../components/FriendCell"
+import * as UI from "../UIStyles"
+import {LINEUP_PADDING} from "../UIStyles"
+import SmartInput from "../components/SmartInput"
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-import {MainBackground, TRANSPARENT_SPACER} from "../UIComponents";
-import GTouchable from "../GTouchable";
-import {userFirstName} from "../../helpers/StringUtils";
+import {MainBackground, TRANSPARENT_SPACER} from "../UIComponents"
+import GTouchable from "../GTouchable"
+import {userFirstName} from "../../helpers/StringUtils"
+import {Colors} from "../colors"
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 type Props = {
     data?: any,
@@ -44,7 +47,7 @@ export default class SendScreen extends Component<Props, State> {
         return (
             <MainBackground>
                 <KeyboardAwareScrollView
-                    contentContainerStyle={{flex:1}}
+                    contentContainerStyle={{padding: LINEUP_PADDING, flex:1}}
                     scrollEnabled={false}
                     keyboardShouldPersistTaps='always'
                 >
@@ -52,7 +55,7 @@ export default class SendScreen extends Component<Props, State> {
                         userId={currentUserId()}
                         navigator={navigator}
                         renderItem={(friend) => this.renderItem(friend)}
-                        ItemSeparatorComponent={TRANSPARENT_SPACER(16)}
+                        ItemSeparatorComponent={TRANSPARENT_SPACER()}
                     />
 
                 </KeyboardAwareScrollView>
@@ -72,7 +75,6 @@ export default class SendScreen extends Component<Props, State> {
                 disabled={sent}
                 onPress={()=>this.setState({selected: isSelected ? null : id})}>
                 <FriendCell
-                    containerStyle={{padding: 16}}
                     friend={friend}
                     childrenBelow={!sent}
                 >
@@ -94,16 +96,25 @@ export default class SendScreen extends Component<Props, State> {
                         // backgroundColor: 'red'
                     }}
                     inputStyle={{
-                        fontSize: 15
+                        fontSize: 16
                     }}
                     // inputContainerStyle={{borderRadius: 1}}
-                    execAction={(input: string) => this.props.dispatch(this.props.sendAction(friend, input))}
+                    execAction={(input: string) => {
+                        return this.props.dispatch(this.props.sendAction(friend, input))
+                            .then((info, err)=> {
+                                const targetId = info.data.relationships.target.data.id;
+                                let sent = this.state.sent;
+                                sent[targetId] = true;
+                                this.setState({sent})
+                            });
+                    }}
                     placeholder={i18n.t("send_screen.add_description_placeholder", {recipient: userFirstName(friend)})}
                     autoFocus
                     height={35}
                     numberOfLines={1}
                     canSendDefault={true}
                     returnKeyType={'send'}
+                    button={<MaterialIcons name="send" size={28} color={Colors.greyishBrown} />}
                 />
             </View>;
     }

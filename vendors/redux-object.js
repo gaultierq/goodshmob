@@ -30,7 +30,7 @@ function buildRelationship(reducer, target, relationship, options, cache) {
 export default function build(reducer, objectName, id = null, providedOpts = {}, cache = {}) {
     const defOpts = { eager: false, ignoreLinks: false, includeType: false };
     const options = Object.assign({}, defOpts, providedOpts);
-    const { eager, includeType } = options;
+    const { eager, includeType, decorator } = options;
 
     if (!reducer[objectName]) {
         return null;
@@ -102,7 +102,9 @@ export default function build(reducer, objectName, id = null, providedOpts = {},
     if (typeof ret.id === 'undefined') {
         ret.id = ids;
     }
-
-    ret['built'] = true;
+    if (decorator) {
+        decorator(ret)
+    }
+    //ret['built'] = true;
     return ret;
 }

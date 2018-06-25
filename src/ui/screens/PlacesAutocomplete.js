@@ -1,12 +1,12 @@
-import React from 'react';
-import {Image, Text, View} from 'react-native';
-import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
-import Screen from "../components/Screen";
+import React from 'react'
+import {Image, Text, View} from 'react-native'
+import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete'
+import Screen from "../components/Screen"
 import Config from 'react-native-config'
-import {NavStyles, SEARCH_INPUT_PROPS, SEARCH_STYLES, styleMargin, stylePadding} from "../UIStyles";
-import {SEARCH_OPTIONS_PADDINGS} from "./searchplacesoption";
-import * as UI from "../UIStyles";
-import {Colors} from "../colors";
+import * as UI from "../UIStyles"
+import {NavStyles, SEARCH_INPUT_PROPS, SEARCH_STYLES, styleMargin, stylePadding} from "../UIStyles"
+import {SEARCH_OPTIONS_PADDINGS} from "./searchplacesoption"
+import {Colors} from "../colors"
 
 // const homePlace = { description: 'Home', geometry: { location: { lat: 48.8152937, lng: 2.4597668 } }};
 // const workPlace = { description: 'Work', geometry: { location: { lat: 48.8496818, lng: 2.2940881 } }};
@@ -22,7 +22,6 @@ export type State = {
 
 export default class PlacesAutocomplete extends Screen<Props, State> {
 
-
     static navigatorStyle = {
         screenBackgroundColor: 'transparent',
         modalPresentationStyle: 'overFullScreen',
@@ -34,9 +33,6 @@ export default class PlacesAutocomplete extends Screen<Props, State> {
         props.navigator.setStyle({...UI.NavStyles,
             navBarNoBorder: true,
             topBarElevationShadowEnabled: false,
-            navBarCustomView: 'goodsh.SearchNavBar',
-
-
 
             navBarCustomViewInitialProps: {
                 initialInput: props.token,
@@ -87,16 +83,23 @@ export default class PlacesAutocomplete extends Screen<Props, State> {
                     container: {
                         borderTopWidth: 0,
                         borderBottomWidth: 0,
+                        marginBottom: 10,
                         backgroundColor: 'transparent',
+
                     },
                     textInputContainer: {
                         width: '100%',
                         backgroundColor: NavStyles.navBarBackgroundColor,
                         borderTopWidth: 0,
-                        borderBottomWidth: 0,
+                        // borderBottomWidth: 0,
 
-                        ...SEARCH_OPTIONS_PADDINGS
-                        // backgroundColor:'red',
+                        ...SEARCH_OPTIONS_PADDINGS,
+
+
+                        // backgroundColor: 'red',
+                        // paddingVertical: 180,
+                        // marginBottom: 15,
+                        paddingBottom: 55
                     },
                     textInput: [SEARCH_STYLES.searchInput, {
                         ...styleMargin(0,0),
@@ -111,7 +114,7 @@ export default class PlacesAutocomplete extends Screen<Props, State> {
                 }}
 
                 currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
-                currentLocationLabel="Current location"
+                currentLocationLabel={i18n.t('current_location')}
                 nearbyPlacesAPI='None' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
                 GoogleReverseGeocodingQuery={{
                     // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro

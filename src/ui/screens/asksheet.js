@@ -1,24 +1,34 @@
 // @flow
-import React, {Component} from 'react';
-import {Alert, Clipboard, KeyboardAvoidingView, Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import type {Ask, Id, ItemType} from "../../types";
-import {CheckBox} from "react-native-elements";
-import {connect} from "react-redux";
-import {logged} from "../../managers/CurrentUser"
-import * as Api from "../../managers/Api";
-import ApiAction from "../../helpers/ApiAction";
+import React, {Component} from 'react'
+import {
+    Alert,
+    Clipboard,
+    Dimensions,
+    Image,
+    KeyboardAvoidingView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
+} from 'react-native'
+import type {Id, ItemType} from "../../types"
+import {CheckBox} from "react-native-elements"
+import {connect} from "react-redux"
+import {currentUserId, logged} from "../../managers/CurrentUser"
+import * as Api from "../../managers/Api"
+import ApiAction from "../../helpers/ApiAction"
 
 import Snackbar from "react-native-snackbar"
-import Button from 'apsl-react-native-button'
-import {Colors} from "../colors";
-import Sheet from "../components/sheet";
-import {SFP_TEXT_BOLD} from "../fonts";
-import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
-import GTouchable from "../GTouchable";
-import type {PendingAction} from "../../helpers/ModelUtils";
-import {pendingActionWrapper} from "../../helpers/ModelUtils";
-import {Call} from "../../managers/Api";
-import {renderSimpleButton} from "../UIStyles";
+import {Colors} from "../colors"
+import Sheet from "../components/sheet"
+import {SFP_TEXT_BOLD} from "../fonts"
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
+import GTouchable from "../GTouchable"
+import type {PendingAction} from "../../helpers/ModelUtils"
+import {pendingActionWrapper} from "../../helpers/ModelUtils"
+import {renderSimpleButton} from "../UIStyles"
+import {FETCH_ACTIVITIES, fetchMyNetwork} from "../networkActions"
 
 type Props = {
     itemId: Id,
@@ -179,15 +189,23 @@ export default class AskScreen extends Component<Props, State> {
         if (this.state.isAsking) return;
         this.setState({isAsking: true});
 
-        this.props.dispatch(ASK_CREATION.pending({content}, {}));
-        Snackbar.show({
-            title: i18n.t('ask.sent'),
-        });
+        this.props.dispatch(ASK_CREATION.exec({content}, {})).then(() =>{
+            Snackbar.show({
+                title: i18n.t('ask.sent'),
+            });
 
-        //hack: on bundled android, no timeout will crash the app
-        setTimeout(()=> {
-            this._sheet.close();
-        }, 1000)
+            setTimeout(() => {
+                this.props.dispatch(
+                    fetchMyNetwork()
+                        .createActionDispatchee(FETCH_ACTIVITIES, {userId: currentUserId(), mergeOptions: {drop: true}}))
+            }, 1000)
+
+            //hack: on bundled android, no timeout will crash the app
+            setTimeout(()=> {
+                this._sheet.close();
+            }, 1000)
+        })
+
 
         // this.props
         //     .dispatch(actions.createAsk({content}).disptachForAction2(CREATE_ASK))

@@ -1,16 +1,20 @@
 // @flow
-// @flow
 
-import React, {Component} from 'react';
-import {Image, LayoutAnimation, StyleSheet, Text, View, UIManager} from 'react-native';
-import {Colors} from "./colors";
-import User from "react-native-firebase/lib/modules/auth/User";
-import {CachedImage} from "react-native-img-cache";
-import GTouchable from "./GTouchable";
-import {BACKGROUND_COLOR, STYLES} from "./UIStyles";
-import Spinner from 'react-native-spinkit';
-import type {RequestState} from "../types";
-
+import React, {Component} from 'react'
+import {Image, LayoutAnimation, Platform, StyleSheet, Text, UIManager, View} from 'react-native'
+import {AVATAR_BACKGROUNDS, Colors} from "./colors"
+import GTouchable from "./GTouchable"
+import {BACKGROUND_COLOR, LINEUP_PADDING, STYLES} from "./UIStyles"
+import Spinner from 'react-native-spinkit'
+import type {Lineup, RNNNavigator, User} from "../types"
+import {ViewStyle} from "../types"
+import {displayLineupActionMenu, seeList} from "./Nav"
+import LineupHorizontal from "./components/LineupHorizontal"
+import LineupTitle2 from "./components/LineupTitle2"
+import GImage from "./components/GImage"
+import {firstLetter, hashCode} from "../helpers/StringUtils"
+import {SFP_TEXT_REGULAR} from "./fonts"
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
@@ -38,7 +42,7 @@ export const MainBackground = (props) => <View
 type Props = {
     user: User,
     size?: number,
-    style?: any
+    style?: ViewStyle
 }
 type State = {}
 
@@ -48,30 +52,64 @@ export class Avatar extends Component<Props, State> {
     static defaultProps = {
         size: 40
     }
+
     render() {
         const {user, style, size, ...attributes} = this.props;
 
-        //TODO: image placeholder
-        return (<CachedImage
-            source={{uri: user && user.image}}
-            style={[{
-                height: size,
-                width: size,
-                borderRadius: size / 2,
+        let uri = null
 
-            }, style]}
-            {...attributes}
-        />)
+        if (user) {
+            uri = user.image
+
+            if (_.isNull(uri)) {
+
+                const colorId = hashCode(user.id) % AVATAR_BACKGROUNDS.length
+                const color = AVATAR_BACKGROUNDS[colorId]
+
+                const initials = firstLetter(user.firstName) + firstLetter(user.lastName)
+                if (initials.length === 0) return null
+
+                return <View style={[{
+                    height: size,
+                    width: size,
+                    borderRadius: size / 2,
+                    backgroundColor: color,
+                    paddingLeft: size / 20,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }, style]}>
+                    <Text style={{
+                        color: Colors.white,
+                        fontFamily: SFP_TEXT_REGULAR,
+                        fontSize: size / 2.3
+                    }}>{initials.toUpperCase()}</Text>
+                </View>
+            }
+        }
+
+        //TODO: image placeholder
+        return (
+            <GImage
+                source={{ uri }}
+                fallbackSource={require('../img/avatar-missing.png')}
+                style={[{
+                    height: size,
+                    width: size,
+                    borderRadius: size / 2,
+
+                }, style]}
+                {...attributes}
+            />
+        )
     }
 }
 
-export const TRANSPARENT_SPACER = (height: number) => ()=><View style={{height, backgroundColor: 'transparent'}}/>
+export const TRANSPARENT_SPACER = (height: number = 20) => ()=><View style={{height, backgroundColor: 'transparent'}}/>
 
 
 export function activityFeedProps() {
     return {
         ItemSeparatorComponent: TRANSPARENT_SPACER(20),
-        ListHeaderComponent: TRANSPARENT_SPACER(0)(),
         style: {backgroundColor: Colors.greying},
     };
 }
@@ -88,12 +126,8 @@ export const FullScreenLoader = props => (<View style={STYLES.FULL_SCREEN}>
     <Spinner
         isVisible={true}
         size={__DEVICE_WIDTH__ / 10}
-        type={"WanderingCubes"}
+        type={"9CubeGrid"}
         color={Colors.grey3}/>
-</View>);
-
-export const Http404 = props => (<View style={STYLES.FULL_SCREEN}>
-    <Text>{i18n.t('errors.unavailable')}</Text>
 </View>);
 
 
@@ -147,5 +181,172 @@ export function floatingButtonScrollListener() {
             _listViewOffset = currentOffset
         })
     }();
-
 }
+
+
+export const RENDER_SECTION_HEADER = (navigator: RNNNavigator, dispatch: Dispatch, lineup: Lineup) => <GTouchable
+    onPress={() => seeList(navigator, lineup)}>
+
+    <LineupTitle2
+        lineupId={lineup.id}
+        dataResolver={id => lineup}
+        style={{
+            backgroundColor: BACKGROUND_COLOR,
+            paddingLeft: LINEUP_PADDING,
+        }}
+    >
+        {renderLineupMenu(navigator, dispatch, lineup)}
+    </LineupTitle2>
+</GTouchable>;
+
+//TODO: split - create a file dedicated to Lineup rendering
+export const LINEUP_SECTIONS = (navigator: RNNNavigator, dispatch: any) => (lineups: Lineup[])=> {
+    return lineups.map(lineup => ({
+        data: [lineup],
+        onPress: () => seeList(navigator, lineup),
+        renderItem: ({item}: {item: Lineup}) => (
+            <GTouchable
+                onPress={() => seeList(navigator, lineup)}>
+                <LineupHorizontal
+                    lineupId={item.id}
+                    dataResolver={() => ({lineup: lineup, savings: lineup.savings})}
+                    style={{paddingBottom: 10}}
+                    skipLineupTitle={true}
+                />
+            </GTouchable>
+        ),
+        renderSectionHeader: () => RENDER_SECTION_HEADER(navigator, dispatch, lineup),
+    }));
+};
+
+
+export function renderLineupMenu(navigator: RNNNavigator, dispatch: any, lineup: Lineup) {
+    return (
+        <GTouchable style={{
+            // backgroundColor: 'red'
+        }}
+                    onPress={() => displayLineupActionMenu(navigator, dispatch, lineup)}>
+            <View style={{
+                paddingHorizontal: LINEUP_PADDING,
+                paddingVertical: 12,
+            }}>
+                <Image source={require('../img2/moreDotsGrey.png')} resizeMode="contain"/>
+            </View>
+        </GTouchable>
+    );
+}
+
+export function renderLineupFromOtherPeople(navigator: RNNNavigator, lineup: Lineup) {
+
+    return (<GTouchable
+        onPress={() => seeList(navigator, lineup)}>
+
+        <LineupHorizontal
+            lineup={lineup}
+            style={{paddingBottom: 10}}
+            renderTitle={(l: Lineup) => <LineupTitle2 dataResolver={id => lineup} lineupId={lineup.id}/>}
+        />
+    </GTouchable>);
+}
+
+export const GoodshContext = React.createContext({userOwnResources: true});
+
+
+export let getAddButton = (lineup: Lineup) => {
+    return {
+        ...Platform.select({
+            ios: {
+                rightButtons: [
+                    {
+                        systemItem: 'add',
+                        id: 'add'
+                    }
+                ],
+            },
+            android: {
+                fab: {
+                    collapsedId: 'add',
+                    collapsedIcon: require('./../img2/plus_white.png'),
+                    collapsedIconColor: Colors.white,
+                    backgroundColor: Colors.green
+                }
+            },
+        }),
+    }
+}
+
+export let getFollowButton = (lineup: Lineup) => {
+    return {
+        ...Platform.select({
+            ios: {
+                rightButtons: [FOLLOW_RIGHT_BUTTON(lineup.id)],
+            },
+            android: {
+                fab: {
+                    collapsedId: 'add',
+                    collapsedIcon: require('./../img/plus.png'),
+                    collapsedIconColor: Colors.white,
+                    backgroundColor: Colors.green
+                }
+            },
+        }),
+    }
+}
+
+export const FOLLOW_RIGHT_BUTTON = (id: string) => ({
+    title: i18n.t('actions.follow'),
+    id: 'follow_' + id
+})
+
+export const UNFOLLOW_RIGHT_BUTTON = (id: string) => ({
+    title: i18n.t('actions.unfollow'),
+    id: 'unfollow_' + id
+})
+
+export const RIGHT_BUTTON_SPINNER = {
+    component: 'goodsh.NavBarButtonIndicator',
+}
+
+
+let PERSON_ADD
+Promise.all([
+    Icon.getImageSource('person-add', 24, 'black')
+]).then(sources => {
+    PERSON_ADD = sources[0]
+})
+
+export const CONNECT_RIGHT_BUTTON = (id: string) => ({
+    // title: i18n.t('actions.follow'),
+    id: 'connect_' + id,
+    icon: PERSON_ADD
+})
+
+export const DISCONNECT_RIGHT_BUTTON = (id: string) => ({
+    title: i18n.t('actions.unfollow'),
+    id: 'disconnect_' + id
+})
+
+export let getUnfollowButton = (lineup: Lineup) => {
+    return Platform.select({
+        ios: {
+            rightButtons: [UNFOLLOW_RIGHT_BUTTON],
+        },
+        android: {
+            fab: {
+                collapsedId: 'add',
+                collapsedIcon: require('./../img/plus.png'),
+                collapsedIconColor: Colors.white,
+                backgroundColor: Colors.green
+            }
+        },
+    })
+}
+
+export let getClearButton = function () {
+    return Platform.select({
+        ios: {rightButtons: []},
+        android: {fab: {}}
+    })
+}
+
+export const RED_SQUARE = (size = 100) => () => <View style={{width: size, height: size, backgroundColor: 'red'}} />

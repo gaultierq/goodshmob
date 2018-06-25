@@ -30,6 +30,10 @@ export class RequestManager {
         return this.isLast(caller, action, 'ko');
     }
 
+    isIdle(action: string, caller: any) {
+        return this.isLast(caller, action, 'idle');
+    }
+
     isLast(caller, action, stat) {
         let events = this.getEvents(caller, action);
         let last;
@@ -47,11 +51,11 @@ export class RequestManager {
     }
 
     //setState, and register tracker
-    notify(tracker: RequestManagerTracker, status: string, options?: ?*) {
+    notify(tracker: RequestManagerTracker, status: string, options?:*) {
         let caller = this.actions.get(tracker);
         if (!caller) throw "no caller found";
         const action: string = tracker.getAction();
-        caller.setState({[action]: status});
+
 
         this.events.push({
             action,
@@ -59,7 +63,9 @@ export class RequestManager {
             status,
             date: Date.now(),
             options
-        });
+        })
+
+        caller.setState({[action]: status})
     }
 }
 
@@ -77,7 +83,7 @@ export class RequestManagerTracker {
         this.manager.notify(this, 'ko')
     }
 
-    success(options?: ?*) {
+    success(options?:*) {
         this.manager.notify(this, 'ok', options)
     }
 

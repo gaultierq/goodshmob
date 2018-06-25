@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import React from 'react'
 import {
     ActivityIndicator,
     FlatList,
@@ -10,28 +10,30 @@ import {
     Text,
     TouchableOpacity,
     View
-} from 'react-native';
-import {connect} from "react-redux";
+} from 'react-native'
+import {connect} from "react-redux"
 import {currentUserId, logged} from "../../managers/CurrentUser"
-import type {Id, Lineup, List, NavigableProps, Saving} from "../../types";
-import ItemCell from "../components/ItemCell";
-import LineupCell from "../components/LineupCell";
-import {AlgoliaClient, createResultFromHit, createResultFromHit2, makeAlgoliaSearchEngine} from "../../helpers/AlgoliaUtils";
-import UserConnectItem from "./userConnectItem";
-import UserRowI from "../activity/components/UserRowI";
-import {SearchStyles} from "../UIStyles";
-import Screen from "../components/Screen";
+import type {Id, List, NavigableProps, Saving, SearchToken} from "../../types"
+import ItemCell from "../components/ItemCell"
+import {
+    AlgoliaClient,
+    createResultFromHit,
+    createResultFromHit2,
+    makeAlgoliaSearchEngine
+} from "../../helpers/AlgoliaUtils"
+import UserConnectItem from "./userConnectItem"
+import Screen from "../components/Screen"
+import EmptySearch, {renderBlankIcon} from "../components/EmptySearch"
 import Config from 'react-native-config'
-import SearchScreen from "./search";
-import {Colors} from "../colors";
-import GTouchable from "../GTouchable";
-import {seeActivityDetails, seeList, seeUser} from "../Nav";
-import LineupHorizontal, {LineupH1} from "../components/LineupHorizontal";
-import LineupTitle from "../components/LineupTitle";
-import type {SearchState} from "./search";
-import SearchPage from "./SearchPage";
+import SearchScreen from "./search"
+import GTouchable from "../GTouchable"
+import {seeActivityDetails, seeUser} from "../Nav"
+import SearchPage from "./SearchPage"
+import {GoodshContext, renderLineupFromOtherPeople} from "../UIComponents"
+import {Colors} from "../colors"
 
 type Props = NavigableProps & {
+    token ?: SearchToken
 };
 
 type State = {
@@ -47,8 +49,6 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
         topBarElevationShadowEnabled: false
     };
 
-
-    static navigatorStyle = SearchStyles;
 
     state: State = {connect: {}};
 
@@ -83,15 +83,22 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                 type: "savings",
                 index,
                 query,
-                tabName: "network_search_tabs.savings",
+                tabName: i18n.t("network_search_tabs.savings"),
                 placeholder: "search_bar.network_placeholder",
                 parseResponse: createResultFromHit,
-                renderResults: ({query, results}) => (
-                    <SearchPage
+                renderResults: ({query, results}) => {
+                    if (!results) {
+                        return <EmptySearch
+                            icon={renderBlankIcon('savings')}
+                            text={i18n.t("search_item_screen.placeholder.savings")}
+                        />
+                    }
+
+                    return <SearchPage
                         search={results}
                         renderItem={renderItem}
                     />
-                )
+                }
             },
             {
                 type: "users",
@@ -100,27 +107,40 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                     filters: `NOT objectID:${currentUserId()}`,
 
                 },
-                tabName: "network_search_tabs.users",
+                tabName: i18n.t("network_search_tabs.users"),
                 placeholder: "search_bar.network_placeholder",
                 parseResponse: createResultFromHit2,
-                renderResults: ({query, results}) => (
-                    <SearchPage
+                renderResults: ({query, results}) => {
+                    if (!results) {
+                        return <EmptySearch
+                            icon={renderBlankIcon('users')}
+                            text={i18n.t("search_item_screen.placeholder.users")}
+                        />
+                    }
+
+                    return <SearchPage
                         search={results}
                         renderItem={renderUser}
                     />
-                )
+                }
             },
 
         ];
 
         let search = makeAlgoliaSearchEngine(categories, navigator);
 
-        return <SearchScreen
-            searchEngine={search}
-            categories={categories}
-            navigator={navigator}
-            placeholder={i18n.t('search.in_network')}
-        />;
+        return (
+            <GoodshContext.Provider value={{userOwnResources: false}}>
+                <SearchScreen
+                    searchEngine={search}
+                    categories={categories}
+                    navigator={navigator}
+                    placeholder={i18n.t('search.in_network')}
+                    style={{backgroundColor: Colors.white}}
+                    token={this.props.token}
+                />
+            </GoodshContext.Provider>
+        )
     }
 
 
@@ -142,54 +162,7 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
 }
 
 
-//TODO: move
-export let renderLineupFromAlgolia = (navigator, item) => {
-    let user = item.user;
 
-
-    let userXml = (
-
-
-        <View style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            flex: 0,
-            // backgroundColor: 'yellow'
-        }}>
-            <Text style={{
-                fontSize: 12,
-                color: Colors.greyishBrown,
-                marginLeft: 8,
-                marginRight: 3,
-                flex: 0,
-
-            }}>{i18n.t('search.by')}</Text>
-            <UserRowI
-                user={user}
-                navigator={navigator}
-                noImage={true}
-                style={{flex: 0}} //TODO: rm when removed in UserRowI
-            />
-        </View>
-    );
-
-    const newVar = <GTouchable
-        onPress={() => seeList(navigator, item)}>
-
-        <LineupHorizontal
-            lineupId={item.id}
-            dataResolver={() => ({lineup: item, savings: item.savings})}
-            style={{paddingBottom: 10}}
-            renderTitle={(lineup: Lineup) => (
-                <View style={{flexDirection: 'row'}}>
-                    <LineupTitle lineup={lineup} style={{marginVertical: 6,}}/>
-                    {userXml}
-                </View>
-            )}
-        />
-    </GTouchable>;
-    return newVar;
-};
 let itemRenderer = navigator => {
     let renderItem = ({item}) => {
 
@@ -197,7 +170,7 @@ let itemRenderer = navigator => {
 
 
         if (isLineup) {
-            return renderLineupFromAlgolia(navigator, item)
+            return renderLineupFromOtherPeople(navigator, item)
         }
         else {
             let saving = item;

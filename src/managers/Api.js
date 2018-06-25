@@ -1,20 +1,20 @@
 // @flow
 
 import URL from "url-parse"
-import * as Util from "../helpers/ModelUtils";
-import normalize from 'json-api-normalizer';
+import * as Util from "../helpers/ModelUtils"
+import normalize from 'json-api-normalizer'
 //hack for tests. FIXME: remove circular dep
-import {logoutOffline} from "../auth/actions";
-import ApiAction from "../helpers/ApiAction";
-import fetch from 'react-native-fetch-polyfill';
-import type {Dispatchee, ms, RequestState} from "../types";
+import {logoutOffline} from "../auth/actions"
+import ApiAction from "../helpers/ApiAction"
+import fetch from 'react-native-fetch-polyfill'
+import type {Dispatchee, Id, ms, RequestState} from "../types"
 import Config from 'react-native-config'
-import {Statistics} from "./Statistics";
-import {REMOVE_PENDING_ACTION} from "../reducers/dataReducer";
-import {NetInfo} from "react-native";
-import {sendMessage} from "./Messenger";
-import {CONNECTIVITY_CHANGE} from "../reducers/app";
-import {sleeper} from "../helpers/TimeUtils";
+import {Statistics} from "./Statistics"
+import {REMOVE_PENDING_ACTION} from "../reducers/dataReducer"
+import {NetInfo} from "react-native"
+import {sendMessage} from "./Messenger"
+import {CONNECTIVITY_CHANGE} from "../reducers/app"
+import {sleeper} from "../helpers/TimeUtils"
 
 import analytics from './Analytics'
 
@@ -197,8 +197,8 @@ class Api {
 
         return new Promise((resolve, reject) => {
 
-            if (!this.isConnected()) {
-                reject(new Error("Error: not connected"));
+            if (Config.SKIP_API_CONNEXION_CHECK !== 'true' && !this.isConnected()) {
+                reject(new Error("not connected"));
             }
             else {
                 let options = Object.assign({
@@ -213,6 +213,7 @@ class Api {
                         reject(err);
                     })
                     .then(resp=> {
+                        console.log(resp)
                         setTimeout(()=> {
                             if (instance.auth() === auth) {
                                 resolve(resp);
@@ -252,9 +253,7 @@ export class Call {
 
     addQuery(query: any): Call {
         if (query) {
-            let currentQuery = this.url.query;
-            let q = currentQuery;//qs.parse(currentQuery);
-            let newQuery = Object.assign({}, q || {}, query);
+            let newQuery = Object.assign({}, this.url.query || {}, query);
             this.url.set('query', newQuery);
         }
         return this;
@@ -297,7 +296,10 @@ export class Call {
     // - load more timeout => display some in-screen message on screen (with retry)
     // - default: temp. snack (ouch! ...)
     // - item already in lineup: some alerts
-    createActionDispatchee(apiAction: ApiAction, options?: any = {}): Dispatchee {
+    createActionDispatchee(apiAction: ApiAction, options?: {
+        trigger?: any,
+        mergeOptions?: {drop?: boolean},
+    } = {}): Dispatchee {
         const call = this;
         const {trigger = TRIGGER_USER_DIRECT_ACTION} = options;
 
@@ -307,10 +309,15 @@ export class Call {
             return new Promise((resolve, reject) => {
                 call.run()
                     .then(resp => {
-                        const debugError = this.debugFail(apiAction);
-                        if (debugError) throw debugError;
-                        return resp;
-                    })
+                            const debugError = this.debugFail(apiAction);
+                            if (debugError) throw debugError;
+                            return resp;
+                        },
+                        err => {
+                            // console.warn("test::1")
+                            throw err
+                        }
+                    )
                     .then(
                         resp => {
                             let requestTime = Date.now() - tic;
@@ -325,10 +332,14 @@ export class Call {
                             return resp;
                         },
                         //useless
-                        err => {throw err}
+                        err => {
+                            // console.warn("test::2")
+                            throw err
+                        }
                     )
                     .then(sleeper(Math.max(__MIN_REQUEST_TIME__ - (Date.now() - tic), 0)))
                     // .then(sleeper(5000))
+
                     .then(resp => {
                             let response = resp.json;
 
@@ -343,13 +354,17 @@ export class Call {
                                 payload: response,
                                 original: resp.original,
                                 options
-                            });
-
+                            })
+                            return response
+                        }
+                    )
+                    .then(response => {
+                            // console.warn("test::6")
                             resolve(response);
                         },
                         //1., 2.
                         error => {
-
+                            // console.warn("test::3")
                             if (trigger <= 2) {
                                 sendMessage(
                                     __IS_LOCAL__ ?
@@ -363,7 +378,7 @@ export class Call {
                                 // dispatch(errorAction);
                                 //logout(dispatch);
                                 logoutOffline(dispatch);
-                                reject("user lost authentification");
+                                reject("user lost authentification: " + apiAction.name());
                                 return;
                             }
                             // dispatch(errorAction);
@@ -376,6 +391,10 @@ export class Call {
 
     run() {
         if (!this.method) throw new Error(`call need a method ${this.toString()}`);
+        if (__API_PAGINATION_PER_PAGE__) {
+            this.addQuery({per_page: __API_PAGINATION_PER_PAGE__})
+        }
+
         return instance.submit(this.url.toString(), this.method, this.body, this.delay)
             .catch(err => {throw err})
             .then(resp => {
@@ -404,8 +423,8 @@ export class Call {
         return conf && conf.getFail(action);
     }
 
-    debugFailObtained: boolean = false;
-    debugfailConfig: ?DebugFailConfig;
+    debugFailObtained: boolean = false
+    debugfailConfig: ?DebugFailConfig
 
     obtainDebugFailConfig(): ?DebugFailConfig {
         if (!this.debugFailObtained) {
@@ -525,7 +544,7 @@ export function safeExecBlock(block, stateName: string) {
 
     };
     // $FlowFixMe
-    if (this.state[stateName] !== 'sending') {
+    if (_.get(this.state, stateName) !== 'sending') {
 
         // $FlowFixMe
         return setRequestState('sending')()
@@ -582,3 +601,58 @@ export const reduceList = (state, action, desc, optionalExtractor?) => {
     }
     return state;
 };
+
+
+export const reduceList2 = (state: STATE<SHELL>, action: REDUX_ACTION<SHELL>, apiAction: ApiAction, optionalExtractor?: any => any) => {
+    switch (action.type) {
+        case apiAction.success():
+
+            let {mergeOptions = {}} = action.options
+            if (mergeOptions.drop) {
+                console.debug("droping data");
+                state = {...state, list: []}
+            }
+
+            let newList = action.payload.data.map(f => {
+                let {id, type} = f;
+                let options = optionalExtractor && optionalExtractor(f) || {};
+                return {id, type, ...options};
+            });
+
+            let merged;
+            try {
+                merged = new Util.Merge(state.list || [], newList)
+                    .withOptions(mergeOptions)
+                    .merge();
+            }
+            catch (e) {
+                console.error(e)
+                throw e
+            }
+
+            if (merged !== state.list) state = {...state, list: merged}
+
+            const hasNoMore = action.payload.data.length === 0;
+            if (hasNoMore !== state.hasNoMore) state = {...state, hasNoMore: hasNoMore}
+
+    }
+    return state;
+};
+
+
+
+export type STATE<T> = {
+    list?: Array<T>,
+    hasNoMore?: boolean
+}
+
+export type SHELL = {
+    id: Id, type: string
+}
+
+export type REDUX_ACTION<T> = {
+    type: string,
+    payload: {data: Array<T>},
+    options: any
+}
+

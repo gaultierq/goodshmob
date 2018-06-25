@@ -1,32 +1,37 @@
 // @flow
 
-import React from 'react';
-import {ActivityIndicator, FlatList, Platform, RefreshControl, TouchableOpacity, View, Text} from 'react-native';
-import {connect} from "react-redux";
+import React from 'react'
+import {ActivityIndicator, FlatList, Platform, RefreshControl, Text, TouchableOpacity, View} from 'react-native'
+import {connect} from "react-redux"
 import {currentUser, currentUserId, logged} from "../../managers/CurrentUser"
-import ActivityCell from "../activity/components/ActivityCell";
-import {activityFeedProps, floatingButtonScrollListener} from "../UIComponents"
+import ActivityCell from "../activity/components/ActivityCell"
+import {scheduleOpacityAnimation, TRANSPARENT_SPACER} from "../UIComponents"
 import Feed from "../components/feed"
-import type {List, NavigableProps} from "../../types";
-import ActionButton from 'react-native-action-button';
-import ItemCell from "../components/ItemCell";
-import LineupCell from "../components/LineupCell";
-import {FETCH_ACTIVITIES, fetchMyNetwork} from "../networkActions";
-import * as Nav from "../Nav";
-import Screen from "../components/Screen";
-import {FEED_INITIAL_LOADER_DURATION, STYLES} from "../UIStyles";
-import {Colors} from "../colors";
-import GTouchable from "../GTouchable";
-import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
-import {CREATE_ASK} from "./ask";
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import ShareButton from "../components/ShareButton";
+import type {Activity, Id, NavigableProps} from "../../types"
+import {FETCH_ACTIVITIES, fetchMyNetwork} from "../networkActions"
+import * as Nav from "../Nav"
+import {CANCELABLE_MODAL2, seeActivityDetails} from "../Nav"
+import Screen from "../components/Screen"
+import {LINEUP_PADDING, renderSimpleButton, STYLES} from "../UIStyles"
+import {Colors} from "../colors"
+import ShareButton from "../components/ShareButton"
+import {Call, safeDispatchAction} from "../../managers/Api"
+import {buildData} from "../../helpers/DataUtils"
+import ActivityStatus from "../activity/components/ActivityStatus"
+import {SFP_TEXT_MEDIUM} from "../fonts"
+import AskInput from "../components/AskInput"
+import GTouchable from "../GTouchable"
 
 type Props = NavigableProps;
 
 type State = {
-    isActionButtonVisible: boolean
 };
+
+type NetworkSection = {
+    id: Id,
+    activityCount: number,
+    data: Array<any>
+}
 
 @logged
 @connect((state, ownProps) => ({
@@ -36,7 +41,6 @@ type State = {
     activity: state.activity
 }))
 class NetworkScreen extends Screen<Props, State> {
-
 
     static navigatorButtons = {
         rightButtons: [
@@ -60,10 +64,13 @@ class NetworkScreen extends Screen<Props, State> {
     };
 
     state = {
-        isActionButtonVisible: true
     };
 
-    constructor(props){
+    feed: any
+
+    lastRenderedLength: ?number
+
+    constructor(props: Props){
         super(props);
         props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
@@ -81,6 +88,14 @@ class NetworkScreen extends Screen<Props, State> {
         console.debug("network:onNavigatorEvent" , event);
         let navigator = this.props.navigator;
 
+        if (__IS_IOS__ && event.id === 'bottomTabReselected' && this.feed) {
+            //__IS_IOS__ because of: scrollToIndex should be used in conjunction with getItemLayout or onScrollToIndexFailed
+            // this.feed.scrollToOffset({x: 0, y: 0, animated: true});
+            if (this.lastRenderedLength && this.lastRenderedLength > 0) {
+                this.feed.scrollToLocation({sectionIndex: 0, itemIndex: 0, viewOffset: 50})
+            }
+
+        }
 
         if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
             if (event.id === 'community') { // this is the same id field from the static navigatorButtons definition
@@ -100,11 +115,91 @@ class NetworkScreen extends Screen<Props, State> {
         }
     }
 
+    render() {
+
+        const {network, data, navigator, ...attr} = this.props
+
+        let userId = currentUserId();
+
+        let network1 = network[userId] || {list: []}
+        let sections = network1.list
+            .map(group => buildData(data, 'activityGroups', group.id))
+            .map(built => (built && {
+                id: built.id,
+                activityCount: built.activityCount,
+                data: built.activities
+            }))
+            .filter(v => !!v)
+
+
+        let scrollUpOnBack = super.isVisible() ? ()=> {
+            navigator.switchToTab({
+                tabIndex: 0
+            });
+            return true;
+        } : null;
+
+        this.lastRenderedLength = sections.length
+
+        let fc = _.get(currentUser(), 'meta.friendsCount')
+
+        return (
+            <View style={{flex:1}}>
+                <Feed
+                    displayName={"Network"}
+                    sections={sections}
+                    renderItem={({item, index}) => this.renderItem(item, index)}
+                    renderSectionFooter={({section}) => this.renderSectionFooter(section)}
+                    ListHeaderComponent={fc !== 0 && this.renderAskInput()}
+                    listRef={ref => this.feed = ref}
+                    fetchSrc={{
+                        callFactory: fetchMyNetwork,
+                        // useLinks: true,
+                        action: FETCH_ACTIVITIES,
+                        options: {userId}
+                    }}
+                    hasMore={!network1.hasNoMore}
+                    scrollUpOnBack={scrollUpOnBack}
+                    ListEmptyComponent={<View><Text style={STYLES.empty_message}>{i18n.t('community_screen.empty_screen')}</Text><ShareButton text={i18n.t('actions.invite')}/></View>}
+                    initialNumToRender={5}
+                    decorateLoadMoreCall={(sections: any[], call: Call) => call.addQuery({id_lt: _.last(sections).id})}
+                    visibility={super.getVisibility()}
+                    SectionSeparatorComponent={({leadingItem, trailingItem, leadingSection, section, trailingSection}) => {
+                        // return <View style={{height: 10, backgroundColor: 'blue'}}/>
+                        if (!leadingItem && trailingItem === _.get(section, 'data[0]')) {
+                            return TRANSPARENT_SPACER(20)()
+                        }
+                        return null
+                    }}
+                    style={{backgroundColor: Colors.greying}}
+
+                    ItemSeparatorComponent={({leadingItem, trailingItem, section}) => {
+                        if (leadingItem === section.data[0]) {
+                            return (
+                                <Text style={{
+                                    fontSize: 17,
+                                    margin: 15,
+                                    fontFamily: SFP_TEXT_MEDIUM
+                                }}>{i18n.t('detail_screen.related_activities_title')}</Text>
+                            )
+                        }
+                        return null
+
+                    }}
+                    {...attr}
+                    contentOffset={{x: 0, y: 100}}
+                />
+
+            </View>
+        );
+    }
+
+    renderAskInput() {
+        return <GTouchable onPress={() => this.showAsk()}><AskInput editable={false} pointerEvents='none'/></GTouchable>
+    }
 
     showAsk() {
         let {navigator} = this.props;
-
-//TODO: rm platform specific rules when [1] is solved.
         //1: https://github.com/wix/react-native-navigation/issues/1502
         navigator.showModal({
             screen: 'goodsh.AskScreen', // unique ID registered with Navigation.registerScreen
@@ -112,98 +207,33 @@ class NetworkScreen extends Screen<Props, State> {
         });
     }
 
-    //hack to skip the first render
-    hasBeenRenderedOnce = false;
-
-    render() {
-        if (__ENABLE_PERF_OPTIM__) {
-            if (!this.hasBeenRenderedOnce && !this.isVisible()) return null;
-            this.hasBeenRenderedOnce = true;
-        }
-
-
-        let userId = currentUserId();
-
-        let network = this.props.network[userId] || {};
-        let activities = _.slice(network.list);
-
-        //take all my asks
-        //oder by date
-
-        let myAsks = _.transform(
-            this.props.data.asks,
-            (asks, value) => {
-                if (value.relationships.user.data.id === userId) {
-                    asks.push(value);
-                }
-            }, []);
-
-        myAsks = _.orderBy(myAsks, 'attributes.createdAt', 'asc');
-
-        let firstActivityOfFeed = Date.parse(_.get(activities, '0.createdAt'));
-
-        for (let i = 0; i < myAsks.length; i++) {
-            let a = myAsks[i];
-            if (Date.parse(a.attributes.createdAt) < firstActivityOfFeed) break;
-            activities.unshift({id: a.id, type: 'asks'});
-        }
-
-        //FIXME: remove dep to ask
-        activities = mergeItemsAndPendings(
-            activities,
-            this.props.pending[CREATE_ASK],
-            [],
-            (pending) => ({
-                id: pending.id,
-                content: pending.payload.content,
-                createdAt: pending.insertedAt,
-                user: currentUser(),
-                type: 'asks',
-                pending: true
-            })
-        );
-
-
-
-        let scrollUpOnBack = super.isVisible() ? ()=> {
-            this.props.navigator.switchToTab({
-                tabIndex: 0
-            });
-            return true;
-        } : null;
-
+    renderSectionFooter(section: NetworkSection) {
+        const count = section.activityCount - section.data.length
+        if (!count) return null
+        const loading = this.state['reqFetchMore' + section.id] === 'sending'
         return (
-            <View style={{flex:1}}>
-                <Feed
-                    displayName={"network feed"}
-                    data={activities}
-                    renderItem={this.renderItem.bind(this)}
-                    fetchSrc={{
-                        callFactory: fetchMyNetwork,
-                        useLinks: true,
-                        action: FETCH_ACTIVITIES,
-                        options: {userId}
-                    }}
-                    hasMore={!network.hasNoMore}
-                    scrollUpOnBack={scrollUpOnBack}
-                    cannotFetch={!super.isVisible()}
-                    visibility={super.getVisibility()}
-                    empty={<View><Text style={STYLES.empty_message}>{i18n.t('community_screen.empty_screen')}</Text><ShareButton text={i18n.t('actions.invite')}/></View>}
-                    {...activityFeedProps()}
-                    // initialLoaderDelay={FEED_INITIAL_LOADER_DURATION}
-                    initialNumToRender={3}
-                    onScroll={floatingButtonScrollListener.call(this)}
-                />
+            <View style={{flexDirection: 'row', alignItems: 'center',
+                backgroundColor: Colors.white,
+                paddingHorizontal: LINEUP_PADDING,
+                paddingVertical: 4,
+            }}>
+                {!loading && <Text>{i18n.t('there_are_activities', {count})}</Text>}
 
-
-                {this.state.isActionButtonVisible && <ActionButton
-                    icon={<Icon name="comment-question-outline" size={30} color={Colors.white} style={{paddingTop: 5}}/>}
-                    buttonColor={Colors.green}
-                    onPress={() => { this.onFloatingButtonPressed() }}
-                />}
-
+                {renderSimpleButton(
+                    ' ' + i18n.t('more_activities', {count}),
+                    ()=> safeDispatchAction.call(
+                        this,
+                        this.props.dispatch,
+                        fetchMyNetwork({limit: 1, activity_by_group: section.activityCount, id_lte: section.id}).createActionDispatchee(FETCH_ACTIVITIES, {userId: currentUserId()}),
+                        'reqFetchMore' + section.id
+                    ).then(() => scheduleOpacityAnimation()),
+                    {loading: loading,
+                        textStyle: {fontSize: 14,},
+                        style: {margin: 0, height: 30}}
+                )}
             </View>
-        );
+
+        )
     }
 
     navToActivity(activity) {
@@ -213,103 +243,46 @@ class NetworkScreen extends Screen<Props, State> {
         });
     }
 
-    onFloatingButtonPressed() {
-        this.showAsk();
-    }
-
     showSearch() {
         let navigator = this.props.navigator;
 
-
-        const queries = [
-            {
-                indexName: 'Saving_staging',
-                params: {
-                    facets: "[\"list_name\"]",
-                    filters: 'user_id:' + currentUserId(),
-                }
-            }
-        ];
-
-        let renderItem = ({item})=> {
-
-            let isLineup = item.type === 'lists';
-
-            //FIXME: item can be from search, and not yet in redux store
-            //item = buildData(this.props.data, item.type, item.id) || item;
-
-            //if (!item) return null;
-
-            if (isLineup) {
-                let lineup: List = item;
-                //let handler = this.props.onLineupPressed ? () => this.props.onLineupPressed(item) : null;
-                return (
-                    <GTouchable
-                        //onPress={handler}
-                    >
-                        <View>
-                            <LineupCell
-                                lineup={lineup}
-                                //onAddInLineupPressed={this.props.onAddInLineupPressed}
-                            />
-                        </View>
-                    </GTouchable>
-                )
-            }
-            else {
-                let saving = item;
-
-                let resource = saving.resource;
-
-                //TODO: this is hack
-                if (!resource) return null;
-
-                return (
-                    <ItemCell
-                        item={resource}
-                    />
-                )
-            }
-        };
-
         navigator.showModal({
             screen: 'goodsh.NetworkSearchScreen',
-            animationType: 'none',
-
             passProps:{
-                onClickClose: () => navigator.dismissModal({animationType: 'none'}),
+                onClickClose: () => navigator.dismissModal(),
             },
-            backButtonHidden: true,
-            navigatorButtons: {
-                leftButtons: [],
-                rightButtons: [
-                    {
-                        id: Nav.CLOSE_MODAL,
-                        title: i18n.t("actions.cancel")
-                    }
-                ],
-            },
+            navigatorButtons: CANCELABLE_MODAL2,
         });
     }
 
-    static checkEmpty(activities) {
-        let empty = activities.filter((elem, index, self) => {
-            return typeof elem === 'undefined';
-        });
-        if (empty.length > 0) throw new Error(`empty activities found`);
-    }
-
-    renderItem({item}) {
-
-        return (
-            <ActivityCell
-                onPressItem={() => this.navToActivity(item)}
-                activity={item.pending ? item : null}
-                activityId={item.id}
-                activityType={item.type}
-                navigator={this.props.navigator}
-            />
-        )
+    renderItem(activity: Activity, index: number) {
+        if (index === 0) {
+            return (
+                <ActivityCell
+                    onPressItem={() => this.navToActivity(activity)}
+                    activity={activity.pending ? activity : null}
+                    activityId={activity.id}
+                    activityType={activity.type}
+                    navigator={this.props.navigator}
+                />
+            )
+        }
+        else {
+            return (
+                <GTouchable onPress={() => {
+                    seeActivityDetails(this.props.navigator, activity)
+                }}>
+                    <ActivityStatus
+                        activity={activity}
+                        descriptionNumberOfLines={3}
+                        navigator={this.props.navigator}
+                        cardStyle={{
+                            paddingHorizontal: LINEUP_PADDING,
+                            paddingVertical: 10,}}
+                    />
+                </GTouchable>
+            )
+        }
     }
 }
 

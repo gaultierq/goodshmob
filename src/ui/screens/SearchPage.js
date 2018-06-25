@@ -1,7 +1,7 @@
 // @flow
 
-import type {Node} from 'react';
-import React, {Component} from 'react';
+import type {Node} from 'react'
+import React, {Component} from 'react'
 import {
     ActivityIndicator,
     FlatList,
@@ -12,15 +12,11 @@ import {
     Text,
     TouchableOpacity,
     View
-} from 'react-native';
-import {TabBar, TabViewAnimated, TabViewPagerPan} from 'react-native-tab-view';
-
-import {SearchBar} from 'react-native-elements'
-
-import type {Item, List} from "../../types";
-import {Navigation} from 'react-native-navigation';
-import {FullScreenLoader} from "../UIComponents";
-import type {SearchState} from "./search";
+} from 'react-native'
+import type {Item, List} from "../../types"
+import {Navigation} from 'react-native-navigation'
+import {FullScreenLoader} from "../UIComponents"
+import type {SearchState} from "../../helpers/SearchHelper"
 
 
 type PageProps = {

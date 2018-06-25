@@ -1,37 +1,42 @@
 // @flow
 
-import * as Api from "../managers/Api";
+import * as Api from "../managers/Api"
 import * as actionTypes from "./actionTypes"
 import {SET_USER_NULL} from "./actionTypes"
-import {LoginManager as FacebookLoginManager} from "react-native-fbsdk";
-import type {Device} from "../types";
-import {ImageCache} from "react-native-img-cache";
-
+import {LoginManager as FacebookLoginManager} from "react-native-fbsdk"
+import type {Device} from "../types"
+import {ImageCacheManager} from 'react-native-cached-image'
 
 export function logoutOffline(dispatch) {
-    FacebookLoginManager.logOut();
-    ImageCache.get().clear();
-    dispatch({type: SET_USER_NULL});
-
+    try {
+        const imageCacheManager = ImageCacheManager()
+        imageCacheManager.clearCache().catch(e => console.error("send notification to bugsnag", e))
+    }
+    finally {
+        FacebookLoginManager.logOut()
+        dispatch({type: SET_USER_NULL})
+    }
 }
 
 //if user lost auth, then offline logout
 export function logout(dispatch) {
+    logoutOffline(dispatch);
+
     return dispatch(
         new Api.Call()
             .withMethod('POST')
             .withRoute(`logout`)
             .createActionDispatchee(actionTypes.USER_LOGOUT)
     ).then(()=> {
-        logoutOffline(dispatch);
+
     }, err => {console.error(err)});
 }
 
-export function login(facebookAccessToken: string) {
+export function loginWith(service: 'facebook'|'account_kit', token: string) {
     return new Api.Call()
         .withMethod('POST')
-        .withRoute(`auth/facebook/generate_token`)
-        .withBody({auth: {access_token: facebookAccessToken}})
+        .withRoute(`auth/${service}/generate_token`)
+        .withBody({auth: {access_token: token}})
         .createActionDispatchee(actionTypes.USER_LOGIN);
 }
 

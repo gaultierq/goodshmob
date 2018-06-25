@@ -1,83 +1,166 @@
 // @flow
 
-import React from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import {connect} from "react-redux";
-import {currentUserId, logged} from "../../managers/CurrentUser"
-import {activityFeedProps} from "../UIComponents";
-import Immutable from 'seamless-immutable';
-import * as Api from "../../managers/Api";
-import Feed from "../components/feed";
-import type {List, Saving} from "../../types";
-import {buildData, doDataMergeInState} from "../../helpers/DataUtils";
-import ActivityCell from "../activity/components/ActivityCell";
-import ActionButton from 'react-native-action-button';
-import {startAddItem} from "../Nav";
-import {Colors} from "../colors";
-import Screen from "./../components/Screen";
-import {STYLES} from "../UIStyles";
-import {fullName} from "../../helpers/StringUtils";
-import {FETCH_LINEUP, FETCH_SAVINGS} from "../lineup/actions";
-import {UNSAVE} from "../activity/actionTypes";
-import * as UI from "../UIStyles";
+import React from 'react'
+import {Keyboard, ScrollView, StyleSheet, Text, View} from 'react-native'
+import {connect} from "react-redux"
+import {logged} from "../../managers/CurrentUser"
+import {activityFeedProps, FOLLOW_RIGHT_BUTTON, getAddButton, UNFOLLOW_RIGHT_BUTTON} from "../UIComponents"
+import Immutable from 'seamless-immutable'
+import * as Api from "../../managers/Api"
+import Feed from "../components/feed"
+import type {Id, Lineup, RNNNavigator, Saving} from "../../types"
+import {doDataMergeInState} from "../../helpers/DataUtils"
+import ActivityCell from "../activity/components/ActivityCell"
+import {seeActivityDetails, startAddItem} from "../Nav"
+import {Colors} from "../colors"
+import Screen from "./../components/Screen"
+import * as UI from "../UIStyles"
+import {STYLES} from "../UIStyles"
+import {fullName} from "../../helpers/StringUtils"
+import {
+    FETCH_LINEUP,
+    FETCH_SAVINGS,
+    fetchLineup,
+    followLineupPending,
+    unfollowLineupPending,
+    unfollowLineupPending2
+} from "../lineup/actions"
+import {UNSAVE} from "../activity/actionTypes"
+import * as authActions from "../../auth/actions"
+import {GLineupAction, L_ADD_ITEM, L_FOLLOW, L_UNFOLLOW, LineupRights} from "../lineupRights"
+import {LINEUP_AND_SAVING_SELECTOR} from "../../helpers/ModelUtils"
+import {createSelector} from "reselect"
+
 
 type Props = {
     lineupId: string,
-    navigator: any
+    navigator: any,
+    lineup: ?Lineup,
+    saving: ?Saving[],
 };
 
 type State = {
-    title: null|{title: string, titleImage: string},
-    titleSet: boolean
+    title?: {title: string, titleImage: string},
+    titleSet?: boolean,
 };
 
+export const selector = createSelector(
+    [
+        LINEUP_AND_SAVING_SELECTOR,
+        state => state.pending
+    ],
+    ({lineup, savings}, pending) => {
 
+        let actions = LineupRights.getActions(lineup, pending)
+        let action = null
+        if (actions.indexOf(L_ADD_ITEM) >= 0) action = L_ADD_ITEM
+        if (actions.indexOf(L_FOLLOW) >= 0) action = L_FOLLOW
+        if (actions.indexOf(L_UNFOLLOW) >= 0) action = L_UNFOLLOW
 
-
+        return {lineup, savings, action}
+    }
+)
 
 @logged
-@connect((state, ownProps) => ({
-    data: state.data,
-}))
+@connect(selector)
 class LineupScreen extends Screen<Props, State> {
 
     static navigatorStyle = {
         // those props only affect Android
         navBarTitleTextCentered: true,
         navBarSubTitleTextCentered: true,
-    };
+    }
 
-    render() {
-        const lineup = this.getLineup();
+    unsubscribe: ?() => void
 
-        // this.setNavigatorTitle(this.props.navigator, {title: _.get(lineup, 'name'), subtitle: subtitle()});
+    state = {
+        navBarState: {}
+    }
+
+    componentWillMount() {
+        this.unsubscribe = this.props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+    }
+
+    componentWillUnmount() {
+        if (this.unsubscribe) this.unsubscribe()
+    }
+
+    componentDidAppear() {
+        LineupScreen.refreshNavBar(this.props.navigator, this.props.lineupId)
+    }
+
+    refreshNavigatorButtons() {
+        console.debug('refreshNavigatorButtons')
+        this.props.navigator.setButtons(this.getMainActionButton2(this.props.action, this.props.lineupId))
+
+    }
+
+    static refreshNavBar(navigator: RNNNavigator, lineupId: ?Id, lineup: ?Lineup) {
         //FIXME: rm platform specific code, https://github.com/wix/react-native-navigation/issues/1871
-        if (this.isVisible() && lineup) {
-            if (__IS_IOS__) {
-                this.props.navigator.setStyle({
-                    ...UI.NavStyles,
-                    navBarCustomView: 'goodsh.LineupNav',
-                    navBarCustomViewInitialProps: {
-                        user: lineup.user,
-                        lineupName: _.get(lineup, 'name'),
-                        lineupCount: _.get(lineup, `meta.savingsCount`, null)
-                    }
-                });
-            }
-            else {
-                let subtitle = () => {
-                    const user = _.get(lineup, 'user');
-                    //FIXME: MagicString
-                    return user && "par " + fullName(user)
-                };
-                this.setNavigatorTitle(this.props.navigator, {title: _.get(lineup, 'name'), subtitle: subtitle()});
-            }
+        // console.debug('refreshing navbar', navBarState)
+        if (__IS_IOS__ && lineupId) {
+            // if (!navBarState.lineupName) return
+            navigator.setStyle({
+                ...UI.NavStyles,
+                navBarCustomView: 'goodsh.LineupNav',
+                navBarCustomViewInitialProps: {
+                    lineupId
+                }
+            });
+        }
+        else if (__IS_ANDROID__ && lineup) {
+            const user = lineup.user
+            let subtitle = () => {
+                //FIXME: MagicString
+                return user && "par " + fullName(user)
+            };
+            navigator.setTitle({title: lineup.name});
+            navigator.setSubTitle({subtitle: subtitle()});
         }
 
+    }
 
-        let savings, fetchSrc;
+    //TODO: improve code
+    getMainActionButton2(action: GLineupAction, lineupId: Id): any {
+
+        if (action) {
+            if (action === L_ADD_ITEM) return getAddButton(lineupId)
+            if (action === L_FOLLOW) return {rightButtons: [FOLLOW_RIGHT_BUTTON(lineupId)],}
+            if (action === L_UNFOLLOW) return {rightButtons: [UNFOLLOW_RIGHT_BUTTON(lineupId)],}
+        }
+        return {rightButtons: [], fab: {}}
+    }
+
+    // FIXME: terrible hack: watch store, refresh accordingly
+    onNavigatorEvent(event) {
+        let lineup = this.props.lineup
+        if (!lineup) {
+            console.warn("lineup not found")
+            return
+        }
+        if (event.id === 'add') {
+            startAddItem(this.props.navigator, lineup.id)
+        }
+        else if (event.id === 'follow_' + lineup.id) {
+            followLineupPending(this.props.dispatch, lineup)
+        }
+        else if (event.id === 'unfollow_' + lineup.id) {
+            unfollowLineupPending(this.props.dispatch, lineup)
+        }
+    }
+
+    // static getDerivedStateFromProps(props: Props, state: State) {
+    // }
+
+
+    render() {
+        const {lineup, savings} = this.props
+
+        LineupScreen.refreshNavBar(this.props.navigator, null, lineup)
+        this.refreshNavigatorButtons()
+
+        let fetchSrc;
         if (lineup && lineup.savings) {
-            savings = lineup.savings;
             fetchSrc = {
                 callFactory:()=>actions.fetchSavings(this.props.lineupId),
                 action:FETCH_SAVINGS,
@@ -85,9 +168,8 @@ class LineupScreen extends Screen<Props, State> {
             };
         }
         else {
-            savings = [];
             fetchSrc = {
-                callFactory:()=>actions.fetchLineup(this.props.lineupId),
+                callFactory:() => fetchLineup(this.props.lineupId),
                 action: FETCH_LINEUP,
                 options: {listId: this.props.lineupId}
             };
@@ -101,35 +183,21 @@ class LineupScreen extends Screen<Props, State> {
                     renderItem={item => this.renderItem(item, lineup)}
                     fetchSrc={fetchSrc}
                     hasMore={true}
-                    empty={<Text style={STYLES.empty_message}>{i18n.t("empty.lineup")}</Text>}
+                    ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t("empty.lineup")}</Text>}
                     {...activityFeedProps()}
                 />
-                {
-                    this.displayFloatingButton() &&
-                    <ActionButton
-                        buttonColor={Colors.green}
-                        onPress={() => { this.onFloatingButtonPressed() }}
-                    />
-                }
-
             </View>
         );
     }
 
-
-    displayFloatingButton() {
-        let lineup = this.getLineup();
-
-        return lineup && lineup.user && lineup.user.id === currentUserId();
-    }
-
-    onFloatingButtonPressed() {
-        startAddItem(this.props.navigator, this.props.lineupId);
-    }
-
-
-    getLineup() : List {
-        return buildData(this.props.data, "lists", this.props.lineupId);
+    follow() {
+        Api.safeExecBlock.call(
+            this,
+            () => {
+                return authActions.logout(this.props.dispatch)
+            },
+            'reqLogout'
+        );
     }
 
     renderItem(item, lineup) {
@@ -139,34 +207,14 @@ class LineupScreen extends Screen<Props, State> {
 
         return (
             <ActivityCell
-                activityId={saving.id}
+                activity={saving}
                 activityType={saving.type}
                 // skipLineup={true}
                 // skipDescription={true}
-                onPressItem={() => this.navToSavingDetail(saving)}
+                onPressItem={() => seeActivityDetails(this.props.navigator, saving)}
                 navigator={this.props.navigator}
             />
         )
-    }
-
-    deleteSaving(saving) {
-        this.props.dispatch(actions.deleteSaving(saving));
-    }
-
-    navToSavingDetail(saving) {
-        let activity = saving;
-
-
-        this.props.navigator.push({
-            screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
-            passProps: {activityId: activity.id, activityType: activity.type}, // Object that will be passed as props to the pushed screen (optional)
-            animated: true, // does the push have transition animation or does it happen immediately (optional)
-            animationType: 'slide-up', // 'fade' (for both) / 'slide-horizontal' (for android) does the push have different transition animation (optional)
-            backButtonTitle: undefined, // override the back button title (optional)
-            backButtonHidden: false, // hide the back button altogether (optional)
-            navigatorStyle: {}, // override the navigator style for the pushed screen (optional)
-            navigatorButtons: {} // override the nav buttons for the pushed screen (optional)
-        });
     }
 }
 
@@ -174,19 +222,11 @@ class LineupScreen extends Screen<Props, State> {
 
 const actions = {
 
-    fetchLineup: (lineupId: string) => {
-        return new Api.Call().withMethod('GET')
-            .withRoute(`lists/${lineupId}`)
-            .addQuery({
-                include: "savings,savings.user"
-            });
-    },
     fetchSavings: (lineupId: string) => {
         return new Api.Call().withMethod('GET')
             .withRoute(`lists/${lineupId}/savings`)
             .addQuery({
                 page: 1,
-                per_page: 10,
                 include: "*.*"
             });
     },

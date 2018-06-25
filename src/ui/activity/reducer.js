@@ -1,9 +1,9 @@
 // @flow
 
-import Immutable from 'seamless-immutable';
-import * as types from './actionTypes';
-import {sanitizeActivityType, updateSplice0} from "../../helpers/DataUtils";
-import update from "immutability-helper";
+import Immutable from 'seamless-immutable'
+import * as types from './actionTypes'
+import {sanitizeActivityType, updateSplice0} from "../../helpers/DataUtils"
+import update from "immutability-helper"
 
 
 export default function reduce(state:any = {}, action: any) {

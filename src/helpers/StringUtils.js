@@ -7,6 +7,17 @@ export function toLowercase(type) {
     return type.substr(0, 1).toLowerCase() + type.substr(1, type.length - 1);
 }
 
+//hash(null) = 0
+export function hashCode(str) { // java String#hashCode
+    let hash = 0;
+    if (str) {
+        for (let i = 0; i < str.length; i++) {
+            hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        }
+    }
+    return Math.abs(hash);
+}
+
 // Decorator function for logging
 export function logger(target, name, descriptor) {
 
@@ -29,12 +40,24 @@ export function logger(target, name, descriptor) {
 }
 
 
-export function fullName(user: User) {
-    return user ? `${user.firstName} ${user.lastName}` : "";
+export const fullName2 = ({firstName, lastName} = {}) => _.isEmpty(firstName) || _.isEmpty(lastName) ? "" : firstName + " " + lastName;
+
+export function fullName(user: User): string {
+    let {firstName, lastName} = user || {}
+    return fullName2({firstName, lastName});
+}
+
+export function savingCount(lineup: Lineup) {
+    return _.get(lineup, 'meta.savingsCount', 0)
 }
 
 export function userFirstName(user: User) {
     return user ? `${user.firstName}` : "";
+}
+
+export function firstLetter(string: string): string {
+    if (string && string.length > 0) return string.charAt(0)
+    return ''
 }
 
 

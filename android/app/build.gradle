@@ -297,6 +297,8 @@ repositories {
 
 
 dependencies {
+    compile project(':react-native-progresshub')
+    compile project(':react-native-facebook-account-kit')
     compile project(':react-native-device-info')
     implementation project(':react-native-app-settings')
     implementation project(':react-native-spinkit')

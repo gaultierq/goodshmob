@@ -1,23 +1,22 @@
 // @flow
-import React from 'react';
-import {StyleSheet, Text, TextInput, View} from 'react-native';
-import {CheckBox, SearchBar} from "react-native-elements";
-import type {Props as LineupProps} from "./lineuplist";
-import {LineupListScreen} from './lineuplist';
-import AddLineupComponent from "../components/addlineup";
-import {Colors} from "../colors";
-import {currentUserId, logged} from "../../managers/CurrentUser";
-import Screen from "../components/Screen";
-import LineupHorizontal from "../components/LineupHorizontal";
-import type {Id, Lineup, RequestState, Saving} from "../../types";
-import {connect} from "react-redux";
-import * as Api from "../../managers/Api";
-import {buildData} from "../../helpers/DataUtils";
-import Spinner from 'react-native-spinkit';
-import {MOVE_SAVING} from "../activity/actionTypes";
-import LineupCellSaving from "../components/LineupCellSaving";
-import GTouchable from "../GTouchable";
-import {FullScreenLoader} from "../UIComponents";
+import React from 'react'
+import {StyleSheet, Text, TextInput, View} from 'react-native'
+import {CheckBox, SearchBar} from "react-native-elements"
+import type {Props as LineupProps} from "./lineuplist"
+import {LineupListScreen} from './lineuplist'
+import AddLineupComponent from "../components/addlineup"
+import {Colors} from "../colors"
+import {currentUserId, logged} from "../../managers/CurrentUser"
+import Screen from "../components/Screen"
+import LineupHorizontal, {default_renderTitle} from "../components/LineupHorizontal"
+import type {Id, Lineup, RequestState, Saving} from "../../types"
+import {connect} from "react-redux"
+import * as Api from "../../managers/Api"
+import {buildData} from "../../helpers/DataUtils"
+import {MOVE_SAVING} from "../activity/actionTypes"
+import LineupCellSaving from "../components/LineupCellSaving"
+import GTouchable from "../GTouchable"
+import {FullScreenLoader} from "../UIComponents"
 
 type Props = LineupProps & {
     // onListSelected: ()=>void
@@ -25,8 +24,8 @@ type Props = LineupProps & {
 };
 
 type State = {
-    reqFetch?: ?RequestState,
-    reqMove?: ?RequestState,
+    reqFetch?:RequestState,
+    reqMove?:RequestState,
     // filter:? string,  //filter lists over this search token
 };
 
@@ -51,13 +50,13 @@ export default class MoveInScreen extends Screen<Props, State> {
             <View style={{flex:1}}>
 
                 <LineupListScreen
-                    ListHeaderComponent={(<AddLineupComponent
+                    ListHeaderComponent={(
+                        <AddLineupComponent
                             disableOffline={true}
                             navigator={this.props.navigator}
                             style={{backgroundColor: Colors.green, padding: 10, marginTop: 15, marginRight: 15, marginLeft: 8, borderRadius:8}}
                             styleText={{color: Colors.white, fontWeight: 'normal'}}/>
                     )}
-
                     {...otherProps}
                     userId={currentUserId()}
                     renderItem={(lineup: Lineup) => (
@@ -67,6 +66,7 @@ export default class MoveInScreen extends Screen<Props, State> {
                         >
                             <LineupHorizontal
                                 lineupId={lineup.id}
+                                renderTitle={default_renderTitle}
                                 renderSaving={(saving: Saving) => {
                                     return <LineupCellSaving item={saving.resource} style={{
                                         borderWidth: saving.id === this.props.savingId ? 1 : 0,
@@ -79,6 +79,7 @@ export default class MoveInScreen extends Screen<Props, State> {
 
                                     }}/>
                                 }
+
                                 }
                             />
                         </GTouchable>

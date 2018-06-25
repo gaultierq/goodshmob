@@ -1,22 +1,18 @@
 //@flow
 
 
-export function superLog(msg: string) {
-
-    console.debug('%c ' + msg, 'background: #222; color: #bada55');
-
-    // superConsole = {...console};
-}
 
 export function createConsole(displayName: string) {
 
     return {
         log: (message: string, ...others) => console.log(`[${displayName}]: ${message}`, ...others),
         debug: (message: string, ...others) => console.debug(`[${displayName}]: ${message}`, ...others),
-        info: (message: string) => console.info(`[${displayName}]: ${message}`),
-        warn: (message: string) => console.warn(`[${displayName}]: ${message}`),
+        info: (message: string, ...others) => console.info(`[${displayName}]: ${message}`, ...others),
+        warn: (message: string, ...others) => console.warn(`[${displayName}]: ${message}`, ...others),
     }
 }
+
+
 
 
 export function hexToRgb(hex) {
@@ -27,3 +23,12 @@ export function hexToRgb(hex) {
         b: parseInt(result[3], 16)
     } : null;
 }
+
+export function hexToRgbaWithHalpha(hex:string, alpha: number) {
+    const rgb = hexToRgb(hex)
+    if (!rgb) return null
+    let {r, g, b} = rgb
+    return `rgba(${r},${g},${b},${alpha})`
+
+}
+

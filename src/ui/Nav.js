@@ -1,24 +1,25 @@
 // @flow
 
-import type {Activity, ActivityType, Id, Item, Lineup, RNNNavigator, User} from "../types";
-import {fullName} from "../helpers/StringUtils";
-import StoreManager from "../managers/StoreManager";
-import i18n from '../i18n/i18n';
-import BottomSheet from 'react-native-bottomsheet';
-import {unsaveOnce} from "./activity/components/ActivityActionBar";
-import {sanitizeActivityType} from "../helpers/DataUtils";
-import {View} from "react-native";
-import type {Description, Visibility} from "./screens/save";
-import * as Api from "../managers/Api";
-import ApiAction from "../helpers/ApiAction";
-import Config from "react-native-config";
-import ItemCell from "./components/ItemCell";
-import React from "react";
-import {LineupH1} from "./components/LineupHorizontal";
-import LineupHorizontal from "./components/LineupHorizontal";
-import LineupCellSaving from "./components/LineupCellSaving";
-import LineupTitle from "./components/LineupTitle";
-import {Colors} from "./colors";
+
+import type {Activity, ActivityType, Id, Item, Lineup, RNNNavigator, SearchToken, User} from "../types"
+import {fullName} from "../helpers/StringUtils"
+import StoreManager from "../managers/StoreManager"
+import i18n from '../i18n/i18n'
+import BottomSheet from 'react-native-bottomsheet'
+import {unsaveOnce} from "./activity/components/ActivityActionBar"
+import {sanitizeActivityType} from "../helpers/DataUtils"
+import {Alert, View} from "react-native"
+import type {Description, Visibility} from "./screens/save"
+import * as Api from "../managers/Api"
+import ApiAction from "../helpers/ApiAction"
+import Config from "react-native-config"
+import ItemCell from "./components/ItemCell"
+import React from "react"
+import LineupHorizontal from "./components/LineupHorizontal"
+import LineupCellSaving from "./components/LineupCellSaving"
+import {deleteLineup, followLineupPending, unfollowLineupPending} from "./lineup/actions"
+import {L_DELETE, L_FOLLOW, L_RENAME, L_SHARE, L_UNFOLLOW, LineupRights} from "./lineupRights"
+import LineupTitle2 from "./components/LineupTitle2"
 
 export const CLOSE_MODAL = 'close_modal';
 
@@ -28,6 +29,15 @@ export const CANCELABLE_MODAL = {
         {
             id: CLOSE_MODAL,
             icon: require('../img2/closeXGrey.png')
+        }
+    ],
+    rightButtons: []
+}
+export const CANCELABLE_MODAL2 = {
+    leftButtons: [
+        {
+            id: CLOSE_MODAL,
+            icon: require('../img2/leftBackArrowGrey.png')
         }
     ],
     rightButtons: []
@@ -44,15 +54,27 @@ export const CANCELABLE_SEARCH_MODAL = () => ({
     leftButtons: []
 });
 
-export function startAddItem(navigator: *, defaultLineupId: Id) {
-    let cancel = () => {
-        navigator.dismissAllModals()
-    };
+export function startAddItem(navigator: *, defaultLineup: Id | Lineup) {
+
+
+    let defaultLineupId
+
+    if (_.isString(defaultLineup)) {
+        defaultLineupId = defaultLineup
+        defaultLineup = null
+    }
+    else {
+        defaultLineupId = defaultLineup.id
+    }
+
+    let cancel = navigator.dismissAllModals
+
 
     navigator.showModal({
         screen: 'goodsh.SearchItemsScreen', // unique ID registered with Navigation.registerScreen
-        navigatorButtons: CANCELABLE_SEARCH_MODAL(),
+        navigatorButtons: CANCELABLE_MODAL2,
         passProps: {
+            defaultLineup,
             onItemSelected: (item: Item, navigator: RNNNavigator) => {
 
                 navigator.showModal({
@@ -72,7 +94,7 @@ export function startAddItem(navigator: *, defaultLineupId: Id) {
             },
             onCancel: cancel
         }, // Object that will be passed as props to the pushed screen (optional)
-    });
+    })
 }
 
 
@@ -215,7 +237,7 @@ export function displayShareItem(navigator: RNNNavigator, activity: Activity) {
     );
 }
 
-export function displayShareLineup(navigator: RNNNavigator, lineup: Lineup) {
+export function displayShareLineup({navigator, lineup}: LineupActionParams) {
     let userId = _.get(lineup, 'user.id');
     let lineupId = _.get(lineup, 'id');
     if (!userId || !lineupId) return; //TODO: error
@@ -229,7 +251,14 @@ export function displayShareLineup(navigator: RNNNavigator, lineup: Lineup) {
                     lineupId={lineup.id}
                     style={{height: 100}}
                     renderSaving={saving => <LineupCellSaving item={saving.resource} />}
-                    renderTitle={(lineup: Lineup) => <LineupTitle style={{fontSize: 24}} lineup={lineup} skipChevron={true}/>}
+                    renderTitle={(lineup: Lineup) => (
+                        //{/*<:LineupTitle style={{fontSize: 24}} lineup={lineup} />*/}
+                        <LineupTitle2
+                            lineupId={lineup.id}
+                            dataResolver={id => lineup}
+                            // style={{backgroundColor: BACKGROUND_COLOR,}}
+                        />
+                    )}
                 />),
             sendAction: null,
             createShareIntent: () => createShareIntent(lineup.name, url),
@@ -256,7 +285,115 @@ function sendItem(itemId: Id, user: User, description?: Description = "", privac
         .addQuery({
             include: "*.*"
         });
-};
+}
+
+
+export function displayHomeSearch(navigator: RNNNavigator, token: SearchToken) {
+
+    navigator.showModal({
+        screen: 'goodsh.HomeSearchScreen', // unique ID registered with Navigation.registerScreen
+        // animationType: 'none',
+        backButtonHidden: true,
+        passProps: {
+            onClickClose: () => navigator.dismissModal(),
+            token
+        },
+        // backButtonHidden: true,
+        // navigatorButtons: {
+        //     leftButtons: [],
+        //     rightButtons: [
+        //         {
+        //             id: CLOSE_MODAL,
+        //             title: i18n.t("actions.cancel")
+        //         }
+        //     ],
+        // },
+        //
+        // navigatorButtons: Nav.CANCELABLE_SEARCH_MODAL(),
+        navigatorButtons: CANCELABLE_MODAL,
+    });
+}
+
+
+export function displayChangeTitle({navigator, lineup}: {navigator: RNNNavigator, lineup: Lineup}) {
+    let {id, name} = lineup;
+
+    navigator.showModal({
+        screen: 'goodsh.ChangeLineupName',
+        animationType: 'none',
+        passProps: {
+            lineupId: id,
+            initialLineupName: name
+        }
+    });
+}
+
+//TODO: restore destuctive button index
+type LineupMenuAction = {
+    label: string,
+    handler: LineupActionParams => void,
+}
+
+export type LineupActionParams = {
+    dispatch: any,
+    navigator: RNNNavigator,
+    lineup: Lineup
+}
+const MENU_ACTIONS = new Map([
+    [L_RENAME, {
+        label: i18n.t("actions.change_title"),
+        handler: displayChangeTitle
+    }],
+
+    [L_SHARE, {
+        label: i18n.t("actions.share_list"),
+        handler: displayShareLineup
+    }],
+    [L_DELETE, {
+        label: i18n.t("actions.delete"),
+        handler: deleteLineup
+    }],
+    [L_UNFOLLOW, {
+        label: i18n.t("actions.unfollow"),
+        handler: ({dispatch, lineup}) => unfollowLineupPending(dispatch, lineup)
+    }],
+    [L_FOLLOW, {
+        label: i18n.t("actions.follow"),
+        handler: ({dispatch, lineup}) => followLineupPending(dispatch, lineup)
+    }]
+])
+
+export function displayLineupActionMenu(navigator: RNNNavigator, dispatch: any, lineup: Lineup) {
+
+    let actions : LineupMenuAction[] = LineupRights.getActions(lineup).map(a => MENU_ACTIONS.get(a)).filter(a => !!a)
+
+    BottomSheet.showBottomSheetWithOptions({
+            options: [
+                ...actions.map(a => a.label),
+                i18n.t("actions.cancel")
+            ],
+            title: lineup.name,
+            // dark: true,
+            // destructiveButtonIndex: 2,
+            cancelButtonIndex: actions.length,
+        }, (value) => {
+            const lineupMenuAction = actions[value];
+            if (lineupMenuAction) {
+                lineupMenuAction.handler({navigator, dispatch, lineup})
+            }
+        }
+    );
+}
 
 
 
+export function openUserSheet(navigator: RNNNavigator, user: User) {
+    navigator.showModal({
+        screen: 'goodsh.UserSheet',
+        animationType: 'none',
+        passProps: {
+            user: user,
+            userId: user.id
+        }
+    })
+}

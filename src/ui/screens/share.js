@@ -1,18 +1,19 @@
 // @flow
-import React, {Component} from 'react';
-import {Clipboard, Dimensions, Image, Share, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import type {Dispatchee, Id, Item, ItemType, Url, User} from "../../types";
-import {CheckBox} from "react-native-elements";
-import Snackbar from "react-native-snackbar"
+import React, {Component} from 'react'
+import {Clipboard, Dimensions, Image, Share, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import type {Dispatchee, Url, User} from "../../types"
+import {CheckBox} from "react-native-elements"
+import _Messenger from "../../managers/Messenger"
 
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import {currentUserId, logged} from "../../managers/CurrentUser"
-import {connect} from "react-redux";
-import {buildNonNullData} from "../../helpers/DataUtils";
-import * as Nav from "../Nav";
-import {Colors} from "../colors";
-import GTouchable from "../GTouchable";
-import Sheet from "../components/sheet";
+import type {MapStateToProps} from "react-redux"
+import {connect} from "react-redux"
+import * as Nav from "../Nav"
+import {Colors} from "../colors"
+import GTouchable from "../GTouchable"
+import Sheet from "../components/sheet"
+
 
 type Props = {
     navigator: any,
@@ -22,10 +23,10 @@ type Props = {
     renderSharedObject: ()=>Node,
 
     //return the url to copy
-    urlForClipboard: ? () => Url,
+    urlForClipboard?: () => Url,
 
     //for send screen
-    sendAction: ?(friend: User, description?: string) => Dispatchee,
+    sendAction?:(friend: User, description?: string) => Dispatchee,
 
     //return the intent for the share
     createShareIntent:? () => {content: any, options: any},
@@ -34,11 +35,9 @@ type Props = {
 type State = {
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps: MapStateToProps<*, *, *> = state => ({
     data: state.data,
-});
-
-
+})
 @logged
 @connect(mapStateToProps)
 class ShareScreen extends Component<Props, State> {
@@ -121,7 +120,7 @@ class ShareScreen extends Component<Props, State> {
         const urlForClipboard = this.props.urlForClipboard;
         if (!urlForClipboard) return;
         Clipboard.setString(urlForClipboard());
-        Snackbar.show({title: i18n.t('shared.link_copied')});
+        _Messenger.sendMessage(i18n.t('shared.link_copied'));
     }
 
     share() {

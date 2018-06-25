@@ -1,10 +1,10 @@
 // @flow
 
-import React, {Component} from 'react';
-import {View, Image, StyleSheet, Text, TextInput, TouchableOpacity} from 'react-native';
-import {Colors} from "../colors";
-;
-import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts";
+import React, {Component} from 'react'
+import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import {SFP_TEXT_MEDIUM} from "../fonts"
+
+
 
 export default class SwiperNav extends Component<Props, State> {
 

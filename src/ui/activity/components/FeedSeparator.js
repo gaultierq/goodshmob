@@ -1,13 +1,12 @@
 // @flow
 
-import React from 'react';
-import {Image, Linking, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import * as UI from "../../UIStyles";
-import {Colors} from "../../colors";
+import React from 'react'
+import {Image, Linking, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Colors} from "../../colors"
 
 type Props = {
     vMargin?: number,
-    style?: ?*
+    style?:*
 };
 
 type State = {

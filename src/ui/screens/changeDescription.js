@@ -1,17 +1,17 @@
 // @flow
-import React, {Component} from 'react';
-import type {ActivityType, Id} from "../../types";
-import {connect} from "react-redux";
+import React, {Component} from 'react'
+import type {ActivityType, Id} from "../../types"
+import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
-import * as Api from "../../managers/Api";
-import ApiAction from "../../helpers/ApiAction";
+import * as Api from "../../managers/Api"
+import ApiAction from "../../helpers/ApiAction"
 
-import Snackbar from "react-native-snackbar"
-import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
-import type {PendingAction} from "../../helpers/ModelUtils";
-import {pendingActionWrapper} from "../../helpers/ModelUtils";
-import ModalTextInput from "./modalTextInput";
-import {buildData, sanitizeActivityType} from "../../helpers/DataUtils";
+import _Messenger from "../../managers/Messenger"
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
+import type {PendingAction} from "../../helpers/ModelUtils"
+import {pendingActionWrapper} from "../../helpers/ModelUtils"
+import ModalTextInput from "./modalTextInput"
+import {buildData, sanitizeActivityType} from "../../helpers/DataUtils"
 
 type Props = {
     activityId: Id,
@@ -75,10 +75,7 @@ export default class ChangeDescriptionScreen extends Component<Props, State> {
             type: sanitizeActivityType(this.props.activityType),
             description}))
             .then(()=> {
-                //TODO: Use Messenger
-                Snackbar.show({
-                    title: i18n.t('congrats.generic'),
-                });
+                _Messenger.sendMessage(i18n.t('congrats.generic'));
             });
 
     }

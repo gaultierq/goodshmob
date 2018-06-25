@@ -1,7 +1,7 @@
 // @flow
 
-import type {Node} from 'react';
-import React from 'react';
+import type {Node} from 'react'
+import React from 'react'
 import {
     ActivityIndicator,
     Button,
@@ -13,34 +13,35 @@ import {
     TextInput,
     TouchableOpacity,
     View
-} from 'react-native';
+} from 'react-native'
 
-import {connect} from "react-redux";
-import {currentUserId, logged} from "../../managers/CurrentUser"
-import LineupCell from "../components/LineupCell";
-import Immutable from 'seamless-immutable';
-import * as Api from "../../managers/Api";
+import {connect} from "react-redux"
+import {isCurrentUserId, logged} from "../../managers/CurrentUser"
 import {SearchBar} from 'react-native-elements'
-import type {Id, List, User} from "../../types";
-import type {Props as FeedProps} from "../components/feed";
-import Feed from "../components/feed";
-import ApiAction from "../../helpers/ApiAction";
-import {buildData, doDataMergeInState} from "../../helpers/DataUtils";
-import {CREATE_LINEUP, DELETE_LINEUP} from "../lineup/actionTypes";
-import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
-import {STYLES} from "../UIStyles";
-import GTouchable from "../GTouchable";
-import Screen from "../components/Screen";
-import dotprop from "dot-prop-immutable"
+import type {Id, List, User} from "../../types"
+import type {Props as FeedProps} from "../components/feed"
+import Feed from "../components/feed"
+import {buildData, doDataMergeInState} from "../../helpers/DataUtils"
+import {CREATE_LINEUP, DELETE_LINEUP} from "../lineup/actionTypes"
+import {mergeItemsAndPendings} from "../../helpers/ModelUtils"
+import Screen from "../components/Screen"
 
-export type Props = FeedProps<List> & {
+import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
+import {GoodshContext} from "../UIComponents"
+import Immutable from 'seamless-immutable'
+import LineupCell from "../components/LineupCell"
+import * as Api from "../../managers/Api"
+import GTouchable from "../GTouchable"
+
+
+export type Props = FeedProps & {
     userId: Id,
     data?: any,
     onCancel?: ()=>void,
     sectionMaker?: (lineups: List<List>) => Array<*>,
     ListHeaderComponent?: Node,
-    renderItem: (item: *)=>Node,
-    navigator: *
+    navigator: *,
+    listRef: any => void | string
 };
 
 type State = {
@@ -63,7 +64,6 @@ export class LineupListScreen extends Screen<Props, State> {
         this.state = {...super.state, isLoading: false, isLoadingMore: false,}
     }
 
-
     render() {
         const {
             userId,
@@ -76,18 +76,19 @@ export class LineupListScreen extends Screen<Props, State> {
             ...attributes
         } = this.props;
 
+
         let user: User = buildData(this.props.data, "users", userId);
 
 
         let lists = user && user.lists || [];
 
         let fetchSrc =  !_.isEmpty(lists) ? {
-            callFactory: () => actions.fetchLineups(userId),
-            action: FETCH_LINEUPS,
+            callFactory: () => userActions.fetchLineups(userId),
+            action: userActionTypes.FETCH_LINEUPS,
             options: {userId}
         } : {
-            callFactory: () => actions.getUserAndTheirLists(userId),
-            action: GET_USER_W_LISTS
+            callFactory: () => userActions.getUserAndTheirLists(userId),
+            action: userActionTypes.GET_USER_W_LISTS
         };
 
 
@@ -105,49 +106,34 @@ export class LineupListScreen extends Screen<Props, State> {
             {afterI: 0}
         );
 
+        // items = includePendingFollowItems(items,
+        //     this.props.pending[FOLLOW_LINEUP],
+        //     this.props.pending[UNFOLLOW_LINEUP])
+
         return (
-            <Feed
-                data={items}
-                sections={sectionMaker && sectionMaker(items)}
-                renderItem={this.renderItem.bind(this)}
-                fetchSrc={fetchSrc}
-                {...attributes}
-            />
-        );
+            <GoodshContext.Provider value={{userOwnResources: isCurrentUserId(userId)}}>
+                <Feed
+                    data={items}
+                    listRef={this.props.listRef}
+                    sections={sectionMaker && sectionMaker(items)}
+                    renderItem={this.renderItem.bind(this)}
+                    fetchSrc={fetchSrc}
+                    {...attributes}
+                />
+
+            </GoodshContext.Provider>
+        )
     }
 
-    renderItem(item) {
-        let list = item.item;
-        if (!(list.type === 'lists')) throw "unexpected type";
-
+    renderItem({item}) {
+        let list = item;
         list = buildData(this.props.data, list.type, list.id) || list;
 
         let {renderItem, navigator} = this.props;
 
         return (renderItem || renderSimpleListItem(navigator))(list);
     }
-
 }
-
-
-const GET_USER_W_LISTS = ApiAction.create("get_user_w_lists", "get user lists of lineups");
-const FETCH_LINEUPS = ApiAction.create("fetch_lineups", "retrieve the user lineups details");
-
-const actions = (() => {
-
-    return {
-        fetchLineups: userId => new Api.Call()
-            .withMethod('GET')
-            .withRoute(`users/${userId}/lists`)
-            .addQuery({include: "savings,savings.resource"}),
-
-        getUserAndTheirLists: (userId): Api.Call => new Api.Call()
-            .withMethod('GET')
-            .withRoute(`users/${userId}`)
-            .addQuery({include: "lists,lists.savings,lists.savings.resource"}),
-
-    };
-})();
 
 const reducer = (() => {
     const initialState = Immutable(Api.initialListState());
@@ -156,7 +142,7 @@ const reducer = (() => {
 
     return (state = initialState, action = {}) => {
         switch (action.type) {
-            case FETCH_LINEUPS.success(): {
+            case userActionTypes.FETCH_LINEUPS.success(): {
                 let {userId, mergeOptions} = action.options;
                 let path = getPath(userId);
                 state = doDataMergeInState(state, path, action.payload.data, mergeOptions);

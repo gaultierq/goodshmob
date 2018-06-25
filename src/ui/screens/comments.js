@@ -1,25 +1,26 @@
 // @flow
-import React from 'react';
-import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
-import {connect} from "react-redux";
+import React from 'react'
+import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native'
+import {connect} from "react-redux"
 import {currentUser, isCurrentUser, logged} from "../../managers/CurrentUser"
-import {FullScreenLoader, Http404, MainBackground} from "../UIComponents";
-import Immutable from 'seamless-immutable';
-import * as Api from "../../managers/Api";
-import {Call} from "../../managers/Api";
-import Feed from "../components/feed";
-import type {Activity, ActivityType, Comment, Id, RequestState} from "../../types";
-import ApiAction from "../../helpers/ApiAction";
-import {buildData, doDataMergeInState, sanitizeActivityType} from "../../helpers/DataUtils";
-import {fetchActivity} from "../activity/actions";
+import {FullScreenLoader, MainBackground} from "../UIComponents"
+import Immutable from 'seamless-immutable'
+import * as Api from "../../managers/Api"
+import {Call} from "../../managers/Api"
+import Feed from "../components/feed"
+import type {Activity, ActivityType, Comment, Id, RequestState} from "../../types"
+import ApiAction from "../../helpers/ApiAction"
+import {buildData, doDataMergeInState, sanitizeActivityType} from "../../helpers/DataUtils"
+import {fetchActivity} from "../activity/actions"
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-import {mergeItemsAndPendings} from "../../helpers/ModelUtils";
-import {Colors} from "../colors";
-import Screen from "../components/Screen";
+import {mergeItemsAndPendings} from "../../helpers/ModelUtils"
+import {Colors} from "../colors"
+import Screen from "../components/Screen"
 import {component as CommentInput} from "../components/CommentInput"
-import ActivityStatus from "../activity/components/ActivityStatus";
-import CommentCell from "../components/CommentCell";
-import MultiMap from "multimap";
+import ActivityStatus from "../activity/components/ActivityStatus"
+import CommentCell from "../components/CommentCell"
+import MultiMap from "multimap"
+import Http404 from "./errors/404"
 
 
 const LOAD_COMMENTS = ApiAction.create("load_comments", "retrieve the comments of an item");
@@ -63,10 +64,12 @@ class CommentsScreen extends Screen<Props, State> {
         if (!activity) {
             if (this.state.reqFetchActivity === 'sending') return <FullScreenLoader/>
             if (this.state.reqFetchActivity === 'ko') return <Http404/>
+            console.warn('rendering hole')
+            return null
         }
         let comments = mergeItemsAndPendings(
             activity ? activity.comments : [],
-            this.props.pending[CREATE_COMMENT],
+            _.filter(this.props.pending[CREATE_COMMENT], p => _.get(p, 'payload.activityId') === activity.id),
             [],
             (pending) => ({
                 id: pending.id,
@@ -79,6 +82,9 @@ class CommentsScreen extends Screen<Props, State> {
             })
         );
 
+        comments = _.sortBy(comments, c => new Date(c.createdAt))
+        comments = _.reverse(comments)
+
         const fullComments = comments.filter( c => c.built || c.pending);
 
         this.setNavigatorTitle(this.props.navigator, {
@@ -86,6 +92,7 @@ class CommentsScreen extends Screen<Props, State> {
             subtitle: _.get(activity, 'resource.title')
         })
 
+        let sections = this.splitCommentsInSections(fullComments);
         return (
             <MainBackground>
 
@@ -110,16 +117,26 @@ class CommentsScreen extends Screen<Props, State> {
 
                     <View style={{
                         flex:1,
-                        // justifyContent: 'flex-end',
-                        //    backgroundColor: 'brown'
+                        justifyContent: 'flex-end',
+                        // backgroundColor: 'brown'
                     }}>
 
                         <Feed
-                            // style={{flex:1}}
+                            decorateLoadMoreCall={(sections: any[], call: Call) => {
+                                if (!_.isEmpty(sections)) {
+                                    let last = _.head(_.filter(this.toFlat(sections), f => !f.pending))
+                                    if (last) {
+                                        call.addQuery({id_after: last.id})
+                                    }
+
+                                }
+
+                            }}
                             inverted
                             ListFooterComponent={this.renderDescription(activity)}
-                            sections={this.splitCommentsInSections(fullComments)}
+                            sections={sections}
                             keyExtractor={item => _.head(item).id}
+                            getFlatItems={() => this.toFlat(sections)}
                             doNotDisplayFetchMoreLoader={true}
                             SectionSeparatorComponent={()=> <View style={{margin: 4}} />}
                             // style={{backgroundColor: 'red'}}
@@ -133,7 +150,6 @@ class CommentsScreen extends Screen<Props, State> {
                                 }}>
                                 {section.title}</Text>}
 
-
                             fetchSrc={{
                                 callFactory:()=>actions.loadComments(activity),
                                 action: LOAD_COMMENTS,
@@ -145,7 +161,7 @@ class CommentsScreen extends Screen<Props, State> {
                                 paddingVertical: 15,
                                 // backgroundColor: Colors.greying
                             }}
-                            // empty={<Text style={[STYLES.empty_message, {fontSize: 20, paddingBottom: 50}]}>{i18n.t('activity_screen.comments.no_comments')}</Text>}
+                            // ListEmptyComponent={<Text style={[STYLES.empty_message, {fontSize: 20, paddingBottom: 50}]}>{i18n.t('activity_screen.comments.no_comments')}</Text>}
                         />
 
                         <View style={{height: 60, flex:0, backgroundColor: 'blue'}}>
@@ -177,7 +193,20 @@ class CommentsScreen extends Screen<Props, State> {
         );
     }
 
-    renderDescription(activity) {
+
+    toFlat(sections: any) {
+        let concat = datas => Array.prototype.concat.apply([], datas)
+
+        //datas = [date1, date2, date3, date4]
+        let datas = sections.map(s => s.data)
+        let byDate = concat(datas)
+        let byAuthor = concat(byDate)
+        let comments = concat(byAuthor)
+        return comments
+
+    }
+
+    renderDescription(activity: Activity) {
         return <ActivityStatus
             activity={activity}
             // skipLineup={this.props.skipLineup}
@@ -208,6 +237,10 @@ class CommentsScreen extends Screen<Props, State> {
         />;
     }
 
+    //sections[0].data[0][0]
+    // list of sections, each section as its data: D
+    // here D is an array !
+    //sections: date > author > comments
     splitCommentsInSections(comments: Array<Comment>) {
 
         const sectionsMap = new MultiMap();
@@ -251,7 +284,7 @@ class CommentsScreen extends Screen<Props, State> {
         // group authors
         sectionsMap.forEachEntry((value, k) => {
             let groupedByAuthor = groupByAuthor(value);
-            groupedByAuthor = _.reverse(groupedByAuthor);
+            // groupedByAuthor = _.reverse(groupedByAuthor);
             authorGrouped.set(k, ...groupedByAuthor);
         });
 
@@ -264,13 +297,9 @@ class CommentsScreen extends Screen<Props, State> {
             const date = new Date(dateStr);
             let format = Date.now() - Date.parse(dateStr) < 7 * 24 * 60 * 60 * 1000 ? "%a %-H:%M" :  "%d/%m/%-y %-H:%M";
 
-            const data = _.reverse(value);
             sections.push({
-                // data: data,
                 data: value,
                 title: i18n.strftime(date, format),
-                // subtitle: ` (${savingCount})`,
-                // onPress: () => this.seeLineup(goodshbox.id),
                 renderItem: this.renderItem.bind(this)
             })
         });
@@ -319,19 +348,6 @@ const actions = (() => {
                 .withMethod('GET')
                 .withRoute(`${activityType}/${activity.id}/comments`);
         },
-
-        addComment: (activity: Activity, content: string) => {
-            let activityType = sanitizeActivityType(activity.type);
-            let activityId = activity.id;
-
-            return new Call()
-                .withMethod('POST')
-                .withRoute(`${activityType}/${activityId}/comments`)
-                .addQuery({include: "user"})
-                .withBody({comment: {content: content}})
-                .createActionDispatchee(CREATE_COMMENT, {activityId, activityType})
-                ;
-        }
     };
 })();
 

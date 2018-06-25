@@ -1,10 +1,10 @@
 // @flow
 import * as types from "./actionTypes"
-import * as Api from "../../managers/Api";
-import {sanitizeActivityType} from "../../helpers/DataUtils";
-import type {ActivityType, Id} from "../../types";
-import type {PendingAction} from "../../helpers/ModelUtils";
-import {pendingActionWrapper} from "../../helpers/ModelUtils";
+import * as Api from "../../managers/Api"
+import {sanitizeActivityType} from "../../helpers/DataUtils"
+import type {ActivityType, Id} from "../../types"
+import type {PendingAction} from "../../helpers/ModelUtils"
+import {pendingActionWrapper} from "../../helpers/ModelUtils"
 
 
 export function fetchActivity(activityId: Id, activityType: ActivityType, options?:any = {}) {

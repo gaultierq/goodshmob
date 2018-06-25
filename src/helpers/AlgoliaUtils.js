@@ -1,13 +1,11 @@
 // @flow
 
-import React from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {TabBar, TabViewAnimated} from 'react-native-tab-view';
-import {SearchBar} from 'react-native-elements'
-import type {SearchCategoryType, SearchTrigger} from "../ui/screens/search";
-import type {RNNNavigator, SearchToken} from "../types";
-import algoliasearch from 'algoliasearch/reactnative';
-import * as appActions from "../auth/actions";
+import React from 'react'
+import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import type {SearchCategoryType, SearchTrigger} from "./SearchHelper"
+import type {RNNNavigator, SearchToken} from "../types"
+import algoliasearch from 'algoliasearch/reactnative'
+import * as appActions from "../auth/actions"
 
 type AlgoliaIndexName = string;
 type AlgoliaIndex = *;
@@ -138,7 +136,7 @@ export function makeAlgoliaSearchEngine(categories, navigator: RNNNavigator) {
     };
     return {
         search,
-        canSearch: (token: SearchToken, category: SearchCategoryType, trigger: SearchTrigger, searchOptions: ?any) => {
+        canSearch: (token: SearchToken, category: SearchCategoryType, trigger: SearchTrigger, searchOptions?:any) => {
             return !_.isEmpty(token);
         }
     };

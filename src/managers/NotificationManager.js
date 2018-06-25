@@ -1,24 +1,28 @@
 // @flow
 
 import {Linking} from 'react-native'
-import type {Notification, NotificationOpen} from 'react-native-firebase';
+import type {Notification, NotificationOpen} from 'react-native-firebase'
 import RNFirebase from 'react-native-firebase'
-import {Navigation} from 'react-native-navigation';
-import NavManager from "./NavManager";
-import {isLogged} from "./CurrentUser";
+import {Navigation} from 'react-native-navigation'
+import NavManager from "./NavManager"
 
 
 class _NotificationManager implements NotificationManager {
 
     configured: boolean = false;
+    logger: GLogger
+
+    _hasPermission: boolean //used as a proxy for synchronous cases
 
     constructor() {
     }
 
-    init() {
+    async init() {
+        this.logger = rootlogger.createLogger('notifications')
         if (!__WITH_NOTIFICATIONS__) return;
-        console.info("fcm:load");
-        this.configureSafe();
+        this.logger.info("fcm:load");
+        this.configureSafe()
+        this._hasPermission = await this.hasPermissions()
     }
 
     configureSafe() {
@@ -31,13 +35,26 @@ class _NotificationManager implements NotificationManager {
                     this.configure();
                 }
                 else {
-                    console.warn("fcm: permission not granted");
+                    this.logger.warn("fcm: permission not granted");
                 }
             });
     }
 
+    async hasPermissions(): Promise<boolean> {
+        return RNFirebase
+            .app()
+            .messaging()
+            .hasPermission()
+    }
 
-
+    hasPermissionsSync(askAgain: boolean = false): boolean {
+        if (askAgain) {
+            setTimeout(()=> {
+                this.hasPermissions().then(has=>this._hasPermission = has)
+            })
+        }
+        return this._hasPermission
+    }
 
     configure() {
         if (this.configured) throw 'already configured'
@@ -47,11 +64,11 @@ class _NotificationManager implements NotificationManager {
         let messaging = firebase.messaging();
 
         messaging.getToken().then((token) => {
-            console.info("fcm:token=" + token);
-        }, (err) => console.log(err));
+            this.logger.info("fcm:token=" + token);
+        }, (err) => this.logger.error(err));
 
         firebase.notifications().getInitialNotification().then((notificationOpen: NotificationOpen) => {
-            console.log('getInitialNotification', notificationOpen)
+            this.logger.log('getInitialNotification', notificationOpen)
             if (notificationOpen) this.handleNotif(notificationOpen.notification)
         })
 
@@ -72,34 +89,39 @@ class _NotificationManager implements NotificationManager {
         });
 
         firebase.notifications().onNotificationDisplayed((notification: Notification) => {
-            console.log('onNotificationDisplayed', notification)
+            this.logger.info('onNotificationDisplayed', notification)
         });
 
         //android: triggered when app opening from notification
         firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
-            console.log('onNotificationOpened', notificationOpen)
+            this.logger.info('onNotificationOpened', notificationOpen)
             if (notificationOpen) this.handleNotif(notificationOpen.notification)
         });
     }
 
-    requestPermissionsForLoggedUser() {
+    requestPermissionsForLoggedUser(): Promise<boolean> {
         return new Promise((resolve,reject) => {
-            if (!__WITH_NOTIFICATIONS__) reject('notifications are not enabled on device')
-            console.info('request Permissions For LoggedUser')
-            RNFirebase
-                .app()
-                .messaging()
-                .requestPermission()
-                .then( () => {
-                    console.info('notification permission granted')
-                    this.configure()
-                    resolve()
-                }, reject);
+            if (!__WITH_NOTIFICATIONS__) {
+                reject('notifications are not enabled on device')
+            }
+            else {
+                this.logger.info('request Permissions For LoggedUser')
+                RNFirebase
+                    .app()
+                    .messaging()
+                    .requestPermission()
+                    .then( () => {
+                        this.logger.info('notification permission granted')
+                        this.configure()
+                        resolve()
+                    }, reject)
+            }
+
 
         })
     }
 
-    handleNotif = notif => {
+    handleNotif = (notif: any) => {
         if (!__WITH_NOTIFICATIONS__) return;
         if (!notif) return
         if (!notif._data) {
@@ -121,9 +143,11 @@ class _NotificationManager implements NotificationManager {
 
 export interface NotificationManager {
 
-    init(store: any): void;
+    init(store: any): Promise<void>;
 
-    requestPermissionsForLoggedUser(): Promise;
+    requestPermissionsForLoggedUser(): Promise<boolean>;
+
+    hasPermissionsSync(askAgain?: boolean): boolean;
 
 }
 
