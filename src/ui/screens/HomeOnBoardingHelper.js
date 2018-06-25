@@ -15,9 +15,13 @@ export class HomeOnBoardingHelper {
     registerTapTarget(ref: any, primaryText: string, secondaryText: string) {
 
         if (!this.appTourTargets.has(ref)) {
-            let params;
+            let params = {
+                titleTextSize: "24",
+                descriptionTextSize: "18"
+            }
             if (__IS_IOS__) {
                 params = {
+                    ...params,
                     primaryText,
                     secondaryText,
                     targetHolderColor: Colors.blue,
@@ -27,6 +31,7 @@ export class HomeOnBoardingHelper {
             }
             else {
                 params = {
+                    ...params,
                     title: primaryText,
                     description: secondaryText,
                     //defined in android/app/src/main/res/values/colors.xml

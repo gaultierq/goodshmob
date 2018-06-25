@@ -98,7 +98,7 @@ export default class MyGoodsh extends Screen<Props, State> {
                             data: _.slice(lineups, 1),
                             title: i18n.t("lineups.mine.title"),
                             // renderSectionHeaderChildren:() => <AddLineupComponent navigator={this.props.navigator}/>,
-                            renderItem: ({item, index})=> this.renderLineup(item, index, navigator, this.props.targetRef),
+                            renderItem: ({item, index})=> this.renderLineup(item, index, navigator, index > 0 ? null : this.props.targetRef),
                             renderSectionHeader: () => this.renderSectionHeader(
                                 i18n.t("lineups.mine.title"),
                                 <AddLineupComponent navigator={this.props.navigator}/>
@@ -130,14 +130,12 @@ export default class MyGoodsh extends Screen<Props, State> {
     }
 
     renderLineup(item: Lineup, index: number, navigator: RNNNavigator, targetRef?: any) {
-        const targetRefFirstElement = index === 0 ? targetRef : undefined
-
         return (
             <LineupH1
                 lineup={item} navigator={navigator}
                 withMenuButton={true}
                 onPressEmptyLineup={() => startAddItem(navigator, item)}
-                renderEmpty={this.renderEmptyLineup(navigator, item, targetRefFirstElement)}
+                renderEmpty={this.renderEmptyLineup(navigator, item, targetRef)}
                 renderMenuButton={() => {
                     //TODO: dubious 15
                     return this.renderMenuButton(item, 15)
@@ -155,8 +153,8 @@ export default class MyGoodsh extends Screen<Props, State> {
                     />
                 )}
                 ListHeaderComponent={(
-                    <GTouchable ref={targetRefFirstElement} onPress={() => startAddItem(navigator, item)}>
-                        {LineupHorizontal.renderPlus({style:{marginRight: 10}})}
+                    <GTouchable onPress={() => startAddItem(navigator, item)}>
+                        {LineupHorizontal.renderPlus({style:{marginRight: 10}}, targetRef)}
                     </GTouchable>)
                 }
                 style={[

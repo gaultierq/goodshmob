@@ -137,29 +137,31 @@ export default class LineupHorizontal extends Component<Props, State> {
     }
 
 
-    static defaultRenderEmpty(renderFirstAsPlus: boolean = false, targetRefFirstElement?: () => void) {
+    static defaultRenderEmpty(renderFirstAsPlus: boolean = false, plusRef?: () => void) {
         return (
             <View style={{flexDirection: 'row', paddingLeft: LINEUP_PADDING}}>{
                 [0,1,2,3,4].map((o, i) => {
-                        return <View key={`key-${i}`} ref={i === 0 ? targetRefFirstElement : undefined} >
+                        return (
                             <EmptyCell style={{marginRight: 10}}>
-                                {i === 0 && renderFirstAsPlus && this.renderInnerPlus()}
+                                {i === 0 && renderFirstAsPlus && this.renderInnerPlus(plusRef)}
                             </EmptyCell>
-                        </View>
+                        )
                     }
                 )
             }</View>
         )
     }
 
-    static renderPlus(props: any = {}) {
-        return (<EmptyCell key={`key-${0}`} {...props}>{this.renderInnerPlus()}</EmptyCell>)
+    static renderPlus(cellProps: any, ref?: () => void) {
+        return (
+            <EmptyCell key={`key-${0}`} {...cellProps}>
+                {this.renderInnerPlus(ref)}
+            </EmptyCell>
+        )
     }
 
-    static renderInnerPlus() {
+    static renderInnerPlus(ref?: () => void) {
         const size = "60%"
-        const plusThickness = '8%'
-        let plusColor = Colors.white
         return <View style={{
             position: 'absolute',
             width: size,
@@ -167,7 +169,10 @@ export default class LineupHorizontal extends Component<Props, State> {
             alignItems: 'center',
             justifyContent: 'center',
         }}>
-            <Image source={require('./../../img2/plus_white.png')} />
+            <Image
+                ref={ref}
+                source={require('./../../img2/plus_white.png')}
+            />
         </View>;
     }
 }
