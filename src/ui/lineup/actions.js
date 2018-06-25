@@ -10,7 +10,6 @@ import type {Visibility} from "../screens/additem"
 import ApiAction from "../../helpers/ApiAction"
 import {UNSAVE} from "../activity/actionTypes"
 import {Alert} from "react-native"
-import Snackbar from "react-native-snackbar"
 import type {LineupActionParams} from "../Nav"
 import _Messenger from "../../managers/Messenger"
 
@@ -102,16 +101,16 @@ export function deleteLineup({dispatch, lineup}: LineupActionParams) {
             {text: i18n.t("actions.ok"), onPress: () => {
                     dispatch(LINEUP_DELETION.pending({lineupId}, {delayMs, lineupId}))
                         .then(pendingId => {
-                            Snackbar.show({
-                                    title: i18n.t("activity_item.buttons.deleted_list"),
-                                    duration: Snackbar.LENGTH_LONG,
+                            _Messenger.sendMessage(
+                                i18n.t("activity_item.buttons.deleted_list"),
+                                {
+                                    timeout: delayMs,
                                     action: {
                                         title: i18n.t("actions.undo"),
-                                        color: 'green',
                                         onPress: () => {
                                             dispatch(LINEUP_DELETION.undo(pendingId))
                                         },
-                                    },
+                                    }
                                 }
                             );
                         });
