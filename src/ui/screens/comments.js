@@ -181,6 +181,7 @@ class CommentsScreen extends Screen<Props, State> {
                                     paddingBottom: 0,
                                     marginBottom: 0,
                                 }}
+                                multiline={true}
                                 height={60}
                                 placeholder={i18n.t("activity_comments_screen.add_comment_placeholder")}
                                 autoFocus={this.props.autoFocus}
