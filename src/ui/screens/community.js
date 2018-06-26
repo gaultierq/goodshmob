@@ -35,30 +35,12 @@ export class CommunityScreen extends Screen<Props, State> {
 
     render() {
         return (
-<<<<<<< HEAD
-
-            <TabView
-                style={
-                    [
-                        {flex: 1},
-                        //bug: drawer passProps not working [https://github.com/wix/react-native-navigation/issues/663]
-                        //this.props.style || __IS_IOS__? {marginTop: 38} : {}
-                    ]
-                }
-                navigationState={{...this.state, visible: this.isVisible()}}
-                renderScene={this.renderScene.bind(this)}
-                renderTabBar={props => <TabBar {...TAB_BAR_PROPS} {...props}/>}
-                onIndexChange={index => this.setState({index})}
-                renderPager={props => <PagerPan {...props} />}
-                swipeEnabled={false}
-=======
             <FriendsScreen
                 userId={currentUserId()}
                 navigator={this.props.navigator}
                 //renderItem={(item) => this.renderItem(item)}
                 ListHeaderComponent={<ShareButton text={i18n.t('actions.invite')}/>}
                 style={{backgroundColor: Colors.white}}
->>>>>>> Split community into 2 screens.
             />
         )
     }

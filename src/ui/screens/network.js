@@ -1,7 +1,10 @@
 // @flow
 
 import React from 'react'
-import {ActivityIndicator, FlatList, Platform, RefreshControl, Text, TouchableOpacity, View} from 'react-native'
+import {
+    ActivityIndicator, Dimensions, FlatList, Platform, RefreshControl, Text,
+    TouchableOpacity, View
+} from 'react-native'
 import {connect} from "react-redux"
 import {currentUser, currentUserId, logged} from "../../managers/CurrentUser"
 import ActivityCell from "../activity/components/ActivityCell"
@@ -21,6 +24,7 @@ import ActivityStatus from "../activity/components/ActivityStatus"
 import {SFP_TEXT_MEDIUM} from "../fonts"
 import AskInput from "../components/AskInput"
 import GTouchable from "../GTouchable"
+import * as UI from "../UIStyles"
 
 type Props = NavigableProps;
 
@@ -44,17 +48,15 @@ class NetworkScreen extends Screen<Props, State> {
 
     static navigatorButtons = {
         rightButtons: [
-            {
-                id: 'search', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
-                icon: require('../../img2/searchHeaderIcon.png'),
-            },
-        ],
-        leftButtons: [
+
             {
                 id: 'interactions', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
                 icon: require('../../img2/notificationIcon.png'),
                 title: i18n.t("home_search_screen.community.title")
             },
+        ],
+        leftButtons: [
+
             {
                 id: 'friends', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
                 icon: require('../../img2/goodshersHeaderIcon.png'),
@@ -80,6 +82,24 @@ class NetworkScreen extends Screen<Props, State> {
         props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
+    componentDidMount() {
+        const {height, width} = Dimensions.get('window');
+
+        this.props.navigator.setStyle({
+            ...UI.NavStyles,
+            navBarCustomView: 'goodsh.TouchableSearchBar',
+            navBarCustomViewInitialProps: {
+                style: {
+                    width: width - 130,
+                    marginTop: __IS_IOS__ ? 0 : 10,
+                },
+                searchBarProps: {
+                    placeholder: i18n.t('search.in_network')
+                },
+                onPress: this.showSearch.bind(this)
+            }
+        });
+    }
     componentWillAppear() {
         this.props.navigator.setDrawerEnabled({side: 'right', enabled: true});
         this.props.navigator.setDrawerEnabled({side: 'left', enabled: false});
@@ -124,10 +144,6 @@ class NetworkScreen extends Screen<Props, State> {
                     },
                     navigatorButtons: Nav.CANCELABLE_MODAL,
                 });
-            }
-
-            if (event.id === 'search') {
-                this.showSearch();
             }
         }
     }
@@ -269,6 +285,7 @@ class NetworkScreen extends Screen<Props, State> {
                 onClickClose: () => navigator.dismissModal(),
             },
             navigatorButtons: CANCELABLE_MODAL2,
+            animationType: 'none',
         });
     }
 
