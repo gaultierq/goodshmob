@@ -182,6 +182,7 @@ export default class UserScreen extends Screen<Props, State> {
                 <UserLineups
                     displayName={"user feed"}
                     feedId={"user list"}
+                    searchBarPlaceholder={i18n.t('search.in_user_lists')}
                     userId={userId}
                     navigator={this.props.navigator}
                     ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}

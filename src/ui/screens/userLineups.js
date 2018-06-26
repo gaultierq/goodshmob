@@ -32,6 +32,7 @@ import GSearchBar2 from "../components/GSearchBar2"
 type Props = LineupListProps & {
     userId: Id,
     navigator: RNNNavigator,
+    searchBarPlaceholder: string,
     listRef?: any => void | string
 };
 
@@ -98,7 +99,7 @@ export default class UserLineups extends Screen<Props, State> {
                 <GSearchBar2
                     value={this.state.filter}
                     onChangeText={filter => this.setState({filter})}
-                    placeholder={i18n.t('search.in_feed')}
+                    placeholder={this.props.searchBarPlaceholder}
                     // onFocus={() => this.onFilterFocusChange(true)}
                     // onCancel={() => this.onFilterFocusChange(false)}
                     // textInputRef={r => this.filterNode = r}

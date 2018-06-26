@@ -66,6 +66,7 @@ export default class MyGoodsh extends Screen<Props, State> {
             <UserLineups
                 contentOffset={{x: 0, y: 50}}
                 displayName={"MyGoodsh"}
+                searchBarPlaceholder={i18n.t('search.in_feed')}
                 feedId={"home list"}
                 userId={userId}
                 navigator={navigator}

@@ -71,6 +71,7 @@ export default {
         in_items: "Saisir le nom à enregistrer",
         in_network: "Rechercher dans mon réseau",
         in_feed: "Rechercher dans mes listes",
+        in_user_lists: "Rechercher dans ces listes",
         by: "par"
     },
     "shared":{

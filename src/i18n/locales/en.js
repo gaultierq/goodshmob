@@ -71,6 +71,7 @@ export default {
         in_items: "Find anything",
         in_network: "Search in my network",
         in_feed: "In my lists",
+        in_user_lists: "In this user's lists",
         by: "by",
     },
     "shared":{
