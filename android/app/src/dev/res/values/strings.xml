@@ -6,4 +6,5 @@
     <string name="bugsnag_api_key">e9d1e430d2405cc1e6f6d775fac95ca9</string>
     <string name="host_url">goodshitapp-staging.herokuapp.com</string>
     <string name="host_url2">goodshitapp-staging.herokuapp.com</string>
+    <string name="goodsh_protocol_scheme">goodshdev</string>
 </resources>

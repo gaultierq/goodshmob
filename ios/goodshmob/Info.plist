@@ -29,7 +29,7 @@
 			<array>
 				<string>$(FACEBOOK_LOGIN_URL_SCHEME)</string>
 				<string>ak$(FACEBOOK_APP_ID)</string>
-				<string>goodsh</string>
+				<string>$(GOODSH_URL_SCHEME)</string>
 			</array>
 		</dict>
 	</array>

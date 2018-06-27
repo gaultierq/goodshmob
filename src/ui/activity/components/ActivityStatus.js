@@ -16,6 +16,7 @@ import HTMLView from "react-native-htmlview/HTMLView"
 import URL from "url-parse"
 import NavManager from "../../../managers/NavManager"
 import {connect} from "react-redux"
+import Config from 'react-native-config'
 
 type Props = {
     activity: Activity,
@@ -190,11 +191,11 @@ export default class ActivityStatus extends React.Component<Props, State> {
     }
 
     getUserHtml(user: User) {
-        return `<a href="goodsh://it/users/${user.id}">${fullName(user)}</a>`;
+        return `<a href="${Config.GOODSH_PROTOCOL_SCHEME}://it/users/${user.id}">${fullName(user)}</a>`;
     }
 
     getLineupHtml(lineup: Lineup) {
-        return `<a href="goodsh://it/lists/${lineup.id}">${this.truncate(lineup.name)}</a> (${savingCount(lineup)})`;
+        return `<a href="${Config.GOODSH_PROTOCOL_SCHEME}://it/lists/${lineup.id}">${this.truncate(lineup.name)}</a> (${savingCount(lineup)})`;
     }
 
 

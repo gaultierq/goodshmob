@@ -81,7 +81,7 @@ export default class App {
         }
 
         //initGlobal(false);
-        this.logger.log(`spawning app with env`, Config);
+        this.logger.debug(`spawning app with env`, Config);
         //this.hydrated = false;
 
         //see the network requests in the debugger
