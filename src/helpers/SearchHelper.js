@@ -5,12 +5,12 @@ import {RequestState} from "../types"
 
 
 export type SearchCategoryType = string;
+
+// A single page of result returned by search engine
 export type SearchResult = {
-    [SearchCategoryType]: {
-        results: Array<*>,
-        page: number,
-        nbPages: number,
-    }
+    results: Array<*>,
+    page: number,
+    nbPages: number,
 }
 export type SearchQuery = {
     token: SearchToken,
@@ -43,7 +43,7 @@ export type SearchState = {
     page: number,
     nbPages: number,
     data: Array<List | Saving>,
-    token: string,
+    searchKey: string,
 };
 
 export type SearchCategory = {
@@ -56,7 +56,7 @@ export type SearchCategory = {
     placeholder: i18Key,
     onItemSelected?: () => void,
     searchOptions: SearchOptions,
-    renderResults: ({query: SearchQuery, results: SearchState}) => Node,
+    renderResults: ({query: SearchQuery, searchState: SearchState}) => Node,
     renderBlank?: () => Node,
 }
 

@@ -86,8 +86,8 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                 tabName: i18n.t("network_search_tabs.savings"),
                 placeholder: "search_bar.network_placeholder",
                 parseResponse: createResultFromHit,
-                renderResults: ({query, results}) => {
-                    if (!results) {
+                renderResults: ({query, searchState}) => {
+                    if (!searchState) {
                         return <EmptySearch
                             icon={renderBlankIcon('savings')}
                             text={i18n.t("search_item_screen.placeholder.savings")}
@@ -95,7 +95,7 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                     }
 
                     return <SearchPage
-                        search={results}
+                        search={searchState}
                         renderItem={renderItem}
                     />
                 }
@@ -110,8 +110,8 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                 tabName: i18n.t("network_search_tabs.users"),
                 placeholder: "search_bar.network_placeholder",
                 parseResponse: createResultFromHit2,
-                renderResults: ({query, results}) => {
-                    if (!results) {
+                renderResults: ({query, searchState}) => {
+                    if (!searchState) {
                         return <EmptySearch
                             icon={renderBlankIcon('users')}
                             text={i18n.t("search_item_screen.placeholder.users")}
@@ -119,7 +119,7 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                     }
 
                     return <SearchPage
-                        search={results}
+                        search={searchState}
                         renderItem={renderUser}
                     />
                 }

@@ -105,14 +105,14 @@ export default class HomeSearchScreen extends Screen<Props, State> {
                 query,
                 placeholder: "search_bar.me_placeholder",
                 parseResponse: createResultFromHit,
-                renderResults: ({query, results}) => {
-                    if (!results || _.isEmpty(results.data)) {
+                renderResults: ({query, searchState}) => {
+                    if (!searchState || _.isEmpty(searchState.data)) {
                         return <EmptySearch text={i18n.t("lineups.search.empty")}/>
                     }
                     return (
                         <SearchPage
                             query={query}
-                            search={results}
+                            search={searchState}
                             renderItem={renderItem}
                         />
                     )

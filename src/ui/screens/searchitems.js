@@ -23,7 +23,7 @@ import type {
     SearchCategoryType,
     SearchEngine,
     SearchQuery,
-    SearchResult,
+    SearchResult, SearchState,
     SearchTrigger
 } from "../../helpers/SearchHelper"
 import {SEARCH_CATEGORIES_TYPE} from "../../helpers/SearchHelper"
@@ -31,7 +31,7 @@ import SearchScreen from "./search"
 import normalize from 'json-api-normalizer'
 import GTouchable from "../GTouchable"
 import Screen from "../components/Screen"
-import EmptySearch from "../components/EmptySearch"
+import EmptySearch, {renderBlankIcon} from "../components/EmptySearch"
 import type {Item, Lineup, RNNNavigator} from "../../types"
 import {Colors} from "../colors"
 import Geolocation from "../../managers/GeoLocation"
@@ -61,7 +61,6 @@ class SearchItem extends Screen<Props, State> {
     };
 
     render() {
-
         let categories = SEARCH_CATEGORIES_TYPE.map(categ=>{
             return {
                 type: categ,
@@ -70,37 +69,31 @@ class SearchItem extends Screen<Props, State> {
                 // placeholder: "search_item_screen.placeholder." + categ,
 
                 searchOptions: this.renderSearchOptions(categ),
-                renderResults: ({query, results}) => {
-
-                    if (this.displayBlank(query, results)) {
-                        return (
-                            <KeyboardAwareScrollView
+                renderResults: ({query, searchState}) => {
+                    if (this.displayBlank(query, searchState)) {
+                        return (<KeyboardAwareScrollView
                                 contentContainerStyle={{flex:1}}
                                 scrollEnabled={false}
-                                keyboardShouldPersistTaps='always'
-                                // style={{position: 'absolute', bottom:0, top: 0}}
-                            >
-                                <EmptySearch categ={categ}/>
-
-
-                            </KeyboardAwareScrollView>
-                        )
+                                keyboardShouldPersistTaps='always'>
+                                <EmptySearch
+                                    icon={renderBlankIcon(categ)}
+                                    text={i18n.t("search_item_screen.placeholder." + categ)}
+                                />
+                            </KeyboardAwareScrollView>)
                     }
-                    return (
 
+                    return (
                         <SearchPage
-                            search={results}
+                            search={searchState}
                             renderItem={({item})=> (
                                 <GTouchable
                                     onPress={() => this.props.onItemSelected(item, this.props.navigator)}
-                                    disabled={!this.props.onItemSelected}
-                                >
+                                    disabled={!this.props.onItemSelected}>
                                     <ItemCell item={item}/>
                                 </GTouchable>
                             )}
                         />
                     )},
-
             }
         });
 
@@ -114,12 +107,11 @@ class SearchItem extends Screen<Props, State> {
                         let {aroundMe, place} = searchOptions
                         return aroundMe || place
                     }
-
                 }
                 if (_.isEmpty(token)) {
                     return null
                 }
-                return token
+                return `${category}_${token}`
             }
         }
         return <SearchScreen
@@ -145,17 +137,16 @@ class SearchItem extends Screen<Props, State> {
         return index
     }
 
-    displayBlank(query: SearchQuery, results: SearchResult) {
+    displayBlank(query: SearchQuery, searchState: SearchState) {
         const {
             token,
             categoryType,
             options,
-
         } = query;
         switch (categoryType) {
             case 'places':
                 if (options && options.aroundMe) {
-                    return !results || results.state === 0
+                    return !searchState || searchState.requestState === 'idle'
                 }
                 return _.isEmpty(token) ;
             default:
@@ -178,14 +169,10 @@ class SearchItem extends Screen<Props, State> {
     }
 
     search(token: SearchToken, category: SearchCategoryType, page: number, options?:any): Promise<*> {
-
         //searching
         console.debug(`api: searching: token='${token}', category='${category}', page=${page}, options=`, options);
 
         return new Promise((resolve, reject) => {
-
-            //actions.searchFor(this.state.input, cat)
-
             let call = new Api.Call()
                 .withMethod('GET')
                 .withRoute(`search/${category}`);
@@ -206,11 +193,7 @@ class SearchItem extends Screen<Props, State> {
                                 return buildData(data, d.type, d.id);
                             });
 
-                            resolve({
-                                [category]: {
-                                    results, page, nbPages: 0
-                                }
-                            });
+                            resolve({results, page, nbPages: 0});
                         }, err=> {
                             //console.warn(err)
                             reject(err);

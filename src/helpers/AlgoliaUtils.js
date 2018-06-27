@@ -2,7 +2,10 @@
 
 import React from 'react'
 import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import type {SearchCategoryType, SearchTrigger} from "./SearchHelper"
+import type {
+    SearchCategoryType, SearchResult,
+    SearchTrigger
+} from "./SearchHelper"
 import type {RNNNavigator, SearchToken} from "../types"
 import algoliasearch from 'algoliasearch/reactnative'
 import * as appActions from "../auth/actions"
@@ -90,44 +93,16 @@ export function makeAlgoliaSearchEngine(categories, navigator: RNNNavigator) {
                         reject(err);
                         return;
                     }
-                    let res = {};
                     let result = content;
                     let hits = result.hits;
                     console.log(`search result lists: ${hits.length}`);
 
                     let searchResult = category.parseResponse(hits);
 
-                    let type = category.type;
-
-                    let search = {};
-
-                    search.results = searchResult;
-                    search.page = result.page;
-                    search.nbPages = result.nbPages;
-                    res[type] = search;
-
-                    // categFiltered.reduce((obj, c, i) => {
-                    //     // categories.reduce((obj, c, i) => {
-                    //
-                    //     let result = _.get(content.results, 0, {hits: []});
-                    //     let hits = result.hits;
-                    //     console.log(`search result lists: ${hits.length}`);
-                    //
-                    //     let searchResult = c.parseResponse(hits);
-                    //
-                    //     let type = c.type;
-                    //
-                    //     let search = {};
-                    //
-                    //     search.results = searchResult;
-                    //     search.page = result.page;
-                    //     search.nbPages = result.nbPages;
-                    //
-                    //     obj[type] = search;
-                    //     return obj;
-                    // }, res);
-
-                    resolve(res);
+                    let search:SearchResult = {results: searchResult,
+                        page: result.page,
+                        nbPages: result.nbPages};
+                    resolve(search);
                 });
             });
             // index.search(queries, (err, content) => {

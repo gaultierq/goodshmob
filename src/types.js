@@ -163,6 +163,8 @@ export type MergeOpts = MergeOptions<string>
 
 export type SearchToken = string;
 
+export type SearchKey = string;
+
 export type i18Key = string;
 
 export type RequestState = 'idle' | 'sending' | 'ok' | 'ko';
