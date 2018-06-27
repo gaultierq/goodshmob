@@ -43,7 +43,7 @@ export default class SearchPage extends Component<PageProps, PageState> {
         let searchResult: Array<Item|List> = (search && search.data) || [];
         let isSearchRequesting = search && search.requestState === 'sending';
         let emptySearchResult = search && !isSearchRequesting && searchResult.length === 0;
-        let loadingFirst = isSearchRequesting && search.page === 0;
+        let loadingFirst = isSearchRequesting && (search.page === 0 || _.isUndefined(search.page));
 
         if (loadingFirst) return <FullScreenLoader/>
         if (emptySearchResult) return <Text style={{alignSelf: "center", marginTop: 20}}>{i18n.t('lineups.search.empty')}</Text>

@@ -32,6 +32,7 @@ import type {
     SearchState,
     SearchTrigger
 } from "../../helpers/SearchHelper"
+import {SearchKey} from "../../types"
 
 
 //token -> {data, hasMore, isSearching}
@@ -41,7 +42,8 @@ import type {
 export type State = {
     input?: SearchToken,
     routes: Array<*>,
-    searches: { [SearchToken]: {[SearchCategoryType]: SearchState}},
+    searches: { [SearchKey]: SearchState},
+    searchKey: string,
     index: number
 };
 
@@ -168,9 +170,9 @@ export default class SearchScreen extends Component<Props, State> {
     };
 
     renderSearchPage(category: SearchCategory) {
-        let forToken = this.state.searches[this.state.input];
         const categoryType = category.type;
-        let results : SearchState = forToken && forToken[categoryType];
+
+        let searchState : SearchState = this.state.searches[this.state.searchKey]
         let query: SearchQuery = {
             token: this.state.input,
             categoryType,
@@ -178,7 +180,7 @@ export default class SearchScreen extends Component<Props, State> {
         }
 
         //FIXME: restore loadmore
-        return category.renderResults({query, results})
+        return category.renderResults({query, searchState})
     }
 
 
@@ -217,57 +219,45 @@ export default class SearchScreen extends Component<Props, State> {
 
         const searchKey = getSearchKey(token, catType, trigger, options)
 
+        this.setState({searchKey})
+
         if (_.isNull(searchKey)) {
             console.log(`perform search aborted: cannot search`);
             return;
         }
 
-        //set searching
-        const defaultState = {
-            searches: {
-                ...this.state.searches,
-                [token]: {
-                    ..._.get(this.state, `searches.${token}`, null),
-                    [catType]: {
-                        ..._.get(this.state, `searches.${token}.${catType}`, null),
-                        page, requestState: 'sending', token
-                    }
-                }
-            },
-        };
-        this.setState(defaultState, () => {
-            console.log(`index set within perform search=${this.state.index}`);
-        });
-
+        this.setState({searches: {...this.state.searches, [searchKey]: {requestState: 'sending'}}});
 
 
         search(token, catType, page, options)
-            .catch(err=> {
+            .catch(err => {
                 console.warn(`error while performing search:`, err);
                 this.setState(update(this.state, {searches: {[token]: {[catType]: {$merge: {requestState: 'ko'}}}}},));
             })
-            .then((results: SearchResult) => {
-                console.debug('search results', results)
-                if (!results) {
+            .then((searchResult: SearchResult) => {
+                console.debug('search results', searchResult)
+                if (!searchResult || !searchResult.results) {
+                    console.debug('ERROR: searchResult is falsey or searchResult.results is falsey')
                     // TODO: set state error
                     return;
                 }
 
-                let result = results[catType];
-                if (result) {
-                    let {page, nbPages} = result;
-                    let newItems = result.results;
-                    let requestState = 'ok';
-                    let merge = {page, nbPages, requestState};
+                let {results, page, nbPages} = searchResult;
 
-                    if (!page) merge = {...merge, data: []};
-                    let newState = this.state;
-                    newState = update(newState, {searches: {[token]: {[catType]: {$merge: merge}}}},);
-                    newState = update(newState, {searches: {[token]: {[catType]: {data: {$push: newItems}}}}});
-                    this.setState(newState, () => {
-                        console.log(`index (2) set within perform search=${this.state.index}`);
-                    });
+                const searchState : SearchState = {
+                    nbPages,
+                    page,
+                    searchKey,
+                    data: results,
+                    requestState: 'ok',
                 }
+                let prevState = this.state
+
+                this.setState({searches: {...prevState.searches, [searchKey]: searchState}}, () => {
+                    console.log(`Search state set for key ${searchKey} and state`, searchState);
+                });
+
+                // TODO: Eliot add pagination
             });
     }
 
