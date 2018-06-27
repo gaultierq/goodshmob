@@ -2,6 +2,9 @@ PODS:
   - Firebase/Core (4.8.0):
     - FirebaseAnalytics (= 4.0.5)
     - FirebaseCore (= 4.0.13)
+  - Firebase/DynamicLinks (4.8.0):
+    - Firebase/Core
+    - FirebaseDynamicLinks (= 2.3.1)
   - Firebase/Messaging (4.8.0):
     - Firebase/Core
     - FirebaseMessaging (= 2.0.8)
@@ -12,6 +15,8 @@ PODS:
     - nanopb (~> 0.3)
   - FirebaseCore (4.0.13):
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
+  - FirebaseDynamicLinks (2.3.1):
+    - FirebaseAnalytics (~> 4.0)
   - FirebaseInstanceID (2.0.8):
     - FirebaseCore (~> 4.0)
   - FirebaseMessaging (2.0.8):
@@ -71,6 +76,7 @@ PODS:
 
 DEPENDENCIES:
   - Firebase/Core
+  - Firebase/DynamicLinks
   - Firebase/Messaging
   - nanopb (from `https://raw.githubusercontent.com/tnantoka/nanopb-podspec/deployment-target/nanopb/0.3.8/nanopb.podspec`)
   - react-native-config (from `../node_modules/react-native-config`)
@@ -103,6 +109,7 @@ SPEC CHECKSUMS:
   Firebase: 710decbbc6d9d48530e9a5dba3209740c3532e05
   FirebaseAnalytics: 5b02a63ead2c3f0259cfc7f15e053e440587ecf8
   FirebaseCore: 3c02ec652db3d03fdc8bc6d9154af3e20d64b6f5
+  FirebaseDynamicLinks: b708fbc1e9bd77c2d992812736b206820e283203
   FirebaseInstanceID: 81df5805a08001e69138664bdd02c6719a9ac80f
   FirebaseMessaging: dfdcd307c2382290a1e297a81d0f18370f5b1bcd
   GoogleToolboxForMac: 2501e2ad72a52eb3dfe7bd9aee7dad11b858bd20
@@ -112,6 +119,6 @@ SPEC CHECKSUMS:
   react-native-config: 408003951fd9d8b1dfd7ebf535f67c315f44d823
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: 2866b5e9ab4eb3d7d98e4da05aba5969d49a927a
+PODFILE CHECKSUM: 4d364b76edbfb427b7e9031c7ba03210c2bb2018
 
 COCOAPODS: 1.4.0

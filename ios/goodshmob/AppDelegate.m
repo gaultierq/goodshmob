@@ -11,6 +11,7 @@
 #import "RNFirebaseNotifications.h"
 #import "RNFirebaseMessaging.h"
 #import <React/RCTLinkingManager.h>
+#import "RNFirebaseLinks.h"
 
 // **********************************************
 // *** DON'T MISS: THE NEXT LINE IS IMPORTANT ***
@@ -71,6 +72,7 @@
 //  }
   
   if ([ReactNativeConfig envFor:@"WITH_NOTIFICATIONS"]) {
+    [FIROptions defaultOptions].deepLinkURLScheme = [[[NSBundle mainBundle] infoDictionary] valueForKey:@"DYNAMIC_LINK_PROTOCOL_SCHEME"];
     [FIRApp configure];
     [RNFirebaseNotifications configure];
   }
@@ -82,19 +84,23 @@
   return YES;
 }
 
-- (BOOL)application:(UIApplication *)application
-            openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation {
-  return [[FBSDKApplicationDelegate sharedInstance] application:application
-                                                        openURL:url
-                                              sourceApplication:sourceApplication
-                                                     annotation:annotation]
-  ||  [RCTLinkingManager
-         application:application
-         openURL:url
-         sourceApplication:sourceApplication
-         annotation:annotation];
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+  BOOL handled = [[FBSDKApplicationDelegate sharedInstance] application:application
+                                                                openURL:url
+                                                      sourceApplication: options[UIApplicationOpenURLOptionsSourceApplicationKey] annotation: options[UIApplicationOpenURLOptionsAnnotationKey]];
+
+  if (!handled) {
+      handled = [RCTLinkingManager
+                 application:application
+                 openURL:url
+                 sourceApplication: options[UIApplicationOpenURLOptionsSourceApplicationKey]
+                 annotation: options[UIApplicationOpenURLOptionsAnnotationKey]];
+    }
+  if (!handled) {
+    handled = [[RNFirebaseLinks instance] application:application openURL:url options:options];
+  }
+  
+  return handled;
 }
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
@@ -131,9 +137,14 @@
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity
  restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler
 {
-  return [RCTLinkingManager application:application
+  BOOL handled = [RCTLinkingManager application:application
                    continueUserActivity:userActivity
                      restorationHandler:restorationHandler];
+  if (!handled) {
+    handled = [[RNFirebaseLinks instance] application:application continueUserActivity:userActivity restorationHandler:restorationHandler];
+  }
+  return handled;
 }
 
 @end
+

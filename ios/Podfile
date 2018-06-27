@@ -10,6 +10,7 @@ target 'goodshmob' do
   # Pods for goodshmob
   pod 'Firebase/Core'
   pod 'Firebase/Messaging'
+  pod 'Firebase/DynamicLinks'
   pod 'react-native-config', :path => '../node_modules/react-native-config'
 
   #https://github.com/evollu/react-native-fcm/issues/769
