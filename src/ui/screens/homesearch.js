@@ -28,7 +28,6 @@ import {Colors} from "../colors"
 
 type Props = NavigableProps & {
     token?:SearchToken,
-    userId: Id
 };
 
 type State = {
@@ -41,10 +40,6 @@ export default class HomeSearchScreen extends Screen<Props, State> {
     static navigatorStyle = {
         navBarNoBorder: true,
         topBarElevationShadowEnabled: false
-    };
-
-    static defaultProps = {
-        userId: currentUserId()
     };
 
     render() {
@@ -95,7 +90,7 @@ export default class HomeSearchScreen extends Screen<Props, State> {
 
 
         let query = {
-            filters: `user_id:${this.props.userId}`,
+            filters: `user_id:${currentUserId()}`,
         };
 
         let categories : Array<SearchCategory> = [
