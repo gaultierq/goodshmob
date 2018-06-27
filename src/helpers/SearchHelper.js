@@ -1,6 +1,7 @@
 // @flow
 
 import type {i18Key, List, Saving, SearchToken} from "../types"
+import {RequestState} from "../types"
 
 
 export type SearchCategoryType = string;
@@ -24,12 +25,13 @@ export type SearchEngine = {
             page: number,
             searchOptions?: any
         ) => Promise<SearchResult>,
-    canSearch: (
+    getSearchKey: (
         token: SearchToken,
         category: SearchCategoryType,
         trigger: SearchTrigger,
         searchOptions?: any
-    ) => boolean
+    ) => string,
+
 
 };
 export type SearchTrigger = 'unknown' | 'button' | 'input_changed' | 'tab_changed' | 'intial_token'
@@ -37,7 +39,7 @@ export type SearchOptions = {
     renderOptions: (any, any => void, void => void) => Node
 }
 export type SearchState = {
-    searchState: number, //0,1,2,3
+    requestState: RequestState,
     page: number,
     nbPages: number,
     data: Array<List | Saving>,

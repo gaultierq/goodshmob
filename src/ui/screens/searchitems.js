@@ -107,7 +107,7 @@ class SearchItem extends Screen<Props, State> {
 
         const searchEngine: SearchEngine = {
             search: this.search.bind(this),
-            canSearch: (token: SearchToken, category: SearchCategoryType, trigger: SearchTrigger, searchOptions?:any) => {
+            getSearchKey: (token: SearchToken, category: SearchCategoryType, trigger: SearchTrigger, searchOptions?:any) => {
                 //if search places, do not auto search if tab change
                 if (category === 'places' && searchOptions && (searchOptions.aroundMe || searchOptions.place)) {
                     if (searchOptions) {
@@ -116,7 +116,10 @@ class SearchItem extends Screen<Props, State> {
                     }
 
                 }
-                return !_.isEmpty(token);
+                if (_.isEmpty(token)) {
+                    return null
+                }
+                return token
             }
         }
         return <SearchScreen
@@ -197,7 +200,6 @@ class SearchItem extends Screen<Props, State> {
                     call
                         .run()
                         .then(response=>{
-                            console.log(response);
                             let data = normalize(response.json);
 
                             let results = response.json.data.map(d=>{
