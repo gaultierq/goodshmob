@@ -136,8 +136,8 @@ export function makeAlgoliaSearchEngine(categories, navigator: RNNNavigator) {
     };
     return {
         search,
-        canSearch: (token: SearchToken, category: SearchCategoryType, trigger: SearchTrigger, searchOptions?:any) => {
-            return !_.isEmpty(token);
+        getSearchKey: (token: SearchToken, category: SearchCategoryType, trigger: SearchTrigger, searchOptions?:any) => {
+            return _.isEmpty(token) ? null : token;
         }
     };
 }

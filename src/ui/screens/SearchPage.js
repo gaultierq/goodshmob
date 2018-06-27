@@ -41,7 +41,7 @@ export default class SearchPage extends Component<PageProps, PageState> {
 
 
         let searchResult: Array<Item|List> = (search && search.data) || [];
-        let isSearchRequesting = search && search.searchState === 1;
+        let isSearchRequesting = search && search.requestState === 'sending';
         let emptySearchResult = search && !isSearchRequesting && searchResult.length === 0;
         let loadingFirst = isSearchRequesting && search.page === 0;
 

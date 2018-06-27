@@ -184,15 +184,13 @@ export default class SearchScreen extends Component<Props, State> {
 
     //FIXME: restore
     renderSearchFooter(search: SearchState) {
-        //let search = this.props.search;
         if (!search) return null;
         let nextPage = search.page + 1;
 
         let hasMore = nextPage < search.nbPages;
         if (!hasMore) return null;
 
-        //TODO: flaw
-        let isLoadingMore = /*search.page > 0 && */search.searchState === 1;
+        let isLoadingMore = search.requestState === 'sending';
 
         return (<Button
             isLoading={isLoadingMore}
@@ -213,29 +211,31 @@ export default class SearchScreen extends Component<Props, State> {
         let catType = this.getCurrentCategory().type;
 
         console.log(`performSearch:token=${token} page=${page}`);
-        const {search, canSearch} = this.props.searchEngine;
+        const {search, getSearchKey} = this.props.searchEngine;
         const options = this.getSearchOptions(catType);
 
 
-        if (!canSearch(token, catType, trigger, options)) {
+        const searchKey = getSearchKey(token, catType, trigger, options)
+
+        if (_.isNull(searchKey)) {
             console.log(`perform search aborted: cannot search`);
             return;
         }
 
         //set searching
-        const debugState = {
+        const defaultState = {
             searches: {
                 ...this.state.searches,
                 [token]: {
                     ..._.get(this.state, `searches.${token}`, null),
                     [catType]: {
                         ..._.get(this.state, `searches.${token}.${catType}`, null),
-                        page, searchState: 1, token
+                        page, requestState: 'sending', token
                     }
                 }
             },
         };
-        this.setState(debugState, () => {
+        this.setState(defaultState, () => {
             console.log(`index set within perform search=${this.state.index}`);
         });
 
@@ -244,11 +244,10 @@ export default class SearchScreen extends Component<Props, State> {
         search(token, catType, page, options)
             .catch(err=> {
                 console.warn(`error while performing search:`, err);
-                this.setState(update(this.state, {searches: {[token]: {[catType]: {$merge: {searchState: 3}}}}},));
+                this.setState(update(this.state, {searches: {[token]: {[catType]: {$merge: {requestState: 'ko'}}}}},));
             })
             .then((results: SearchResult) => {
                 console.debug('search results', results)
-                //const catType = this.getCurrentCategory().type;
                 if (!results) {
                     // TODO: set state error
                     return;
@@ -258,8 +257,8 @@ export default class SearchScreen extends Component<Props, State> {
                 if (result) {
                     let {page, nbPages} = result;
                     let newItems = result.results;
-                    let searchState = 2;
-                    let merge = {page, nbPages, searchState};
+                    let requestState = 'ok';
+                    let merge = {page, nbPages, requestState};
 
                     if (!page) merge = {...merge, data: []};
                     let newState = this.state;
