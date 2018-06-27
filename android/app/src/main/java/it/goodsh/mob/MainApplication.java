@@ -26,6 +26,7 @@ import io.fabric.sdk.android.Fabric;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
+import io.invertase.firebase.links.RNFirebaseLinksPackage;
 import ui.taptargetview.RNTapTargetViewPackage;
 
 import com.bugsnag.BugsnagReactNative;
@@ -75,6 +76,7 @@ public class MainApplication extends NavigationApplication implements ReactAppli
             new RNFirebasePackage(),
             new RNFirebaseNotificationsPackage(),
             new RNFirebaseMessagingPackage(),
+            new RNFirebaseLinksPackage(),
             BugsnagReactNative.getPackage(),
             new SnackbarPackage(),
             new VectorIconsPackage(),

@@ -322,6 +322,8 @@ dependencies {
     implementation("com.google.android.gms:play-services-base:${rootProject.ext.googlePlayServicesVersion}")
     implementation "com.google.firebase:firebase-core:${rootProject.ext.googlePlayServicesVersion}"
     implementation "com.google.firebase:firebase-messaging:${rootProject.ext.googlePlayServicesVersion}"
+    implementation "com.google.firebase:firebase-invites:${rootProject.ext.googlePlayServicesVersion}"
+
     implementation 'me.leolin:ShortcutBadger:1.1.21@aar' // <-- Add this line if you wish to use badge on Android
 
 
