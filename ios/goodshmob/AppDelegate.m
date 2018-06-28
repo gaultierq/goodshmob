@@ -12,6 +12,7 @@
 #import "RNFirebaseMessaging.h"
 #import <React/RCTLinkingManager.h>
 #import "RNFirebaseLinks.h"
+#import <FirebaseDynamicLinks/FirebaseDynamicLinks.h>
 
 // **********************************************
 // *** DON'T MISS: THE NEXT LINE IS IMPORTANT ***
@@ -72,7 +73,8 @@
 //  }
   
   if ([ReactNativeConfig envFor:@"WITH_NOTIFICATIONS"]) {
-    [FIROptions defaultOptions].deepLinkURLScheme = [[[NSBundle mainBundle] infoDictionary] valueForKey:@"DYNAMIC_LINK_PROTOCOL_SCHEME"];
+    [FIROptions defaultOptions].deepLinkURLScheme = @"goodshlocal";
+    //[[[NSBundle mainBundle] infoDictionary] valueForKey:@"DYNAMIC_LINK_PROTOCOL_SCHEME"];
     [FIRApp configure];
     [RNFirebaseNotifications configure];
   }
@@ -81,6 +83,8 @@
     [Fabric with:@[[Answers class], [Crashlytics class]]];
   }
 
+  [FIRDynamicLinks performDiagnosticsWithCompletion:nil];
+  
   return YES;
 }
 

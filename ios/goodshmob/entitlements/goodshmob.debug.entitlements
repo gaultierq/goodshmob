@@ -7,6 +7,7 @@
 	<key>com.apple.developer.associated-domains</key>
 	<array>
 		<string>applinks:goodshitapp-staging.herokuapp.com</string>
+		<string>applinks:goodshlocal.page.link</string>
 	</array>
 </dict>
 </plist>

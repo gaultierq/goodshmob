@@ -1854,7 +1854,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Name of the resource we're selectively copying\nGOOGLESERVICE_INFO_PLIST=GoogleService-Info.plist\n\n# Get references to dev and prod versions of the GoogleService-Info.plist\n# NOTE: These should only live on the file system and should NOT be part of the target (since we'll be adding them to the target manually)\nGOOGLESERVICE_INFO_DEV=${PROJECT_DIR}/${TARGET_NAME}/Firebase/Dev/${GOOGLESERVICE_INFO_PLIST}\nGOOGLESERVICE_INFO_PROD=${PROJECT_DIR}/${TARGET_NAME}/Firebase/Prod/${GOOGLESERVICE_INFO_PLIST}\n\n# Make sure the dev version of GoogleService-Info.plist exists\necho \"Looking for ${GOOGLESERVICE_INFO_PLIST} in ${GOOGLESERVICE_INFO_DEV}\"\nif [ ! -f $GOOGLESERVICE_INFO_DEV ]\nthen\necho \"No Development GoogleService-Info.plist found. Please ensure it's in the proper directory.\"\nexit 1\nfi\n\n# Make sure the prod version of GoogleService-Info.plist exists\necho \"Looking for ${GOOGLESERVICE_INFO_PLIST} in ${GOOGLESERVICE_INFO_PROD}\"\nif [ ! -f $GOOGLESERVICE_INFO_PROD ]\nthen\necho \"No Production GoogleService-Info.plist found. Please ensure it's in the proper directory.\"\nexit 1\nfi\n\n# Get a reference to the destination location for the GoogleService-Info.plist\nPLIST_DESTINATION=${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app\necho \"Will copy ${GOOGLESERVICE_INFO_PLIST} to final destination: ${PLIST_DESTINATION}\"\n\n# Copy over the prod GoogleService-Info.plist for Release builds\nif [ \"${CONFIGURATION}\" == \"Prod\" ]\nthen\necho \"Using ${GOOGLESERVICE_INFO_PROD}\"\ncp -v \"${GOOGLESERVICE_INFO_PROD}\" \"${PLIST_DESTINATION}\"\ncp -v \"${GOOGLESERVICE_INFO_PROD}\" \"${PROJECT_DIR}/${TARGET_NAME}\"\nelse\necho \"Using ${GOOGLESERVICE_INFO_DEV}\"\ncp -v \"${GOOGLESERVICE_INFO_DEV}\" \"${PLIST_DESTINATION}\"\ncp -v \"${GOOGLESERVICE_INFO_DEV}\" \"${PROJECT_DIR}/${TARGET_NAME}\"\nfi\necho \"Displaying result of copy\"\nls \"${PLIST_DESTINATION}\"";
+			shellScript = "# Name of the resource we're selectively copying\nGOOGLESERVICE_INFO_PLIST=GoogleService-Info.plist\n\n# Get references to dev and prod versions of the GoogleService-Info.plist\n# NOTE: These should only live on the file system and should NOT be part of the target (since we'll be adding them to the target manually)\nGOOGLESERVICE_INFO_DEBUG=${PROJECT_DIR}/${TARGET_NAME}/Firebase/Debug/${GOOGLESERVICE_INFO_PLIST}\nGOOGLESERVICE_INFO_DEV=${PROJECT_DIR}/${TARGET_NAME}/Firebase/Dev/${GOOGLESERVICE_INFO_PLIST}\nGOOGLESERVICE_INFO_PROD=${PROJECT_DIR}/${TARGET_NAME}/Firebase/Prod/${GOOGLESERVICE_INFO_PLIST}\n\n# Make sure the dev version of GoogleService-Info.plist exists\necho \"Looking for ${GOOGLESERVICE_INFO_PLIST} in ${GOOGLESERVICE_INFO_DEV}\"\nif [ ! -f $GOOGLESERVICE_INFO_DEV ]\nthen\necho \"No Development GoogleService-Info.plist found. Please ensure it's in the proper directory.\"\nexit 1\nfi\n\n# Make sure the prod version of GoogleService-Info.plist exists\necho \"Looking for ${GOOGLESERVICE_INFO_PLIST} in ${GOOGLESERVICE_INFO_PROD}\"\nif [ ! -f $GOOGLESERVICE_INFO_PROD ]\nthen\necho \"No Production GoogleService-Info.plist found. Please ensure it's in the proper directory.\"\nexit 1\nfi\n\n# Get a reference to the destination location for the GoogleService-Info.plist\nPLIST_DESTINATION=${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app\necho \"Will copy ${GOOGLESERVICE_INFO_PLIST} to final destination: ${PLIST_DESTINATION}\"\n\n# Copy over the prod GoogleService-Info.plist for Release builds\nif [ \"${CONFIGURATION}\" == \"Prod\" ]\nthen\n    echo \"Using ${GOOGLESERVICE_INFO_PROD}\"\n    cp -v \"${GOOGLESERVICE_INFO_PROD}\" \"${PLIST_DESTINATION}\"\n    cp -v \"${GOOGLESERVICE_INFO_PROD}\" \"${PROJECT_DIR}/${TARGET_NAME}\"\nelif [ \"${CONFIGURATION}\" == \"Debug\" ]\nthen\n    echo \"Using ${GOOGLESERVICE_INFO_DEBUG}\"\n    cp -v \"${GOOGLESERVICE_INFO_DEBUG}\" \"${PLIST_DESTINATION}\"\n    cp -v \"${GOOGLESERVICE_INFO_DEBUG}\" \"${PROJECT_DIR}/${TARGET_NAME}\"\nelse\n    echo \"Using ${GOOGLESERVICE_INFO_DEV}\"\n    cp -v \"${GOOGLESERVICE_INFO_DEV}\" \"${PLIST_DESTINATION}\"\n    cp -v \"${GOOGLESERVICE_INFO_DEV}\" \"${PROJECT_DIR}/${TARGET_NAME}\"\nfi\necho \"Displaying result of copy\"\nls \"${PLIST_DESTINATION}\"\n";
 		};
 		D0DBBED91FF5F3ED00ABBCAB /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1920,7 +1920,6 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 656VNMF77V;
-				DYNAMIC_LINK_PROTOCOL_SCHEME = "applinks:goodshdev.page.link";
 				FACEBOOK_APP_ID = 857429951037660;
 				FACEBOOK_DISPLAY_NAME = "debug - Goodsh";
 				FACEBOOK_LOGIN_URL_SCHEME = fb857429951037660;
@@ -1987,7 +1986,6 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 656VNMF77V;
-				DYNAMIC_LINK_PROTOCOL_SCHEME = "applinks:goodshrelease.page.link";
 				FACEBOOK_APP_ID = 857429951037660;
 				FACEBOOK_DISPLAY_NAME = "release - Goodsh";
 				FACEBOOK_LOGIN_URL_SCHEME = fb857429951037660;
@@ -2198,7 +2196,6 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 656VNMF77V;
-				DYNAMIC_LINK_PROTOCOL_SCHEME = "applinks:goodshpreprod.page.link";
 				FACEBOOK_APP_ID = 1933031383391822;
 				FACEBOOK_DISPLAY_NAME = "preprod - Goodsh";
 				FACEBOOK_LOGIN_URL_SCHEME = fb1933031383391822;
@@ -2310,7 +2307,6 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 656VNMF77V;
-				DYNAMIC_LINK_PROTOCOL_SCHEME = "applinks:goodshdev.page.link";
 				FACEBOOK_APP_ID = 857429951037660;
 				FACEBOOK_DISPLAY_NAME = "release - Goodsh";
 				FACEBOOK_LOGIN_URL_SCHEME = fb857429951037660;
@@ -2422,7 +2418,6 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 656VNMF77V;
-				DYNAMIC_LINK_PROTOCOL_SCHEME = "applinks:goodsh.page.link";
 				FACEBOOK_APP_ID = 787478441366145;
 				FACEBOOK_DISPLAY_NAME = "release - Goodsh";
 				FACEBOOK_LOGIN_URL_SCHEME = fb787478441366145;

@@ -418,7 +418,7 @@ export default class App {
                             .then((url) => {
                                 this.logger.info("dynamic link", url)
                                 if (url) {
-
+                                    alert(`dynamic link ${url}`)
                                 }
                                 else {
                                     // app NOT opened from a url

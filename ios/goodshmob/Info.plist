@@ -30,7 +30,6 @@
 				<string>$(FACEBOOK_LOGIN_URL_SCHEME)</string>
 				<string>ak$(FACEBOOK_APP_ID)</string>
 				<string>$(GOODSH_URL_SCHEME)</string>
-				<string>$(DYNAMIC_LINK_PROTOCOL_SCHEME)</string>
 			</array>
 		</dict>
 	</array>
