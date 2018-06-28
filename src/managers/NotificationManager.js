@@ -23,6 +23,8 @@ class _NotificationManager implements NotificationManager {
         this.logger.info("fcm:load");
         this.configureSafe()
         this._hasPermission = await this.hasPermissions()
+
+
     }
 
     configureSafe() {

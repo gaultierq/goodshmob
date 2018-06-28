@@ -33,7 +33,7 @@ import BugsnagManager from "./managers/BugsnagManager"
 import RNAccountKit, {Color,} from 'react-native-facebook-account-kit'
 import RNProgressHUB from 'react-native-progresshub'
 import {actions as userActions, actionTypes as userActionTypes} from "./redux/UserActions"
-
+import firebase from 'react-native-firebase'
 
 type AppMode = 'idle' | 'init_cache' | 'logged' | 'unlogged' | 'upgrading_cache' | 'unknown'
 type AppConfig = {
@@ -411,6 +411,19 @@ export default class App {
                         BugsnagManager.setUser(currentUser());
 
                         DeviceManager.checkAndSendDiff();
+
+
+                        firebase.links()
+                            .getInitialLink()
+                            .then((url) => {
+                                this.logger.info("dynamic link", url)
+                                if (url) {
+
+                                }
+                                else {
+                                    // app NOT opened from a url
+                                }
+                            });
 
                         this.launchMain(navigatorStyle);
                     }
