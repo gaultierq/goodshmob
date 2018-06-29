@@ -21,11 +21,11 @@ import {buildData} from "../../helpers/DataUtils"
 import type {
     SearchCategory,
     SearchCategoryType,
-    SearchEngine,
+    SearchEngine, SearchOptions,
     SearchQuery,
     SearchResult, SearchState,
 } from "../../helpers/SearchHelper"
-import {SEARCH_CATEGORIES_TYPE} from "../../helpers/SearchHelper"
+import {RenderOptions, SEARCH_CATEGORIES_TYPE} from "../../helpers/SearchHelper"
 import SearchScreen from "./search"
 import normalize from 'json-api-normalizer'
 import GTouchable from "../GTouchable"
@@ -64,7 +64,7 @@ class SearchItem extends Screen<Props, State> {
                 type: categ,
                 tabName: i18n.t("search_item_screen.tabs." + categ),
                 description: i18n.t("search_item_screen.placeholder." + categ),
-                searchOptions: this.renderSearchOptions(categ),
+                renderOptions: this.renderSearchOptions(categ),
                 renderItem: ({item})=> (
                     <GTouchable
                         onPress={() => this.props.onItemSelected(item, this.props.navigator)}
@@ -82,14 +82,16 @@ class SearchItem extends Screen<Props, State> {
 
         const searchEngine: SearchEngine = {
             search: this.search.bind(this),
-            getSearchKey: (token: SearchToken, category: SearchCategoryType, searchOptions?:any) => {
+            getSearchKey: (category: SearchCategoryType, searchOptions: SearchOptions) => {
+                //TODO: put back
                 //if search places, do not auto search if tab change
-                if (category === 'places' && searchOptions && (searchOptions.aroundMe || searchOptions.place)) {
-                    if (searchOptions) {
-                        let {aroundMe, place} = searchOptions
-                        return aroundMe || place
-                    }
-                }
+                // if (category === 'places' && searchOptions && (searchOptions.aroundMe || searchOptions.place)) {
+                //     if (searchOptions) {
+                //         let {aroundMe, place} = searchOptions
+                //         return aroundMe || place
+                //     }
+                // }
+                const token = searchOptions.token
                 if (_.isEmpty(token)) {
                     return null
                 }
@@ -136,23 +138,26 @@ class SearchItem extends Screen<Props, State> {
         }
     }
 
-    renderSearchOptions(category: SearchCategoryType) {
-        return category === 'places' && {
-            renderOptions: (currentOptions: any, onNewOptions: SearchPlacesProps, onSearchSubmited: any) => (
-                <SearchPlacesOption
+    renderSearchOptions(category: SearchCategoryType): RenderOptions {
+        if (category === 'places') {
+            return (currentOptions: SearchOptions, onNewOptions: SearchPlacesProps) => {
+
+                return <SearchPlacesOption
                     {...currentOptions}
                     onNewOptions={onNewOptions}
-                    onSearchSubmited={onSearchSubmited}
+                    // onSearchSubmited={onSearchSubmited}
                     navigator={this.props.navigator}
                 />
-            ),
-        };
+            }
+        }
+        return
 
     }
 
-    search(token: SearchToken, category: SearchCategoryType, page: number, options?:any): Promise<*> {
+    search(category: SearchCategoryType, page: number, searchOptions: SearchOptions): Promise<*> {
         //searching
-        console.debug(`api: searching: token='${token}', category='${category}', page=${page}, options=`, options);
+        const token = searchOptions.token;
+        console.debug(`api: searching: token='${token}', category='${category}', page=${page}, options=`, searchOptions);
 
         return new Promise((resolve, reject) => {
             let call = new Api.Call()
@@ -163,7 +168,7 @@ class SearchItem extends Screen<Props, State> {
                 call.addQuery({'search[term]': token});
             }
 
-            this.fillOptions(category, call, options)
+            this.fillOptions(category, call, searchOptions)
                 .then(call=> {
                     //maybe use redux here ?
                     call

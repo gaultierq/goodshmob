@@ -213,7 +213,6 @@ export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlace
                             style={{
                                 color: Colors.brownishGrey,
                                 flex: 1,
-                                singleLine: true,
                                 backgroundColor: 'transparent',
                             }}>{i18n.t("search_item_screen.search_options.around_me")}
 

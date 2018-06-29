@@ -28,7 +28,7 @@ import EmptySearch, {renderBlankIcon} from "../components/EmptySearch"
 import type {
     SearchCategory,
     SearchCategoryType,
-    SearchEngine,
+    SearchEngine, SearchOptions,
     SearchQuery,
     SearchResult,
     SearchState,
@@ -65,7 +65,7 @@ export default class SearchScreen extends Component<Props, State> {
 
     state : State;
 
-    searchOptions: { [SearchCategoryType]: *} = {};
+    searchOptions: { [SearchCategoryType]: SearchOptions} = {};
 
     static defaultProps = {index: 0, autoSearch: true};
 
@@ -96,6 +96,11 @@ export default class SearchScreen extends Component<Props, State> {
         this.setState({index}, () => this.tryPerformSearch(this.state.input, 0));
     }
 
+    onNewOptions(newOptions: SearchOptions, cat) {
+        this.searchOptions[cat.type] = newOptions;
+        this._debounceSearch();
+    };
+
     render() {
 
         let nCat = this.props.categories.length;
@@ -105,10 +110,7 @@ export default class SearchScreen extends Component<Props, State> {
 
         const showTabs = nCat > 1 && (hasSearched || true);
 
-        const onNewOptions = newOptions => {
-            this.searchOptions[cat.type] = newOptions;
-            this._debounceSearch();
-        };
+
 
         return (
             <KeyboardAvoidingView behavior={ (Platform.OS === 'ios') ? 'padding' : null }
@@ -118,7 +120,7 @@ export default class SearchScreen extends Component<Props, State> {
                 {
                     <GSearchBar2
                         onChangeText={input => this.setState({input}, input => this._debounceSearch(input))}
-                        onSubmitEditing={() => this.tryPerformSearch(this.state.input, 0)}
+                        onSubmitEditing={() => this.tryPerformSearch(0)}
                         placeholder={this.props.placeholder}
                         value={this.state.input}
                         autoFocus
@@ -127,16 +129,6 @@ export default class SearchScreen extends Component<Props, State> {
                             paddingBottom: 5,
                             paddingHorizontal: LINEUP_PADDING, backgroundColor: NAV_BACKGROUND_COLOR}}
                     />
-                }
-
-                {
-                    cat && cat.searchOptions && (
-                        cat.searchOptions.renderOptions(
-                            this.getSearchOptions(cat.type),
-                            onNewOptions,
-                            this._debounceSearch
-                            )
-                    )
                 }
 
                 { showTabs && <TabView
@@ -168,18 +160,20 @@ export default class SearchScreen extends Component<Props, State> {
     }
 
     renderScene({ route }: *) {
-        return this.renderSearchPage(this.props.categories[route.key])
+        const category = this.props.categories[route.key]
+
+        const renderOptions = category && category.renderOptions
+        const onNewOptionsCategory = _.curryRight(this.onNewOptions)(category).bind(this)
+        const searchOptions: SearchOptions = this.getSearchOptions(category.type) || {}
+
+        return <View style={{flex:1}}>
+            {renderOptions && renderOptions(searchOptions, onNewOptionsCategory)}
+            {this.renderSearchPage(category)}
+        </View>
     };
 
     renderSearchPage(category: SearchCategory) {
-        const categoryType = category.type;
-
         let searchState : SearchState = this.state.searches[this.state.searchKey]
-        let query: SearchQuery = {
-            token: this.state.input,
-            categoryType,
-            options: this.getSearchOptions(categoryType)
-        }
 
         if (!searchState) return category.renderEmpty
         if (searchState.requestState === 'sending') return <FullScreenLoader/>
@@ -189,49 +183,47 @@ export default class SearchScreen extends Component<Props, State> {
             return <Text style={{alignSelf: "center", marginTop: 20}}>{i18n.t("lineups.search.empty")}</Text>
 
         return <FlatList
-            data={searchState.data}
-            renderItem={category.renderItem}
-            keyExtractor={(item) => item.id}
-            onScrollBeginDrag={Keyboard.dismiss}
-            keyboardShouldPersistTaps='always'/>
+                data={searchState.data}
+                renderItem={category.renderItem}
+                keyExtractor={(item) => item.id}
+                onScrollBeginDrag={Keyboard.dismiss}
+                keyboardShouldPersistTaps='always'/>
     }
 
+    // //FIXME: restore
+    // renderSearchFooter(search: SearchState) {
+    //     if (!search) return null;
+    //     let nextPage = search.page + 1;
+    //
+    //     let hasMore = nextPage < search.nbPages;
+    //     if (!hasMore) return null;
+    //
+    //     let isLoadingMore = search.requestState === 'sending';
+    //
+    //     return (<Button
+    //         isLoading={isLoadingMore}
+    //         isDisabled={isLoadingMore}
+    //         onPress={()=>{this.tryPerformSearch(search.token, nextPage)}}
+    //         style={[styles.button, {marginTop: 15}]}
+    //         disabledStyle={styles.button}
+    //     >
+    //         <Text style={{color: isLoadingMore ? Colors.greyishBrown : Colors.black}}>{i18n.t('actions.load_more')}</Text>
+    //     </Button>);
+    // }
 
 
-    //FIXME: restore
-    renderSearchFooter(search: SearchState) {
-        if (!search) return null;
-        let nextPage = search.page + 1;
+    _debounceSearch = _.debounce(() => this.tryPerformSearch(0), 500);
 
-        let hasMore = nextPage < search.nbPages;
-        if (!hasMore) return null;
-
-        let isLoadingMore = search.requestState === 'sending';
-
-        return (<Button
-            isLoading={isLoadingMore}
-            isDisabled={isLoadingMore}
-            onPress={()=>{this.tryPerformSearch(search.token, nextPage)}}
-            style={[styles.button, {marginTop: 15}]}
-            disabledStyle={styles.button}
-        >
-            <Text style={{color: isLoadingMore ? Colors.greyishBrown : Colors.black}}>{i18n.t('actions.load_more')}</Text>
-        </Button>);
-    }
-
-
-    _debounceSearch = _.debounce(() => this.tryPerformSearch(this.state.input, 0), 500);
-
-    tryPerformSearch(token: SearchToken, page: number) {
+    tryPerformSearch(page: number) {
 
         let catType = this.getCurrentCategory().type;
 
-        console.log(`performSearch:token=${token} page=${page}`);
+        console.log(`performSearch:token=${this.state.input} page=${page}`);
         const {search, getSearchKey} = this.props.searchEngine;
-        const options = this.getSearchOptions(catType);
+        let searchOptions: SearchOptions = this.getSearchOptions(catType) || {token: ''};
 
-
-        const searchKey = getSearchKey(token, catType, options)
+        searchOptions.token = this.state.input
+        const searchKey = getSearchKey(catType, searchOptions)
 
         this.setState({searchKey})
 
@@ -242,8 +234,7 @@ export default class SearchScreen extends Component<Props, State> {
 
         this.setState({searches: {...this.state.searches, [searchKey]: {requestState: 'sending'}}});
 
-
-        search(token, catType, page, options)
+        search(catType, page, searchOptions)
             .catch(err => {
                 console.warn(`error while performing search:`, err);
                 this.setState({searches: {...this.state.searches, [searchKey]: {requestState: 'ko'}}});
