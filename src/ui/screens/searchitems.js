@@ -38,7 +38,6 @@ import Geolocation from "../../managers/GeoLocation"
 import type {SearchPlacesProps} from "./searchplacesoption"
 import {SearchPlacesOption} from "./searchplacesoption"
 import OpenAppSettings from 'react-native-app-settings'
-import SearchPage from "./SearchPage"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import {findBestSearchCategory} from "../../helpers/Classifier"
 
@@ -66,34 +65,18 @@ class SearchItem extends Screen<Props, State> {
                 type: categ,
                 tabName: i18n.t("search_item_screen.tabs." + categ),
                 description: i18n.t("search_item_screen.placeholder." + categ),
-                // placeholder: "search_item_screen.placeholder." + categ,
-
                 searchOptions: this.renderSearchOptions(categ),
-                renderResults: ({query, searchState}) => {
-                    if (this.displayBlank(query, searchState)) {
-                        return (<KeyboardAwareScrollView
-                                contentContainerStyle={{flex:1}}
-                                scrollEnabled={false}
-                                keyboardShouldPersistTaps='always'>
-                                <EmptySearch
-                                    icon={renderBlankIcon(categ)}
-                                    text={i18n.t("search_item_screen.placeholder." + categ)}
-                                />
-                            </KeyboardAwareScrollView>)
-                    }
-
-                    return (
-                        <SearchPage
-                            search={searchState}
-                            renderItem={({item})=> (
-                                <GTouchable
-                                    onPress={() => this.props.onItemSelected(item, this.props.navigator)}
-                                    disabled={!this.props.onItemSelected}>
-                                    <ItemCell item={item}/>
-                                </GTouchable>
-                            )}
-                        />
-                    )},
+                renderItem: ({item})=> (
+                    <GTouchable
+                        onPress={() => this.props.onItemSelected(item, this.props.navigator)}
+                        disabled={!this.props.onItemSelected}>
+                        <ItemCell item={item}/>
+                    </GTouchable>
+                ),
+                renderEmpty: <EmptySearch
+                    icon={renderBlankIcon(categ)}
+                    text={i18n.t("search_item_screen.placeholder." + categ)}
+                />
             }
         });
 
