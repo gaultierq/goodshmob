@@ -24,7 +24,6 @@ import type {
     SearchEngine,
     SearchQuery,
     SearchResult, SearchState,
-    SearchTrigger
 } from "../../helpers/SearchHelper"
 import {SEARCH_CATEGORIES_TYPE} from "../../helpers/SearchHelper"
 import SearchScreen from "./search"
@@ -83,7 +82,7 @@ class SearchItem extends Screen<Props, State> {
 
         const searchEngine: SearchEngine = {
             search: this.search.bind(this),
-            getSearchKey: (token: SearchToken, category: SearchCategoryType, trigger: SearchTrigger, searchOptions?:any) => {
+            getSearchKey: (token: SearchToken, category: SearchCategoryType, searchOptions?:any) => {
                 //if search places, do not auto search if tab change
                 if (category === 'places' && searchOptions && (searchOptions.aroundMe || searchOptions.place)) {
                     if (searchOptions) {
