@@ -20,19 +20,17 @@ export type SearchQuery = {
 export type SearchEngine = {
     search:
         (
-            token: SearchToken,
             category: SearchCategoryType,
             page: number,
-            searchOptions?: any
+            searchOptions: SearchOptions
         ) => Promise<SearchResult>,
     getSearchKey: (
-        token: SearchToken,
         category: SearchCategoryType,
-        searchOptions?: any
+        searchOptions: SearchOptions
     ) => string,
 };
 export type SearchOptions = {
-    renderOptions: (any, any => void, void => void) => Node
+    token: string,
 }
 export type SearchState = {
     requestState: RequestState,
@@ -52,10 +50,12 @@ export type SearchCategory = {
     description?: string,
     placeholder: i18Key,
     onItemSelected?: () => void,
-    searchOptions: SearchOptions,
+    renderOptions?: RenderOptions,
     renderResults: ({query: SearchQuery, searchState: SearchState}) => Node,
     renderBlank?: () => Node,
 }
+
+export type RenderOptions = (SearchOptions, SearchOptions => void) => Node
 
 export type SearchItemCategoryType = "consumer_goods" | "places" | "musics" | "movies";
 
