@@ -14,6 +14,7 @@
 #import "RNFirebaseLinks.h"
 #import <FirebaseDynamicLinks/FirebaseDynamicLinks.h>
 
+@import GoogleMaps;
 // **********************************************
 // *** DON'T MISS: THE NEXT LINE IS IMPORTANT ***
 // **********************************************
@@ -44,6 +45,7 @@
     }
   }
   
+  [GMSServices provideAPIKey:[ReactNativeConfig envFor:@"GOOGLE_MAPS_API_KEY"]];
   
   
   // **********************************************
