@@ -51,6 +51,7 @@ export type SearchCategory = {
     query: *,
     parseResponse: (hits: []) => *,
     renderItem: (item: *) => Node,
+    renderEmpty: () => Node,
     tabName: string,
     description?: string,
     placeholder: i18Key,

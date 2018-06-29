@@ -21,7 +21,6 @@ import type {SearchCategory} from "./search"
 import SearchScreen from "./search"
 import GTouchable from "../GTouchable"
 import Config from 'react-native-config'
-import SearchPage from "./SearchPage"
 import {renderLineupFromOtherPeople} from "../UIComponents"
 import EmptySearch from "../components/EmptySearch"
 import {Colors} from "../colors"
@@ -100,18 +99,8 @@ export default class HomeSearchScreen extends Screen<Props, State> {
                 query,
                 placeholder: "search_bar.me_placeholder",
                 parseResponse: createResultFromHit,
-                renderResults: ({query, searchState}) => {
-                    if (!searchState || _.isEmpty(searchState.data)) {
-                        return <EmptySearch text={i18n.t("lineups.search.empty")}/>
-                    }
-                    return (
-                        <SearchPage
-                            query={query}
-                            search={searchState}
-                            renderItem={renderItem}
-                        />
-                    )
-                }
+                renderEmpty: <EmptySearch text={i18n.t("lineups.search.empty")}/>,
+                renderItem
             }
         ];
         let navigator = this.props.navigator;

@@ -4,7 +4,7 @@ import type {Node} from 'react'
 import React, {Component} from 'react'
 import {
     ActivityIndicator,
-    FlatList,
+    FlatList, Keyboard,
     KeyboardAvoidingView,
     Platform,
     StyleSheet,
@@ -23,6 +23,8 @@ import {Navigation} from 'react-native-navigation'
 import update from "immutability-helper"
 import {Colors} from "../colors"
 import GSearchBar2 from "../components/GSearchBar2"
+import EmptySearch, {renderBlankIcon} from "../components/EmptySearch"
+
 import type {
     SearchCategory,
     SearchCategoryType,
@@ -33,6 +35,7 @@ import type {
     SearchTrigger
 } from "../../helpers/SearchHelper"
 import {SearchKey} from "../../types"
+import {FullScreenLoader} from "../UIComponents"
 
 
 //token -> {data, hasMore, isSearching}
@@ -179,9 +182,21 @@ export default class SearchScreen extends Component<Props, State> {
             options: this.getSearchOptions(categoryType)
         }
 
-        //FIXME: restore loadmore
-        return category.renderResults({query, searchState})
+        if (!searchState) return category.renderEmpty
+        if (searchState.requestState === 'sending') return <FullScreenLoader/>
+        if (searchState.requestState === 'ko')
+            return <Text style={{alignSelf: "center", marginTop: 20}}>{i18n.t("errors.generic")}</Text>
+        if (searchState.data && searchState.data.length === 0)
+            return <Text style={{alignSelf: "center", marginTop: 20}}>{i18n.t("lineups.search.empty")}</Text>
+
+        return <FlatList
+            data={searchState.data}
+            renderItem={category.renderItem}
+            keyExtractor={(item) => item.id}
+            onScrollBeginDrag={Keyboard.dismiss}
+            keyboardShouldPersistTaps='always'/>
     }
+
 
 
     //FIXME: restore
@@ -232,7 +247,8 @@ export default class SearchScreen extends Component<Props, State> {
         search(token, catType, page, options)
             .catch(err => {
                 console.warn(`error while performing search:`, err);
-                this.setState(update(this.state, {searches: {[token]: {[catType]: {$merge: {requestState: 'ko'}}}}},));
+                this.setState({searches: {...this.state.searches, [searchKey]: {requestState: 'ko'}}});
+
             })
             .then((searchResult: SearchResult) => {
                 console.debug('search results', searchResult)

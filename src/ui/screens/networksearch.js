@@ -28,7 +28,6 @@ import Config from 'react-native-config'
 import SearchScreen from "./search"
 import GTouchable from "../GTouchable"
 import {seeActivityDetails, seeUser} from "../Nav"
-import SearchPage from "./SearchPage"
 import {GoodshContext, renderLineupFromOtherPeople} from "../UIComponents"
 import {Colors} from "../colors"
 
@@ -86,19 +85,11 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                 tabName: i18n.t("network_search_tabs.savings"),
                 placeholder: "search_bar.network_placeholder",
                 parseResponse: createResultFromHit,
-                renderResults: ({query, searchState}) => {
-                    if (!searchState) {
-                        return <EmptySearch
-                            icon={renderBlankIcon('savings')}
-                            text={i18n.t("search_item_screen.placeholder.savings")}
-                        />
-                    }
-
-                    return <SearchPage
-                        search={searchState}
-                        renderItem={renderItem}
-                    />
-                }
+                renderEmpty: <EmptySearch
+                    icon={renderBlankIcon('savings')}
+                    text={i18n.t("search_item_screen.placeholder.savings")}
+                />,
+                renderItem: renderItem
             },
             {
                 type: "users",
@@ -110,19 +101,11 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                 tabName: i18n.t("network_search_tabs.users"),
                 placeholder: "search_bar.network_placeholder",
                 parseResponse: createResultFromHit2,
-                renderResults: ({query, searchState}) => {
-                    if (!searchState) {
-                        return <EmptySearch
-                            icon={renderBlankIcon('users')}
-                            text={i18n.t("search_item_screen.placeholder.users")}
-                        />
-                    }
-
-                    return <SearchPage
-                        search={searchState}
-                        renderItem={renderUser}
-                    />
-                }
+                renderItem: renderUser,
+                renderEmpty: <EmptySearch
+                    icon={renderBlankIcon('users')}
+                    text={i18n.t("search_item_screen.placeholder.users")}
+                />
             },
 
         ];
