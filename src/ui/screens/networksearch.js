@@ -96,7 +96,6 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
                 index: AlgoliaClient.createAlgoliaIndex(Config.ALGOLIA_USER_INDEX),
                 query: {
                     filters: `NOT objectID:${currentUserId()}`,
-
                 },
                 tabName: i18n.t("network_search_tabs.users"),
                 placeholder: "search_bar.network_placeholder",

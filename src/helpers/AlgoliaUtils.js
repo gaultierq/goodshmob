@@ -4,7 +4,6 @@ import React from 'react'
 import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import type {
     SearchCategoryType, SearchResult,
-    SearchTrigger
 } from "./SearchHelper"
 import type {RNNNavigator, SearchToken} from "../types"
 import algoliasearch from 'algoliasearch/reactnative'
@@ -111,7 +110,7 @@ export function makeAlgoliaSearchEngine(categories, navigator: RNNNavigator) {
     };
     return {
         search,
-        getSearchKey: (token: SearchToken, category: SearchCategoryType, trigger: SearchTrigger, searchOptions?:any) => {
+        getSearchKey: (token: SearchToken, category: SearchCategoryType, searchOptions?:any) => {
             return _.isEmpty(token) ? null : token;
         }
     };

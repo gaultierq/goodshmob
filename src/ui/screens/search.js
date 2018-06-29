@@ -32,7 +32,6 @@ import type {
     SearchQuery,
     SearchResult,
     SearchState,
-    SearchTrigger
 } from "../../helpers/SearchHelper"
 import {SearchKey} from "../../types"
 import {FullScreenLoader} from "../UIComponents"
@@ -223,7 +222,7 @@ export default class SearchScreen extends Component<Props, State> {
 
     _debounceSearch = _.debounce(() => this.tryPerformSearch(this.state.input, 0), 500);
 
-    tryPerformSearch(token: SearchToken, page: number, trigger: SearchTrigger = 'unknown') {
+    tryPerformSearch(token: SearchToken, page: number) {
 
         let catType = this.getCurrentCategory().type;
 
@@ -232,7 +231,7 @@ export default class SearchScreen extends Component<Props, State> {
         const options = this.getSearchOptions(catType);
 
 
-        const searchKey = getSearchKey(token, catType, trigger, options)
+        const searchKey = getSearchKey(token, catType, options)
 
         this.setState({searchKey})
 

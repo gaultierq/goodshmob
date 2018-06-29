@@ -28,13 +28,9 @@ export type SearchEngine = {
     getSearchKey: (
         token: SearchToken,
         category: SearchCategoryType,
-        trigger: SearchTrigger,
         searchOptions?: any
     ) => string,
-
-
 };
-export type SearchTrigger = 'unknown' | 'button' | 'input_changed' | 'tab_changed' | 'intial_token'
 export type SearchOptions = {
     renderOptions: (any, any => void, void => void) => Node
 }
