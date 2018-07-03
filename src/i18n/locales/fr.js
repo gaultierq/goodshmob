@@ -217,7 +217,7 @@ export default {
             "places":"restaurant, café,\nboutique, hôtel, musée,\nville, plage, lieu touristique...",
             "movies":"film, série, documentaire, émission... ",
             "musics":"titre, artiste, album...",
-            "savings": "Saisir des mots clefs pour trouver des listes à suivre",
+            "savings": "Saisir des mots-clés pour trouver des listes à suivre",
             "users": "Chercher des membres à suivre",
 
         },
