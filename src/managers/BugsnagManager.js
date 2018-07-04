@@ -51,6 +51,11 @@ class _BugsnagManager implements BugsnagManager {
         this.bugsnag.notify(err,attach);
     }
 
+    leaveBreadcrumb(desc: string, obj2: any, ): void {
+        if (!__WITH_BUGSNAG__) return;
+        this.bugsnag.leaveBreadcrumb(desc, obj2)
+    }
+
 }
 
 export interface BugsnagManager {
@@ -59,6 +64,7 @@ export interface BugsnagManager {
     setUser(user: User): void;
     clearUser(): void;
     notify(err: Error): void;
+    leaveBreadcrumb(desc: string, obj2: any, ): void;
 
 }
 
