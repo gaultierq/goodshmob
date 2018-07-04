@@ -13,10 +13,12 @@ let instance: DeviceManager;
 class DeviceManager {
 
     store: any;
+    device: Device
 
     //waiting for user login to save the device
     init(store): DeviceManager {
         this.store = store;
+        this.device = {}
         return this;
     }
 
@@ -33,7 +35,7 @@ class DeviceManager {
     }
 
     getInfo(property) {
-        const device = this.store.getState().device;
+        const device = this.device;
         return device && device[property];
     }
 
@@ -139,6 +141,8 @@ export function generateCurrentDevice(): Promise<Device> {
         "deviceName","userAgent","deviceLocale","deviceCountry","timezone"
     ], "get");
     adapt(["emulator","tablet"], "is", true);
+
+    instance.device = result
 
     return messaging.getToken().then(fcmToken=>{
         result.fcmToken = fcmToken;
