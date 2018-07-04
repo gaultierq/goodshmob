@@ -105,8 +105,12 @@ export default class MyInterests extends Screen<Props, State> {
 
                     fetchSrc={this.fetchSrc(userId)}
                     decorateLoadMoreCall={(sections: any[], call: Call) => {
-                        const lastLineup = _.last(sections).data[0];
-                        return call.addQuery({id_after: this.followIdsByListIds[lastLineup.id]})
+                        let firstItems = sections.map(s => s.data).map(data => data[0])
+                        let lastList = _.findLast(firstItems, list => !!this.followIdsByListIds[list.id])
+                        if (lastList) {
+                            call.addQuery({id_after: this.followIdsByListIds[lastList.id]})
+
+                        }
                     }
                     }
                     {...attr}

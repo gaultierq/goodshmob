@@ -51,17 +51,25 @@ class Api {
     }
 
     listenConnectivity() {
-        let handleConnection = connected => {
-            console.log('Api: ' + (connected ? 'online' : 'offline'));
-            // this.isConnected = connected;
-            this.store.dispatch({type: CONNECTIVITY_CHANGE, connected});
-
-            this.execPendings();
-        };
-
-        NetInfo.isConnected.fetch().then(handleConnection);
-        NetInfo.isConnected.addEventListener('connectionChange', handleConnection);
+        this.fetchIsConnected()
+        NetInfo.isConnected.addEventListener('connectionChange', this.handleConnection)
     }
+
+    fetchIsConnected() {
+        NetInfo.isConnected.fetch().then(this.handleConnection)
+    }
+
+    handleConnection = connected => {
+        console.log('Api: ' + (connected ? 'online' : 'offline'));
+        // this.isConnected = connected;
+        this.store.dispatch({type: CONNECTIVITY_CHANGE, connected});
+
+        this.execPendings();
+    }
+
+    _debounceFetchIsConnected = _.debounce(this.fetchIsConnected, 500);
+
+    pendingAction;
 
     onStoreUpdate() {
         this.execPendings();
@@ -70,10 +78,12 @@ class Api {
     //TODO: this is a hack. logout should preserve 'app' store sub-state
     isConnected() {
         // return true;
-        return this.store.getState().app.connected !== false;
+        const connected = this.store.getState().app.connected !== false
+        if (!connected) {
+            this._debounceFetchIsConnected()
+        }
+        return connected
     }
-
-    pendingAction;
 
     execPendings() {
 
