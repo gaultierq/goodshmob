@@ -2384,7 +2384,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1209FB8CA334A60727ACA40E /* Pods-goodshmob.prod.xcconfig */;
 			buildSettings = {
-				ACCOUNT_KIT_CLIENT_TOKEN = "";
+				ACCOUNT_KIT_CLIENT_TOKEN = 1b32eb87bee8c8b5005e7fc5340f291d;
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUGSNAG_API_KEY = 40d9f8b35e4216c738e694e92a9a57d6;
