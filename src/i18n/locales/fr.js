@@ -2,7 +2,7 @@ export default {
     app : {
         update: {
             title: "Mise à jour",
-            label : "Mise à jour de Goodsh. Un peu de patience..."
+            label : "Mise à jour de goodsh.it. Un peu de patience..."
         }
     },
     "tabs": {
@@ -34,7 +34,7 @@ export default {
         empty_screen: "Retrouve ici tous tes goodsh.\nTap '+' pour en ajouter un."
     },
     no_spam: {
-        dialog_title: "Les 3 grands principes de Goodsh",
+        dialog_title: "Les 3 grands principes de goodsh.it",
         dialog_body: "- Tes goodsh ne sont visibles **QUE** par toi et ton réseau\n\n" +
         "- Quand tu enregistres un goodsh, tes contacts ne sont **PAS** notifiés\n\n" +
         "- Pour un goodsh **COMPLÈTEMENT** privé, active le cadenas",
@@ -135,7 +135,7 @@ export default {
     },
     "login_screen":{
         "facebook_signin":"SE CONNECTER AVEC FACEBOOK",
-        "no_publication":"Goodsh ne publie rien sur Facebook.",
+        "no_publication":"goodsh.it ne publie rien sur Facebook.",
         "account_kit_signin":"Se connecter sans Facebook",
         "definition":{
             "example":"##Bouquin, restaurant, film, série, artiste,\nlieu, musique, gadget, fringue, vin, …"
@@ -275,11 +275,11 @@ export default {
         }
     },
     loadmore: "Chargement",
-    send_message: "Envoyé via Goodsh : l'app où tu stockes tout ce que tu aimes.",
-    send_object: "te recommande %{what} - via Goodsh",
+    send_message: "Je t'envoie ceci de goodsh.it : l'app où tu stockes tout ce que tu aimes.",
+    send_object: "te recommande %{what} - via goodsh.it",
     goodsh_url: "https:\/\/goodsh.it\/",
     friends: {
-        empty_screen: "Profite pleinement de Goodsh et invite des proches.",
+        empty_screen: "Profite pleinement de goodsh.it et invite des proches.",
         buttons: {
             connect: "Connecter",
             disconnect: "Déconnecter",
@@ -393,7 +393,7 @@ export default {
     },
     share_goodsh: {
         title: "Viens goodsher avec moi.",
-        message: "Rejoins-moi sur Goodsh : https://goodsh.it/",
+        message: "Je t'invite sur goodsh.it : l'app où tu stockes tout ce que tu aimes. https://goodsh.it/",
     },
     loading: {
         error: "Oups... Problème avec internet. "

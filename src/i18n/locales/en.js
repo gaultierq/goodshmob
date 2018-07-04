@@ -34,7 +34,7 @@ export default {
         empty_screen: "All your goodsh in one place.\nTap '+' to save a new one."
     },
     no_spam: {
-        dialog_title: "The 3 pillars of Goodsh",
+        dialog_title: "The 3 pillars of goodsh.it",
         dialog_body: "- Your goodsh are **ONLY** visible by you and your friends\n\n" +
         "- When you save a goodsh, we **DON'T** notify your contacts\n\n" +
         "- For a fully private goodsh, tap the lock\n\n",
@@ -136,7 +136,7 @@ export default {
     },
     "login_screen":{
         "facebook_signin":"SIGN IN WITH FACEBOOK",
-        "no_publication":"Goodsh does not post anything on Facebook.",
+        "no_publication":"goodsh.it does not post anything on Facebook.",
         "account_kit_signin":"Sign in without Facebook",
         "definition":{
             "example":"##Bouquin, restaurant, film, série, artiste,lieu, musique, gadget, fringue, vin, …"
@@ -275,11 +275,11 @@ export default {
         }
     },
     loadmore: "Loading",
-    send_message: "Send via Goodsh: The bucketlist app to store and never forget a good stuff someone advised me to do.",
-    send_object: "recommend you %{what} - via Goodsh",
+    send_message: "I send it to you from goodsh.it : the app to keep all you love.",
+    send_object: "recommend you %{what} - via goodsh.it",
     goodsh_url: "https:\/\/goodsh.it\/",
     friends: {
-        empty_screen: "Fully enjoy Goodsh by inviting your friends.",
+        empty_screen: "Fully enjoy goodsh.it by inviting your friends.",
         buttons: {
             connect: "Connect",
             disconnect: "Disconnect",
@@ -396,7 +396,7 @@ export default {
     },
     share_goodsh: {
         title: "Come goodsh with me",
-        message: "Join me on Goodsh: https://goodsh.it/"
+        message: "I invite you on goodsh.it: the app to keep all you love. https://goodsh.it/"
     },
     alert: {
         delete: {
