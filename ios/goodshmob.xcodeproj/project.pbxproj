@@ -1162,10 +1162,9 @@
 				D09DADD22088F24200A80322 /* Setup Firebase Environment GoogleService-Info.plist */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				7C18B1A907446F3764AE66C1 /* [CP] Embed Pods Frameworks */,
-				6C3FEE3CEEEA2E495DADA8B9 /* [CP] Copy Pods Resources */,
 				D087DD361FF363A20052651C /* Embed Frameworks */,
 				D0DBBED91FF5F3ED00ABBCAB /* ShellScript */,
+				23D056BA4AB094241E26478C /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1794,15 +1793,18 @@
 			shellPath = /bin/sh;
 			shellScript = "export DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(Debug|Debug)\"\nexport NODE_BINARY=node\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh";
 		};
-		6C3FEE3CEEEA2E495DADA8B9 /* [CP] Copy Pods Resources */ = {
+		23D056BA4AB094241E26478C /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-goodshmob/Pods-goodshmob-resources.sh",
+				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMaps.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1825,21 +1827,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		7C18B1A907446F3764AE66C1 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-goodshmob/Pods-goodshmob-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		D09DADD22088F24200A80322 /* Setup Firebase Environment GoogleService-Info.plist */ = {
@@ -1915,6 +1902,7 @@
 				BUGSNAG_API_KEY = e9d1e430d2405cc1e6f6d775fac95ca9;
 				BUNDLE_DISPLAY_NAME = "Goodsh L";
 				CODE_SIGN_ENTITLEMENTS = goodshmob/entitlements/goodshmob.debug.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1982,10 +1970,11 @@
 				BUGSNAG_API_KEY = e9d1e430d2405cc1e6f6d775fac95ca9;
 				BUNDLE_DISPLAY_NAME = "Goodsh R";
 				CODE_SIGN_ENTITLEMENTS = goodshmob/entitlements/goodshmob.dev.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 656VNMF77V;
+				DEVELOPMENT_TEAM = "";
 				FACEBOOK_APP_ID = 857429951037660;
 				FACEBOOK_DISPLAY_NAME = "release - Goodsh";
 				FACEBOOK_LOGIN_URL_SCHEME = fb857429951037660;
@@ -2029,10 +2018,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = it.goodsh.mob;
+				PRODUCT_BUNDLE_IDENTIFIER = it.goodsh.mob.debug;
 				PRODUCT_NAME = goodshmob;
-				PROVISIONING_PROFILE = "6aaccdd5-3ac5-4a8b-a62c-e6d7c0dfe84b";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development it.goodsh.mob";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -2192,10 +2181,11 @@
 				BUGSNAG_API_KEY = f5136193bd74c794739ab36caae0107c;
 				BUNDLE_DISPLAY_NAME = "Goodsh P";
 				CODE_SIGN_ENTITLEMENTS = goodshmob/entitlements/goodshmob.preprod.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 656VNMF77V;
+				DEVELOPMENT_TEAM = "";
 				FACEBOOK_APP_ID = 1933031383391822;
 				FACEBOOK_DISPLAY_NAME = "preprod - Goodsh";
 				FACEBOOK_LOGIN_URL_SCHEME = fb1933031383391822;
@@ -2239,10 +2229,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = it.goodsh.mob.preprod;
+				PRODUCT_BUNDLE_IDENTIFIER = it.goodsh.mob.debug;
 				PRODUCT_NAME = "goodshmob preprod";
-				PROVISIONING_PROFILE = "78324f49-c85a-4435-9ff8-b53eb5dcb318";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development it.goodsh.mob.preprod";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Preprod;
@@ -2303,10 +2293,11 @@
 				BUGSNAG_API_KEY = e9d1e430d2405cc1e6f6d775fac95ca9;
 				BUNDLE_DISPLAY_NAME = "Goodsh D";
 				CODE_SIGN_ENTITLEMENTS = goodshmob/entitlements/goodshmob.dev.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 656VNMF77V;
+				DEVELOPMENT_TEAM = "";
 				FACEBOOK_APP_ID = 857429951037660;
 				FACEBOOK_DISPLAY_NAME = "release - Goodsh";
 				FACEBOOK_LOGIN_URL_SCHEME = fb857429951037660;
@@ -2350,10 +2341,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = it.goodsh.mob.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = it.goodsh.mob.debug;
 				PRODUCT_NAME = "goodshmob dev";
-				PROVISIONING_PROFILE = "f06c57ff-f319-41f1-af1d-9ec75dab201f";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development it.goodsh.mob.dev";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Dev;
@@ -2414,10 +2405,11 @@
 				BUGSNAG_API_KEY = 40d9f8b35e4216c738e694e92a9a57d6;
 				BUNDLE_DISPLAY_NAME = Goodsh;
 				CODE_SIGN_ENTITLEMENTS = goodshmob/entitlements/goodshmob.prod.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 656VNMF77V;
+				DEVELOPMENT_TEAM = "";
 				FACEBOOK_APP_ID = 787478441366145;
 				FACEBOOK_DISPLAY_NAME = "release - Goodsh";
 				FACEBOOK_LOGIN_URL_SCHEME = fb787478441366145;
@@ -2461,10 +2453,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = it.goodsh.mob;
+				PRODUCT_BUNDLE_IDENTIFIER = it.goodsh.mob.debug;
 				PRODUCT_NAME = "goodshmob prod";
-				PROVISIONING_PROFILE = "6aaccdd5-3ac5-4a8b-a62c-e6d7c0dfe84b";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development it.goodsh.mob";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Prod;
