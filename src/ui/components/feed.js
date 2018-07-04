@@ -30,6 +30,7 @@ import {RequestManager} from "../../managers/request"
 import Spinner from 'react-native-spinkit'
 import Config from "react-native-config"
 import {FullScreenLoader} from "../UIComponents"
+import BugsnagManager from "../../managers/BugsnagManager"
 
 export type FeedSource = {
     callFactory: ()=>Api.Call,
@@ -192,8 +193,10 @@ export default class Feed extends Component<Props, State>  {
 
 
     render() {
-        if (this.props.displayName === 'Network') {
-            this.console.debug("feed::render", this.state)
+
+        const name = this.props.displayName
+        if (name) {
+            BugsnagManager.leaveBreadcrumb(name, {type: 'render feed'});
         }
 
         assertUnique(this.getFlatItems());
