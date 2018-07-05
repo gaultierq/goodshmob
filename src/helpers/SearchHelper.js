@@ -2,7 +2,7 @@
 
 import type {i18Key, List, Saving, SearchToken} from "../types"
 import {RequestState} from "../types"
-
+import * as React from 'react'
 
 export type SearchCategoryType = string;
 
@@ -24,13 +24,21 @@ export type SearchEngine = {
             page: number,
             searchOptions: SearchOptions
         ) => Promise<SearchResult>,
-    getSearchKey: (
+    generateSearchKey: (
         category: SearchCategoryType,
         searchOptions: SearchOptions
     ) => string,
+    canSearch: (
+        category: SearchCategoryType,
+        searchOptions: SearchOptions
+    ) => boolean
 };
 export type SearchOptions = {
     token: string,
+    aroundMe?: boolean,
+    place?: string,
+    lat?: number,
+    lng?: number
 }
 export type SearchState = {
     requestState: RequestState,
@@ -55,7 +63,7 @@ export type SearchCategory = {
     renderBlank?: () => Node,
 }
 
-export type RenderOptions = (SearchOptions, SearchOptions => void) => Node
+export type RenderOptions = (SearchOptions, SearchOptions => void) => React.Element<any>
 
 export type SearchItemCategoryType = "consumer_goods" | "places" | "musics" | "movies";
 

@@ -219,18 +219,20 @@ export default class SearchScreen extends Component<Props, State> {
         let catType = this.getCurrentCategory().type;
 
         console.log(`performSearch:token=${this.state.input} page=${page}`);
-        const {search, getSearchKey} = this.props.searchEngine;
+        const {search, generateSearchKey, canSearch} = this.props.searchEngine;
         let searchOptions: SearchOptions = this.getSearchOptions(catType) || {token: ''};
 
-        searchOptions.token = this.state.input
-        const searchKey = getSearchKey(catType, searchOptions)
+        searchOptions.token = this.state.input || ''
 
-        this.setState({searchKey})
-
-        if (_.isNull(searchKey)) {
+        if (!canSearch(catType, searchOptions)) {
             console.log(`perform search aborted: cannot search`);
+            this.setState({searchKey: ''})
             return;
         }
+
+        const searchKey = generateSearchKey(catType, searchOptions)
+
+        this.setState({searchKey})
 
         this.setState({searches: {...this.state.searches, [searchKey]: {requestState: 'sending'}}});
 

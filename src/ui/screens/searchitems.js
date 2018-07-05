@@ -82,20 +82,30 @@ class SearchItem extends Screen<Props, State> {
 
         const searchEngine: SearchEngine = {
             search: this.search.bind(this),
-            getSearchKey: (category: SearchCategoryType, searchOptions: SearchOptions) => {
-                //TODO: put back
-                //if search places, do not auto search if tab change
-                // if (category === 'places' && searchOptions && (searchOptions.aroundMe || searchOptions.place)) {
-                //     if (searchOptions) {
-                //         let {aroundMe, place} = searchOptions
-                //         return aroundMe || place
-                //     }
-                // }
+            generateSearchKey: (category: SearchCategoryType, searchOptions: SearchOptions) => {
                 const token = searchOptions.token
-                if (_.isEmpty(token)) {
-                    return null
+                let searchKey = `${category}_${token}`
+
+                if (searchOptions.aroundMe) {
+                    searchKey += '_aroundMe'
                 }
-                return `${category}_${token}`
+
+                if (searchOptions.place) {
+                    const {place, lat, lng} = searchOptions
+                    searchKey += `_${place}_${lat || 0}_${lng || 0}`
+                }
+
+                return searchKey
+            },
+            canSearch: (category: SearchCategoryType, searchOptions: SearchOptions) => {
+                console.log('cansearch', category, searchOptions, _.isEmpty(searchOptions.token))
+                // if search places, do not auto search if tab change
+                if (category === 'places' && searchOptions && (searchOptions.aroundMe || searchOptions.place)) {
+                    let {aroundMe, place} = searchOptions
+                    return aroundMe || !!place
+                }
+                const token = searchOptions.token
+                return !_.isEmpty(token);
             }
         }
         return <SearchScreen
@@ -151,7 +161,6 @@ class SearchItem extends Screen<Props, State> {
             }
         }
         return
-
     }
 
     search(category: SearchCategoryType, page: number, searchOptions: SearchOptions): Promise<*> {
