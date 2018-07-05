@@ -200,14 +200,17 @@ class Api {
 
 
 
-    submit(url, method, body, delay) {
+    submit(call) {
+        let {url, method, body, delay, force} = call
+
+
         if (!this.initialized) throw "Api must be initialized before being used";
 
         let auth = instance.auth();
 
         return new Promise((resolve, reject) => {
 
-            if (Config.SKIP_API_CONNEXION_CHECK !== 'true' && !this.isConnected()) {
+            if (Config.SKIP_API_CONNEXION_CHECK !== 'true' && !this.isConnected() && !force) {
                 reject(new Error("not connected"));
             }
             else {
@@ -218,7 +221,7 @@ class Api {
                 }, body ? {body: JSON.stringify(body)} : null);
 
                 console.debug(`%c sending request url=${url}, options: ${JSON.stringify(options)}`, 'background: #FCFCFC; color: #E36995');
-                fetch(url, options)
+                fetch(url.toString(), options)
                     .catch(err=> {
                         reject(err);
                     })
@@ -248,6 +251,7 @@ export class Call {
     body: any;
     method: string;
     delay: ms;
+    force: boolean
 
     //headers = instance.headers();
 
@@ -284,6 +288,11 @@ export class Call {
     delay(delay:ms): Call {
         this.delay = delay;
         return this;
+    }
+
+    //ignore "isConnected"
+    force() {
+        this.force = true
     }
 
     static parse(url): Call {
@@ -405,7 +414,7 @@ export class Call {
             this.addQuery({per_page: __API_PAGINATION_PER_PAGE__})
         }
 
-        return instance.submit(this.url.toString(), this.method, this.body, this.delay)
+        return instance.submit(this)
             .catch(err => {throw err})
             .then(resp => {
                 if (resp.ok) {

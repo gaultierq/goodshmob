@@ -376,7 +376,7 @@ export default class App {
 
 
                         const action = userActions
-                            .getUser(currentUserId())
+                            .getUser(currentUserId()).force()
                             .createActionDispatchee(userActionTypes.GET_USER)
 
                         this.store.dispatch(action).then(() => {
