@@ -191,8 +191,8 @@ export default {
     },
     "community":{
         "screens": {
-            "friends":"MY CONTACTS",
-            "notifications":"NOTIFICATIONS",
+            "friends":"My contacts",
+            "notifications":"Notifications",
         },
         "empty_screen": "The goodsh of your friends are here.\nInvite them to share your tips with them."
     },

@@ -190,8 +190,8 @@ export default {
     },
     "community":{
         "screens": {
-            "friends":"MES CONTACTS",
-            "notifications":"NOTIFICATIONS",
+            "friends":"Mes contacts",
+            "notifications":"Notifications",
         },
         "empty_screen": "Découvre ici les actus de tes contacts."
     },

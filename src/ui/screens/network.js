@@ -285,7 +285,6 @@ class NetworkScreen extends Screen<Props, State> {
                 onClickClose: () => navigator.dismissModal(),
             },
             navigatorButtons: CANCELABLE_MODAL2,
-            animationType: 'none',
         });
     }
 
