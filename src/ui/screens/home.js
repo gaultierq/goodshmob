@@ -225,6 +225,7 @@ export default class HomeScreen extends Screen<Props, State> {
                     renderScene={this.renderScene.bind(this)}
                     renderTabBar={props => <TabBar {...TAB_BAR_PROPS} {...props}/>}
                     renderPager={props => <PagerPan {...props} />}
+                    swipeEnabled={false}
                     onIndexChange={index => {
                         this.setState({index}, () => this.refreshRightButtons())
                     }}
