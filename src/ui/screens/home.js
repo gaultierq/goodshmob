@@ -36,6 +36,7 @@ import MyInterests from "./MyInterests"
 import {fullName2} from "../../helpers/StringUtils"
 import {currentUserFilter} from "../../redux/selectors"
 import NotificationManager from '../../managers/NotificationManager'
+import {Colors} from "../colors"
 
 type Props = {
     userId: Id,
@@ -66,7 +67,8 @@ export default class HomeScreen extends Screen<Props, State> {
 
     static navigatorStyle = {
         navBarNoBorder: true,
-        topBarElevationShadowEnabled: false
+        topBarElevationShadowEnabled: false,
+        navBarButtonColor: Colors.green
     };
 
 
