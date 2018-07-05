@@ -19,7 +19,7 @@ export type Props = {
     style?: any,
     onChangeText: string => void,
     ref?: any => string,
-
+    editable?: boolean,
 
 };
 
@@ -29,7 +29,8 @@ export default class GSearchBar2 extends Component<Props, State> {
     inputNode: Node
 
     static defaultProps = {
-        cancelTitle: i18n.t('actions.cancel')
+        cancelTitle: i18n.t('actions.cancel'),
+        editable: true,
     }
 
     constructor(props: Props) {
@@ -62,6 +63,8 @@ export default class GSearchBar2 extends Component<Props, State> {
                             blurOnSubmit={true}
                             returnKeyType={'search'}
                             keyboardType={'default'}
+                            editable={this.props.editable}
+                            pointerEvents={this.props.editable ? 'auto' : 'none'}
                             autoCapitalize={'none'}
                             underlineColorAndroid={'transparent'}
                             {...this.props}

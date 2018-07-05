@@ -189,10 +189,10 @@ export default {
         "savings":"LISTS",
         "users":"MEMBERS"
     },
-    "community_screen":{
-        "tabs": {
-            "friends":"MY CONTACTS",
-            "notifications":"NOTIFICATIONS",
+    "community":{
+        "screens": {
+            "friends":"My contacts",
+            "notifications":"Notifications",
         },
         "empty_screen": "The goodsh of your friends are here.\nInvite them to share your tips with them."
     },

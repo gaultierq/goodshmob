@@ -30,6 +30,7 @@ import {InteractionScreen} from './screens/interactions'
 import AddLineupSheet from './screens/addlineupsheet'
 import PlacesAutocomplete from './screens/PlacesAutocomplete'
 import UserNav from './components/UserNav'
+import TouchableSearchBar from './components/TouchableSearchBar'
 import LineupNav from './components/LineupNav'
 import RnRenderPerfs from 'rn-render-perfs'
 import Perf from 'ReactPerf'
@@ -114,5 +115,6 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.PopularItemsScreen', () => PopularItemsScreen, store, Provider);
     wrap('goodsh.AskScreen', () => AskScreen, store, Provider);
     wrap('goodsh.NavBarButtonIndicator', () => GIndicator, store, Provider);
+    wrap('goodsh.TouchableSearchBar', () => TouchableSearchBar, store, Provider);
 
 }

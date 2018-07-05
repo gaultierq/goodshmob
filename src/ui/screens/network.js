@@ -1,7 +1,10 @@
 // @flow
 
 import React from 'react'
-import {ActivityIndicator, FlatList, Platform, RefreshControl, Text, TouchableOpacity, View} from 'react-native'
+import {
+    ActivityIndicator, Dimensions, FlatList, Platform, RefreshControl, Text,
+    TouchableOpacity, View
+} from 'react-native'
 import {connect} from "react-redux"
 import {currentUser, currentUserId, logged} from "../../managers/CurrentUser"
 import ActivityCell from "../activity/components/ActivityCell"
@@ -21,6 +24,7 @@ import ActivityStatus from "../activity/components/ActivityStatus"
 import {SFP_TEXT_MEDIUM} from "../fonts"
 import AskInput from "../components/AskInput"
 import GTouchable from "../GTouchable"
+import * as UI from "../UIStyles"
 
 type Props = NavigableProps;
 
@@ -44,14 +48,17 @@ class NetworkScreen extends Screen<Props, State> {
 
     static navigatorButtons = {
         rightButtons: [
+
             {
-                id: 'search', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
-                icon: require('../../img2/searchHeaderIcon.png'),
+                id: 'interactions', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
+                icon: require('../../img2/notificationIcon.png'),
+                title: i18n.t("home_search_screen.community.title")
             },
         ],
         leftButtons: [
+
             {
-                id: 'community', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
+                id: 'friends', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
                 icon: require('../../img2/goodshersHeaderIcon.png'),
                 title: i18n.t("home_search_screen.community.title")
             }
@@ -75,6 +82,24 @@ class NetworkScreen extends Screen<Props, State> {
         props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
+    componentDidMount() {
+        const {height, width} = Dimensions.get('window');
+
+        this.props.navigator.setStyle({
+            ...UI.NavStyles,
+            navBarCustomView: 'goodsh.TouchableSearchBar',
+            navBarCustomViewInitialProps: {
+                style: {
+                    width: width - 130,
+                    marginTop: __IS_IOS__ ? 0 : 10,
+                },
+                searchBarProps: {
+                    placeholder: i18n.t('search.in_network')
+                },
+                onPress: this.showSearch.bind(this)
+            }
+        });
+    }
     componentWillAppear() {
         this.props.navigator.setDrawerEnabled({side: 'right', enabled: true});
         this.props.navigator.setDrawerEnabled({side: 'left', enabled: false});
@@ -98,19 +123,27 @@ class NetworkScreen extends Screen<Props, State> {
         }
 
         if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
-            if (event.id === 'community') { // this is the same id field from the static navigatorButtons definition
+            if (event.id === 'interactions') { // this is the same id field from the static navigatorButtons definition
 
                 navigator.showModal({
-                    screen: 'goodsh.CommunityScreen', // unique ID registered with Navigation.registerScreen
-                    title: i18n.t("home_search_screen.community.title"),
+                    screen: 'goodsh.InteractionScreen', // unique ID registered with Navigation.registerScreen
+                    title: i18n.t("community.screens.notifications"),
                     passProps:{
                         style: {marginTop: 38},
                     },
                     navigatorButtons: Nav.CANCELABLE_MODAL,
                 });
             }
-            if (event.id === 'search') {
-                this.showSearch();
+
+            if (event.id === 'friends') {
+                navigator.showModal({
+                    screen: 'goodsh.CommunityScreen',
+                    title: i18n.t("community.screens.friends"),
+                    passProps:{
+                        style: {marginTop: 38},
+                    },
+                    navigatorButtons: Nav.CANCELABLE_MODAL,
+                });
             }
         }
     }
@@ -160,7 +193,7 @@ class NetworkScreen extends Screen<Props, State> {
                     }}
                     hasMore={!network1.hasNoMore}
                     scrollUpOnBack={scrollUpOnBack}
-                    ListEmptyComponent={<View><Text style={STYLES.empty_message}>{i18n.t('community_screen.empty_screen')}</Text><ShareButton text={i18n.t('actions.invite')}/></View>}
+                    ListEmptyComponent={<View><Text style={STYLES.empty_message}>{i18n.t('community.empty_screen')}</Text><ShareButton text={i18n.t('actions.invite')}/></View>}
                     initialNumToRender={5}
                     decorateLoadMoreCall={(sections: any[], call: Call) => call.addQuery({id_lt: _.last(sections).id})}
                     visibility={super.getVisibility()}
