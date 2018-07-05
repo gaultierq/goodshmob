@@ -85,7 +85,7 @@ export default class SearchScreen extends Component<Props, State> {
             this.state.input = token
 
             setTimeout(()=> {
-                this.tryPerformSearch(token, 0);
+                this.tryPerformSearch(0);
             });
         }
         this.props.navigator.setTitle({title: i18n.t("search_screen.title")})
@@ -93,7 +93,7 @@ export default class SearchScreen extends Component<Props, State> {
 
     handleIndexChange(index: number) {
         console.log(`tab changed to ${index}`);
-        this.setState({index}, () => this.tryPerformSearch(this.state.input, 0));
+        this.setState({index}, () => this.tryPerformSearch(0));
     }
 
     onNewOptions(newOptions: SearchOptions, cat) {
@@ -176,40 +176,43 @@ export default class SearchScreen extends Component<Props, State> {
         let searchState : SearchState = this.state.searches[this.state.searchKey]
 
         if (!searchState) return category.renderEmpty
-        if (searchState.requestState === 'sending') return <FullScreenLoader/>
+        if (searchState.requestState === 'sending' && searchState.page === 0) return <FullScreenLoader/>
         if (searchState.requestState === 'ko')
             return <Text style={{alignSelf: "center", marginTop: 20}}>{i18n.t("errors.generic")}</Text>
         if (searchState.data && searchState.data.length === 0)
             return <Text style={{alignSelf: "center", marginTop: 20}}>{i18n.t("lineups.search.empty")}</Text>
 
-        return <FlatList
-                data={searchState.data}
+        console.log('render', searchState.data, _.flatten(searchState.data))
+        return <View style={{flex: 1}}>
+            <FlatList
+                data={_.flatten(searchState.data)}
                 renderItem={category.renderItem}
+                ListFooterComponent={() => this.renderSearchFooter(searchState)}
                 keyExtractor={(item) => item.id}
                 onScrollBeginDrag={Keyboard.dismiss}
                 keyboardShouldPersistTaps='always'/>
+        </View>
     }
 
-    // //FIXME: restore
-    // renderSearchFooter(search: SearchState) {
-    //     if (!search) return null;
-    //     let nextPage = search.page + 1;
-    //
-    //     let hasMore = nextPage < search.nbPages;
-    //     if (!hasMore) return null;
-    //
-    //     let isLoadingMore = search.requestState === 'sending';
-    //
-    //     return (<Button
-    //         isLoading={isLoadingMore}
-    //         isDisabled={isLoadingMore}
-    //         onPress={()=>{this.tryPerformSearch(search.token, nextPage)}}
-    //         style={[styles.button, {marginTop: 15}]}
-    //         disabledStyle={styles.button}
-    //     >
-    //         <Text style={{color: isLoadingMore ? Colors.greyishBrown : Colors.black}}>{i18n.t('actions.load_more')}</Text>
-    //     </Button>);
-    // }
+    renderSearchFooter(searchState: SearchState) {
+        if (!searchState) return null;
+        let nextPage = searchState.page + 1;
+
+        let hasMore = nextPage < searchState.nbPages;
+        if (!hasMore) return null;
+
+        let isLoadingMore = searchState.requestState === 'sending';
+
+        return (<Button
+            isLoading={isLoadingMore}
+            isDisabled={isLoadingMore}
+            onPress={()=>{this.tryPerformSearch(nextPage)}}
+            style={[styles.button, {marginTop: 15}]}
+            disabledStyle={styles.button}
+        >
+            <Text style={{color: isLoadingMore ? Colors.greyishBrown : Colors.black}}>{i18n.t('actions.load_more')}</Text>
+        </Button>);
+    }
 
 
     _debounceSearch = _.debounce(() => this.tryPerformSearch(0), 500);
@@ -234,7 +237,15 @@ export default class SearchScreen extends Component<Props, State> {
 
         this.setState({searchKey})
 
-        this.setState({searches: {...this.state.searches, [searchKey]: {requestState: 'sending'}}});
+        let prevSearchState : SearchState = this.state.searches[this.state.searchKey]
+
+        if (prevSearchState) {
+            prevSearchState.requestState = 'sending'
+            prevSearchState.page = page
+            this.setState({searches: {...this.state.searches, [searchKey]: prevSearchState}});
+        } else {
+            this.setState({searches: {...this.state.searches, [searchKey]: {requestState: 'sending', page}}});
+        }
 
         search(catType, page, searchOptions)
             .catch(err => {
@@ -250,13 +261,17 @@ export default class SearchScreen extends Component<Props, State> {
                     return;
                 }
 
+
                 let {results, page, nbPages} = searchResult;
+
+                let data = prevSearchState && prevSearchState.data ? prevSearchState.data : []
+                data[page] = results
 
                 const searchState : SearchState = {
                     nbPages,
                     page,
                     searchKey,
-                    data: results,
+                    data,
                     requestState: 'ok',
                 }
                 let prevState = this.state
@@ -281,7 +296,6 @@ const styles = StyleSheet.create({
     },
     button: {
         padding: 8,
-        height: 30,
         borderColor: "transparent",
     },
 
