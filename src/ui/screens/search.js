@@ -139,6 +139,7 @@ export default class SearchScreen extends Component<Props, State> {
                     style={styles.container}
                     navigationState={this.state}
                     renderScene={this.renderScene.bind(this)}
+                    swipeEnabled={false}
                     renderTabBar={this.renderHeader.bind(this)}
                     onIndexChange={this.handleIndexChange.bind(this)}
                     keyboardShouldPersistTaps='always'
