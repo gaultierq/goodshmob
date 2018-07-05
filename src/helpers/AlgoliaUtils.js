@@ -3,11 +3,12 @@
 import React from 'react'
 import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import type {
-    SearchCategoryType, SearchOptions, SearchResult,
+    SearchCategoryType, SearchEngine, SearchOptions, SearchResult,
 } from "./SearchHelper"
 import type {RNNNavigator, SearchToken} from "../types"
 import algoliasearch from 'algoliasearch/reactnative'
 import * as appActions from "../auth/actions"
+import type {SearchCategory} from "../ui/screens/search"
 
 type AlgoliaIndexName = string;
 type AlgoliaIndex = *;
@@ -64,7 +65,7 @@ const instance = new AlgoliaClient();
 
 export {instance as AlgoliaClient};
 
-export function makeAlgoliaSearchEngine(categories, navigator: RNNNavigator) {
+export function makeAlgoliaSearchEngine(categories: Array<SearchCategory>, navigator: RNNNavigator): SearchEngine {
 
     let search = (categoryType: SearchCategoryType, page: number, searchOptions: SearchOptions): Promise<*> => {
 
@@ -111,8 +112,11 @@ export function makeAlgoliaSearchEngine(categories, navigator: RNNNavigator) {
     };
     return {
         search,
-        getSearchKey: (category: SearchCategoryType, searchOptions: SearchOptions) => {
-            return _.isEmpty(searchOptions.token) ? null : searchOptions.token;
+        generateSearchKey: (category: SearchCategoryType, searchOptions: SearchOptions) => {
+            return searchOptions.token
+        },
+        canSearch: (category: SearchCategoryType, searchOptions: SearchOptions) => {
+            return !_.isEmpty(searchOptions.token)
         }
     };
 }
