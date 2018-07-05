@@ -258,8 +258,9 @@ export let getAddButton = (lineup: Lineup) => {
             ios: {
                 rightButtons: [
                     {
-                        systemItem: 'add',
-                        id: 'add'
+                        icon: require('./../img2/plus_green.png'),
+                        id: 'add',
+                        disableIconTint: true,
                     }
                 ],
             },
