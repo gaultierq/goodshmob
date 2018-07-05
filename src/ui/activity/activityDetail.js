@@ -150,6 +150,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                         item={activity.resource}
                                         navigator={this.props.navigator}
                                         onPressItem={() => this.goBuy(activity)}
+                                        onPress={() => this.goBuy(activity)}
                                         showAllImages
                                     />
                                 </GTouchable>}

@@ -26,6 +26,7 @@ import {buildData, sanitizeActivityType} from "../../../helpers/DataUtils"
 import * as Api from "../../../managers/Api"
 import {FETCH_ITEM} from "../../lineup/actionTypes"
 import {fetchItemCall} from "../../lineup/actions"
+import GTouchable from "../../../ui/GTouchable"
 
 type Props = {
     item: Item,
@@ -34,6 +35,7 @@ type Props = {
     showAllImages?: boolean,
     liked?: boolean,
     bodyStyle?: *,
+    onPress?: () => void,
     rightComponent?: Node
 };
 
@@ -149,12 +151,12 @@ export default class ItemBody extends React.Component<Props, State> {
                 swipe={this.props.showAllImages}
                 bullets={false}>
                 {images.map((image, i) => {
-                    return <GImage
+                    return <GTouchable  key={image} onPress={() => this.props.onPress && this.props.onPress()}>
+                        <GImage
                         source={image ? {uri: image} : require('../../../img/goodsh_placeholder.png')}
-                        key={image}
                         resizeMode={resize}
-                        style={[styles.image, {height: imageHeight, width: this.state.width}]}
-                    />
+                        style={[styles.image, {height: imageHeight, width: this.state.width}]}/>
+                    </GTouchable>
 
                 }) }
             </Carousel>}
