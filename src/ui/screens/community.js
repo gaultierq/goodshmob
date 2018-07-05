@@ -71,6 +71,7 @@ export class CommunityScreen extends Screen<Props, State> {
                 renderTabBar={props => <TabBar {...TAB_BAR_PROPS} {...props}/>}
                 onIndexChange={index => this.setState({index})}
                 renderPager={props => <PagerPan {...props} />}
+                swipeEnabled={false}
             />
         )
     }
