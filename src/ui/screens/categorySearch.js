@@ -13,22 +13,21 @@ import {
 } from 'react-native'
 import {connect} from "react-redux"
 import {currentUserId, logged} from "../../managers/CurrentUser"
-import type {Id, List, NavigableProps, Saving, SearchToken} from "../../types"
+import type {Id, NavigableProps, Saving, SearchToken} from "../../types"
 import ItemCell from "../components/ItemCell"
 import {
     AlgoliaClient,
     createResultFromHit,
-    createResultFromHit2,
     makeAlgoliaSearchEngine
 } from "../../helpers/AlgoliaUtils"
-import UserConnectItem from "./userConnectItem"
 import Screen from "../components/Screen"
+import MultiSwitch from "../components/MultiSwitch"
 import EmptySearch, {renderBlankIcon} from "../components/EmptySearch"
 import Config from 'react-native-config'
 import SearchScreen from "./search"
 import GTouchable from "../GTouchable"
-import {seeActivityDetails, seeUser} from "../Nav"
-import {GoodshContext, renderLineupFromOtherPeople} from "../UIComponents"
+import {seeActivityDetails} from "../Nav"
+import {GoodshContext} from "../UIComponents"
 import {Colors} from "../colors"
 import {SEARCH_CATEGORIES_TYPE} from "../../helpers/SearchHelper"
 
@@ -107,6 +106,11 @@ export default class CategorySearchStyle extends Screen<Props, State> {
                     icon={renderBlankIcon('savings')}
                     text={i18n.t("search_item_screen.placeholder.savings")}
                 />,
+                renderOptions: () => {
+                    return <MultiSwitch/>
+
+                },
+
                 renderItem: this.renderItem.bind(this)
             }
         })
