@@ -182,7 +182,6 @@ export default class SearchScreen extends Component<Props, State> {
         if (searchState.data && searchState.data.length === 0)
             return <Text style={{alignSelf: "center", marginTop: 20}}>{i18n.t("lineups.search.empty")}</Text>
 
-        console.log('render', searchState.data, _.flatten(searchState.data))
         return <View style={{flex: 1}}>
             <FlatList
                 data={_.flatten(searchState.data)}

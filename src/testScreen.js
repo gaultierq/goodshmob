@@ -1,5 +1,6 @@
 import {currentUserId} from "./managers/CurrentUser"
 import type {Item} from "./types"
+import CategorySearchScreen from "./ui/screens/categorySearch"
 
 export const homeScreen = {
     screen: {
@@ -280,6 +281,12 @@ export const userSheetScreen = {
 export const searchAutoCompleteScreen = {
     screen: {
         screen: 'goodsh.PlacesAutocomplete',
+    },
+}
+export const categorySearch = {
+    screen: {
+        screen: 'goodsh.CategorySearchScreen',
+        title: 'Test goodsh.CategorySearchScreen',
     },
 }
 
