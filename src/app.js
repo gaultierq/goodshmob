@@ -1,4 +1,5 @@
 // @flow
+
 /* global ErrorUtils */
 import {applyMiddleware, combineReducers, compose, createStore} from "redux"
 import {Navigation} from 'react-native-navigation'
@@ -20,7 +21,7 @@ import {Statistics} from "./managers/Statistics"
 import {CLEAR_CACHE, INIT_CACHE, UPGRADE_CACHE} from "./auth/actionTypes"
 import Config from 'react-native-config'
 import {Provider} from "react-redux"
-import {Messenger} from "./managers/Messenger"
+import {Messenger, sendMessage} from "./managers/Messenger"
 import {Colors} from "./ui/colors"
 import {SFP_TEXT_REGULAR} from "./ui/fonts"
 import NavManager from "./managers/NavManager"
@@ -60,7 +61,7 @@ export default class App {
 
     hydrated: boolean;
 
-    logger
+    logger;
 
 
     constructor() {
@@ -95,18 +96,6 @@ export default class App {
 
         this.registerScreens();
 
-        //TODO: find a better way of delaying this Linking init
-        setTimeout(()=> {
-            Linking.addEventListener('url', ({url}) => {
-                if (url) this.logger.log('Linking: url event: ', url);
-                NavManager.goToDeeplink(url);
-            })
-
-            Linking.getInitialURL().then(url => {
-                if (url) this.logger.log('Linking:Initial url is: ', url);
-                NavManager.goToDeeplink(url);
-            }).catch(err => this.logger.error('Linking:An error occurred', err));
-        }, 500)
     };
 
     prepareUI() {
@@ -343,6 +332,13 @@ export default class App {
 
     //temp hack
     initialLinkFetched = false
+    initialLink = null
+
+    async obtainInitialLink() {
+        if (this.initialLinkFetched) return this.initialLink
+        this.initialLinkFetched = true
+        return await firebase.links().getInitialLink()
+    }
 
     async onAppConfigChanged(oldConfig: AppConfig) {
 
@@ -362,19 +358,11 @@ export default class App {
 
         if (!this.initialLinkFetched) {
             this.initialLinkFetched = true
-            firebase.links()
-                .getInitialLink()
-                .then((url) => {
-                    if (url) {
-                        this.logger.info("dynamic link", url)
-                        Messenger.sendMessage(`to see your content, please log in ${url}`, {timeout: 10000000})
-                    }
-                    else {
-                        // app NOT opened from a url
-                    }
-                });
-
-
+            let url = await this.obtainInitialLink()
+            if (url) {
+                this.logger.info("dynamic link", url)
+                sendMessage(`to see your content, please log in ${url}`, {timeout: 10000000})
+            }
         }
 
         const cacheVersion = Config.CACHE_VERSION;
@@ -431,6 +419,22 @@ export default class App {
                         BugsnagManager.setUser(currentUser());
 
                         DeviceManager.checkAndSendDiff();
+
+                        //TODO: find a better way of delaying this Linking init
+                        setTimeout(async ()=> {
+                            Linking.addEventListener('url', ({url}) => {
+                                if (url) this.logger.log('Linking: url event: ', url);
+                                NavManager.goToDeeplink(url);
+                            })
+                            let initialUrl = await Linking.getInitialURL()
+                            let initialLink = await this.obtainInitialLink()
+
+                            this.logger.debug("deeplinking input: ", initialUrl, initialLink)
+
+                            NavManager.goToDeeplink(initialUrl || initialLink);
+
+                        }, 500)
+
 
 
                         this.launchMain(navigatorStyle);
