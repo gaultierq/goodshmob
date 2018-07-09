@@ -123,6 +123,7 @@ export default class HomeScreen extends Screen<Props, State> {
         }
         if (event.id === 'add') {
             startAddItem(this.props.navigator, currentGoodshboxId())
+
             return
         }
         //HACK

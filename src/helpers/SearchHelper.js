@@ -52,14 +52,13 @@ export type SearchCategory = {
     type: SearchCategoryType,
     query: *,
     parseResponse: (hits: []) => *,
-    renderItem: (item: *) => React.Element<any>,
+    renderItem: (item: *) => React.Element<any> | null,
     renderEmpty: () => React.Element<any>,
     tabName: string,
     description?: string,
     placeholder: i18Key,
     onItemSelected?: () => void,
     renderOptions?: RenderOptions,
-    renderResults: ({query: SearchQuery, searchState: SearchState}) => Node,
     renderBlank?: () => Node,
 }
 

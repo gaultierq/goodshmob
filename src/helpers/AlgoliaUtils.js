@@ -113,7 +113,7 @@ export function makeAlgoliaSearchEngine(categories: Array<SearchCategory>, navig
     return {
         search,
         generateSearchKey: (category: SearchCategoryType, searchOptions: SearchOptions) => {
-            return searchOptions.token
+            return `${category}_${searchOptions.token}`
         },
         canSearch: (category: SearchCategoryType, searchOptions: SearchOptions) => {
             return !_.isEmpty(searchOptions.token)
