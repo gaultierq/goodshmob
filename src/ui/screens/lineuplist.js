@@ -111,17 +111,15 @@ export class LineupListScreen extends Screen<Props, State> {
         //     this.props.pending[UNFOLLOW_LINEUP])
 
         return (
-            <GoodshContext.Provider value={{userOwnResources: isCurrentUserId(userId)}}>
-                <Feed
-                    data={items}
-                    listRef={this.props.listRef}
-                    sections={sectionMaker && sectionMaker(items)}
-                    renderItem={this.renderItem.bind(this)}
-                    fetchSrc={fetchSrc}
-                    {...attributes}
-                />
+            <Feed
+                data={items}
+                listRef={this.props.listRef}
+                sections={sectionMaker && sectionMaker(items)}
+                renderItem={this.renderItem.bind(this)}
+                fetchSrc={fetchSrc}
+                {...attributes}
+            />
 
-            </GoodshContext.Provider>
         )
     }
 
