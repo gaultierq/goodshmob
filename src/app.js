@@ -8,7 +8,6 @@ import thunk from "redux-thunk"
 
 import * as Api from './managers/Api'
 import {autoRehydrate, createTransform, persistStore} from 'redux-persist'
-import {Alert, AsyncStorage, Dimensions, Linking, StyleSheet, TouchableOpacity} from 'react-native'
 import immutableTransform from './immutableTransform'
 import * as CurrentUser from './managers/CurrentUser'
 import {currentUser, currentUserId, isLogged} from './managers/CurrentUser'
@@ -34,6 +33,7 @@ import RNAccountKit, {Color,} from 'react-native-facebook-account-kit'
 import RNProgressHUB from 'react-native-progresshub'
 import {actions as userActions, actionTypes as userActionTypes} from "./redux/UserActions"
 import firebase from 'react-native-firebase'
+import {Alert, AsyncStorage, Dimensions, Linking, StyleSheet, TouchableOpacity, ToastAndroid} from 'react-native'
 
 type AppMode = 'idle' | 'init_cache' | 'logged' | 'unlogged' | 'upgrading_cache' | 'unknown'
 type AppConfig = {
@@ -341,6 +341,9 @@ export default class App {
         AsyncStorage.setItem('@goodsh:cacheVersion', ""+version);
     }
 
+    //temp hack
+    initialLinkFetched = false
+
     async onAppConfigChanged(oldConfig: AppConfig) {
 
         this.logger.debug(`app mode changed: new mode`, this.config, '(old mode', oldConfig,`)`);
@@ -356,6 +359,23 @@ export default class App {
             }
         }
         let navigatorStyle = {...UI.NavStyles};
+
+        if (!this.initialLinkFetched) {
+            this.initialLinkFetched = true
+            firebase.links()
+                .getInitialLink()
+                .then((url) => {
+                    if (url) {
+                        this.logger.info("dynamic link", url)
+                        Messenger.sendMessage(`to see your content, please log in ${url}`, {timeout: 10000000})
+                    }
+                    else {
+                        // app NOT opened from a url
+                    }
+                });
+
+
+        }
 
         const cacheVersion = Config.CACHE_VERSION;
         switch (this.config.mode) {
@@ -412,18 +432,6 @@ export default class App {
 
                         DeviceManager.checkAndSendDiff();
 
-
-                        firebase.links()
-                            .getInitialLink()
-                            .then((url) => {
-                                this.logger.info("dynamic link", url)
-                                if (url) {
-                                    alert(`dynamic link ${url}`)
-                                }
-                                else {
-                                    // app NOT opened from a url
-                                }
-                            });
 
                         this.launchMain(navigatorStyle);
                     }
