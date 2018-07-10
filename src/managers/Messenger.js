@@ -40,11 +40,9 @@ class _Messenger implements Messenger {
                     action,
                     duration: Snackbar.LENGTH_INDEFINITE,
                 });
-
-
                 // }
-
                 break;
+
             default:
                 throw `unsupported message type: ${type}`
         }

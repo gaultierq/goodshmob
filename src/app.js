@@ -245,6 +245,10 @@ export default class App {
                 textColor: Color.hex(Colors.white),
             }})
 
+        firebase.links().onLink((url) => {
+            this.logger.info("dynamic links: onLink", url)
+        });
+
 
 
         //api in the end: we dont want to make any call during the app init
@@ -356,13 +360,11 @@ export default class App {
         }
         let navigatorStyle = {...UI.NavStyles};
 
-        if (!this.initialLinkFetched) {
-            this.initialLinkFetched = true
-            let url = await this.obtainInitialLink()
-            if (url) {
-                this.logger.info("dynamic link", url)
-                sendMessage(`to see your content, please log in ${url}`, {timeout: 10000000})
-            }
+        // this.logger.info("DEBUGGGGGGGG")
+        let url = await this.obtainInitialLink()
+        this.logger.info("dynamic link", url)
+        if (url) {
+            sendMessage(`to see your content, please log in ${url}`, {timeout: 60000})
         }
 
         const cacheVersion = Config.CACHE_VERSION;
