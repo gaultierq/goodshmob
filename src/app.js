@@ -506,6 +506,14 @@ export default class App {
                     }
                 },
                 {
+                    screen: 'goodsh.CategorySearchScreen',// unique ID registered with Navigation.registerScreen
+                    icon: require('./img2/category_Glyph.png'),
+                    selectedIcon: require('./img2/category_Glyph_Pressed.png'),
+                    title: i18n.t('tabs.network.title'), // title of the screen as appears in the nav bar (optional)
+                    navigatorStyle,
+                    iconInsets
+                },
+                {
                     screen: 'goodsh.NetworkScreen', // unique ID registered with Navigation.registerScreen
                     icon: require('./img2/feed.png'),
                     selectedIcon: require('./img2/feed-active.png'),
