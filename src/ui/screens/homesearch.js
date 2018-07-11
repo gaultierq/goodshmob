@@ -17,7 +17,7 @@ import type {Id, List, NavigableProps, Saving, SearchToken} from "../../types"
 import ItemCell from "../components/ItemCell"
 import {AlgoliaClient, createResultFromHit, makeAlgoliaSearchEngine} from "../../helpers/AlgoliaUtils"
 import Screen from "../components/Screen"
-import type {SearchCategory} from "./search"
+import type {SearchCategory} from "../../helpers/SearchHelper"
 import SearchScreen from "./search"
 import GTouchable from "../GTouchable"
 import Config from 'react-native-config'
@@ -87,19 +87,14 @@ export default class HomeSearchScreen extends Screen<Props, State> {
             });
         });
 
-
-        let query = {
-            filters: `user_id:${currentUserId()}`,
-        };
-
         let categories : Array<SearchCategory> = [
             {
                 type: "savings",
                 index,
-                query,
+                defaultOptions: {algoliaFilter: `user_id:${currentUserId()}`},
                 placeholder: "search_bar.me_placeholder",
                 parseResponse: createResultFromHit,
-                renderEmpty: <EmptySearch text={i18n.t("lineups.search.empty")}/>,
+                renderEmpty: () => <EmptySearch text={i18n.t("lineups.search.empty")}/>,
                 renderItem
             }
         ];

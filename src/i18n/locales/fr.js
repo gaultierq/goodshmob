@@ -71,7 +71,12 @@ export default {
         in_items: "Saisir le nom à enregistrer",
         in_network: "Rechercher dans mon réseau",
         in_feed: "Rechercher dans mes listes",
-        by: "par"
+        by: "par",
+        category: {
+            "me": "Moi",
+            "friends": "Mes amis",
+            "all": "Tous"
+        }
     },
     "shared":{
         "goodsh_saved":"Enregistré",

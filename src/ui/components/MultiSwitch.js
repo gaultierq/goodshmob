@@ -10,8 +10,12 @@ import {
 } from 'react-native';
 const { width } = Dimensions.get('window');
 import {Colors} from "../colors"
+import type {NavigableProps, SearchToken} from "../../types"
 
-export default class MultiSwitch extends Component {
+type Props = NavigableProps & {
+    onPositionChange?: (position: number) => void
+};
+export default class MultiSwitch extends Component<Props> {
 
     constructor(props) {
         super(props);
@@ -94,7 +98,7 @@ export default class MultiSwitch extends Component {
     };
 
     setPosition(position) {
-        console.log('setposition', this.state.switcherWidth * position)
+        this.props.onPositionChange && this.props.onPositionChange(position)
         Animated.timing(this.state.position, {
             toValue: this.state.switcherWidth * position,
             duration: 300
@@ -104,15 +108,13 @@ export default class MultiSwitch extends Component {
         return (
             <View style={styles.container}>
 
-                <TouchableOpacity style={styles.buttonStyle} onPress={() => this.setPosition(0)}>
-                    <Text>Moi</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.buttonStyle} onPress={() => this.setPosition(1)}>
-                    <Text>Mes amis</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.buttonStyle} onPress={() => this.setPosition(2)}>
-                    <Text>Tout le monde</Text>
-                </TouchableOpacity>
+                {this.props.options.map((option, index) => {
+                        return <TouchableOpacity key={index} style={styles.buttonStyle} onPress={() => this.setPosition(index)}>
+                            <Text>{option.label}</Text>
+                        </TouchableOpacity>
+                    }
+                )}
+
 
                 <Animated.View
                     pointerEvents="none"
