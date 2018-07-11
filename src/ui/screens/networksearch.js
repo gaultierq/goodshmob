@@ -30,6 +30,7 @@ import GTouchable from "../GTouchable"
 import {seeActivityDetails, seeUser} from "../Nav"
 import {GoodshContext, renderLineupFromOtherPeople} from "../UIComponents"
 import {Colors} from "../colors"
+import type {SearchCategory} from "../../helpers/SearchHelper"
 
 type Props = NavigableProps & {
     token ?: SearchToken
@@ -73,19 +74,15 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
             });
         });
 
-        let query = {
-            filters: `NOT type:List AND NOT user_id:${currentUserId()}`,
-        };
-
-        let categories = [
+        let categories: Array<SearchCategory> = [
             {
                 type: "savings",
                 index,
-                query,
+                defaultOptions: {algoliaFilter:  `NOT type:List AND NOT user_id:${currentUserId()}`},
                 tabName: i18n.t("network_search_tabs.savings"),
                 placeholder: "search_bar.network_placeholder",
                 parseResponse: createResultFromHit,
-                renderEmpty: <EmptySearch
+                renderEmpty: () => <EmptySearch
                     icon={renderBlankIcon('savings')}
                     text={i18n.t("search_item_screen.placeholder.savings")}
                 />,
@@ -94,14 +91,12 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
             {
                 type: "users",
                 index: AlgoliaClient.createAlgoliaIndex(Config.ALGOLIA_USER_INDEX),
-                query: {
-                    filters: `NOT objectID:${currentUserId()}`,
-                },
+                defaultOptions: {algoliaFilter: `NOT objectID:${currentUserId()}`},
                 tabName: i18n.t("network_search_tabs.users"),
                 placeholder: "search_bar.network_placeholder",
                 parseResponse: createResultFromHit2,
                 renderItem: renderUser,
-                renderEmpty: <EmptySearch
+                renderEmpty: () => <EmptySearch
                     icon={renderBlankIcon('users')}
                     text={i18n.t("search_item_screen.placeholder.users")}
                 />

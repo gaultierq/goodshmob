@@ -57,6 +57,7 @@ export type Props = {
     token?:SearchToken,
     style?: *,
     index: number,
+    hideSearchBar?: boolean
 };
 
 @connect()
@@ -67,7 +68,7 @@ export default class SearchScreen extends Component<Props, State> {
 
     searchOptions: { [SearchCategoryType]: SearchOptions} = {};
 
-    static defaultProps = {index: 0, autoSearch: true};
+    static defaultProps = {index: 0, autoSearch: true, hideSearchBar: false};
 
     constructor(props: Props) {
         super(props);
@@ -117,7 +118,7 @@ export default class SearchScreen extends Component<Props, State> {
                                   keyboardVerticalOffset={Platform.OS === 'ios' ? 50 : 0}
                                   style={[{width:"100%", height: "100%", backgroundColor: "transparent"},this.props.style]}>
 
-                {
+                {!this.props.hideSearchBar &&
                     <GSearchBar2
                         onChangeText={input => this.setState({input}, input => this._debounceSearch(input))}
                         onSubmitEditing={() => this.tryPerformSearch(0)}
@@ -182,9 +183,16 @@ export default class SearchScreen extends Component<Props, State> {
         if (searchState.data && searchState.data.length === 0)
             return <Text style={{alignSelf: "center", marginTop: 20}}>{i18n.t("lineups.search.empty")}</Text>
 
+        const data = _.flatten(searchState.data)
+
+        if (data.length === 0 ) {
+            return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <Text>{i18n.t("lineups.search.empty")}</Text>
+            </View>
+        }
         return <View style={{flex: 1}}>
             <FlatList
-                data={_.flatten(searchState.data)}
+                data={data}
                 renderItem={category.renderItem}
                 ListFooterComponent={() => this.renderSearchFooter(searchState)}
                 keyExtractor={(item) => item.id}
@@ -222,7 +230,7 @@ export default class SearchScreen extends Component<Props, State> {
 
         console.log(`performSearch:token=${this.state.input} page=${page}`);
         const {search, generateSearchKey, canSearch} = this.props.searchEngine;
-        let searchOptions: SearchOptions = this.getSearchOptions(catType) || {token: ''};
+        let searchOptions: SearchOptions = this.getSearchOptions(catType) || this.getCurrentCategory().defaultOptions;
 
         searchOptions.token = this.state.input || ''
 

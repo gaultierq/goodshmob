@@ -72,6 +72,11 @@ export default {
         in_network: "Search in my network",
         in_feed: "In my lists",
         by: "by",
+        category: {
+            "me": "Me",
+            "friends": "My friends",
+            "all": "All"
+        }
     },
     "shared":{
         "goodsh_saved":"Saved",

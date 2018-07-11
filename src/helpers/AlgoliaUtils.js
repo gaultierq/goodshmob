@@ -65,13 +65,15 @@ const instance = new AlgoliaClient();
 
 export {instance as AlgoliaClient};
 
-export function makeAlgoliaSearchEngine(categories: Array<SearchCategory>, navigator: RNNNavigator): SearchEngine {
+export function makeAlgoliaSearchEngine(categories: Array<SearchCategory>,
+                                        navigator: RNNNavigator,
+                                        withoutToken: boolean = false): SearchEngine {
 
     let search = (categoryType: SearchCategoryType, page: number, searchOptions: SearchOptions): Promise<*> => {
 
         //searching
-        const token = searchOptions.token
-        console.log(`algolia: searching ${token}`);
+        const token = searchOptions.token || ''
+        console.log(`algolia: searching ${token}`, searchOptions);
 
         //separate searches
         let categFiltered = categories.filter((c) => c.type === categoryType);
@@ -79,9 +81,9 @@ export function makeAlgoliaSearchEngine(categories: Array<SearchCategory>, navig
 
 
         // const queries = categFiltered.map(c=> {return {...c.query, params: c.params, query: token}});
-        const query = {...category.query, params: category.query.params, page, query: token};
+        const query = {...category.query, filters: searchOptions.algoliaFilter, page, query: token};
 
-
+        console.log({query})
         let indexResolver = category.index;
 
         return new Promise((resolve, reject) => {
@@ -96,7 +98,7 @@ export function makeAlgoliaSearchEngine(categories: Array<SearchCategory>, navig
                     }
                     let result = content;
                     let hits = result.hits;
-                    console.log(`search result lists: ${hits.length}`);
+                    console.log(`search result lists: ${hits.length}`, hits);
 
                     let searchResult = category.parseResponse(hits);
 
@@ -116,7 +118,7 @@ export function makeAlgoliaSearchEngine(categories: Array<SearchCategory>, navig
             return `${category}_${searchOptions.token}`
         },
         canSearch: (category: SearchCategoryType, searchOptions: SearchOptions) => {
-            return !_.isEmpty(searchOptions.token)
+            return withoutToken || !_.isEmpty(searchOptions.token)
         }
     };
 }
@@ -132,7 +134,7 @@ export function obtainClient(): Promise<AlgoliaClient> {
 
 
 
-export function createResultFromHit(hits, options = {}) {
+export function createResultFromHit(hits, options = {}, withoutToken: boolean = false) {
     let {filterItems} = options;
 
     let searchResult = [];
@@ -186,10 +188,11 @@ export function createResultFromHit(hits, options = {}) {
         }
 
         //if matching a list, algolia will also notify us the item_title matching
-        if (matchedItemTitle && !filterItems) {
+        if (withoutToken || (matchedItemTitle && !filterItems)) {
             searchResult.push(saving);
         }
     });
+
     return searchResult;
 }
 export function createResultFromHit2(hits, options = {}) {

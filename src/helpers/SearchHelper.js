@@ -34,11 +34,13 @@ export type SearchEngine = {
     ) => boolean
 };
 export type SearchOptions = {
-    token: string,
+    token?: string,
     aroundMe?: boolean,
     place?: string,
     lat?: number,
-    lng?: number
+    lng?: number,
+    friendFilter?: FRIEND_FILTER_TYPE,
+    algoliaFilter?: {}
 }
 export type SearchState = {
     requestState: RequestState,
@@ -50,11 +52,11 @@ export type SearchState = {
 
 export type SearchCategory = {
     type: SearchCategoryType,
-    query: *,
+    defaultOptions?: SearchOptions,
     parseResponse: (hits: []) => *,
     renderItem: (item: *) => React.Element<any> | null,
     renderEmpty: () => React.Element<any>,
-    tabName: string,
+    tabName?: string,
     description?: string,
     placeholder: i18Key,
     onItemSelected?: () => void,
@@ -65,6 +67,7 @@ export type SearchCategory = {
 export type RenderOptions = (SearchOptions, SearchOptions => void) => React.Element<any>
 
 export type SearchItemCategoryType = "consumer_goods" | "places" | "musics" | "movies";
+export type FRIEND_FILTER_TYPE = "me" | "friends" | "all" ;
 
 export const SEARCH_CATEGORIES_TYPE: SearchItemCategoryType[] = ["consumer_goods", "places", "musics", "movies"]
 export const SEARCH_ITEM_CATEGORIES: SearchCategory[] = SEARCH_CATEGORIES_TYPE.map(type => (
