@@ -8,13 +8,14 @@ import {
     Text,
     TouchableOpacity,
 } from 'react-native';
-const { width } = Dimensions.get('window');
 import {Colors} from "../colors"
 import type {NavigableProps, SearchToken} from "../../types"
 
 type Props = NavigableProps & {
-    onPositionChange?: (position: number) => void
+    onPositionChange?: (position: number) => void,
+    options: [{type: string, label: string}]
 };
+
 export default class MultiSwitch extends Component<Props> {
 
     constructor(props) {
@@ -22,80 +23,10 @@ export default class MultiSwitch extends Component<Props> {
         this.state = {
             isComponentReady: false,
             position: new Animated.Value(0),
-            posValue: 0,
-            selectedPosition: 0,
-            duration: 100,
-            mainWidth: width - 30,
-            switcherWidth: width / 3,
-            thresholdDistance: width - 8 - width / 2.4
+            switcherWidth: switcherWidth,
         };
-        this.isParentScrollDisabled = false;
     }
 
-    componentWillMount() {
-
-    }
-
-    notStartedSelected = () => {
-        Animated.timing(this.state.position, {
-            toValue: Platform.OS === 'ios' ? -2 : 0,
-            duration: this.state.duration
-        }).start();
-        setTimeout(() => {
-            this.setState({
-                posValue: Platform.OS === 'ios' ? -2 : 0,
-                selectedPosition: 0
-            });
-        }, 100);
-        if (this.state.isComponentReady) this.props.onStatusChanged('Open');
-    };
-
-    inProgressSelected = () => {
-        Animated.timing(this.state.position, {
-            toValue: this.state.mainWidth / 2 - this.state.switcherWidth / 2,
-            duration: this.state.duration
-        }).start();
-        setTimeout(() => {
-            this.setState({
-                posValue:
-                this.state.mainWidth / 2 - this.state.switcherWidth / 2,
-                selectedPosition: 1
-            });
-        }, 100);
-        if (this.state.isComponentReady)
-            this.props.onStatusChanged('In Progress');
-    };
-
-    completeSelected = () => {
-        Animated.timing(this.state.position, {
-            toValue:
-                Platform.OS === 'ios'
-                    ? this.state.mainWidth - this.state.switcherWidth
-                    : this.state.mainWidth - this.state.switcherWidth - 2,
-            duration: this.state.duration
-        }).start();
-        setTimeout(() => {
-            this.setState({
-                posValue:
-                    Platform.OS === 'ios'
-                        ? this.state.mainWidth - this.state.switcherWidth
-                        : this.state.mainWidth - this.state.switcherWidth - 2,
-                selectedPosition: 2
-            });
-        }, 100);
-        if (this.state.isComponentReady) this.props.onStatusChanged('Complete');
-    };
-
-    getStatus = () => {
-        switch (this.state.selectedPosition) {
-            case 0:
-                return 'Open';
-            case 1:
-                return 'In Progress';
-            case 2:
-                return 'Complete';
-        }
-    };
 
     setPosition(position) {
         this.props.onPositionChange && this.props.onPositionChange(position)
@@ -104,37 +35,38 @@ export default class MultiSwitch extends Component<Props> {
             duration: 300
         }).start();
     }
+
     render() {
         return (
             <View style={styles.container}>
-
                 {this.props.options.map((option, index) => {
-                        return <TouchableOpacity key={index} style={styles.buttonStyle} onPress={() => this.setPosition(index)}>
+                        return <TouchableOpacity key={index}
+                                                 style={styles.buttonStyle}
+                                                 onPress={() => this.setPosition(index)}>
                             <Text>{option.label}</Text>
                         </TouchableOpacity>
                     }
                 )}
 
-
                 <Animated.View
                     pointerEvents="none"
                     style={[
                         styles.switcher,
-                        {
-                            transform: [{ translateX: this.state.position }]
-                        }
-                    ]}
-                >
-                </Animated.View>
+                        {transform: [{translateX: this.state.position}]}
+                    ]}/>
             </View>
         );
     }
 }
 
 
+const screenWidth = Dimensions.get('window').width;
 const height = 25
-const styles = {
+const marginHorizontal = 10
+const width = screenWidth - 2 * marginHorizontal
+const switcherWidth = width / 3
 
+const styles = {
     container: {
         width: width,
         height: height,
@@ -142,7 +74,8 @@ const styles = {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 27.5
+        borderRadius: 27.5,
+        marginHorizontal: marginHorizontal
     },
 
     switcher: {
@@ -156,7 +89,7 @@ const styles = {
         height: height,
         alignItems: 'center',
         justifyContent: 'center',
-        width: width / 3,
+        width: switcherWidth,
         shadowOpacity: 0.31,
         shadowRadius: 3,
         shadowColor: Colors.grey4
