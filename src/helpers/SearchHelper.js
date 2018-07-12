@@ -2,7 +2,7 @@
 
 import type {Node} from 'react'
 import * as React from 'react'
-import type {Id, Lineup, List, RNNNavigator, Saving, SearchToken, User} from "../types"
+import type {Id, Item, Lineup, List, RNNNavigator, Saving, SearchToken, User} from "../types"
 import {RequestState} from "../types"
 import EmptySearch, {renderBlankIcon} from "../ui/components/EmptySearch"
 import {AlgoliaClient, createResultFromHit, createResultFromHit2} from "./AlgoliaUtils"
@@ -176,6 +176,18 @@ export function SEARCH_CATEGORY_USER(currentUserId: Id, renderItem: any => Node)
     }
 }
 
+export function SEARCH_CATEGORY_ITEM(categ: SearchItemCategoryType, renderItem: any => Node): SearchCategory {
+    return {
+        type: categ,
+            tabName: i18n.t("search_item_screen.tabs." + categ),
+        description: i18n.t("search_item_screen.placeholder." + categ),
+        renderItem,
+        renderEmpty: <EmptySearch text={i18n.t("search_item_screen.placeholder." + categ)}
+        icon={renderBlankIcon(categ)}
+    />
+    }
+}
+
 
 export function renderSavingOrLineup(navigator: RNNNavigator) {
 
@@ -216,6 +228,7 @@ export function renderUser(navigator: RNNNavigator) {
         );
     }
 }
+
 
 
 
