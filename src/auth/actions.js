@@ -20,16 +20,16 @@ export function logoutOffline(dispatch) {
 
 //if user lost auth, then offline logout
 export function logout(dispatch) {
-    logoutOffline(dispatch);
-
     return dispatch(
         new Api.Call()
             .withMethod('POST')
             .withRoute(`logout`)
             .createActionDispatchee(actionTypes.USER_LOGOUT)
-    ).then(()=> {
-
-    }, err => {console.error(err)});
+    ).catch(err  => console.error(err))
+        .then(()=> {
+                logoutOffline(dispatch);
+            }
+        )
 }
 
 export function loginWith(service: 'facebook'|'account_kit', token: string) {
