@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react'
+import type {Node} from 'react'
 import {
     ActivityIndicator,
     Alert,
@@ -19,13 +20,15 @@ import {Call} from "../../managers/Api"
 import ItemCell from "../components/ItemCell"
 import {buildData} from "../../helpers/DataUtils"
 import type {
+    RenderOptions,
     SearchCategory,
     SearchCategoryType,
-    SearchEngine, SearchOptions,
+    SearchEngine,
+    SearchOptions,
     SearchQuery,
-    SearchResult, SearchState,
+    SearchState,
 } from "../../helpers/SearchHelper"
-import {RenderOptions, SEARCH_CATEGORIES_TYPE} from "../../helpers/SearchHelper"
+import {SEARCH_CATEGORIES_TYPE} from "../../helpers/SearchHelper"
 import SearchScreen from "./search"
 import normalize from 'json-api-normalizer'
 import GTouchable from "../GTouchable"
@@ -40,8 +43,6 @@ import OpenAppSettings from 'react-native-app-settings'
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import {findBestSearchCategory} from "../../helpers/Classifier"
 
-
-type SearchToken = string;
 
 type Props = {
     onItemSelected?: (item: Item, navigator: RNNNavigator) => void,
@@ -59,13 +60,13 @@ class SearchItem extends Screen<Props, State> {
     };
 
     render() {
-        let categories = SEARCH_CATEGORIES_TYPE.map(categ=>{
-            return {
+
+        let categories: SearchCategory[] = SEARCH_CATEGORIES_TYPE.map(categ => ({
                 type: categ,
                 tabName: i18n.t("search_item_screen.tabs." + categ),
                 description: i18n.t("search_item_screen.placeholder." + categ),
                 renderOptions: this.renderSearchOptions(categ),
-                renderItem: ({item})=> (
+                renderItem: ({item}) => (
                     <GTouchable
                         onPress={() => this.props.onItemSelected(item, this.props.navigator)}
                         disabled={!this.props.onItemSelected}>
@@ -73,11 +74,12 @@ class SearchItem extends Screen<Props, State> {
                     </GTouchable>
                 ),
                 renderEmpty: <EmptySearch
-                    icon={renderBlankIcon(categ)}
                     text={i18n.t("search_item_screen.placeholder." + categ)}
+                    icon={renderBlankIcon(categ)}
                 />
-            }
-        });
+            })
+        )
+
 
 
         const searchEngine: SearchEngine = {
@@ -113,11 +115,10 @@ class SearchItem extends Screen<Props, State> {
             categories={categories}
             placeholder={i18n.t('search.in_items')}
             index={this.findBestIndex(categories)}
-            {...this.props}
+            navigator={this.props.navigator}
             style={{backgroundColor: Colors.white}}
         />;
     }
-
 
     findBestIndex(categories: SearchCategory[]) {
         let index
@@ -160,7 +161,7 @@ class SearchItem extends Screen<Props, State> {
                 />
             }
         }
-        return
+        return null
     }
 
     search(category: SearchCategoryType, page: number, searchOptions: SearchOptions): Promise<*> {
@@ -198,7 +199,7 @@ class SearchItem extends Screen<Props, State> {
         });
     }
 
-    getPosition(options: any = {}) {
+    getPosition(options: any = {}): Promise<any> {
         if (options.aroundMe) {
             return Geolocation.getPosition();
         }
@@ -215,7 +216,7 @@ class SearchItem extends Screen<Props, State> {
         }
     }
 
-    fillOptions(category: SearchCategoryType, call: Call, options: any) {
+    fillOptions(category: SearchCategoryType, call: Call, options: any): Promise<any> {
         return new Promise((resolve, reject) => {
             if (category === 'places') {
                 this.getPosition(options).then(({latitude, longitude}) => {

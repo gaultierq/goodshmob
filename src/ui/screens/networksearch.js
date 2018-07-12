@@ -2,16 +2,6 @@
 
 import type {Node} from 'react'
 import React from 'react'
-import {
-    ActivityIndicator,
-    FlatList,
-    Platform,
-    RefreshControl,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
-} from 'react-native'
 import {connect} from "react-redux"
 import {currentUserId, logged} from "../../managers/CurrentUser"
 import type {NavigableProps, SearchToken} from "../../types"
@@ -24,7 +14,7 @@ import type {SearchCategory, SearchEngine} from "../../helpers/SearchHelper"
 import {
     renderSavingOrLineup,
     renderUser,
-    SEARCH_CATEGORY_LIST_OR_SAVINGS,
+    SEARCH_CATEGORY_OTHERS_LIST_OR_SAVINGS,
     SEARCH_CATEGORY_USER
 } from "../../helpers/SearchHelper"
 
@@ -50,22 +40,19 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
     constructor(props: Props) {
         super(props)
         this.categories = [
-            SEARCH_CATEGORY_LIST_OR_SAVINGS(currentUserId(), renderSavingOrLineup(props.navigator)),
+            SEARCH_CATEGORY_OTHERS_LIST_OR_SAVINGS(currentUserId(), renderSavingOrLineup(props.navigator)),
             SEARCH_CATEGORY_USER(currentUserId(), renderUser(props.navigator)),
         ]
         this.search = makeAlgoliaSearchEngine(this.categories, props.navigator);
     }
 
     render() {
-
-        let navigator = this.props.navigator;
-
         return (
             <GoodshContext.Provider value={{userOwnResources: false}}>
                 <SearchScreen
                     searchEngine={this.search}
                     categories={this.categories}
-                    navigator={navigator}
+                    navigator={this.props.navigator}
                     placeholder={i18n.t('search.in_network')}
                     style={{backgroundColor: Colors.white}}
                     token={this.props.token}
