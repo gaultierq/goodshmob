@@ -230,7 +230,7 @@ export default class SearchScreen extends Component<Props, State> {
 
         console.log(`performSearch:token=${this.state.input} page=${page}`);
         const {search, generateSearchKey, canSearch} = this.props.searchEngine;
-        let searchOptions: SearchOptions = this.getSearchOptions(catType) || this.getCurrentCategory().defaultOptions;
+        let searchOptions: SearchOptions = this.getSearchOptions(catType) || this.getCurrentCategory().defaultOptions || {};
 
         searchOptions.token = this.state.input || ''
 
