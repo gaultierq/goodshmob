@@ -75,18 +75,20 @@ export type SearchCategory = {
     tabName?: string,
     description?: string,
     onItemSelected?: () => void,
-    renderOptions?: RenderOptions,
+    renderOptions?: ?RenderOptions,
 
 }
 
 export type RenderOptions = (SearchOptions, SearchOptions => void) => React.Element<any>
 
 export type SearchItemCategoryType = "consumer_goods" | "places" | "musics" | "movies";
+
+// QG to EA: let's try to follow the camel case convention for types
 export type FRIEND_FILTER_TYPE = "me" | "friends" | "all" ;
 
 export const SEARCH_CATEGORIES_TYPE: SearchItemCategoryType[] = ["consumer_goods", "places", "musics", "movies"]
 
-//wrong type, used for tests, FIXME
+// wrong type, used for tests, FIXME
 // $FlowFixMe
 export const SEARCH_ITEM_CATEGORIES: SearchCategory[] = SEARCH_CATEGORIES_TYPE.map(type => (
     {
