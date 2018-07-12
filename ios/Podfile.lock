@@ -67,6 +67,8 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
+  - RNDeviceInfo (0.21.5):
+    - React
   - yoga (0.55.2.React)
 
 DEPENDENCIES:
@@ -87,6 +89,7 @@ DEPENDENCIES:
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTVibration (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 EXTERNAL SOURCES:
@@ -96,6 +99,8 @@ EXTERNAL SOURCES:
     :path: ../node_modules/react-native
   react-native-config:
     :path: ../node_modules/react-native-config
+  RNDeviceInfo:
+    :path: ../node_modules/react-native-device-info
   yoga:
     :path: ../node_modules/react-native/ReactCommon/yoga
 
@@ -110,8 +115,9 @@ SPEC CHECKSUMS:
   Protobuf: 8a9838fba8dae3389230e1b7f8c104aa32389c03
   React: 35618ff86985ccc5a8a17d3ca0dd76fd47e0c690
   react-native-config: 408003951fd9d8b1dfd7ebf535f67c315f44d823
+  RNDeviceInfo: 568c5641057313b4912d08a7742ff0b2f753ed5c
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: 2866b5e9ab4eb3d7d98e4da05aba5969d49a927a
+PODFILE CHECKSUM: 7e9d14f3479115cfaef33d96da9f1c6d6c0c9f32
 
 COCOAPODS: 1.4.0
