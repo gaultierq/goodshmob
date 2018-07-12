@@ -40,7 +40,7 @@ export type SearchOptions = {
     lat?: number,
     lng?: number,
     friendFilter?: FRIEND_FILTER_TYPE,
-    algoliaFilter?: {}
+    algoliaFilter?: string
 }
 export type SearchState = {
     requestState: RequestState,
