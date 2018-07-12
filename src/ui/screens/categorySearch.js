@@ -87,7 +87,7 @@ export default class CategorySearchStyle extends Screen<Props, State> {
         if (!resource) return null;
 
         return (
-            <GTouchable onPress={() => seeActivityDetails(navigator, saving)}>
+            <GTouchable onPress={() => seeActivityDetails(this.props.navigator, saving)}>
                 <ItemCell item={resource}/>
             </GTouchable>
         )
