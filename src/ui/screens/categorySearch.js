@@ -65,6 +65,7 @@ export default class CategorySearchStyle extends Screen<Props, State> {
 
 
     componentDidMount() {
+        //so I guess we are looking among the 1st 10 friends only ?
         Api.safeDispatchAction.call(
             this,
             this.props.dispatch,
@@ -128,27 +129,7 @@ export default class CategorySearchStyle extends Screen<Props, State> {
 
                 />,
                 defaultOptions: {algoliaFilter: this.makeFilter('me', category)},
-                renderOptions: (searchOptions: SearchOptions, onNewOptions: SearchOptions => void) => {
-
-                    const options = [
-                        {label: i18n.t("search.category.me"), type: 'me'},
-                        {label: i18n.t("search.category.friends"), type: 'friends'},
-                        {label: i18n.t("search.category.all"), type: 'all'},
-                    ]
-
-                    const onPositionChange = (position: number) => {
-                        const friendFilter: FRIEND_FILTER_TYPE =  options[position].type
-
-                        searchOptions = _.clone(searchOptions)
-                        searchOptions.algoliaFilter = this.makeFilter(friendFilter, category)
-                        onNewOptions(searchOptions)
-                    }
-
-                    return <MultiSwitch
-                        options={options}
-                        onPositionChange={onPositionChange}/>
-
-                },
+                renderOptions: this.renderOptions.bind(this),
 
                 renderItem: this.renderItem.bind(this)
             }
@@ -157,17 +138,45 @@ export default class CategorySearchStyle extends Screen<Props, State> {
         let search = makeAlgoliaSearchEngine(categories, navigator, true);
 
         return (
-            <GoodshContext.Provider value={{userOwnResources: false}}>
+
+            <GoodshContext.Provider value={{
+                // QG to EA: why ?
+                userOwnResources: false
+            }}>
                 <SearchScreen
                     searchEngine={search}
                     categories={categories}
                     navigator={navigator}
                     style={{backgroundColor: Colors.white}}
                     hideSearchBar={true}
+
+                    // QG to EA: ????!
                     token={'*'}
                 />
             </GoodshContext.Provider>
         )
+    }
+
+    renderOptions (searchOptions: SearchOptions, onNewOptions: SearchOptions => void) {
+
+        const options = [
+            {label: i18n.t("search.category.me"), type: 'me'},
+            {label: i18n.t("search.category.friends"), type: 'friends'},
+            {label: i18n.t("search.category.all"), type: 'all'},
+        ]
+
+        const onPositionChange = (position: number) => {
+            const friendFilter: FRIEND_FILTER_TYPE =  options[position].type
+
+            searchOptions = _.clone(searchOptions)
+            searchOptions.algoliaFilter = this.makeFilter(friendFilter, category)
+            onNewOptions(searchOptions)
+        }
+
+        return <MultiSwitch
+            options={options}
+            onPositionChange={onPositionChange}/>
+
     }
 
     makeFilter(friendFilter: FRIEND_FILTER_TYPE, category: string) {
@@ -203,13 +212,5 @@ export default class CategorySearchStyle extends Screen<Props, State> {
                 console.error('Unknown friend filter')
                 return
         }
-    }
-
-
-    onSavingPressed(saving: Saving) {
-        this.props.navigator.push({
-            screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
-            passProps: {activityId: saving.id, activityType: saving.type}, // Object that will be passed as props to the pushed screen (optional)
-        });
     }
 }
