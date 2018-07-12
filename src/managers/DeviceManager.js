@@ -13,6 +13,7 @@ let instance: DeviceManager;
 class DeviceManager {
 
     store: any;
+    device: Device
 
     //waiting for user login to save the device
     init(store): DeviceManager {
@@ -64,13 +65,6 @@ class DeviceManager {
 
     }
 }
-
-function arrayContainsArray(superset, subset) {
-    return subset.every(function (value) {
-        return (superset.indexOf(value) >= 0);
-    });
-}
-
 
 function flatDiff(left, right) {
 

@@ -12,7 +12,8 @@ target 'goodshmob' do
   pod 'Firebase/Messaging'
   pod 'Firebase/DynamicLinks'
   pod 'react-native-config', :path => '../node_modules/react-native-config'
-
+  pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
+  
   #https://github.com/evollu/react-native-fcm/issues/769
   pod 'nanopb', podspec: 'https://raw.githubusercontent.com/tnantoka/nanopb-podspec/deployment-target/nanopb/0.3.8/nanopb.podspec'
 
