@@ -8,7 +8,6 @@ import type {
 import type {RNNNavigator, SearchToken} from "../types"
 import algoliasearch from 'algoliasearch/reactnative'
 import * as appActions from "../auth/actions"
-import type {SearchCategory} from "../ui/screens/search"
 
 type AlgoliaIndexName = string;
 type AlgoliaIndex = *;

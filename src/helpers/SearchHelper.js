@@ -1,13 +1,12 @@
 // @flow
 
 import type {Node} from 'react'
-import type {i18Key, Id, Lineup, List, RNNNavigator, Saving, SearchToken, User} from "../types"
-import {RequestState} from "../types"
 import * as React from 'react'
+import type {Id, Lineup, List, RNNNavigator, Saving, SearchToken, User} from "../types"
+import {RequestState} from "../types"
 import EmptySearch, {renderBlankIcon} from "../ui/components/EmptySearch"
 import {AlgoliaClient, createResultFromHit, createResultFromHit2} from "./AlgoliaUtils"
 import Config from 'react-native-config'
-import {currentUserId} from "../managers/CurrentUser"
 import {renderLineupFromOtherPeople} from "../ui/UIComponents"
 import {seeActivityDetails, seeUser} from "../ui/Nav"
 import GTouchable from "../ui/GTouchable"
@@ -63,15 +62,21 @@ export type SearchState = {
 export type SearchCategory = {
     type: SearchCategoryType,
     defaultOptions?: SearchOptions,
-    parseResponse: (hits: []) => *,
+
+    // bad: only used for algolia
+    parseResponse?: (hits: []) => *,
+
     renderItem: (item: *) => ?Node,
-    renderEmpty: () => React.Element<any>,
+
+    //no results
+    renderEmpty: Node,
+
+
     tabName?: string,
     description?: string,
-    placeholder: i18Key,
     onItemSelected?: () => void,
     renderOptions?: RenderOptions,
-    renderBlank?: () => Node,
+
 }
 
 export type RenderOptions = (SearchOptions, SearchOptions => void) => React.Element<any>
@@ -80,6 +85,9 @@ export type SearchItemCategoryType = "consumer_goods" | "places" | "musics" | "m
 export type FRIEND_FILTER_TYPE = "me" | "friends" | "all" ;
 
 export const SEARCH_CATEGORIES_TYPE: SearchItemCategoryType[] = ["consumer_goods", "places", "musics", "movies"]
+
+//wrong type, used for tests, FIXME
+// $FlowFixMe
 export const SEARCH_ITEM_CATEGORIES: SearchCategory[] = SEARCH_CATEGORIES_TYPE.map(type => (
     {
         type: type,
@@ -90,7 +98,7 @@ export const SEARCH_ITEM_CATEGORIES: SearchCategory[] = SEARCH_CATEGORIES_TYPE.m
 
 
 
-export function SEARCH_CATEGORY_LIST_OR_SAVINGS(currentUserId: Id, renderItem: any => Node): SearchCategory {
+export function SEARCH_CATEGORY_OTHERS_LIST_OR_SAVINGS(currentUserId: Id, renderItem: any => Node): SearchCategory {
 
     let index : Promise<any> = new Promise((resolve, reject) => {
         AlgoliaClient.createAlgoliaIndex(Config.ALGOLIA_SAVING_INDEX).then(index => {
@@ -115,12 +123,38 @@ export function SEARCH_CATEGORY_LIST_OR_SAVINGS(currentUserId: Id, renderItem: a
         tabName: i18n.t("network_search_tabs.savings"),
         placeholder: "search_bar.network_placeholder",
         parseResponse: createResultFromHit,
-        renderEmpty: () => <EmptySearch
+        renderEmpty: <EmptySearch
             icon={renderBlankIcon('savings')}
             text={i18n.t("search_item_screen.placeholder.savings")}
         />,
         renderItem
     }
+}
+
+export function SEARCH_CATEGORY_MY_LIST_OR_SAVINGS(currentUserId: Id, renderItem: any => Node): SearchCategory {
+    let index = new Promise(resolve => {
+        AlgoliaClient.createAlgoliaIndex(Config.ALGOLIA_SAVING_INDEX).then(index => {
+            index.setSettings({
+                    searchableAttributes: [
+                        'item_title',
+                        'list_name'
+                    ],
+                    attributesForFaceting: ['user_id'],
+                }
+            );
+            resolve(index);
+        });
+    });
+
+    return {
+            type: "savings",
+            index,
+            defaultOptions: {algoliaFilter: `user_id:${currentUserId}`},
+            placeholder: "search_bar.me_placeholder",
+            parseResponse: createResultFromHit,
+            renderEmpty: <EmptySearch text={i18n.t("lineups.search.empty")}/>,
+            renderItem
+        }
 }
 
 export function SEARCH_CATEGORY_USER(currentUserId: Id, renderItem: any => Node): SearchCategory {
@@ -133,7 +167,7 @@ export function SEARCH_CATEGORY_USER(currentUserId: Id, renderItem: any => Node)
         placeholder: "search_bar.network_placeholder",
         parseResponse: createResultFromHit2,
         renderItem,
-        renderEmpty: () => <EmptySearch
+        renderEmpty: <EmptySearch
             icon={renderBlankIcon('users')}
             text={i18n.t("search_item_screen.placeholder.users")}
         />

@@ -4,7 +4,8 @@ import type {Node} from 'react'
 import React, {Component} from 'react'
 import {
     ActivityIndicator,
-    FlatList, Keyboard,
+    FlatList,
+    Keyboard,
     KeyboardAvoidingView,
     Platform,
     StyleSheet,
@@ -16,24 +17,22 @@ import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
 import {PagerPan, TabBar, TabView} from 'react-native-tab-view'
 
-import type {SearchToken} from "../../types"
+import type {RNNNavigator, SearchToken} from "../../types"
+import {SearchKey} from "../../types"
 import Button from 'apsl-react-native-button'
 import {LINEUP_PADDING, NAV_BACKGROUND_COLOR, TAB_BAR_PROPS} from "../UIStyles"
 import {Navigation} from 'react-native-navigation'
-import update from "immutability-helper"
 import {Colors} from "../colors"
 import GSearchBar2 from "../components/GSearchBar2"
-import EmptySearch, {renderBlankIcon} from "../components/EmptySearch"
 
 import type {
     SearchCategory,
     SearchCategoryType,
-    SearchEngine, SearchOptions,
-    SearchQuery,
+    SearchEngine,
+    SearchOptions,
     SearchResult,
     SearchState,
 } from "../../helpers/SearchHelper"
-import {SearchKey} from "../../types"
 import {FullScreenLoader} from "../UIComponents"
 
 
@@ -52,7 +51,7 @@ export type State = {
 
 export type Props = {
     categories: Array<SearchCategory>,
-    navigator: *,
+    navigator: RNNNavigator,
     searchEngine: SearchEngine,
     token?:SearchToken,
     style?: *,
