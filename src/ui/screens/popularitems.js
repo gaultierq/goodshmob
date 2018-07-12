@@ -27,7 +27,7 @@ import ApiAction from "../../helpers/ApiAction"
 import type {FeedSource} from "../components/feed"
 import Feed from "../components/feed"
 import ItemCell from "../components/ItemCell"
-import {buildNonNullData} from "../../helpers/DataUtils"
+import {buildData} from "../../helpers/DataUtils"
 import GTouchable from "../GTouchable"
 import {Colors} from "../colors"
 import {SFP_TEXT_REGULAR} from "../fonts"
@@ -66,7 +66,7 @@ export default class PopularItemsScreen extends Screen<Props, State> {
     }
 
     render() {
-        const items = this.props.popular_items.list.map(i => buildNonNullData(this.props.data, i.type, i.id))
+        const items = this.props.popular_items.list.map(i => buildData(this.props.data, i.type, i.id))
 
         const empty = _.isEmpty(this.state.selectedItems)
         return (
@@ -132,7 +132,7 @@ export default class PopularItemsScreen extends Screen<Props, State> {
     }
 
     saveMany(itemIds: Id[]) {
-        const items = this.props.popular_items.list.map(i => buildNonNullData(this.props.data, i.type, i.id))
+        const items = this.props.popular_items.list.map(i => buildData(this.props.data, i.type, i.id))
 
         let listByItemId = items.filter(i => itemIds.indexOf(i.id ) >=0).reduce((res, item) => {
             res[item.id] = _.get(findBestLineup(item, currentUser().lists), 'id')

@@ -10,7 +10,7 @@ import * as Api from "../../managers/Api"
 import Feed from "../components/feed"
 import ApiAction from "../../helpers/ApiAction"
 import UserActivity from "../activity/components/UserActivity"
-import {buildNonNullData, sanitizeActivityType} from "../../helpers/DataUtils"
+import {buildData, sanitizeActivityType} from "../../helpers/DataUtils"
 import type {Activity} from "../../types"
 import Screen from "../components/Screen"
 import NavManager from "../../managers/NavManager"
@@ -83,7 +83,8 @@ export class InteractionScreen extends Screen<Props, State> {
     }
 
     renderItem({item}) {
-        let activity: Activity = buildNonNullData(this.props.data, item.type, item.id);
+        let activity: Activity = buildData(this.props.data, item.type, item.id);
+        if (!activity) return null
 
         let user = activity.user;
         let createdAt = activity.createdAt;

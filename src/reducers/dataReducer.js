@@ -1,4 +1,4 @@
-import {API_DATA_SUCCESS} from '../managers/Api'
+import {API_DATA_SUCCESS, TRUNCATE_DATA} from '../managers/Api'
 import Immutable from 'seamless-immutable'
 import {Statistics} from "../managers/Statistics"
 import update from "immutability-helper"
@@ -46,6 +46,8 @@ export function data(state = initialState, action) {
                 console.debug('data:success:: update')
             }
             return result;
+        case TRUNCATE_DATA:
+            return initialState
         default:
             return state;
     }

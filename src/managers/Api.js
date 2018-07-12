@@ -21,6 +21,7 @@ import analytics from './Analytics'
 export const API_DATA_REQUEST = 'API_DATA_REQUEST';
 export const API_DATA_SUCCESS = 'API_DATA_SUCCESS';
 export const API_DATA_FAILURE = 'API_DATA_FAILURE';
+export const TRUNCATE_DATA = 'TRUNCATE_DATA';
 
 
 const CURRENT_API_VERSION = 'v2.0.0';

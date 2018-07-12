@@ -5,7 +5,7 @@ import React from 'react'
 import {Image, Linking, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {connect} from "react-redux"
 import {logged} from "../../../managers/CurrentUser"
-import {buildNonNullData, getAskBackgroundColor, sanitizeActivityType} from "../../../helpers/DataUtils"
+import {buildData, getAskBackgroundColor, sanitizeActivityType} from "../../../helpers/DataUtils"
 import type {Activity, ActivityType, Id, RNNNavigator} from "../../../types"
 import ItemBody from "./ItemBody"
 import ActivityActionBar from "./ActivityActionBar"
@@ -270,7 +270,7 @@ export default class ActivityCell extends React.Component<Props, State> {
 
 
     getActivity() {
-        const result = this.props.activity || buildNonNullData(this.props.data, this.props.activityType, this.props.activityId);
+        const result = this.props.activity || buildData(this.props.data, this.props.activityType, this.props.activityId);
         if (result && result.resource) {
             this.itemId = result.resource.id;
         }

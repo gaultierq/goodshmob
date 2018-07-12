@@ -9,7 +9,7 @@ import {currentGoodshboxId, isCurrentUser, logged} from "../../../managers/Curre
 import * as activityAction from "../actions"
 import {unsave} from "../actions"
 import {fullName, toUppercase} from "../../../helpers/StringUtils"
-import {buildNonNullData, sanitizeActivityType} from "../../../helpers/DataUtils"
+import {buildData, sanitizeActivityType} from "../../../helpers/DataUtils"
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import {default as FeatherIcon} from 'react-native-vector-icons/Feather'
@@ -49,7 +49,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
     render() {
 
-        let activity = buildNonNullData(this.props.data, this.props.activityType, this.props.activityId);
+        let activity = buildData(this.props.data, this.props.activityType, this.props.activityId);
 
         //let activity: Model.Activity = this.props.activity;
 
