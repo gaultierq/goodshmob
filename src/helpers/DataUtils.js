@@ -69,19 +69,10 @@ export const isActivityType = (candidate: string) => {
 };
 
 export function buildData(store, type, id: Id) {
-    return buildNonNullData(store, type, id, false);
-}
-
-
-export function buildNonNullData(store, type, id: Id, assertNonNull?: boolean = true) {
     let start = Date.now();
     // let result = build(store, type, id, {includeType: true});
     let sanitized = sanitizeActivityType(type);
     let result = build(store, sanitized, id, {includeType: true, decorator: item => decorate(item)});
-
-
-    if (assertNonNull && !result && __WITH_ASSERTS__) throw new Error(`resource not found for type=${type} id=${id}`);
-    //Statistics.record('build', Date.now()-start);
 
     decorate(result)
     Statistics.recordTime(`buildData`, Date.now()-start);
@@ -94,7 +85,6 @@ function decorate(object: ?any) {
         object.name = i18n.t('lineups.goodsh.title')
     }
     object.built = 'true'
-
 }
 
 export function assertUnique(data: Array<*>) {

@@ -14,6 +14,7 @@ import {Colors} from "../colors"
 import BugsnagManager from "../../managers/BugsnagManager"
 import * as Nav from "../Nav"
 import {Navigation} from "react-native-navigation"
+import {TRUNCATE_DATA} from "../../managers/Api"
 
 type Props = {
 }
@@ -58,6 +59,10 @@ export default class DebugScreen extends Screen<Props, State> {
                         this.renderConfig(this.props.config)
                     }
                     <Button
+                        title="truncate data"
+                        onPress={this.truncateData.bind(this)}
+                    />
+                    <Button
                         title="print storage"
                         onPress={this.printStorage.bind(this)}
                     />
@@ -93,6 +98,10 @@ export default class DebugScreen extends Screen<Props, State> {
                 </View>
             </ScrollView>
         );
+    }
+
+    truncateData() {
+        this.props.dispatch({type: TRUNCATE_DATA})
     }
 
     showBuildInfo() {
