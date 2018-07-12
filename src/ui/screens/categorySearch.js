@@ -121,17 +121,17 @@ export default class CategorySearchStyle extends Screen<Props, State> {
                 type: category,
                 index,
                 tabName: i18n.t("search_item_screen.tabs." + category),
-                placeholder: "search_bar.network_placeholder",
-                parseResponse: (hits) => createResultFromHit(hits, {}, true),
+
                 renderEmpty: <EmptySearch
                     icon={renderBlankIcon(category)}
                     text={i18n.t("search_item_screen.placeholder." + category)}
 
                 />,
+                renderItem: this.renderItem.bind(this),
+
+                parseResponse: (hits) => createResultFromHit(hits, {}, true),
                 defaultOptions: {algoliaFilter: this.makeFilter('me', category)},
                 renderOptions: this.renderOptions.bind(this),
-
-                renderItem: this.renderItem.bind(this)
             }
         })
 
@@ -179,7 +179,7 @@ export default class CategorySearchStyle extends Screen<Props, State> {
 
     }
 
-    makeFilter(friendFilter: FRIEND_FILTER_TYPE, category: string) {
+    makeFilter(friendFilter: FRIEND_FILTER_TYPE, category: string): string {
         let CATEGORY_TO_TYPE = {
             consumer_goods: 'type:CreativeWork',
             places: 'type:Place',
