@@ -260,7 +260,7 @@ export default class HomeScreen extends Screen<Props, State> {
                         ListHeaderComponent={
                             !this.state.filterFocused && this.state.currentTip && this.renderTip()
                         }
-                        targetRef={this._targetRef(i18n.t("home.wizard.action_button_label"), i18n.t("home.wizard.action_button_body"))}
+                        targetRef={this._targetRef("add", i18n.t("home.wizard.action_button_label"), i18n.t("home.wizard.action_button_body"))}
                         onFilterFocusChange={filterFocused => new Promise(resolved => {
                             this.setState({filterFocused}, resolved())
                         })
@@ -311,9 +311,9 @@ export default class HomeScreen extends Screen<Props, State> {
 
     }
 
-    _targetRef = (primaryText, secondaryText) => ref => {
+    _targetRef = (refName, primaryText, secondaryText) => ref => {
         if (!ref) return;
-        this.onBoardingHelper.registerTapTarget(ref, primaryText, secondaryText)
+        this.onBoardingHelper.registerTapTarget(refName, ref, primaryText, secondaryText)
     };
 
 }
