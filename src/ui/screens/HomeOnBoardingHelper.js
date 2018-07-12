@@ -12,49 +12,50 @@ export class HomeOnBoardingHelper {
 
     focusAddJob: ?number
 
-    registerTapTarget(ref: any, primaryText: string, secondaryText: string) {
+    registerTapTarget(refName: string, ref: any, primaryText: string, secondaryText: string) {
+        if (this.isShowing()) return
+        this.appTourTargets.set(refName, {ref, primaryText, secondaryText});
+    }
 
-        if (!this.appTourTargets.has(ref)) {
-            let params = {
-                titleTextSize: "24",
-                descriptionTextSize: "18"
-            }
-            if (__IS_IOS__) {
-                params = {
-                    ...params,
-                    primaryText,
-                    secondaryText,
-                    targetHolderColor: Colors.blue,
-                    targetTintColor: Colors.white,
-                    primaryTextColor: Colors.white,
-                }
-            }
-            else {
-                params = {
-                    ...params,
-                    title: primaryText,
-                    description: secondaryText,
-                    //defined in android/app/src/main/res/values/colors.xml
-                    outerCircleColor: 'outerCircleColorPrimary',
-                    targetCircleColor: 'outerCircleColorSecondary',
-                }
-            }
-
-            let appTourTarget = AppTourView.for(ref, params);
-            this.appTourTargets.set(ref, appTourTarget);
+    createAppTourView(primaryText: string, secondaryText: string, ref) {
+        let params = {
+            titleTextSize: "24",
+            descriptionTextSize: "18"
         }
+        if (__IS_IOS__) {
+            params = {
+                ...params,
+                primaryText,
+                secondaryText,
+                targetHolderColor: Colors.blue,
+                targetTintColor: Colors.white,
+                primaryTextColor: Colors.white,
+            }
+        }
+        else {
+            params = {
+                ...params,
+                title: primaryText,
+                description: secondaryText,
+                //defined in android/app/src/main/res/values/colors.xml
+                outerCircleColor: 'outerCircleColorPrimary',
+                targetCircleColor: 'outerCircleColorSecondary',
+            }
+        }
+
+        return AppTourView.for(ref, params)
     }
 
     handleFocusAdd() {
-        if (this.focusAddJob) return
+        if (this.isShowing()) return
         if (this.appTourTargets.size  === 0) return
 
         this.focusAddJob = setTimeout(() => {
             OnBoardingManager.onDisplayed('focus_add')
 
             let appTourSequence = new AppTourSequence();
-            this.appTourTargets.forEach((appTourTarget, view) => {
-                appTourSequence.add(appTourTarget);
+            this.appTourTargets.forEach(({ref, primaryText, secondaryText}) => {
+                appTourSequence.add(this.createAppTourView(primaryText, secondaryText, ref));
             });
 
             AppTour.ShowSequence(appTourSequence);
@@ -65,5 +66,9 @@ export class HomeOnBoardingHelper {
             OnBoardingManager.postOnDismissed('focus_add', 10000)
 
         }, 100);
+    }
+
+    isShowing() {
+        return this.focusAddJob
     }
 }
