@@ -33,7 +33,7 @@ type State = {
 
 @connect()
 @logged
-export default class UserConnectItem extends Component<Props, State> {
+export default class UserItem extends Component<Props, State> {
 
     state : State = {};
 

@@ -1,5 +1,6 @@
 // @flow
 
+import type {Node} from 'react'
 import React from 'react'
 import {
     ActivityIndicator,
@@ -13,31 +14,25 @@ import {
 } from 'react-native'
 import {connect} from "react-redux"
 import {currentUserId, logged} from "../../managers/CurrentUser"
-import type {Id, List, NavigableProps, Saving, SearchToken} from "../../types"
-import ItemCell from "../components/ItemCell"
-import {
-    AlgoliaClient,
-    createResultFromHit,
-    createResultFromHit2,
-    makeAlgoliaSearchEngine
-} from "../../helpers/AlgoliaUtils"
-import UserConnectItem from "./userConnectItem"
+import type {NavigableProps, SearchToken} from "../../types"
+import {makeAlgoliaSearchEngine} from "../../helpers/AlgoliaUtils"
 import Screen from "../components/Screen"
-import EmptySearch, {renderBlankIcon} from "../components/EmptySearch"
-import Config from 'react-native-config'
 import SearchScreen from "./search"
-import GTouchable from "../GTouchable"
-import {seeActivityDetails, seeUser} from "../Nav"
-import {GoodshContext, renderLineupFromOtherPeople} from "../UIComponents"
+import {GoodshContext} from "../UIComponents"
 import {Colors} from "../colors"
-import type {SearchCategory} from "../../helpers/SearchHelper"
+import type {SearchCategory, SearchEngine} from "../../helpers/SearchHelper"
+import {
+    renderSavingOrLineup,
+    renderUser,
+    SEARCH_CATEGORY_LIST_OR_SAVINGS,
+    SEARCH_CATEGORY_USER
+} from "../../helpers/SearchHelper"
 
 type Props = NavigableProps & {
     token ?: SearchToken
 };
 
 type State = {
-    connect: {[Id]: number}
 };
 
 @connect()
@@ -49,68 +44,27 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
         topBarElevationShadowEnabled: false
     };
 
+    categories: Array<SearchCategory>
+    search: SearchEngine
 
-    state: State = {connect: {}};
+    constructor(props: Props) {
+        super(props)
+        this.categories = [
+            SEARCH_CATEGORY_LIST_OR_SAVINGS(currentUserId(), renderSavingOrLineup(props.navigator)),
+            SEARCH_CATEGORY_USER(currentUserId(), renderUser(props.navigator)),
+        ]
+        this.search = makeAlgoliaSearchEngine(this.categories, props.navigator);
+    }
 
     render() {
 
         let navigator = this.props.navigator;
 
-        let {renderItem, renderUser} = itemRenderer(navigator);
-
-        let index = new Promise(resolve => {
-            AlgoliaClient.createAlgoliaIndex(Config.ALGOLIA_SAVING_INDEX).then(index => {
-                index.setSettings({
-                        searchableAttributes: [
-                            'item_title',
-                            'list_name'
-                        ],
-                        attributeForDistinct: 'item_id',
-                        distinct: true,
-                        attributesForFaceting: ['user_id', 'type'],
-                    }
-                );
-                resolve(index);
-            });
-        });
-
-        let categories: Array<SearchCategory> = [
-            {
-                type: "savings",
-                index,
-                defaultOptions: {algoliaFilter:  `NOT type:List AND NOT user_id:${currentUserId()}`},
-                tabName: i18n.t("network_search_tabs.savings"),
-                placeholder: "search_bar.network_placeholder",
-                parseResponse: createResultFromHit,
-                renderEmpty: () => <EmptySearch
-                    icon={renderBlankIcon('savings')}
-                    text={i18n.t("search_item_screen.placeholder.savings")}
-                />,
-                renderItem: renderItem
-            },
-            {
-                type: "users",
-                index: AlgoliaClient.createAlgoliaIndex(Config.ALGOLIA_USER_INDEX),
-                defaultOptions: {algoliaFilter: `NOT objectID:${currentUserId()}`},
-                tabName: i18n.t("network_search_tabs.users"),
-                placeholder: "search_bar.network_placeholder",
-                parseResponse: createResultFromHit2,
-                renderItem: renderUser,
-                renderEmpty: () => <EmptySearch
-                    icon={renderBlankIcon('users')}
-                    text={i18n.t("search_item_screen.placeholder.users")}
-                />
-            },
-
-        ];
-
-        let search = makeAlgoliaSearchEngine(categories, navigator);
-
         return (
             <GoodshContext.Provider value={{userOwnResources: false}}>
                 <SearchScreen
-                    searchEngine={search}
-                    categories={categories}
+                    searchEngine={this.search}
+                    categories={this.categories}
                     navigator={navigator}
                     placeholder={i18n.t('search.in_network')}
                     style={{backgroundColor: Colors.white}}
@@ -120,60 +74,5 @@ export default class NetworkSearchScreen extends Screen<Props, State> {
         )
     }
 
-
-    onSavingPressed(saving: Saving) {
-        this.props.navigator.push({
-            screen: 'goodsh.ActivityDetailScreen', // unique ID registered with Navigation.registerScreen
-            passProps: {activityId: saving.id, activityType: saving.type}, // Object that will be passed as props to the pushed screen (optional)
-        });
-    }
-
-    onLineupPressed(lineup: List) {
-        this.props.navigator.push({
-            screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
-            passProps: {
-                lineupId: lineup.id,
-            },
-        });
-    }
 }
 
-
-
-let itemRenderer = navigator => {
-    let renderItem = ({item}) => {
-
-        let isLineup = item.type === 'lists';
-
-
-        if (isLineup) {
-            return renderLineupFromOtherPeople(navigator, item)
-        }
-        else {
-            let saving = item;
-
-            let resource = saving.resource;
-
-            //TODO: this is hack
-            if (!resource) return null;
-
-            return (
-                <GTouchable onPress={() => seeActivityDetails(navigator, saving)}>
-                    <ItemCell item={resource}/>
-                </GTouchable>
-            )
-        }
-    };
-
-    let renderUser = ({item}) => {
-        return (
-            <GTouchable onPress={() => seeUser(navigator, item)}>
-                <UserConnectItem
-                    user={item}
-                    navigator={navigator}
-                />
-            </GTouchable>
-        );
-    };
-    return {renderItem, renderUser};
-};
