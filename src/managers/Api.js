@@ -294,6 +294,7 @@ export class Call {
     //ignore "isConnected"
     force() {
         this.force = true
+        return this
     }
 
     static parse(url): Call {
