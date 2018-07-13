@@ -152,7 +152,8 @@ export function createResultFromHit(hits, options = {}, withoutToken: boolean = 
             type,
             image,
             url,
-            user
+            user,
+            description
         } = h;
 
         user2 = {
@@ -164,7 +165,7 @@ export function createResultFromHit(hits, options = {}, withoutToken: boolean = 
         let saving = {
             id: objectID,
             user: Object.assign({type: "users"}, user2, {id: user_id}),
-            resource: {type, image, url, title: item_title},
+            resource: {type, image, url, title: item_title, description},
             type: "savings"
         };
 

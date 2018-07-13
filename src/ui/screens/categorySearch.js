@@ -29,8 +29,10 @@ import GTouchable from "../GTouchable"
 import {seeActivityDetails} from "../Nav"
 import {GoodshContext} from "../UIComponents"
 import {Colors} from "../colors"
-import {SEARCH_CATEGORIES_TYPE, SearchOptions} from "../../helpers/SearchHelper"
-import type {FRIEND_FILTER_TYPE} from "../../helpers/SearchHelper"
+import {SEARCH_CATEGORIES_TYPE} from "../../helpers/SearchHelper"
+import type {
+    FRIEND_FILTER_TYPE, SearchOptions, SearchCategory
+} from "../../helpers/SearchHelper"
 import * as Api from "../../managers/Api"
 import {
     actions as userActions,
@@ -51,7 +53,7 @@ type State = {
     pending: state.pending
 }))
 @logged
-export default class CategorySearchStyle extends Screen<Props, State> {
+export default class CategorySearchScreen extends Screen<Props, State> {
 
     static navigatorStyle = {
         navBarNoBorder: true,
@@ -128,7 +130,7 @@ export default class CategorySearchStyle extends Screen<Props, State> {
 
                 />,
                 renderItem: this.renderItem.bind(this),
-
+                geoResult: category === 'places',
                 parseResponse: (hits) => createResultFromHit(hits, {}, true),
                 defaultOptions: {algoliaFilter: this.makeFilter('me', category)},
                 renderOptions: this.renderOptions.bind(this),
@@ -157,7 +159,7 @@ export default class CategorySearchStyle extends Screen<Props, State> {
         )
     }
 
-    renderOptions (searchOptions: SearchOptions, onNewOptions: SearchOptions => void) {
+    renderOptions (searchOptions: SearchOptions, onNewOptions: SearchOptions => void, category: SearchCategory) {
 
         const options = [
             {label: i18n.t("search.category.me"), type: 'me'},
@@ -169,7 +171,7 @@ export default class CategorySearchStyle extends Screen<Props, State> {
             const friendFilter: FRIEND_FILTER_TYPE =  options[position].type
 
             searchOptions = _.clone(searchOptions)
-            searchOptions.algoliaFilter = this.makeFilter(friendFilter, category)
+            searchOptions.algoliaFilter = this.makeFilter(friendFilter, category.type)
             onNewOptions(searchOptions)
         }
 

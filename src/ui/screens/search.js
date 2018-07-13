@@ -24,6 +24,8 @@ import {LINEUP_PADDING, NAV_BACKGROUND_COLOR, TAB_BAR_PROPS} from "../UIStyles"
 import {Navigation} from 'react-native-navigation'
 import {Colors} from "../colors"
 import GSearchBar2 from "../components/GSearchBar2"
+import GMap from "../components/GMap"
+import ActionButton from 'react-native-action-button';
 
 import type {
     SearchCategory,
@@ -118,17 +120,17 @@ export default class SearchScreen extends Component<Props, State> {
                                   style={[{width:"100%", height: "100%", backgroundColor: "transparent"},this.props.style]}>
 
                 {!this.props.hideSearchBar &&
-                    <GSearchBar2
-                        onChangeText={input => this.setState({input}, input => this._debounceSearch(input))}
-                        onSubmitEditing={() => this.tryPerformSearch(0)}
-                        placeholder={this.props.placeholder}
-                        value={this.state.input}
-                        autoFocus
-                        style={{
-                            paddingTop: 10,
-                            paddingBottom: 5,
-                            paddingHorizontal: LINEUP_PADDING, backgroundColor: NAV_BACKGROUND_COLOR}}
-                    />
+                <GSearchBar2
+                    onChangeText={input => this.setState({input}, input => this._debounceSearch(input))}
+                    onSubmitEditing={() => this.tryPerformSearch(0)}
+                    placeholder={this.props.placeholder}
+                    value={this.state.input}
+                    autoFocus
+                    style={{
+                        paddingTop: 10,
+                        paddingBottom: 5,
+                        paddingHorizontal: LINEUP_PADDING, backgroundColor: NAV_BACKGROUND_COLOR}}
+                />
                 }
 
                 { showTabs && <TabView
@@ -159,23 +161,41 @@ export default class SearchScreen extends Component<Props, State> {
         return <TabBar {...TAB_BAR_PROPS} {...props}/>
     }
 
+    getSearchState(searchKey: string): SearchState {
+        return this.state.searches[searchKey] || {isEmpty: true}
+    }
+
     renderScene({ route }: *) {
         const category = this.props.categories[route.key]
 
         const renderOptions = category && category.renderOptions
         const onNewOptionsCategory = _.curryRight(this.onNewOptions)(category).bind(this)
         const searchOptions: SearchOptions = this.getSearchOptions(category.type) || {}
+        const searchKey = this.state.searchKey
+        let searchState : SearchState = this.getSearchState(searchKey)
 
         return <View style={{flex:1}}>
-            {renderOptions && renderOptions(searchOptions, onNewOptionsCategory)}
-            {this.renderSearchPage(category)}
+            {renderOptions && renderOptions(searchOptions, onNewOptionsCategory, category)}
+            {!searchState.showingMap && this.renderSearchPage(category, searchState)}
+            {searchState.showingMap && <GMap category={category} searchState={searchState}/>}
+            {category.geoResult && <ActionButton
+                buttonColor="rgba(231,76,60,1)"
+                buttonText={searchState.showingMap ? 'L' : 'M'}
+                onPress={() => {
+                    this.updateSearchState(searchKey, {showingMap: !searchState.showingMap})
+                }}
+            />}
         </View>
-    };
+    }
 
-    renderSearchPage(category: SearchCategory) {
-        let searchState : SearchState = this.state.searches[this.state.searchKey]
+    updateSearchState(searchKey: string, newState: Object) {
+        this.setState({searches: {...this.state.searches,
+                [searchKey]: {...this.state.searches[searchKey], ...newState}}})
+    }
 
-        if (!searchState) return category.renderEmpty
+    renderSearchPage(category: SearchCategory, searchState: SearchState) {
+
+        if (searchState.isEmpty) return category.renderEmpty
         if (searchState.requestState === 'sending' && searchState.page === 0) return <FullScreenLoader/>
         if (searchState.requestState === 'ko')
             return <Text style={{alignSelf: "center", marginTop: 20}}>{i18n.t("errors.generic")}</Text>
@@ -243,15 +263,14 @@ export default class SearchScreen extends Component<Props, State> {
 
         this.setState({searchKey})
 
-        let prevSearchState : SearchState = this.state.searches[this.state.searchKey]
+        let prevSearchState : SearchState =this.getSearchState(searchKey)
 
-        if (prevSearchState) {
-            prevSearchState.requestState = 'sending'
-            prevSearchState.page = page
-            this.setState({searches: {...this.state.searches, [searchKey]: prevSearchState}});
-        } else {
-            this.setState({searches: {...this.state.searches, [searchKey]: {requestState: 'sending', page}}});
+        let newState = {
+            requestState: 'sending',
+            isEmpty: false,
+            page
         }
+        this.updateSearchState(searchKey, newState)
 
         search(catType, page, searchOptions)
             .catch(err => {
@@ -260,7 +279,6 @@ export default class SearchScreen extends Component<Props, State> {
 
             })
             .then((searchResult: SearchResult) => {
-                console.debug('search results', searchResult)
                 if (!searchResult || !searchResult.results) {
                     console.debug('ERROR: searchResult is falsey or searchResult.results is falsey')
                     // TODO: set state error
@@ -279,14 +297,10 @@ export default class SearchScreen extends Component<Props, State> {
                     searchKey,
                     data,
                     requestState: 'ok',
+                    isEmpty: false
                 }
-                let prevState = this.state
 
-                this.setState({searches: {...prevState.searches, [searchKey]: searchState}}, () => {
-                    console.log(`Search state set for key ${searchKey} and state`, searchState);
-                });
-
-                // TODO: Eliot add pagination
+                this.updateSearchState(searchKey, searchState)
             });
     }
 
