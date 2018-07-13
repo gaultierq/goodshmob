@@ -153,6 +153,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-maps"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -172,8 +174,9 @@ SPEC CHECKSUMS:
   react-native-config: 408003951fd9d8b1dfd7ebf535f67c315f44d823
   react-native-google-maps: 2cfe3b01f8422c7dae51d8764139fd70f888cfce
   react-native-maps: 066c2afcc89e18726377bcc685315f989ca22449
+  RNDeviceInfo: 568c5641057313b4912d08a7742ff0b2f753ed5c
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: 6cd91ed0333a08bd02e1b41bc6f6b7f4e50706e5
+PODFILE CHECKSUM: e724112d332f0f9a782a3d802fb0f96f3814ab79
 
 COCOAPODS: 1.5.0
