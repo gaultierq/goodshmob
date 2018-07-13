@@ -52,11 +52,12 @@ export type SearchOptions = {
     algoliaFilter?: string
 }
 export type SearchState = {
-    requestState: RequestState,
-    page: number,
-    nbPages: number,
-    data: Array<List | Saving>,
-    searchKey: string,
+    requestState?: RequestState,
+    page?: number,
+    nbPages?: number,
+    data?: Array<List | Saving>,
+    showingMap?: boolean,
+    isEmpty: boolean
 };
 
 export type SearchCategory = {
