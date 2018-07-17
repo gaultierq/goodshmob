@@ -17,6 +17,7 @@ export const Colors = Object.freeze({
     darkerGreen: '#01b687',
     pink: 'rgb(220,124,223)',
     grey142: 'rgb(142,142,147)',
+    orange: '#F98A8A',
 });
 
 

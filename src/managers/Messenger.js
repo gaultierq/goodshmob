@@ -23,8 +23,8 @@ class _Messenger implements Messenger {
         switch (type) {
             case 'snack':
                 //TODO: something with priority
-                let {priority, reference, action, timeout = 2000} = others;
-                action = action && {...action, color: Colors.green};
+                let {priority, reference, action, timeout = 2000, dangerous} = others;
+                action = action && {...action, color: Colors.white};
 
 
                 if (this.snackDismissTimeout) clearTimeout(this.snackDismissTimeout);
@@ -39,6 +39,7 @@ class _Messenger implements Messenger {
                     title: content,
                     action,
                     duration: Snackbar.LENGTH_INDEFINITE,
+                    backgroundColor:dangerous ? Colors.orange : Colors.blue,
                 });
                 // }
                 break;
