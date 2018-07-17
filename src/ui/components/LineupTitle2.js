@@ -24,7 +24,6 @@ export type Props = {
     lineupId: Id,
     dataResolver?: Id => Lineup,
     style?: ViewStyle,
-    skipAuthor?: boolean,
     children?: Node,
 }
 
@@ -38,7 +37,7 @@ export default class LineupTitle2 extends Component<Props, State> {
 
     render() {
 
-        let {lineupId, skipAuthor, dataResolver, style, children} = this.props
+        let {lineupId, dataResolver, style, children} = this.props
 
         dataResolver = dataResolver || (id => buildData(this.props.data, 'lists', id))
         let lineup = dataResolver(lineupId)
@@ -80,7 +79,7 @@ export default class LineupTitle2 extends Component<Props, State> {
 
                         </View>
                         {
-                            !getFirstDefined(skipAuthor, userOwnResources) && author && author.firstName && <View style={{
+                            !userOwnResources && author && author.firstName && <View style={{
                                 flexDirection: 'row',
                                 alignItems: 'center',
                                 flex: 0,

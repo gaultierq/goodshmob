@@ -142,7 +142,7 @@ export default class LineupHorizontal extends Component<Props, State> {
             <View style={{flexDirection: 'row', paddingLeft: LINEUP_PADDING}}>{
                 [0,1,2,3,4].map((o, i) => {
                         return (
-                            <EmptyCell style={{marginRight: 10}}>
+                            <EmptyCell key={`empty-${i}`} style={{marginRight: 10}}>
                                 {i === 0 && renderFirstAsPlus && this.renderInnerPlus(plusRef)}
                             </EmptyCell>
                         )

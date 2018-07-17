@@ -149,7 +149,6 @@ export default class MyGoodsh extends Screen<Props, State> {
                             paddingRight: 30,
                             // backgroundColor: 'blue',
                         }}
-                        skipAuthor={true}
                     />
                 )}
                 ListHeaderComponent={(

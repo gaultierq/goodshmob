@@ -53,7 +53,6 @@ export default class AddInScreen extends Screen<Props, State> {
                                     <LineupTitle2
                                         lineupId={lineup.id}
                                         dataResolver={id => lineup}
-                                        skipAuthor={true}
                                     />
                                 )}
 
