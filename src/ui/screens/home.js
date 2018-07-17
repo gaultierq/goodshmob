@@ -86,6 +86,7 @@ export default class HomeScreen extends Screen<Props, State> {
         ],
     }
 
+    _mounted: boolean
     logger = rootlogger.createLogger("home")
     feed: any
     onBoardingHelper = new HomeOnBoardingHelper()
@@ -154,6 +155,14 @@ export default class HomeScreen extends Screen<Props, State> {
         }
     }
 
+    componentDidMount() {
+        this._mounted = true
+    }
+
+    componentWillMount() {
+        this._mounted = false
+    }
+
     componentDidAppear() {
 
         // this.onBoardingHelper.listenTipChange(tip => {
@@ -179,7 +188,9 @@ export default class HomeScreen extends Screen<Props, State> {
             this.logger.debug("found info to display:", type)
             switch (type) {
                 case "focus_add":
-                    this.onBoardingHelper.handleFocusAdd()
+                    if (this._mounted) {
+                        this.onBoardingHelper.handleFocusAdd()
+                    }
                     break
                 case "notification_permissions":
                     NotificationManager.requestPermissionsForLoggedUser()
