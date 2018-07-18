@@ -22,12 +22,10 @@ export default class GMap extends Component<Props, State>  {
 
     render() {
         const data = _.flatten(this.props.searchState.data)
-        console.log('data', data)
         return (<MapView
             style={{flex:1, marginTop: 5}}
             provider={'google'}
             ref={this.props.setRef}>
-            key={3}
             {data && data.map(function (result, i) {
 
                 const item = result.resource || result

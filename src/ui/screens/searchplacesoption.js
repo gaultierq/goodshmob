@@ -127,6 +127,7 @@ export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlace
 
                                                     this.setStateAndNotify({
                                                         place: place,
+                                                        aroundMe: false,
                                                         lat, lng
                                                     });
                                                 }

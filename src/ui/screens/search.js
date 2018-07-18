@@ -16,6 +16,7 @@ import {
 import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
 import {PagerPan, TabBar, TabView} from 'react-native-tab-view'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 import type {RNNNavigator, SearchToken} from "../../types"
 import {SearchKey} from "../../types"
@@ -112,13 +113,19 @@ export default class SearchScreen extends Component<Props, State> {
     }
 
     updateMapPosition(position: Object) {
-        console.log(position)
-        this.mapRef && this.mapRef.animateToRegion({
+        const options = {
             longitude: position.lng,
             latitude: position.lat,
             latitudeDelta: 0.1822,
             longitudeDelta: 0.0821,
-        })
+        }
+        if (this.mapRef) {
+            // HACK: Timeout is here because if the map is not visible,
+            // setting the position will show a too big area
+            setTimeout(() => {
+                this.mapRef.animateToRegion(options)
+            }, 100)
+        }
     }
 
     render() {
@@ -185,7 +192,7 @@ export default class SearchScreen extends Component<Props, State> {
 
     renderScene({ route }: *) {
         const category = this.props.categories[route.key]
-        this.renderCategory(category)
+        return this.renderCategory(category)
     }
 
     renderCategory(category: SearchCategory) {
@@ -204,20 +211,19 @@ export default class SearchScreen extends Component<Props, State> {
                 {category.geoResult && this.renderMap(category, searchState, onNewOptionsCategory, searchOptions)}
 
             </View>
-            {category.geoResult && <ActionButton buttonColor="rgba(231,76,60,1)"
-                                                 buttonText={displayMap ? 'L' : 'M'}
-                                                 onPress={() => {
+            {category.geoResult &&
+            <ActionButton buttonColor="rgba(231,76,60,1)"
+                          icon={<Icon name={displayMap ? 'list' : 'map'} color={Colors.white} size={32} />}
+                          onPress={() => {
+                              this.setState({displayMap: !this.state.displayMap})
 
-                                                     this.setState({displayMap: !this.state.displayMap})
-
-                                                     if (!this.state.displayMap) {
-                                                         getPosition(searchOptions)
-                                                             .then(position => {
-                                                                 this.updateMapPosition({lat: position.latitude, lng: position.longitude})
-                                                             })
-
-                                                     }
-                                                 }}
+                              if (!this.state.displayMap) {
+                                  getPosition(searchOptions)
+                                      .then(position => {
+                                          this.updateMapPosition({lat: position.latitude, lng: position.longitude})
+                                      })
+                              }
+                          }}
             />}
         </View>
     }
@@ -342,7 +348,6 @@ export default class SearchScreen extends Component<Props, State> {
                     // TODO: set state error
                     return;
                 }
-
 
                 let {results, page, nbPages} = searchResult;
 
