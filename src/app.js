@@ -496,8 +496,8 @@ export default class App {
             tabs: [
                 {
                     screen: 'goodsh.HomeScreen',
-                    icon: require('./img2/mystuff_Glyph.png'),
-                    selectedIcon: require('./img2/mystuff_Glyph_Active.png'),
+                    icon: require('./img2/home.png'),
+                    selectedIcon: require('./img2/home-active.png'),
                     navigatorStyle: [navigatorStyle],
                     iconInsets,
                     passProps: {
@@ -506,8 +506,8 @@ export default class App {
                 },
                 {
                     screen: 'goodsh.NetworkScreen', // unique ID registered with Navigation.registerScreen
-                    icon: require('./img2/feed_Glyph.png'),
-                    selectedIcon: require('./img2/feed_Glyph_Pressed.png'),
+                    icon: require('./img2/feed.png'),
+                    selectedIcon: require('./img2/feed-active.png'),
                     navigatorStyle,
                     iconInsets
                 },
