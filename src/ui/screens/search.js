@@ -163,7 +163,7 @@ export default class SearchScreen extends Component<Props, State> {
                 />}
 
                 {
-                    nCat === 1 && this.renderSearchPage(this.props.categories[0])
+                    nCat === 1 && this.renderCategory(this.props.categories[0])
                 }
 
             </KeyboardAvoidingView>
@@ -185,7 +185,10 @@ export default class SearchScreen extends Component<Props, State> {
 
     renderScene({ route }: *) {
         const category = this.props.categories[route.key]
+        this.renderCategory(category)
+    }
 
+    renderCategory(category: SearchCategory) {
         const renderOptions = category && category.renderOptions
         const onNewOptionsCategory = _.curryRight(this.onNewOptions)(category).bind(this)
         const searchOptions: SearchOptions = this.getSearchOptions(category.type)
