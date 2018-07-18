@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {
-    ActivityIndicator,
+    ActivityIndicator, Alert,
     Animated,
     Easing,
     FlatList,
@@ -18,6 +18,8 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import {Navigation} from 'react-native-navigation'
 import {CANCELABLE_SEARCH_MODAL} from "../Nav"
 import type {RNNNavigator} from "../../types"
+import OpenAppSettings from "react-native-app-settings"
+import Geolocation from "../../managers/GeoLocation"
 
 
 export type SearchPlacesProps = {
@@ -54,7 +56,7 @@ export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlace
         const aroundMe = !!props.aroundMe;
         this.state = {aroundMe};
         this.animation = new Animated.Value(1);
-        props.onNewOptions(this.state);
+        // props.onNewOptions(this.state);
         this.toggleAroundMe(aroundMe);
     }
 
@@ -275,5 +277,51 @@ export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlace
 
     setStateAndNotify(newState) {
         this.setState(newState, () => this.props.onNewOptions(this.state));
+    }
+}
+
+export function getPositionOrAskPermission(options: any) {
+    return new Promise((resolve, reject) => {
+        getPosition(options).then(({latitude, longitude}) => {
+            console.log('getPositionOrAskPermission', {latitude, longitude})
+            resolve({latitude, longitude});
+        }, err => {
+            console.debug("error detected", err);
+            // if (__IS_ANDROID__ err.msg === 'No location provider available.') {
+            // if (__IS_IOS__ && err.msg === 'User denied access to location services.') {
+            Alert.alert(
+                i18n.t("alert.position.title"),
+                i18n.t("alert.position.message"),
+                [
+                    {
+                        text: i18n.t('alert.position.button'),
+                        onPress: () => {
+                            OpenAppSettings.open()
+                        },
+                    },
+
+                ],
+                { cancelable: true }
+            );
+            reject(err)
+        });
+
+    });
+
+}
+
+export function getPosition(options: any = {}): Promise<any> {
+    if (options.aroundMe) {
+        return Geolocation.getPosition();
+    } else {
+        return new Promise((resolve, reject) => {
+            let {lat, lng} = options;
+            if (lat && lng) {
+                resolve({latitude: lat, longitude: lng});
+            }
+            else {
+                resolve({});
+            }
+        });
     }
 }

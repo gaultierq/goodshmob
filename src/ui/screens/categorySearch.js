@@ -28,6 +28,7 @@ import SearchScreen from "./search"
 import GTouchable from "../GTouchable"
 import {seeActivityDetails} from "../Nav"
 import {GoodshContext} from "../UIComponents"
+import {SearchPlacesOption} from "./searchplacesoption"
 import {Colors} from "../colors"
 import {SEARCH_CATEGORIES_TYPE} from "../../helpers/SearchHelper"
 import type {
@@ -167,7 +168,7 @@ export default class CategorySearchScreen extends Screen<Props, State> {
             {label: i18n.t("search.category.all"), type: 'all'},
         ]
 
-        const onPositionChange = (position: number) => {
+        const onFriendFilterChange = (position: number) => {
             const friendFilter: FRIEND_FILTER_TYPE =  options[position].type
 
             searchOptions = _.clone(searchOptions)
@@ -175,9 +176,22 @@ export default class CategorySearchScreen extends Screen<Props, State> {
             onNewOptions(searchOptions)
         }
 
-        return <MultiSwitch
-            options={options}
-            onPositionChange={onPositionChange}/>
+        const onLocationChange = (newState) => {
+            onNewOptions({...searchOptions, ...newState})
+        }
+
+        return <View>
+            <MultiSwitch
+                options={options}
+                onPositionChange={onFriendFilterChange}/>
+            {category.type === 'places' &&
+            <SearchPlacesOption
+                {...searchOptions}
+                onNewOptions={onLocationChange}
+                navigator={this.props.navigator}
+            />
+            }
+        </View>
 
     }
 
