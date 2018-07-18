@@ -40,7 +40,7 @@ export type SearchEngine = {
     canSearch: (
         category: SearchCategoryType,
         searchOptions: SearchOptions
-    ) => boolean
+    ) => Promise<boolean>
 };
 export type SearchOptions = {
     token?: string,
@@ -49,14 +49,14 @@ export type SearchOptions = {
     lat?: number,
     lng?: number,
     friendFilter?: FRIEND_FILTER_TYPE,
-    algoliaFilter?: string
+    algoliaFilter?: string,
+
 }
 export type SearchState = {
     requestState?: RequestState,
     page?: number,
     nbPages?: number,
     data?: Array<List | Saving>,
-    showingMap?: boolean,
     isEmpty: boolean
 };
 
@@ -87,7 +87,7 @@ export type SearchItemCategoryType = "consumer_goods" | "places" | "musics" | "m
 // QG to EA: let's try to follow the camel case convention for types
 export type FRIEND_FILTER_TYPE = "me" | "friends" | "all" ;
 
-export const SEARCH_CATEGORIES_TYPE: SearchItemCategoryType[] = ["consumer_goods", "places", "musics", "movies"]
+export const SEARCH_CATEGORIES_TYPE: SearchItemCategoryType[] = ["places", "consumer_goods", "musics", "movies"]
 
 // wrong type, used for tests, FIXME
 // $FlowFixMe

@@ -37,7 +37,7 @@ import type {Item, Lineup, RNNNavigator} from "../../types"
 import {Colors} from "../colors"
 import Geolocation from "../../managers/GeoLocation"
 import type {SearchPlacesProps} from "./searchplacesoption"
-import {SearchPlacesOption} from "./searchplacesoption"
+import {SearchPlacesOption, getPositionOrAskPermission, getPosition} from "./searchplacesoption"
 import OpenAppSettings from 'react-native-app-settings'
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import {findBestSearchCategory} from "../../helpers/Classifier"
@@ -68,6 +68,8 @@ class SearchItem extends Screen<Props, State> {
                 {
                     ...SEARCH_CATEGORY_ITEM(categ, this.renderItem.bind(this)),
                     renderOptions: this.renderSearchOptions(categ),
+                    geoResult: categ === 'places',
+                    defaultOptions: categ === 'places' ? {aroundMe: true} : {}
                 }
             )
         )
@@ -89,14 +91,28 @@ class SearchItem extends Screen<Props, State> {
                 return searchKey
             },
             canSearch: (category: SearchCategoryType, searchOptions: SearchOptions) => {
-                console.log('cansearch', category, searchOptions, _.isEmpty(searchOptions.token))
-                // if search places, do not auto search if tab change
-                if (category === 'places' && searchOptions && (searchOptions.aroundMe || searchOptions.place)) {
-                    let {aroundMe, place} = searchOptions
-                    return aroundMe || !!place
-                }
-                const token = searchOptions.token
-                return !_.isEmpty(token);
+                console.debug('canSearch', category, searchOptions, _.isEmpty(searchOptions.token))
+
+                return new Promise((resolve, reject) => {
+                    if (category === 'places') {
+                        if (searchOptions.aroundMe) {
+                            const pro = getPositionOrAskPermission(searchOptions)
+                            return resolve(pro)
+                        } else if (searchOptions.lat && searchOptions.lng) {
+                            return resolve()
+                        } else {
+                            console.log('SEARCH ERROR: position not defined')
+                            return reject()
+                        }
+                    }
+                    const token = searchOptions.token
+                    if (!_.isEmpty(token)) {
+                        resolve()
+                    } else {
+                        reject()
+                    }
+                })
+
             }
         }
     }
@@ -152,11 +168,11 @@ class SearchItem extends Screen<Props, State> {
 
     renderSearchOptions(category: SearchCategoryType): ?RenderOptions {
         if (category === 'places') {
-            return (currentOptions: SearchOptions, onNewOptions: SearchPlacesProps) => {
+            return (currentOptions: SearchOptions, onNewOptions: SearchOptions => void) => {
 
                 return <SearchPlacesOption
                     {...currentOptions}
-                    onNewOptions={onNewOptions}
+                    onNewOptions={(p) => onNewOptions(getPosition(p))}
                     // onSearchSubmited={onSearchSubmited}
                     navigator={this.props.navigator}
                 />
@@ -200,57 +216,24 @@ class SearchItem extends Screen<Props, State> {
         });
     }
 
-    getPosition(options: any = {}): Promise<any> {
-        if (options.aroundMe) {
-            return Geolocation.getPosition();
-        }
-        else {
-            return new Promise((resolve, reject) => {
-                let {lat, lng} = options;
-                if (lat && lng) {
-                    resolve({latitude: lat, longitude: lng});
-                }
-                else {
-                    resolve({});
-                }
-            });
-        }
-    }
 
     fillOptions(category: SearchCategoryType, call: Call, options: any): Promise<any> {
         return new Promise((resolve, reject) => {
             if (category === 'places') {
-                this.getPosition(options).then(({latitude, longitude}) => {
+                getPosition(options).then(({latitude, longitude}) => {
                     call.addQuery(latitude && {'search[lat]': latitude})
                         .addQuery(longitude && {'search[lng]': longitude});
                     resolve(call);
                 }, err => {
-                    console.debug("error detected", err);
-                    // if (__IS_ANDROID__ err.msg === 'No location provider available.') {
-                    // if (__IS_IOS__ && err.msg === 'User denied access to location services.') {
-                    Alert.alert(
-                        i18n.t("alert.position.title"),
-                        i18n.t("alert.position.message"),
-                        [
-                            {
-                                text: i18n.t('alert.position.button'),
-                                onPress: () => {
-                                    OpenAppSettings.open()
-                                },
-                            },
-
-                        ],
-                        { cancelable: true }
-                    );
+                    console.debug("UNEXPECTED SEARCH ERROR: at this stage we should have position permission", err);
                     reject(err)
                 });
-
-            }
-            else {
+            } else {
                 resolve(call);
             }
         });
     }
+
 
 }
 let screen = SearchItem;

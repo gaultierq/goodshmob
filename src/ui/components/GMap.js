@@ -6,7 +6,8 @@ import type {SearchCategory, SearchState} from "../../helpers/SearchHelper"
 
 export type Props = {
     category: SearchCategory,
-    searchState: SearchState
+    searchState: SearchState,
+    setRef: () => void
 };
 
 type State = {
@@ -21,20 +22,20 @@ export default class GMap extends Component<Props, State>  {
 
     render() {
         const data = _.flatten(this.props.searchState.data)
+        console.log('data', data)
         return (<MapView
             style={{flex:1, marginTop: 5}}
-            initialRegion={{
-                latitude: 48.8600141,
-                longitude: 2.3509759,
-                latitudeDelta: 0.1822,
-                longitudeDelta: 0.0821,
-            }}>
-
+            provider={'google'}
+            ref={this.props.setRef}>
+            key={3}
             {data && data.map(function (result, i) {
+
+                const item = result.resource || result
+                const userInfo = result.user ? ` by ${result.user.first_name} ${result.user.last_name}` : ''
                 return <Marker key={i}
-                               coordinate={result.resource.description}
-                               title={`${result.resource.title} by ${result.user.first_name} ${result.user.last_name}`}
-                               description={result.resource.description.address}
+                               coordinate={item.description}
+                               title={`${item.title}${userInfo}`}
+                               description={item.description.address}
                 />
             })}
         </MapView>

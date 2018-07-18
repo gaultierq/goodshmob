@@ -36,6 +36,7 @@ import type {
     SearchState,
 } from "../../helpers/SearchHelper"
 import {FullScreenLoader} from "../UIComponents"
+import {getPosition} from "./searchplacesoption"
 
 
 //token -> {data, hasMore, isSearching}
@@ -47,7 +48,9 @@ export type State = {
     routes: Array<*>,
     searches: { [SearchKey]: SearchState},
     searchKey: string,
-    index: number
+    index: number,
+    displayMap?: boolean,
+
 };
 
 
@@ -66,7 +69,7 @@ export type Props = {
 export default class SearchScreen extends Component<Props, State> {
 
     state : State;
-
+    mapRef: Node;
     searchOptions: { [SearchCategoryType]: SearchOptions} = {};
 
     static defaultProps = {index: 0, autoSearch: true, hideSearchBar: false};
@@ -100,8 +103,23 @@ export default class SearchScreen extends Component<Props, State> {
 
     onNewOptions(newOptions: SearchOptions, cat) {
         this.searchOptions[cat.type] = newOptions;
+        if (newOptions.lat && newOptions.lng) {
+            console.log('newOptions', this, this.mapRef, newOptions)
+            this.updateMapPosition(newOptions)
+        }
+
         this._debounceSearch();
-    };
+    }
+
+    updateMapPosition(position: Object) {
+        console.log(position)
+        this.mapRef && this.mapRef.animateToRegion({
+            longitude: position.lng,
+            latitude: position.lat,
+            latitudeDelta: 0.1822,
+            longitudeDelta: 0.0821,
+        })
+    }
 
     render() {
 
@@ -154,7 +172,7 @@ export default class SearchScreen extends Component<Props, State> {
     }
 
     getSearchOptions(catType: SearchCategoryType) {
-        return this.searchOptions[catType];
+        return this.searchOptions[catType] || this.getCurrentCategory().defaultOptions || {};
     }
 
     renderHeader(props: *) {
@@ -170,22 +188,54 @@ export default class SearchScreen extends Component<Props, State> {
 
         const renderOptions = category && category.renderOptions
         const onNewOptionsCategory = _.curryRight(this.onNewOptions)(category).bind(this)
-        const searchOptions: SearchOptions = this.getSearchOptions(category.type) || {}
+        const searchOptions: SearchOptions = this.getSearchOptions(category.type)
         const searchKey = this.state.searchKey
         let searchState : SearchState = this.getSearchState(searchKey)
 
+        const displayMap = category.geoResult && this.state.displayMap
+
         return <View style={{flex:1}}>
             {renderOptions && renderOptions(searchOptions, onNewOptionsCategory, category)}
-            {!searchState.showingMap && this.renderSearchPage(category, searchState)}
-            {searchState.showingMap && <GMap category={category} searchState={searchState}/>}
-            {category.geoResult && <ActionButton
-                buttonColor="rgba(231,76,60,1)"
-                buttonText={searchState.showingMap ? 'L' : 'M'}
-                onPress={() => {
-                    this.updateSearchState(searchKey, {showingMap: !searchState.showingMap})
-                }}
+            <View style={{flex:1}}>
+                {this.renderSearchPage(category, searchState)}
+                {category.geoResult && this.renderMap(category, searchState, onNewOptionsCategory, searchOptions)}
+
+            </View>
+            {category.geoResult && <ActionButton buttonColor="rgba(231,76,60,1)"
+                                                 buttonText={displayMap ? 'L' : 'M'}
+                                                 onPress={() => {
+
+                                                     this.setState({displayMap: !this.state.displayMap})
+
+                                                     if (!this.state.displayMap) {
+                                                         getPosition(searchOptions)
+                                                             .then(position => {
+                                                                 this.updateMapPosition({lat: position.latitude, lng: position.longitude})
+                                                             })
+
+                                                     }
+                                                 }}
             />}
         </View>
+    }
+
+    renderMap(category: SearchCategory, searchState: SearchState, onNewOptions: any, searchOptions: SearchOptions) {
+        return <View style={[{position: 'absolute', zIndex: 1000, left:0, right:0, top:0, bottom:0},
+            this.state.displayMap ? {} : {height:0}]}>
+
+            <GMap category={category}
+                  searchState={searchState}
+                  searchOptions={searchOptions}
+                  setRef={this.setMapRef.bind(this)}
+                  onNewOptions={onNewOptions}/>
+        </View>
+
+    }
+    setMapRef(ref: Node) {
+        console.debug('setting map ref', ref, this, this.mapRef)
+        if (ref !== null) {
+            this.mapRef = ref
+        }
     }
 
     updateSearchState(searchKey: string, newState: Object) {
@@ -247,32 +297,37 @@ export default class SearchScreen extends Component<Props, State> {
 
         let catType = this.getCurrentCategory().type;
 
-        console.log(`performSearch:token=${this.state.input} page=${page}`);
         const {search, generateSearchKey, canSearch} = this.props.searchEngine;
-        let searchOptions: SearchOptions = this.getSearchOptions(catType) || this.getCurrentCategory().defaultOptions || {};
-
+        let searchOptions: SearchOptions = this.getSearchOptions(catType);
+        canSearch
+        console.debug('tryPerformSearch', searchOptions);
         searchOptions.token = this.state.input || ''
 
-        if (!canSearch(catType, searchOptions)) {
-            console.log(`perform search aborted: cannot search`);
-            this.setState({searchKey: ''})
-            return;
-        }
+        let searchKey = ''
+        let prevSearchState: SearchState
 
-        const searchKey = generateSearchKey(catType, searchOptions)
+        canSearch(catType, searchOptions)
+            .catch(err => {
+                console.log(`perform search aborted: cannot search`);
+                this.setState({searchKey: ''})
+            })
+            .then(() => {
+                console.log('searching')
+                searchKey = generateSearchKey(catType, searchOptions)
+                this.setState({searchKey})
 
-        this.setState({searchKey})
+                prevSearchState = this.getSearchState(searchKey)
 
-        let prevSearchState : SearchState =this.getSearchState(searchKey)
+                let newState = {
+                    requestState: 'sending',
+                    isEmpty: false,
+                    page
+                }
+                this.updateSearchState(searchKey, newState)
 
-        let newState = {
-            requestState: 'sending',
-            isEmpty: false,
-            page
-        }
-        this.updateSearchState(searchKey, newState)
+                return search(catType, page, searchOptions)
 
-        search(catType, page, searchOptions)
+            })
             .catch(err => {
                 console.warn(`error while performing search:`, err);
                 this.setState({searches: {...this.state.searches, [searchKey]: {requestState: 'ko'}}});
