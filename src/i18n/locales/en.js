@@ -70,6 +70,7 @@ export default {
     search:{
         in_items: "Find anything",
         in_network: "Search in my network",
+        in_users: "Find somebody",
         in_feed: "In my lists",
         by: "by",
         category: {

@@ -298,18 +298,18 @@ export function displayHomeSearch(navigator: RNNNavigator, token: SearchToken) {
             onClickClose: () => navigator.dismissModal(),
             token
         },
-        // backButtonHidden: true,
-        // navigatorButtons: {
-        //     leftButtons: [],
-        //     rightButtons: [
-        //         {
-        //             id: CLOSE_MODAL,
-        //             title: i18n.t("actions.cancel")
-        //         }
-        //     ],
-        // },
-        //
-        // navigatorButtons: Nav.CANCELABLE_SEARCH_MODAL(),
+        navigatorButtons: CANCELABLE_MODAL,
+    });
+}
+
+export function displaySearchUser(navigator: RNNNavigator, token: SearchToken) {
+
+    navigator.showModal({
+        screen: 'goodsh.UserSearchScreen', // unique ID registered with Navigation.registerScreen
+        passProps: {
+            onClickClose: () => navigator.dismissModal(),
+            token
+        },
         navigatorButtons: CANCELABLE_MODAL,
     });
 }

@@ -70,6 +70,7 @@ export default {
     search: {
         in_items: "Saisir le nom à enregistrer",
         in_network: "Rechercher dans mon réseau",
+        in_users: "Rechercher quelqu'un",
         in_feed: "Rechercher dans mes listes",
         by: "par",
         category: {
