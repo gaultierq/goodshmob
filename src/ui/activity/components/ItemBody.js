@@ -27,6 +27,7 @@ import * as Api from "../../../managers/Api"
 import {FETCH_ITEM} from "../../lineup/actionTypes"
 import {fetchItemCall} from "../../lineup/actions"
 import GTouchable from "../../../ui/GTouchable"
+import {openLinkSafely} from "../../UIStyles"
 
 type Props = {
     item: Item,
@@ -153,9 +154,9 @@ export default class ItemBody extends React.Component<Props, State> {
                 {images.map((image, i) => {
                     return <GTouchable  key={image} onPress={() => this.props.onPress && this.props.onPress()}>
                         <GImage
-                        source={image ? {uri: image} : require('../../../img/goodsh_placeholder.png')}
-                        resizeMode={resize}
-                        style={[styles.image, {height: imageHeight, width: this.state.width}]}/>
+                            source={image ? {uri: image} : require('../../../img/goodsh_placeholder.png')}
+                            resizeMode={resize}
+                            style={[styles.image, {height: imageHeight, width: this.state.width}]}/>
                     </GTouchable>
 
                 }) }
@@ -173,6 +174,21 @@ export default class ItemBody extends React.Component<Props, State> {
                 </Animated.View>
             }
             {/*</BoxShadow>*/}
+            {
+                (item.type === 'Album' || item.type === 'Track') && <GTouchable style={{position: 'absolute', bottom: 10, right: 10}} onPress={() => {
+                    openLinkSafely(item.url)
+                }
+                }>
+                    <Image
+                        source={require('../../../img2/play.png')}
+                        resizeMode="contain"
+                        style={{
+                            width: 50,
+                            height: 50,
+                            opacity: 0.8
+                        }}/>
+                </GTouchable>
+            }
         </View>
     }
 
