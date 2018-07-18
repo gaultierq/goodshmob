@@ -376,7 +376,7 @@ export default {
         ask_button: "Ask",
         invite: "Inviter des amis",
         load_more: "Charger la suite",
-        unsave: "Supprimer",
+        unsave: "Enregistré",
         save: "Enregistrer",
 
     },

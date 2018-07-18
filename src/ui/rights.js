@@ -51,7 +51,7 @@ export const A_BUY : GAction = new GAction('buy');
 
 
 
-class ActivityRights {
+export class ActivityRights {
 
     activity: Activity;
 

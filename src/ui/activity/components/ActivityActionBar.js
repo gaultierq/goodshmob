@@ -14,7 +14,16 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import {default as FeatherIcon} from 'react-native-vector-icons/Feather'
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors"
-import {A_BUY, A_LIKE, A_SAVE, A_UNLIKE, A_UNSAVE, canPerformAction, getPendingLikeStatus} from "../../rights"
+import {
+    A_BUY,
+    A_LIKE,
+    A_SAVE,
+    A_UNLIKE,
+    A_UNSAVE,
+    ActivityRights,
+    canPerformAction,
+    getPendingLikeStatus
+} from "../../rights"
 import {CREATE_COMMENT} from "../../screens/comments"
 import GTouchable from "../../GTouchable"
 import * as Nav from "../../Nav"
@@ -22,6 +31,7 @@ import {displayShareItem} from "../../Nav"
 import {CREATE_SAVING, doUnsave, SAVING_DELETION} from "../../lineup/actions"
 import StoreManager from "../../../managers/StoreManager"
 import _Messenger from "../../../managers/Messenger"
+import {SFP_TEXT_MEDIUM} from "../../fonts"
 
 export type ActivityActionType = 'comment'| 'like'| 'unlike'| 'share'| 'save'| 'unsave'| 'see'| 'buy'| 'answer';
 const ACTIONS = ['comment', 'like', 'unlike','share', 'save', 'unsave', 'see', 'buy', 'answer'];
@@ -53,13 +63,40 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
         //let activity: Model.Activity = this.props.activity;
 
+        let ar = new ActivityRights(activity);
+
 
         let leftButtons = this.getButtons(['comment', 'answer', 'like', 'unlike', 'share'], activity);
-        let rightButtons = this.getButtons(['save', 'unsave'], activity);
+
+        let rightButtons
+        if (ar.canSave()) {
+            rightButtons = (
+                <GTouchable onPress={()=> {
+                    this.execSave(activity)
+                }} style={[styles.saveButtonContainer, {backgroundColor: Colors.green}]}>
+                    <Image style={[styles.saveButtonIcon]} source={require('../../../img2/save-icon.png')}/>
+                    <Text style={[styles.saveButtonText, {color: Colors.white}]}>{i18n.t('actions.save')}</Text>
+                </GTouchable>
+            )
+        }
+        else if (ar.canUnsave()) {
+            const grey11 = Colors.greyish
+            rightButtons = (
+                <GTouchable onPress={()=> {
+                    this.execUnsave(activity)
+                }} style={[styles.saveButtonContainer, {borderColor: "#cacaca", borderWidth: 1}]}>
+                    <Image style={[styles.saveButtonIcon]} source={require('../../../img2/save-fill.png')}/>
+                    <Text style={[styles.saveButtonText, {color: grey11}]}>{i18n.t('actions.unsave')}</Text>
+                </GTouchable>
+            )
+        }
+
+
+
 
 
         return (
-            <View style={{flexDirection: 'row', paddingHorizontal: 10, backgroundColor: ACTIVITY_CELL_BACKGROUND, justifyContent: 'space-between',}}>
+            <View style={{flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, backgroundColor: ACTIVITY_CELL_BACKGROUND, justifyContent: 'space-between',}}>
                 <View style={styles.actionBar}>{leftButtons}</View>
                 <View style={[styles.actionBar]}>{rightButtons}</View>
             </View>)
@@ -474,5 +511,22 @@ const styles = StyleSheet.create({
     buttonText: {
         textAlign: 'center',
         fontSize: 15
+    },
+
+    saveButtonContainer: {
+        flexDirection: 'row',
+        borderRadius: 4,
+        height: 33,
+        alignItems: 'center',
+        paddingHorizontal: 4 * 2,
+    },
+    saveButtonText: {
+        fontSize: 14,
+        marginHorizontal: 4,
+        fontFamily: SFP_TEXT_MEDIUM,
+    },
+    saveButtonIcon: {
+        width: 8,
+        marginHorizontal: 4
     }
 });

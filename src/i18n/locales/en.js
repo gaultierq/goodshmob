@@ -379,7 +379,7 @@ export default {
         ask_button: "Ask",
         invite: "Invite a friend",
         load_more: "Load more",
-        unsave: "Delete",
+        unsave: "Saved",
         save: "Save",
     },
     common: {
