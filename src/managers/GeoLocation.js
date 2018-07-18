@@ -45,7 +45,6 @@ class _GeoLocation implements GeoLocation {
 
             if (hasLocationPermission) {
                 navigator.geolocation.getCurrentPosition(position => {
-                        console.log(position);
                         resolve(position);
                     },
                     (error) => {

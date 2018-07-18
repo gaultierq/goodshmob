@@ -170,9 +170,20 @@ class SearchItem extends Screen<Props, State> {
         if (category === 'places') {
             return (currentOptions: SearchOptions, onNewOptions: SearchOptions => void) => {
 
+                const onNewPosition = (newPosition) => {
+                    getPosition(newPosition).then((detailedPosition) => {
+                        // We need to merge the origal object, with the newPosition (contains aroundMe),
+                        // and the lat and lng if they are not defined
+                        const newOptions = {...currentOptions,
+                            ...newPosition,
+                            ...{lat: detailedPosition.latitude, lng: detailedPosition.longitude}
+                        }
+                        onNewOptions(newOptions)
+                    })
+                }
                 return <SearchPlacesOption
                     {...currentOptions}
-                    onNewOptions={(p) => onNewOptions(getPosition(p))}
+                    onNewOptions={onNewPosition}
                     // onSearchSubmited={onSearchSubmited}
                     navigator={this.props.navigator}
                 />
