@@ -4,7 +4,7 @@ import Button from 'apsl-react-native-button'
 import * as React from "react"
 import {toUppercase} from "../helpers/StringUtils"
 import {Colors, SEARCH_PLACEHOLDER_COLOR} from "./colors"
-import {SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "./fonts"
+import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "./fonts"
 import GTouchable from "./GTouchable"
 import type {ViewStyle} from "../types"
 import {TextStyle} from "../types"
@@ -282,7 +282,9 @@ let TAB_BAR_STYLES = StyleSheet.create({
         //width: 90,
     },
     label: {
-        color: '#000000',
+        color: Colors.greyishBrown,
+        fontFamily: SFP_TEXT_BOLD,
+        letterSpacing: 1,
         textAlign: 'center',
     },
 
