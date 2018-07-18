@@ -1165,6 +1165,7 @@
 				D087DD361FF363A20052651C /* Embed Frameworks */,
 				D0DBBED91FF5F3ED00ABBCAB /* ShellScript */,
 				23D056BA4AB094241E26478C /* [CP] Copy Pods Resources */,
+				646F05EA1A90A9CCAC353458 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1809,6 +1810,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-goodshmob/Pods-goodshmob-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		646F05EA1A90A9CCAC353458 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-goodshmob/Pods-goodshmob-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6E22ED90F7CE417D00C048D7 /* [CP] Check Pods Manifest.lock */ = {
