@@ -19,6 +19,7 @@ export const NavStyles = {
     navBarSubtitleFontSize: 14,
     navBarSubtitleColor: Colors.brownishGrey,
     navBarSubtitleFontFamily: SFP_TEXT_MEDIUM,
+    navBarTextColor: Colors.black,
     navBarTitleFontSize: 17,
     navBarTextFontFamily: SFP_TEXT_MEDIUM,
     navBarTitleFontFamily: SFP_TEXT_MEDIUM,
