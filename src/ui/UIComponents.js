@@ -252,7 +252,7 @@ export function renderLineupFromOtherPeople(navigator: RNNNavigator, lineup: Lin
 export const GoodshContext = React.createContext({userOwnResources: true});
 
 
-export let getAddButton = (lineup: Lineup) => {
+export let getAddButton = () => {
     return {
         ...Platform.select({
             ios: {

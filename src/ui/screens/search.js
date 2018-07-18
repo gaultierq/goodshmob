@@ -142,7 +142,7 @@ export default class SearchScreen extends Component<Props, State> {
         return (
             <KeyboardAvoidingView behavior={ (Platform.OS === 'ios') ? 'padding' : null }
                                   keyboardVerticalOffset={Platform.OS === 'ios' ? 50 : 0}
-                                  style={[{width:"100%", height: "100%", backgroundColor: "transparent"},this.props.style]}>
+                                  style={[{width:"100%", height: "100%", backgroundColor: Colors.white},this.props.style]}>
 
                 {!this.props.hideSearchBar &&
                 <GSearchBar2

@@ -83,23 +83,24 @@ class NetworkScreen extends Screen<Props, State> {
     }
 
     componentDidMount() {
-        const {height, width} = Dimensions.get('window');
+        // const {height, width} = Dimensions.get('window');
 
-        this.props.navigator.setStyle({
-            ...UI.NavStyles,
-            navBarCustomView: 'goodsh.TouchableSearchBar',
-            navBarCustomViewInitialProps: {
-                style: {
-                    width: width - 130,
-                    marginTop: __IS_IOS__ ? 0 : 10,
-                },
-                searchBarProps: {
-                    placeholder: i18n.t('search.in_network')
-                },
-                onPress: this.showSearch.bind(this)
-            }
-        });
+        // this.props.navigator.setStyle({
+        //     ...UI.NavStyles,
+        //     navBarCustomView: 'goodsh.TouchableSearchBar',
+        //     navBarCustomViewInitialProps: {
+        //         style: {
+        //             width: width - 130,
+        //             marginTop: __IS_IOS__ ? 0 : 10,
+        //         },
+        //         searchBarProps: {
+        //             placeholder: i18n.t('search.in_network')
+        //         },
+        //         onPress: this.showSearch.bind(this)
+        //     }
+        // });
     }
+
     componentWillAppear() {
         this.props.navigator.setDrawerEnabled({side: 'right', enabled: true});
         this.props.navigator.setDrawerEnabled({side: 'left', enabled: false});

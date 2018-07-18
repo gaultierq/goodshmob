@@ -20,7 +20,7 @@ import ShareButton from "../components/ShareButton"
 type Props = {
     userId: Id,
     navigator:any,
-    renderItem:?(item:Item)=>Node,
+    renderItem?: (item:Item)=>Node,
 
     onPressItem?: (item: User)=>void,
     data?: any,
