@@ -223,7 +223,7 @@ const htmlStyles = StyleSheet.create({
     a: {
         fontFamily: SFP_TEXT_BOLD,
         fontSize: 16,
-        color: Colors.black,
+        color: Colors.darkerBlack,
     },
     i: {
         fontFamily: SFP_TEXT_ITALIC,
@@ -248,8 +248,8 @@ const styles = StyleSheet.create({
         fontFamily: SFP_TEXT_ITALIC,
         color: Colors.brownishGrey},
     userText: {
-        fontSize: 10,
-        lineHeight: 10,
+        fontSize: 13,
+        lineHeight: 22,
         color: Colors.greyish,
     },
     shadow: {

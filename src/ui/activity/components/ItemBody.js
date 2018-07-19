@@ -16,7 +16,7 @@ import {connect} from "react-redux"
 import {logged} from "../../../managers/CurrentUser"
 import type {Item, ItemType} from "../../../types"
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors"
-import {SFP_TEXT_ITALIC} from "../../fonts"
+import {SFP_TEXT_ITALIC, SFP_TEXT_REGULAR} from "../../fonts"
 import GImage from '../../components/GImage'
 
 import {firstName} from "../../../helpers/StringUtils"
@@ -236,8 +236,8 @@ const styles = StyleSheet.create({
     body: {padding: 15, paddingBottom: 0, backgroundColor: ACTIVITY_CELL_BACKGROUND},
     bodyInner: {flexDirection: 'row'},
     flex1: {flex:1},
-    title: {fontSize: 19, color: Colors.black, marginBottom: 4, marginRight: 5},
-    subtitle: {fontSize: 14, color: Colors.greyish},
+    title: {fontSize: 20, fontFamily: SFP_TEXT_REGULAR, color: Colors.black, marginBottom: 4, marginRight: 5},
+    subtitle: {fontSize: 14, fontFamily: SFP_TEXT_REGULAR, color: Colors.greyish},
     description: {fontSize: 14, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey},
     imageContainer: {flex:1, alignSelf: 'center', width: "100%", backgroundColor: 'transparent'},
     image: {alignSelf: 'center', backgroundColor: ACTIVITY_CELL_BACKGROUND, width: "100%"},
