@@ -7,7 +7,7 @@ import type {SearchEngine, SearchItemCategoryType,} from "../../../helpers/Searc
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import {LINEUP_PADDING, NAV_BACKGROUND_COLOR} from "../../UIStyles"
 import GSearchBar2 from "../../components/GSearchBar2"
-import SearchPage from "../searchpage"
+import SearchMotor from "../searchMotor"
 import ItemCell from "../../components/ItemCell"
 import {__createSearchItemSearcher} from "../../../helpers/SearchHelper"
 
@@ -48,9 +48,9 @@ export default class SearchItemPageGeneric extends React.Component<SMP, SMS> {
                     placeholder={this.props.placeholder}
                     autoFocus
                 />
-                <SearchPage
+                <SearchMotor
                     searchEngine={this.state.search}
-                    renderItem={({item}) => <ItemCell item={item}/>}
+                    renderResults={state => <SearchListResults searchState={state} renderItem={({item}) => <ItemCell item={item}/>} />}
                     searchOptions={this.state.searchOptions}
                 />
             </View>

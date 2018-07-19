@@ -4,16 +4,17 @@ import type {Node} from 'react'
 import React from 'react'
 import {StyleSheet, Text, TextInput, View,} from 'react-native'
 import type {SearchEngine,} from "../../../helpers/SearchHelper"
-import {__createAlgoliaSearcher, renderSavingOrLineup, renderUser} from "../../../helpers/SearchHelper"
+import {__createAlgoliaSearcher, renderSavingOrLineup} from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import {LINEUP_PADDING, NAV_BACKGROUND_COLOR} from "../../UIStyles"
 import GSearchBar2 from "../../components/GSearchBar2"
-import SearchPage from "../searchpage"
+import SearchMotor from "../searchMotor"
 import type {RNNNavigator} from "../../../types"
-import {AlgoliaClient, createResultFromHit2} from "./../../../helpers/AlgoliaUtils"
+import {AlgoliaClient} from "./../../../helpers/AlgoliaUtils"
 import Config from 'react-native-config'
 import {currentUserId} from "../../../managers/CurrentUser"
 import {createResultFromHit} from "../../../helpers/AlgoliaUtils"
+import SearchListResults from "../searchListResults"
 
 export type SearchUserOptions = {
     token: string
@@ -78,9 +79,9 @@ export default class SearchSavingAndLineupPage extends React.Component<SUP, SUS>
                     placeholder={i18n.t("search_bar.me_placeholder")}
                     autoFocus
                 />
-                <SearchPage
+                <SearchMotor
                     searchEngine={this.state.search}
-                    renderItem={renderSavingOrLineup(this.props.navigator)}
+                    renderResults={state => <SearchListResults searchState={state} renderItem={renderSavingOrLineup(this.props.navigator)} />}
                     searchOptions={this.state.searchOptions}
                 />
             </View>

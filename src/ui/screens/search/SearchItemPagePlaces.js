@@ -8,11 +8,12 @@ import {__createSearchItemSearcher} from "../../../helpers/SearchHelper"
 import {LINEUP_PADDING, NAV_BACKGROUND_COLOR} from "../../UIStyles"
 import {getPosition, SearchPlacesOption} from "./searchplacesoption"
 import GSearchBar2 from "../../components/GSearchBar2"
-import SearchPage from "../searchpage"
+import SearchMotor from "../searchMotor"
 import ItemCell from "../../components/ItemCell"
 import type {RNNNavigator} from "../../../types"
 import type {SearchItemsGenOptions} from "./SearchItemPageGeneric"
 import type {GeoPosition} from "./searchplacesoption"
+import SearchListResults from "../searchListResults"
 
 export type SearchItemsPlacesOptions = SearchItemsGenOptions & {
     lat?: string,
@@ -63,9 +64,9 @@ export default class SearchItemPagePlaces extends React.Component<SMP, SMS> {
                     }}
                 />
 
-                <SearchPage
+                <SearchMotor
                     searchEngine={this.state.search}
-                    renderItem={({item}) => <ItemCell item={item}/>}
+                    renderResults={state => <SearchListResults searchState={state} renderItem={({item}) => <ItemCell item={item}/>} />}
                     searchOptions={this.state.searchOptions}
                 />
             </View>

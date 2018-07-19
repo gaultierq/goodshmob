@@ -3,7 +3,7 @@
 import type {Node} from 'react'
 import React from 'react'
 import {StyleSheet, Text, TextInput, View,} from 'react-native'
-import type {SearchEngine, SearchItemCategoryType,} from "../../../helpers/SearchHelper"
+import type {SearchEngine,} from "../../../helpers/SearchHelper"
 import {__createAlgoliaSearcher, makeBrowseAlgoliaFilter2} from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import SearchMotor from "../searchMotor"
@@ -16,27 +16,29 @@ import Config from 'react-native-config'
 import {seeActivityDetails} from "../../Nav"
 import GTouchable from "../../GTouchable"
 import {SocialScopeSelector} from "./socialscopeselector"
-import type {Saving} from "../../../types"
+import type {GeoPosition} from "./searchplacesoption"
+import {SearchPlacesOption} from "./searchplacesoption"
+import type {RNNNavigator, Saving} from "../../../types"
 import SearchListResults from "../searchListResults"
-
-export type BrowseItemsGenOptions = {
-    algoliaFilter?: string
-}
 
 type SMS = {
     search: SearchEngine<BrowseItemsGenOptions>,
     searchOptions: BrowseItemsGenOptions,
 
 }
+
 type SMP = {
-    category: SearchItemCategoryType,
+    navigator: RNNNavigator
+}
+export type BrowseItemsGenOptions = {
+    algoliaFilter?: string
 }
 
 @connect(state => ({
     data: state.data,
 }))
 @logged
-export default class BrowseItemPageGeneric extends React.Component<SMP, SMS> {
+export default class BrowseItemPagePlaces extends React.Component<SMP, SMS> {
 
     constructor(props: SMP) {
         super(props)
@@ -68,35 +70,39 @@ export default class BrowseItemPageGeneric extends React.Component<SMP, SMS> {
                 }),
                 canSearch: searchOptions => Promise.resolve(true)
             }
-
-
         }
     }
 
     render() {
         return (
             <View>
-
                 <SocialScopeSelector onScopeChange={scope => {
                     this.setState({
                         searchOptions: {
                             ...this.state.searchOptions,
-                            algoliaFilter: makeBrowseAlgoliaFilter2(scope, this.props.category, this.getUser())
+                            algoliaFilter: makeBrowseAlgoliaFilter2(scope, 'places', this.getUser())
                         }
                     })}
                 }/>
 
+                <SearchPlacesOption
+                    navigator={this.props.navigator}
+                    onNewOptions={(pos: GeoPosition) => {
+                        this.setState({searchOptions: {...this.state.searchOptions, ...pos}})
+                    }}
+                />
+
                 <SearchMotor
                     searchEngine={this.state.search}
-                    renderResults={state => <SearchListResults searchState={state} renderItem={this._renderItem} />}
+                    renderResults={state => <SearchListResults searchState={state} renderItem={this.renderItem.bind(this)} />}
                     searchOptions={this.state.searchOptions}
                 />
             </View>
         )
     }
 
-    //factorize
-    _renderItem = ({item}: {item: Saving}) => {
+    //to factorize
+    renderItem({item}: {item: Saving}) {
 
         let saving = item;
 
@@ -112,6 +118,7 @@ export default class BrowseItemPageGeneric extends React.Component<SMP, SMS> {
         )
     }
 
+    //TODO: use selector
     getUser() {
         return buildData(this.props.data, "users", currentUserId())
     }

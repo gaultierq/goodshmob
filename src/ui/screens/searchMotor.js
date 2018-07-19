@@ -13,23 +13,13 @@ import {
     TouchableOpacity,
     View
 } from 'react-native'
-import {connect} from "react-redux"
-import {logged} from "../../managers/CurrentUser"
 
-import type {SearchToken} from "../../types"
 import {SearchKey} from "../../types"
 import Button from 'apsl-react-native-button'
 import {Navigation} from 'react-native-navigation'
 import {Colors} from "../colors"
 
-import type {
-    SearchCategory,
-    SearchCategoryType,
-    SearchEngine,
-    SearchOptions,
-    SearchResult,
-    SearchState,
-} from "../../helpers/SearchHelper"
+import type {SearchEngine, SearchOptions, SearchResult, SearchState,} from "../../helpers/SearchHelper"
 import {FullScreenLoader} from "../UIComponents"
 
 
@@ -42,9 +32,11 @@ export interface ISearchPage {
 
 export type Props<SO> = {
     searchEngine: SearchEngine<SO>,
+    renderResults: SearchState => Node,
     renderEmpty?: () => Node,
     ref?: ISearchPage => void,
-    searchOptions: SO
+    searchOptions: SO,
+
 };
 
 //options: page x location? x
@@ -52,7 +44,8 @@ export type State = {
     searches: { [SearchKey]: SearchState},
 };
 
-export default class SearchPage<SO> extends Component<Props<SO>, State> implements ISearchPage {
+// this guy is responsible for making search requests
+export default class SearchMotor<SO> extends Component<Props<SO>, State> implements ISearchPage {
 
     state : State = {
         searches: {}
@@ -95,6 +88,11 @@ export default class SearchPage<SO> extends Component<Props<SO>, State> implemen
     }
 
     renderSearchPage(searchState: SearchState) {
+        return this.props.renderResults(searchState)
+
+
+
+
         searchState = searchState || {}
         if (searchState.requestState === 'sending' && searchState.page === 0) return <FullScreenLoader/>
         if (searchState.requestState === 'ko')
@@ -119,6 +117,8 @@ export default class SearchPage<SO> extends Component<Props<SO>, State> implemen
                 keyboardShouldPersistTaps='always'/>
         </View>
     }
+
+
 
     updateSearchState(searchKey: string, newState: Object) {
         this.setState(

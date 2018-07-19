@@ -8,11 +8,12 @@ import {__createAlgoliaSearcher, renderUser} from "../../../helpers/SearchHelper
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import {LINEUP_PADDING, NAV_BACKGROUND_COLOR} from "../../UIStyles"
 import GSearchBar2 from "../../components/GSearchBar2"
-import SearchPage from "../searchpage"
+import SearchMotor from "../searchMotor"
 import type {RNNNavigator} from "../../../types"
 import {AlgoliaClient, createResultFromHit2} from "./../../../helpers/AlgoliaUtils"
 import Config from 'react-native-config'
 import {currentUserId} from "../../../managers/CurrentUser"
+import SearchListResults from "../searchListResults"
 
 export type SearchUserOptions = {
     token: string
@@ -57,9 +58,9 @@ export default class SearchUserPage extends React.Component<SUP, SUS> {
                     placeholder={"# search user"}
                     autoFocus
                 />
-                <SearchPage
+                <SearchMotor
                     searchEngine={this.state.search}
-                    renderItem={renderUser(this.props.navigator)}
+                    renderResults={state => <SearchListResults searchState={state} renderItem={renderUser(this.props.navigator)} />}
                     searchOptions={this.state.searchOptions}
                 />
             </View>
