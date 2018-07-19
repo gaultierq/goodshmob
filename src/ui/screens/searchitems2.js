@@ -15,20 +15,9 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native'
-import ItemCell from "../components/ItemCell"
-import type {
-    RenderOptions,
-    SearchCategory,
-    SearchCategoryType,
-    SearchOptions,
-    SearchQuery,
-    SearchState,
-} from "../../helpers/SearchHelper"
 import {SEARCH_CATEGORIES_TYPE} from "../../helpers/SearchHelper"
-import GTouchable from "../GTouchable"
 import Screen from "../components/Screen"
 import type {Item, Lineup, RNNNavigator} from "../../types"
-import {getPosition, SearchPlacesOption} from "./search/searchplacesoption"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import {findBestSearchCategory} from "../../helpers/Classifier"
 import {TAB_BAR_PROPS} from "../UIStyles"
