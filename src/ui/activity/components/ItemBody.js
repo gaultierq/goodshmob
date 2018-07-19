@@ -28,6 +28,7 @@ import {FETCH_ITEM} from "../../lineup/actionTypes"
 import {fetchItemCall} from "../../lineup/actions"
 import GTouchable from "../../../ui/GTouchable"
 import {LINEUP_PADDING, openLinkSafely} from "../../UIStyles"
+import FeedSeparator from "./FeedSeparator"
 
 type Props = {
     item?: Item,
@@ -92,7 +93,7 @@ export default class ItemBody extends React.Component<Props, State> {
             <View onLayout={this._onLayoutDidChange}>
                 {/*Image And Button*/}
                 {this.renderImage()}
-
+                <FeedSeparator/>
                 {(
                     <View style={[{
                         padding: LINEUP_PADDING,
