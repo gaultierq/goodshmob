@@ -18,7 +18,6 @@ import FriendScreen from './screens/friends'
 import {CommunityScreen} from './screens/community'
 import SendScreen from './screens/send'
 import UserScreen from './screens/user'
-import NetworkSearchScreen from './screens/networksearch'
 import HomeSearchScreen from './screens/homesearch'
 import CategorySearchScreen from './screens/categorySearch'
 import AddItemScreen from './screens/additem'
@@ -96,7 +95,6 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.ProfileScreen', () => ProfileScreen, store, Provider);
     wrap('goodsh.AlgoliaSearchScreen', () => AlgoliaSearchScreen, store, Provider);
     wrap('goodsh.UserScreen', () => UserScreen, store, Provider);
-    wrap('goodsh.NetworkSearchScreen', () => NetworkSearchScreen, store, Provider);
     wrap('goodsh.HomeSearchScreen', () => HomeSearchScreen, store, Provider);
     wrap('goodsh.CategorySearchScreen', () => CategorySearchScreen, store, Provider);
     wrap('goodsh.AddItemScreen', () => AddItemScreen, store, Provider);

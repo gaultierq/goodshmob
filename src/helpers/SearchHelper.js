@@ -2,7 +2,7 @@
 
 import type {Node} from 'react'
 import * as React from 'react'
-import type {Id, Item, Lineup, List, RNNNavigator, Saving, SearchToken, User} from "../types"
+import type {Id, Lineup, List, RNNNavigator, Saving, SearchToken, User} from "../types"
 import {RequestState} from "../types"
 import EmptySearch, {renderBlankIcon} from "../ui/components/EmptySearch"
 import {AlgoliaClient, createResultFromHit, createResultFromHit2} from "./AlgoliaUtils"
@@ -12,15 +12,12 @@ import {seeActivityDetails, seeUser} from "../ui/Nav"
 import GTouchable from "../ui/GTouchable"
 import ItemCell from "../ui/components/ItemCell"
 import UserItem from "../ui/screens/userItem"
-import {BACKGROUND_COLOR, TAB_BAR_PROPS} from "../ui/UIStyles"
-import {PagerPan, TabBar, TabView} from "react-native-tab-view"
-import {Colors} from "../ui/colors"
 import {StyleSheet} from "react-native"
-import {getPosition, getPositionOrAskPermission} from "../ui/screens/search/searchplacesoption"
+import {getPosition} from "../ui/screens/search/searchplacesoption"
 import type {SearchItemsGenOptions} from "../ui/screens/search/SearchItemPageGeneric"
 import {buildData} from "./DataUtils"
-import {Call} from "../managers/Api"
 import * as Api from "../managers/Api"
+import {Call} from "../managers/Api"
 import normalize from 'json-api-normalizer'
 
 export type SearchCategoryType = string;
@@ -162,11 +159,14 @@ export function SEARCH_CATEGORY_USER(currentUserId: Id, renderItem: any => Node)
 
     return {
         type: "users",
+
         index: AlgoliaClient.createAlgoliaIndex(Config.ALGOLIA_USER_INDEX),
         defaultOptions: {algoliaFilter: `NOT objectID:${currentUserId}`},
+        parseResponse: createResultFromHit2,
+
         tabName: i18n.t("network_search_tabs.users"),
         placeholder: "search_bar.network_placeholder",
-        parseResponse: createResultFromHit2,
+
         renderItem,
         renderEmpty: <EmptySearch
             icon={renderBlankIcon('users')}
@@ -229,46 +229,6 @@ export function renderUser(navigator: RNNNavigator) {
 }
 
 
-
-
-export const SearchTabView = (props: any) => (
-    // $FlowFixMe
-    <TabView
-        style={styles22.container}
-        // navigationState={this.state}
-        // renderScene={this.renderScene.bind(this)}
-        // onIndexChange={this.handleIndexChange.bind(this)}
-        swipeEnabled={false}
-        renderTabBar={props => <TabBar {...TAB_BAR_PROPS} {...props}/>}
-        keyboardShouldPersistTaps='always'
-        renderPager={props => <PagerPan {...props} />}
-        {...props}
-    />
-)
-
-
-const styles22 = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    button: {
-        padding: 8,
-        borderColor: "transparent",
-    },
-
-    searchInput: {
-        backgroundColor: Colors.white,
-    },
-    activityIndicator: {
-        position: "absolute",
-        top: 30, left: 0, right: 0, justifyContent: 'center',
-        zIndex: 3000
-    },
-});
-
-
-
-
 export function __createSearchItemSearcher<SO: SearchItemsGenOptions>(type: SearchItemCategoryType): (searchOptions: SO, page: number,) => Promise<SearchResult> {
 
     return (options: SO, page) => __searchItems(type, page, options)
@@ -327,36 +287,53 @@ function __searchItems<SO: SearchItemsGenOptions>(category: SearchCategoryType, 
     });
 }
 
-function __makeSearchEngine<SO: SearchItemsGenOptions>(category: SearchItemCategoryType) {
-    return {
-        search: __createSearchItemSearcher(category),
-        generateSearchKey: (searchOptions: SearchItemsGenOptions) => {
-            throw 'generateSearchKeyIsUseless'
-        },
-        canSearch: (searchOptions: SO) => {
-            console.debug('canSearch', category, searchOptions, _.isEmpty(searchOptions.input))
-
-            return new Promise((resolve, reject) => {
-                if (category === 'places') {
-                    if (searchOptions.aroundMe) {
-                        const pro = getPositionOrAskPermission(searchOptions)
-                        return resolve(pro)
-                    } else if (searchOptions.lat && searchOptions.lng) {
-                        return resolve()
-                    } else {
-                        console.log('SEARCH ERROR: position not defined')
-                        return reject()
-                    }
-                }
-                const token = searchOptions.input
-                if (!_.isEmpty(token)) {
-                    resolve()
-                } else {
-                    reject()
-                }
-            })
-
-        }
-    }
+export type AlgoliaSearchConfig = {
+    index: any,
+    query?: any,
+    parseResponse: (hits: []) => *,
 }
 
+export function __createAlgoliaSearcher<SO: any>(
+    config: AlgoliaSearchConfig
+)
+    : (searchOptions: SO, page: number,) => Promise<SearchResult> {
+
+    return (searchOptions: SearchOptions, page: number): Promise<*> => {
+
+        //searching
+        const token = searchOptions.token || ''
+        console.log(`algolia: searching ${token}`, searchOptions);
+
+        // const queries = categFiltered.map(c=> {return {...c.query, params: c.params, query: token}});
+        const query = {
+            ...config.query, filters: searchOptions.algoliaFilter, page, query: token
+        }
+
+        console.log({query})
+        return new Promise((resolve, reject) => {
+
+            config.index.then(index => {
+                index.search(query, (err, content) => {
+
+                    if (err) {
+                        console.error(err);
+                        reject(err);
+                        return;
+                    }
+                    let result = content;
+                    let hits = result.hits;
+                    console.log(`search result lists: ${hits.length}`, hits);
+
+                    let searchResult = config.parseResponse(hits);
+
+                    let search:SearchResult = {results: searchResult,
+                        page: result.page,
+                        nbPages: result.nbPages};
+                    resolve(search);
+                });
+            });
+            // index.search(queries, (err, content) => {
+
+        });
+    }
+}
