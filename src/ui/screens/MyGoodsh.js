@@ -33,6 +33,7 @@ import UserLineups from "./userLineups"
 import {TipConfig} from "../components/Tip"
 import LineupTitle2 from "../components/LineupTitle2"
 import {SFP_TEXT_MEDIUM} from "../fonts"
+import {LINEUP_SECTIONS} from "../UIComponents"
 
 
 type Props = {
@@ -71,41 +72,42 @@ export default class MyGoodsh extends Screen<Props, State> {
                 navigator={navigator}
                 ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
                 renderSectionHeader={({section}) => section.renderSectionHeader()}
-                sectionMaker={(lineups)=> {
-                    const goodshbox = _.head(lineups);
-                    let savingCount = _.get(goodshbox, `meta.savingsCount`, 0)
-                    const showGoodshbox = goodshbox && goodshbox.savings.length > 0;
-
-                    return _.compact([
-                        showGoodshbox ? {
-                            data: [goodshbox],
-                            title: i18n.t("lineups.goodsh.title"),
-                            subtitle: ` (${savingCount})`,
-                            onPress: () => seeList(navigator, goodshbox),
-                            renderItem: ({item, index}) => (
-                                <LineupH1
-                                    lineup={item}
-                                    navigator={navigator}
-                                    skipLineupTitle={true}
-                                    renderEmpty={this.renderEmptyLineup(navigator, item)}
-                                />
-                            ),
-                            renderSectionHeader: () => this.renderSectionHeader(
-                                i18n.t("lineups.goodsh.title"),
-                            )
-                        } : false,
-                        {
-                            data: _.slice(lineups, 1),
-                            title: i18n.t("lineups.mine.title"),
-                            // renderSectionHeaderChildren:() => <AddLineupComponent navigator={this.props.navigator}/>,
-                            renderItem: ({item, index})=> this.renderLineup(item, index, navigator, index > 0 ? null : this.props.targetRef),
-                            renderSectionHeader: () => this.renderSectionHeader(
-                                i18n.t("lineups.mine.title"),
-                                <AddLineupComponent navigator={this.props.navigator}/>
-                            )
-                        },
-                    ]);
-                }}
+                sectionMaker={LINEUP_SECTIONS(this.props.navigator, this.props.dispatch)}
+                // sectionMaker={(lineups)=> {
+                //     const goodshbox = _.head(lineups);
+                //     let savingCount = _.get(goodshbox, `meta.savingsCount`, 0)
+                //     const showGoodshbox = goodshbox && goodshbox.savings.length > 0;
+                //
+                //     return _.compact([
+                //         showGoodshbox ? {
+                //             data: [goodshbox],
+                //             title: i18n.t("lineups.goodsh.title"),
+                //             subtitle: ` (${savingCount})`,
+                //             onPress: () => seeList(navigator, goodshbox),
+                //             renderItem: ({item, index}) => (
+                //                 <LineupH1
+                //                     lineup={item}
+                //                     navigator={navigator}
+                //                     skipLineupTitle={true}
+                //                     renderEmpty={this.renderEmptyLineup(navigator, item)}
+                //                 />
+                //             ),
+                //             renderSectionHeader: () => this.renderSectionHeader(
+                //                 i18n.t("lineups.goodsh.title"),
+                //             )
+                //         } : false,
+                //         {
+                //             data: _.slice(lineups, 1),
+                //             title: i18n.t("lineups.mine.title"),
+                //             // renderSectionHeaderChildren:() => <AddLineupComponent navigator={this.props.navigator}/>,
+                //             renderItem: ({item, index})=> this.renderLineup(item, index, navigator, index > 0 ? null : this.props.targetRef),
+                //             renderSectionHeader: () => this.renderSectionHeader(
+                //                 i18n.t("lineups.mine.title"),
+                //                 <AddLineupComponent navigator={this.props.navigator}/>
+                //             )
+                //         },
+                //     ]);
+                // }}
 
                 {...attributes}
             />
@@ -189,7 +191,7 @@ export default class MyGoodsh extends Screen<Props, State> {
                     // backgroundColor: 'red',
                 }}>
                     <Image
-                        source={require('../../img2/moreDotsGrey.png')} resizeMode="contain"/>
+                        source={require('../../img2/sidedots.png')} resizeMode="contain"/>
                 </View>
             </GTouchable>
         );

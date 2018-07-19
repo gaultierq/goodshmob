@@ -219,8 +219,9 @@ export const STYLES = StyleSheet.create({
         backgroundColor: 'rgba(255, 255, 255, 0.65)'
     },
     SECTION_TITLE: {
-        fontSize: 20,
-        fontFamily: SFP_TEXT_MEDIUM
+        fontSize: 16,
+        fontFamily: SFP_TEXT_REGULAR,
+        color: Colors.black
     }
 });
 

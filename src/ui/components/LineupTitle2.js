@@ -14,7 +14,6 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import UserRowI from "../activity/components/UserRowI"
 import {buildData} from "../../helpers/DataUtils"
 import {STYLES} from "../UIStyles"
-import {getFirstDefined} from "../../helpers/LangUtil"
 import {GoodshContext} from "../UIComponents"
 
 export type State = {
@@ -109,8 +108,8 @@ export default class LineupTitle2 extends Component<Props, State> {
         })();
         let color = _.get(lineup, 'meta.followed', false) ? Colors.black : undefined
         return [
-            this.renderMedal(_.get(lineup, 'meta.savingsCount', -1), "th-large", it),
-            this.renderMedal(_.get(lineup, 'meta.followersCount', -1), "star", it, color)
+            <Text>{_.get(lineup, 'meta.savingsCount', -1)}</Text>,
+            // this.renderMedal(_.get(lineup, 'meta.followersCount', -1), "star", it, color)
         ];
     }
 

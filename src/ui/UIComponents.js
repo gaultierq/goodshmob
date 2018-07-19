@@ -210,7 +210,6 @@ export const LINEUP_SECTIONS = (navigator: RNNNavigator, dispatch: any) => (line
                 <LineupHorizontal
                     lineupId={item.id}
                     dataResolver={() => ({lineup: lineup, savings: lineup.savings})}
-                    style={{paddingBottom: 10}}
                     skipLineupTitle={true}
                 />
             </GTouchable>
