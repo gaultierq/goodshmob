@@ -28,7 +28,7 @@ import SearchScreen from "./search"
 import GTouchable from "../GTouchable"
 import {seeActivityDetails} from "../Nav"
 import {GoodshContext} from "../UIComponents"
-import {SearchPlacesOption} from "./searchplacesoption"
+import {SearchPlacesOption} from "./search/searchplacesoption"
 import {Colors} from "../colors"
 import {SEARCH_CATEGORIES_TYPE} from "../../helpers/SearchHelper"
 import type {

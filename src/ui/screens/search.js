@@ -37,7 +37,7 @@ import type {
     SearchState,
 } from "../../helpers/SearchHelper"
 import {FullScreenLoader} from "../UIComponents"
-import {getPosition} from "./searchplacesoption"
+import {getPosition} from "./search/searchplacesoption"
 
 
 //token -> {data, hasMore, isSearching}

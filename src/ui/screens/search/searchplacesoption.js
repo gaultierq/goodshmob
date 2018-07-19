@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import {
     ActivityIndicator, Alert,
@@ -11,21 +13,21 @@ import {
     View
 } from 'react-native'
 import {CheckBox} from 'react-native-elements'
-import GTouchable from "../GTouchable"
-import {Colors} from "../colors"
-import {NavStyles, SEARCH_INPUT_PROPS, SEARCH_INPUT_RADIUS, SEARCH_STYLES, SEARCH_STYLES_OBJ} from "../UIStyles"
+import GTouchable from "../../GTouchable"
+import {Colors} from "../../colors"
+import {NavStyles, SEARCH_INPUT_PROPS, SEARCH_INPUT_RADIUS, SEARCH_STYLES, SEARCH_STYLES_OBJ} from "../../UIStyles"
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import {Navigation} from 'react-native-navigation'
-import {CANCELABLE_SEARCH_MODAL} from "../Nav"
-import type {RNNNavigator} from "../../types"
+import {CANCELABLE_SEARCH_MODAL} from "../../Nav"
+import type {RNNNavigator} from "../../../types"
 import OpenAppSettings from "react-native-app-settings"
-import Geolocation from "../../managers/GeoLocation"
+import Geolocation from "../../../managers/GeoLocation"
 
 
 export type SearchPlacesProps = {
     aroundMe?:boolean,
     onNewOptions: any => void,
-    onSearchSubmited: void => void,
+    onSearchSubmited?: void => void,
     navigator: RNNNavigator
 };
 

@@ -12,6 +12,16 @@ import {seeActivityDetails, seeUser} from "../ui/Nav"
 import GTouchable from "../ui/GTouchable"
 import ItemCell from "../ui/components/ItemCell"
 import UserItem from "../ui/screens/userItem"
+import {BACKGROUND_COLOR, TAB_BAR_PROPS} from "../ui/UIStyles"
+import {PagerPan, TabBar, TabView} from "react-native-tab-view"
+import {Colors} from "../ui/colors"
+import {StyleSheet} from "react-native"
+import {getPosition, getPositionOrAskPermission} from "../ui/screens/search/searchplacesoption"
+import type {SearchItemsGenOptions} from "../ui/screens/search/SearchItemPageGeneric"
+import {buildData} from "./DataUtils"
+import {Call} from "../managers/Api"
+import * as Api from "../managers/Api"
+import normalize from 'json-api-normalizer'
 
 export type SearchCategoryType = string;
 
@@ -138,14 +148,14 @@ export function SEARCH_CATEGORY_MY_LIST_OR_SAVINGS(currentUserId: Id, renderItem
     });
 
     return {
-            type: "savings",
-            index,
-            defaultOptions: {algoliaFilter: `user_id:${currentUserId}`},
-            placeholder: "search_bar.me_placeholder",
-            parseResponse: createResultFromHit,
-            renderEmpty: <EmptySearch text={i18n.t("lineups.search.empty")}/>,
-            renderItem
-        }
+        type: "savings",
+        index,
+        defaultOptions: {algoliaFilter: `user_id:${currentUserId}`},
+        placeholder: "search_bar.me_placeholder",
+        parseResponse: createResultFromHit,
+        renderEmpty: <EmptySearch text={i18n.t("lineups.search.empty")}/>,
+        renderItem
+    }
 }
 
 export function SEARCH_CATEGORY_USER(currentUserId: Id, renderItem: any => Node): SearchCategory {
@@ -168,12 +178,12 @@ export function SEARCH_CATEGORY_USER(currentUserId: Id, renderItem: any => Node)
 export function SEARCH_CATEGORY_ITEM(categ: SearchItemCategoryType, renderItem: any => Node): SearchCategory {
     return {
         type: categ,
-            tabName: i18n.t("search_item_screen.tabs." + categ),
+        tabName: i18n.t("search_item_screen.tabs." + categ),
         description: i18n.t("search_item_screen.placeholder." + categ),
         renderItem,
         renderEmpty: <EmptySearch text={i18n.t("search_item_screen.placeholder." + categ)}
-        icon={renderBlankIcon(categ)}
-    />
+                                  icon={renderBlankIcon(categ)}
+        />
     }
 }
 
@@ -220,4 +230,133 @@ export function renderUser(navigator: RNNNavigator) {
 
 
 
+
+export const SearchTabView = (props: any) => (
+    // $FlowFixMe
+    <TabView
+        style={styles22.container}
+        // navigationState={this.state}
+        // renderScene={this.renderScene.bind(this)}
+        // onIndexChange={this.handleIndexChange.bind(this)}
+        swipeEnabled={false}
+        renderTabBar={props => <TabBar {...TAB_BAR_PROPS} {...props}/>}
+        keyboardShouldPersistTaps='always'
+        renderPager={props => <PagerPan {...props} />}
+        {...props}
+    />
+)
+
+
+const styles22 = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    button: {
+        padding: 8,
+        borderColor: "transparent",
+    },
+
+    searchInput: {
+        backgroundColor: Colors.white,
+    },
+    activityIndicator: {
+        position: "absolute",
+        top: 30, left: 0, right: 0, justifyContent: 'center',
+        zIndex: 3000
+    },
+});
+
+
+
+
+export function __createSearchItemSearcher<SO: SearchItemsGenOptions>(type: SearchItemCategoryType): (searchOptions: SO, page: number,) => Promise<SearchResult> {
+
+    return (options: SO, page) => __searchItems(type, page, options)
+}
+
+function __searchItems<SO: SearchItemsGenOptions>(category: SearchCategoryType, page: number, searchOptions: SO): Promise<*> {
+
+    let fillOptions = (category: SearchCategoryType, call: Call, options: any) => {
+        return new Promise((resolve, reject) => {
+            if (category === 'places') {
+                getPosition(options).then(({latitude, longitude}) => {
+                    call.addQuery(latitude && {'search[lat]': latitude})
+                        .addQuery(longitude && {'search[lng]': longitude});
+                    resolve(call);
+                }, err => {
+                    console.debug("UNEXPECTED SEARCH ERROR: at this stage we should have position permission", err);
+                    reject(err)
+                });
+            } else {
+                resolve(call);
+            }
+        });
+    }
+
+    //searching
+    const token = searchOptions.input;
+    console.debug(`api: searching: token='${token}', category='${category}', page=${page}, options=`, searchOptions);
+
+    return new Promise((resolve, reject) => {
+        let call = new Api.Call()
+            .withMethod('GET')
+            .withRoute(`search/${category}`);
+
+        if (!_.isEmpty(token)) {
+            call.addQuery({'search[term]': token});
+        }
+
+        fillOptions(category, call, searchOptions)
+            .then(call=> {
+                //maybe use redux here ?
+                call
+                    .run()
+                    .then(response=>{
+                        let data = normalize(response.json);
+
+                        let results = response.json.data.map(d=>{
+                            return buildData(data, d.type, d.id);
+                        });
+
+                        resolve({results, page, nbPages: 0});
+                    }, err=> {
+                        //console.warn(err)
+                        reject(err);
+                    });
+            }, err => reject(err));
+    });
+}
+
+function __makeSearchEngine<SO: SearchItemsGenOptions>(category: SearchItemCategoryType) {
+    return {
+        search: __createSearchItemSearcher(category),
+        generateSearchKey: (searchOptions: SearchItemsGenOptions) => {
+            throw 'generateSearchKeyIsUseless'
+        },
+        canSearch: (searchOptions: SO) => {
+            console.debug('canSearch', category, searchOptions, _.isEmpty(searchOptions.input))
+
+            return new Promise((resolve, reject) => {
+                if (category === 'places') {
+                    if (searchOptions.aroundMe) {
+                        const pro = getPositionOrAskPermission(searchOptions)
+                        return resolve(pro)
+                    } else if (searchOptions.lat && searchOptions.lng) {
+                        return resolve()
+                    } else {
+                        console.log('SEARCH ERROR: position not defined')
+                        return reject()
+                    }
+                }
+                const token = searchOptions.input
+                if (!_.isEmpty(token)) {
+                    resolve()
+                } else {
+                    reject()
+                }
+            })
+
+        }
+    }
+}
 

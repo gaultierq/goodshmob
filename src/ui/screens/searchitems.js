@@ -35,10 +35,7 @@ import GTouchable from "../GTouchable"
 import Screen from "../components/Screen"
 import type {Item, Lineup, RNNNavigator} from "../../types"
 import {Colors} from "../colors"
-import Geolocation from "../../managers/GeoLocation"
-import type {SearchPlacesProps} from "./searchplacesoption"
-import {SearchPlacesOption, getPositionOrAskPermission, getPosition} from "./searchplacesoption"
-import OpenAppSettings from 'react-native-app-settings'
+import {getPosition, getPositionOrAskPermission, SearchPlacesOption} from "./search/searchplacesoption"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import {findBestSearchCategory} from "../../helpers/Classifier"
 
