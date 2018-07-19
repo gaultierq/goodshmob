@@ -50,17 +50,17 @@ class NetworkScreen extends Screen<Props, State> {
         rightButtons: [
 
             {
-                id: 'interactions', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
-                icon: require('../../img2/notificationIcon.png'),
-                title: i18n.t("home_search_screen.community.title")
+                id: 'interactions',
+                icon: require('../../img2/bell.png'),
+                // title: i18n.t("home_search_screen.community.title")
             },
         ],
         leftButtons: [
 
             {
-                id: 'friends', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
-                icon: require('../../img2/goodshersHeaderIcon.png'),
-                title: i18n.t("home_search_screen.community.title")
+                id: 'friends',
+                icon: require('../../img2/add-user.png'),
+                // title: i18n.t("home_search_screen.community.title")
             }
         ],
     };
