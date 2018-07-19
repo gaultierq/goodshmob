@@ -114,7 +114,7 @@ export default class ActivityCell extends React.Component<Props, State> {
                                     liked={this.isLiked(activity)}
                                     navigator={this.props.navigator}
                                     bodyStyle={{
-                                        padding: 23,
+                                        padding: LINEUP_PADDING,
                                         paddingTop: 12,
                                     }}
                                 />

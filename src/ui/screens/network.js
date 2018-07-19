@@ -211,7 +211,7 @@ class NetworkScreen extends Screen<Props, State> {
                             return (
                                 <Text style={{
                                     fontSize: 17,
-                                    margin: 15,
+                                    margin: LINEUP_PADDING,
                                     fontFamily: SFP_TEXT_MEDIUM
                                 }}>{i18n.t('detail_screen.related_activities_title')}</Text>
                             )

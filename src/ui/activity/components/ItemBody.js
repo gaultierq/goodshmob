@@ -27,7 +27,7 @@ import * as Api from "../../../managers/Api"
 import {FETCH_ITEM} from "../../lineup/actionTypes"
 import {fetchItemCall} from "../../lineup/actions"
 import GTouchable from "../../../ui/GTouchable"
-import {openLinkSafely} from "../../UIStyles"
+import {LINEUP_PADDING, openLinkSafely} from "../../UIStyles"
 
 type Props = {
     item?: Item,
@@ -94,9 +94,14 @@ export default class ItemBody extends React.Component<Props, State> {
                 {this.renderImage()}
 
                 {(
-                    <View style={[styles.body, bodyStyle]}>
-                        <View style={styles.bodyInner}>
-                            <View style={styles.flex1}>
+                    <View style={[{
+                        padding: LINEUP_PADDING,
+                        paddingBottom: 0,
+                        backgroundColor: ACTIVITY_CELL_BACKGROUND,
+                        // backgroundColor: 'red',
+                    }, bodyStyle]}>
+                        <View style={{flexDirection: 'row'}}>
+                            <View style={{flex:1}}>
                                 <Text style={[styles.title]} numberOfLines={2}>{item.title}</Text>
                                 <Text style={[styles.subtitle]}>{item.subtitle}</Text>
                             </View>

@@ -32,6 +32,7 @@ import {CREATE_SAVING, doUnsave, SAVING_DELETION} from "../../lineup/actions"
 import StoreManager from "../../../managers/StoreManager"
 import _Messenger from "../../../managers/Messenger"
 import {SFP_TEXT_MEDIUM} from "../../fonts"
+import {LINEUP_PADDING} from "../../UIStyles"
 
 export type ActivityActionType = 'comment'| 'like'| 'unlike'| 'share'| 'save'| 'unsave'| 'see'| 'buy'| 'answer';
 const ACTIONS = ['comment', 'like', 'unlike','share', 'save', 'unsave', 'see', 'buy', 'answer'];
@@ -96,7 +97,13 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
 
         return (
-            <View style={{flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, backgroundColor: ACTIVITY_CELL_BACKGROUND, justifyContent: 'space-between',}}>
+            <View style={{
+                flexDirection: 'row', alignItems: 'center',
+                paddingRight: LINEUP_PADDING,
+                backgroundColor: ACTIVITY_CELL_BACKGROUND,
+                // backgroundColor: 'red',
+                justifyContent: 'space-between',
+            }}>
                 <View style={styles.actionBar}>{leftButtons}</View>
                 <View style={[styles.actionBar]}>{rightButtons}</View>
             </View>)
