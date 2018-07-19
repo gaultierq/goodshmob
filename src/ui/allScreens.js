@@ -2,7 +2,7 @@ import {Navigation} from 'react-native-navigation'
 
 import {screen as LoginScreen} from './screens/login'
 import {screen as NetworkScreen} from './screens/network'
-import {screen as SearchItemScreen} from './screens/searchitems'
+import SearchItems from './screens/searchitems'
 import DebugScreen from './screens/debug'
 
 import {screen as ActivityDetailScreen} from './activity/activityDetail'
@@ -46,7 +46,6 @@ import EditUserProfileScreen from "./screens/edituserprofile"
 import PopularItemsScreen from "./screens/popularitems"
 import GIndicator from "./screens/indicator"
 import UserSearchScreen from "./screens/usersearch"
-import SearchItem2 from "./screens/searchitems2"
 
 
 function wrap(screenName,screenCreator,store,provider) {
@@ -79,7 +78,7 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.EditUserProfileScreen', screenCreator, store, Provider);
     wrap('goodsh.LoginScreen', () => LoginScreen, store, Provider);
     wrap('goodsh.NetworkScreen', () => NetworkScreen, store, Provider);
-    wrap('goodsh.SearchItemsScreen', () => SearchItemScreen, store, Provider);
+    wrap('goodsh.SearchItems', () => SearchItems, store, Provider);
     wrap('goodsh.DebugScreen', () => DebugScreen, store, Provider);
     wrap('goodsh.FriendsScreen', () => FriendScreen, store, Provider);
     wrap('goodsh.ActivityDetailScreen', () => ActivityDetailScreen, store, Provider);
@@ -118,6 +117,5 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.NavBarButtonIndicator', () => GIndicator, store, Provider);
     wrap('goodsh.TouchableSearchBar', () => TouchableSearchBar, store, Provider);
     wrap('goodsh.UserSearchScreen', () => UserSearchScreen, store, Provider);
-    wrap('goodsh.SearchItem2', () => SearchItem2, store, Provider);
 
 }
