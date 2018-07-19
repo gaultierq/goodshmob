@@ -30,15 +30,14 @@ import GTouchable from "../../../ui/GTouchable"
 import {openLinkSafely} from "../../UIStyles"
 
 type Props = {
-    item: Item,
-    itemId: Item,
-    itemType: ItemType,
+    item?: Item,
+    itemId?: Item,
+    itemType?: ItemType,
     showAllImages?: boolean,
     liked?: boolean,
     bodyStyle?: *,
     onPress?: () => void,
-    rightComponent?: Node
-};
+}
 
 type State = {
     width?: number,
@@ -130,11 +129,7 @@ export default class ItemBody extends React.Component<Props, State> {
         }
         let imageHeight = 288;
 
-        const resize = images && (
-            item.type === 'CreativeWork'
-            || item.type === 'TvShow'
-            || item.type === 'Movie'
-        )? 'contain' : 'cover';
+        const resize = this.getResize(images, item);
 
         const opacity = this.animatedValue.interpolate({
             inputRange: [0, 1],
@@ -175,12 +170,12 @@ export default class ItemBody extends React.Component<Props, State> {
             }
             {/*</BoxShadow>*/}
             {
-                (item.type === 'Album' || item.type === 'Track') && <GTouchable style={{position: 'absolute', bottom: 10, right: 10}} onPress={() => {
+                <GTouchable style={{position: 'absolute', bottom: 10, right: 10}} onPress={() => {
                     openLinkSafely(item.url)
                 }
                 }>
                     <Image
-                        source={require('../../../img2/play.png')}
+                        source={this.getIcon(item)}
                         resizeMode="contain"
                         style={{
                             width: 50,
@@ -190,6 +185,33 @@ export default class ItemBody extends React.Component<Props, State> {
                 </GTouchable>
             }
         </View>
+    }
+
+    getResize(images, item) {
+        return images && (
+            item.type === 'CreativeWork'
+            || item.type === 'TvShow'
+            || item.type === 'Movie'
+        ) ? 'contain' : 'cover'
+    }
+
+    getIcon(item: Item) {
+        switch (item.type) {
+
+            case 'CreativeWork':
+                return require('../../../img2/link.png')
+            case 'TvShow':
+            case 'Movie':
+                return require('../../../img2/film-strip.png')
+            case 'Place':
+                return require('../../../img2/location.png')
+
+            case 'Album':
+            case 'Track':
+                return require('../../../img2/play.png')
+            default: return null
+        }
+
     }
 
     animatedValue = new Animated.Value(0);

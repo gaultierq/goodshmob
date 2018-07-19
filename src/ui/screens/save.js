@@ -34,7 +34,7 @@ export default class SaveScreen extends Component<Props, State> {
         const item = activity.resource
         return (
             <View style={[styles.container, containerStyle]}>
-                <ItemBody itemType={item} itemId={item.id} noGoodshButton />
+                <ItemBody itemType={item} itemId={item.id} />
 
                 <CheckBox
                     right

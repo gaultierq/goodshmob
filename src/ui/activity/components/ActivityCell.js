@@ -116,7 +116,6 @@ export default class ActivityCell extends React.Component<Props, State> {
                                         padding: 23,
                                         paddingTop: 12,
                                     }}
-                                    rightComponent={this.renderBuyButton(activity)}
                                 />
                         }
 
