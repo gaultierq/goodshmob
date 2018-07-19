@@ -2,7 +2,7 @@ import {Navigation} from 'react-native-navigation'
 
 import {screen as LoginScreen} from './screens/login'
 import {screen as NetworkScreen} from './screens/network'
-import {screen as SearchItemScreen} from './screens/searchitems'
+import SearchItems from './screens/searchitems'
 import DebugScreen from './screens/debug'
 
 import {screen as ActivityDetailScreen} from './activity/activityDetail'
@@ -18,7 +18,6 @@ import FriendScreen from './screens/friends'
 import {CommunityScreen} from './screens/community'
 import SendScreen from './screens/send'
 import UserScreen from './screens/user'
-import NetworkSearchScreen from './screens/networksearch'
 import HomeSearchScreen from './screens/homesearch'
 import CategorySearchScreen from './screens/categorySearch'
 import AddItemScreen from './screens/additem'
@@ -79,7 +78,7 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.EditUserProfileScreen', screenCreator, store, Provider);
     wrap('goodsh.LoginScreen', () => LoginScreen, store, Provider);
     wrap('goodsh.NetworkScreen', () => NetworkScreen, store, Provider);
-    wrap('goodsh.SearchItemsScreen', () => SearchItemScreen, store, Provider);
+    wrap('goodsh.SearchItems', () => SearchItems, store, Provider);
     wrap('goodsh.DebugScreen', () => DebugScreen, store, Provider);
     wrap('goodsh.FriendsScreen', () => FriendScreen, store, Provider);
     wrap('goodsh.ActivityDetailScreen', () => ActivityDetailScreen, store, Provider);
@@ -95,7 +94,6 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.ProfileScreen', () => ProfileScreen, store, Provider);
     wrap('goodsh.AlgoliaSearchScreen', () => AlgoliaSearchScreen, store, Provider);
     wrap('goodsh.UserScreen', () => UserScreen, store, Provider);
-    wrap('goodsh.NetworkSearchScreen', () => NetworkSearchScreen, store, Provider);
     wrap('goodsh.HomeSearchScreen', () => HomeSearchScreen, store, Provider);
     wrap('goodsh.CategorySearchScreen', () => CategorySearchScreen, store, Provider);
     wrap('goodsh.AddItemScreen', () => AddItemScreen, store, Provider);

@@ -5,7 +5,7 @@ import Screen from "../components/Screen"
 import Config from 'react-native-config'
 import * as UI from "../UIStyles"
 import {NavStyles, SEARCH_INPUT_PROPS, SEARCH_STYLES, styleMargin, stylePadding} from "../UIStyles"
-import {SEARCH_OPTIONS_PADDINGS} from "./searchplacesoption"
+import {SEARCH_OPTIONS_PADDINGS} from "./search/searchplacesoption"
 import {Colors} from "../colors"
 
 // const homePlace = { description: 'Home', geometry: { location: { lat: 48.8152937, lng: 2.4597668 } }};

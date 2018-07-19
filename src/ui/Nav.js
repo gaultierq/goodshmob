@@ -71,7 +71,7 @@ export function startAddItem(navigator: *, defaultLineup: Id | Lineup) {
 
 
     navigator.showModal({
-        screen: 'goodsh.SearchItemsScreen', // unique ID registered with Navigation.registerScreen
+        screen: 'goodsh.SearchItems', // unique ID registered with Navigation.registerScreen
         navigatorButtons: CANCELABLE_MODAL2,
         passProps: {
             defaultLineup,

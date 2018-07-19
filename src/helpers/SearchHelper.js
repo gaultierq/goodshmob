@@ -2,7 +2,7 @@
 
 import type {Node} from 'react'
 import * as React from 'react'
-import type {Id, Item, Lineup, List, RNNNavigator, Saving, SearchToken, User} from "../types"
+import type {Id, Lineup, List, RNNNavigator, Saving, SearchToken, User} from "../types"
 import {RequestState} from "../types"
 import EmptySearch, {renderBlankIcon} from "../ui/components/EmptySearch"
 import {AlgoliaClient, createResultFromHit, createResultFromHit2} from "./AlgoliaUtils"
@@ -12,6 +12,14 @@ import {seeActivityDetails, seeUser} from "../ui/Nav"
 import GTouchable from "../ui/GTouchable"
 import ItemCell from "../ui/components/ItemCell"
 import UserItem from "../ui/screens/userItem"
+import {StyleSheet} from "react-native"
+import {getPosition} from "../ui/screens/search/searchplacesoption"
+import type {SearchItemsGenOptions} from "../ui/screens/search/SearchItemPageGeneric"
+import {buildData} from "./DataUtils"
+import * as Api from "../managers/Api"
+import {Call} from "../managers/Api"
+import normalize from 'json-api-normalizer'
+import {currentUserId} from "../managers/CurrentUser"
 
 export type SearchCategoryType = string;
 
@@ -26,21 +34,9 @@ export type SearchQuery = {
     categoryType: SearchCategoryType,
     options?: any
 }
-export type SearchEngine = {
-    search:
-        (
-            category: SearchCategoryType,
-            page: number,
-            searchOptions: SearchOptions
-        ) => Promise<SearchResult>,
-    generateSearchKey: (
-        category: SearchCategoryType,
-        searchOptions: SearchOptions
-    ) => string,
-    canSearch: (
-        category: SearchCategoryType,
-        searchOptions: SearchOptions
-    ) => Promise<boolean>
+export type SearchEngine<SO> = {
+    search: (searchOptions: SO, page: number,) => Promise<SearchResult>,
+    canSearch: (searchOptions: SO) => Promise<boolean>
 };
 export type SearchOptions = {
     token?: string,
@@ -99,97 +95,6 @@ export const SEARCH_ITEM_CATEGORIES: SearchCategory[] = SEARCH_CATEGORIES_TYPE.m
     }
 ))
 
-
-
-export function SEARCH_CATEGORY_OTHERS_LIST_OR_SAVINGS(currentUserId: Id, renderItem: any => Node): SearchCategory {
-
-    let index : Promise<any> = new Promise((resolve, reject) => {
-        AlgoliaClient.createAlgoliaIndex(Config.ALGOLIA_SAVING_INDEX).then(index => {
-            index.setSettings({
-                    searchableAttributes: [
-                        'item_title',
-                        'list_name'
-                    ],
-                    attributeForDistinct: 'item_id',
-                    distinct: true,
-                    attributesForFaceting: ['user_id', 'type'],
-                }
-            );
-            resolve(index);
-        });
-    })
-
-    return {
-        type: "savings",
-        index,
-        defaultOptions: {algoliaFilter:  `NOT type:List AND NOT user_id:${currentUserId}`},
-        tabName: i18n.t("network_search_tabs.savings"),
-        placeholder: "search_bar.network_placeholder",
-        parseResponse: createResultFromHit,
-        renderEmpty: <EmptySearch
-            icon={renderBlankIcon('savings')}
-            text={i18n.t("search_item_screen.placeholder.savings")}
-        />,
-        renderItem
-    }
-}
-
-export function SEARCH_CATEGORY_MY_LIST_OR_SAVINGS(currentUserId: Id, renderItem: any => Node): SearchCategory {
-    let index = new Promise(resolve => {
-        AlgoliaClient.createAlgoliaIndex(Config.ALGOLIA_SAVING_INDEX).then(index => {
-            index.setSettings({
-                    searchableAttributes: [
-                        'item_title',
-                        'list_name'
-                    ],
-                    attributesForFaceting: ['user_id'],
-                }
-            );
-            resolve(index);
-        });
-    });
-
-    return {
-            type: "savings",
-            index,
-            defaultOptions: {algoliaFilter: `user_id:${currentUserId}`},
-            placeholder: "search_bar.me_placeholder",
-            parseResponse: createResultFromHit,
-            renderEmpty: <EmptySearch text={i18n.t("lineups.search.empty")}/>,
-            renderItem
-        }
-}
-
-export function SEARCH_CATEGORY_USER(currentUserId: Id, renderItem: any => Node): SearchCategory {
-
-    return {
-        type: "users",
-        index: AlgoliaClient.createAlgoliaIndex(Config.ALGOLIA_USER_INDEX),
-        defaultOptions: {algoliaFilter: `NOT objectID:${currentUserId}`},
-        tabName: i18n.t("network_search_tabs.users"),
-        placeholder: "search_bar.network_placeholder",
-        parseResponse: createResultFromHit2,
-        renderItem,
-        renderEmpty: <EmptySearch
-            icon={renderBlankIcon('users')}
-            text={i18n.t("search_item_screen.placeholder.users")}
-        />
-    }
-}
-
-export function SEARCH_CATEGORY_ITEM(categ: SearchItemCategoryType, renderItem: any => Node): SearchCategory {
-    return {
-        type: categ,
-            tabName: i18n.t("search_item_screen.tabs." + categ),
-        description: i18n.t("search_item_screen.placeholder." + categ),
-        renderItem,
-        renderEmpty: <EmptySearch text={i18n.t("search_item_screen.placeholder." + categ)}
-        icon={renderBlankIcon(categ)}
-    />
-    }
-}
-
-
 export function renderSavingOrLineup(navigator: RNNNavigator) {
 
     return ({item}: {item: Lineup | Saving}): Node => {
@@ -231,5 +136,151 @@ export function renderUser(navigator: RNNNavigator) {
 }
 
 
+export function __createSearchItemSearcher<SO: SearchItemsGenOptions>(type: SearchItemCategoryType): (searchOptions: SO, page: number,) => Promise<SearchResult> {
+
+    return (options: SO, page) => __searchItems(type, page, options)
+}
+
+function __searchItems<SO: SearchItemsGenOptions>(category: SearchCategoryType, page: number, searchOptions: SO): Promise<*> {
+
+    let fillOptions = (category: SearchCategoryType, call: Call, options: any) => {
+        return new Promise((resolve, reject) => {
+            if (category === 'places') {
+                getPosition(options).then(({latitude, longitude}) => {
+                    call.addQuery(latitude && {'search[lat]': latitude})
+                        .addQuery(longitude && {'search[lng]': longitude});
+                    resolve(call);
+                }, err => {
+                    console.debug("UNEXPECTED SEARCH ERROR: at this stage we should have position permission", err);
+                    reject(err)
+                });
+            } else {
+                resolve(call);
+            }
+        });
+    }
+
+    //searching
+    const token = searchOptions.input;
+    console.debug(`api: searching: token='${token}', category='${category}', page=${page}, options=`, searchOptions);
+
+    return new Promise((resolve, reject) => {
+        let call = new Api.Call()
+            .withMethod('GET')
+            .withRoute(`search/${category}`);
+
+        if (!_.isEmpty(token)) {
+            call.addQuery({'search[term]': token});
+        }
+
+        fillOptions(category, call, searchOptions)
+            .then(call=> {
+                //maybe use redux here ?
+                call
+                    .run()
+                    .then(response=>{
+                        let data = normalize(response.json);
+
+                        let results = response.json.data.map(d=>{
+                            return buildData(data, d.type, d.id);
+                        });
+
+                        resolve({results, page, nbPages: 0});
+                    }, err=> {
+                        //console.warn(err)
+                        reject(err);
+                    });
+            }, err => reject(err));
+    });
+}
+
+export type AlgoliaSearchConfig = {
+    index: any,
+    query?: any,
+    parseResponse: (hits: []) => *,
+}
+
+export function __createAlgoliaSearcher<SO: any>(
+    config: AlgoliaSearchConfig
+)
+    : (searchOptions: SO, page: number,) => Promise<SearchResult> {
+
+    return (searchOptions: SearchOptions, page: number): Promise<*> => {
+
+        //searching
+        const token = searchOptions.token || ''
+        console.log(`algolia: searching ${token}`, searchOptions);
+
+        // const queries = categFiltered.map(c=> {return {...c.query, params: c.params, query: token}});
+        const query = {
+            ...config.query, filters: searchOptions.algoliaFilter, page, query: token
+        }
+
+        console.log({query})
+        return new Promise((resolve, reject) => {
+
+            config.index.then(index => {
+                index.search(query, (err, content) => {
+
+                    if (err) {
+                        console.error(err);
+                        reject(err);
+                        return;
+                    }
+                    let result = content;
+                    let hits = result.hits;
+                    console.log(`search result lists: ${hits.length}`, hits);
+
+                    let searchResult = config.parseResponse(hits);
+
+                    let search:SearchResult = {results: searchResult,
+                        page: result.page,
+                        nbPages: result.nbPages};
+                    resolve(search);
+                });
+            });
+            // index.search(queries, (err, content) => {
+
+        });
+    }
+}
+
+
+export function makeBrowseAlgoliaFilter2(friendFilter: FRIEND_FILTER_TYPE, category: string, user: User): string {
+
+
+    let CATEGORY_TO_TYPE = {
+        consumer_goods: 'type:CreativeWork',
+        places: 'type:Place',
+        musics: '(type:Track OR type:Album OR type:Artist)',
+        movies: '(type:Movie OR type:TvShow)'
+    }
+
+
+    let defaultQuery = `${CATEGORY_TO_TYPE[category]}`
+    switch(friendFilter) {
+        case 'me':
+            return `${defaultQuery} AND user_id:${currentUserId()}`
+        case 'friends': {
+            if (!user.friends) {
+                console.log('Could not find user friends, resorting to all')
+                return defaultQuery
+            }
+
+            let query = ''
+            user.friends.forEach((friend, index) => {
+                query += (index === 0 ? '' : ' OR ') + `user_id:${friend.id}`
+            })
+
+            return defaultQuery + ` AND (${query})`
+        }
+
+        case 'all':
+            return defaultQuery
+        default:
+            console.error('Unknown friend filter')
+            return ''
+    }
+}
 
 

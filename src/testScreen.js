@@ -170,10 +170,10 @@ export const networkSearchScreen = {
     }
 };
 
-export const searchItemsScreen = {
+export const SearchItems = {
     screen: {
-        screen: 'goodsh.SearchItemsScreen',
-        title: 'Test SearchItemsScreen',
+        screen: 'goodsh.SearchItems',
+        title: 'Test SearchItems',
     },
     passProps: {
         onItemSelected: (item: Item, navigator: RNNNavigator) => {
@@ -193,6 +193,8 @@ export const searchItemsScreen = {
         },
     }
 };
+
+
 export const homeSearchItemsScreen = {
     screen: {
         screen: 'goodsh.HomeSearchScreen',
