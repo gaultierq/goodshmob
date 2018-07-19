@@ -40,7 +40,7 @@ type State = {
     routes: any
 };
 
-export default class SearchItem extends Screen<Props, State> {
+export default class SearchItems extends Screen<Props, State> {
 
     static navigatorStyle = {
         navBarNoBorder: true,

@@ -19,6 +19,7 @@ import {buildData} from "./DataUtils"
 import * as Api from "../managers/Api"
 import {Call} from "../managers/Api"
 import normalize from 'json-api-normalizer'
+import {currentUserId} from "../managers/CurrentUser"
 
 export type SearchCategoryType = string;
 
@@ -93,100 +94,6 @@ export const SEARCH_ITEM_CATEGORIES: SearchCategory[] = SEARCH_CATEGORIES_TYPE.m
         description: i18n.t("search_item_screen.placeholder." + type),
     }
 ))
-
-
-
-export function SEARCH_CATEGORY_OTHERS_LIST_OR_SAVINGS(currentUserId: Id, renderItem: any => Node): SearchCategory {
-
-    let index : Promise<any> = new Promise((resolve, reject) => {
-        AlgoliaClient.createAlgoliaIndex(Config.ALGOLIA_SAVING_INDEX).then(index => {
-            index.setSettings({
-                    searchableAttributes: [
-                        'item_title',
-                        'list_name'
-                    ],
-                    attributeForDistinct: 'item_id',
-                    distinct: true,
-                    attributesForFaceting: ['user_id', 'type'],
-                }
-            );
-            resolve(index);
-        });
-    })
-
-    return {
-        type: "savings",
-        index,
-        defaultOptions: {algoliaFilter:  `NOT type:List AND NOT user_id:${currentUserId}`},
-        tabName: i18n.t("network_search_tabs.savings"),
-        placeholder: "search_bar.network_placeholder",
-        parseResponse: createResultFromHit,
-        renderEmpty: <EmptySearch
-            icon={renderBlankIcon('savings')}
-            text={i18n.t("search_item_screen.placeholder.savings")}
-        />,
-        renderItem
-    }
-}
-
-export function SEARCH_CATEGORY_MY_LIST_OR_SAVINGS(currentUserId: Id, renderItem: any => Node): SearchCategory {
-    let index = new Promise(resolve => {
-        AlgoliaClient.createAlgoliaIndex(Config.ALGOLIA_SAVING_INDEX).then(index => {
-            index.setSettings({
-                    searchableAttributes: [
-                        'item_title',
-                        'list_name'
-                    ],
-                    attributesForFaceting: ['user_id'],
-                }
-            );
-            resolve(index);
-        });
-    });
-
-    return {
-        type: "savings",
-        index,
-        defaultOptions: {algoliaFilter: `user_id:${currentUserId}`},
-        placeholder: "search_bar.me_placeholder",
-        parseResponse: createResultFromHit,
-        renderEmpty: <EmptySearch text={i18n.t("lineups.search.empty")}/>,
-        renderItem
-    }
-}
-
-export function SEARCH_CATEGORY_USER(currentUserId: Id, renderItem: any => Node): SearchCategory {
-
-    return {
-        type: "users",
-
-        index: AlgoliaClient.createAlgoliaIndex(Config.ALGOLIA_USER_INDEX),
-        defaultOptions: {algoliaFilter: `NOT objectID:${currentUserId}`},
-        parseResponse: createResultFromHit2,
-
-        tabName: i18n.t("network_search_tabs.users"),
-        placeholder: "search_bar.network_placeholder",
-
-        renderItem,
-        renderEmpty: <EmptySearch
-            icon={renderBlankIcon('users')}
-            text={i18n.t("search_item_screen.placeholder.users")}
-        />
-    }
-}
-
-export function SEARCH_CATEGORY_ITEM(categ: SearchItemCategoryType, renderItem: any => Node): SearchCategory {
-    return {
-        type: categ,
-        tabName: i18n.t("search_item_screen.tabs." + categ),
-        description: i18n.t("search_item_screen.placeholder." + categ),
-        renderItem,
-        renderEmpty: <EmptySearch text={i18n.t("search_item_screen.placeholder." + categ)}
-                                  icon={renderBlankIcon(categ)}
-        />
-    }
-}
-
 
 export function renderSavingOrLineup(navigator: RNNNavigator) {
 
@@ -337,3 +244,43 @@ export function __createAlgoliaSearcher<SO: any>(
         });
     }
 }
+
+
+export function makeBrowseAlgoliaFilter2(friendFilter: FRIEND_FILTER_TYPE, category: string, user: User): string {
+
+
+    let CATEGORY_TO_TYPE = {
+        consumer_goods: 'type:CreativeWork',
+        places: 'type:Place',
+        musics: '(type:Track OR type:Album OR type:Artist)',
+        movies: '(type:Movie OR type:TvShow)'
+    }
+
+
+    let defaultQuery = `${CATEGORY_TO_TYPE[category]}`
+    switch(friendFilter) {
+        case 'me':
+            return `${defaultQuery} AND user_id:${currentUserId()}`
+        case 'friends': {
+            if (!user.friends) {
+                console.log('Could not find user friends, resorting to all')
+                return defaultQuery
+            }
+
+            let query = ''
+            user.friends.forEach((friend, index) => {
+                query += (index === 0 ? '' : ' OR ') + `user_id:${friend.id}`
+            })
+
+            return defaultQuery + ` AND (${query})`
+        }
+
+        case 'all':
+            return defaultQuery
+        default:
+            console.error('Unknown friend filter')
+            return ''
+    }
+}
+
+

@@ -24,17 +24,26 @@ import OpenAppSettings from "react-native-app-settings"
 import Geolocation from "../../../managers/GeoLocation"
 
 
+export type GeoPosition = {
+    lat: string,
+    lng: string
+}
+
 export type SearchPlacesProps = {
     aroundMe?:boolean,
-    onNewOptions: any => void,
+    onNewOptions: GeoPosition => void,
     onSearchSubmited?: void => void,
-    navigator: RNNNavigator
+    navigator: RNNNavigator,
+
 };
 
 type SearchPlacesState = {
     aroundMe: boolean,
     place: string,
-    focus: boolean
+    focus: boolean,
+
+    lat?: ?string,
+    lng?: ?string
 };
 
 export const SEARCH_OPTIONS_PADDINGS = {
@@ -130,7 +139,8 @@ export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlace
                                                     this.setStateAndNotify({
                                                         place: place,
                                                         aroundMe: false,
-                                                        lat, lng
+                                                        lat,
+                                                        lng
                                                     });
                                                 }
 
@@ -278,8 +288,9 @@ export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlace
 
     }
 
-    setStateAndNotify(newState) {
-        this.setState(newState, () => this.props.onNewOptions(this.state));
+    setStateAndNotify(newState: SearchPlacesState) {
+        let {lat, lng} = newState || {}
+        this.setState(newState, () => this.props.onNewOptions({lat, lng}));
     }
 }
 

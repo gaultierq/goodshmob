@@ -11,9 +11,12 @@ import GSearchBar2 from "../../components/GSearchBar2"
 import SearchPage from "../searchpage"
 import ItemCell from "../../components/ItemCell"
 import type {RNNNavigator} from "../../../types"
+import type {SearchItemsGenOptions} from "./SearchItemPageGeneric"
+import type {GeoPosition} from "./searchplacesoption"
 
 export type SearchItemsPlacesOptions = SearchItemsGenOptions & {
-    aroundMe: boolean
+    lat?: string,
+    lng?: string,
 }
 
 type SMS = {
@@ -28,13 +31,11 @@ type SMP = {
 export default class SearchItemPagePlaces extends React.Component<SMP, SMS> {
 
 
-
     constructor(props: SMP) {
         super(props)
         this.state = {
             searchOptions: {
                 input: '',
-                aroundMe: true
             },
             search: {
                 search: __createSearchItemSearcher('places'),
@@ -44,18 +45,6 @@ export default class SearchItemPagePlaces extends React.Component<SMP, SMS> {
     }
 
     render() {
-
-        const onNewPosition = (newPosition) => {
-            getPosition(newPosition).then((detailedPosition) => {
-                // We need to merge the origal object, with the newPosition (contains aroundMe),
-                // and the lat and lng if they are not defined
-                const newOptions = {...currentOptions,
-                    ...newPosition,
-                    ...{lat: detailedPosition.latitude, lng: detailedPosition.longitude}
-                }
-                onNewOptions(newOptions)
-            })
-        }
 
         return (
             <View>
@@ -68,10 +57,10 @@ export default class SearchItemPagePlaces extends React.Component<SMP, SMS> {
                 />
 
                 <SearchPlacesOption
-                    {...this.state.searchOptions}
-                    onNewOptions={onNewPosition}
-                    // onSearchSubmited={onSearchSubmited}
                     navigator={this.props.navigator}
+                    onNewOptions={(pos: GeoPosition) => {
+                        this.setState({searchOptions: {...this.state.searchOptions, ...pos}})
+                    }}
                 />
 
                 <SearchPage
