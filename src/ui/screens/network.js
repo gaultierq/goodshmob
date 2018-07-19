@@ -277,18 +277,6 @@ class NetworkScreen extends Screen<Props, State> {
         });
     }
 
-    showSearch() {
-        let navigator = this.props.navigator;
-
-        navigator.showModal({
-            screen: 'goodsh.NetworkSearchScreen',
-            passProps:{
-                onClickClose: () => navigator.dismissModal(),
-            },
-            navigatorButtons: CANCELABLE_MODAL2,
-        });
-    }
-
     renderItem(activity: Activity, index: number) {
         if (index === 0) {
             return (
