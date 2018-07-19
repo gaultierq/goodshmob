@@ -142,11 +142,11 @@ export default {
             "example":"##Bouquin, restaurant, film, série, artiste,lieu, musique, gadget, fringue, vin, …"
         },
         "value_proposal":"##I was said it is\n" +"very good.\n" + "Not to forget it\n" + "I stored it\n" + "in",
-        "slider_intro_1": "Don't forget your friends' tips,\ngoodsh them.",
-        "slider_intro_2": "Find your stuff whenever you need them, and share easily.",
-        "slider_intro_3": "Request ideas, suggestions, reviews from your network.",
-        "slider_intro_4": "Discover books, movies, music, restaurants, gift ideas, things to do, to visit...and buy in a blink of an eye.",
-        "credentials": "Handcrafted in 2018",
+        "slider_intro_1": "Keep all you love\nTV show, Restaurant, Book\nMusic, Gift idea\n...",
+        "slider_intro_2": "Create your lists\nWith +200M de places, movies, TV shows\nmusic, books & products\nalready in the app.",
+        "slider_intro_3": "Follow lists that interest you.",
+        "slider_intro_4": "Share your interests with who you want\nFriends\nFamily\nWorkmates\nFans.",
+        "credentials": "Keep all you love",
     },
     "popular_screen":{
         "title": "Add your first wishs",

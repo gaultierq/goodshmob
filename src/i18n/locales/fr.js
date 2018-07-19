@@ -141,11 +141,11 @@ export default {
             "example":"##Bouquin, restaurant, film, série, artiste,\nlieu, musique, gadget, fringue, vin, …"
         },
         "value_proposal":"##Marre d’oublier les recommandations\nqu’on te fait ?",
-        "slider_intro_1": "On m'a dit que c’était top.\nPour ne pas l'oublier\nje l’ai goodshé.",
-        "slider_intro_2": "Je retrouve mes recos quand j'en ai besoin.\nEt je peux les partager facilement.",
-        "slider_intro_3": "Je demande des avis, des idées, des conseils à mon réseau.",
-        "slider_intro_4": "Je découvre livres, films, musiques, restos, idées cadeau, choses à faire...et j'achète en un clin d'oeil.",
-        "credentials": "Fait main en 2018",
+        "slider_intro_1": "L'app où tu stockes\ntout ce que tu aimes\nSérie, Resto, Livre\nMusique, Idée cadeau\n...",
+        "slider_intro_2": "Crée tes listes\nAvec +200M de lieux, films, séries\nmusiques, livres & produits\ndéjà dans l'app.",
+        "slider_intro_3": "Suis les listes qui t'intéressent.",
+        "slider_intro_4": "Partage tes centres d'intérêts avec qui tu veux\nAmi\nFamille\nCollègue\nFan.",
+        "credentials": "Keep all you love",
     },
     "popular_screen":{
         "title": "Enregistrer vos premières envies",
