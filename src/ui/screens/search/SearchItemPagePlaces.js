@@ -14,6 +14,9 @@ import type {RNNNavigator} from "../../../types"
 import type {SearchItemsGenOptions} from "./SearchItemPageGeneric"
 import type {GeoPosition} from "./searchplacesoption"
 import SearchListResults from "../searchListResults"
+import {Colors} from "../../colors"
+import ActionButton from "react-native-action-button"
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 export type SearchItemsPlacesOptions = SearchItemsGenOptions & {
     lat?: string,
@@ -23,6 +26,7 @@ export type SearchItemsPlacesOptions = SearchItemsGenOptions & {
 type SMS = {
     search: SearchEngine<SearchItemsPlacesOptions>,
     searchOptions: SearchItemsPlacesOptions,
+    mapDisplay: boolean,
 
 }
 type SMP = {
@@ -35,6 +39,7 @@ export default class SearchItemPagePlaces extends React.Component<SMP, SMS> {
     constructor(props: SMP) {
         super(props)
         this.state = {
+            mapDisplay: false,
             searchOptions: {
                 input: '',
             },
@@ -68,6 +73,13 @@ export default class SearchItemPagePlaces extends React.Component<SMP, SMS> {
                     searchEngine={this.state.search}
                     renderResults={state => <SearchListResults searchState={state} renderItem={({item}) => <ItemCell item={item}/>} />}
                     searchOptions={this.state.searchOptions}
+                />
+
+                <ActionButton buttonColor="rgba(231,76,60,1)"
+                              icon={<MaterialIcon name={this.state.mapDisplay ? 'list' : 'map'} color={Colors.white} size={32} />}
+                              onPress={() => {
+                                  this.setState({mapDisplay: !this.state.mapDisplay})
+                              }}
                 />
             </View>
         )

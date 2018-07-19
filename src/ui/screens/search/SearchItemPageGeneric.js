@@ -10,6 +10,7 @@ import GSearchBar2 from "../../components/GSearchBar2"
 import SearchMotor from "../searchMotor"
 import ItemCell from "../../components/ItemCell"
 import {__createSearchItemSearcher} from "../../../helpers/SearchHelper"
+import SearchListResults from "../searchListResults"
 
 export type SearchItemsGenOptions = {input: string}
 

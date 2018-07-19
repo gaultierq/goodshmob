@@ -2,12 +2,11 @@
 import React, {Component} from 'react'
 import {Image} from 'react-native'
 import MapView, {Marker} from 'react-native-maps'
-import type {SearchCategory, SearchState} from "../../helpers/SearchHelper"
+import type {SearchState} from "../../helpers/SearchHelper"
 
 export type Props = {
-    category: SearchCategory,
     searchState: SearchState,
-    setRef: () => void
+    setRef?: () => void
 };
 
 type State = {
@@ -21,7 +20,7 @@ export default class GMap extends Component<Props, State>  {
     };
 
     render() {
-        const data = _.flatten(this.props.searchState.data)
+        const data = _.flatten(_.get(this.props, 'searchState.data', []))
         return (<MapView
             style={{flex:1, marginTop: 5}}
             provider={'google'}

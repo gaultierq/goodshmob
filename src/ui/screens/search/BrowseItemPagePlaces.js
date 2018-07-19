@@ -3,7 +3,7 @@
 import type {Node} from 'react'
 import React from 'react'
 import {StyleSheet, Text, TextInput, View,} from 'react-native'
-import type {SearchEngine,} from "../../../helpers/SearchHelper"
+import type {SearchEngine, SearchState,} from "../../../helpers/SearchHelper"
 import {__createAlgoliaSearcher, makeBrowseAlgoliaFilter2} from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import SearchMotor from "../searchMotor"
@@ -17,13 +17,18 @@ import {seeActivityDetails} from "../../Nav"
 import GTouchable from "../../GTouchable"
 import {SocialScopeSelector} from "./socialscopeselector"
 import type {GeoPosition} from "./searchplacesoption"
-import {SearchPlacesOption} from "./searchplacesoption"
+import {getPosition, SearchPlacesOption} from "./searchplacesoption"
 import type {RNNNavigator, Saving} from "../../../types"
 import SearchListResults from "../searchListResults"
+import GMap from "../../components/GMap"
+import {Colors} from "../../colors"
+import ActionButton from "react-native-action-button"
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 type SMS = {
     search: SearchEngine<BrowseItemsGenOptions>,
     searchOptions: BrowseItemsGenOptions,
+    mapDisplay: boolean
 
 }
 
@@ -61,6 +66,7 @@ export default class BrowseItemPagePlaces extends React.Component<SMP, SMS> {
 
 
         this.state = {
+            mapDisplay: false,
             searchOptions: {
             },
             search: {
@@ -74,8 +80,9 @@ export default class BrowseItemPagePlaces extends React.Component<SMP, SMS> {
     }
 
     render() {
+        const mapDisplay = this.state.mapDisplay
         return (
-            <View>
+            <View style={{flex: 1, width: '100%', height: '100%'}}>
                 <SocialScopeSelector onScopeChange={scope => {
                     this.setState({
                         searchOptions: {
@@ -94,14 +101,26 @@ export default class BrowseItemPagePlaces extends React.Component<SMP, SMS> {
 
                 <SearchMotor
                     searchEngine={this.state.search}
-                    renderResults={state => <SearchListResults searchState={state} renderItem={this.renderItem.bind(this)} />}
+                    renderResults={this._renderResults}
                     searchOptions={this.state.searchOptions}
+                />
+
+                <ActionButton buttonColor="rgba(231,76,60,1)"
+                              icon={<MaterialIcon name={mapDisplay ? 'list' : 'map'} color={Colors.white} size={32} />}
+                              onPress={() => {
+                                  this.setState({mapDisplay: !this.state.mapDisplay})
+                              }}
                 />
             </View>
         )
     }
 
-    //to factorize
+    _renderResults = (state: SearchState) => {
+        if (this.state.mapDisplay) return <GMap searchState={state}/>
+        else return <SearchListResults searchState={state} renderItem={this.renderItem.bind(this)}/>
+    }
+
+//to factorize
     renderItem({item}: {item: Saving}) {
 
         let saving = item;
