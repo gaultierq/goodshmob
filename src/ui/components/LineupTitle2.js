@@ -107,8 +107,9 @@ export default class LineupTitle2 extends Component<Props, State> {
             yield false
         })();
         let color = _.get(lineup, 'meta.followed', false) ? Colors.black : undefined
+        const savingCount = _.get(lineup, 'meta.savingsCount', 0)
         return [
-            <Text>{_.get(lineup, 'meta.savingsCount', -1)}</Text>,
+            <Text style={{ color: Colors.greyish }}>{ `(${savingCount})` }</Text>,
             // this.renderMedal(_.get(lineup, 'meta.followersCount', -1), "star", it, color)
         ];
     }
