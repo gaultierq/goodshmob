@@ -26,21 +26,9 @@ export type SearchQuery = {
     categoryType: SearchCategoryType,
     options?: any
 }
-export type SearchEngine = {
-    search:
-        (
-            category: SearchCategoryType,
-            page: number,
-            searchOptions: SearchOptions
-        ) => Promise<SearchResult>,
-    generateSearchKey: (
-        category: SearchCategoryType,
-        searchOptions: SearchOptions
-    ) => string,
-    canSearch: (
-        category: SearchCategoryType,
-        searchOptions: SearchOptions
-    ) => Promise<boolean>
+export type SearchEngine<SO> = {
+    search: (searchOptions: SO, page: number,) => Promise<SearchResult>,
+    canSearch: (searchOptions: SO) => Promise<boolean>
 };
 export type SearchOptions = {
     token?: string,

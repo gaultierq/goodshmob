@@ -193,6 +193,31 @@ export const searchItemsScreen = {
         },
     }
 };
+
+export const SearchItem2 = {
+    screen: {
+        screen: 'goodsh.SearchItem2',
+        title: 'Test SearchItemsScreen',
+    },
+    passProps: {
+        onItemSelected: (item: Item, navigator: RNNNavigator) => {
+
+            navigator.showModal({
+                screen: 'goodsh.AddItemScreen',
+                title: i18n.t("add_item_screen.title"),
+                animationType: 'none',
+                passProps: {
+                    token: 'h',
+                    itemId: item.id,
+                    itemType: item.type,
+                    item,
+                },
+            });
+
+        },
+    }
+};
+
 export const homeSearchItemsScreen = {
     screen: {
         screen: 'goodsh.HomeSearchScreen',
