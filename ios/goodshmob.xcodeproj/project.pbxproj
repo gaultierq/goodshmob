@@ -1913,7 +1913,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUGSNAG_API_KEY = e9d1e430d2405cc1e6f6d775fac95ca9;
-				BUNDLE_DISPLAY_NAME = "Goodsh L";
+				BUNDLE_DISPLAY_NAME = "goodsh.it L";
 				CODE_SIGN_ENTITLEMENTS = goodshmob/entitlements/goodshmob.debug.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -1980,7 +1980,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUGSNAG_API_KEY = e9d1e430d2405cc1e6f6d775fac95ca9;
-				BUNDLE_DISPLAY_NAME = "Goodsh R";
+				BUNDLE_DISPLAY_NAME = "goodsh.it R";
 				CODE_SIGN_ENTITLEMENTS = goodshmob/entitlements/goodshmob.dev.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -2190,7 +2190,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUGSNAG_API_KEY = f5136193bd74c794739ab36caae0107c;
-				BUNDLE_DISPLAY_NAME = "Goodsh P";
+				BUNDLE_DISPLAY_NAME = "goodsh.it P";
 				CODE_SIGN_ENTITLEMENTS = goodshmob/entitlements/goodshmob.preprod.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -2301,7 +2301,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUGSNAG_API_KEY = e9d1e430d2405cc1e6f6d775fac95ca9;
-				BUNDLE_DISPLAY_NAME = "Goodsh D";
+				BUNDLE_DISPLAY_NAME = "goodsh.it D";
 				CODE_SIGN_ENTITLEMENTS = goodshmob/entitlements/goodshmob.dev.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -2412,7 +2412,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUGSNAG_API_KEY = 40d9f8b35e4216c738e694e92a9a57d6;
-				BUNDLE_DISPLAY_NAME = Goodsh;
+				BUNDLE_DISPLAY_NAME = goodsh.it;
 				CODE_SIGN_ENTITLEMENTS = goodshmob/entitlements/goodshmob.prod.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
