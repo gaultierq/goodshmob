@@ -33,9 +33,13 @@ export type SearchQuery = {
     categoryType: SearchCategoryType,
     options?: any
 }
+
+export type CannotSearchReason = string
 export type SearchEngine<SO> = {
     search: (searchOptions: SO, page: number,) => Promise<SearchResult>,
-    canSearch: (searchOptions: SO) => Promise<boolean>
+
+    //returns null if can search
+    canSearch: (searchOptions: SO) => Promise<?CannotSearchReason> | ?CannotSearchReason
 };
 export type SearchOptions = {
     token?: string,

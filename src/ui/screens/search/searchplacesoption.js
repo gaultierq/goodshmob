@@ -2,7 +2,8 @@
 
 import React, {Component} from 'react'
 import {
-    ActivityIndicator, Alert,
+    ActivityIndicator,
+    Alert,
     Animated,
     Easing,
     FlatList,
@@ -35,6 +36,7 @@ export type SearchPlacesProps = {
     onNewOptions: GeoPosition => void,
     onSearchSubmited?: void => void,
     navigator: RNNNavigator,
+    ref?: IPositionSelector => void,
 
 };
 
@@ -54,7 +56,13 @@ export const SEARCH_OPTIONS_PADDINGS = {
     paddingVertical: 8,
 };
 
-export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState> {
+
+//search query KEY: token x category x options
+export interface IPositionSelector {
+    getPosition(): Promise<GeoPosition>;
+}
+
+export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState> implements IPositionSelector {
 
     input;
     animation;
@@ -70,6 +78,12 @@ export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlace
         this.animation = new Animated.Value(1);
         // props.onNewOptions(this.state);
         this.toggleAroundMe(aroundMe);
+    }
+
+    componentDidMount() {
+        if (this.props.ref) {
+            this.props.ref(this)
+        }
     }
 
     render() {
@@ -289,11 +303,27 @@ export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlace
 
     }
 
-    setStateAndNotify(newState: SearchPlacesState) {
-        let {lat, lng, aroundMe} = newState || {}
-        const geoPosition: GeoPosition = {lat, lng, aroundMe: aroundMe || true}
+    async setStateAndNotify(newState: SearchPlacesState) {
 
-        this.setState(newState, () => this.props.onNewOptions(geoPosition));
+        await this.setState(newState)
+        let position = await this.getPosition()
+        this.props.onNewOptions(position)
+    }
+
+    async getPosition() {
+        let {lat, lng, aroundMe} = this.state
+        let  geoPosition: GeoPosition
+        if (!aroundMe) {
+            //place position
+            let position = await Geolocation.getPosition()
+            geoPosition = {lat: position.latitude, lng: position.longitude}
+        }
+        else {
+            geoPosition = {lat, lng}
+        }
+        console.debug("position selector, getPosition:", geoPosition, this.state)
+        return geoPosition
+
     }
 }
 

@@ -2,29 +2,28 @@
 
 import type {Node} from 'react'
 import React from 'react'
-import {StyleSheet, Text, TextInput, View,} from 'react-native'
+import {Button, StyleSheet, Text, TextInput, View,} from 'react-native'
 import type {SearchEngine, SearchState} from "../../../helpers/SearchHelper"
-import {renderItem} from "../../../helpers/SearchHelper"
-import {__createAlgoliaSearcher, makeBrowseAlgoliaFilter2} from "../../../helpers/SearchHelper"
+import {__createAlgoliaSearcher, makeBrowseAlgoliaFilter2, renderItem} from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
+import type {ISearchMotor} from "../searchMotor"
 import SearchMotor from "../searchMotor"
-import ItemCell from "../../components/ItemCell"
 import {currentUserId, logged} from "../../../managers/CurrentUser"
 import {buildData} from "../../../helpers/DataUtils"
 import {connect} from "react-redux"
 import {AlgoliaClient, createResultFromHit} from "../../../helpers/AlgoliaUtils"
 import Config from 'react-native-config'
-import {seeActivityDetails} from "../../Nav"
-import GTouchable from "../../GTouchable"
 import {SocialScopeSelector} from "./socialscopeselector"
-import type {GeoPosition} from "./searchplacesoption"
-import {getPosition, SearchPlacesOption, getPositionOrAskPermission} from "./searchplacesoption"
-import type {RNNNavigator, Saving} from "../../../types"
+import type {GeoPosition, IPositionSelector} from "./searchplacesoption"
+import {SearchPlacesOption} from "./searchplacesoption"
+import type {RNNNavigator} from "../../../types"
 import SearchListResults from "../searchListResults"
 import GMap from "../../components/GMap"
 import {Colors} from "../../colors"
 import ActionButton from "react-native-action-button"
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
+import Permissions from 'react-native-permissions'
+
 
 type SMS = {
     search: SearchEngine<BrowseItemsGenOptions>,
@@ -48,6 +47,10 @@ export type BrowseItemsGenOptions = {
 }))
 @logged
 export default class BrowseItemPagePlaces extends React.Component<SMP, SMS> {
+
+
+    motor: ISearchMotor
+    positionSelector: IPositionSelector
 
     constructor(props: SMP) {
         super(props)
@@ -81,9 +84,20 @@ export default class BrowseItemPagePlaces extends React.Component<SMP, SMS> {
                     geoSearch: true,
                     parseResponse: (hits) => createResultFromHit(hits, {}, true),
                 }),
-                canSearch: searchOptions => {
-                    return getPositionOrAskPermission(searchOptions)
-                        .then(() => true)
+                canSearch: async searchOptions => {
+                    if (searchOptions.lat && searchOptions.lng) return null
+                    let hasPermissions = await Permissions.check('location')
+                    console.log("hasPermissions", hasPermissions)
+                    if (hasPermissions) {
+                        switch (hasPermissions) {
+                            // authorized', 'denied', 'restricted', or 'undetermined'
+                            case "authorized": return null
+                            case "denied": return "location_permissions_denied"
+                            case "restricted": return "location_permissions_restricted"
+                            case "undetermined": return "location_permissions_undetermined"
+                        }
+                    }
+                    return "unknown"
                 }
             }
         }
@@ -102,7 +116,9 @@ export default class BrowseItemPagePlaces extends React.Component<SMP, SMS> {
                     })}
                 }/>
 
+
                 <SearchPlacesOption
+                    ref={ref => this.positionSelector = ref}
                     navigator={this.props.navigator}
                     onNewOptions={(pos: GeoPosition) => {
                         this.setState({searchOptions: {...this.state.searchOptions, ...pos}})
@@ -113,6 +129,36 @@ export default class BrowseItemPagePlaces extends React.Component<SMP, SMS> {
                     searchEngine={this.state.search}
                     renderResults={this._renderResults}
                     searchOptions={this.state.searchOptions}
+                    ref={ref => this.motor = ref}
+                    renderBlank={cannot => {
+                        if (cannot === 'location_permissions_undetermined') {
+                            return (
+                                <View>
+                                    <Text>#please give the permissions</Text>
+                                    <Button
+                                        title="#ask permissions"
+                                        onPress={async () => {
+                                            console.info("asking for location permissions result")
+                                            let res = await Permissions.request('location')
+                                            console.info("location permissions result", res)
+                                            if (res === 'authorized') {
+                                                let position = await this.positionSelector.getPosition()
+                                                let {lat, lng} = position
+                                                this.setState({searchOptions: {...this.state.searchOptions, lat, lng}})
+                                            }
+                                            else {
+                                                console.warn("location permissions result case not handled", res)
+                                                //what to do, what to do
+                                            }
+
+                                        }}
+                                    />
+                                </View>
+                            )
+
+                        }
+                        return <View><Text>{cannot}</Text></View>
+                    }}
                 />
 
                 <ActionButton buttonColor="rgba(231,76,60,1)"
