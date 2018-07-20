@@ -33,7 +33,7 @@ export interface ISearchPage {
 export type Props<SO> = {
     searchEngine: SearchEngine<SO>,
     renderResults: SearchState => Node,
-    renderEmpty?: () => Node,
+    renderBlank?: () => Node,
     ref?: ISearchPage => void,
     searchOptions: SO,
 
@@ -88,6 +88,9 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
     }
 
     renderSearchPage(searchState: SearchState) {
+        if (_.isUndefined(searchState) && this.props.renderBlank) {
+            return this.props.renderBlank()
+        }
         return this.props.renderResults(searchState)
 
 

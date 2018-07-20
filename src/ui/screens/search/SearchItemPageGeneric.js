@@ -15,6 +15,7 @@ import SearchMotor from "../searchMotor"
 import ItemCell from "../../components/ItemCell"
 import {__createSearchItemSearcher} from "../../../helpers/SearchHelper"
 import SearchListResults from "../searchListResults"
+import BlankSearch, {renderBlankIcon} from "../../../ui/components/BlankSearch"
 
 export type SearchItemsGenOptions = {input: string}
 
@@ -34,7 +35,7 @@ export default class SearchItemPageGeneric extends React.Component<SMP, SMS> {
         super(props)
         this.state = {
             searchOptions: {
-                input: ''
+                input: '',
             },
             search: {
                 search: __createSearchItemSearcher(props.category),
@@ -44,6 +45,7 @@ export default class SearchItemPageGeneric extends React.Component<SMP, SMS> {
     }
 
     render() {
+
         return (
             <View>
                 <GSearchBar2
@@ -55,8 +57,15 @@ export default class SearchItemPageGeneric extends React.Component<SMP, SMS> {
                 />
                 <SearchMotor
                     searchEngine={this.state.search}
-                    renderResults={state => <SearchListResults searchState={state} renderItem={renderResource.bind(this)} />}
+                    renderResults={(state) => <SearchListResults searchState={state}
+                                                      renderItem={renderResource.bind(this)}
+
+                    />}
                     searchOptions={this.state.searchOptions}
+                    renderBlank={() => <BlankSearch
+                        icon={renderBlankIcon(this.props.category)}
+                        text={i18n.t("search_item_screen.placeholder." + this.props.category)}
+                    />}
                 />
             </View>
         )

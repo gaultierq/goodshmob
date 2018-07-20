@@ -17,10 +17,11 @@ import SearchListResults from "../searchListResults"
 import {Colors} from "../../colors"
 import ActionButton from "react-native-action-button"
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
+import BlankSearch, {renderBlankIcon} from "../../../ui/components/BlankSearch"
 
 export type SearchItemsPlacesOptions = SearchItemsGenOptions & {
-    lat?: string,
-    lng?: string,
+    lat?: number | null,
+    lng?: number | null,
 }
 
 type SMS = {
@@ -73,6 +74,10 @@ export default class SearchItemPagePlaces extends React.Component<SMP, SMS> {
                     searchEngine={this.state.search}
                     renderResults={state => <SearchListResults searchState={state} renderItem={({item}) => <ItemCell item={item}/>} />}
                     searchOptions={this.state.searchOptions}
+                    renderBlank={() => <BlankSearch
+                        icon={renderBlankIcon('places')}
+                        text={i18n.t("search_item_screen.placeholder.places")}
+                    />}
                 />
 
                 <ActionButton buttonColor="rgba(231,76,60,1)"

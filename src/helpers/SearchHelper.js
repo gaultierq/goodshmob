@@ -4,7 +4,7 @@ import type {Node} from 'react'
 import * as React from 'react'
 import type {Id, Lineup, List, RNNNavigator, Saving, SearchToken, User} from "../types"
 import {Item, RequestState} from "../types"
-import EmptySearch, {renderBlankIcon} from "../ui/components/EmptySearch"
+import BlankSearch, {renderBlankIcon} from "../ui/components/BlankSearch"
 import {AlgoliaClient, createResultFromHit, createResultFromHit2} from "./AlgoliaUtils"
 import Config from 'react-native-config'
 import {renderLineupFromOtherPeople} from "../ui/UIComponents"
@@ -52,7 +52,6 @@ export type SearchState = {
     page?: number,
     nbPages?: number,
     data?: Array<List | Saving>,
-    isEmpty: boolean
 };
 
 export type SearchCategory = {
@@ -222,7 +221,6 @@ export function __createAlgoliaSearcher<SO: any>(
                 promise = getPosition(searchOptions)
                     .then((position) => {
                         const aroundLatLng = `${position.lat}, ${position.lng}`
-                        console.log('aroundLatLng', aroundLatLng)
                         query['aroundLatLng'] = aroundLatLng
                         return config.index
                     })
