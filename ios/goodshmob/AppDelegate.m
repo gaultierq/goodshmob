@@ -45,7 +45,8 @@
     }
   }
   
-  [GMSServices provideAPIKey:[ReactNativeConfig envFor:@"GOOGLE_MAPS_API_KEY"]];
+  
+  [GMSServices provideAPIKey:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"GoogleMapsApiKey"]];
   
   
   // **********************************************
