@@ -357,6 +357,7 @@ export default {
         change: "Change",
         change_title: "Change title",
         edit_saving_menu: "Edit this goodsh",
+        share: "Share",
         share_list: "Share this list",
         change_description: "Change the description",
         move: "Change list",

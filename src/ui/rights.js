@@ -8,10 +8,13 @@ import {CREATE_LIKE, DELETE_LIKE} from "./activity/actionTypes"
 import StoreManager from "../managers/StoreManager"
 
 export class GAction {
-    name: string;
 
-    constructor(name: string) {
+    name: string
+    priority: number
+
+    constructor(name: string, priority: number = 0) {
         this.name = name;
+        this.priority = priority
     }
 
     toString() {
@@ -39,17 +42,12 @@ export class GAction {
     }
 }
 
-
-
 //TODO: comments, see,
-export const A_LIKE : GAction = new GAction('like');
-export const A_UNLIKE : GAction = new GAction('unlike');
-export const A_SAVE : GAction = new GAction('save');
-export const A_UNSAVE : GAction = new GAction('unsave');
-export const A_BUY : GAction = new GAction('buy');
-
-
-
+export const A_LIKE : GAction = new GAction('like', 1);
+export const A_UNLIKE : GAction = new GAction('unlike', 4);
+export const A_SAVE : GAction = new GAction('save', -1);
+export const A_UNSAVE : GAction = new GAction('unsave', 3);
+export const A_BUY : GAction = new GAction('buy', 2);
 
 export class ActivityRights {
 

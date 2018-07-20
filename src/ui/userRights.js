@@ -8,8 +8,8 @@ const GUserActions = []
 
 export class GUserAction extends GAction {
 
-    constructor(name: string) {
-        super(name)
+    constructor(name: string, priority: number = 0) {
+        super(name, priority)
         GUserActions.push(this)
     }
 
@@ -18,8 +18,8 @@ export class GUserAction extends GAction {
     }
 }
 
-export const U_CONNECT: GUserAction = new GUserAction('connect to user')
-export const U_DISCONNECT: GUserAction = new GUserAction('disconnect from user')
+export const U_CONNECT: GUserAction = new GUserAction('connect to user', -1)
+export const U_DISCONNECT: GUserAction = new GUserAction('disconnect from user', 3)
 
 
 export class UserRights {
