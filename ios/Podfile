@@ -47,6 +47,8 @@ target 'goodshmob' do
 
   # pod 'RNDeviceInfo', path: '../node_modules/react-native-device-info'
 
+  pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'
+
 end
 
 post_install do |installer|
