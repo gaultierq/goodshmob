@@ -47,7 +47,7 @@ export default class SearchItemPageGeneric extends React.Component<SMP, SMS> {
     render() {
 
         return (
-            <View>
+            <View style={{flex: 1}}>
                 <GSearchBar2
                     onChangeText={(input: string)  => {this.setState({searchOptions: {...this.state.searchOptions, input}})}}
                     value={_.get(this.state, this.state.searchOptions.input)}
@@ -57,8 +57,9 @@ export default class SearchItemPageGeneric extends React.Component<SMP, SMS> {
                 />
                 <SearchMotor
                     searchEngine={this.state.search}
-                    renderResults={(state) => <SearchListResults searchState={state}
-                                                      renderItem={renderResource.bind(this)}
+                    renderResults={(state, onLoadMore) => <SearchListResults
+                        searchState={state}
+                        renderItem={renderResource.bind(this)}
 
                     />}
                     searchOptions={this.state.searchOptions}

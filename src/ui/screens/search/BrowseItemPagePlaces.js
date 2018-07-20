@@ -92,7 +92,7 @@ export default class BrowseItemPagePlaces extends React.Component<SMP, SMS> {
     render() {
         const mapDisplay = this.state.mapDisplay
         return (
-            <View style={{flex: 1, width: '100%', height: '100%'}}>
+            <View style={{flex: 1}}>
                 <SocialScopeSelector onScopeChange={scope => {
                     this.setState({
                         searchOptions: {

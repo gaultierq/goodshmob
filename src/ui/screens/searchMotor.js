@@ -32,7 +32,7 @@ export interface ISearchPage {
 
 export type Props<SO> = {
     searchEngine: SearchEngine<SO>,
-    renderResults: SearchState => Node,
+    renderResults: (SearchState, () => void) => Node,
     renderBlank?: () => Node,
     ref?: ISearchPage => void,
     searchOptions: SO,
@@ -42,6 +42,7 @@ export type Props<SO> = {
 //options: page x location? x
 export type State = {
     searches: { [SearchKey]: SearchState},
+    searchKey: string
 };
 
 // this guy is responsible for making search requests
@@ -62,15 +63,15 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
 
     render() {
 
-        const searchKey = this.generateSearchKey(this.props.searchOptions)
+        const searchKey = this.state.searchKey
         return (
-            <KeyboardAvoidingView behavior={ (Platform.OS === 'ios') ? 'padding' : null }
-                                  keyboardVerticalOffset={Platform.OS === 'ios' ? 50 : 0}
-                                  style={[{width:"100%", height: "100%", backgroundColor: Colors.white}]}>
+            <View behavior={ (Platform.OS === 'ios') ? 'padding' : null }
+                  keyboardVerticalOffset={Platform.OS === 'ios' ? 50 : 0}
+                  style={[{flex:1, backgroundColor: 'white'}]}>
 
 
                 {this.renderSearchPage(this.getSearchState(searchKey))}
-            </KeyboardAvoidingView>
+            </View>
 
         );
     }
@@ -80,18 +81,25 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
     }
 
     search1(options: SearchOptions, soft: boolean = false) {
-        this.tryPerformSearch(options, 0)
+        this._debounceSearch(options, 0)
     }
 
     getSearchState(searchKey: string): SearchState {
         return this.state && this.state.searches && this.state.searches[searchKey]
     }
 
+    onLoadMore() {
+        const searchOptions = this.props.searchOptions
+        const searchKey = this.generateSearchKey(searchOptions)
+        const searchState = this.getSearchState(searchKey)
+        this.tryPerformSearch(searchOptions, searchState.page + 1)
+    }
+
     renderSearchPage(searchState: SearchState) {
         if (_.isUndefined(searchState) && this.props.renderBlank) {
             return this.props.renderBlank()
         }
-        return this.props.renderResults(searchState)
+        return this.props.renderResults(searchState, this.onLoadMore.bind(this))
 
 
         //
@@ -134,25 +142,7 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
         )
     }
 
-    renderSearchFooter(searchState: SearchState) {
-        if (!searchState) return null;
-        let nextPage = searchState.page + 1;
 
-        let hasMore = nextPage < searchState.nbPages;
-        if (!hasMore) return null;
-
-        let isLoadingMore = searchState.requestState === 'sending';
-
-        return (<Button
-            isLoading={isLoadingMore}
-            isDisabled={isLoadingMore}
-            onPress={()=>{this.tryPerformSearch(this.props.searchOptions, nextPage)}}
-            style={[styles.button, {marginTop: 15}]}
-            disabledStyle={styles.button}
-        >
-            <Text style={{color: isLoadingMore ? Colors.greyishBrown : Colors.black}}>{i18n.t('actions.load_more')}</Text>
-        </Button>);
-    }
 
     componentDidUpdate(prevProps: Props<SO>) {
         const searchOptions = this.props.searchOptions
@@ -160,14 +150,14 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
             //why ?
             && !!searchOptions
         ) {
-            this.tryPerformSearch(searchOptions, 0)
+            this._debounceSearch(searchOptions, 0)
         }
     }
 
+    _debounceSearch(searchOptions: ?SO, page: number) {
+        return _.debounce(() => this.tryPerformSearch(searchOptions, page), 500)();
+    }
 
-
-
-    // _debounceSearch = _.debounce(() => this.tryPerformSearch(0), 500);
 
     tryPerformSearch(searchOptions: ?SO, page: number) {
 
@@ -193,7 +183,6 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
 
                 let newState = {
                     requestState: 'sending',
-                    isEmpty: false,
                     page
                 }
                 this.updateSearchState(searchKey, newState)
@@ -231,24 +220,3 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
             });
     }
 }
-
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    button: {
-        padding: 8,
-        borderColor: "transparent",
-    },
-
-    searchInput: {
-        backgroundColor: Colors.white,
-    },
-    activityIndicator: {
-        position: "absolute",
-        top: 30, left: 0, right: 0, justifyContent: 'center',
-        zIndex: 3000
-    },
-});
-

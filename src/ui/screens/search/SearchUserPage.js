@@ -60,7 +60,7 @@ export default class SearchUserPage extends React.Component<SUP, SUS> {
                 />
                 <SearchMotor
                     searchEngine={this.state.search}
-                    renderResults={state => <SearchListResults searchState={state} renderItem={renderUser(this.props.navigator)} />}
+                    renderResults={(state, onLoadMore) => <SearchListResults searchState={state} renderItem={renderUser(this.props.navigator)} />}
                     searchOptions={this.state.searchOptions}
                 />
             </View>

@@ -75,7 +75,7 @@ export default class BrowseItemPageGeneric extends React.Component<SMP, SMS> {
 
     render() {
         return (
-            <View>
+            <View style={{flex: 1}}>
 
                 <SocialScopeSelector onScopeChange={scope => {
                     this.setState({
@@ -88,7 +88,7 @@ export default class BrowseItemPageGeneric extends React.Component<SMP, SMS> {
 
                 <SearchMotor
                     searchEngine={this.state.search}
-                    renderResults={state => <SearchListResults searchState={state} renderItem={renderItem.bind(this)} />}
+                    renderResults={(state, onLoadMore)=> <SearchListResults searchState={state} onLoadMore={onLoadMore} renderItem={renderItem.bind(this)} />}
                     searchOptions={this.state.searchOptions}
                 />
             </View>

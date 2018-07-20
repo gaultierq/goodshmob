@@ -4,7 +4,11 @@ import type {Node} from 'react'
 import React from 'react'
 import {StyleSheet, Text, TextInput, View,} from 'react-native'
 import type {SearchEngine,} from "../../../helpers/SearchHelper"
-import {__createAlgoliaSearcher, renderSavingOrLineup} from "../../../helpers/SearchHelper"
+import {
+    __createAlgoliaSearcher,
+    renderItem,
+    renderSavingOrLineup
+} from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import {LINEUP_PADDING, NAV_BACKGROUND_COLOR} from "../../UIStyles"
 import GSearchBar2 from "../../components/GSearchBar2"
@@ -81,7 +85,7 @@ export default class SearchSavingAndLineupPage extends React.Component<SUP, SUS>
                 />
                 <SearchMotor
                     searchEngine={this.state.search}
-                    renderResults={state => <SearchListResults searchState={state} renderItem={renderSavingOrLineup(this.props.navigator)} />}
+                    renderResults={(state, onLoadMore) => <SearchListResults searchState={state} onLoadMore={onLoadMore} renderItem={renderSavingOrLineup(this.props.navigator)} />}
                     searchOptions={this.state.searchOptions}
                 />
             </View>

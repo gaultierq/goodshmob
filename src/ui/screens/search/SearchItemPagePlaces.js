@@ -54,7 +54,7 @@ export default class SearchItemPagePlaces extends React.Component<SMP, SMS> {
     render() {
 
         return (
-            <View>
+            <View style={{flex: 1}}>
                 <GSearchBar2
                     onChangeText={(input: string)  => {this.setState({searchOptions: {...this.state.searchOptions, input}})}}
                     value={_.get(this.state, this.state.searchOptions.input)}
