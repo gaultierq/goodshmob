@@ -3,7 +3,11 @@
 import type {Node} from 'react'
 import React from 'react'
 import {StyleSheet, Text, TextInput, View,} from 'react-native'
-import type {SearchEngine, SearchItemCategoryType,} from "../../../helpers/SearchHelper"
+import type {
+    SearchEngine,
+    SearchItemCategoryType,
+} from "../../../helpers/SearchHelper"
+import {renderResource} from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import {LINEUP_PADDING, NAV_BACKGROUND_COLOR} from "../../UIStyles"
 import GSearchBar2 from "../../components/GSearchBar2"
@@ -51,7 +55,7 @@ export default class SearchItemPageGeneric extends React.Component<SMP, SMS> {
                 />
                 <SearchMotor
                     searchEngine={this.state.search}
-                    renderResults={state => <SearchListResults searchState={state} renderItem={({item}) => <ItemCell item={item}/>} />}
+                    renderResults={state => <SearchListResults searchState={state} renderItem={renderResource.bind(this)} />}
                     searchOptions={this.state.searchOptions}
                 />
             </View>

@@ -3,7 +3,8 @@
 import type {Node} from 'react'
 import React from 'react'
 import {StyleSheet, Text, TextInput, View,} from 'react-native'
-import type {SearchEngine, SearchState,} from "../../../helpers/SearchHelper"
+import type {SearchEngine, SearchState} from "../../../helpers/SearchHelper"
+import {renderItem} from "../../../helpers/SearchHelper"
 import {__createAlgoliaSearcher, makeBrowseAlgoliaFilter2} from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import SearchMotor from "../searchMotor"
@@ -126,25 +127,11 @@ export default class BrowseItemPagePlaces extends React.Component<SMP, SMS> {
 
     _renderResults = (state: SearchState) => {
         if (this.state.mapDisplay) return <GMap searchState={state}/>
-        else return <SearchListResults searchState={state} renderItem={this.renderItem.bind(this)}/>
+        else return <SearchListResults searchState={state} renderItem={renderItem.bind(this)}/>
     }
 
 //to factorize
-    renderItem({item}: {item: Saving}) {
 
-        let saving = item;
-
-        let resource = saving.resource;
-
-        //TODO: this is hack
-        if (!resource) return null;
-
-        return (
-            <GTouchable onPress={() => seeActivityDetails(this.props.navigator, saving)}>
-                <ItemCell item={resource}/>
-            </GTouchable>
-        )
-    }
 
     //TODO: use selector
     getUser() {

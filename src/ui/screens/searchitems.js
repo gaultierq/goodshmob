@@ -74,7 +74,7 @@ export default class SearchItems extends Screen<Props, State> {
         let focused = this.state.index === ix
         switch (route.key) {
             case 'places': return <SearchItemPagePlaces navigator={this.props.navigator}/>
-            default: return <SearchItemPageGeneric category={route.key} placeholder={"# " + route.key}/>
+            default: return <SearchItemPageGeneric  navigator={this.props.navigator} category={route.key} placeholder={"# " + route.key}/>
         }
     }
 

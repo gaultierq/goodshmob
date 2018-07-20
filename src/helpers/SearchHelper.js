@@ -3,7 +3,7 @@
 import type {Node} from 'react'
 import * as React from 'react'
 import type {Id, Lineup, List, RNNNavigator, Saving, SearchToken, User} from "../types"
-import {RequestState} from "../types"
+import {Item, RequestState} from "../types"
 import EmptySearch, {renderBlankIcon} from "../ui/components/EmptySearch"
 import {AlgoliaClient, createResultFromHit, createResultFromHit2} from "./AlgoliaUtils"
 import Config from 'react-native-config'
@@ -82,7 +82,7 @@ export type SearchItemCategoryType = "consumer_goods" | "places" | "musics" | "m
 // QG to EA: let's try to follow the camel case convention for types
 export type FRIEND_FILTER_TYPE = "me" | "friends" | "all" ;
 
-export const SEARCH_CATEGORIES_TYPE: SearchItemCategoryType[] = ["consumer_goods", "places", "musics", "movies"]
+export const SEARCH_CATEGORIES_TYPE: SearchItemCategoryType[] = ["places", "consumer_goods", "musics", "movies"]
 
 // wrong type, used for tests, FIXME
 // $FlowFixMe
@@ -293,4 +293,50 @@ export function makeBrowseAlgoliaFilter2(friendFilter: FRIEND_FILTER_TYPE, categ
     }
 }
 
+export function renderItem({item}: {item: Saving}) {
+
+    let saving = item;
+
+    let resource = saving.resource;
+
+    //TODO: this is hack
+    if (!resource) return null;
+
+    return (
+        <GTouchable onPress={() => seeActivityDetails(this.props.navigator, saving)}>
+            <ItemCell item={resource}/>
+        </GTouchable>
+    )
+}
+
+
+function onNewItemSelected(item: Item, navigator: RNNNavigator) {
+    let cancel = navigator.dismissAllModals
+
+    navigator.showModal({
+        screen: 'goodsh.AddItemScreen',
+        title: i18n.t("add_item_screen.title"),
+        animationType: 'none',
+        passProps: {
+            itemId: item.id,
+            itemType: item.type,
+            item,
+            onCancel: cancel,
+            onAdded: cancel,
+        },
+    });
+}
+
+export function renderResource({item}: {item: Item}) {
+
+    //TODO: this is hack
+    if (!item) return null;
+
+
+    return (
+        <GTouchable onPress={() => onNewItemSelected(item, this.props.navigator) }>
+            <ItemCell item={item}/>
+        </GTouchable>
+    )
+}
 

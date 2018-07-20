@@ -75,29 +75,10 @@ export function startAddItem(navigator: *, defaultLineup: Id | Lineup) {
         navigatorButtons: CANCELABLE_MODAL2,
         passProps: {
             defaultLineup,
-            onItemSelected: (item: Item, navigator: RNNNavigator) => {
-
-                navigator.showModal({
-                    screen: 'goodsh.AddItemScreen',
-                    title: i18n.t("add_item_screen.title"),
-                    animationType: 'none',
-                    passProps: {
-                        itemId: item.id,
-                        itemType: item.type,
-                        item,
-                        defaultLineupId,
-                        onCancel: cancel,
-                        onAdded: cancel,
-                    },
-                });
-
-            },
             onCancel: cancel
         }, // Object that will be passed as props to the pushed screen (optional)
     })
 }
-
-
 
 export function seeList(navigator: RNNNavigator, lineup: Lineup) {
 

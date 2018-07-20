@@ -4,7 +4,7 @@ import type {Node} from 'react'
 import React from 'react'
 import {StyleSheet, Text, TextInput, View,} from 'react-native'
 import type {SearchEngine, SearchItemCategoryType,} from "../../../helpers/SearchHelper"
-import {__createAlgoliaSearcher, makeBrowseAlgoliaFilter2} from "../../../helpers/SearchHelper"
+import {__createAlgoliaSearcher, makeBrowseAlgoliaFilter2, renderItem} from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import SearchMotor from "../searchMotor"
 import ItemCell from "../../components/ItemCell"
@@ -88,29 +88,13 @@ export default class BrowseItemPageGeneric extends React.Component<SMP, SMS> {
 
                 <SearchMotor
                     searchEngine={this.state.search}
-                    renderResults={state => <SearchListResults searchState={state} renderItem={this._renderItem} />}
+                    renderResults={state => <SearchListResults searchState={state} renderItem={renderItem.bind(this)} />}
                     searchOptions={this.state.searchOptions}
                 />
             </View>
         )
     }
 
-    //factorize
-    _renderItem = ({item}: {item: Saving}) => {
-
-        let saving = item;
-
-        let resource = saving.resource;
-
-        //TODO: this is hack
-        if (!resource) return null;
-
-        return (
-            <GTouchable onPress={() => seeActivityDetails(this.props.navigator, saving)}>
-                <ItemCell item={resource}/>
-            </GTouchable>
-        )
-    }
 
     getUser() {
         return buildData(this.props.data, "users", currentUserId())

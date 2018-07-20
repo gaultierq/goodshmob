@@ -26,6 +26,7 @@ export default class HomeSearchScreen extends Screen<Props, State> {
     render() {
         return (
             <SearchSavingAndLineupPage
+                navigator={this.props.navigator}
                 token={this.props.token}
             />
         )
