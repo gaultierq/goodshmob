@@ -91,31 +91,31 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
         return this.props.renderResults(searchState)
 
 
-
-
-        searchState = searchState || {}
-        if (searchState.requestState === 'sending' && searchState.page === 0) return <FullScreenLoader/>
-        if (searchState.requestState === 'ko')
-            return <Text style={{alignSelf: "center", marginTop: 20}}>{i18n.t("errors.generic")}</Text>
-        if (searchState.data && searchState.data.length === 0)
-            return <Text style={{alignSelf: "center", marginTop: 20}}>{i18n.t("lineups.search.empty")}</Text>
-
-        const data = _.flatten(searchState.data)
-
-        if (data.length === 0 ) {
-            return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                <Text>{i18n.t("lineups.search.empty")}</Text>
-            </View>
-        }
-        return <View style={{flex: 1}}>
-            <FlatList
-                data={data}
-                renderItem={this.props.renderItem}
-                ListFooterComponent={() => this.renderSearchFooter(searchState)}
-                keyExtractor={(item) => item.id}
-                onScrollBeginDrag={Keyboard.dismiss}
-                keyboardShouldPersistTaps='always'/>
-        </View>
+        //
+        //
+        // searchState = searchState || {}
+        // if (searchState.requestState === 'sending' && searchState.page === 0) return <FullScreenLoader/>
+        // if (searchState.requestState === 'ko')
+        //     return <Text style={{alignSelf: "center", marginTop: 20}}>{i18n.t("errors.generic")}</Text>
+        // if (searchState.data && searchState.data.length === 0)
+        //     return <Text style={{alignSelf: "center", marginTop: 20}}>{i18n.t("lineups.search.empty")}</Text>
+        //
+        // const data = _.flatten(searchState.data)
+        //
+        // if (data.length === 0 ) {
+        //     return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        //         <Text>{i18n.t("lineups.search.empty")}</Text>
+        //     </View>
+        // }
+        // return <View style={{flex: 1}}>
+        //     <FlatList
+        //         data={data}
+        //         renderItem={this.props.renderItem}
+        //         ListFooterComponent={() => this.renderSearchFooter(searchState)}
+        //         keyExtractor={(item) => item.id}
+        //         onScrollBeginDrag={Keyboard.dismiss}
+        //         keyboardShouldPersistTaps='always'/>
+        // </View>
     }
 
 

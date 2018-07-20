@@ -25,8 +25,9 @@ import Geolocation from "../../../managers/GeoLocation"
 
 
 export type GeoPosition = {
-    lat: string,
-    lng: string
+    lat?: number | null,
+    lng?: number | null,
+    aroundMe?: boolean
 }
 
 export type SearchPlacesProps = {
@@ -42,8 +43,8 @@ type SearchPlacesState = {
     place: string,
     focus: boolean,
 
-    lat?: ?string,
-    lng?: ?string
+    lat?: ?number,
+    lng?: ?number
 };
 
 export const SEARCH_OPTIONS_PADDINGS = {
@@ -289,16 +290,18 @@ export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlace
     }
 
     setStateAndNotify(newState: SearchPlacesState) {
-        let {lat, lng} = newState || {}
-        this.setState(newState, () => this.props.onNewOptions({lat, lng}));
+        let {lat, lng, aroundMe} = newState || {}
+        const geoPosition: GeoPosition = {lat, lng, aroundMe: aroundMe || true}
+
+        this.setState(newState, () => this.props.onNewOptions(geoPosition));
     }
 }
 
-export function getPositionOrAskPermission(options: any) {
+export function getPositionOrAskPermission(options: any): Promise<GeoPosition> {
     return new Promise((resolve, reject) => {
-        getPosition(options).then(({latitude, longitude}) => {
-            console.log('getPositionOrAskPermission', {latitude, longitude})
-            resolve({latitude, longitude});
+        getPosition(options).then(({lat, lng}) => {
+            console.log('getPositionOrAskPermission', {lat, lng})
+            resolve({lat, lng});
         }, err => {
             console.debug("error detected", err);
             // if (__IS_ANDROID__ err.msg === 'No location provider available.') {
@@ -326,12 +329,15 @@ export function getPositionOrAskPermission(options: any) {
 
 export function getPosition(options: any = {}): Promise<any> {
     if (options.aroundMe) {
-        return Geolocation.getPosition();
+        return Geolocation.getPosition()
+            .then(position => {
+                return {lat: position.latitude, lng: position.longitude}
+            })
     } else {
         return new Promise((resolve, reject) => {
             let {lat, lng} = options;
             if (lat && lng) {
-                resolve({latitude: lat, longitude: lng});
+                resolve({lat, lng});
             }
             else {
                 resolve({});

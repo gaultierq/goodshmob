@@ -17,7 +17,7 @@ import {seeActivityDetails} from "../../Nav"
 import GTouchable from "../../GTouchable"
 import {SocialScopeSelector} from "./socialscopeselector"
 import type {GeoPosition} from "./searchplacesoption"
-import {getPosition, SearchPlacesOption} from "./searchplacesoption"
+import {getPosition, SearchPlacesOption, getPositionOrAskPermission} from "./searchplacesoption"
 import type {RNNNavigator, Saving} from "../../../types"
 import SearchListResults from "../searchListResults"
 import GMap from "../../components/GMap"
@@ -36,7 +36,10 @@ type SMP = {
     navigator: RNNNavigator
 }
 export type BrowseItemsGenOptions = {
-    algoliaFilter?: string
+    algoliaFilter?: string,
+    lat?: number,
+    lng?: number,
+    aroundMe: boolean
 }
 
 @connect(state => ({
@@ -68,13 +71,19 @@ export default class BrowseItemPagePlaces extends React.Component<SMP, SMS> {
         this.state = {
             mapDisplay: false,
             searchOptions: {
+                algoliaFilter: makeBrowseAlgoliaFilter2('me', 'places', this.getUser()),
+                aroundMe: true,
             },
             search: {
                 search: __createAlgoliaSearcher({
                     index: index,
+                    geoSearch: true,
                     parseResponse: (hits) => createResultFromHit(hits, {}, true),
                 }),
-                canSearch: searchOptions => Promise.resolve(true)
+                canSearch: searchOptions => {
+                    return getPositionOrAskPermission(searchOptions)
+                        .then(() => true)
+                }
             }
         }
     }

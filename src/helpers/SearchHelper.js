@@ -13,14 +13,13 @@ import GTouchable from "../ui/GTouchable"
 import ItemCell from "../ui/components/ItemCell"
 import UserItem from "../ui/screens/userItem"
 import {StyleSheet} from "react-native"
-import {getPosition} from "../ui/screens/search/searchplacesoption"
+import {GeoPosition, getPosition} from "../ui/screens/search/searchplacesoption"
 import type {SearchItemsGenOptions} from "../ui/screens/search/SearchItemPageGeneric"
 import {buildData} from "./DataUtils"
 import * as Api from "../managers/Api"
 import {Call} from "../managers/Api"
 import normalize from 'json-api-normalizer'
 import {currentUserId} from "../managers/CurrentUser"
-
 export type SearchCategoryType = string;
 
 // A single page of result returned by search engine
@@ -197,6 +196,7 @@ function __searchItems<SO: SearchItemsGenOptions>(category: SearchCategoryType, 
 export type AlgoliaSearchConfig = {
     index: any,
     query?: any,
+    geoSearch?: boolean,
     parseResponse: (hits: []) => *,
 }
 
@@ -211,15 +211,26 @@ export function __createAlgoliaSearcher<SO: any>(
         const token = searchOptions.token || ''
         console.log(`algolia: searching ${token}`, searchOptions);
 
-        // const queries = categFiltered.map(c=> {return {...c.query, params: c.params, query: token}});
-        const query = {
-            ...config.query, filters: searchOptions.algoliaFilter, page, query: token
+        let query = {
+            ...config.query, filters: searchOptions.algoliaFilter, page, query: token,
         }
 
-        console.log({query})
         return new Promise((resolve, reject) => {
 
-            config.index.then(index => {
+            let promise
+            if (config.geoSearch) {
+                promise = getPosition(searchOptions)
+                    .then((position) => {
+                        const aroundLatLng = `${position.lat}, ${position.lng}`
+                        console.log('aroundLatLng', aroundLatLng)
+                        query['aroundLatLng'] = aroundLatLng
+                        return config.index
+                    })
+            } else {
+                promise = Promise.resolve(config.index)
+            }
+
+            promise.then(index => {
                 index.search(query, (err, content) => {
 
                     if (err) {
@@ -239,7 +250,6 @@ export function __createAlgoliaSearcher<SO: any>(
                     resolve(search);
                 });
             });
-            // index.search(queries, (err, content) => {
 
         });
     }
