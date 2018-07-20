@@ -124,7 +124,7 @@ class LineupScreen extends Screen<Props, State> {
     getMainActionButton2(action: GLineupAction, lineupId: Id): any {
 
         if (action) {
-            if (action === L_ADD_ITEM) return getAddButton(lineupId)
+            if (action === L_ADD_ITEM) return getAddButton()
             if (action === L_FOLLOW) return {rightButtons: [FOLLOW_RIGHT_BUTTON(lineupId)],}
             if (action === L_UNFOLLOW) return {rightButtons: [UNFOLLOW_RIGHT_BUTTON(lineupId)],}
         }
