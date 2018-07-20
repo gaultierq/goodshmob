@@ -166,16 +166,20 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     renderImageIcon(action: ActivityActionType, size: number, color: Color, style?: any) {
         switch(action) {
             case 'comment':
-                return <FontAwesome style={style} name={'comment-o'} size={size} color={color}/>
+                return <Image style={style} source={require('../../../img2/comment-icon.png')} />
+                // return <FontAwesome style={style} name={'comment-o'} size={size} color={color}/>
             case 'like':
-                return <FontAwesome style={style} name={'heart-o'} size={size} color={color}/>
+                return <Image style={style} source={require('../../../img2/heart.png')} />
+                // return <FontAwesome style={style} name={'heart-o'} size={size} color={color}/>
             case 'unlike':
-                return <FontAwesome style={style} name={'heart'} size={size} color={color}/>
+                return <Image style={style} source={require('../../../img2/heart.png')} />
+                // return <FontAwesome style={style} name={'heart'} size={size} color={color}/>
             case 'share':
-                if (__IS_IOS__) {
-                    return <FeatherIcon style={style} name={'share'} size={size} color={color}/>
-                }
-                return <MaterialIcon style={style} name={'share'} size={size} color={color}/>
+                return <Image style={style} source={require('../../../img2/share-small.png')}/>
+                // if (__IS_IOS__) {
+                //     return <FeatherIcon style={style} name={'share'} size={size} color={color}/>
+                // }
+                // return <MaterialIcon style={style} name={'share'} size={size} color={color}/>
             case 'save':
                 return <FontAwesome style={style} name={'bookmark-o'} size={size} color={color}/>
             case 'unsave':
@@ -253,7 +257,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
         let color = active ? Colors.green: Colors.greyishBrown;
         return (<GTouchable onPress={handler} key={action}>
                 <View style={styles.button}>
-                    {this.renderImageIcon(action, 24, color, [styles.buttonImage])}
+                    {this.renderImageIcon(action, 24, color, [styles.buttonImage, {tintColor: color}])}
                     <Text style={[styles.buttonText, {color}]}>{text}</Text>
                 </View>
             </GTouchable>
