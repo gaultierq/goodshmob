@@ -136,7 +136,9 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
     }
 
     _debounceSearch(searchOptions: ?SO, page: number) {
-        return _.debounce(() => this.tryPerformSearch(searchOptions, page), 500)();
+        return _.debounce(() => this.tryPerformSearch(searchOptions, page), 500, {
+            'leading': true,
+        })();
     }
 
 
