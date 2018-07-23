@@ -363,13 +363,16 @@ const MENU_ACTIONS = new Map([
     }]
 ])
 
-export function displayLineupActionMenu(navigator: RNNNavigator, dispatch: any, lineup: Lineup, actions?: GLineupAction[]) {
+export function displayLineupActionMenu(
+    navigator: RNNNavigator,
+    dispatch: any,
+    lineup: Lineup,
+    filter?: GLineupAction => boolean = a => true) {
 
-    if (!actions) {
-        actions = LineupRights.getActions(lineup)
-    }
-
-    let menuAction : LineupMenuAction[] = actions.map(a => MENU_ACTIONS.get(a)).filter(a => !!a)
+    let menuAction : LineupMenuAction[] =
+        _.filter(LineupRights.getActions(lineup), filter)
+            .map(a => MENU_ACTIONS.get(a))
+            .filter(a => !!a)
 
     BottomSheet.showBottomSheetWithOptions({
             options: [

@@ -176,7 +176,7 @@ class LineupScreen extends Screen<Props, State> {
         }
         else if (event.id === 'more_' + lineup.id) {
             let {more} = this.getButtons(actions)
-            displayLineupActionMenu(this.props.navigator, this.props.dispatch, lineup, more)
+            displayLineupActionMenu(this.props.navigator, this.props.dispatch, lineup, a => more.some(a))
         }
     }
 

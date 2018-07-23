@@ -117,10 +117,12 @@ export default class LineupTitle2 extends Component<Props, State> {
             //<Text key={'savings-count-medal'} style={{ color: Colors.greyish }}>{ `(${savingCount})` }</Text>,
             this.renderMedal(_.get(lineup, 'meta.savingsCount', -1), "th-large", it),
             this.renderMedal(_.get(lineup, 'meta.followersCount', -1), "star", it, _.get(lineup, 'meta.followed', false) ? Colors.green : undefined),
-            (canFollow && <GTouchable
+            (canFollow && <View style={{flexDirection: 'row', height: 15}} key={'follow-button'}>
+                {it.next().value && this.renderMedalDot()}
+                <GTouchable
                     style={{
                         // backgroundColor: 'red',
-                        height: 15
+
                     }}
                     onPress={()=>{
                         followLineupPending(this.props.dispatch, lineup)
@@ -131,7 +133,8 @@ export default class LineupTitle2 extends Component<Props, State> {
                         fontFamily: SFP_TEXT_BOLD
                         // backgroundColor: 'blue'
                     }}>{i18n.t('actions.follow')}</Text>
-                </GTouchable>)
+                </GTouchable>
+            </View>)
         ];
     }
 
@@ -154,13 +157,17 @@ export default class LineupTitle2 extends Component<Props, State> {
         }
 
         return count > 0 && <Text key={icon}>
-            {displayDot.next().value && <Text style={[styles.smallText, {color, marginHorizontal: 6}]}>• </Text>}
+            {displayDot.next().value && this.renderMedalDot()}
             <Icon name={icon} size={iconSize} color={color}/>
             <Text style={[styles.smallText, {marginLeft: 4, color,
                 alignSelf: 'flex-end',
                 // backgroundColor: 'red',
             }]}>{' '}{count}{' '}</Text>
         </Text>;
+    }
+
+    renderMedalDot() {
+        return <Text style={[styles.smallText, {color: Colors.greyish, marginHorizontal: 6}]}>• </Text>
     }
 }
 
