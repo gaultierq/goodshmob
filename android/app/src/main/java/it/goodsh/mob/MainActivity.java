@@ -44,7 +44,7 @@ public class MainActivity extends SplashActivity {
             LinearLayout view = new LinearLayout(this);
             view.setGravity(Gravity.CENTER);
             view.setOrientation(LinearLayout.VERTICAL);
-            view.setBackgroundColor(Color.parseColor("#01DEB1"));
+            view.setBackgroundColor(Color.parseColor("#FFFFFF"));
 
 
             /*Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.splash1);
@@ -54,7 +54,7 @@ public class MainActivity extends SplashActivity {
             /*view.setBackgroundDrawable(bitmapDrawable);*/
 
             ImageView goodsh = new ImageView(this);
-            goodsh.setImageResource(R.drawable.logo_white);
+            goodsh.setImageResource(R.drawable.logo_black);
             //int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 180, getResources().getDisplayMetrics());
 
             goodsh.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
