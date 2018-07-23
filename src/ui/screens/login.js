@@ -60,7 +60,7 @@ class Login extends Component<Props, State> {
                       <View style={[styles.desc, {}]}>
                           <Text style={[styles.text, {marginBottom: marg,color: "#ffffff"}]}>
                               {i18n.t("login_screen.slider_intro_1")}</Text>
-                          <Image style={[styles.image]} source={require("../../img2/logoWhite.png")}/>
+                          <Image style={[styles.image]} source={require("../../img2/logoBlack.png")}/>
                           {/*todo: find a better way to obtain
                               1. goodsh centered
                               2. goodsh and text never overlapping
@@ -105,7 +105,7 @@ class Login extends Component<Props, State> {
                   {/*slide 5*/}
                   <View style={[styles.slide, {backgroundColor: Colors.green}]}>
                       <View style={[styles.desc]}>
-                          <Image style={[styles.image, {marginBottom: marg}]} source={require("../../img2/logoWhite.png")}/>
+                          <Image style={[styles.image, {marginBottom: marg}]} source={require("../../img2/logoBlack.png")}/>
                       </View>
                       <View style={{
                       }}>
