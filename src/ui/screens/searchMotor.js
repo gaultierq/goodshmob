@@ -66,6 +66,8 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
         if (this.props.ref) {
             this.props.ref(this)
         }
+        const searchOptions = this.props.searchOptions
+        this.tryPerformSearch(searchOptions, 0)
     }
 
     render() {
@@ -153,10 +155,10 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
 
         let missingSearchPermission = missingSearchPermissions(searchOptions)
         this.setState({missingSearchPermission})
+        console.log('missingSearchPermission', missingSearchPermission)
         if (missingSearchPermission) return
 
 
-        console.log('searching')
         searchKey = generateSearchKey(searchOptions)
         await this.setState({searchKey})
 

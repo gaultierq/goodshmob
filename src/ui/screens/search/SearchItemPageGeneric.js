@@ -39,7 +39,15 @@ export default class SearchItemPageGeneric extends React.Component<SMP, SMS> {
             },
             search: {
                 search: __createSearchItemSearcher(props.category),
-                missingSearchPermissions: searchOptions => _.isEmpty(searchOptions.input) ? PERMISSION_EMPTY_INPUT : null
+                missingSearchPermissions: searchOptions => {
+                    if (!_.isEmpty(searchOptions.input)) {
+                        return null
+                    }
+                    return <BlankSearch
+                        icon={renderBlankIcon(this.props.category)}
+                        text={i18n.t("search_item_screen.placeholder." + this.props.category)}
+                    />
+                }
             }
         }
     }
@@ -63,10 +71,6 @@ export default class SearchItemPageGeneric extends React.Component<SMP, SMS> {
 
                     />}
                     searchOptions={this.state.searchOptions}
-                    renderBlank={() => <BlankSearch
-                        icon={renderBlankIcon(this.props.category)}
-                        text={i18n.t("search_item_screen.placeholder." + this.props.category)}
-                    />}
                 />
             </View>
         )
