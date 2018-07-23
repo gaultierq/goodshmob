@@ -1,12 +1,16 @@
 //@flow
 import React, {Component} from 'react'
-import {ActivityIndicator, Image, View} from 'react-native'
-import MapView, {Marker} from 'react-native-maps'
+import {ActivityIndicator, Image, View, Text} from 'react-native'
+import MapView, {Marker, Callout} from 'react-native-maps'
 import type {SearchState} from "../../helpers/SearchHelper"
+import {Activity} from "../../types"
+import {renderSimpleButton} from "../UIStyles"
+import {seeActivityDetails} from "../Nav"
 
 export type Props = {
     searchState: SearchState,
-    setRef?: () => void
+    setRef?: () => void,
+    onItemPressed: (item: any) => void
 };
 
 type State = {
@@ -55,6 +59,25 @@ export default class GMap extends Component<Props, State>  {
             longitudeDelta: (maxLongitude - minLongitude) * 2}
     }
 
+    renderMarker(key: number, result: any) {
+        const item = result.resource || result
+        const userInfo = result.user ? ` by ${result.user.first_name} ${result.user.last_name}` : ''
+        const title = `${item.title}${userInfo}`
+        const description = item.description.address
+
+        return <Marker key={key}
+                       coordinate={item.description}>
+            {/*Button in callout are not possible on Android, must make the full view clickable*/}
+            <Callout onPress={() => this.props.onItemPressed(result)}>
+                <View>
+                    <Text style={{fontWeight: 'bold'}}>{title}</Text>
+                    <Text>{description}</Text>
+                    <Text>{i18n.t("search.category.more_details")}</Text>
+                </View>
+            </Callout>
+        </Marker>
+    }
+
     render() {
         const requestState = _.get(this.props, 'searchState.requestState', [])
 
@@ -69,15 +92,8 @@ export default class GMap extends Component<Props, State>  {
                     provider={'google'}
                     region={this.center}
                     ref={this.setRef}>
-                    {data && data.map(function (result, i) {
-
-                        const item = result.resource || result
-                        const userInfo = result.user ? ` by ${result.user.first_name} ${result.user.last_name}` : ''
-                        return <Marker key={i}
-                                       coordinate={item.description}
-                                       title={`${item.title}${userInfo}`}
-                                       description={item.description.address}
-                        />
+                    {data && data.map((result, i) => {
+                        return this.renderMarker(i, result)
                     })}
                 </MapView>
                 {requestState === 'sending' && <ActivityIndicator
