@@ -15,6 +15,10 @@ import UserRowI from "../activity/components/UserRowI"
 import {buildData} from "../../helpers/DataUtils"
 import {STYLES} from "../UIStyles"
 import {GoodshContext} from "../UIComponents"
+import {L_FOLLOW, LineupRights} from "../lineupRights"
+import GTouchable from "../GTouchable"
+import {followLineupPending} from "../lineup/actions"
+import {SFP_TEXT_BOLD} from "../fonts"
 
 export type State = {
 
@@ -106,17 +110,35 @@ export default class LineupTitle2 extends Component<Props, State> {
             yield true
             yield false
         })();
-        let color = _.get(lineup, 'meta.followed', false) ? Colors.black : undefined
-        const savingCount = _.get(lineup, 'meta.savingsCount', 0)
+
+        let lr = new LineupRights(lineup, this.props.pending)
+        let canFollow = lr.canExec(L_FOLLOW)
         return [
-            <Text style={{ color: Colors.greyish }}>{ `(${savingCount})` }</Text>,
-            this.renderMedal(_.get(lineup, 'meta.followersCount', -1), "star", it, color)
+            //<Text key={'savings-count-medal'} style={{ color: Colors.greyish }}>{ `(${savingCount})` }</Text>,
+            this.renderMedal(_.get(lineup, 'meta.savingsCount', -1), "th-large", it),
+            this.renderMedal(_.get(lineup, 'meta.followersCount', -1), "star", it, _.get(lineup, 'meta.followed', false) ? Colors.green : undefined),
+            (canFollow && <GTouchable
+                    style={{
+                        // backgroundColor: 'red',
+                        height: 15
+                    }}
+                    onPress={()=>{
+                        followLineupPending(this.props.dispatch, lineup)
+                    }}>
+                    <Text style={{
+                        color: Colors.green,
+                        fontSize: 14,
+                        fontFamily: SFP_TEXT_BOLD
+                        // backgroundColor: 'blue'
+                    }}>{i18n.t('actions.follow')}</Text>
+                </GTouchable>)
         ];
     }
 
     renderMedal(count: number, icon: string, displayDot: () => boolean, color: Color = Colors.greyish) {
         const iconSize = 15;
 
+        // fixme : this is bad
         if (__IS_ANDROID__) {
             return count > 0 && <Text style={[styles.medalsContainer, {paddingLeft: 10, marginLeft: 10}]} key={icon}>
                 {icon === 'th-large' && <Text style={[styles.smallText, {marginLeft: 4, color,

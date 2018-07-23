@@ -72,42 +72,42 @@ export default class MyGoodsh extends Screen<Props, State> {
                 navigator={navigator}
                 ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
                 renderSectionHeader={({section}) => section.renderSectionHeader()}
-                sectionMaker={LINEUP_SECTIONS(this.props.navigator, this.props.dispatch)}
-                // sectionMaker={(lineups)=> {
-                //     const goodshbox = _.head(lineups);
-                //     let savingCount = _.get(goodshbox, `meta.savingsCount`, 0)
-                //     const showGoodshbox = goodshbox && goodshbox.savings.length > 0;
-                //
-                //     return _.compact([
-                //         showGoodshbox ? {
-                //             data: [goodshbox],
-                //             title: i18n.t("lineups.goodsh.title"),
-                //             subtitle: ` (${savingCount})`,
-                //             onPress: () => seeList(navigator, goodshbox),
-                //             renderItem: ({item, index}) => (
-                //                 <LineupH1
-                //                     lineup={item}
-                //                     navigator={navigator}
-                //                     skipLineupTitle={true}
-                //                     renderEmpty={this.renderEmptyLineup(navigator, item)}
-                //                 />
-                //             ),
-                //             renderSectionHeader: () => this.renderSectionHeader(
-                //                 i18n.t("lineups.goodsh.title"),
-                //             )
-                //         } : false,
-                //         {
-                //             data: _.slice(lineups, 1),
-                //             title: i18n.t("lineups.mine.title"),
-                //             // renderSectionHeaderChildren:() => <AddLineupComponent navigator={this.props.navigator}/>,
-                //             renderItem: ({item, index})=> this.renderLineup(item, index, navigator, index > 0 ? null : this.props.targetRef),
-                //             renderSectionHeader: () => this.renderSectionHeader(
-                //                 i18n.t("lineups.mine.title"),
-                //                 <AddLineupComponent navigator={this.props.navigator}/>
-                //             )
-                //         },
-                //     ]);
-                // }}
+                // sectionMaker={LINEUP_SECTIONS(this.props.navigator, this.props.dispatch)}
+                sectionMaker={(lineups)=> {
+                    const goodshbox = _.head(lineups);
+                    let savingCount = _.get(goodshbox, `meta.savingsCount`, 0)
+                    const showGoodshbox = goodshbox && goodshbox.savings.length > 0;
+
+                    return _.compact([
+                        showGoodshbox ? {
+                            data: [goodshbox],
+                            title: i18n.t("lineups.goodsh.title"),
+                            subtitle: ` (${savingCount})`,
+                            onPress: () => seeList(navigator, goodshbox),
+                            renderItem: ({item, index}) => (
+                                <LineupH1
+                                    lineup={item}
+                                    navigator={navigator}
+                                    skipLineupTitle={true}
+                                    renderEmpty={this.renderEmptyLineup(navigator, item)}
+                                />
+                            ),
+                            renderSectionHeader: () => this.renderSectionHeader(
+                                i18n.t("lineups.goodsh.title"),
+                            )
+                        } : false,
+                        {
+                            data: _.slice(lineups, 1),
+                            title: i18n.t("lineups.mine.title"),
+                            // renderSectionHeaderChildren:() => <AddLineupComponent navigator={this.props.navigator}/>,
+                            renderItem: ({item, index})=> this.renderLineup(item, index, navigator, index > 0 ? null : this.props.targetRef),
+                            renderSectionHeader: () => this.renderSectionHeader(
+                                i18n.t("lineups.mine.title"),
+                                <AddLineupComponent navigator={this.props.navigator}/>
+                            )
+                        },
+                    ]);
+                }}
 
                 {...attributes}
             />
@@ -139,8 +139,7 @@ export default class MyGoodsh extends Screen<Props, State> {
                 onPressEmptyLineup={() => startAddItem(navigator, item)}
                 renderEmpty={this.renderEmptyLineup(navigator, item, targetRef)}
                 renderMenuButton={() => {
-                    //TODO: dubious 15
-                    return this.renderMenuButton(item, 15)
+                    return this.renderMenuButton(item)
                 }}
                 renderTitle={(lineup: Lineup) => (
                     <LineupTitle2
@@ -178,20 +177,17 @@ export default class MyGoodsh extends Screen<Props, State> {
         );
     }
 
-    renderMenuButton(item: Lineup, padding: number) {
+    renderMenuButton(item: Lineup) {
         //TODO: use right manager
         if (!item || item.id === currentGoodshboxId()) return null;
 
         return (
             <GTouchable style={{}} onPress={() => displayLineupActionMenu(this.props.navigator, this.props.dispatch, item)}>
                 <View style={{
-                    paddingHorizontal: padding,
+                    paddingHorizontal: 0,
                     paddingVertical: 16,
-                    // paddingBottom: 8,
-                    // backgroundColor: 'red',
                 }}>
-                    <Image
-                        source={require('../../img2/sidedots.png')} resizeMode="contain"/>
+                    <Image source={require('../../img2/sidedots.png')} resizeMode="contain"/>
                 </View>
             </GTouchable>
         );
