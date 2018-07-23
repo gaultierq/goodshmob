@@ -13,7 +13,7 @@ import {LINEUP_PADDING, NAV_BACKGROUND_COLOR} from "../../UIStyles"
 import GSearchBar2 from "../../components/GSearchBar2"
 import SearchMotor from "../searchMotor"
 import ItemCell from "../../components/ItemCell"
-import {__createSearchItemSearcher} from "../../../helpers/SearchHelper"
+import {__createSearchItemSearcher, PERMISSION_EMPTY_INPUT} from "../../../helpers/SearchHelper"
 import SearchListResults from "../searchListResults"
 import BlankSearch, {renderBlankIcon} from "../../../ui/components/BlankSearch"
 
@@ -39,7 +39,7 @@ export default class SearchItemPageGeneric extends React.Component<SMP, SMS> {
             },
             search: {
                 search: __createSearchItemSearcher(props.category),
-                canSearch: searchOptions => Promise.resolve(!_.isEmpty(searchOptions.input))
+                missingSearchPermissions: searchOptions => _.isEmpty(searchOptions.input) ? PERMISSION_EMPTY_INPUT : null
             }
         }
     }

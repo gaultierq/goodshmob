@@ -4,7 +4,11 @@ import type {Node} from 'react'
 import React from 'react'
 import {StyleSheet, Text, TextInput, View,} from 'react-native'
 import type {SearchEngine,} from "../../../helpers/SearchHelper"
-import {__createAlgoliaSearcher, renderUser} from "../../../helpers/SearchHelper"
+import {
+    __createAlgoliaSearcher,
+    PERMISSION_EMPTY_INPUT,
+    renderUser
+} from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import {LINEUP_PADDING, NAV_BACKGROUND_COLOR} from "../../UIStyles"
 import GSearchBar2 from "../../components/GSearchBar2"
@@ -43,7 +47,7 @@ export default class SearchUserPage extends React.Component<SUP, SUS> {
                     index: AlgoliaClient.createAlgoliaIndex(Config.ALGOLIA_USER_INDEX),
                     parseResponse: createResultFromHit2,
                 }),
-                canSearch: searchOptions => Promise.resolve(!_.isEmpty(searchOptions.token))
+                missingSearchPermissions: searchOptions =>  _.isEmpty(searchOptions.input) ? PERMISSION_EMPTY_INPUT : null
             }
         }
     }

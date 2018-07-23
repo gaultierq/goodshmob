@@ -4,7 +4,10 @@ import type {Node} from 'react'
 import React from 'react'
 import {StyleSheet, Text, TextInput, View,} from 'react-native'
 import type {SearchEngine} from "../../../helpers/SearchHelper"
-import {__createSearchItemSearcher} from "../../../helpers/SearchHelper"
+import {
+    __createSearchItemSearcher,
+    PERMISSION_EMPTY_INPUT
+} from "../../../helpers/SearchHelper"
 import {LINEUP_PADDING, NAV_BACKGROUND_COLOR} from "../../UIStyles"
 import {getPosition, SearchPlacesOption} from "./searchplacesoption"
 import GSearchBar2 from "../../components/GSearchBar2"
@@ -46,7 +49,7 @@ export default class SearchItemPagePlaces extends React.Component<SMP, SMS> {
             },
             search: {
                 search: __createSearchItemSearcher('places'),
-                canSearch: searchOptions => Promise.resolve(!_.isEmpty(searchOptions.input))
+                missingSearchPermissions: searchOptions => _.isEmpty(searchOptions.input) ? PERMISSION_EMPTY_INPUT : null
             }
         }
     }

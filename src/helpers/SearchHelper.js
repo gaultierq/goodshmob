@@ -5,7 +5,6 @@ import * as React from 'react'
 import type {Id, Lineup, List, RNNNavigator, Saving, SearchToken, User} from "../types"
 import {Item, RequestState} from "../types"
 import BlankSearch, {renderBlankIcon} from "../ui/components/BlankSearch"
-import {AlgoliaClient, createResultFromHit, createResultFromHit2} from "./AlgoliaUtils"
 import Config from 'react-native-config'
 import {renderLineupFromOtherPeople} from "../ui/UIComponents"
 import {seeActivityDetails, seeUser} from "../ui/Nav"
@@ -13,7 +12,7 @@ import GTouchable from "../ui/GTouchable"
 import ItemCell from "../ui/components/ItemCell"
 import UserItem from "../ui/screens/userItem"
 import {StyleSheet} from "react-native"
-import {GeoPosition, getPosition} from "../ui/screens/search/searchplacesoption"
+import {GeoPosition} from "../ui/screens/search/searchplacesoption"
 import type {SearchItemsGenOptions} from "../ui/screens/search/SearchItemPageGeneric"
 import {buildData} from "./DataUtils"
 import * as Api from "../managers/Api"
@@ -34,12 +33,11 @@ export type SearchQuery = {
     options?: any
 }
 
-export type CannotSearchReason = string
+
 export type SearchEngine<SO> = {
     search: (searchOptions: SO, page: number,) => Promise<SearchResult>,
-
     //returns null if can search
-    canSearch: (searchOptions: SO) => Promise<?CannotSearchReason> | ?CannotSearchReason
+    missingSearchPermissions: (searchOptions: SO) => Node | null
 };
 export type SearchOptions = {
     token?: string,
@@ -86,6 +84,9 @@ export type SearchItemCategoryType = "consumer_goods" | "places" | "musics" | "m
 export type FRIEND_FILTER_TYPE = "me" | "friends" | "all" ;
 
 export const SEARCH_CATEGORIES_TYPE: SearchItemCategoryType[] = ["consumer_goods", "places", "musics", "movies"]
+
+
+export const PERMISSION_EMPTY_INPUT = 'empty_input'
 
 // wrong type, used for tests, FIXME
 // $FlowFixMe
@@ -148,14 +149,15 @@ function __searchItems<SO: SearchItemsGenOptions>(category: SearchCategoryType, 
     let fillOptions = (category: SearchCategoryType, call: Call, options: any) => {
         return new Promise((resolve, reject) => {
             if (category === 'places') {
-                getPosition(options).then(({latitude, longitude}) => {
-                    call.addQuery(latitude && {'search[lat]': latitude})
-                        .addQuery(longitude && {'search[lng]': longitude});
-                    resolve(call);
-                }, err => {
-                    console.debug("UNEXPECTED SEARCH ERROR: at this stage we should have position permission", err);
-                    reject(err)
-                });
+                resolve(call);
+                // getPosition(options).then(({latitude, longitude}) => {
+                //     call.addQuery(latitude && {'search[lat]': latitude})
+                //         .addQuery(longitude && {'search[lng]': longitude});
+                //     resolve(call);
+                // }, err => {
+                //     console.debug("UNEXPECTED SEARCH ERROR: at this stage we should have position permission", err);
+                //     reject(err)
+                // });
             } else {
                 resolve(call);
             }
@@ -221,16 +223,17 @@ export function __createAlgoliaSearcher<SO: any>(
         return new Promise((resolve, reject) => {
 
             let promise
-            if (config.geoSearch) {
-                promise = getPosition(searchOptions)
-                    .then((position) => {
-                        const aroundLatLng = `${position.lat}, ${position.lng}`
-                        query['aroundLatLng'] = aroundLatLng
-                        return config.index
-                    })
-            } else {
-                promise = Promise.resolve(config.index)
-            }
+            // if (config.geoSearch) {
+            //     promise = getPosition(searchOptions)
+            //         .then((position) => {
+            //             const aroundLatLng = `${position.lat}, ${position.lng}`
+            //             query['aroundLatLng'] = aroundLatLng
+            //             return config.index
+            //         })
+            // } else {
+            //     promise = Promise.resolve(config.index)
+            // }
+            promise = Promise.resolve(config.index)
 
             promise.then(index => {
                 index.search(query, (err, content) => {

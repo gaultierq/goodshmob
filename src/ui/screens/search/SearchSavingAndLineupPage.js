@@ -5,7 +5,7 @@ import React from 'react'
 import {StyleSheet, Text, TextInput, View,} from 'react-native'
 import type {SearchEngine,} from "../../../helpers/SearchHelper"
 import {
-    __createAlgoliaSearcher,
+    __createAlgoliaSearcher, PERMISSION_EMPTY_INPUT,
     renderItem,
     renderSavingOrLineup
 } from "../../../helpers/SearchHelper"
@@ -68,7 +68,7 @@ export default class SearchSavingAndLineupPage extends React.Component<SUP, SUS>
                     index: index,
                     parseResponse: createResultFromHit,
                 }),
-                canSearch: searchOptions => Promise.resolve(!_.isEmpty(searchOptions.token))
+                missingSearchPermissions: searchOptions => _.isEmpty(searchOptions.token) ? PERMISSION_EMPTY_INPUT : null
             }
         }
     }

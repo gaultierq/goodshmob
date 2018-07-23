@@ -30,6 +30,7 @@ type SMS = {
 }
 type SMP = {
     category: SearchItemCategoryType,
+    data: any
 }
 
 @connect(state => ({
@@ -66,7 +67,7 @@ export default class BrowseItemPageGeneric extends React.Component<SMP, SMS> {
                     index: index,
                     parseResponse: (hits) => createResultFromHit(hits, {}, true),
                 }),
-                canSearch: searchOptions => Promise.resolve(true)
+                missingSearchPermissions: searchOptions => null
             }
 
 

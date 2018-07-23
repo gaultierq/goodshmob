@@ -47,8 +47,8 @@ export type Props<SO> = {
 //options: page x location? x
 export type State = {
     searches: { [SearchKey]: SearchState},
-    searchKey: string,
-    cannot: ?CannotSearchReason,
+    searchKey?: string,
+    missingSearchPermission: Node | null,
 };
 
 // this guy is responsible for making search requests
@@ -56,7 +56,7 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
 
     state : State = {
         searches: {},
-        cannot: null
+        missingSearchPermission: null
     };
 
     static defaultProps = {index: 0, autoSearch: true, hideSearchBar: false};
@@ -103,10 +103,10 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
     }
 
     renderSearchPage(searchState: SearchState) {
-        const cannot = this.state.cannot || (_.isUndefined(searchState) ? 'blank' : null)
+        const missingSearchPermission = this.state.missingSearchPermission
 
-        if (cannot != null && this.props.renderBlank) {
-            return this.props.renderBlank(cannot)
+        if (missingSearchPermission != null) {
+            return missingSearchPermission
         }
 
         return this.props.renderResults(searchState, this.onLoadMore.bind(this))
@@ -145,40 +145,15 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
     async tryPerformSearch(searchOptions: SO, page: number) {
 
 
-        const {search, canSearch} = this.props.searchEngine;
+        const {search, missingSearchPermissions} = this.props.searchEngine;
         let generateSearchKey = this.generateSearchKey.bind(this)
 
-        // searchOptions.token = this.state.input || ''
-
         let searchKey = ''
-// <<<<<<< HEAD
-//         let prevSearchState: SearchState
-
-//         canSearch(searchOptions)
-//             .catch(err => {
-//                 console.log(`perform search aborted: cannot search`);
-//                 this.setState({searchKey: ''})
-//             })
-//             .then(() => {
-//                 console.log('searching')
-//                 searchKey = generateSearchKey(searchOptions)
-//                 this.setState({searchKey})
-
-//                 prevSearchState = this.getSearchState(searchKey)
-
-//                 let newState = {
-//                     requestState: 'sending',
-//                     page
-//                 }
-//                 this.updateSearchState(searchKey, newState)
-// // =======
         let prevSearchState: SearchState;
-// >>>>>>> rm aroundme from place selector
 
-
-        let cannot = await canSearch(searchOptions)
-        this.setState({cannot})
-        if (cannot) return
+        let missingSearchPermission = missingSearchPermissions(searchOptions)
+        this.setState({missingSearchPermission})
+        if (missingSearchPermission) return
 
 
         console.log('searching')

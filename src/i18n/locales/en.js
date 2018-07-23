@@ -77,7 +77,11 @@ export default {
             "me": "Me",
             "friends": "My friends",
             "all": "All",
-            "more_details": "Press for more details"
+            "more_details": "Press for more details",
+            missing_permission: "You must authorize geolocation to search around you",
+            settings_permission: "Open settings and enable geolocation",
+            retry: "Retry",
+            authorize: "Authorize geolocation"
         }
     },
     "shared":{

@@ -1,5 +1,5 @@
 // @flow
-
+import type {Node} from 'react'
 import React, {Component} from 'react'
 import {
     ActivityIndicator,
@@ -16,24 +16,32 @@ import {
 import {CheckBox} from 'react-native-elements'
 import GTouchable from "../../GTouchable"
 import {Colors} from "../../colors"
-import {NavStyles, SEARCH_INPUT_PROPS, SEARCH_INPUT_RADIUS, SEARCH_STYLES, SEARCH_STYLES_OBJ} from "../../UIStyles"
+import {
+    NavStyles,
+    renderSimpleButton,
+    SEARCH_INPUT_PROPS,
+    SEARCH_INPUT_RADIUS,
+    SEARCH_STYLES,
+    SEARCH_STYLES_OBJ
+} from "../../UIStyles"
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import {Navigation} from 'react-native-navigation'
 import {CANCELABLE_SEARCH_MODAL} from "../../Nav"
 import type {RNNNavigator} from "../../../types"
 import OpenAppSettings from "react-native-app-settings"
 import Geolocation from "../../../managers/GeoLocation"
+import Permissions from 'react-native-permissions'
 
 
-export type GeoPosition = {
-    lat?: number | null,
-    lng?: number | null,
-    aroundMe?: boolean
+export type GeoStatus = {
+    lat?: number,
+    lng?: number,
+    permissionError: string | null
 }
 
 export type SearchPlacesProps = {
     aroundMe?:boolean,
-    onNewOptions: GeoPosition => void,
+    onNewOptions: GeoStatus => void,
     onSearchSubmited?: void => void,
     navigator: RNNNavigator,
     ref?: IPositionSelector => void,
@@ -59,7 +67,7 @@ export const SEARCH_OPTIONS_PADDINGS = {
 
 //search query KEY: token x category x options
 export interface IPositionSelector {
-    getPosition(): Promise<GeoPosition>;
+    getPosition(): Promise<GeoStatus>;
 }
 
 export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState> implements IPositionSelector {
@@ -76,7 +84,6 @@ export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlace
         const aroundMe = !!props.aroundMe;
         this.state = {aroundMe};
         this.animation = new Animated.Value(1);
-        // props.onNewOptions(this.state);
         this.toggleAroundMe(aroundMe);
     }
 
@@ -84,6 +91,7 @@ export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlace
         if (this.props.ref) {
             this.props.ref(this)
         }
+        this.setStateAndNotify(this.state)
     }
 
     render() {
@@ -304,74 +312,65 @@ export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlace
     }
 
     async setStateAndNotify(newState: SearchPlacesState) {
-
         await this.setState(newState)
-        let position = await this.getPosition()
-        this.props.onNewOptions(position)
-    }
 
-    async getPosition() {
-        let {lat, lng, aroundMe} = this.state
-        let  geoPosition: GeoPosition
-        if (!aroundMe) {
-            //place position
-            let position = await Geolocation.getPosition()
-            geoPosition = {lat: position.latitude, lng: position.longitude}
-        }
-        else {
-            geoPosition = {lat, lng}
-        }
-        console.debug("position selector, getPosition:", geoPosition, this.state)
-        return geoPosition
-
-    }
-}
-
-export function getPositionOrAskPermission(options: any): Promise<GeoPosition> {
-    return new Promise((resolve, reject) => {
-        getPosition(options).then(({lat, lng}) => {
-            console.log('getPositionOrAskPermission', {lat, lng})
-            resolve({lat, lng});
-        }, err => {
-            console.debug("error detected", err);
-            // if (__IS_ANDROID__ err.msg === 'No location provider available.') {
-            // if (__IS_IOS__ && err.msg === 'User denied access to location services.') {
-            Alert.alert(
-                i18n.t("alert.position.title"),
-                i18n.t("alert.position.message"),
-                [
-                    {
-                        text: i18n.t('alert.position.button'),
-                        onPress: () => {
-                            OpenAppSettings.open()
-                        },
-                    },
-
-                ],
-                { cancelable: true }
-            );
-            reject(err)
-        });
-
-    });
-
-}
-
-export function getPosition(options: any = {}): Promise<any> {
-    if (options.aroundMe) {
-        return Geolocation.getPosition()
-            .then(position => {
-                return {lat: position.latitude, lng: position.longitude}
+        this.getPosition()
+            .then(geoPosition => {
+                this.props.onNewOptions(geoPosition)
             })
-    } else {
-        return new Promise((resolve, reject) => {
-            let {lat, lng} = options;
-            if (lat && lng) {
-                resolve({lat, lng});
-            }
-            else {
-                resolve({});
-            }
-        });
+
     }
+
+    getPosition(): Promise<GeoStatus> {
+        let {lat, lng, aroundMe} = this.state
+        let geoPosition: GeoStatus
+        if (aroundMe) {
+            return getCurrentGeoStatus()
+        } else {
+            geoPosition = {lat, lng, permissionError: null}
+            return Promise.resolve(geoPosition)
+        }
+    }
+
 }
+
+//
+function getCurrentGeoStatus(): Promise<GeoStatus> {
+    let geoPosition: GeoStatus
+    return Permissions.check('location').then(response => {
+
+        if (response !== 'authorized') {
+            geoPosition = {permissionError: response}
+            return Promise.resolve(geoPosition)
+        } else {
+            return Geolocation.getPosition()
+                .then(position => {
+                    geoPosition = {lat: position.latitude,
+                        lng: position.longitude,
+                        permissionError: null}
+                    return geoPosition
+                })
+        }
+    })
+}
+
+function askPermission(onUpdatedPosition: GeoStatus => void) {
+    Permissions.request('location')
+        .then((res)=> {
+            getCurrentGeoStatus()
+                .then(position => {
+                    onUpdatedPosition(position)
+                })
+        })
+}
+
+export function renderAskPermission(permissionError: string, onUpdatedPosition: GeoStatus => void): Node {
+    return <View>
+        <Text>{i18n.t("search.category.missing_permission")}</Text>
+
+        {permissionError === 'denied' && <Text>{i18n.t("search.category.settings_permission")}</Text>}
+        {permissionError === 'denied' && renderSimpleButton(i18n.t("search.category.retry"), () => askPermission(onUpdatedPosition))}
+        {permissionError === 'undetermined' && renderSimpleButton(i18n.t("search.category.authorize"), () => askPermission(onUpdatedPosition))}
+    </View>
+}
+

@@ -15,7 +15,7 @@ import {AlgoliaClient, createResultFromHit} from "../../../helpers/AlgoliaUtils"
 import Config from 'react-native-config'
 import {SocialScopeSelector} from "./socialscopeselector"
 import type {GeoPosition, IPositionSelector} from "./searchplacesoption"
-import {SearchPlacesOption} from "./searchplacesoption"
+import {SearchPlacesOption, renderAskPermission} from "./searchplacesoption"
 import type {RNNNavigator} from "../../../types"
 import SearchListResults from "../searchListResults"
 import GMap from "../../components/GMap"
@@ -23,23 +23,30 @@ import {Colors} from "../../colors"
 import ActionButton from "react-native-action-button"
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import Permissions from 'react-native-permissions'
+import {seeActivityDetails} from "../../Nav"
+import {renderSimpleButton} from "../../UIStyles"
+import type {SearchItemsGenOptions} from "./SearchItemPageGeneric"
 
 
 type SMS = {
     search: SearchEngine<BrowseItemsGenOptions>,
-    searchOptions: BrowseItemsGenOptions,
+    searchOptions: BrowseItemsPlacesOptions,
     mapDisplay: boolean
 
 }
 
 type SMP = {
-    navigator: RNNNavigator
+    navigator: RNNNavigator,
+    data: any
 }
 export type BrowseItemsGenOptions = {
     algoliaFilter?: string,
+}
+
+export type BrowseItemsPlacesOptions = BrowseItemsGenOptions & {
     lat?: number,
     lng?: number,
-    aroundMe: boolean
+    permissionError: string | null
 }
 
 @connect(state => ({
@@ -76,7 +83,7 @@ export default class BrowseItemPagePlaces extends React.Component<SMP, SMS> {
             mapDisplay: false,
             searchOptions: {
                 algoliaFilter: makeBrowseAlgoliaFilter2('me', 'places', this.getUser()),
-                aroundMe: true,
+                permissionError: null,
             },
             search: {
                 search: __createAlgoliaSearcher({
@@ -84,20 +91,10 @@ export default class BrowseItemPagePlaces extends React.Component<SMP, SMS> {
                     geoSearch: true,
                     parseResponse: (hits) => createResultFromHit(hits, {}, true),
                 }),
-                canSearch: async searchOptions => {
-                    if (searchOptions.lat && searchOptions.lng) return null
-                    let hasPermissions = await Permissions.check('location')
-                    console.log("hasPermissions", hasPermissions)
-                    if (hasPermissions) {
-                        switch (hasPermissions) {
-                            // authorized', 'denied', 'restricted', or 'undetermined'
-                            case "authorized": return null
-                            case "denied": return "location_permissions_denied"
-                            case "restricted": return "location_permissions_restricted"
-                            case "undetermined": return "location_permissions_undetermined"
-                        }
-                    }
-                    return "unknown"
+                missingSearchPermissions: searchOptions => {
+                    if (!searchOptions.permissionError) return null
+
+                    return renderAskPermission(searchOptions.permissionError, (status) => this.setState({searchOptions: {...this.state.searchOptions, ...status}}))
                 }
             }
         }
@@ -130,35 +127,35 @@ export default class BrowseItemPagePlaces extends React.Component<SMP, SMS> {
                     renderResults={this._renderResults}
                     searchOptions={this.state.searchOptions}
                     ref={ref => this.motor = ref}
-                    renderBlank={cannot => {
-                        if (cannot === 'location_permissions_undetermined') {
-                            return (
-                                <View>
-                                    <Text>#please give the permissions</Text>
-                                    <Button
-                                        title="#ask permissions"
-                                        onPress={async () => {
-                                            console.info("asking for location permissions result")
-                                            let res = await Permissions.request('location')
-                                            console.info("location permissions result", res)
-                                            if (res === 'authorized') {
-                                                let position = await this.positionSelector.getPosition()
-                                                let {lat, lng} = position
-                                                this.setState({searchOptions: {...this.state.searchOptions, lat, lng}})
-                                            }
-                                            else {
-                                                console.warn("location permissions result case not handled", res)
-                                                //what to do, what to do
-                                            }
-
-                                        }}
-                                    />
-                                </View>
-                            )
-
-                        }
-                        return <View><Text>{cannot}</Text></View>
-                    }}
+                    // renderBlank={cannot => {
+                    //     if (cannot === 'location_permissions_undetermined') {
+                    //         return (
+                    //             <View>
+                    //                 <Text>#please give the permissions</Text>
+                    //                 <Button
+                    //                     title="#ask permissions"
+                    //                     onPress={async () => {
+                    //                         console.info("asking for location permissions result")
+                    //                         let res = await Permissions.request('location')
+                    //                         console.info("location permissions result", res)
+                    //                         if (res === 'authorized') {
+                    //                             let position = await this.positionSelector.getPosition()
+                    //                             let {lat, lng} = position
+                    //                             this.setState({searchOptions: {...this.state.searchOptions, lat, lng}})
+                    //                         }
+                    //                         else {
+                    //                             console.warn("location permissions result case not handled", res)
+                    //                             //what to do, what to do
+                    //                         }
+                    //
+                    //                     }}
+                    //                 />
+                    //             </View>
+                    //         )
+                    //
+                    //     }
+                    //     return <View><Text>{cannot}</Text></View>
+                    // }}
                 />
 
                 <ActionButton buttonColor="rgba(231,76,60,1)"
@@ -172,11 +169,10 @@ export default class BrowseItemPagePlaces extends React.Component<SMP, SMS> {
     }
 
     _renderResults = (state: SearchState) => {
-        if (this.state.mapDisplay) return <GMap searchState={state}/>
+        if (this.state.mapDisplay) return <GMap searchState={state} onItemPressed={(item) => seeActivityDetails(this.props.navigator, item)}/>
         else return <SearchListResults searchState={state} renderItem={renderItem.bind(this)}/>
     }
 
-//to factorize
 
 
     //TODO: use selector
