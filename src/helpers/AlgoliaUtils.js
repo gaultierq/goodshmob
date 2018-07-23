@@ -113,18 +113,6 @@ export function makeAlgoliaSearchEngine(categories: Array<SearchCategory>,
     };
     return {
         search,
-        generateSearchKey: (category: SearchCategoryType, searchOptions: SearchOptions) => {
-            return `${category}_${searchOptions.token}`
-        },
-        canSearch: (category: SearchCategoryType, searchOptions: SearchOptions) => {
-            return new Promise((resolve, reject) => {
-                if (withoutToken || !_.isEmpty(searchOptions.token)) {
-                    resolve()
-                } else {
-                    reject()
-                }
-            })
-        }
     };
 }
 
