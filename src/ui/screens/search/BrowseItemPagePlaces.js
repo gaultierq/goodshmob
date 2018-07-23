@@ -24,8 +24,6 @@ import ActionButton from "react-native-action-button"
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import Permissions from 'react-native-permissions'
 import {seeActivityDetails} from "../../Nav"
-import {renderSimpleButton} from "../../UIStyles"
-import type {SearchItemsGenOptions} from "./SearchItemPageGeneric"
 
 
 type SMS = {
@@ -83,7 +81,7 @@ export default class BrowseItemPagePlaces extends React.Component<SMP, SMS> {
             mapDisplay: false,
             searchOptions: {
                 algoliaFilter: makeBrowseAlgoliaFilter2('me', 'places', this.getUser()),
-                permissionError: null,
+                permissionError: 'not-asked',
             },
             search: {
                 search: __createAlgoliaSearcher({
@@ -92,7 +90,7 @@ export default class BrowseItemPagePlaces extends React.Component<SMP, SMS> {
                     parseResponse: (hits) => createResultFromHit(hits, {}, true),
                 }),
                 missingSearchPermissions: searchOptions => {
-                    if (!searchOptions.permissionError) return null
+                    if (!searchOptions.permissionError && searchOptions.lat && searchOptions.lng) return null
 
                     return renderAskPermission(searchOptions.permissionError, (status) => this.setState({searchOptions: {...this.state.searchOptions, ...status}}))
                 }

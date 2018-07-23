@@ -150,14 +150,9 @@ function __searchItems<SO: SearchItemsGenOptions>(category: SearchCategoryType, 
         return new Promise((resolve, reject) => {
             if (category === 'places') {
                 resolve(call);
-                // getPosition(options).then(({latitude, longitude}) => {
-                //     call.addQuery(latitude && {'search[lat]': latitude})
-                //         .addQuery(longitude && {'search[lng]': longitude});
-                //     resolve(call);
-                // }, err => {
-                //     console.debug("UNEXPECTED SEARCH ERROR: at this stage we should have position permission", err);
-                //     reject(err)
-                // });
+                call.addQuery({'search[lat]': options.lat})
+                    .addQuery({'search[lng]': options.lng});
+                    resolve(call);
             } else {
                 resolve(call);
             }
@@ -214,28 +209,20 @@ export function __createAlgoliaSearcher<SO: any>(
 
         //searching
         const token = searchOptions.token || ''
-        console.log(`algolia: searching ${token}`, searchOptions);
 
         let query = {
             ...config.query, filters: searchOptions.algoliaFilter, page, query: token,
         }
+        if (config.geoSearch) {
+            const aroundLatLng = `${searchOptions.lat}, ${searchOptions.lng}`
+            query['aroundLatLng'] = aroundLatLng
+        }
+
+        console.log(`algolia: searching ${token}`, searchOptions, query);
 
         return new Promise((resolve, reject) => {
 
-            let promise
-            // if (config.geoSearch) {
-            //     promise = getPosition(searchOptions)
-            //         .then((position) => {
-            //             const aroundLatLng = `${position.lat}, ${position.lng}`
-            //             query['aroundLatLng'] = aroundLatLng
-            //             return config.index
-            //         })
-            // } else {
-            //     promise = Promise.resolve(config.index)
-            // }
-            promise = Promise.resolve(config.index)
-
-            promise.then(index => {
+            config.index.then(index => {
                 index.search(query, (err, content) => {
 
                     if (err) {
