@@ -43,6 +43,7 @@
 		"is-mergeable-object": "^1.1.0",
 		"json-api-normalizer": "^0.4.5",
 		"lodash": "^4.17.4",
+		"memoize-one": "^4.0.0",
 		"multimap": "^1.0.2",
 		"plist": "^2.1.0",
 		"ramda": "^0.24.1",

@@ -1,11 +1,10 @@
 //@flow
 import React, {Component} from 'react'
-import {ActivityIndicator, Image, View, Text} from 'react-native'
-import MapView, {Marker, Callout} from 'react-native-maps'
+import {ActivityIndicator, Image, Text, View} from 'react-native'
+import MapView, {Callout, Marker} from 'react-native-maps'
 import type {SearchState} from "../../helpers/SearchHelper"
-import {Activity} from "../../types"
-import {renderSimpleButton} from "../UIStyles"
-import {seeActivityDetails} from "../Nav"
+import memoize from "memoize-one";
+
 
 export type Props = {
     searchState: SearchState,
@@ -14,7 +13,9 @@ export type Props = {
 };
 
 type State = {
-};
+
+}
+
 type Region = {
     latitude: number,
     longitude: number,
@@ -25,20 +26,35 @@ type Region = {
 
 export default class GMap extends Component<Props, State>  {
 
-    mapRef: Node
-    center: Region
+    getCenter = memoize(data => GMap.getCenter(data))
+    getData = memoize(data => _.flatten(data))
 
-    static defaultProps = {
+    render() {
+        const requestState = _.get(this.props, 'searchState.requestState', [])
 
-    };
+        const data = this.getData(_.get(this.props, 'searchState.data', []))
 
-    setRef(ref: Node) {
-        if (ref != null) {
-            this.mapRef = ref
-        }
+        return (
+            <View style={{flex:1, marginTop: 5}}>
+                <MapView
+                    style={{flex:1}}
+                    provider={'google'}
+                    region={this.getCenter(data)}>
+                    {data && data.map((result, i) => {
+                        return this.renderMarker(i, result)
+                    })}
+                </MapView>
+                {requestState === 'sending' && <ActivityIndicator
+                    animating={true}
+                    size="large"
+                    style={{position: 'absolute', bottom: 30, left: 20}}
+                />
+                }
+            </View>
+        )
     }
 
-    getCenter(data: []): Region {
+    static getCenter(data: []): Region {
         const latitudes = data.map((item) => {
             item = item.resource || item
             return item.description.latitude
@@ -60,7 +76,10 @@ export default class GMap extends Component<Props, State>  {
     }
 
     renderMarker(key: number, result: any) {
+        //Q to E: un peu strange ca; add a type for result ?
         const item = result.resource || result
+
+        //Q to E: MagicString
         const userInfo = result.user ? ` by ${result.user.first_name} ${result.user.last_name}` : ''
         const title = `${item.title}${userInfo}`
         const description = item.description.address
@@ -76,33 +95,6 @@ export default class GMap extends Component<Props, State>  {
                 </View>
             </Callout>
         </Marker>
-    }
-
-    render() {
-        const requestState = _.get(this.props, 'searchState.requestState', [])
-
-        const data = _.flatten(_.get(this.props, 'searchState.data', []))
-
-        if (requestState === 'ok') {
-            this.center = this.getCenter(data)
-        }
-        return (<View style={{flex:1, marginTop: 5}}>
-                <MapView
-                    style={{flex:1}}
-                    provider={'google'}
-                    region={this.center}
-                    ref={this.setRef}>
-                    {data && data.map((result, i) => {
-                        return this.renderMarker(i, result)
-                    })}
-                </MapView>
-                {requestState === 'sending' && <ActivityIndicator
-                    animating={true}
-                    size="large"
-                    style={{position: 'absolute', bottom: 30, left: 20}}
-                />}
-            </View>
-        );
     }
 
 }
