@@ -75,7 +75,7 @@ export default class SearchSavingAndLineupPage extends React.Component<SUP, SUS>
 
     render() {
         return (
-            <View>
+            <View style={{flex: 1}}>
                 <GSearchBar2
                     onChangeText={(token: string)  => {this.setState({searchOptions: {...this.state.searchOptions, token}})}}
                     value={this.state.searchOptions.token}
