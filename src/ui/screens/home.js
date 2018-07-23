@@ -19,7 +19,7 @@ import {
 
 import {connect} from "react-redux"
 import type {Id, RNNNavigator, Saving} from "../../types"
-import {TAB_BAR_PROPS} from "../UIStyles"
+import {TAB_BAR_PROPS, TAB_BAR_STYLES} from "../UIStyles"
 import {currentGoodshboxId, currentUser, logged} from "../../managers/CurrentUser"
 import {CheckBox} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation'
@@ -36,6 +36,7 @@ import MyInterests from "./MyInterests"
 import {fullName2} from "../../helpers/StringUtils"
 import {currentUserFilter} from "../../redux/selectors"
 import NotificationManager from '../../managers/NotificationManager'
+import {Colors} from "../colors"
 
 type Props = {
     userId: Id,
@@ -234,7 +235,19 @@ export default class HomeScreen extends Screen<Props, State> {
                     style={{flex: 1}}
                     navigationState={{...this.state, visible: this.isVisible()}}
                     renderScene={this.renderScene.bind(this)}
-                    renderTabBar={props => <TabBar {...TAB_BAR_PROPS} {...props}/>}
+                    renderTabBar={props => (
+                        <TabBar
+                            renderLabel={({route}) => (
+                                <Text
+                                    style={[TAB_BAR_STYLES.label, {color: this.isFocused(route) ? Colors.green : Colors.black}]}>
+                                    {_.toUpper(route.title)}
+                                </Text>
+                            )
+                            }
+                            {...TAB_BAR_PROPS}
+                            {...props}
+                        />
+                    )}
                     renderPager={props => <PagerPan {...props} />}
                     swipeEnabled={false}
                     onIndexChange={index => {
@@ -255,8 +268,7 @@ export default class HomeScreen extends Screen<Props, State> {
     }
 
     renderScene({ route}: *) {
-        let ix = ROUTES.indexOf(route)
-        let focused = this.state.index === ix
+        let focused = this.isFocused(route)
         switch (route.key) {
 
             case 'my_goodsh':
@@ -289,6 +301,12 @@ export default class HomeScreen extends Screen<Props, State> {
         }
     }
 
+
+    isFocused(route) {
+        let ix = ROUTES.indexOf(route)
+        let focused = this.state.index === ix
+        return focused
+    }
 
     renderTip() {
         const currentTip = this.state.currentTip;

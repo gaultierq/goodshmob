@@ -267,8 +267,7 @@ export const SEARCH_INPUT_PROPS = {
     underlineColorAndroid: 'transparent'
 };
 
-
-let TAB_BAR_STYLES = StyleSheet.create({
+export let TAB_BAR_STYLES = StyleSheet.create({
     tabbar: {
         // backgroundColor: Colors.white,
         backgroundColor: NavStyles.navBarBackgroundColor,
@@ -296,6 +295,7 @@ export const TAB_BAR_PROPS = {
     indicatorStyle: TAB_BAR_STYLES.indicator,
     style: TAB_BAR_STYLES.tabbar,
     tabStyle: TAB_BAR_STYLES.tab,
-    labelStyle: TAB_BAR_STYLES.label,
+    labelStyle: TAB_BAR_STYLES.label
 }
+
 
