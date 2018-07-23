@@ -11,24 +11,64 @@ export type Props = {
 
 type State = {
 };
+type Region = {
+    latitude: number,
+    longitude: number,
+    latitudeDelta: number,
+    longitudeDelta: number,
+}
 
 
 export default class GMap extends Component<Props, State>  {
+
+    mapRef: Node
+    center: Region
 
     static defaultProps = {
 
     };
 
+    setRef(ref: Node) {
+        if (ref != null) {
+            this.mapRef = ref
+        }
+    }
+
+    getCenter(data: []): Region {
+        const latitudes = data.map((item) => {
+            item = item.resource || item
+            return item.description.latitude
+        })
+        const longitudes = data.map((item) => {
+            item = item.resource || item
+            return item.description.longitude
+        })
+
+        const maxLatitude = _.max(latitudes)
+        const minLatitude = _.min(latitudes)
+        const maxLongitude = _.max(longitudes)
+        const minLongitude = _.min(longitudes)
+
+        return {latitude: (maxLatitude + minLatitude) / 2,
+            longitude: (maxLongitude + minLongitude) / 2,
+            latitudeDelta: (maxLatitude - minLatitude) * 2,
+            longitudeDelta: (maxLongitude - minLongitude) * 2}
+    }
+
     render() {
-        console.log('searchState', this.props.searchState)
         const requestState = _.get(this.props, 'searchState.requestState', [])
 
         const data = _.flatten(_.get(this.props, 'searchState.data', []))
+
+        if (requestState === 'ok') {
+            this.center = this.getCenter(data)
+        }
         return (<View style={{flex:1, marginTop: 5}}>
                 <MapView
                     style={{flex:1}}
                     provider={'google'}
-                    ref={this.props.setRef}>
+                    region={this.center}
+                    ref={this.setRef}>
                     {data && data.map(function (result, i) {
 
                         const item = result.resource || result
