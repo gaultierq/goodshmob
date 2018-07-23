@@ -76,7 +76,8 @@ export default {
         category: {
             "me": "Moi",
             "friends": "Mes amis",
-            "all": "Tous"
+            "all": "Tous",
+            "more_details": "Appuyer pour plus de détails"
         }
     },
     "shared":{
