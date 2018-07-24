@@ -297,14 +297,15 @@ export let getFollowButton = (lineup: Lineup) => {
 }
 
 export const ADD_ITEM_RIGHT_BUTTON = (id: string) => ({
-    icon: require('../img2/add.png'),
-    // disableIconTint: true,
+    icon: require('../img2/add_green.png'),
+    disableIconTint: true,
     id: 'add_' + id
 })
 
 export const FOLLOW_RIGHT_BUTTON = (id: string) => ({
     title: i18n.t('actions.follow'),
-    id: 'follow_' + id
+    id: 'follow_' + id,
+    buttonColor: Colors.green
 })
 
 export const UNFOLLOW_RIGHT_BUTTON = (id: string) => ({

@@ -77,9 +77,9 @@ export default class LineupNav extends Component<Props, State> {
                 alignItems: 'center',
                 justifyContent: 'center'}
             }>
-                <Avatar
-                    user={user}
-                    size={imageDim}/>
+                {/*<Avatar*/}
+                    {/*user={user}*/}
+                    {/*size={imageDim}/>*/}
                 <Text style={{
                     fontSize: 17,
                     fontFamily: SFP_TEXT_MEDIUM,
