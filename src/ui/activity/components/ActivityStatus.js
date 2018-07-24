@@ -82,12 +82,16 @@ export default class ActivityStatus extends React.Component<Props, State> {
                                 {
                                     this.props.withMenu && <GTouchable style={{
                                         // backgroundColor: 'red',
-                                        padding: 10,
+                                        alignSelf: 'flex-start',
+                                        paddingHorizontal: 10,
+                                        paddingVertical: 10,
                                     }} onPress={()=>{
                                         let u = this.getMainUrl(activity)
                                         this.showResourceActions(u)
                                     }}>
-                                        <Image source={require("../../../img2/sidedots.png")} />
+                                        <Image
+                                            style={{tintColor: Colors.greyishBrown}}
+                                            source={require("../../../img2/sidedots.png")} />
                                     </GTouchable>
                                 }
 
