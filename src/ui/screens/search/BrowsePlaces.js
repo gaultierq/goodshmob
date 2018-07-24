@@ -131,35 +131,6 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
                     renderResults={this._renderResults}
                     searchOptions={this.state.searchOptions}
                     ref={ref => this.motor = ref}
-                    // renderBlank={cannot => {
-                    //     if (cannot === 'location_permissions_undetermined') {
-                    //         return (
-                    //             <View>
-                    //                 <Text>#please give the permissions</Text>
-                    //                 <Button
-                    //                     title="#ask permissions"
-                    //                     onPress={async () => {
-                    //                         console.info("asking for location permissions result")
-                    //                         let res = await Permissions.request('location')
-                    //                         console.info("location permissions result", res)
-                    //                         if (res === 'authorized') {
-                    //                             let position = await this.positionSelector.getPosition()
-                    //                             let {lat, lng} = position
-                    //                             this.setState({searchOptions: {...this.state.searchOptions, lat, lng}})
-                    //                         }
-                    //                         else {
-                    //                             console.warn("location permissions result case not handled", res)
-                    //                             //what to do, what to do
-                    //                         }
-                    //
-                    //                     }}
-                    //                 />
-                    //             </View>
-                    //         )
-                    //
-                    //     }
-                    //     return <View><Text>{cannot}</Text></View>
-                    // }}
                 />
 
                 <ActionButton buttonColor="rgba(231,76,60,1)"

@@ -3,10 +3,14 @@
 import type {Node} from 'react'
 import React from 'react'
 import {StyleSheet, Text, TextInput, View,} from 'react-native'
-import type {SearchEngine} from "../../../helpers/SearchHelper"
+import type {SearchEngine, SearchState} from "../../../helpers/SearchHelper"
 import {
     __createSearchItemSearcher,
-    PERMISSION_EMPTY_INPUT, PERMISSION_EMPTY_POSITION, renderResource
+    PERMISSION_EMPTY_INPUT,
+    PERMISSION_EMPTY_POSITION,
+    renderItem,
+    renderResource,
+    onNewItemSelected
 } from "../../../helpers/SearchHelper"
 import {LINEUP_PADDING, NAV_BACKGROUND_COLOR} from "../../UIStyles"
 import {
@@ -25,6 +29,8 @@ import {Colors} from "../../colors"
 import ActionButton from "react-native-action-button"
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import BlankSearch, {renderBlankIcon} from "../../../ui/components/BlankSearch"
+import {seeActivityDetails} from "../../Nav"
+import GMap from "../../components/GMap"
 
 export type SearchItemsPlacesOptions = SearchItemsGenOptions & {
     lat?: ?number,
@@ -105,10 +111,7 @@ export default class SearchPlaces extends React.Component<SMP, SMS> {
 
                 <SearchMotor
                     searchEngine={this.state.search}
-                    renderResults={(state, onLoadMore) => <SearchListResults
-                        searchState={state}
-                        renderItem={renderResource.bind(this)}
-                    />}
+                    renderResults={this._renderResults}
                     searchOptions={this.state.searchOptions}
                 />
 
@@ -120,6 +123,12 @@ export default class SearchPlaces extends React.Component<SMP, SMS> {
                 />
             </View>
         )
+    }
+
+    _renderResults = (state: SearchState) => {
+        if (this.state.mapDisplay) return <GMap searchState={state} onItemPressed={(item) => onNewItemSelected(item, this.props.navigator)}/>
+
+        return <SearchListResults searchState={state} renderItem={renderResource.bind(this)}/>
     }
 }
 

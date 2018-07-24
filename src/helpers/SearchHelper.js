@@ -49,7 +49,6 @@ export const PERMISSION_EMPTY_POSITION = 'empty_position'
 
 export type SearchOptions = {
     token?: string,
-    aroundMe?: boolean,
     place?: string,
     lat?: number,
     lng?: number,
@@ -310,7 +309,7 @@ export function renderItem({item}: {item: Saving}) {
 }
 
 
-function onNewItemSelected(item: Item, navigator: RNNNavigator) {
+export function onNewItemSelected(item: Item, navigator: RNNNavigator) {
     let cancel = navigator.dismissAllModals
 
     navigator.showModal({
