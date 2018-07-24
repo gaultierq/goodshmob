@@ -35,6 +35,7 @@ import RNProgressHUB from 'react-native-progresshub'
 import {actions as userActions, actionTypes as userActionTypes} from "./redux/UserActions"
 import firebase from 'react-native-firebase'
 import {Alert, AsyncStorage, Dimensions, Linking, StyleSheet, TouchableOpacity, ToastAndroid} from 'react-native'
+import {NAV_BACKGROUND_COLOR} from "./ui/UIStyles"
 
 type AppMode = 'idle' | 'init_cache' | 'logged' | 'unlogged' | 'upgrading_cache' | 'unknown'
 type AppConfig = {
@@ -481,7 +482,7 @@ export default class App {
         let tabsStyle = { // optional, add this if you want to style the tab bar beyond the defaults
             tabBarButtonColor: Colors.black, // optional, change the color of the tab icons and text (also unselected)
             tabBarSelectedButtonColor: Colors.green, // optional, change the color of the selected tab icon and text (only selected)
-            tabBarBackgroundColor: 'white',
+            tabBarBackgroundColor: NAV_BACKGROUND_COLOR,
             forceTitlesDisplay: false,
             initialTabIndex: 0,
         };

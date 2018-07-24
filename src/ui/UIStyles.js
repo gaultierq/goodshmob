@@ -9,8 +9,8 @@ import GTouchable from "./GTouchable"
 import type {ViewStyle} from "../types"
 import {TextStyle} from "../types"
 
-export const BACKGROUND_COLOR = Colors.dirtyWhite2;
-export const NAV_BACKGROUND_COLOR = Colors.white;
+export const BACKGROUND_COLOR = Colors.white;
+export const NAV_BACKGROUND_COLOR = Colors.dirtyWhite;
 
 export const NavStyles = {
     navBarButtonColor: Colors.greyishBrown,
