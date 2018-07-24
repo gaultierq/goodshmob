@@ -29,7 +29,7 @@ type SMP = {
     placeholder: string
 }
 
-export default class SearchItemPageGeneric extends React.Component<SMP, SMS> {
+export default class SearchGeneric extends React.Component<SMP, SMS> {
 
     constructor(props: SMP) {
         super(props)
@@ -43,10 +43,16 @@ export default class SearchItemPageGeneric extends React.Component<SMP, SMS> {
                     if (!_.isEmpty(searchOptions.input)) {
                         return null
                     }
-                    return <BlankSearch
-                        icon={renderBlankIcon(this.props.category)}
-                        text={i18n.t("search_item_screen.placeholder." + this.props.category)}
-                    />
+                    return PERMISSION_EMPTY_INPUT
+                },
+                renderMissingPermission: (searchOptions, missingPermission) => {
+                    if (missingPermission === PERMISSION_EMPTY_INPUT) {
+                        return <BlankSearch
+                            icon={renderBlankIcon(this.props.category)}
+                            text={i18n.t("search_item_screen.placeholder." + this.props.category)}
+                        />
+                    }
+                    return <View/>
                 }
             }
         }

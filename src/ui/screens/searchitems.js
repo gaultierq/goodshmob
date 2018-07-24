@@ -24,8 +24,8 @@ import {TAB_BAR_PROPS} from "../UIStyles"
 import {TabView} from "react-native-tab-view"
 import TabBar from "react-native-tab-view/src/TabBar"
 import PagerPan from "react-native-tab-view/src/PagerPan"
-import SearchItemPageGeneric from "./search/SearchItemPageGeneric"
-import SearchItemPagePlaces from "./search/SearchItemPagePlaces"
+import SearchGeneric from "./search/SearchGeneric"
+import SearchPlaces from "./search/SearchPlaces"
 
 
 type Props = {
@@ -73,8 +73,8 @@ export default class SearchItems extends Screen<Props, State> {
         let ix = ROUTES.indexOf(route)
         let focused = this.state.index === ix
         switch (route.key) {
-            case 'places': return <SearchItemPagePlaces navigator={this.props.navigator}/>
-            default: return <SearchItemPageGeneric  navigator={this.props.navigator} category={route.key} placeholder={"# " + route.key}/>
+            case 'places': return <SearchPlaces navigator={this.props.navigator}/>
+            default: return <SearchGeneric navigator={this.props.navigator} category={route.key} placeholder={"# " + route.key}/>
         }
     }
 

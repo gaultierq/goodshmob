@@ -37,7 +37,7 @@ type SMP = {
     data: state.data,
 }))
 @logged
-export default class BrowseItemPageGeneric extends React.Component<SMP, SMS> {
+export default class BrowseGeneric extends React.Component<SMP, SMS> {
 
     constructor(props: SMP) {
         super(props)
@@ -61,6 +61,7 @@ export default class BrowseItemPageGeneric extends React.Component<SMP, SMS> {
 
         this.state = {
             searchOptions: {
+                algoliaFilter: makeBrowseAlgoliaFilter2('me', this.props.category, this.getUser())
             },
             search: {
                 search: __createAlgoliaSearcher({

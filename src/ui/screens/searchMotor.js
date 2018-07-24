@@ -48,7 +48,7 @@ export type Props<SO> = {
 export type State = {
     searches: { [SearchKey]: SearchState},
     searchKey?: string,
-    missingSearchPermission: Node | null,
+    missingSearchPermission: ?string,
 };
 
 // this guy is responsible for making search requests
@@ -106,9 +106,10 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
 
     renderSearchPage(searchState: SearchState) {
         const missingSearchPermission = this.state.missingSearchPermission
+        const engine = this.props.searchEngine
 
-        if (missingSearchPermission != null) {
-            return missingSearchPermission
+        if (missingSearchPermission != null && engine.renderMissingPermission) {
+            return engine.renderMissingPermission(this.props.searchOptions, missingSearchPermission)
         }
 
         return this.props.renderResults(searchState, this.onLoadMore.bind(this))
@@ -155,7 +156,6 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
 
         let missingSearchPermission = missingSearchPermissions(searchOptions)
         this.setState({missingSearchPermission})
-        console.log('missingSearchPermission', missingSearchPermission)
         if (missingSearchPermission) return
 
 

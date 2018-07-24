@@ -18,6 +18,7 @@ import {AlgoliaClient, createResultFromHit2} from "./../../../helpers/AlgoliaUti
 import Config from 'react-native-config'
 import {currentUserId} from "../../../managers/CurrentUser"
 import SearchListResults from "../searchListResults"
+import BlankSearch, {renderBlankIcon} from "../../components/BlankSearch"
 
 export type SearchUserOptions = {
     token: string
@@ -47,14 +48,23 @@ export default class SearchUserPage extends React.Component<SUP, SUS> {
                     index: AlgoliaClient.createAlgoliaIndex(Config.ALGOLIA_USER_INDEX),
                     parseResponse: createResultFromHit2,
                 }),
-                missingSearchPermissions: searchOptions =>  _.isEmpty(searchOptions.input) ? PERMISSION_EMPTY_INPUT : null
+                missingSearchPermissions: searchOptions =>  _.isEmpty(searchOptions.token) ? PERMISSION_EMPTY_INPUT : null,
+                renderMissingPermission: (searchOptions, missingSearchPermission): Node => {
+                    if (missingSearchPermission === PERMISSION_EMPTY_INPUT) {
+                        return <BlankSearch
+                            icon={renderBlankIcon('users')}
+                            text={i18n.t("search_item_screen.placeholder.users")}
+                        />
+                    }
+                    return <View/>
+                }
             }
         }
     }
 
     render() {
         return (
-            <View>
+            <View style={{flex: 1}}>
                 <GSearchBar2
                     onChangeText={(token: string)  => {this.setState({searchOptions: {...this.state.searchOptions, token}})}}
                     value={_.get(this.state, this.state.searchOptions.token)}

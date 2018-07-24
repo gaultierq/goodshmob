@@ -13,7 +13,7 @@ import ItemCell from "../ui/components/ItemCell"
 import UserItem from "../ui/screens/userItem"
 import {StyleSheet} from "react-native"
 import {GeoPosition} from "../ui/screens/search/searchplacesoption"
-import type {SearchItemsGenOptions} from "../ui/screens/search/SearchItemPageGeneric"
+import type {SearchItemsGenOptions} from "../ui/screens/search/SearchGeneric"
 import {buildData} from "./DataUtils"
 import * as Api from "../managers/Api"
 import {Call} from "../managers/Api"
@@ -37,8 +37,13 @@ export type SearchQuery = {
 export type SearchEngine<SO> = {
     search: (searchOptions: SO, page: number,) => Promise<SearchResult>,
     //returns null if can search
-    missingSearchPermissions: (searchOptions: SO) => Node | null
+    missingSearchPermissions: (searchOptions: SO) => ?string,
+    renderMissingPermission?: (searchOptions: SO, missingPermission: string) => Node
 };
+
+export const PERMISSION_EMPTY_INPUT = 'empty_input'
+
+
 export type SearchOptions = {
     token?: string,
     aroundMe?: boolean,
@@ -86,7 +91,6 @@ export type FRIEND_FILTER_TYPE = "me" | "friends" | "all" ;
 export const SEARCH_CATEGORIES_TYPE: SearchItemCategoryType[] = ["consumer_goods", "places", "musics", "movies"]
 
 
-export const PERMISSION_EMPTY_INPUT = 'empty_input'
 
 // wrong type, used for tests, FIXME
 // $FlowFixMe

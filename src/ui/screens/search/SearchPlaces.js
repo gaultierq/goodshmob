@@ -14,7 +14,7 @@ import GSearchBar2 from "../../components/GSearchBar2"
 import SearchMotor from "../searchMotor"
 import ItemCell from "../../components/ItemCell"
 import type {RNNNavigator} from "../../../types"
-import type {SearchItemsGenOptions} from "./SearchItemPageGeneric"
+import type {SearchItemsGenOptions} from "./SearchGeneric"
 import type {GeoPosition} from "./searchplacesoption"
 import SearchListResults from "../searchListResults"
 import {Colors} from "../../colors"
@@ -37,7 +37,7 @@ type SMP = {
     navigator: RNNNavigator
 }
 
-export default class SearchItemPagePlaces extends React.Component<SMP, SMS> {
+export default class SearchPlaces extends React.Component<SMP, SMS> {
 
 
     constructor(props: SMP) {
@@ -53,10 +53,16 @@ export default class SearchItemPagePlaces extends React.Component<SMP, SMS> {
                     if (!_.isEmpty(searchOptions.input)) {
                         return null
                     }
-                    return <BlankSearch
-                        icon={renderBlankIcon('places')}
-                        text={i18n.t("search_item_screen.placeholder.places")}
-                    />
+                    return PERMISSION_EMPTY_INPUT
+                },
+                renderMissingPermission: (searchOptions, missingPermission) => {
+                    if (missingPermission === PERMISSION_EMPTY_INPUT) {
+                        return <BlankSearch
+                            icon={renderBlankIcon('places')}
+                            text={i18n.t("search_item_screen.placeholder.places")}
+                        />
+                    }
+                    return <View/>
                 }
             }
         }

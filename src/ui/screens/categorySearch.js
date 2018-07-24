@@ -19,8 +19,8 @@ import * as Api from "../../managers/Api"
 import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
 import {TAB_BAR_PROPS} from "../UIStyles"
 import {PagerPan, TabBar, TabView} from "react-native-tab-view"
-import BrowseItemPageGeneric from "./search/BrowseItemPageGeneric"
-import BrowseItemPagePlaces from "./search/BrowseItemPagePlaces"
+import BrowseGeneric from "./search/BrowseGeneric"
+import BrowsePlaces from "./search/BrowsePlaces"
 import {connect} from "react-redux"
 
 type Props = NavigableProps & {
@@ -77,8 +77,8 @@ export default class CategorySearchScreen extends Screen<Props, State> {
         let ix = ROUTES.indexOf(route)
         let focused = this.state.index === ix
         switch (route.key) {
-            case 'places': return <BrowseItemPagePlaces navigator={this.props.navigator}/>
-            default: return <BrowseItemPageGeneric navigator={this.props.navigator} category={route.key} />
+            case 'places': return <BrowsePlaces navigator={this.props.navigator}/>
+            default: return <BrowseGeneric navigator={this.props.navigator} category={route.key} />
         }
     }
 }

@@ -19,6 +19,7 @@ import Config from 'react-native-config'
 import {currentUserId} from "../../../managers/CurrentUser"
 import {createResultFromHit} from "../../../helpers/AlgoliaUtils"
 import SearchListResults from "../searchListResults"
+import BlankSearch, {renderBlankIcon} from "../../components/BlankSearch"
 
 export type SearchUserOptions = {
     token: string
@@ -68,7 +69,16 @@ export default class SearchSavingAndLineupPage extends React.Component<SUP, SUS>
                     index: index,
                     parseResponse: createResultFromHit,
                 }),
-                missingSearchPermissions: searchOptions => _.isEmpty(searchOptions.token) ? PERMISSION_EMPTY_INPUT : null
+                missingSearchPermissions: searchOptions => _.isEmpty(searchOptions.token) ? PERMISSION_EMPTY_INPUT : null,
+                renderMissingPermission: (searchOptions, missingSearchPermission): Node => {
+                    if (missingSearchPermission === PERMISSION_EMPTY_INPUT) {
+                        return <BlankSearch
+                            icon={renderBlankIcon('savings')}
+                            text={i18n.t("lineups.filter.deepsearch")}
+                        />
+                    }
+                    return <View/>
+                }
             }
         }
     }

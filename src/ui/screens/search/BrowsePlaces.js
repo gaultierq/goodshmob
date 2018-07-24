@@ -27,7 +27,7 @@ import {seeActivityDetails} from "../../Nav"
 
 
 type SMS = {
-    search: SearchEngine<BrowseItemsGenOptions>,
+    search: SearchEngine<BrowseItemsPlacesOptions>,
     searchOptions: BrowseItemsPlacesOptions,
     mapDisplay: boolean
 
@@ -44,14 +44,14 @@ export type BrowseItemsGenOptions = {
 export type BrowseItemsPlacesOptions = BrowseItemsGenOptions & {
     lat?: number,
     lng?: number,
-    permissionError: string | null
+    permissionError: ?string
 }
 
 @connect(state => ({
     data: state.data,
 }))
 @logged
-export default class BrowseItemPagePlaces extends React.Component<SMP, SMS> {
+export default class BrowsePlaces extends React.Component<SMP, SMS> {
 
 
     motor: ISearchMotor
@@ -92,7 +92,10 @@ export default class BrowseItemPagePlaces extends React.Component<SMP, SMS> {
                 missingSearchPermissions: searchOptions => {
                     if (!searchOptions.permissionError && searchOptions.lat && searchOptions.lng) return null
 
-                    return renderAskPermission(searchOptions.permissionError, (status) => this.setState({searchOptions: {...this.state.searchOptions, ...status}}))
+                    return searchOptions.permissionError
+                },
+                renderMissingPermission: (searchOptions: BrowseItemsPlacesOptions, missingPermission: string) => {
+                    return renderAskPermission(missingPermission, (status) => this.setState({searchOptions: {...this.state.searchOptions, ...status}}))
                 }
             }
         }

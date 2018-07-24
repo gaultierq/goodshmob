@@ -14,6 +14,6 @@ type State = {
 export default class UserSearchScreen extends Screen<Props, State> {
 
     render() {
-        return <SearchUserPage />
+        return <SearchUserPage navigator={this.props.navigator}/>
     }
 }
