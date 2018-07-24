@@ -57,4 +57,4 @@ const styles = StyleSheet.create({
         fontFamily: SFP_TEXT_MEDIUM,
         fontWeight: 'bold'
     }
-});
+})

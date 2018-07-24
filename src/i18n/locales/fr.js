@@ -141,7 +141,7 @@ export default {
             "example":"##Bouquin, restaurant, film, série, artiste,\nlieu, musique, gadget, fringue, vin, …"
         },
         "value_proposal":"##Marre d’oublier les recommandations\nqu’on te fait ?",
-        "slider_intro_1": "On m'a dit que c’était top.\nPour ne pas l'oublier\nje l’ai goodshé.",
+        "slider_intro_1": "L’app où \n" + "<bold>tu stockes</bold> tout \n" + "ce que <bold>tu aimes</bold>",
         "slider_intro_2": "Je retrouve mes recos quand j'en ai besoin.\nEt je peux les partager facilement.",
         "slider_intro_3": "Je demande des avis, des idées, des conseils à mon réseau.",
         "slider_intro_4": "Je découvre livres, films, musiques, restos, idées cadeau, choses à faire...et j'achète en un clin d'oeil.",
