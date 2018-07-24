@@ -101,7 +101,7 @@ export default class GMap extends Component<Props, State>  {
                        coordinate={item.description}>
             {/*Button in callout are not possible on Android, must make the full view clickable*/}
             <Callout onPress={() => this.props.onItemPressed(result)}>
-                <View>
+                <View style={{width: 200}}>
                     <Text style={{fontWeight: 'bold'}}>{title}</Text>
                     <Text>{description}</Text>
                     <Text>{i18n.t("search.category.more_details")}</Text>
