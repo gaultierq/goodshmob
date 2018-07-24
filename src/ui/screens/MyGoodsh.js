@@ -190,7 +190,7 @@ export default class MyGoodsh extends Screen<Props, State> {
                 flex:0,
                 flexDirection: 'row',
                 // backgroundColor: 'red',
-                height: 30,
+                height: 36,
                 alignItems: 'center',
             }}>
                 <GTouchable

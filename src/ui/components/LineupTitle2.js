@@ -167,7 +167,7 @@ export default class LineupTitle2 extends Component<Props, State> {
     }
 
     renderMedalDot() {
-        return <Text style={[styles.smallText, {color: Colors.greyish, marginHorizontal: 6}]}>• </Text>
+        return <Text style={[styles.smallText, {color: Colors.greyish, marginHorizontal: 6}]}>  </Text>
     }
 }
 
