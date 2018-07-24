@@ -15,12 +15,14 @@ import SwiperNav from "../components/SwiperNav"
 import {Colors} from "../colors"
 
 import Swiper from 'react-native-swiper'
-import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts"
+import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "../fonts"
 
 import i18n from '../../i18n'
 import * as Api from "../../managers/Api"
 import {renderSimpleButton} from "../UIStyles"
 import type {RequestState, User} from "../../types"
+import HTMLView from "react-native-htmlview"
+import GTouchable from "../GTouchable"
 
 type Props = {
     initialIndex: number
@@ -41,117 +43,218 @@ class Login extends Component<Props, State> {
         this.goLastSwiperView = this.goLastSwiperView.bind(this);
     }
 
+
+
     render() {
+
         let marg = 40;
         let transformBase = 100;
+
+
+
+        const contentHtmlStyles = StyleSheet.create({
+
+            div: {
+                fontFamily: SFP_TEXT_REGULAR,
+                fontSize: 38,
+                lineHeight: 44,
+                color: Colors.white,
+                textAlign:'center',
+                textShadowColor: 'rgba(0, 0, 0, 1)',
+                textShadowOffset: {width: -1, height: 1},
+                textShadowRadius: 8,
+            },
+            bold: {
+                fontSize: 36,
+                fontFamily: SFP_TEXT_BOLD,
+            },
+        })
+        const headerHtmlStyles = StyleSheet.create({
+
+            div: {
+                fontFamily: SFP_TEXT_REGULAR,
+                fontSize: 30,
+                // lineHeight: 38,
+                color: Colors.white,
+                textAlign:'center',
+            },
+            bold: {
+                fontSize: 35,
+                fontFamily: SFP_TEXT_BOLD,
+            },
+            black: {
+                color: Colors.black,
+            },
+        })
+
+        let ratio = .28
+
+        const Header = props =>  (<View style={{
+            backgroundColor: Colors.green,
+            width: '100%',
+            height: `${ratio * 100}%`,
+            alignItems: 'center',
+            justifyContent: 'center'
+        }}>
+            {props.children}
+        </View>)
+        const Content = props =>  (<View style={[{
+            width: '100%', height: `${(1-ratio) * 100}%`,
+            paddingHorizontal: '10%',
+            paddingVertical: 20,
+            // justifyContent: 'space-between',
+        }, props.style]}>
+            {props.children}
+        </View>)
+
+
+        const NextButton = props =>  (
+            <GTouchable style={{
+                backgroundColor: Colors.green,
+                width: '100%',
+                alignSelf: 'flex-end',
+                alignItems: 'center',
+                borderRadius: 4,
+                paddingVertical: 12,
+            }} onPress={this.next.bind(this)}
+            >
+                <Text style={{
+                    fontSize: 26,
+                    fontFamily: SFP_TEXT_BOLD
+                }}>{props.label}</Text>
+            </GTouchable>
+        )
+
         return (
             <View style={styles.wrapper}>
-              <Swiper
-                  ref="homeSwiper"
-                  loop={false}
-                  index={this.props.initialIndex}
-                  // dotStyle={{backgroundColor: dotColor, width: 5, height: 5,borderRadius: 2.5, margin: 12}}
-                  // activeDotStyle={{backgroundColor: dotColor, width: 8, height: 8, borderRadius: 4, margin: 12}}
-                  renderPagination={(index, total, context) => this.renderPagination(index, total, context)}
-                  onIndexChanged={(index)=>this.setState({index})}
-              >
+                <Swiper
+                    ref="homeSwiper"
+                    loop={false}
+                    index={this.state.index}
+                    onIndexChanged={async (index) => {
+                        await this.setState({index})
+                        console.debug('login: index change, nex index=', index)
+                    }}
+                    showsPagination={false}
+                >
+                    {/*slide 1*/}
+                    <ImageBackground
+                        source={require('../../img2/slider_background_0.png')}
+                        style={{width: '100%', height: '100%',}}>
+                        <Header>
+                            <Image style={[styles.image]} source={require("../../img2/logoWhite.png")}/>
+                        </Header>
 
-                  <View style={[styles.slide, {backgroundColor: Colors.green}]}>
-                      <View style={[styles.desc, {}]}>
-                          <Text style={[styles.text, {marginBottom: marg,color: "#ffffff"}]}>
-                              {i18n.t("login_screen.slider_intro_1")}</Text>
-                          <Image style={[styles.image]} source={require("../../img2/logoWhite.png")}/>
-                          {/*todo: find a better way to obtain
-                              1. goodsh centered
-                              2. goodsh and text never overlapping
-                              */}
-                          <Text style={[styles.text, {marginTop: marg,opacity: 0}]}>
-                              {i18n.t("login_screen.slider_intro_1")}</Text>
-                      </View>
+                        <Content style={{justifyContent: 'space-between',}}>
+                            <HTMLView value={`<div>${i18n.t("login_screen.slider_intro_1")}</div>`} stylesheet={contentHtmlStyles}/>
+                            <NextButton label={"Commencer"} />
+                        </Content>
+                    </ImageBackground>
+                    {/*slide 2*/}
+                    <ImageBackground
+                        source={require('../../img2/slider_background_1.png')}
+                        style={{width: '100%', height: '100%',}}>
+                        <Header>
+                            <HTMLView value={`<div>${i18n.t("login_screen.slider_intro_2")}</div>`} stylesheet={headerHtmlStyles}/>
+                        </Header>
+                        <Content style={{justifyContent: 'flex-end',}}>
+                            <NextButton label={"Suivant"} />
+                        </Content>
+                    </ImageBackground>
+                    {/*slide 3*/}
+                    <ImageBackground
+                        source={require('../../img2/slider_background_2.png')}
+                        style={{width: '100%', height: '100%',}}>
+                        <Header>
+                            <HTMLView value={`<div>${i18n.t("login_screen.slider_intro_3")}</div>`} stylesheet={headerHtmlStyles}/>
+                        </Header>
 
+                        <Content style={{justifyContent: 'flex-end',}}>
+                            <NextButton label={"Suivant"} />
+                        </Content>
+                    </ImageBackground>
+                    {/*slide 4*/}
+                    <ImageBackground
+                        source={require('../../img2/slider_background_3.png')}
+                        style={{width: '100%', height: '100%',}}>
+                        <Header>
+                            <HTMLView value={`<div>${i18n.t("login_screen.slider_intro_4")}</div>`} stylesheet={headerHtmlStyles}/>
+                        </Header>
 
-                      <Image style={[styles.path,  {right: 0, transform: [{translateY: transformBase}]}]} source={require("../../img2/path1.png")}/>
-                  </View>
-                  <View style={[styles.slide, {backgroundColor: "#ffffff"}]}>
-                      <View style={[styles.desc]}>
-                          <Image style={[styles.image, {marginBottom: marg}]} source={require("../../img2/paperPlane.png")}/>
-                          <Text style={[styles.text, {color: Colors.green}]}>
-                              {i18n.t("login_screen.slider_intro_2")}
-                          </Text>
-                          <Image style={[styles.image, {opacity:0, marginTop: marg}]} source={require("../../img2/paperPlane.png")}/>
-                      </View>
-                      <Image style={[styles.path, {width: '100%', transform: [{translateY: transformBase + 45}]}]} source={require("../../img2/Path2.png")}/>
-                  </View>
-                  <View style={[styles.slide, {backgroundColor: "#000000"}]}>
-                      <View style={[styles.desc]}>
-                          <Image style={[styles.image, {marginBottom: marg}]} source={require("../../img2/askIcon.png")}/>
-                          <Text style={[styles.text, {color: "#ffffff"}]}>
-                              {i18n.t("login_screen.slider_intro_3")}
-                          </Text>
-                          <Image style={[styles.image, {opacity:0, marginTop: marg}]} source={require("../../img2/askIcon.png")}/>
-                      </View>
-                      <Image style={[styles.path, {transform: [{translateY: transformBase+ 107}]}]} source={require("../../img2/Path3.png")}/>
-                  </View>
-                  <View style={[styles.slide, {backgroundColor: Colors.green}]}>
-                      <View style={[styles.desc]}>
-                          <Image style={[styles.image, {marginBottom: marg}]} source={require("../../img2/discoverIcon.png")}/>
-                          <Text style={[styles.text, {color: "#ffffff"}]}>
-                              {i18n.t("login_screen.slider_intro_4")}
-                          </Text>
-                          <Image style={[styles.image, {opacity:0, marginTop: marg}]} source={require("../../img2/discoverIcon.png")}/>
-                      </View>
-                      <Image style={[styles.path, {left: 0, transform: [{translateY: transformBase + 117}]}]} source={require("../../img2/Path4.png")}/>
-                  </View>
-                  {/*slide 5*/}
-                  <View style={[styles.slide, {backgroundColor: Colors.green}]}>
-                      <View style={[styles.desc]}>
-                          <Image style={[styles.image, {marginBottom: marg}]} source={require("../../img2/logoWhite.png")}/>
-                      </View>
-                      <View style={{
-                      }}>
-
-
-                          <Button
-                              isLoading={this.isSending(['reqLoginFb'])}
-                              isDisabled={this.isSending()}
-                              onPress={() => this.execLogin(false)}
-                              style={styles.facebookButton}>
-                              <Icon name="facebook" size={20} color="white" />
-                              <Text style={styles.facebookButtonText}>
-                                  {i18n.t('login_screen.facebook_signin')}
-                              </Text>
-                          </Button>
+                        <Content style={{justifyContent: 'space-between',}}>
+                            <HTMLView value={`<div>${i18n.t("login_screen.slider_intro_4_bis")}</div>`} stylesheet={contentHtmlStyles}/>
+                            <NextButton label={"Suivant"} />
+                        </Content>
+                    </ImageBackground>
+                    {/*slide 5*/}
+                    <View style={[styles.slide, {backgroundColor: Colors.white}]}>
+                        <View style={[styles.desc]}>
+                            <Image style={[styles.image, {marginBottom: marg}]} source={require("../../img2/logoBlack.png")}/>
+                        </View>
+                        <View style={{
+                        }}>
 
 
+                            <Text style={{fontSize: 10, color: '#ffffff', letterSpacing:1.2, textAlign: 'center', marginTop: 22, fontFamily: SFP_TEXT_BOLD}}>
+                                {i18n.t('login_screen.no_publication')}
+                            </Text>
 
-                          <Text style={{fontSize: 10, color: '#ffffff', letterSpacing:1.2, textAlign: 'center', marginTop: 22, fontFamily: SFP_TEXT_BOLD}}>
-                              {i18n.t('login_screen.no_publication')}
-                          </Text>
 
-                          {
-                              renderSimpleButton(
-                                  i18n.t('login_screen.account_kit_signin'),
-                                  () => this.execLogin(true),
-                                  {
-                                      loading: this.isSending(['reqLoginAk']),
-                                      disabled: this.isSending(),
-                                      style: {},
-                                      textStyle: {fontSize: 12, color: '#ffffff', letterSpacing:1.2, textAlign: 'center', marginTop: 22, fontFamily: SFP_TEXT_BOLD}
-                                  }
-                              )
-                          }
+                            <Button
+                                isLoading={this.isSending(['reqLoginFb'])}
+                                isDisabled={this.isSending()}
+                                onPress={() => this.execLogin(false)}
+                                style={[styles.facebookButton, ]}>
+                                <Icon name="facebook" size={20} color="white" />
+                                <Text style={styles.facebookButtonText}>
+                                    {i18n.t('login_screen.facebook_signin')}
+                                </Text>
+                            </Button>
 
-                      </View>
-                  </View>
-              </Swiper>
-              <SwiperNav index={this.state.index} color={this.getColorsByIndex()} onPressSkip={this.goLastSwiperView}/>
+                            {
+                                renderSimpleButton(
+                                    i18n.t('login_screen.account_kit_signin'),
+                                    () => this.execLogin(true),
+                                    {
+                                        loading: this.isSending(['reqLoginAk']),
+                                        disabled: this.isSending(),
+                                        textStyle: {fontSize: 12, letterSpacing:1.2, textAlign: 'center', marginTop: 22, fontFamily: SFP_TEXT_BOLD}
+                                    }
+                                )
+                            }
+
+                        </View>
+                    </View>
+                </Swiper>
+                {/*<SwiperNav index={this.state.index} color={this.getColorsByIndex()} onPressSkip={this.goLastSwiperView}/>*/}
+                {
+                    this.state.index > 0 && this.state.index < 5 &&  <GTouchable style={{
+                        position: 'absolute',
+                        right: 24,
+                        top: 47
+                    }} onPress={this.goLastSwiperView.bind(this)}>
+                    <Text style={{
+                        fontSize: 20,
+                        fontFamily: SFP_TEXT_MEDIUM,
+                        color: Colors.white,
+                        backgroundColor: 'transparent'
+                    }}>{i18n.t("actions.skip")}
+                    </Text>
+                </GTouchable>
+                }
             </View>
         )
     }
 
+
+
     goLastSwiperView() {
         const indexEnd = (this.state.index) ? (4 - this.state.index) : 4;
         this.refs["homeSwiper"].scrollBy(indexEnd, true);
+    }
+
+    next() {
+        this.refs["homeSwiper"].scrollBy(1, true);
     }
 
 
@@ -334,7 +437,7 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
     wrapper: {
-      flex: 1
+        flex: 1
     },
     slide: {
         flex: 1,
@@ -373,3 +476,6 @@ const styles = StyleSheet.create({
     }
 
 });
+
+
+

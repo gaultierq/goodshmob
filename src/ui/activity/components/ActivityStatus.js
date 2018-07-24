@@ -27,7 +27,8 @@ type Props = {
     descriptionContainerStyle?:*,
     descriptionStyle?: ViewStyle,
     children?:Node,
-    descriptionNumberOfLines?: number
+    descriptionNumberOfLines?: number,
+    withMenu?: boolean
 };
 
 type State = {
@@ -59,6 +60,7 @@ export default class ActivityStatus extends React.Component<Props, State> {
                         <GTouchable onPress={() => seeUser(navigator, activity.user)}>
                             <Avatar user={activity.user} />
                         </GTouchable>
+
                         <View style={{
                             // backgroundColor: 'red',
                             // alignItems: 'center',
@@ -66,7 +68,34 @@ export default class ActivityStatus extends React.Component<Props, State> {
                             flex: 1,
                             marginLeft: 8,
                         }}>
-                            { textNode }
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems:'center',
+                                flex: 1,
+                            }}>
+                                <View style={{
+                                    flexDirection: 'row',
+                                    flex: 1,
+                                }}>
+                                    { textNode }
+                                </View>
+                                {
+                                    this.props.withMenu && <GTouchable style={{
+                                        // backgroundColor: 'red',
+                                        alignSelf: 'flex-start',
+                                        paddingHorizontal: 10,
+                                        paddingVertical: 10,
+                                    }} onPress={()=>{
+                                        let u = this.getMainUrl(activity)
+                                        this.showResourceActions(u)
+                                    }}>
+                                        <Image
+                                            style={{tintColor: Colors.greyishBrown}}
+                                            source={require("../../../img2/sidedots.png")} />
+                                    </GTouchable>
+                                }
+
+                            </View>
                             <Text style={[styles.userText, {alignSelf: 'flex-start', ...stylePadding(0, 3)}]}>{timeSinceActivity(activity)}</Text>
                         </View>
                     </View>
@@ -85,6 +114,13 @@ export default class ActivityStatus extends React.Component<Props, State> {
         if (isSaving(activity) && !skipLineup) return this._renderSavedInList
         else if (isSending(activity)) return this._renderSendTo
         else if (isAsking(activity)) return this.renderAsk;
+        else throw "christ"
+    }
+
+    getMainUrl(activity:Activity, skipLineup?: boolean): ?string {
+        if (isSaving(activity) && !skipLineup) return this.buildLineupUrl(activity.target)
+        else if (isSending(activity)) return this.buildUserUrl(activity.target)
+        else if (isAsking(activity)) return null
         else throw "christ"
     }
 
@@ -119,25 +155,7 @@ export default class ActivityStatus extends React.Component<Props, State> {
             <HTMLView
                 // renderNode={renderNode}
                 onLinkLongPress={pressed => {
-                    let url: URL
-                    try {
-                        url = new URL(pressed)
-                        const q = url.query;
-                        url.set('query', {... (q || {}), origin: 'long_press'})
-                    }
-                    catch (e) {
-                        console.log("failed to parse url", e)
-                    }
-                    if (url) {
-                        //this doesnt quite work as we need {navigator, dispatch}
-                        //follow: https://github.com/wix/react-native-navigation/issues/3260
-
-                        //Linking.openURL(url.toString())
-                        const {navigator, dispatch} = this.props
-                        NavManager.goToDeeplink(url, {navigator, dispatch})
-
-                    }
-
+                    this.showResourceActions(pressed)
                 }
                 }
                 value={`<div>${i18n.t("activity_item.header.in",
@@ -155,6 +173,31 @@ export default class ActivityStatus extends React.Component<Props, State> {
             textNode,
             content: activity.description
         };
+    }
+
+    showResourceActions(pressed) {
+        let url = this.decorateUrlWithLongPress(pressed)
+        if (url) {
+            //this doesnt quite work as we need {navigator, dispatch}
+            //follow: https://github.com/wix/react-native-navigation/issues/3260
+
+            //Linking.openURL(url.toString())
+            const {navigator, dispatch} = this.props
+            NavManager.goToDeeplink(url, {navigator, dispatch})
+        }
+    }
+
+    decorateUrlWithLongPress(url: string): URL {
+        let result: URL
+        try {
+            result = new URL(url)
+            const q = result.query
+            result.set('query', {... (q || {}), origin: 'long_press'})
+        }
+        catch (e) {
+            console.log("failed to parse result", e)
+        }
+        return result
     }
 
     getItemHtml(activity: Activity) {
@@ -191,13 +234,23 @@ export default class ActivityStatus extends React.Component<Props, State> {
     }
 
     getUserHtml(user: User) {
-        return `<a href="${Config.GOODSH_PROTOCOL_SCHEME}://it/users/${user.id}">${fullName(user)}</a>`;
+        let userUrl = this.buildUserUrl(user)
+        return `<a href="${userUrl}">${fullName(user)}</a>`;
     }
 
     getLineupHtml(lineup: Lineup) {
-        return `<a href="${Config.GOODSH_PROTOCOL_SCHEME}://it/lists/${lineup.id}">${this.truncate(lineup.name)}</a> (${savingCount(lineup)})`;
+        let lineupUrl = this.buildLineupUrl(lineup)
+        return `<a href="${lineupUrl}">${this.truncate(lineup.name)}</a> (${savingCount(lineup)})`;
     }
 
+
+    buildLineupUrl(lineup: Lineup): string {
+        return `${Config.GOODSH_PROTOCOL_SCHEME}://it/lists/${lineup.id}`
+    }
+
+    buildUserUrl(user: User): string {
+        return `${Config.GOODSH_PROTOCOL_SCHEME}://it/users/${user.id}`
+    }
 
     renderAsk = () => {
         const {activity} = this.props;
@@ -223,7 +276,7 @@ const htmlStyles = StyleSheet.create({
     a: {
         fontFamily: SFP_TEXT_BOLD,
         fontSize: 16,
-        color: Colors.black,
+        color: Colors.darkerBlack,
     },
     i: {
         fontFamily: SFP_TEXT_ITALIC,
@@ -244,12 +297,13 @@ const styles = StyleSheet.create({
         marginLeft: 2,
     },
     description: {
-        fontSize: 13, lineHeight: 18,
+        fontSize: 14,
+        lineHeight: 22,
         fontFamily: SFP_TEXT_ITALIC,
         color: Colors.brownishGrey},
     userText: {
-        fontSize: 10,
-        lineHeight: 10,
+        fontSize: 13,
+        lineHeight: 22,
         color: Colors.greyish,
     },
     shadow: {

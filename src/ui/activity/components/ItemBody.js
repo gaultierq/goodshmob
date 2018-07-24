@@ -16,7 +16,7 @@ import {connect} from "react-redux"
 import {logged} from "../../../managers/CurrentUser"
 import type {Item, ItemType} from "../../../types"
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors"
-import {SFP_TEXT_ITALIC} from "../../fonts"
+import {SFP_TEXT_ITALIC, SFP_TEXT_REGULAR} from "../../fonts"
 import GImage from '../../components/GImage'
 
 import {firstName} from "../../../helpers/StringUtils"
@@ -27,17 +27,18 @@ import * as Api from "../../../managers/Api"
 import {FETCH_ITEM} from "../../lineup/actionTypes"
 import {fetchItemCall} from "../../lineup/actions"
 import GTouchable from "../../../ui/GTouchable"
+import {LINEUP_PADDING, openLinkSafely} from "../../UIStyles"
+import FeedSeparator from "./FeedSeparator"
 
 type Props = {
-    item: Item,
-    itemId: Item,
-    itemType: ItemType,
+    item?: Item,
+    itemId?: Item,
+    itemType?: ItemType,
     showAllImages?: boolean,
     liked?: boolean,
     bodyStyle?: *,
     onPress?: () => void,
-    rightComponent?: Node
-};
+}
 
 type State = {
     width?: number,
@@ -92,11 +93,16 @@ export default class ItemBody extends React.Component<Props, State> {
             <View onLayout={this._onLayoutDidChange}>
                 {/*Image And Button*/}
                 {this.renderImage()}
-
+                <FeedSeparator/>
                 {(
-                    <View style={[styles.body, bodyStyle]}>
-                        <View style={styles.bodyInner}>
-                            <View style={styles.flex1}>
+                    <View style={[{
+                        padding: LINEUP_PADDING,
+                        paddingBottom: 0,
+                        backgroundColor: ACTIVITY_CELL_BACKGROUND,
+                        // backgroundColor: 'red',
+                    }, bodyStyle]}>
+                        <View style={{flexDirection: 'row'}}>
+                            <View style={{flex:1}}>
                                 <Text style={[styles.title]} numberOfLines={2}>{item.title}</Text>
                                 <Text style={[styles.subtitle]}>{item.subtitle}</Text>
                             </View>
@@ -129,11 +135,7 @@ export default class ItemBody extends React.Component<Props, State> {
         }
         let imageHeight = 288;
 
-        const resize = images && (
-            item.type === 'CreativeWork'
-            || item.type === 'TvShow'
-            || item.type === 'Movie'
-        )? 'contain' : 'cover';
+        const resize = this.getResize(images, item);
 
         const opacity = this.animatedValue.interpolate({
             inputRange: [0, 1],
@@ -153,9 +155,9 @@ export default class ItemBody extends React.Component<Props, State> {
                 {images.map((image, i) => {
                     return <GTouchable  key={image} onPress={() => this.props.onPress && this.props.onPress()}>
                         <GImage
-                        source={image ? {uri: image} : require('../../../img/goodsh_placeholder.png')}
-                        resizeMode={resize}
-                        style={[styles.image, {height: imageHeight, width: this.state.width}]}/>
+                            source={image ? {uri: image} : require('../../../img/goodsh_placeholder.png')}
+                            resizeMode={resize}
+                            style={[styles.image, {height: imageHeight, width: this.state.width}]}/>
                     </GTouchable>
 
                 }) }
@@ -173,7 +175,49 @@ export default class ItemBody extends React.Component<Props, State> {
                 </Animated.View>
             }
             {/*</BoxShadow>*/}
+            {
+                <GTouchable style={{position: 'absolute', bottom: 10, right: 10}} onPress={() => {
+                    openLinkSafely(item.url)
+                }
+                }>
+                    <Image
+                        source={this.getIcon(item)}
+                        resizeMode="contain"
+                        style={{
+                            width: 50,
+                            height: 50,
+                            opacity: 0.8
+                        }}/>
+                </GTouchable>
+            }
         </View>
+    }
+
+    getResize(images, item) {
+        return images && (
+            item.type === 'CreativeWork'
+            || item.type === 'TvShow'
+            || item.type === 'Movie'
+        ) ? 'contain' : 'cover'
+    }
+
+    getIcon(item: Item) {
+        switch (item.type) {
+
+            case 'CreativeWork':
+                return require('../../../img2/link.png')
+            case 'TvShow':
+            case 'Movie':
+                return require('../../../img2/film-strip.png')
+            case 'Place':
+                return require('../../../img2/location.png')
+
+            case 'Album':
+            case 'Track':
+                return require('../../../img2/play.png')
+            default: return null
+        }
+
     }
 
     animatedValue = new Animated.Value(0);
@@ -198,8 +242,8 @@ const styles = StyleSheet.create({
     body: {padding: 15, paddingBottom: 0, backgroundColor: ACTIVITY_CELL_BACKGROUND},
     bodyInner: {flexDirection: 'row'},
     flex1: {flex:1},
-    title: {fontSize: 19, color: Colors.black, marginBottom: 4, marginRight: 5},
-    subtitle: {fontSize: 14, color: Colors.greyish},
+    title: {fontSize: 20, fontFamily: SFP_TEXT_REGULAR, color: Colors.black, marginBottom: 4, marginRight: 5},
+    subtitle: {fontSize: 14, fontFamily: SFP_TEXT_REGULAR, color: Colors.greyish},
     description: {fontSize: 14, fontFamily: SFP_TEXT_ITALIC, color: Colors.brownishGrey},
     imageContainer: {flex:1, alignSelf: 'center', width: "100%", backgroundColor: 'transparent'},
     image: {alignSelf: 'center', backgroundColor: ACTIVITY_CELL_BACKGROUND, width: "100%"},

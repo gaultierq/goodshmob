@@ -92,7 +92,7 @@ class ShareScreen extends Component<Props, State> {
                             onPress={()=>this.share()}
                             disabled={!createShareIntent}
                         >
-                            <Image source={require('../../img2/share.png')}
+                            <Image source={__IS_IOS__ ? require('../../img2/share-ios.png') : require('../../img2/share-android.png')}
                                    resizeMode="contain"
                                    style={styles.image}/>
                             <View>

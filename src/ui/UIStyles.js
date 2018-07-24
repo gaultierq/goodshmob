@@ -4,12 +4,12 @@ import Button from 'apsl-react-native-button'
 import * as React from "react"
 import {toUppercase} from "../helpers/StringUtils"
 import {Colors, SEARCH_PLACEHOLDER_COLOR} from "./colors"
-import {SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "./fonts"
+import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "./fonts"
 import GTouchable from "./GTouchable"
 import type {ViewStyle} from "../types"
 import {TextStyle} from "../types"
 
-export const BACKGROUND_COLOR = Colors.dirtyWhite2;
+export const BACKGROUND_COLOR = Colors.white;
 export const NAV_BACKGROUND_COLOR = Colors.dirtyWhite;
 
 export const NavStyles = {
@@ -19,6 +19,7 @@ export const NavStyles = {
     navBarSubtitleFontSize: 14,
     navBarSubtitleColor: Colors.brownishGrey,
     navBarSubtitleFontFamily: SFP_TEXT_MEDIUM,
+    navBarTextColor: Colors.black,
     navBarTitleFontSize: 17,
     navBarTextFontFamily: SFP_TEXT_MEDIUM,
     navBarTitleFontFamily: SFP_TEXT_MEDIUM,
@@ -218,8 +219,9 @@ export const STYLES = StyleSheet.create({
         backgroundColor: 'rgba(255, 255, 255, 0.65)'
     },
     SECTION_TITLE: {
-        fontSize: 20,
-        fontFamily: SFP_TEXT_MEDIUM
+        fontSize: 16,
+        fontFamily: SFP_TEXT_REGULAR,
+        color: Colors.black
     }
 });
 
@@ -265,8 +267,7 @@ export const SEARCH_INPUT_PROPS = {
     underlineColorAndroid: 'transparent'
 };
 
-
-let TAB_BAR_STYLES = StyleSheet.create({
+export let TAB_BAR_STYLES = StyleSheet.create({
     tabbar: {
         // backgroundColor: Colors.white,
         backgroundColor: NavStyles.navBarBackgroundColor,
@@ -282,7 +283,9 @@ let TAB_BAR_STYLES = StyleSheet.create({
         //width: 90,
     },
     label: {
-        color: '#000000',
+        color: Colors.greyishBrown,
+        fontFamily: SFP_TEXT_BOLD,
+        letterSpacing: 1,
         textAlign: 'center',
     },
 
@@ -292,6 +295,7 @@ export const TAB_BAR_PROPS = {
     indicatorStyle: TAB_BAR_STYLES.indicator,
     style: TAB_BAR_STYLES.tabbar,
     tabStyle: TAB_BAR_STYLES.tab,
-    labelStyle: TAB_BAR_STYLES.label,
+    labelStyle: TAB_BAR_STYLES.label
 }
+
 

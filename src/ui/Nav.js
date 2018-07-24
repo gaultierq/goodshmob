@@ -18,7 +18,7 @@ import React from "react"
 import LineupHorizontal from "./components/LineupHorizontal"
 import LineupCellSaving from "./components/LineupCellSaving"
 import {deleteLineup, followLineupPending, unfollowLineupPending} from "./lineup/actions"
-import {L_DELETE, L_FOLLOW, L_RENAME, L_SHARE, L_UNFOLLOW, LineupRights} from "./lineupRights"
+import {GLineupAction, L_DELETE, L_FOLLOW, L_RENAME, L_SHARE, L_UNFOLLOW, LineupRights} from "./lineupRights"
 import LineupTitle2 from "./components/LineupTitle2"
 
 export const CLOSE_MODAL = 'close_modal';
@@ -237,7 +237,7 @@ export function displayShareItem(navigator: RNNNavigator, activity: Activity) {
     );
 }
 
-export function displayShareLineup({navigator, lineup}: LineupActionParams) {
+export function displayShareLineup({navigator, lineup}: {navigator: RNNNavigator, lineup: Lineup}) {
     let userId = _.get(lineup, 'user.id');
     let lineupId = _.get(lineup, 'id');
     if (!userId || !lineupId) return; //TODO: error
@@ -363,21 +363,28 @@ const MENU_ACTIONS = new Map([
     }]
 ])
 
-export function displayLineupActionMenu(navigator: RNNNavigator, dispatch: any, lineup: Lineup) {
+export function displayLineupActionMenu(
+    navigator: RNNNavigator,
+    dispatch: any,
+    lineup: Lineup,
+    filter?: GLineupAction => boolean = a => true) {
 
-    let actions : LineupMenuAction[] = LineupRights.getActions(lineup).map(a => MENU_ACTIONS.get(a)).filter(a => !!a)
+    let menuAction : LineupMenuAction[] =
+        _.filter(LineupRights.getActions(lineup), filter)
+            .map(a => MENU_ACTIONS.get(a))
+            .filter(a => !!a)
 
     BottomSheet.showBottomSheetWithOptions({
             options: [
-                ...actions.map(a => a.label),
+                ...menuAction.map(a => a.label),
                 i18n.t("actions.cancel")
             ],
             title: lineup.name,
             // dark: true,
             // destructiveButtonIndex: 2,
-            cancelButtonIndex: actions.length,
+            cancelButtonIndex: menuAction.length,
         }, (value) => {
-            const lineupMenuAction = actions[value];
+            const lineupMenuAction = menuAction[value];
             if (lineupMenuAction) {
                 lineupMenuAction.handler({navigator, dispatch, lineup})
             }

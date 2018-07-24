@@ -9,8 +9,8 @@ const GLineupActions = []
 
 export class GLineupAction extends GAction {
 
-    constructor(name: string) {
-        super(name)
+    constructor(name: string, priority: number = 0) {
+        super(name, priority)
         GLineupActions.push(this)
     }
 
@@ -21,12 +21,12 @@ export class GLineupAction extends GAction {
 }
 
 // add_item_into
-export const L_ADD_ITEM: GLineupAction = new GLineupAction('add item')
-export const L_SHARE: GLineupAction = new GLineupAction('share list')
-export const L_RENAME: GLineupAction = new GLineupAction('rename list')
-export const L_DELETE: GLineupAction = new GLineupAction('delete list')
-export const L_FOLLOW: GLineupAction = new GLineupAction('follow list')
-export const L_UNFOLLOW: GLineupAction = new GLineupAction('unfollow list')
+export const L_SHARE: GLineupAction = new GLineupAction('share list', -2)
+export const L_ADD_ITEM: GLineupAction = new GLineupAction('add item', -2)
+export const L_RENAME: GLineupAction = new GLineupAction('rename list', 1)
+export const L_DELETE: GLineupAction = new GLineupAction('delete list', 2)
+export const L_FOLLOW: GLineupAction = new GLineupAction('follow list', -3)
+export const L_UNFOLLOW: GLineupAction = new GLineupAction('unfollow list', 4)
 
 export class LineupRights {
     lineup: Lineup

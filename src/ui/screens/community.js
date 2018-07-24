@@ -6,15 +6,12 @@ import {connect} from "react-redux"
 import {currentUserId, logged} from "../../managers/CurrentUser"
 import {ViewStyle} from "../../types"
 import FriendsScreen from "./friends"
-import {PagerPan, TabBar, TabView} from 'react-native-tab-view'
 
 import ApiAction from "../../helpers/ApiAction"
 import * as Api from "../../managers/Api"
 import Immutable from 'seamless-immutable'
-import {InteractionScreen} from "./interactions"
 import Screen from "../components/Screen"
 import {Colors} from "../colors"
-import {TAB_BAR_PROPS} from "../UIStyles"
 import ShareButton from "../components/ShareButton"
 
 type Props = {

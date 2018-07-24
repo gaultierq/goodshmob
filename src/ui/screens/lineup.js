@@ -4,14 +4,20 @@ import React from 'react'
 import {Keyboard, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
-import {activityFeedProps, FOLLOW_RIGHT_BUTTON, getAddButton, UNFOLLOW_RIGHT_BUTTON} from "../UIComponents"
+import {
+    activityFeedProps,
+    FOLLOW_RIGHT_BUTTON,
+    getAddButton,
+    getNavButtonForAction,
+    UNFOLLOW_RIGHT_BUTTON
+} from "../UIComponents"
 import Immutable from 'seamless-immutable'
 import * as Api from "../../managers/Api"
 import Feed from "../components/feed"
 import type {Id, Lineup, RNNNavigator, Saving} from "../../types"
 import {doDataMergeInState} from "../../helpers/DataUtils"
 import ActivityCell from "../activity/components/ActivityCell"
-import {seeActivityDetails, startAddItem} from "../Nav"
+import {displayLineupActionMenu, displayShareLineup, seeActivityDetails, startAddItem} from "../Nav"
 import {Colors} from "../colors"
 import Screen from "./../components/Screen"
 import * as UI from "../UIStyles"
@@ -23,7 +29,6 @@ import {
     fetchLineup,
     followLineupPending,
     unfollowLineupPending,
-    unfollowLineupPending2
 } from "../lineup/actions"
 import {UNSAVE} from "../activity/actionTypes"
 import * as authActions from "../../auth/actions"
@@ -52,12 +57,8 @@ export const selector = createSelector(
     ({lineup, savings}, pending) => {
 
         let actions = LineupRights.getActions(lineup, pending)
-        let action = null
-        if (actions.indexOf(L_ADD_ITEM) >= 0) action = L_ADD_ITEM
-        if (actions.indexOf(L_FOLLOW) >= 0) action = L_FOLLOW
-        if (actions.indexOf(L_UNFOLLOW) >= 0) action = L_UNFOLLOW
-
-        return {lineup, savings, action}
+        console.debug("DEBUG12: all actions", actions)
+        return {lineup, savings, actions}
     }
 )
 
@@ -72,6 +73,7 @@ class LineupScreen extends Screen<Props, State> {
     }
 
     unsubscribe: ?() => void
+    actions: ?GLineupAction[]
 
     state = {
         navBarState: {}
@@ -79,6 +81,14 @@ class LineupScreen extends Screen<Props, State> {
 
     componentWillMount() {
         this.unsubscribe = this.props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+
+        this.props.navigator.setStyle({
+            ...UI.NavStyles,
+            navBarCustomView: 'goodsh.LineupNav',
+            navBarCustomViewInitialProps: {
+                lineupId: this.props.lineupId
+            }
+        })
     }
 
     componentWillUnmount() {
@@ -90,8 +100,8 @@ class LineupScreen extends Screen<Props, State> {
     }
 
     refreshNavigatorButtons() {
-        console.debug('refreshNavigatorButtons')
-        this.props.navigator.setButtons(this.getMainActionButton2(this.props.action, this.props.lineupId))
+        console.debug('refresh navigator buttons')
+        this.props.navigator.setButtons(this.getMainActionButton2(this.props.actions, this.props.lineupId))
 
     }
 
@@ -100,13 +110,7 @@ class LineupScreen extends Screen<Props, State> {
         // console.debug('refreshing navbar', navBarState)
         if (__IS_IOS__ && lineupId) {
             // if (!navBarState.lineupName) return
-            navigator.setStyle({
-                ...UI.NavStyles,
-                navBarCustomView: 'goodsh.LineupNav',
-                navBarCustomViewInitialProps: {
-                    lineupId
-                }
-            });
+
         }
         else if (__IS_ANDROID__ && lineup) {
             const user = lineup.user
@@ -121,31 +125,58 @@ class LineupScreen extends Screen<Props, State> {
     }
 
     //TODO: improve code
-    getMainActionButton2(action: GLineupAction, lineupId: Id): any {
+    getMainActionButton2(actions: GLineupAction[], lineupId: Id): any {
+        let {mains, more} = this.getButtons(actions)
 
-        if (action) {
-            if (action === L_ADD_ITEM) return getAddButton(lineupId)
-            if (action === L_FOLLOW) return {rightButtons: [FOLLOW_RIGHT_BUTTON(lineupId)],}
-            if (action === L_UNFOLLOW) return {rightButtons: [UNFOLLOW_RIGHT_BUTTON(lineupId)],}
+        let rightButtons = mains.map(action => getNavButtonForAction(action, `${lineupId}`))
+        if (more.length > 0) {
+            rightButtons.push({
+                icon: require('../../img2/vertical-dots.png'),
+                id: 'more_' + lineupId
+            })
         }
-        return {rightButtons: [], fab: {}}
+        rightButtons.reverse()
+
+        console.debug("lineup " + lineupId + ": buttons:", rightButtons, actions)
+        return {rightButtons, fab: {}}
     }
 
-    // FIXME: terrible hack: watch store, refresh accordingly
+    getButtons(actions) {
+        let more = _.sortBy(actions, a => a.priority)
+        let _p = 0
+        const mains = _.remove(actions, a => {
+            if (a.priority <= _p) {
+                _p = a.priority
+                return true
+            }
+            return false
+        })
+
+        return {mains, more}
+    }
+
+// FIXME: terrible hack: watch store, refresh accordingly
     onNavigatorEvent(event) {
+        console.debug('onNavigatorEvent', event)
         let lineup = this.props.lineup
-        if (!lineup) {
-            console.warn("lineup not found")
-            return
-        }
-        if (event.id === 'add') {
+        if (event.id === 'add_' + lineup.id) {
             startAddItem(this.props.navigator, lineup.id)
         }
         else if (event.id === 'follow_' + lineup.id) {
             followLineupPending(this.props.dispatch, lineup)
         }
+        else if (event.id === 'share_' + lineup.id) {
+            displayShareLineup({
+                navigator: this.props.navigator,
+                lineup: this.props.lineup
+            })
+        }
         else if (event.id === 'unfollow_' + lineup.id) {
             unfollowLineupPending(this.props.dispatch, lineup)
+        }
+        else if (event.id === 'more_' + lineup.id) {
+            let {more} = this.getButtons(actions)
+            displayLineupActionMenu(this.props.navigator, this.props.dispatch, lineup, a => more.some(a))
         }
     }
 
@@ -157,7 +188,13 @@ class LineupScreen extends Screen<Props, State> {
         const {lineup, savings} = this.props
 
         LineupScreen.refreshNavBar(this.props.navigator, null, lineup)
-        this.refreshNavigatorButtons()
+
+        //this is not very react compliant, but I didn't find a good way to do it yet
+        if (this.props.actions !== this.actions) {
+            this.refreshNavigatorButtons()
+            this.actions = this.props.actions
+        }
+
 
         let fetchSrc;
         if (lineup && lineup.savings) {

@@ -92,6 +92,7 @@ export default class ActivityCell extends React.Component<Props, State> {
                         skipLineup={this.props.skipLineup}
                         descriptionNumberOfLines={3}
                         navigator={this.props.navigator}
+                        withMenu={true}
                         cardStyle={{
                             paddingHorizontal: LINEUP_PADDING,
                             paddingVertical: 10,}}
@@ -113,10 +114,9 @@ export default class ActivityCell extends React.Component<Props, State> {
                                     liked={this.isLiked(activity)}
                                     navigator={this.props.navigator}
                                     bodyStyle={{
-                                        padding: 23,
+                                        padding: LINEUP_PADDING,
                                         paddingTop: 12,
                                     }}
-                                    rightComponent={this.renderBuyButton(activity)}
                                 />
                         }
 

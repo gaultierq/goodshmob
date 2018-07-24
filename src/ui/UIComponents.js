@@ -15,6 +15,8 @@ import GImage from "./components/GImage"
 import {firstLetter, hashCode} from "../helpers/StringUtils"
 import {SFP_TEXT_REGULAR} from "./fonts"
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import {GAction} from "./rights"
+import {L_ADD_ITEM, L_FOLLOW, L_SHARE, L_UNFOLLOW} from "./lineupRights"
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
@@ -210,7 +212,6 @@ export const LINEUP_SECTIONS = (navigator: RNNNavigator, dispatch: any) => (line
                 <LineupHorizontal
                     lineupId={item.id}
                     dataResolver={() => ({lineup: lineup, savings: lineup.savings})}
-                    style={{paddingBottom: 10}}
                     skipLineupTitle={true}
                 />
             </GTouchable>
@@ -252,13 +253,15 @@ export function renderLineupFromOtherPeople(navigator: RNNNavigator, lineup: Lin
 export const GoodshContext = React.createContext({userOwnResources: true});
 
 
-export let getAddButton = (lineup: Lineup) => {
+export let getAddButton = () => {
     return {
         ...Platform.select({
             ios: {
                 rightButtons: [
                     {
-                        systemItem: 'add',
+                        // icon: require('../img2/add-intro.png'),
+                        icon: require('../img2/add_green.png'),
+                        disableIconTint: true,
                         id: 'add'
                     }
                 ],
@@ -293,14 +296,26 @@ export let getFollowButton = (lineup: Lineup) => {
     }
 }
 
+export const ADD_ITEM_RIGHT_BUTTON = (id: string) => ({
+    icon: require('../img2/add_green.png'),
+    disableIconTint: true,
+    id: 'add_' + id
+})
+
 export const FOLLOW_RIGHT_BUTTON = (id: string) => ({
     title: i18n.t('actions.follow'),
-    id: 'follow_' + id
+    id: 'follow_' + id,
+    buttonColor: Colors.green
 })
 
 export const UNFOLLOW_RIGHT_BUTTON = (id: string) => ({
     title: i18n.t('actions.unfollow'),
     id: 'unfollow_' + id
+})
+
+export const SHARE_RIGHT_BUTTON = (id: string) => ({
+    icon: require('../img2/share-arrow.png'),
+    id: 'share_' + id
 })
 
 export const RIGHT_BUTTON_SPINNER = {
@@ -350,3 +365,13 @@ export let getClearButton = function () {
 }
 
 export const RED_SQUARE = (size = 100) => () => <View style={{width: size, height: size, backgroundColor: 'red'}} />
+
+
+export function getNavButtonForAction(action: GAction, id: string) {
+    if (action === L_ADD_ITEM) return ADD_ITEM_RIGHT_BUTTON(id)
+    if (action === L_FOLLOW) return FOLLOW_RIGHT_BUTTON(id)
+    if (action === L_UNFOLLOW) return UNFOLLOW_RIGHT_BUTTON(id)
+    if (action === L_SHARE) return SHARE_RIGHT_BUTTON(id)
+    throw action + " not found"
+
+}

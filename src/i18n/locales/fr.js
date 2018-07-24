@@ -145,7 +145,7 @@ export default {
         "slider_intro_2": "Crée tes listes\nAvec +200M de lieux, films, séries\nmusiques, livres & produits\ndéjà dans l'app.",
         "slider_intro_3": "Suis les listes qui t'intéressent.",
         "slider_intro_4": "Partage tes centres d'intérêts avec qui tu veux\nAmi\nFamille\nCollègue\nFan.",
-        "credentials": "Keep all you love",
+        "credentials": "Keep all you love"
     },
     "popular_screen":{
         "title": "Enregistrer vos premières envies",
@@ -354,6 +354,7 @@ export default {
         change: "Modifier",
         change_title: "Modifier le titre",
         edit_saving_menu: "Éditer ce goodsh",
+        share: "Partager",
         share_list: "Partager cette liste",
         change_description: "Modifier la description",
         move: "Déplacer",
@@ -371,12 +372,12 @@ export default {
         terms: "Conditions d'utilisation",
         copy_link: "Copier le lien",
         send_to_goodsher: "Envoyer à un contact",
-        skip: "OK",
+        skip: "Passer",
         ask: "Demander à mon réseau",
         ask_button: "Ask",
         invite: "Inviter des amis",
         load_more: "Charger la suite",
-        unsave: "Supprimer",
+        unsave: "Enregistré",
         save: "Enregistrer",
 
     },

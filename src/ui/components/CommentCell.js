@@ -9,6 +9,7 @@ import {timeSinceActivity} from "../../helpers/DataUtils"
 import {Colors} from "../colors"
 import {SFP_TEXT_REGULAR} from "../fonts"
 import {Col, Grid, Row} from "react-native-easy-grid"
+import {fullName} from "../../helpers/StringUtils"
 
 type Props = {
     comment: Comment | Array<Comment>,
@@ -61,9 +62,18 @@ export default class CommentCell extends Component<Props, State> {
 
         return (
             <Grid>
+                {!rightDisplay &&
+                <Row>
+                    <Col style={{width: dimension}}/>
+                    <Col>
+                        <Text
+                            style={[styles.userName, {alignSelf: 'flex-start', ...styleMargin(0, 4)}]}>{user.firstName}</Text>
+                    </Col>
+                </Row>
+                }
                 <Row style={{ }}>
-                    <Col style={{ width: dimension, justifyContent: 'flex-start'}}>
-                        {!rightDisplay && <Avatar user={user} size={24} style={{marginTop: 3}}/>}
+                    <Col style={{ width: dimension, justifyContent: 'flex-end'}}>
+                        {!rightDisplay && <Avatar user={user} size={24} style={{marginBottom: 3}}/>}
                     </Col>
                     <Col style={{ alignItems: rightDisplay ? 'flex-end': 'flex-start', }}>
                         {comments.map((comment: Comment, i) => <Row style={{marginTop: !!i ? 4 : 0}} key={comment.id}>
@@ -107,6 +117,11 @@ export default class CommentCell extends Component<Props, State> {
 
 const styles = StyleSheet.create({
     timeSince: {
+        fontSize: 13,
+        lineHeight: 13,
+        color: Colors.brownishGrey,
+    },
+    userName: {
         fontSize: 10,
         lineHeight: 10,
         color: Colors.greyish,

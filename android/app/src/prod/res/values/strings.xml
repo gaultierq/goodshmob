@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Goodsh</string>
+    <string name="app_name" translatable="false">goodsh.it</string>
     <string name="facebook_app_id">787478441366145</string>
     <string name="ak_client_token">1b32eb87bee8c8b5005e7fc5340f291d</string>
     <string name="ak_login_protocol_scheme">ak787478441366145</string>

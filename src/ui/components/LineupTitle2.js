@@ -14,8 +14,11 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import UserRowI from "../activity/components/UserRowI"
 import {buildData} from "../../helpers/DataUtils"
 import {STYLES} from "../UIStyles"
-import {getFirstDefined} from "../../helpers/LangUtil"
 import {GoodshContext} from "../UIComponents"
+import {L_FOLLOW, LineupRights} from "../lineupRights"
+import GTouchable from "../GTouchable"
+import {followLineupPending} from "../lineup/actions"
+import {SFP_TEXT_BOLD} from "../fonts"
 
 export type State = {
 
@@ -107,16 +110,38 @@ export default class LineupTitle2 extends Component<Props, State> {
             yield true
             yield false
         })();
-        let color = _.get(lineup, 'meta.followed', false) ? Colors.black : undefined
+
+        let lr = new LineupRights(lineup, this.props.pending)
+        let canFollow = lr.canExec(L_FOLLOW)
         return [
+            //<Text key={'savings-count-medal'} style={{ color: Colors.greyish }}>{ `(${savingCount})` }</Text>,
             this.renderMedal(_.get(lineup, 'meta.savingsCount', -1), "th-large", it),
-            this.renderMedal(_.get(lineup, 'meta.followersCount', -1), "star", it, color)
+            this.renderMedal(_.get(lineup, 'meta.followersCount', -1), "star", it, _.get(lineup, 'meta.followed', false) ? Colors.green : undefined),
+            (canFollow && <View style={{flexDirection: 'row', height: 15}} key={'follow-button'}>
+                {it.next().value && this.renderMedalDot()}
+                <GTouchable
+                    style={{
+                        // backgroundColor: 'red',
+
+                    }}
+                    onPress={()=>{
+                        followLineupPending(this.props.dispatch, lineup)
+                    }}>
+                    <Text style={{
+                        color: Colors.green,
+                        fontSize: 14,
+                        fontFamily: SFP_TEXT_BOLD
+                        // backgroundColor: 'blue'
+                    }}>{i18n.t('actions.follow')}</Text>
+                </GTouchable>
+            </View>)
         ];
     }
 
     renderMedal(count: number, icon: string, displayDot: () => boolean, color: Color = Colors.greyish) {
         const iconSize = 15;
 
+        // fixme : this is bad
         if (__IS_ANDROID__) {
             return count > 0 && <Text style={[styles.medalsContainer, {paddingLeft: 10, marginLeft: 10}]} key={icon}>
                 {icon === 'th-large' && <Text style={[styles.smallText, {marginLeft: 4, color,
@@ -132,13 +157,17 @@ export default class LineupTitle2 extends Component<Props, State> {
         }
 
         return count > 0 && <Text key={icon}>
-            {displayDot.next().value && <Text style={[styles.smallText, {color, marginHorizontal: 6}]}>• </Text>}
+            {displayDot.next().value && this.renderMedalDot()}
             <Icon name={icon} size={iconSize} color={color}/>
             <Text style={[styles.smallText, {marginLeft: 4, color,
                 alignSelf: 'flex-end',
                 // backgroundColor: 'red',
             }]}>{' '}{count}{' '}</Text>
         </Text>;
+    }
+
+    renderMedalDot() {
+        return <Text style={[styles.smallText, {color: Colors.greyish, marginHorizontal: 6}]}>  </Text>
     }
 }
 
