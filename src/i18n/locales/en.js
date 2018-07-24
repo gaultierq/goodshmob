@@ -375,7 +375,7 @@ export default {
         terms: "Terms and personal data",
         copy_link: "Copy link",
         send_to_goodsher: "Send to another\nuser",
-        skip: "OK",
+        skip: "Skip",
         ask: "Ask my network",
         ask_button: "Ask",
         invite: "Invite a friend",
