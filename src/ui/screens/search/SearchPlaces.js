@@ -6,10 +6,14 @@ import {StyleSheet, Text, TextInput, View,} from 'react-native'
 import type {SearchEngine} from "../../../helpers/SearchHelper"
 import {
     __createSearchItemSearcher,
-    PERMISSION_EMPTY_INPUT
+    PERMISSION_EMPTY_INPUT, PERMISSION_EMPTY_POSITION, renderResource
 } from "../../../helpers/SearchHelper"
 import {LINEUP_PADDING, NAV_BACKGROUND_COLOR} from "../../UIStyles"
-import {getPosition, SearchPlacesOption} from "./searchplacesoption"
+import {
+    getPosition,
+    renderAskPermission,
+    SearchPlacesOption
+} from "./searchplacesoption"
 import GSearchBar2 from "../../components/GSearchBar2"
 import SearchMotor from "../searchMotor"
 import ItemCell from "../../components/ItemCell"
@@ -23,8 +27,9 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import BlankSearch, {renderBlankIcon} from "../../../ui/components/BlankSearch"
 
 export type SearchItemsPlacesOptions = SearchItemsGenOptions & {
-    lat?: number | null,
-    lng?: number | null,
+    lat?: ?number,
+    lng?: ?number,
+    permissionError: ?string
 }
 
 type SMS = {
@@ -46,15 +51,26 @@ export default class SearchPlaces extends React.Component<SMP, SMS> {
             mapDisplay: false,
             searchOptions: {
                 input: '',
+                permissionError: PERMISSION_EMPTY_POSITION,
             },
             search: {
                 search: __createSearchItemSearcher('places'),
+
                 missingSearchPermissions: searchOptions => {
-                    if (!_.isEmpty(searchOptions.input)) {
-                        return null
+                    if (_.isEmpty(searchOptions.input)) {
+                        return PERMISSION_EMPTY_INPUT
                     }
-                    return PERMISSION_EMPTY_INPUT
+
+                    if (searchOptions.permissionError) return searchOptions.permissionError
+
+                    if (!searchOptions.lat  || !searchOptions.lng) {
+                        return PERMISSION_EMPTY_POSITION
+                    }
+
+                    return null
                 },
+
+
                 renderMissingPermission: (searchOptions, missingPermission) => {
                     if (missingPermission === PERMISSION_EMPTY_INPUT) {
                         return <BlankSearch
@@ -62,7 +78,7 @@ export default class SearchPlaces extends React.Component<SMP, SMS> {
                             text={i18n.t("search_item_screen.placeholder.places")}
                         />
                     }
-                    return <View/>
+                    return renderAskPermission(missingPermission, (status) => this.setState({searchOptions: {...this.state.searchOptions, ...status}}))
                 }
             }
         }
@@ -89,7 +105,10 @@ export default class SearchPlaces extends React.Component<SMP, SMS> {
 
                 <SearchMotor
                     searchEngine={this.state.search}
-                    renderResults={state => <SearchListResults searchState={state} renderItem={({item}) => <ItemCell item={item}/>} />}
+                    renderResults={(state, onLoadMore) => <SearchListResults
+                        searchState={state}
+                        renderItem={renderResource.bind(this)}
+                    />}
                     searchOptions={this.state.searchOptions}
                 />
 

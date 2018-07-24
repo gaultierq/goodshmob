@@ -11,6 +11,9 @@ export default {
         },
         network: {
             title: "News feed"
+        },
+        category_search: {
+            title: "Category Search"
         }
     },
     lineups: {
@@ -79,6 +82,7 @@ export default {
             "all": "All",
             "more_details": "Press for more details",
             missing_permission: "You must authorize geolocation to search around you",
+            missing_location: "Select a place to start a search",
             settings_permission: "Open settings and enable geolocation",
             retry: "Retry",
             authorize: "Authorize geolocation"

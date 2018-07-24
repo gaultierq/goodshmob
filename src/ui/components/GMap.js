@@ -28,18 +28,24 @@ export default class GMap extends Component<Props, State>  {
 
     getCenter = memoize(data => GMap.getCenter(data))
     getData = memoize(data => _.flatten(data))
+    center: Region
 
     render() {
         const requestState = _.get(this.props, 'searchState.requestState', [])
 
         const data = this.getData(_.get(this.props, 'searchState.data', []))
 
+        // Important: we must have data to compute center
+        if (requestState === 'ok') {
+            this.center = this.getCenter(data)
+        }
+
         return (
             <View style={{flex:1, marginTop: 5}}>
                 <MapView
                     style={{flex:1}}
                     provider={'google'}
-                    region={this.getCenter(data)}>
+                    region={this.center}>
                     {data && data.map((result, i) => {
                         return this.renderMarker(i, result)
                     })}
@@ -48,13 +54,20 @@ export default class GMap extends Component<Props, State>  {
                     animating={true}
                     size="large"
                     style={{position: 'absolute', bottom: 30, left: 20}}
-                />
-                }
+                />}
+                {requestState === 'ok' && data.length === 0 &&
+                <View pointerEvents={'none'} style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>
+                    <Text style={{backgroundColor: 'white', padding: 10}}>{i18n.t("lineups.search.empty")}</Text>
+                </View>}
             </View>
         )
     }
 
-    static getCenter(data: []): Region {
+    static getCenter(data: []): ?Region {
+        if (_.isEmpty(data)) {
+            return null
+        }
+
         const latitudes = data.map((item) => {
             item = item.resource || item
             return item.description.latitude

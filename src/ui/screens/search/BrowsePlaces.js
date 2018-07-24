@@ -4,7 +4,7 @@ import type {Node} from 'react'
 import React from 'react'
 import {Button, StyleSheet, Text, TextInput, View,} from 'react-native'
 import type {SearchEngine, SearchState} from "../../../helpers/SearchHelper"
-import {__createAlgoliaSearcher, makeBrowseAlgoliaFilter2, renderItem} from "../../../helpers/SearchHelper"
+import {__createAlgoliaSearcher, makeBrowseAlgoliaFilter2, renderItem, PERMISSION_EMPTY_POSITION} from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import type {ISearchMotor} from "../searchMotor"
 import SearchMotor from "../searchMotor"
@@ -22,7 +22,6 @@ import GMap from "../../components/GMap"
 import {Colors} from "../../colors"
 import ActionButton from "react-native-action-button"
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
-import Permissions from 'react-native-permissions'
 import {seeActivityDetails} from "../../Nav"
 
 
@@ -81,7 +80,7 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
             mapDisplay: false,
             searchOptions: {
                 algoliaFilter: makeBrowseAlgoliaFilter2('me', 'places', this.getUser()),
-                permissionError: 'not-asked',
+                permissionError: PERMISSION_EMPTY_POSITION,
             },
             search: {
                 search: __createAlgoliaSearcher({
@@ -90,9 +89,13 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
                     parseResponse: (hits) => createResultFromHit(hits, {}, true),
                 }),
                 missingSearchPermissions: searchOptions => {
-                    if (!searchOptions.permissionError && searchOptions.lat && searchOptions.lng) return null
+                    if (searchOptions.permissionError) return searchOptions.permissionError
 
-                    return searchOptions.permissionError
+                    if (!searchOptions.lat  || !searchOptions.lng) {
+                        return PERMISSION_EMPTY_POSITION
+                    }
+
+                    return null
                 },
                 renderMissingPermission: (searchOptions: BrowseItemsPlacesOptions, missingPermission: string) => {
                     return renderAskPermission(missingPermission, (status) => this.setState({searchOptions: {...this.state.searchOptions, ...status}}))

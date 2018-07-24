@@ -11,6 +11,9 @@ export default {
         },
         network: {
             title: "Fil d'actualité"
+        },
+        category_search: {
+            title: "Recherche"
         }
     },
     lineups: {
@@ -79,6 +82,7 @@ export default {
             "all": "Tous",
             "more_details": "Appuyer pour plus de détails",
             "missing_permission": "Vous devez autoriser la géolocalisation pour chercher autour de vous",
+            "missing_location": "Sélectionnez un lieu pour chercher autour de vous",
             "settings_permission": "Rendez-vous dans les paramètres pour autoriser la géolocalisation",
             retry: "Réessayer",
             authorize: "Autoriser la géolocalisation"

@@ -43,6 +43,9 @@ export type SearchEngine<SO> = {
 
 export const PERMISSION_EMPTY_INPUT = 'empty_input'
 
+// Happens when the user is selecting a place
+export const PERMISSION_EMPTY_POSITION = 'empty_position'
+
 
 export type SearchOptions = {
     token?: string,
@@ -220,6 +223,7 @@ export function __createAlgoliaSearcher<SO: any>(
         if (config.geoSearch) {
             const aroundLatLng = `${searchOptions.lat}, ${searchOptions.lng}`
             query['aroundLatLng'] = aroundLatLng
+            query['aroundRadius'] = 1000 * 10
         }
 
         console.log(`algolia: searching ${token}`, searchOptions, query);

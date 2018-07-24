@@ -74,7 +74,6 @@ export default class SearchGeneric extends React.Component<SMP, SMS> {
                     renderResults={(state, onLoadMore) => <SearchListResults
                         searchState={state}
                         renderItem={renderResource.bind(this)}
-
                     />}
                     searchOptions={this.state.searchOptions}
                 />

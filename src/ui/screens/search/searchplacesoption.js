@@ -30,6 +30,7 @@ import {CANCELABLE_SEARCH_MODAL} from "../../Nav"
 import type {RNNNavigator} from "../../../types"
 import OpenAppSettings from "react-native-app-settings"
 import Geolocation from "../../../managers/GeoLocation"
+import {PERMISSION_EMPTY_POSITION} from "../../../helpers/SearchHelper"
 import Permissions from 'react-native-permissions'
 
 
@@ -365,12 +366,20 @@ function askPermission(onUpdatedPosition: GeoStatus => void) {
 }
 
 export function renderAskPermission(permissionError: string, onUpdatedPosition: GeoStatus => void): Node {
-    return <View>
-        <Text>{i18n.t("search.category.missing_permission")}</Text>
+    if (permissionError === PERMISSION_EMPTY_POSITION) {
+        return <View style={{flex: 1, padding: 10, justifyContent: 'center', alignItems: 'center'}}>
+            <Text>{i18n.t("search.category.missing_location")}</Text>
+        </View>
+    }
 
-        {permissionError === 'denied' && <Text>{i18n.t("search.category.settings_permission")}</Text>}
-        {permissionError === 'denied' && renderSimpleButton(i18n.t("search.category.retry"), () => askPermission(onUpdatedPosition))}
-        {permissionError === 'undetermined' && renderSimpleButton(i18n.t("search.category.authorize"), () => askPermission(onUpdatedPosition))}
-    </View>
+    if (permissionError === 'denied' || permissionError === 'undetermined' ) {
+        return <View style={{flex: 1, padding: 10, justifyContent: 'center', alignItems: 'center'}}>
+            <Text>{i18n.t("search.category.missing_permission")}</Text>
+
+            {permissionError === 'denied' && <Text>{i18n.t("search.category.settings_permission")}</Text>}
+            {permissionError === 'denied' && renderSimpleButton(i18n.t("search.category.retry"), () => askPermission(onUpdatedPosition))}
+            {permissionError === 'undetermined' && renderSimpleButton(i18n.t("search.category.authorize"), () => askPermission(onUpdatedPosition))}
+        </View>
+    }
 }
 
