@@ -2030,7 +2030,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = it.goodsh.mob;
-				PRODUCT_NAME = Goodshmob;
+				PRODUCT_NAME = Goodshmob.it;
 				PROVISIONING_PROFILE = "6aaccdd5-3ac5-4a8b-a62c-e6d7c0dfe84b";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development it.goodsh.mob";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2462,7 +2462,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = it.goodsh.mob;
-				PRODUCT_NAME = "Goodshmob prod";
+				PRODUCT_NAME = goodshmob.it;
 				PROVISIONING_PROFILE = "6aaccdd5-3ac5-4a8b-a62c-e6d7c0dfe84b";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development it.goodsh.mob";
 				VERSIONING_SYSTEM = "apple-generic";
