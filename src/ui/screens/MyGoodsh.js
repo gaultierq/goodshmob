@@ -35,6 +35,7 @@ import LineupTitle2 from "../components/LineupTitle2"
 import {SFP_TEXT_MEDIUM} from "../fonts"
 import {LINEUP_SECTIONS} from "../UIComponents"
 import {L_SHARE} from "../lineupRights"
+import {Colors} from "../colors"
 
 
 type Props = {
@@ -104,7 +105,7 @@ export default class MyGoodsh extends Screen<Props, State> {
                             renderItem: ({item, index})=> this.renderLineup(item, index, navigator, index > 0 ? null : this.props.targetRef),
                             renderSectionHeader: () => this.renderSectionHeader(
                                 i18n.t("lineups.mine.title"),
-                                <AddLineupComponent navigator={this.props.navigator}/>
+                                <AddLineupComponent navigator={this.props.navigator} styleText={{color: Colors.greyish}}/>
                             )
                         },
                     ]);
@@ -119,13 +120,15 @@ export default class MyGoodsh extends Screen<Props, State> {
     renderSectionHeader(name: string, children?: Node) {
         return (
             <View style={{
-                flexDirection: 'row', backgroundColor: BACKGROUND_COLOR,
+                flexDirection: 'row',
+                backgroundColor: BACKGROUND_COLOR,
                 paddingHorizontal: LINEUP_PADDING,
                 paddingVertical: 8
             }}>
                 <Text style={{
                     fontSize: 24,
-                    fontFamily: SFP_TEXT_MEDIUM
+                    fontFamily: SFP_TEXT_MEDIUM,
+                    // color: Colors.brownishGrey,
                 }}>{name}</Text>
                 {children}
             </View>
