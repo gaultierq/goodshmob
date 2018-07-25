@@ -160,7 +160,7 @@ export default class HomeScreen extends Screen<Props, State> {
         this._mounted = true
     }
 
-    componentWillMount() {
+    componentWillUnmount() {
         this._mounted = false
     }
 
