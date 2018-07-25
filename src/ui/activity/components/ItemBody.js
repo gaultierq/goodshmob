@@ -175,22 +175,36 @@ export default class ItemBody extends React.Component<Props, State> {
                 </Animated.View>
             }
             {/*</BoxShadow>*/}
-            {
-                <GTouchable style={{position: 'absolute', bottom: 10, right: 10}} onPress={() => {
-                    openLinkSafely(item.url)
-                }
-                }>
-                    <Image
-                        source={this.getIcon(item)}
-                        resizeMode="contain"
-                        style={{
-                            width: 50,
-                            height: 50,
-                            opacity: 0.8
-                        }}/>
-                </GTouchable>
-            }
+                <View style={{flexDirection: 'row', position: 'absolute', bottom: 10, alignSelf: 'flex-end'}} >
+                    {
+
+                        this.getUrls(item).map(u=>this.getBottomIcon(u))
+                    }
+                </View>
+
         </View>
+    }
+
+    getUrls(item: Item) {
+        return _.compact([_.get(item, 'url'), _.get(item, 'location')])
+    }
+
+    getBottomIcon(url: string) {
+        const icon = this.getIcon(url)
+        if (!icon) return null
+        return <GTouchable key={'icon-' + url} onPress={() => {
+            openLinkSafely(url)
+        }
+        }>
+            <Image
+                source={icon}
+                resizeMode="contain"
+                style={{
+                    width: 50,
+                    height: 50,
+                    opacity: 0.8
+                }}/>
+        </GTouchable>
     }
 
     getResize(images, item) {
@@ -201,24 +215,21 @@ export default class ItemBody extends React.Component<Props, State> {
         ) ? 'contain' : 'cover'
     }
 
-    getIcon(item: Item) {
-        switch (item.type) {
+    getIcon(url: string) {
+        if (!url) return null
 
-            case 'CreativeWork':
-                return require('../../../img2/link.png')
-            case 'TvShow':
-            case 'Movie':
-                return require('../../../img2/film-strip.png')
-            case 'Place':
-                return require('../../../img2/location.png')
-
-            case 'Album':
-            case 'Track':
-            case 'Artist':
-                return require('../../../img2/play.png')
-            default: return null
+        if (url.indexOf('open.spotify.com/') >= 0) {
+            return require('../../../img2/play.png')
+        }
+        if (url.indexOf('www.themoviedb.org') >= 0) {
+            return require('../../../img2/film-strip.png')
+        }
+        if (url.indexOf('https://maps.google.com/') >= 0) {
+            return require('../../../img2/location.png')
         }
 
+        //else link
+        return require('../../../img2/link.png')
     }
 
     animatedValue = new Animated.Value(0);
