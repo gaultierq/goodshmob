@@ -7,8 +7,8 @@ import {currentUserId, logged} from "../../managers/CurrentUser"
 import {ViewStyle} from "../../types"
 import FriendsScreen from "./friends"
 import Screen from "../components/Screen"
-import {Colors} from "../colors"
 import ShareButton from "../components/ShareButton"
+import {BACKGROUND_COLOR} from "../UIStyles"
 
 type Props = {
     navigator:any,
