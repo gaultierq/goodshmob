@@ -7,7 +7,7 @@ import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
 import FriendCell from "../components/FriendCell"
 import Feed from "../components/feed"
-import type {Id, Item, User} from "../../types"
+import type {Id, Item, RNNNavigator, User} from "../../types"
 import {buildData, doDataMergeInState} from "../../helpers/DataUtils"
 import Screen from "../components/Screen"
 import GTouchable from "../GTouchable"
@@ -19,8 +19,8 @@ import ShareButton from "../components/ShareButton"
 
 type Props = {
     userId: Id,
-    navigator:any,
-    renderItem:?(item:Item)=>Node,
+    navigator: RNNNavigator,
+    renderItem?: (item:Item)=>Node,
 
     onPressItem?: (item: User)=>void,
     data?: any,
@@ -42,7 +42,8 @@ export default class FriendsScreen extends Screen<Props, State> {
         const {
             userId,
             renderItem,
-            ItemSeparatorComponent,
+            data,
+            ...attr,
         } = this.props;
 
 
@@ -71,8 +72,7 @@ export default class FriendsScreen extends Screen<Props, State> {
                     }}
                     ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t('friends.empty_screen')}</Text>}
                     ListHeaderComponent={<ShareButton text={i18n.t('actions.invite')}/>}
-                    ItemSeparatorComponent={ItemSeparatorComponent}
-                    visibility={this.getVisibility()}
+                    {...attr}
                 />
         );
     }

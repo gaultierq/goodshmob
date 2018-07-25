@@ -142,10 +142,11 @@ export default {
             "example":"##Bouquin, restaurant, film, série, artiste,lieu, musique, gadget, fringue, vin, …"
         },
         "value_proposal":"##I was said it is\n" +"very good.\n" + "Not to forget it\n" + "I stored it\n" + "in",
-        "slider_intro_1": "Keep all you love\nTV show, Restaurant, Book\nMusic, Gift idea\n...",
-        "slider_intro_2": "Create your lists\nWith +200M de places, movies, TV shows\nmusic, books & products\nalready in the app.",
-        "slider_intro_3": "Follow lists that interest you.",
-        "slider_intro_4": "Share your interests with who you want\nFriends\nFamily\nWorkmates\nFans.",
+        "slider_intro_1": "L’app où \n" + "<bold>tu stockes</bold> tout \n" + "ce que <bold>tu aimes</bold>",
+        "slider_intro_2": "<bold><black>Créé</black>\ntes listes</bold>\nparmi",
+        "slider_intro_3": "<bold><black>Suis</black>\nles listes</bold>\nqui t’intéressent",
+        "slider_intro_4": "<bold><black>Partage</black> tes\n coups de coeurs</bold>\navec qui tu veux",
+        "slider_intro_4_bis": "<bold>Amis</bold>,\nFamille,\nCollègues,\nFans,\n...\n",
         "credentials": "Keep all you love",
     },
     "popular_screen":{

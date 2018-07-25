@@ -7,7 +7,6 @@ import {reducer as comments2} from '../ui/components/CommentInput'
 import {reducer as friends} from '../ui/screens/friends'
 import {reducer as lineups} from '../ui/screens/lineuplist'
 import lineups2 from '../ui/lineup/reducer'
-import {reducer as peopleYouMayKnow} from '../ui/screens/community'
 import {reducer as interaction} from '../ui/screens/interactions'
 import {statReducer as stat} from '../managers/Statistics'
 import {authReducer as auth, deviceReducer as device} from '../auth/reducer'
@@ -44,7 +43,6 @@ export {
     app,
     data,
     network,
-    peopleYouMayKnow,
     auth,
     stat,
     device,
