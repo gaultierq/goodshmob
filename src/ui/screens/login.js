@@ -110,8 +110,8 @@ class Login extends Component<Props, State> {
             backgroundColor: Colors.green,
             width: '100%',
             height: `${ratio * 100}%`,
-            paddingTop: "15%",
-            alignItems: 'center',
+            paddingTop: 50,
+            // alignItems: 'center',
             justifyContent: 'center'
         }}>
             {props.children}
