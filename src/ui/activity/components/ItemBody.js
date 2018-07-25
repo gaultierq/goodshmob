@@ -214,6 +214,7 @@ export default class ItemBody extends React.Component<Props, State> {
 
             case 'Album':
             case 'Track':
+            case 'Artist':
                 return require('../../../img2/play.png')
             default: return null
         }
