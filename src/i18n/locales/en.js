@@ -145,8 +145,8 @@ export default {
         "slider_intro_1": "The app to\n" + "<bold>keep</bold> \n" + "all you <bold>love</bold>",
         "slider_intro_2": "<bold><black>Create</black>\nlists</bold>\namong",
         "slider_intro_3": "<bold><black>Follow</black>\nlists</bold>\nthat interest you",
-        "slider_intro_4": "<bold><black>Share/black> your\n coups de coeurs</bold>\nwith anyone you wamt",
-        "slider_intro_4_bis": "<bold>Friendss</bold>,\nFamily,\nWorkmates,\nFans,\n...\n",
+        "slider_intro_4": "<bold><black>Share</black></bold> your\n<bold>coups de coeurs</bold>\nwith anyone you wamt",
+        "slider_intro_4_bis": "<bold>Friends</bold>,\nFamily,\nWorkmates,\nFans,\n...\n",
         "credentials": "Keep all you love",
     },
     "popular_screen":{

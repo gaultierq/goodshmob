@@ -447,7 +447,7 @@ export default class App {
             case 'unlogged':
                 BugsnagManager.clearUser();
 
-                this.startUnlogged(navigatorStyle);
+                this.startUnlogged();
                 break;
             case 'init_cache':
                 this.store.dispatch({type: INIT_CACHE, newCacheVersion: cacheVersion});
@@ -559,17 +559,11 @@ export default class App {
         });
     }
 
-    startUnlogged(navigatorStyle) {
+    startUnlogged() {
         Navigation.startSingleScreenApp({
             screen: {
                 label: 'Login',
                 screen: 'goodsh.LoginScreen',
-                navigatorStyle: {
-                    ...navigatorStyle,
-                    navBarHidden: true,
-                    navigationBarColor: Colors.green,
-                    statusBarColor: Colors.green,
-                },
             }
         });
     }

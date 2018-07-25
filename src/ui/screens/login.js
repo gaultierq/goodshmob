@@ -10,8 +10,6 @@ import Config from 'react-native-config'
 import RNAccountKit from 'react-native-facebook-account-kit'
 import Button from 'apsl-react-native-button'
 import Icon from 'react-native-vector-icons/FontAwesome'
-
-import SwiperNav from "../components/SwiperNav"
 import {Colors} from "../colors"
 
 import Swiper from 'react-native-swiper'
@@ -20,12 +18,13 @@ import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "../fonts"
 import i18n from '../../i18n'
 import * as Api from "../../managers/Api"
 import {renderSimpleButton} from "../UIStyles"
-import type {RequestState, User} from "../../types"
+import type {RequestState, RNNNavigator, User} from "../../types"
 import HTMLView from "react-native-htmlview"
 import GTouchable from "../GTouchable"
 
 type Props = {
-    initialIndex: number
+    initialIndex: number,
+    navigator: RNNNavigator
 };
 
 type State = {
@@ -34,23 +33,44 @@ type State = {
     reqLoginAk?: RequestState,
 };
 
+const BUTTON_BACK = {
+    id: 'back2',
+    icon: require('../../img2/backArrowWhite.png'),
+}
+const BUTTON_SKIP = {
+    id: 'skip',
+    title: i18n.t("actions.skip"),
+    buttonColor: 'white',
+    buttonFontSize: 20,
+}
+
+const SLIDE_N = 4
+
 @connect()
 class Login extends Component<Props, State> {
 
     constructor(props: Props) {
         super(props);
         this.state = {index: props.initialIndex || 0};
-        this.goLastSwiperView = this.goLastSwiperView.bind(this);
+
+        props.navigator.addOnNavigatorEvent(event => {
+            console.debug("event", event)
+            if (event.id === 'back2') {
+                this.back()
+            }
+            if (event.id === 'skip') {
+                this.last()
+            }
+
+        });
     }
 
-
+    componentDidMount() {
+        this.refreshNavigator()
+    }
 
     render() {
-
         let marg = 40;
-        let transformBase = 100;
-
-
 
         const contentHtmlStyles = StyleSheet.create({
 
@@ -120,7 +140,8 @@ class Login extends Component<Props, State> {
             >
                 <Text style={{
                     fontSize: 26,
-                    fontFamily: SFP_TEXT_BOLD
+                    fontFamily: SFP_TEXT_BOLD,
+                    color: Colors.white,
                 }}>{props.label}</Text>
             </GTouchable>
         )
@@ -134,6 +155,7 @@ class Login extends Component<Props, State> {
                     onIndexChanged={async (index) => {
                         await this.setState({index})
                         console.debug('login: index change, nex index=', index)
+                        this.refreshNavigator()
                     }}
                     showsPagination={false}
                 >
@@ -226,111 +248,73 @@ class Login extends Component<Props, State> {
                         </View>
                     </View>
                 </Swiper>
-                {/*<SwiperNav index={this.state.index} color={this.getColorsByIndex()} onPressSkip={this.goLastSwiperView}/>*/}
-                {
-                    this.state.index > 0 && this.state.index < 5 &&  <GTouchable style={{
-                        position: 'absolute',
-                        right: 24,
-                        top: 47
-                    }} onPress={this.goLastSwiperView.bind(this)}>
-                    <Text style={{
-                        fontSize: 20,
-                        fontFamily: SFP_TEXT_MEDIUM,
-                        color: Colors.white,
-                        backgroundColor: 'transparent'
-                    }}>{i18n.t("actions.skip")}
-                    </Text>
-                </GTouchable>
-                }
             </View>
         )
     }
 
+    refreshNavigator() {
+        const i = this.state.index
+        this.props.navigator.setButtons({
+            leftButtons: i > 0 ? [BUTTON_BACK] : [],
+            rightButtons: i < SLIDE_N && i > 0 ? [BUTTON_SKIP] : [],
+        })
+        const color = i === SLIDE_N ? Colors.white : Colors.green
+        this.props.navigator.setStyle({
+            navBarButtonColor: Colors.white,
+            // navBarBackgroundColor: color,
 
+            navigationBarColor: color,
 
-    goLastSwiperView() {
-        const indexEnd = (this.state.index) ? (4 - this.state.index) : 4;
-        this.refs["homeSwiper"].scrollBy(indexEnd, true);
+            topBarElevationShadowEnabled: false,
+            statusBarTextColorScheme: i === SLIDE_N ? Colors.dark : Colors.light,
+            // statusBarColor: '#000000',
+            statusBarColor: color,
+
+            // navBarTranslucent: true, // make the nav bar semi-translucent, works best with drawUnderNavBar:true
+            navBarTransparent: true, // make the nav bar transparent, works best with drawUnderNavBar:true,
+            navBarNoBorder: true, // hide the navigation bar bottom border (hair line). Default false
+            drawUnderNavBar: true,
+
+        })
+    }
+
+    last() {
+        this.refs["homeSwiper"].scrollBy(SLIDE_N - this.state.index, true);
     }
 
     next() {
         this.refs["homeSwiper"].scrollBy(1, true);
     }
 
-
-    getColorsByIndex() {
-        let dotColor;
-        let loveColor;
-        let eiffel;
-        const white = '#ffffff';
-        switch (this.state.index) {
-            case 0:
-                dotColor = white;
-                loveColor = white;
-                eiffel = require("../../img2/eiffelWhite.png");
-                break;
-            case 1:
-                dotColor = Colors.green;
-                loveColor = Colors.green;
-                eiffel = require("../../img2/eiffelGreen.png");
-                break;
-            case 2:
-                dotColor = white;
-                loveColor = white;
-                eiffel = require("../../img2/eiffelWhite.png");
-                break;
-            case 3:
-                dotColor = white;
-                loveColor = white;
-                eiffel = require("../../img2/eiffelWhite.png");
-                break;
-            case 4:
-                dotColor = 'transparent';
-                loveColor = white;
-                eiffel = require("../../img2/eiffelWhite.png");
-                break;
-        }
-        return {dotColor, loveColor, eiffel};
+    back() {
+        this.refs["homeSwiper"].scrollBy(-1, true);
     }
 
-    handleFacebookLogin = () => new Promise((resolve, reject)=> {
+    async handleFacebookLogin() {
 
-        LoginManager.logInWithReadPermissions(['public_profile', 'email', 'user_friends'])
-            .then(
-                result => {
-                    if (result.isCancelled) {
-                        //console.log('Login cancelled');
-                        reject('Login cancelled');
-                    }
-                    else {
-                        console.log(`Login success with permissions: ${result.grantedPermissions ? result.grantedPermissions.toString() : 'null'}`);
+        let result
+        try {
+            result = await LoginManager.logInWithReadPermissions(['public_profile', 'email', 'user_friends'])
+        }
+        catch (err) {
+            console.warn('Login fail with error: ' + error);
+            throw err
+        }
+        if (!result) throw 'Login result not found'
+        if (result.isCancelled) throw 'Login cancelled'
 
-                        AccessToken.getCurrentAccessToken().then(
-                            (data) => {
-                                let token = data ? data.accessToken.toString() : '';
-                                if (Config.DEBUG_FACEBOOK_TOKEN) {
-                                    console.info("debug facebook token will be used:" + token);
-                                    token = Config.DEBUG_FACEBOOK_TOKEN;
-                                }
+        console.log(`Login success with permissions: ${result.grantedPermissions ? result.grantedPermissions.toString() : 'null'}`);
 
-                                console.info("facebook token:" + token);
-                                this.props
-                                    .dispatch(appActions.loginWith('facebook', token))
-                                    .then((user) => {
-                                        resolve();
-                                    }, err => reject(err))
-                            }
-                        )
-                    }
+        let data = await AccessToken.getCurrentAccessToken()
+        let token = data ? data.accessToken.toString() : '';
 
-                },
-                error => {
-                    console.log('Login fail with error: ' + error);
-                    reject('Login fail with error: ' + error);
-                }
-            )
-        ;
-    });
+        if (Config.DEBUG_FACEBOOK_TOKEN) {
+            console.info("debug facebook token will be used:" + token);
+            token = Config.DEBUG_FACEBOOK_TOKEN;
+        }
+        console.info("facebook token:" + token);
+        return await this.props.dispatch(appActions.loginWith('facebook', token))
+    }
 
     async handleAccountKitLogin(): Promise<User> {
         let token =  Config.DEBUG_ACCOUNT_KIT_TOKEN
@@ -346,7 +330,7 @@ class Login extends Component<Props, State> {
 
     execLogin(useAccountKit: boolean) {
 
-        const loginFunction = useAccountKit ? this.handleAccountKitLogin.bind(this) : this.handleFacebookLogin
+        const loginFunction = useAccountKit ? this.handleAccountKitLogin.bind(this) : this.handleFacebookLogin.bind(this)
         if (this.isSending()) {
             console.debug("already executing action");
             return;
@@ -362,59 +346,6 @@ class Login extends Component<Props, State> {
     isSending(reqStat: Array<RequestState> = ['reqLoginAk', 'reqLoginFb']) {
         return reqStat.some(r => this.state[r] === 'sending')
     }
-
-    renderPagination = (index, total, context) => {
-        // By default, dots only show when `total` >= 2
-        //if (total <= 1) return null;
-        let {dotColor, eiffel, loveColor} = this.getColorsByIndex();
-
-        const spacing = 6;
-        let dotStyle = {backgroundColor: dotColor, width: 5, height: 5,borderRadius: 2.5, margin: spacing};
-        let activeDotStyle = {backgroundColor: dotColor, width: 8, height: 8, borderRadius: 4, margin: spacing};
-
-        let dots = [];
-        const ActiveDot = <View style={[activeDotStyle]} />;
-        const Dot = <View style={[dotStyle]} />;
-
-        for (let i = 0; i < total; i++) {
-            //if (i === 0 || i === total-1)continue;
-            if (i === total-1)continue;
-            dots.push(i === this.state.index
-                ? React.cloneElement(ActiveDot, {key: i})
-                : React.cloneElement(Dot, {key: i})
-            )
-        }
-
-        return (
-            <View pointerEvents='none' style={[{
-                position: 'absolute',
-                left: 0,
-                right: 0,
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: 'transparent'
-            }, {bottom: 50}]}>
-
-                <View style={[{
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: 'transparent',
-                    marginBottom: 20
-                }]}>
-                    {dots}
-                </View>
-
-                <View style={[{flexDirection: 'row'}]}>
-                    <Image style={{marginRight: 10}} source={eiffel}/>
-                    <Text style={[{color: loveColor, fontFamily: SFP_TEXT_BOLD}]}>{i18n.t("login_screen.credentials")}</Text>
-                </View>
-
-            </View>
-        )
-    }
-
 }
 
 let screen = Login;
