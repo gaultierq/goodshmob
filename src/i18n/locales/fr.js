@@ -208,7 +208,7 @@ export default {
     },
     "search_item_screen":{
         "tabs": {
-            "consumer_goods":"LIVRE\n&\nAUTRES",
+            "consumer_goods":"LIVRE\n&\nAUTRE",
             "places":"LIEU",
             "movies":"FILM\n&\nSERIE",
             "musics":"SON"
