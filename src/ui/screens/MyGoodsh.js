@@ -32,7 +32,7 @@ import LineupHorizontal, {LineupH1} from "../components/LineupHorizontal"
 import UserLineups from "./userLineups"
 import {TipConfig} from "../components/Tip"
 import LineupTitle2 from "../components/LineupTitle2"
-import {SFP_TEXT_MEDIUM} from "../fonts"
+import {SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "../fonts"
 import {LINEUP_SECTIONS} from "../UIComponents"
 import {L_SHARE} from "../lineupRights"
 import {Colors} from "../colors"
@@ -126,9 +126,8 @@ export default class MyGoodsh extends Screen<Props, State> {
                 paddingVertical: 8
             }}>
                 <Text style={{
-                    fontSize: 24,
-                    fontFamily: SFP_TEXT_MEDIUM,
-                    // color: Colors.brownishGrey,
+                    fontSize: 22,
+                    fontFamily: SFP_TEXT_REGULAR,
                 }}>{name}</Text>
                 {children}
             </View>
