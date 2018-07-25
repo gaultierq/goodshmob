@@ -285,7 +285,6 @@ export let TAB_BAR_STYLES = StyleSheet.create({
     label: {
         color: Colors.greyishBrown,
         fontFamily: SFP_TEXT_BOLD,
-        letterSpacing: 1,
         textAlign: 'center',
     },
 
