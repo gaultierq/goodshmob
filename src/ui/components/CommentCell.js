@@ -9,7 +9,6 @@ import {timeSinceActivity} from "../../helpers/DataUtils"
 import {Colors} from "../colors"
 import {SFP_TEXT_REGULAR} from "../fonts"
 import {Col, Grid, Row} from "react-native-easy-grid"
-import {fullName} from "../../helpers/StringUtils"
 
 type Props = {
     comment: Comment | Array<Comment>,
@@ -62,14 +61,16 @@ export default class CommentCell extends Component<Props, State> {
 
         return (
             <Grid>
-                {!rightDisplay &&
-                <Row>
-                    <Col style={{width: dimension}}/>
-                    <Col>
-                        <Text
-                            style={[styles.userName, {alignSelf: 'flex-start', ...styleMargin(0, 4)}]}>{user.firstName}</Text>
-                    </Col>
-                </Row>
+                {
+                    //this is a terrible hack. ActivityDetail should use another dedicated component
+                    !rightDisplay && !skipTime &&
+                    <Row>
+                        <Col style={{width: dimension}}/>
+                        <Col>
+                            <Text
+                                style={[styles.userName, {alignSelf: 'flex-start', marginVertical: 4}]}>{user.firstName}</Text>
+                        </Col>
+                    </Row>
                 }
                 <Row style={{ }}>
                     <Col style={{ width: dimension, justifyContent: 'flex-end'}}>
