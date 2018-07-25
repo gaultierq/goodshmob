@@ -239,7 +239,7 @@ export default class HomeScreen extends Screen<Props, State> {
                         <TabBar
                             renderLabel={({route}) => (
                                 <Text
-                                    style={[TAB_BAR_STYLES.label, {color: this.isFocused(route) ? Colors.green : Colors.black}]}>
+                                    style={[{paddingVertical: 14}, TAB_BAR_STYLES.label, {color: this.isFocused(route) ? Colors.green : Colors.black}]}>
                                     {_.toUpper(route.title)}
                                 </Text>
                             )
