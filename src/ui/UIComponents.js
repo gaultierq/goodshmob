@@ -93,7 +93,7 @@ export class Avatar extends Component<Props, State> {
         return (
             <GImage
                 source={{ uri }}
-                fallbackSource={require('../img/avatar-missing.png')}
+                fallbackSource={require('../img2/default-avatar.png')}
                 style={[{
                     height: size,
                     width: size,
