@@ -78,7 +78,7 @@ export default class MyGoodsh extends Screen<Props, State> {
                 sectionMaker={(lineups)=> {
                     const goodshbox = _.head(lineups);
                     let savingCount = _.get(goodshbox, `meta.savingsCount`, 0)
-                    const showGoodshbox = goodshbox && goodshbox.savings.length > 0;
+                    const showGoodshbox = _.get(goodshbox, 'savings.length', 0) > 0;
 
                     return _.compact([
                         showGoodshbox ? {
