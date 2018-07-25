@@ -46,11 +46,12 @@ export class HomeOnBoardingHelper {
         return AppTourView.for(ref, params)
     }
 
-    handleFocusAdd() {
+    handleFocusAdd(isMounted: () => boolean) {
         if (this.isShowing()) return
         if (this.appTourTargets.size  === 0) return
 
         this.focusAddJob = setTimeout(() => {
+            if (!isMounted()) return
             OnBoardingManager.onDisplayed('focus_add')
 
             let appTourSequence = new AppTourSequence();

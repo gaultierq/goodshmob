@@ -190,7 +190,9 @@ export default class HomeScreen extends Screen<Props, State> {
             switch (type) {
                 case "focus_add":
                     if (this._mounted) {
-                        this.onBoardingHelper.handleFocusAdd()
+                        this.onBoardingHelper.handleFocusAdd(() => {
+                            return this._mounted
+                        })
                     }
                     break
                 case "notification_permissions":
