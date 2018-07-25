@@ -17,6 +17,10 @@ export class HomeOnBoardingHelper {
         this.appTourTargets.set(refName, {ref, primaryText, secondaryText});
     }
 
+    clearTapTarget() {
+        this.appTourTargets.clear()
+    }
+
     createAppTourView(primaryText: string, secondaryText: string, ref) {
         let params = {
             titleTextSize: "24",

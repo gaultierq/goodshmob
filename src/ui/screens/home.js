@@ -162,6 +162,7 @@ export default class HomeScreen extends Screen<Props, State> {
 
     componentWillUnmount() {
         this._mounted = false
+        this.onBoardingHelper.clearTapTarget()
     }
 
     componentDidAppear() {
