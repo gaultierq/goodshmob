@@ -166,16 +166,16 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     renderImageIcon(action: ActivityActionType, size: number, color: Color, style?: any) {
         switch(action) {
             case 'comment':
-                return <Image style={style} source={require('../../../img2/comment-icon.png')} />
+                return <Image style={[style, , {tintColor: color}]} source={require('../../../img2/comment-icon.png')} />
                 // return <FontAwesome style={style} name={'comment-o'} size={size} color={color}/>
             case 'like':
-                return <Image style={style} source={require('../../../img2/heart.png')} />
+                return <Image style={[style, , {tintColor: color}]} source={require('../../../img2/heart.png')} />
                 // return <FontAwesome style={style} name={'heart-o'} size={size} color={color}/>
             case 'unlike':
-                return <Image style={style} source={require('../../../img2/heart.png')} />
+                return <Image style={[style, , {tintColor: color}]} source={require('../../../img2/heart.png')} />
                 // return <FontAwesome style={style} name={'heart'} size={size} color={color}/>
             case 'share':
-                return <Image style={style} source={require('../../../img2/share-small.png')}/>
+                return <Image style={[style, , {tintColor: color}]} source={require('../../../img2/share-small.png')}/>
                 // if (__IS_IOS__) {
                 //     return <FeatherIcon style={style} name={'share'} size={size} color={color}/>
                 // }
@@ -257,7 +257,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
         let color = active ? Colors.green: Colors.greyishBrown;
         return (<GTouchable onPress={handler} key={action}>
                 <View style={styles.button}>
-                    {this.renderImageIcon(action, 24, color, [styles.buttonImage, {tintColor: color}])}
+                    {this.renderImageIcon(action, 24, color, styles.buttonImage)}
                     <Text style={[styles.buttonText, {color}]}>{text}</Text>
                 </View>
             </GTouchable>
