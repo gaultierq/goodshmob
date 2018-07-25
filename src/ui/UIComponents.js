@@ -314,7 +314,7 @@ export const UNFOLLOW_RIGHT_BUTTON = (id: string) => ({
 })
 
 export const SHARE_RIGHT_BUTTON = (id: string) => ({
-    icon: require('../img2/share-arrow.png'),
+    icon: require('../img2/shareArrow-empty.png'),
     id: 'share_' + id
 })
 
