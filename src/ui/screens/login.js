@@ -65,10 +65,6 @@ class Login extends Component<Props, State> {
         });
     }
 
-    componentDidMount() {
-        this.refreshNavigator()
-    }
-
     render() {
         let marg = 40;
 
@@ -80,6 +76,7 @@ class Login extends Component<Props, State> {
                 lineHeight: 44,
                 color: Colors.white,
                 textAlign:'center',
+
                 textShadowColor: 'rgba(0, 0, 0, 1)',
                 textShadowOffset: {width: -1, height: 1},
                 textShadowRadius: 8,
@@ -107,12 +104,13 @@ class Login extends Component<Props, State> {
             },
         })
 
-        let ratio = .28
+        let ratio = .32
 
         const Header = props =>  (<View style={{
             backgroundColor: Colors.green,
             width: '100%',
             height: `${ratio * 100}%`,
+            paddingTop: "15%",
             alignItems: 'center',
             justifyContent: 'center'
         }}>
@@ -136,12 +134,20 @@ class Login extends Component<Props, State> {
                 alignItems: 'center',
                 borderRadius: 4,
                 paddingVertical: 12,
+
+
+                textShadowColor: 'rgba(0, 0, 0, 1)',
+                textShadowOffset: {width: -1, height: 1},
+                textShadowRadius: 3,
+
             }} onPress={this.next.bind(this)}
             >
+
                 <Text style={{
                     fontSize: 26,
                     fontFamily: SFP_TEXT_BOLD,
                     color: Colors.white,
+
                 }}>{props.label}</Text>
             </GTouchable>
         )
@@ -258,24 +264,6 @@ class Login extends Component<Props, State> {
             leftButtons: i > 0 ? [BUTTON_BACK] : [],
             rightButtons: i < SLIDE_N && i > 0 ? [BUTTON_SKIP] : [],
         })
-        const color = i === SLIDE_N ? Colors.white : Colors.green
-        this.props.navigator.setStyle({
-            navBarButtonColor: Colors.white,
-            // navBarBackgroundColor: color,
-
-            navigationBarColor: color,
-
-            topBarElevationShadowEnabled: false,
-            statusBarTextColorScheme: i === SLIDE_N ? Colors.dark : Colors.light,
-            // statusBarColor: '#000000',
-            statusBarColor: color,
-
-            // navBarTranslucent: true, // make the nav bar semi-translucent, works best with drawUnderNavBar:true
-            navBarTransparent: true, // make the nav bar transparent, works best with drawUnderNavBar:true,
-            navBarNoBorder: true, // hide the navigation bar bottom border (hair line). Default false
-            drawUnderNavBar: true,
-
-        })
     }
 
     last() {
@@ -368,7 +356,9 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
     wrapper: {
-        flex: 1
+        flex: 1,
+        backgroundColor: Colors.green
+
     },
     slide: {
         flex: 1,

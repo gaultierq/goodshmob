@@ -564,6 +564,14 @@ export default class App {
             screen: {
                 label: 'Login',
                 screen: 'goodsh.LoginScreen',
+                navigatorStyle: {
+                    navBarButtonColor: Colors.white,
+                    drawUnderNavBar: true,
+                    navBarTransparent: true,
+                    navBarTranslucent: true,
+                    navBarBackgroundColor: Colors.dirtyWhite,
+                    topBarElevationShadowEnabled: false
+                }
             }
         });
     }
