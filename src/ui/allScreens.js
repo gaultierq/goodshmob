@@ -2,7 +2,7 @@ import {Navigation} from 'react-native-navigation'
 
 import {screen as LoginScreen} from './screens/login'
 import {screen as NetworkScreen} from './screens/network'
-import {screen as SearchItemScreen} from './screens/searchitems'
+import SearchItems from './screens/searchitems'
 import DebugScreen from './screens/debug'
 
 import {screen as ActivityDetailScreen} from './activity/activityDetail'
@@ -17,10 +17,9 @@ import ProfileScreen from './screens/profile'
 import FriendScreen from './screens/friends'
 import {CommunityScreen} from './screens/community'
 import SendScreen from './screens/send'
-import AlgoliaSearchScreen from './screens/algoliasearch'
 import UserScreen from './screens/user'
-import NetworkSearchScreen from './screens/networksearch'
 import HomeSearchScreen from './screens/homesearch'
+import CategorySearchScreen from './screens/categorySearch'
 import AddItemScreen from './screens/additem'
 import TestScreen from './screens/devtest'
 import AskScreen from './screens/asksheet'
@@ -46,6 +45,7 @@ import MyGoodshsScreen from "./screens/MyGoodsh"
 import EditUserProfileScreen from "./screens/edituserprofile"
 import PopularItemsScreen from "./screens/popularitems"
 import GIndicator from "./screens/indicator"
+import UserSearchScreen from "./screens/usersearch"
 
 
 function wrap(screenName,screenCreator,store,provider) {
@@ -78,7 +78,7 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.EditUserProfileScreen', screenCreator, store, Provider);
     wrap('goodsh.LoginScreen', () => LoginScreen, store, Provider);
     wrap('goodsh.NetworkScreen', () => NetworkScreen, store, Provider);
-    wrap('goodsh.SearchItemsScreen', () => SearchItemScreen, store, Provider);
+    wrap('goodsh.SearchItems', () => SearchItems, store, Provider);
     wrap('goodsh.DebugScreen', () => DebugScreen, store, Provider);
     wrap('goodsh.FriendsScreen', () => FriendScreen, store, Provider);
     wrap('goodsh.ActivityDetailScreen', () => ActivityDetailScreen, store, Provider);
@@ -94,8 +94,8 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.ProfileScreen', () => ProfileScreen, store, Provider);
     wrap('goodsh.AlgoliaSearchScreen', () => AlgoliaSearchScreen, store, Provider);
     wrap('goodsh.UserScreen', () => UserScreen, store, Provider);
-    wrap('goodsh.NetworkSearchScreen', () => NetworkSearchScreen, store, Provider);
     wrap('goodsh.HomeSearchScreen', () => HomeSearchScreen, store, Provider);
+    wrap('goodsh.CategorySearchScreen', () => CategorySearchScreen, store, Provider);
     wrap('goodsh.AddItemScreen', () => AddItemScreen, store, Provider);
     wrap('goodsh.TestScreen', () => TestScreen, store, Provider);
     wrap('goodsh.InteractionScreen', () => InteractionScreen, store, Provider);
@@ -116,5 +116,6 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.AskScreen', () => AskScreen, store, Provider);
     wrap('goodsh.NavBarButtonIndicator', () => GIndicator, store, Provider);
     wrap('goodsh.TouchableSearchBar', () => TouchableSearchBar, store, Provider);
+    wrap('goodsh.UserSearchScreen', () => UserSearchScreen, store, Provider);
 
 }

@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -1162,10 +1161,10 @@
 				D09DADD22088F24200A80322 /* Setup Firebase Environment GoogleService-Info.plist */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				7C18B1A907446F3764AE66C1 /* [CP] Embed Pods Frameworks */,
-				6C3FEE3CEEEA2E495DADA8B9 /* [CP] Copy Pods Resources */,
 				D087DD361FF363A20052651C /* Embed Frameworks */,
 				D0DBBED91FF5F3ED00ABBCAB /* ShellScript */,
+				23D056BA4AB094241E26478C /* [CP] Copy Pods Resources */,
+				646F05EA1A90A9CCAC353458 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1794,19 +1793,37 @@
 			shellPath = /bin/sh;
 			shellScript = "export DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(Debug|Debug)\"\nexport NODE_BINARY=node\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh";
 		};
-		6C3FEE3CEEEA2E495DADA8B9 /* [CP] Copy Pods Resources */ = {
+		23D056BA4AB094241E26478C /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-goodshmob/Pods-goodshmob-resources.sh",
+				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMaps.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-goodshmob/Pods-goodshmob-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		646F05EA1A90A9CCAC353458 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "[CP] Copy Pods Resources";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-goodshmob/Pods-goodshmob-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-goodshmob/Pods-goodshmob-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6E22ED90F7CE417D00C048D7 /* [CP] Check Pods Manifest.lock */ = {
@@ -1825,21 +1842,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		7C18B1A907446F3764AE66C1 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-goodshmob/Pods-goodshmob-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		D09DADD22088F24200A80322 /* Setup Firebase Environment GoogleService-Info.plist */ = {
@@ -1928,6 +1930,7 @@
 					"$(PROJECT_DIR)",
 				);
 				GOODSH_URL_SCHEME = goodshlocal;
+				GOOGLE_MAPS_API_KEY = "AIzaSyCTUa6mMxziglVEBf-5AkHFtWv9ir-auSs";
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../node_modules/react-native-navigation/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-i18n/ios",
@@ -1994,6 +1997,7 @@
 					"$(PROJECT_DIR)",
 				);
 				GOODSH_URL_SCHEME = goodshrelease;
+				GOOGLE_MAPS_API_KEY = "AIzaSyCTUa6mMxziglVEBf-5AkHFtWv9ir-auSs";
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../node_modules/react-native-navigation/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-i18n/ios",
@@ -2204,6 +2208,7 @@
 					"$(PROJECT_DIR)",
 				);
 				GOODSH_URL_SCHEME = goodshpreprod;
+				GOOGLE_MAPS_API_KEY = "AIzaSyCTUa6mMxziglVEBf-5AkHFtWv9ir-auSs";
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../node_modules/react-native-navigation/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-i18n/ios",
@@ -2315,6 +2320,7 @@
 					"$(PROJECT_DIR)",
 				);
 				GOODSH_URL_SCHEME = goodshdev;
+				GOOGLE_MAPS_API_KEY = "AIzaSyCTUa6mMxziglVEBf-5AkHFtWv9ir-auSs";
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../node_modules/react-native-navigation/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-i18n/ios",
@@ -2426,6 +2432,7 @@
 					"$(PROJECT_DIR)",
 				);
 				GOODSH_URL_SCHEME = goodsh;
+				GOOGLE_MAPS_API_KEY = "AIzaSyCTUa6mMxziglVEBf-5AkHFtWv9ir-auSs";
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../node_modules/react-native-navigation/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-i18n/ios",

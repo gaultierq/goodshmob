@@ -11,6 +11,9 @@ export default {
         },
         network: {
             title: "Fil d'actualité"
+        },
+        category_search: {
+            title: "Recherche"
         }
     },
     lineups: {
@@ -70,8 +73,20 @@ export default {
     search: {
         in_items: "Saisir le nom à enregistrer",
         in_network: "Rechercher dans mon réseau",
+        in_users: "Rechercher quelqu'un",
         in_feed: "Rechercher dans mes listes",
-        by: "par"
+        by: "par",
+        category: {
+            "me": "Moi",
+            "friends": "Mes amis",
+            "all": "Tous",
+            "more_details": "Appuyer pour plus de détails",
+            "missing_permission": "Vous devez autoriser la géolocalisation pour chercher autour de vous",
+            "missing_location": "Sélectionnez un lieu pour chercher autour de vous",
+            "settings_permission": "Rendez-vous dans les paramètres pour autoriser la géolocalisation",
+            retry: "Réessayer",
+            authorize: "Autoriser la géolocalisation"
+        }
     },
     "shared":{
         "goodsh_saved":"Enregistré",

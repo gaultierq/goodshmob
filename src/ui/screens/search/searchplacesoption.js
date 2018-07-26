@@ -1,6 +1,9 @@
+// @flow
+import type {Node} from 'react'
 import React, {Component} from 'react'
 import {
     ActivityIndicator,
+    Alert,
     Animated,
     Easing,
     FlatList,
@@ -11,26 +14,48 @@ import {
     View
 } from 'react-native'
 import {CheckBox} from 'react-native-elements'
-import GTouchable from "../GTouchable"
-import {Colors} from "../colors"
-import {NavStyles, SEARCH_INPUT_PROPS, SEARCH_INPUT_RADIUS, SEARCH_STYLES, SEARCH_STYLES_OBJ} from "../UIStyles"
+import GTouchable from "../../GTouchable"
+import {Colors} from "../../colors"
+import {
+    NavStyles,
+    renderSimpleButton,
+    SEARCH_INPUT_PROPS,
+    SEARCH_INPUT_RADIUS,
+    SEARCH_STYLES,
+    SEARCH_STYLES_OBJ
+} from "../../UIStyles"
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import {Navigation} from 'react-native-navigation'
-import {CANCELABLE_SEARCH_MODAL} from "../Nav"
-import type {RNNNavigator} from "../../types"
+import {CANCELABLE_SEARCH_MODAL} from "../../Nav"
+import type {RNNNavigator} from "../../../types"
+import OpenAppSettings from "react-native-app-settings"
+import Geolocation from "../../../managers/GeoLocation"
+import {PERMISSION_EMPTY_POSITION} from "../../../helpers/SearchHelper"
+import Permissions from 'react-native-permissions'
 
+
+export type GeoStatus = {
+    lat?: number,
+    lng?: number,
+    permissionError: string | null
+}
 
 export type SearchPlacesProps = {
     aroundMe?:boolean,
-    onNewOptions: any => void,
-    onSearchSubmited: void => void,
-    navigator: RNNNavigator
+    onNewOptions: GeoStatus => void,
+    onSearchSubmited?: void => void,
+    navigator: RNNNavigator,
+    ref?: IPositionSelector => void,
+
 };
 
 type SearchPlacesState = {
     aroundMe: boolean,
     place: string,
-    focus: boolean
+    focus: boolean,
+
+    lat?: ?number,
+    lng?: ?number
 };
 
 export const SEARCH_OPTIONS_PADDINGS = {
@@ -40,7 +65,13 @@ export const SEARCH_OPTIONS_PADDINGS = {
     paddingVertical: 8,
 };
 
-export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState> {
+
+//search query KEY: token x category x options
+export interface IPositionSelector {
+    getPosition(): Promise<GeoStatus>;
+}
+
+export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlacesState> implements IPositionSelector {
 
     input;
     animation;
@@ -54,8 +85,14 @@ export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlace
         const aroundMe = !!props.aroundMe;
         this.state = {aroundMe};
         this.animation = new Animated.Value(1);
-        props.onNewOptions(this.state);
         this.toggleAroundMe(aroundMe);
+    }
+
+    componentDidMount() {
+        if (this.props.ref) {
+            this.props.ref(this)
+        }
+        this.setStateAndNotify(this.state)
     }
 
     render() {
@@ -125,7 +162,9 @@ export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlace
 
                                                     this.setStateAndNotify({
                                                         place: place,
-                                                        lat, lng
+                                                        aroundMe: false,
+                                                        lat,
+                                                        lng
                                                     });
                                                 }
 
@@ -213,7 +252,6 @@ export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlace
                             style={{
                                 color: Colors.brownishGrey,
                                 flex: 1,
-                                singleLine: true,
                                 backgroundColor: 'transparent',
                             }}>{i18n.t("search_item_screen.search_options.around_me")}
 
@@ -274,7 +312,74 @@ export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlace
 
     }
 
-    setStateAndNotify(newState) {
-        this.setState(newState, () => this.props.onNewOptions(this.state));
+    async setStateAndNotify(newState: SearchPlacesState) {
+        await this.setState(newState)
+
+        this.getPosition()
+            .then(geoPosition => {
+                this.props.onNewOptions(geoPosition)
+            })
+
+    }
+
+    getPosition(): Promise<GeoStatus> {
+        let {lat, lng, aroundMe} = this.state
+        let geoPosition: GeoStatus
+        if (aroundMe) {
+            return getCurrentGeoStatus()
+        } else {
+            geoPosition = {lat, lng, permissionError: null}
+            return Promise.resolve(geoPosition)
+        }
+    }
+
+}
+
+//
+function getCurrentGeoStatus(): Promise<GeoStatus> {
+    let geoPosition: GeoStatus
+    return Permissions.check('location').then(response => {
+
+        if (response !== 'authorized') {
+            geoPosition = {permissionError: response}
+            return Promise.resolve(geoPosition)
+        } else {
+            return Geolocation.getPosition()
+                .then(position => {
+                    geoPosition = {lat: position.latitude,
+                        lng: position.longitude,
+                        permissionError: null}
+                    return geoPosition
+                })
+        }
+    })
+}
+
+function askPermission(onUpdatedPosition: GeoStatus => void) {
+    Permissions.request('location')
+        .then((res)=> {
+            getCurrentGeoStatus()
+                .then(position => {
+                    onUpdatedPosition(position)
+                })
+        })
+}
+
+export function renderAskPermission(permissionError: string, onUpdatedPosition: GeoStatus => void): Node {
+    if (permissionError === PERMISSION_EMPTY_POSITION) {
+        return <View style={{flex: 1, padding: 10, justifyContent: 'center', alignItems: 'center'}}>
+            <Text>{i18n.t("search.category.missing_location")}</Text>
+        </View>
+    }
+
+    if (permissionError === 'denied' || permissionError === 'undetermined' ) {
+        return <View style={{flex: 1, padding: 10, justifyContent: 'center', alignItems: 'center'}}>
+            <Text>{i18n.t("search.category.missing_permission")}</Text>
+
+            {permissionError === 'denied' && <Text>{i18n.t("search.category.settings_permission")}</Text>}
+            {permissionError === 'denied' && renderSimpleButton(i18n.t("search.category.retry"), () => askPermission(onUpdatedPosition))}
+            {permissionError === 'undetermined' && renderSimpleButton(i18n.t("search.category.authorize"), () => askPermission(onUpdatedPosition))}
+        </View>
     }
 }
+

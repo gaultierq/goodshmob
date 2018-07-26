@@ -83,23 +83,24 @@ class NetworkScreen extends Screen<Props, State> {
     }
 
     componentDidMount() {
-        const {height, width} = Dimensions.get('window');
+        // const {height, width} = Dimensions.get('window');
 
-        this.props.navigator.setStyle({
-            ...UI.NavStyles,
-            navBarCustomView: 'goodsh.TouchableSearchBar',
-            navBarCustomViewInitialProps: {
-                style: {
-                    width: width - 130,
-                    marginTop: __IS_IOS__ ? 0 : 10,
-                },
-                searchBarProps: {
-                    placeholder: i18n.t('search.in_network')
-                },
-                onPress: this.showSearch.bind(this)
-            }
-        });
+        // this.props.navigator.setStyle({
+        //     ...UI.NavStyles,
+        //     navBarCustomView: 'goodsh.TouchableSearchBar',
+        //     navBarCustomViewInitialProps: {
+        //         style: {
+        //             width: width - 130,
+        //             marginTop: __IS_IOS__ ? 0 : 10,
+        //         },
+        //         searchBarProps: {
+        //             placeholder: i18n.t('search.in_network')
+        //         },
+        //         onPress: this.showSearch.bind(this)
+        //     }
+        // });
     }
+
     componentWillAppear() {
         this.props.navigator.setDrawerEnabled({side: 'right', enabled: true});
         this.props.navigator.setDrawerEnabled({side: 'left', enabled: false});
@@ -273,18 +274,6 @@ class NetworkScreen extends Screen<Props, State> {
         this.props.navigator.showModal({
             screen: 'goodsh.ActivityDetailScreen',
             passProps: {activityId: activity.id, activityType: activity.type},
-        });
-    }
-
-    showSearch() {
-        let navigator = this.props.navigator;
-
-        navigator.showModal({
-            screen: 'goodsh.NetworkSearchScreen',
-            passProps:{
-                onClickClose: () => navigator.dismissModal(),
-            },
-            navigatorButtons: CANCELABLE_MODAL2,
         });
     }
 

@@ -4,7 +4,7 @@ import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 import com.facebook.CallbackManager;
 import com.facebook.appevents.AppEventsLogger;
-
+import com.airbnb.android.react.maps.MapsPackage;
 
 import android.app.Application;
 import android.content.Intent;
@@ -81,7 +81,8 @@ public class MainApplication extends NavigationApplication implements ReactAppli
             new SnackbarPackage(),
             new VectorIconsPackage(),
             new RNI18nPackage(),
-            new FBSDKPackage(mCallbackManager)
+            new FBSDKPackage(mCallbackManager),
+            new MapsPackage()
     );
   }
 //

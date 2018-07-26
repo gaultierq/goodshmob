@@ -14,6 +14,7 @@
 #import "RNFirebaseLinks.h"
 #import <FirebaseDynamicLinks/FirebaseDynamicLinks.h>
 
+@import GoogleMaps;
 // **********************************************
 // *** DON'T MISS: THE NEXT LINE IS IMPORTANT ***
 // **********************************************
@@ -44,6 +45,8 @@
     }
   }
   
+  
+  [GMSServices provideAPIKey:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"GoogleMapsApiKey"]];
   
   
   // **********************************************

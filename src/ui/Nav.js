@@ -71,33 +71,14 @@ export function startAddItem(navigator: *, defaultLineup: Id | Lineup) {
 
 
     navigator.showModal({
-        screen: 'goodsh.SearchItemsScreen', // unique ID registered with Navigation.registerScreen
+        screen: 'goodsh.SearchItems', // unique ID registered with Navigation.registerScreen
         navigatorButtons: CANCELABLE_MODAL2,
         passProps: {
             defaultLineup,
-            onItemSelected: (item: Item, navigator: RNNNavigator) => {
-
-                navigator.showModal({
-                    screen: 'goodsh.AddItemScreen',
-                    title: i18n.t("add_item_screen.title"),
-                    animationType: 'none',
-                    passProps: {
-                        itemId: item.id,
-                        itemType: item.type,
-                        item,
-                        defaultLineupId,
-                        onCancel: cancel,
-                        onAdded: cancel,
-                    },
-                });
-
-            },
             onCancel: cancel
         }, // Object that will be passed as props to the pushed screen (optional)
     })
 }
-
-
 
 export function seeList(navigator: RNNNavigator, lineup: Lineup) {
 
@@ -298,18 +279,18 @@ export function displayHomeSearch(navigator: RNNNavigator, token: SearchToken) {
             onClickClose: () => navigator.dismissModal(),
             token
         },
-        // backButtonHidden: true,
-        // navigatorButtons: {
-        //     leftButtons: [],
-        //     rightButtons: [
-        //         {
-        //             id: CLOSE_MODAL,
-        //             title: i18n.t("actions.cancel")
-        //         }
-        //     ],
-        // },
-        //
-        // navigatorButtons: Nav.CANCELABLE_SEARCH_MODAL(),
+        navigatorButtons: CANCELABLE_MODAL,
+    });
+}
+
+export function displaySearchUser(navigator: RNNNavigator, token: SearchToken) {
+
+    navigator.showModal({
+        screen: 'goodsh.UserSearchScreen', // unique ID registered with Navigation.registerScreen
+        passProps: {
+            onClickClose: () => navigator.dismissModal(),
+            token
+        },
         navigatorButtons: CANCELABLE_MODAL,
     });
 }

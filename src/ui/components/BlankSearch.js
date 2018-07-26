@@ -19,7 +19,7 @@ type State = {
 };
 
 @logged
-export default class EmptySearch extends Component<Props, State> {
+export default class BlankSearch extends Component<Props, State> {
 
     render() {
 

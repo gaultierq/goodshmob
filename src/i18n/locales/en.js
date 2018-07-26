@@ -11,6 +11,9 @@ export default {
         },
         network: {
             title: "News feed"
+        },
+        category_search: {
+            title: "Category Search"
         }
     },
     lineups: {
@@ -70,8 +73,20 @@ export default {
     search:{
         in_items: "Find anything",
         in_network: "Search in my network",
+        in_users: "Find somebody",
         in_feed: "In my lists",
         by: "by",
+        category: {
+            "me": "Me",
+            "friends": "My friends",
+            "all": "All",
+            "more_details": "Press for more details",
+            missing_permission: "You must authorize geolocation to search around you",
+            missing_location: "Select a place to start a search",
+            settings_permission: "Open settings and enable geolocation",
+            retry: "Retry",
+            authorize: "Authorize geolocation"
+        }
     },
     "shared":{
         "goodsh_saved":"Saved",

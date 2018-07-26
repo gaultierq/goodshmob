@@ -2,7 +2,9 @@
 
 import React from 'react'
 import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import type {SearchCategoryType, SearchTrigger} from "./SearchHelper"
+import type {
+    SearchCategoryType, SearchEngine, SearchOptions, SearchResult,
+} from "./SearchHelper"
 import type {RNNNavigator, SearchToken} from "../types"
 import algoliasearch from 'algoliasearch/reactnative'
 import * as appActions from "../auth/actions"
@@ -62,12 +64,15 @@ const instance = new AlgoliaClient();
 
 export {instance as AlgoliaClient};
 
-export function makeAlgoliaSearchEngine(categories, navigator: RNNNavigator) {
+export function makeAlgoliaSearchEngine(categories: Array<SearchCategory>,
+                                        navigator: RNNNavigator,
+                                        withoutToken: boolean = false): SearchEngine {
 
-    let search = (token: SearchToken, categoryType: SearchCategoryType, page: number): Promise<*> => {
+    let search = (categoryType: SearchCategoryType, page: number, searchOptions: SearchOptions): Promise<*> => {
 
         //searching
-        console.log(`algolia: searching ${token}`);
+        const token = searchOptions.token || ''
+        console.log(`algolia: searching ${token}`, searchOptions);
 
         //separate searches
         let categFiltered = categories.filter((c) => c.type === categoryType);
@@ -75,9 +80,9 @@ export function makeAlgoliaSearchEngine(categories, navigator: RNNNavigator) {
 
 
         // const queries = categFiltered.map(c=> {return {...c.query, params: c.params, query: token}});
-        const query = {...category.query, params: category.query.params, page, query: token};
+        const query = {...category.query, filters: searchOptions.algoliaFilter, page, query: token};
 
-
+        console.log({query})
         let indexResolver = category.index;
 
         return new Promise((resolve, reject) => {
@@ -90,44 +95,16 @@ export function makeAlgoliaSearchEngine(categories, navigator: RNNNavigator) {
                         reject(err);
                         return;
                     }
-                    let res = {};
                     let result = content;
                     let hits = result.hits;
-                    console.log(`search result lists: ${hits.length}`);
+                    console.log(`search result lists: ${hits.length}`, hits);
 
                     let searchResult = category.parseResponse(hits);
 
-                    let type = category.type;
-
-                    let search = {};
-
-                    search.results = searchResult;
-                    search.page = result.page;
-                    search.nbPages = result.nbPages;
-                    res[type] = search;
-
-                    // categFiltered.reduce((obj, c, i) => {
-                    //     // categories.reduce((obj, c, i) => {
-                    //
-                    //     let result = _.get(content.results, 0, {hits: []});
-                    //     let hits = result.hits;
-                    //     console.log(`search result lists: ${hits.length}`);
-                    //
-                    //     let searchResult = c.parseResponse(hits);
-                    //
-                    //     let type = c.type;
-                    //
-                    //     let search = {};
-                    //
-                    //     search.results = searchResult;
-                    //     search.page = result.page;
-                    //     search.nbPages = result.nbPages;
-                    //
-                    //     obj[type] = search;
-                    //     return obj;
-                    // }, res);
-
-                    resolve(res);
+                    let search:SearchResult = {results: searchResult,
+                        page: result.page,
+                        nbPages: result.nbPages};
+                    resolve(search);
                 });
             });
             // index.search(queries, (err, content) => {
@@ -136,9 +113,6 @@ export function makeAlgoliaSearchEngine(categories, navigator: RNNNavigator) {
     };
     return {
         search,
-        canSearch: (token: SearchToken, category: SearchCategoryType, trigger: SearchTrigger, searchOptions?:any) => {
-            return !_.isEmpty(token);
-        }
     };
 }
 
@@ -153,7 +127,7 @@ export function obtainClient(): Promise<AlgoliaClient> {
 
 
 
-export function createResultFromHit(hits, options = {}) {
+export function createResultFromHit(hits, options = {}, withoutToken: boolean = false) {
     let {filterItems} = options;
 
     let searchResult = [];
@@ -172,7 +146,8 @@ export function createResultFromHit(hits, options = {}) {
             type,
             image,
             url,
-            user
+            user,
+            description
         } = h;
 
         user2 = {
@@ -184,7 +159,7 @@ export function createResultFromHit(hits, options = {}) {
         let saving = {
             id: objectID,
             user: Object.assign({type: "users"}, user2, {id: user_id}),
-            resource: {type, image, url, title: item_title},
+            resource: {type, image, url, title: item_title, description},
             type: "savings"
         };
 
@@ -207,10 +182,11 @@ export function createResultFromHit(hits, options = {}) {
         }
 
         //if matching a list, algolia will also notify us the item_title matching
-        if (matchedItemTitle && !filterItems) {
+        if (withoutToken || (matchedItemTitle && !filterItems)) {
             searchResult.push(saving);
         }
     });
+
     return searchResult;
 }
 export function createResultFromHit2(hits, options = {}) {

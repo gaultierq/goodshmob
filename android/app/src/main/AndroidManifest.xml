@@ -78,6 +78,9 @@
             </intent-filter>
         </service>
         <meta-data
+                android:name="com.google.android.geo.API_KEY"
+                android:value="@string/google_maps_api_key"/>
+        <meta-data
             android:name="io.fabric.ApiKey"
             android:value="f32b1bdd9c41d0afb6bba08dd6085586ac9fee12" />
 
