@@ -57,11 +57,11 @@ export default class SearchUserPage extends React.Component<SUP, SUS> {
                     onChangeText={(token: string)  => {this.setState({searchOptions: {...this.state.searchOptions, token}})}}
                     value={_.get(this.state, this.state.searchOptions.token)}
                     style={styles1.searchBar}
-                    placeholder={"# search user"}
+                    placeholder={i18n.t('search_item_screen.searchbar_placeholder.users')}
                     autoFocus
                 />
                 <SearchMotor
-                    searchEngine={this.state.search}
+                    searchEngine={this.search}
                     renderResults={(state, onLoadMore) => <SearchListResults searchState={state} renderItem={renderUser(this.props.navigator)} />}
                     searchOptions={this.state.searchOptions}
                     missingSearchPermissions={this._missingSearchPermissions}
