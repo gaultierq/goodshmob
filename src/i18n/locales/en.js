@@ -62,7 +62,7 @@ export default {
     },
     home: {
         wizard: {
-            action_button_label : "Add a coup de coeur,\n, a wish, a tip.",
+            action_button_label : "Add a coup de cœur,\n, a wish, a tip.",
             action_button_body : "Book, movie, tvshow, restaurant, music...",
         },
         tabs: {
@@ -158,10 +158,10 @@ export default {
         },
         "value_proposal":"##I was said it is\n" +"very good.\n" + "Not to forget it\n" + "I stored it\n" + "in",
         "slider_intro_1": "The app to\n" + "<bold>keep</bold> \n" + "all you <bold>love</bold>",
-        "slider_intro_2": "<bold><black>Create</black>\nlists</bold>\namong",
-        "slider_intro_3": "<bold><black>Follow</black>\nlists</bold>\nthat interest you",
-        "slider_intro_4": "<bold><black>Share</black></bold> your\n<bold>coups de coeurs</bold>\nwith anyone you wamt",
-        "slider_intro_4_bis": "<bold>Friends</bold>,\nFamily,\nWorkmates,\nFans,\n...\n",
+        "slider_intro_2": "<bold><black>Create</black></bold>\nlists\namong",
+        "slider_intro_3": "<bold><black>Follow</black></bold>\nlists\nthat interest you",
+        "slider_intro_4": "<bold><black>Share</black></bold>\nyour coups de cœurs\nwith anyone you wamt",
+        "slider_intro_4_bis": "<bold>Friends</bold>,\nfamily,\nworkmates,\nfans,\n...\n",
         "credentials": "Keep all you love",
         "button_start": "Start",
         "button_next": "Next",

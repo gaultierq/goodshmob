@@ -62,7 +62,7 @@ export default {
     },
     home: {
         wizard: {
-            action_button_label : "Ajouter un coup de coeur,\nune envie, un conseil.",
+            action_button_label : "Ajouter un coup de cœur,\nune envie, un conseil.",
             action_button_body : "Livre, film, série, resto, musique...",
         },
         tabs: {
@@ -157,10 +157,10 @@ export default {
         },
         "value_proposal":"##Marre d’oublier les recommandations\nqu’on te fait ?",
         "slider_intro_1": "L’app où \n" + "<bold>tu stockes</bold> tout \n" + "ce que <bold>tu aimes</bold>",
-        "slider_intro_2": "<bold><black>Créé</black>\ntes listes</bold>\nparmi",
-        "slider_intro_3": "<bold><black>Suis</black>\nles listes</bold>\nqui t’intéressent",
-        "slider_intro_4": "<bold><black>Partage</black> tes\n coups de coeurs</bold>\navec qui tu veux",
-        "slider_intro_4_bis": "<bold>Amis</bold>,\nFamille,\nCollègues,\nFans,\n...\n",
+        "slider_intro_2": "<bold><black>Créé</black></bold>\ntes listes\nparmi",
+        "slider_intro_3": "<bold><black>Suis</black></bold>\nles listes\nqui t’intéressent",
+        "slider_intro_4": "<bold><black>Partage</black></bold>\ntes coups de cœurs\navec qui tu veux",
+        "slider_intro_4_bis": "<bold>Amis</bold>,\nfamille,\ncollègues,\nfans,\n...\n",
         "credentials": "Keep all you love",
         "button_start": "Commencer",
         "button_next": "Suivant",
