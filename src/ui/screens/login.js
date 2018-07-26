@@ -144,7 +144,7 @@ class Login extends Component<Props, State> {
             >
 
                 <Text style={{
-                    fontSize: 26,
+                    fontSize: 24,
                     fontFamily: SFP_TEXT_BOLD,
                     color: Colors.white,
 
