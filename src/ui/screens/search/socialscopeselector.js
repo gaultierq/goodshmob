@@ -1,18 +1,18 @@
 // @flow
 
 import React, {Component} from 'react'
-import MultiSwitch from "../../components/MultiSwitch"
-
+import {Colors} from "../../colors"
+import SwitchSelector from 'react-native-switch-selector'
+import {View} from "react-native"
 
 type SocialScope = 'me' | 'friends' | 'all'
 
 export type Pr = {
-    onScopeChange: SocialScope => void
+    onScopeChange: SocialScope => void,
+
 };
 
-type St = {
-};
-
+type St = {}
 
 export class SocialScopeSelector extends Component<Pr, St> {
 
@@ -25,11 +25,16 @@ export class SocialScopeSelector extends Component<Pr, St> {
         ]
 
         return (
-            <MultiSwitch
-                options={options}
-                onPositionChange={(position: number) => {
-                    this.props.onScopeChange(options[position].type)
-                }}/>
+            <View style={{padding: 12}}>
+                <SwitchSelector
+                    options={options.map((o,i) => ({...o, value: i}))}
+                    onPress={position => this.props.onScopeChange(options[position].type)}
+                    textColor={Colors.black}
+                    selectedColor={Colors.white}
+                    buttonColor={Colors.green}
+                    borderColor={Colors.green}
+                />
+            </View>
         )
 
     }

@@ -5765,6 +5765,10 @@ react-native-swiper@^1.5.13:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-switch-selector@^1.1.8:
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/react-native-switch-selector/-/react-native-switch-selector-1.1.8.tgz#5e79e14d8b91462ac826427d19a4e85708717312"
+
 react-native-tab-view@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-1.0.2.tgz#66e0bc6d38a227ed2b212e3a256b7902f6ce02ed"
