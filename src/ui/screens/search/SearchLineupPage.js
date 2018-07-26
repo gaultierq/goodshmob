@@ -18,7 +18,7 @@ import {currentUserId} from "../../../managers/CurrentUser"
 import {createResultFromHit} from "../../../helpers/AlgoliaUtils"
 import SearchListResults from "../searchListResults"
 import BlankSearch, {renderBlankIcon} from "../../components/BlankSearch"
-import {renderLineupFromOtherPeople} from "../../../ui/UIComponents"
+import {renderLineupFromOtherPeople, GoodshContext} from "../../../ui/UIComponents"
 
 export type SearchUserOptions = {
     token: string
@@ -85,20 +85,22 @@ export default class SearchSavingAndLineupPage extends React.Component<SUP, SUS>
 
     render() {
         return (
-            <View style={{flex: 1}}>
-                <GSearchBar2
-                    onChangeText={(token: string)  => {this.setState({searchOptions: {...this.state.searchOptions, token}})}}
-                    value={this.state.searchOptions.token}
-                    style={styles1.searchBar}
-                    placeholder={i18n.t("search_bar.lineup_placeholder")}
-                    autoFocus
-                />
-                <SearchMotor
-                    searchEngine={this.state.search}
-                    renderResults={(state, onLoadMore) => <SearchListResults searchState={state} onLoadMore={onLoadMore} renderItem={({item}) => renderLineupFromOtherPeople(this.props.navigator, item)} />}
-                    searchOptions={this.state.searchOptions}
-                />
-            </View>
+            <GoodshContext.Provider value={{userOwnResources: false}}>
+                <View style={{flex: 1}}>
+                    <GSearchBar2
+                        onChangeText={(token: string)  => {this.setState({searchOptions: {...this.state.searchOptions, token}})}}
+                        value={this.state.searchOptions.token}
+                        style={styles1.searchBar}
+                        placeholder={i18n.t("search_bar.lineup_placeholder")}
+                        autoFocus
+                    />
+                    <SearchMotor
+                        searchEngine={this.state.search}
+                        renderResults={(state, onLoadMore) => <SearchListResults searchState={state} onLoadMore={onLoadMore} renderItem={({item}) => renderLineupFromOtherPeople(this.props.navigator, item)} />}
+                        searchOptions={this.state.searchOptions}
+                    />
+                </View>
+            </GoodshContext.Provider>
         )
     }
 }

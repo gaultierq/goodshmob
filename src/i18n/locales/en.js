@@ -18,13 +18,13 @@ export default {
     },
     lineups: {
         search: {
-            placeholder: "##Search",
+            placeholder: "Search",
             empty: "No result",
         },
         filter: {
             empty: "Search in my lists on the server",
             deepsearch: "Search in all my lists",
-            lineup_search: "Search in all lists",
+            lineup_search: "Find lists to follow",
         },
         goodsh : {
             title: "GoodshBox"
@@ -74,7 +74,7 @@ export default {
     search:{
         in_items: "Find anything",
         in_network: "Search in my network",
-        in_users: "Find somebody",
+        in_users: "Find users",
         in_feed: "In my lists",
         by: "by",
         category: {
@@ -202,9 +202,9 @@ export default {
         "add_to_list": "Add to"
     },
     "search_bar":{
-        "me_placeholder":"##Search in your lists",
-        "network_placeholder":"##Browse your network",
-        "lineup_placeholder":"##Browse all lists"
+        "me_placeholder":"Search in your lists",
+        "network_placeholder":"Browse your network",
+        "lineup_placeholder":"Search lists to follow"
     },
     "network_search_tabs":{
         "savings":"LISTS",
@@ -241,6 +241,9 @@ export default {
             "musics":"tracks, artists, albums",
             "savings": "Tap keywords for interesting lists to follow",
             "users": "Search for users to follow",
+        },
+        blank: {
+            users: "Find users to follow"
         },
         "search_options":  {
             "around_me": "Around me"
