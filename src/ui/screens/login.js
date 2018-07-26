@@ -167,7 +167,7 @@ class Login extends Component<Props, State> {
                 >
                     {/*slide 1*/}
                     <ImageBackground
-                        source={require('../../img2/slider_background_0.png')}
+                        source={require('../../img2/slider_background_0.jpg')}
                         style={{width: '100%', height: '100%',}}>
                         <Header>
                             <Image style={[styles.image]} source={require("../../img2/logoWhite.png")}/>
@@ -180,7 +180,7 @@ class Login extends Component<Props, State> {
                     </ImageBackground>
                     {/*slide 2*/}
                     <ImageBackground
-                        source={require('../../img2/slider_background_1.png')}
+                        source={require('../../img2/slider_background_1.jpg')}
                         style={{width: '100%', height: '100%',}}>
                         <Header>
                             <HTMLView value={`<div>${i18n.t("login_screen.slider_intro_2")}</div>`} stylesheet={headerHtmlStyles}/>
@@ -191,7 +191,7 @@ class Login extends Component<Props, State> {
                     </ImageBackground>
                     {/*slide 3*/}
                     <ImageBackground
-                        source={require('../../img2/slider_background_2.png')}
+                        source={require('../../img2/slider_background_2.jpg')}
                         style={{width: '100%', height: '100%',}}>
                         <Header>
                             <HTMLView value={`<div>${i18n.t("login_screen.slider_intro_3")}</div>`} stylesheet={headerHtmlStyles}/>
@@ -203,7 +203,7 @@ class Login extends Component<Props, State> {
                     </ImageBackground>
                     {/*slide 4*/}
                     <ImageBackground
-                        source={require('../../img2/slider_background_3.png')}
+                        source={require('../../img2/slider_background_3.jpg')}
                         style={{width: '100%', height: '100%',}}>
                         <Header>
                             <HTMLView value={`<div>${i18n.t("login_screen.slider_intro_4")}</div>`} stylesheet={headerHtmlStyles}/>
