@@ -228,6 +228,7 @@ export default {
         "title": "Rechercher"
     },
     "search_item_screen":{
+        "title": "Ajouter",
         "tabs": {
             "consumer_goods":"LIVRE\n&\nAUTRE",
             "places":"LIEU",
@@ -242,6 +243,14 @@ export default {
             "savings": "Saisir des mots-clés pour trouver des listes à suivre",
             "users": "Chercher des membres à suivre",
 
+        },
+        "searchbar_placeholder": {
+            "consumer_goods": "Rechercher",
+            "places": "Rechercher",
+            "movies": "Rechercher",
+            "musics": "Rechercher",
+            "savings": "Rechercher",
+            "users": "Rechercher",
         },
         blank: {
             users: "Trouver des membres à suivre"

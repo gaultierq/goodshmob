@@ -36,7 +36,8 @@ type SMS = {
 
 }
 type SMP = {
-    navigator: RNNNavigator
+    navigator: RNNNavigator,
+    focused?: boolean
 }
 
 export default class SearchPlaces extends React.Component<SMP, SMS> {
@@ -88,8 +89,8 @@ export default class SearchPlaces extends React.Component<SMP, SMS> {
                     onChangeText={(input: string)  => {this.setState({searchOptions: {...this.state.searchOptions, input}})}}
                     value={_.get(this.state, this.state.searchOptions.input)}
                     style={styles1.searchBar}
-                    placeholder={"# places"}
-                    autoFocus
+                    placeholder={i18n.t('search_item_screen.searchbar_placeholder.places')}
+                    autoFocus={this.props.focused}
                 />
 
                 <SearchPlacesOption

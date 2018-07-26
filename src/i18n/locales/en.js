@@ -229,6 +229,7 @@ export default {
         "title": "Search"
     },
     "search_item_screen":{
+        "title": "Add",
         "tabs": {
             "consumer_goods":"BOOK & OTHER",
             "places":"PLACE",
@@ -242,6 +243,14 @@ export default {
             "musics":"tracks, artists, albums",
             "savings": "Tap keywords for interesting lists to follow",
             "users": "Search for users to follow",
+        },
+        "searchbar_placeholder": {
+            "consumer_goods": "Search",
+            "places": "Search",
+            "movies": "Search",
+            "musics": "Search",
+            "savings": "Search",
+            "users": "Search",
         },
         blank: {
             users: "Find users to follow"

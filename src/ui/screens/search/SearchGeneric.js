@@ -20,7 +20,8 @@ type SMS = {
 }
 type SMP = {
     category: SearchItemCategoryType,
-    placeholder: string
+    placeholder: string,
+    focused?: boolean
 }
 
 export default class SearchGeneric extends React.Component<SMP, SMS> {
@@ -46,7 +47,7 @@ export default class SearchGeneric extends React.Component<SMP, SMS> {
                     value={_.get(this.state, this.state.searchOptions.input)}
                     style={styles1.searchBar}
                     placeholder={this.props.placeholder}
-                    autoFocus
+                    autoFocus={this.props.focused}
                 />
                 <SearchMotor
                     searchEngine={this.search}

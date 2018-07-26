@@ -20,9 +20,7 @@ import Screen from "../components/Screen"
 import type {Item, Lineup, RNNNavigator} from "../../types"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import {findBestSearchCategory} from "../../helpers/Classifier"
-import {TAB_BAR_PROPS} from "../UIStyles"
 import {TabView} from "react-native-tab-view"
-import TabBar from "react-native-tab-view/src/TabBar"
 import PagerPan from "react-native-tab-view/src/PagerPan"
 import SearchGeneric from "./search/SearchGeneric"
 import SearchPlaces from "./search/SearchPlaces"
@@ -78,8 +76,15 @@ export default class SearchItems extends Screen<Props, State> {
         let ix = ROUTES.indexOf(route)
         let focused = this.state.index === ix
         switch (route.key) {
-            case 'places': return <SearchPlaces navigator={this.props.navigator}/>
-            default: return <SearchGeneric navigator={this.props.navigator} category={route.key} placeholder={"# " + route.key}/>
+            case 'places': return <SearchPlaces focused={focused} navigator={this.props.navigator}/>
+            default: return (
+                <SearchGeneric
+                    focused={focused}
+                    navigator={this.props.navigator}
+                    category={route.key}
+                    placeholder={i18n.t('search_item_screen.searchbar_placeholder.' + route.key)}
+                />
+            )
         }
     }
 
