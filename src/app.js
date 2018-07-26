@@ -507,8 +507,8 @@ export default class App {
                 },
                 {
                     screen: 'goodsh.CategorySearchScreen',// unique ID registered with Navigation.registerScreen
-                    icon: require('./img2/category_Glyph.png'),
-                    selectedIcon: require('./img2/category_Glyph_Pressed.png'),
+                    icon: require('./img2/search.png'),
+                    selectedIcon: require('./img2/searchActive.png'),
                     title: i18n.t('tabs.category_search.title'),
                     navigatorStyle,
                     iconInsets
