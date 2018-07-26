@@ -15,7 +15,6 @@ import {screen as SaveScreen} from './screens/save'
 import {screen as ShareScreen} from './screens/share'
 import ProfileScreen from './screens/profile'
 import FriendScreen from './screens/friends'
-import {CommunityScreen} from './screens/community'
 import SendScreen from './screens/send'
 import UserScreen from './screens/user'
 import HomeSearchScreen from './screens/homesearch'
@@ -46,6 +45,7 @@ import EditUserProfileScreen from "./screens/edituserprofile"
 import PopularItemsScreen from "./screens/popularitems"
 import GIndicator from "./screens/indicator"
 import UserSearchScreen from "./screens/usersearch"
+import LineupSearchScreen from "./screens/LineupSearch"
 
 
 function wrap(screenName,screenCreator,store,provider) {
@@ -89,7 +89,6 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.CommentsScreen', () => CommentsScreen, store, Provider);
     wrap('goodsh.SaveScreen', () => SaveScreen, store, Provider);
     wrap('goodsh.ShareScreen', () => ShareScreen, store, Provider);
-    wrap('goodsh.CommunityScreen', () => CommunityScreen, store, Provider);
     wrap('goodsh.SendScreen', () => SendScreen, store, Provider);
     wrap('goodsh.ProfileScreen', () => ProfileScreen, store, Provider);
     wrap('goodsh.AlgoliaSearchScreen', () => AlgoliaSearchScreen, store, Provider);
@@ -117,5 +116,6 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.NavBarButtonIndicator', () => GIndicator, store, Provider);
     wrap('goodsh.TouchableSearchBar', () => TouchableSearchBar, store, Provider);
     wrap('goodsh.UserSearchScreen', () => UserSearchScreen, store, Provider);
+    wrap('goodsh.LineupSearchScreen', () => LineupSearchScreen, store, Provider);
 
 }

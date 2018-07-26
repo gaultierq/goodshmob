@@ -13,16 +13,17 @@ export default {
             title: "Fil d'actualité"
         },
         category_search: {
-            title: "Recherche"
+            title: "Explorer"
         }
     },
     lineups: {
         filter: {
             empty: "Pas de résultat",
             deepsearch: "Chercher dans toutes mes listes",
+            lineup_search: "Trouver des listes à suivre",
         },
         search: {
-            placeholder: "##Rechercher",
+            placeholder: "Rechercher",
             empty: "Pas de résultat.",
         },
         goodsh : {
@@ -200,8 +201,9 @@ export default {
         "add_to_list": "Ajouter à"
     },
     "search_bar":{
-        "me_placeholder":"##Rechercher dans mes listes",
-        "network_placeholder":"##Rechercher dans mon réseau"
+        "me_placeholder":"Rechercher dans mes listes",
+        "network_placeholder":"Rechercher dans mon réseau",
+        "lineup_placeholder":"Chercher des listes a suivre"
     },
     "network_search_tabs":{
         "savings":"LISTES",
@@ -216,7 +218,8 @@ export default {
     },
     "my_interests_screen":{
         "empty_screen": "Explore les listes de tes amis, et suis les plus intéressantes !",
-        "search_lists": "Trouver des listes à suivre"
+        "search_lists": "Trouver des listes à suivre",
+        "search_lists_title": "Recherche de liste"
     },
     "comments_screen":{
         "title": "Commentaires"
@@ -234,11 +237,14 @@ export default {
         "placeholder": {
             "consumer_goods":"livre, cadeau, gadget,\nchaussures, vin, jouet...",
             "places":"restaurant, café,\nboutique, hôtel, musée,\nville, plage, lieu touristique...",
-            "movies":"film, série, documentaire, émission... ",
+            "movies":"film,https://www.coinbase.com/device_confirmations/confirm_email?token=V3kVavdVq9sWdh3pudiWCC série, documentaire, émission... ",
             "musics":"titre, artiste, album...",
             "savings": "Saisir des mots-clés pour trouver des listes à suivre",
             "users": "Chercher des membres à suivre",
 
+        },
+        blank: {
+            users: "Trouver des membres à suivre"
         },
         "search_options":  {
             "around_me": "Autour de moi"

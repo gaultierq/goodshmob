@@ -4,7 +4,7 @@ import type {Node} from 'react'
 import React from 'react'
 import {Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {connect} from "react-redux"
-import {logged} from "../../managers/CurrentUser"
+import {currentUserId, logged} from "../../managers/CurrentUser"
 import FriendCell from "../components/FriendCell"
 import Feed from "../components/feed"
 import type {Id, Item, RNNNavigator, User} from "../../types"
@@ -15,6 +15,8 @@ import {openUserSheet, seeUser} from "../Nav"
 import {LINEUP_PADDING, STYLES} from "../UIStyles"
 import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
 import ShareButton from "../components/ShareButton"
+import * as Nav from "../Nav"
+import UserSearchScreen from "./usersearch"
 
 
 type Props = {
@@ -36,6 +38,23 @@ const mapStateToProps = (state, ownProps) => ({
 @logged
 @connect(mapStateToProps)
 export default class FriendsScreen extends Screen<Props, State> {
+
+    constructor(props: Props){
+        super(props);
+        props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+    }
+
+    onNavigatorEvent(event: any) { // this is the onPress handler for the two buttons together
+        if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
+            if (event.id === 'friendsSearch') {
+                this.props.navigator.showModal({
+                    screen: 'goodsh.UserSearchScreen',
+                    title: i18n.t("search.in_users"),
+                    navigatorButtons: Nav.CANCELABLE_MODAL
+                });
+            }
+        }
+    }
 
     render() {
 

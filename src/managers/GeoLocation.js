@@ -21,7 +21,7 @@ class _GeoLocation implements GeoLocation {
         const hasPermission = await PermissionsAndroid.check(
             PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
         );
-        searchOptions
+
         if (hasPermission) return true;
 
         const status = await PermissionsAndroid.request(
