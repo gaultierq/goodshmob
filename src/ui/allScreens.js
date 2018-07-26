@@ -15,7 +15,6 @@ import {screen as SaveScreen} from './screens/save'
 import {screen as ShareScreen} from './screens/share'
 import ProfileScreen from './screens/profile'
 import FriendScreen from './screens/friends'
-import {CommunityScreen} from './screens/community'
 import SendScreen from './screens/send'
 import UserScreen from './screens/user'
 import HomeSearchScreen from './screens/homesearch'
@@ -89,7 +88,6 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.CommentsScreen', () => CommentsScreen, store, Provider);
     wrap('goodsh.SaveScreen', () => SaveScreen, store, Provider);
     wrap('goodsh.ShareScreen', () => ShareScreen, store, Provider);
-    wrap('goodsh.CommunityScreen', () => CommunityScreen, store, Provider);
     wrap('goodsh.SendScreen', () => SendScreen, store, Provider);
     wrap('goodsh.ProfileScreen', () => ProfileScreen, store, Provider);
     wrap('goodsh.AlgoliaSearchScreen', () => AlgoliaSearchScreen, store, Provider);
