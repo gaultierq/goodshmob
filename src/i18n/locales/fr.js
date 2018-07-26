@@ -218,7 +218,8 @@ export default {
     },
     "my_interests_screen":{
         "empty_screen": "Explore les listes de tes amis, et suis les plus intéressantes !",
-        "search_lists": "Trouver des listes à suivre"
+        "search_lists": "Trouver des listes à suivre",
+        "search_lists_title": "Recherche de liste"
     },
     "comments_screen":{
         "title": "Commentaires"

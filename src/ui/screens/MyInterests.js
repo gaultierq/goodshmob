@@ -124,6 +124,7 @@ export default class MyInterests extends Screen<Props, State> {
 
         navigator.showModal({
             screen: 'goodsh.LineupSearchScreen',
+            title: i18n.t('my_interests_screen.search_lists_title'),
             passProps:{
                 onClickClose: () => navigator.dismissModal(),
             },

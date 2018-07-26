@@ -219,7 +219,8 @@ export default {
     },
     "my_interests_screen":{
         "empty_screen": "You will find every list you follow here.\nExplore your friends lists, and find them here !",
-        "search_lists": "Find lists to follow"
+        "search_lists": "Find lists to follow",
+        "search_lists_title": "List search"
     },
     "comments_screen":{
         "title": "Comments"
