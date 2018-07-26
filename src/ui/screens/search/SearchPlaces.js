@@ -6,30 +6,23 @@ import {StyleSheet, Text, TextInput, View,} from 'react-native'
 import type {SearchEngine, SearchState} from "../../../helpers/SearchHelper"
 import {
     __createSearchItemSearcher,
+    onNewItemSelected,
     PERMISSION_EMPTY_INPUT,
     PERMISSION_EMPTY_POSITION,
-    renderItem,
-    renderResource,
-    onNewItemSelected
+    renderResource
 } from "../../../helpers/SearchHelper"
 import {LINEUP_PADDING, NAV_BACKGROUND_COLOR} from "../../UIStyles"
-import {
-    getPosition,
-    renderAskPermission,
-    SearchPlacesOption
-} from "./searchplacesoption"
+import type {GeoPosition} from "./searchplacesoption"
+import {getPosition, renderAskPermission, SearchPlacesOption} from "./searchplacesoption"
 import GSearchBar2 from "../../components/GSearchBar2"
 import SearchMotor from "../searchMotor"
-import ItemCell from "../../components/ItemCell"
 import type {RNNNavigator} from "../../../types"
 import type {SearchItemsGenOptions} from "./SearchGeneric"
-import type {GeoPosition} from "./searchplacesoption"
 import SearchListResults from "../searchListResults"
 import {Colors} from "../../colors"
 import ActionButton from "react-native-action-button"
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import BlankSearch, {renderBlankIcon} from "../../../ui/components/BlankSearch"
-import {seeActivityDetails} from "../../Nav"
 import GMap from "../../components/GMap"
 
 export type SearchItemsPlacesOptions = SearchItemsGenOptions & {
@@ -53,6 +46,7 @@ export default class SearchPlaces extends React.Component<SMP, SMS> {
 
     constructor(props: SMP) {
         super(props)
+
         this.state = {
             mapDisplay: false,
             searchOptions: {
@@ -61,33 +55,32 @@ export default class SearchPlaces extends React.Component<SMP, SMS> {
             },
             search: {
                 search: __createSearchItemSearcher('places'),
-
-                missingSearchPermissions: searchOptions => {
-                    if (_.isEmpty(searchOptions.input)) {
-                        return PERMISSION_EMPTY_INPUT
-                    }
-
-                    if (searchOptions.permissionError) return searchOptions.permissionError
-
-                    if (!searchOptions.lat  || !searchOptions.lng) {
-                        return PERMISSION_EMPTY_POSITION
-                    }
-
-                    return null
-                },
-
-
-                renderMissingPermission: (searchOptions, missingPermission) => {
-                    if (missingPermission === PERMISSION_EMPTY_INPUT) {
-                        return <BlankSearch
-                            icon={renderBlankIcon('places')}
-                            text={i18n.t("search_item_screen.placeholder.places")}
-                        />
-                    }
-                    return renderAskPermission(missingPermission, (status) => this.setState({searchOptions: {...this.state.searchOptions, ...status}}))
-                }
             }
         }
+    }
+
+    missingSearchPermissions = (searchOptions: SearchItemsPlacesOptions) => {
+        if (_.isEmpty(searchOptions.input)) {
+            return PERMISSION_EMPTY_INPUT
+        }
+
+        if (searchOptions.permissionError) return searchOptions.permissionError
+
+        if (!searchOptions.lat  || !searchOptions.lng) {
+            return PERMISSION_EMPTY_POSITION
+        }
+
+        return null
+    }
+
+    renderMissingPermission = (searchOptions: SearchItemsPlacesOptions, missingPermission: string) => {
+        if (missingPermission === PERMISSION_EMPTY_INPUT) {
+            return <BlankSearch
+                icon={renderBlankIcon('places')}
+                text={i18n.t("search_item_screen.placeholder.places")}
+            />
+        }
+        return renderAskPermission(missingPermission, (status) => this.setState({searchOptions: {...this.state.searchOptions, ...status}}))
     }
 
     render() {
@@ -113,6 +106,8 @@ export default class SearchPlaces extends React.Component<SMP, SMS> {
                     searchEngine={this.state.search}
                     renderResults={this._renderResults}
                     searchOptions={this.state.searchOptions}
+                    missingSearchPermissions={this.missingSearchPermissions}
+                    renderMissingPermission={this.renderMissingPermission}
                 />
 
                 <ActionButton buttonColor="rgba(231,76,60,1)"

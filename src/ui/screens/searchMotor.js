@@ -15,17 +15,9 @@ import {
 } from 'react-native'
 
 import {SearchKey} from "../../types"
-import Button from 'apsl-react-native-button'
 import {Navigation} from 'react-native-navigation'
-import {Colors} from "../colors"
 
-import type {
-    CannotSearchReason,
-    SearchEngine,
-    SearchOptions,
-    SearchResult,
-    SearchState,
-} from "../../helpers/SearchHelper"
+import type {SearchEngine, SearchOptions, SearchResult, SearchState,} from "../../helpers/SearchHelper"
 
 
 //token -> {data, hasMore, isSearching}
@@ -38,9 +30,11 @@ export interface ISearchMotor {
 export type Props<SO> = {
     searchEngine: SearchEngine<SO>,
     renderResults: (SearchState, () => void) => Node,
-    renderBlank?: (cannot: CannotSearchReason) => Node,
     ref?: ISearchMotor => void,
     searchOptions: SO,
+    //returns null if can search
+    missingSearchPermissions: (searchOptions: SO) => ?string,
+    renderMissingPermission?: (searchOptions: SO, missingPermission: string) => Node
 
 };
 
@@ -107,9 +101,9 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
     renderSearchPage(searchState: SearchState) {
         const missingSearchPermission = this.state.missingSearchPermission
         const engine = this.props.searchEngine
-
-        if (missingSearchPermission != null && engine.renderMissingPermission) {
-            return engine.renderMissingPermission(this.props.searchOptions, missingSearchPermission)
+        const {renderMissingPermission} = this.props
+        if (missingSearchPermission != null && renderMissingPermission) {
+            return renderMissingPermission(this.props.searchOptions, missingSearchPermission)
         }
 
         return this.props.renderResults(searchState, this.onLoadMore.bind(this))
@@ -148,7 +142,8 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
     async tryPerformSearch(searchOptions: SO, page: number) {
 
 
-        const {search, missingSearchPermissions} = this.props.searchEngine;
+        const {search} = this.props.searchEngine;
+        const {missingSearchPermissions} = this.props
         let generateSearchKey = this.generateSearchKey.bind(this)
 
         let searchKey = ''

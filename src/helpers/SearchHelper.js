@@ -27,18 +27,9 @@ export type SearchResult = {
     page: number,
     nbPages: number,
 }
-export type SearchQuery = {
-    token: SearchToken,
-    categoryType: SearchCategoryType,
-    options?: any
-}
-
 
 export type SearchEngine<SO> = {
     search: (searchOptions: SO, page: number,) => Promise<SearchResult>,
-    //returns null if can search
-    missingSearchPermissions: (searchOptions: SO) => ?string,
-    renderMissingPermission?: (searchOptions: SO, missingPermission: string) => Node
 };
 
 export const PERMISSION_EMPTY_INPUT = 'empty_input'

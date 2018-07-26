@@ -3,7 +3,7 @@
 import type {Node} from 'react'
 import React from 'react'
 import {StyleSheet, Text, TextInput, View,} from 'react-native'
-import type {SearchEngine, SearchItemCategoryType,} from "../../../helpers/SearchHelper"
+import type {SearchEngine, SearchItemCategoryType, SearchOptions,} from "../../../helpers/SearchHelper"
 import {__createAlgoliaSearcher, makeBrowseAlgoliaFilter2, renderItem} from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import SearchMotor from "../searchMotor"
@@ -68,12 +68,13 @@ export default class BrowseGeneric extends React.Component<SMP, SMS> {
                     index: index,
                     parseResponse: (hits) => createResultFromHit(hits, {}, true),
                 }),
-                missingSearchPermissions: searchOptions => null
             }
 
 
         }
     }
+
+    _missingSearchPermissions = (searchOptions: BrowseItemsGenOptions) => null
 
     render() {
         return (
@@ -92,6 +93,7 @@ export default class BrowseGeneric extends React.Component<SMP, SMS> {
                     searchEngine={this.state.search}
                     renderResults={(state, onLoadMore)=> <SearchListResults searchState={state} onLoadMore={onLoadMore} renderItem={renderItem.bind(this)} />}
                     searchOptions={this.state.searchOptions}
+                    missingSearchPermissions={this._missingSearchPermissions}
                 />
             </View>
         )

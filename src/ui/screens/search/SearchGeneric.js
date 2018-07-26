@@ -3,17 +3,12 @@
 import type {Node} from 'react'
 import React from 'react'
 import {StyleSheet, Text, TextInput, View,} from 'react-native'
-import type {
-    SearchEngine,
-    SearchItemCategoryType,
-} from "../../../helpers/SearchHelper"
-import {renderResource} from "../../../helpers/SearchHelper"
+import type {SearchEngine, SearchItemCategoryType,} from "../../../helpers/SearchHelper"
+import {__createSearchItemSearcher, PERMISSION_EMPTY_INPUT, renderResource} from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import {LINEUP_PADDING, NAV_BACKGROUND_COLOR} from "../../UIStyles"
 import GSearchBar2 from "../../components/GSearchBar2"
 import SearchMotor from "../searchMotor"
-import ItemCell from "../../components/ItemCell"
-import {__createSearchItemSearcher, PERMISSION_EMPTY_INPUT} from "../../../helpers/SearchHelper"
 import SearchListResults from "../searchListResults"
 import BlankSearch, {renderBlankIcon} from "../../../ui/components/BlankSearch"
 
@@ -39,21 +34,6 @@ export default class SearchGeneric extends React.Component<SMP, SMS> {
             },
             search: {
                 search: __createSearchItemSearcher(props.category),
-                missingSearchPermissions: searchOptions => {
-                    if (!_.isEmpty(searchOptions.input)) {
-                        return null
-                    }
-                    return PERMISSION_EMPTY_INPUT
-                },
-                renderMissingPermission: (searchOptions, missingPermission) => {
-                    if (missingPermission === PERMISSION_EMPTY_INPUT) {
-                        return <BlankSearch
-                            icon={renderBlankIcon(this.props.category)}
-                            text={i18n.t("search_item_screen.placeholder." + this.props.category)}
-                        />
-                    }
-                    return <View/>
-                }
             }
         }
     }
@@ -76,9 +56,27 @@ export default class SearchGeneric extends React.Component<SMP, SMS> {
                         renderItem={renderResource.bind(this)}
                     />}
                     searchOptions={this.state.searchOptions}
+                    missingSearchPermissions={this._missingSearchPermissions}
+                    renderMissingPermission={this._renderMissingPermission}
                 />
             </View>
         )
+    }
+    _missingSearchPermissions = searchOptions => {
+        if (!_.isEmpty(searchOptions.input)) {
+            return null
+        }
+        return PERMISSION_EMPTY_INPUT
+    }
+
+    _renderMissingPermission = (searchOptions, missingPermission) => {
+        if (missingPermission === PERMISSION_EMPTY_INPUT) {
+            return <BlankSearch
+                icon={renderBlankIcon(this.props.category)}
+                text={i18n.t("search_item_screen.placeholder." + this.props.category)}
+            />
+        }
+        return <View/>
     }
 }
 

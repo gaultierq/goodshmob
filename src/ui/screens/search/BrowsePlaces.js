@@ -75,7 +75,6 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
             });
         });
 
-
         this.state = {
             mapDisplay: false,
             searchOptions: {
@@ -88,21 +87,11 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
                     geoSearch: true,
                     parseResponse: (hits) => createResultFromHit(hits, {}, true),
                 }),
-                missingSearchPermissions: searchOptions => {
-                    if (searchOptions.permissionError) return searchOptions.permissionError
-
-                    if (!searchOptions.lat  || !searchOptions.lng) {
-                        return PERMISSION_EMPTY_POSITION
-                    }
-
-                    return null
-                },
-                renderMissingPermission: (searchOptions: BrowseItemsPlacesOptions, missingPermission: string) => {
-                    return renderAskPermission(missingPermission, (status) => this.setState({searchOptions: {...this.state.searchOptions, ...status}}))
-                }
             }
         }
     }
+
+
 
     render() {
         const mapDisplay = this.state.mapDisplay
@@ -131,6 +120,8 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
                     renderResults={this._renderResults}
                     searchOptions={this.state.searchOptions}
                     ref={ref => this.motor = ref}
+                    missingSearchPermissions={this._missingSearchPermissions}
+                    renderMissingPermission={this._renderMissingPermission}
                 />
 
                 <ActionButton buttonColor="rgba(231,76,60,1)"
@@ -141,6 +132,19 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
                 />
             </View>
         )
+    }
+    _missingSearchPermissions = searchOptions => {
+        if (searchOptions.permissionError) return searchOptions.permissionError
+
+        if (!searchOptions.lat || !searchOptions.lng) {
+            return PERMISSION_EMPTY_POSITION
+        }
+
+        return null
+    }
+
+    _renderMissingPermission = (searchOptions: BrowseItemsPlacesOptions, missingPermission: string) => {
+        return renderAskPermission(missingPermission, (status) => this.setState({searchOptions: {...this.state.searchOptions, ...status}}))
     }
 
     _renderResults = (state: SearchState) => {

@@ -48,16 +48,6 @@ export default class SearchUserPage extends React.Component<SUP, SUS> {
                     index: AlgoliaClient.createAlgoliaIndex(Config.ALGOLIA_USER_INDEX),
                     parseResponse: createResultFromHit2,
                 }),
-                missingSearchPermissions: searchOptions =>  _.isEmpty(searchOptions.token) ? PERMISSION_EMPTY_INPUT : null,
-                renderMissingPermission: (searchOptions, missingSearchPermission): Node => {
-                    if (missingSearchPermission === PERMISSION_EMPTY_INPUT) {
-                        return <BlankSearch
-                            icon={renderBlankIcon('users')}
-                            text={i18n.t("search_item_screen.placeholder.users")}
-                        />
-                    }
-                    return <View/>
-                }
             }
         }
     }
@@ -76,9 +66,23 @@ export default class SearchUserPage extends React.Component<SUP, SUS> {
                     searchEngine={this.state.search}
                     renderResults={(state, onLoadMore) => <SearchListResults searchState={state} renderItem={renderUser(this.props.navigator)} />}
                     searchOptions={this.state.searchOptions}
+                    missingSearchPermissions={this._missingSearchPermissions}
+                    renderMissingPermission={this._renderMissingPermission}
                 />
             </View>
         )
+    }
+
+    _missingSearchPermissions = searchOptions => _.isEmpty(searchOptions.token) ? PERMISSION_EMPTY_INPUT : null
+
+    _renderMissingPermission = (searchOptions, missingSearchPermission): Node => {
+        if (missingSearchPermission === PERMISSION_EMPTY_INPUT) {
+            return <BlankSearch
+                icon={renderBlankIcon('users')}
+                text={i18n.t("search_item_screen.placeholder.users")}
+            />
+        }
+        return <View/>
     }
 }
 
