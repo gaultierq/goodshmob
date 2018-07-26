@@ -67,7 +67,8 @@ export default class HomeScreen extends Screen<Props, State> {
 
     static navigatorStyle = {
         navBarNoBorder: true,
-        topBarElevationShadowEnabled: false
+        topBarElevationShadowEnabled: false,
+        navBarButtonColor: Colors.green
     };
 
 
