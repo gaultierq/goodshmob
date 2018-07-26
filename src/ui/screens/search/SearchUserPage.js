@@ -25,7 +25,6 @@ export type SearchUserOptions = {
 }
 
 type SUS = {
-    search: SearchEngine<SearchUserOptions>,
     searchOptions: SearchUserOptions,
 
 }
@@ -42,15 +41,14 @@ export default class SearchUserPage extends React.Component<SUP, SUS> {
             searchOptions: {
                 algoliaFilter: `NOT objectID:${currentUserId()}`,
                 token: ''
-            },
-            search: {
-                search: __createAlgoliaSearcher({
-                    index: AlgoliaClient.createAlgoliaIndex(Config.ALGOLIA_USER_INDEX),
-                    parseResponse: createResultFromHit2,
-                }),
             }
         }
     }
+
+    search: SearchEngine<SearchUserOptions> = __createAlgoliaSearcher({
+        index: AlgoliaClient.createAlgoliaIndex(Config.ALGOLIA_USER_INDEX),
+        parseResponse: createResultFromHit2,
+    })
 
     render() {
         return (

@@ -28,9 +28,7 @@ export type SearchResult = {
     nbPages: number,
 }
 
-export type SearchEngine<SO> = {
-    search: (searchOptions: SO, page: number,) => Promise<SearchResult>,
-};
+export type SearchEngine<SO> = (searchOptions: SO, page: number,) => Promise<SearchResult>
 
 export const PERMISSION_EMPTY_INPUT = 'empty_input'
 

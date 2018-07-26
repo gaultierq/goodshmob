@@ -12,8 +12,7 @@ import {
     renderResource
 } from "../../../helpers/SearchHelper"
 import {LINEUP_PADDING, NAV_BACKGROUND_COLOR} from "../../UIStyles"
-import type {GeoPosition} from "./searchplacesoption"
-import {getPosition, renderAskPermission, SearchPlacesOption} from "./searchplacesoption"
+import {renderAskPermission, SearchPlacesOption} from "./searchplacesoption"
 import GSearchBar2 from "../../components/GSearchBar2"
 import SearchMotor from "../searchMotor"
 import type {RNNNavigator} from "../../../types"
@@ -32,7 +31,6 @@ export type SearchItemsPlacesOptions = SearchItemsGenOptions & {
 }
 
 type SMS = {
-    search: SearchEngine<SearchItemsPlacesOptions>,
     searchOptions: SearchItemsPlacesOptions,
     mapDisplay: boolean,
 
@@ -53,11 +51,10 @@ export default class SearchPlaces extends React.Component<SMP, SMS> {
                 input: '',
                 permissionError: PERMISSION_EMPTY_POSITION,
             },
-            search: {
-                search: __createSearchItemSearcher('places'),
-            }
         }
     }
+
+    search: SearchEngine<SearchItemsPlacesOptions> = __createSearchItemSearcher('places')
 
     missingSearchPermissions = (searchOptions: SearchItemsPlacesOptions) => {
         if (_.isEmpty(searchOptions.input)) {
@@ -103,7 +100,7 @@ export default class SearchPlaces extends React.Component<SMP, SMS> {
                 />
 
                 <SearchMotor
-                    searchEngine={this.state.search}
+                    searchEngine={this.search}
                     renderResults={this._renderResults}
                     searchOptions={this.state.searchOptions}
                     missingSearchPermissions={this.missingSearchPermissions}

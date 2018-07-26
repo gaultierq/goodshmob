@@ -15,7 +15,6 @@ import BlankSearch, {renderBlankIcon} from "../../../ui/components/BlankSearch"
 export type SearchItemsGenOptions = {input: string}
 
 type SMS = {
-    search: SearchEngine<SearchItemsGenOptions>,
     searchOptions: SearchItemsGenOptions,
 
 }
@@ -26,16 +25,16 @@ type SMP = {
 
 export default class SearchGeneric extends React.Component<SMP, SMS> {
 
+    search: SearchEngine<SearchItemsGenOptions>
+
     constructor(props: SMP) {
         super(props)
         this.state = {
             searchOptions: {
                 input: '',
             },
-            search: {
-                search: __createSearchItemSearcher(props.category),
-            }
         }
+        this.search = __createSearchItemSearcher(props.category)
     }
 
     render() {
@@ -50,7 +49,7 @@ export default class SearchGeneric extends React.Component<SMP, SMS> {
                     autoFocus
                 />
                 <SearchMotor
-                    searchEngine={this.state.search}
+                    searchEngine={this.search}
                     renderResults={(state, onLoadMore) => <SearchListResults
                         searchState={state}
                         renderItem={renderResource.bind(this)}

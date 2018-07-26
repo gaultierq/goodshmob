@@ -26,7 +26,6 @@ export type SearchUserOptions = {
 }
 
 type SUS = {
-    search: SearchEngine<SearchUserOptions>,
     searchOptions: SearchUserOptions,
 
 }
@@ -40,9 +39,16 @@ export default class SearchSavingAndLineupPage extends React.Component<SUP, SUS>
 
     static defaultProps = {token: ''}
 
+    search: SearchEngine<SearchUserOptions>
+
     constructor(props: SUP) {
         super(props)
-
+        this.state = {
+            searchOptions: {
+                algoliaFilter: `user_id:${currentUserId()}`,
+                token: props.token
+            },
+        }
 
         let index = new Promise(resolve => {
             AlgoliaClient.createAlgoliaIndex(Config.ALGOLIA_SAVING_INDEX).then(index => {
@@ -58,18 +64,11 @@ export default class SearchSavingAndLineupPage extends React.Component<SUP, SUS>
             });
         });
 
-        this.state = {
-            searchOptions: {
-                algoliaFilter: `user_id:${currentUserId()}`,
-                token: props.token
-            },
-            search: {
-                search: __createAlgoliaSearcher({
-                    index: index,
-                    parseResponse: createResultFromHit,
-                }),
-            }
-        }
+        this.search = __createAlgoliaSearcher({
+            index: index,
+            parseResponse: createResultFromHit,
+        })
+
     }
 
     render() {
@@ -83,7 +82,7 @@ export default class SearchSavingAndLineupPage extends React.Component<SUP, SUS>
                     autoFocus
                 />
                 <SearchMotor
-                    searchEngine={this.state.search}
+                    searchEngine={this.search}
                     renderResults={(state, onLoadMore) => <SearchListResults searchState={state} onLoadMore={onLoadMore} renderItem={renderSavingOrLineup(this.props.navigator)} />}
                     searchOptions={this.state.searchOptions}
                     missingSearchPermissions={this._missingSearchPermissions}

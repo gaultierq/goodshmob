@@ -23,14 +23,14 @@ import type {SearchEngine, SearchOptions, SearchResult, SearchState,} from "../.
 //token -> {data, hasMore, isSearching}
 
 //search query KEY: token x category x options
-export interface ISearchMotor {
-    search1(options: SearchOptions, soft: boolean): void;
+export interface ISearchMotor<SO> {
+    search1(options: SO, soft: boolean): void;
 }
 
 export type Props<SO> = {
     searchEngine: SearchEngine<SO>,
     renderResults: (SearchState, () => void) => Node,
-    ref?: ISearchMotor => void,
+    ref?: ISearchMotor<SO> => void,
     searchOptions: SO,
     //returns null if can search
     missingSearchPermissions: (searchOptions: SO) => ?string,
@@ -46,7 +46,7 @@ export type State = {
 };
 
 // this guy is responsible for making search requests
-export default class SearchMotor<SO> extends Component<Props<SO>, State> implements ISearchMotor {
+export default class SearchMotor<SO> extends Component<Props<SO>, State> implements ISearchMotor<SO> {
 
     state : State = {
         searches: {},
@@ -83,7 +83,7 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
         return JSON.stringify(opt)
     }
 
-    search1(options: SearchOptions, soft: boolean = false) {
+    search1(options: SO, soft: boolean = false) {
         this._debounceSearch(options, 0)
     }
 
@@ -132,7 +132,7 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
         }
     }
 
-    _debounceSearch(searchOptions: ?SO, page: number) {
+    _debounceSearch(searchOptions: SO, page: number) {
         return _.debounce(() => this.tryPerformSearch(searchOptions, page), 500, {
             'leading': true,
         })();
@@ -142,7 +142,7 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
     async tryPerformSearch(searchOptions: SO, page: number) {
 
 
-        const {search} = this.props.searchEngine;
+        const searchEngine = this.props.searchEngine;
         const {missingSearchPermissions} = this.props
         let generateSearchKey = this.generateSearchKey.bind(this)
 
@@ -168,7 +168,7 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
 
         let searchResult: ?SearchResult
         try {
-            searchResult = await search(searchOptions, page)
+            searchResult = await searchEngine(searchOptions, page)
         }
         catch (err) {
             console.warn(`error while performing search:`, err);

@@ -26,7 +26,6 @@ import {seeActivityDetails} from "../../Nav"
 
 
 type SMS = {
-    search: SearchEngine<BrowseItemsPlacesOptions>,
     searchOptions: BrowseItemsPlacesOptions,
     mapDisplay: boolean
 
@@ -59,21 +58,6 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
     constructor(props: SMP) {
         super(props)
 
-        let index = new Promise(resolve => {
-            AlgoliaClient.createAlgoliaIndex(Config.ALGOLIA_SAVING_INDEX).then(index => {
-                index.setSettings({
-                        searchableAttributes: [
-                            'item_title',
-                            'list_name'
-                        ],
-                        attributeForDistinct: 'item_id',
-                        distinct: true,
-                        attributesForFaceting: ['user_id', 'type'],
-                    }
-                );
-                resolve(index);
-            });
-        });
 
         this.state = {
             mapDisplay: false,
@@ -81,16 +65,29 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
                 algoliaFilter: makeBrowseAlgoliaFilter2('me', 'places', this.getUser()),
                 permissionError: PERMISSION_EMPTY_POSITION,
             },
-            search: {
-                search: __createAlgoliaSearcher({
-                    index: index,
-                    geoSearch: true,
-                    parseResponse: (hits) => createResultFromHit(hits, {}, true),
-                }),
-            }
         }
     }
+    index: Promise<any> = new Promise(resolve => {
+        AlgoliaClient.createAlgoliaIndex(Config.ALGOLIA_SAVING_INDEX).then(index => {
+            index.setSettings({
+                    searchableAttributes: [
+                        'item_title',
+                        'list_name'
+                    ],
+                    attributeForDistinct: 'item_id',
+                    distinct: true,
+                    attributesForFaceting: ['user_id', 'type'],
+                }
+            );
+            resolve(index);
+        });
+    })
 
+    search: SearchEngine<BrowseItemsPlacesOptions> = __createAlgoliaSearcher({
+        index: this.index,
+        geoSearch: true,
+        parseResponse: (hits) => createResultFromHit(hits, {}, true),
+    })
 
 
     render() {
@@ -116,7 +113,7 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
                 />
 
                 <SearchMotor
-                    searchEngine={this.state.search}
+                    searchEngine={this.search}
                     renderResults={this._renderResults}
                     searchOptions={this.state.searchOptions}
                     ref={ref => this.motor = ref}
