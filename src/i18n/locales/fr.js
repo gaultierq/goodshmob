@@ -203,7 +203,9 @@ export default {
     "search_bar":{
         "me_placeholder":"Rechercher dans mes listes",
         "network_placeholder":"Rechercher dans mon réseau",
-        "lineup_placeholder":"Chercher des listes a suivre"
+        "lineup_placeholder":"Chercher des listes a suivre",
+        "places_placeholder":"Chercher restaurants, des bars ...",
+        "users_placeholder":"Chercher des utilisateurs"
     },
     "network_search_tabs":{
         "savings":"LISTES",

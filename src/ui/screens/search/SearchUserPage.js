@@ -57,7 +57,7 @@ export default class SearchUserPage extends React.Component<SUP, SUS> {
                     onChangeText={(token: string)  => {this.setState({searchOptions: {...this.state.searchOptions, token}})}}
                     value={_.get(this.state, this.state.searchOptions.token)}
                     style={styles1.searchBar}
-                    placeholder={"# search user"}
+                    placeholder={i18n.t('search_bar.users_placeholder')}
                     autoFocus
                 />
                 <SearchMotor

@@ -88,7 +88,7 @@ export default class SearchPlaces extends React.Component<SMP, SMS> {
                     onChangeText={(input: string)  => {this.setState({searchOptions: {...this.state.searchOptions, input}})}}
                     value={_.get(this.state, this.state.searchOptions.input)}
                     style={styles1.searchBar}
-                    placeholder={"# places"}
+                    placeholder={i18n.t('search_bar.places_placeholder')}
                     autoFocus
                 />
 
