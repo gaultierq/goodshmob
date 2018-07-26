@@ -107,7 +107,7 @@ export default class SearchPlaces extends React.Component<SMP, SMS> {
                     renderMissingPermission={this.renderMissingPermission}
                 />
 
-                <ActionButton buttonColor="rgba(231,76,60,1)"
+                <ActionButton buttonColor={Colors.orange}
                               icon={<MaterialIcon name={this.state.mapDisplay ? 'list' : 'map'} color={Colors.white} size={32} />}
                               onPress={() => {
                                   this.setState({mapDisplay: !this.state.mapDisplay})
