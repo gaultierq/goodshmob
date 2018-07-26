@@ -6,8 +6,6 @@ import {StyleSheet, Text, TextInput, View,} from 'react-native'
 import type {SearchEngine,} from "../../../helpers/SearchHelper"
 import {
     __createAlgoliaSearcher, PERMISSION_EMPTY_INPUT,
-    renderItem,
-    renderSavingOrLineup
 } from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import {LINEUP_PADDING, NAV_BACKGROUND_COLOR} from "../../UIStyles"
@@ -51,9 +49,9 @@ export default class SearchSavingAndLineupPage extends React.Component<SUP, SUS>
                         searchableAttributes: [
                             'list_name'
                         ],
+                        attributeForDistinct: 'item_id',
+                        distinct: true,
                         attributesForFaceting: ['user_id', 'type'],
-                    attributeForDistinct: 'list_name',
-                    distinct: 1
                     }
                 );
                 resolve(index);
@@ -63,7 +61,7 @@ export default class SearchSavingAndLineupPage extends React.Component<SUP, SUS>
 
         this.state = {
             searchOptions: {
-                algoliaFilter: `type:List AND (NOT user_id:${currentUserId()})`,
+                algoliaFilter: `NOT type:List AND NOT user_id:${currentUserId()}`,
                 token: props.token
             },
             search: {
