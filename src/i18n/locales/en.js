@@ -13,7 +13,7 @@ export default {
             title: "News feed"
         },
         category_search: {
-            title: "Category Search"
+            title: "Explore"
         }
     },
     lineups: {

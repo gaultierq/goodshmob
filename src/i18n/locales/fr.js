@@ -13,7 +13,7 @@ export default {
             title: "Fil d'actualité"
         },
         category_search: {
-            title: "Recherche"
+            title: "Explorer"
         }
     },
     lineups: {
