@@ -39,7 +39,7 @@ const BUTTON_BACK = {
 }
 const BUTTON_SKIP = {
     id: 'skip',
-    title: i18n.t("actions.skip"),
+    title: i18n.t("login_screen.button_skip"),
     buttonColor: 'white',
     buttonFontSize: 20,
 }
@@ -153,7 +153,11 @@ class Login extends Component<Props, State> {
         )
 
         return (
-            <View style={styles.wrapper}>
+            <View style={{
+                flex: 1,
+                backgroundColor: Colors.green
+
+            }}>
                 <Swiper
                     ref="homeSwiper"
                     loop={false}
@@ -175,7 +179,7 @@ class Login extends Component<Props, State> {
 
                         <Content style={{justifyContent: 'space-between',}}>
                             <HTMLView value={`<div>${i18n.t("login_screen.slider_intro_1")}</div>`} stylesheet={contentHtmlStyles}/>
-                            <NextButton label={"Commencer"} />
+                            <NextButton label={i18n.t("login_screen.button_start")} />
                         </Content>
                     </ImageBackground>
                     {/*slide 2*/}
@@ -186,7 +190,7 @@ class Login extends Component<Props, State> {
                             <HTMLView value={`<div>${i18n.t("login_screen.slider_intro_2")}</div>`} stylesheet={headerHtmlStyles}/>
                         </Header>
                         <Content style={{justifyContent: 'flex-end',}}>
-                            <NextButton label={"Suivant"} />
+                            <NextButton label={i18n.t("login_screen.button_next")} />
                         </Content>
                     </ImageBackground>
                     {/*slide 3*/}
@@ -198,7 +202,7 @@ class Login extends Component<Props, State> {
                         </Header>
 
                         <Content style={{justifyContent: 'flex-end',}}>
-                            <NextButton label={"Suivant"} />
+                            <NextButton label={i18n.t("login_screen.button_next")} />
                         </Content>
                     </ImageBackground>
                     {/*slide 4*/}
@@ -211,7 +215,7 @@ class Login extends Component<Props, State> {
 
                         <Content style={{justifyContent: 'space-between',}}>
                             <HTMLView value={`<div>${i18n.t("login_screen.slider_intro_4_bis")}</div>`} stylesheet={contentHtmlStyles}/>
-                            <NextButton label={"Suivant"} />
+                            <NextButton label={i18n.t("login_screen.button_next")} />
                         </Content>
                     </ImageBackground>
                     {/*slide 5*/}
@@ -355,23 +359,10 @@ const styles = StyleSheet.create({
         fontSize: 15,
         marginLeft: 10,
     },
-    wrapper: {
-        flex: 1,
-        backgroundColor: Colors.green
-
-    },
     slide: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    text: {
-        fontSize: 23,
-        fontFamily: SFP_TEXT_MEDIUM,
-        textAlign: "center"
-    },
-    path: {
-        position:'absolute',
     },
     image: {
         alignSelf: 'center'
@@ -379,23 +370,6 @@ const styles = StyleSheet.create({
     desc: {
         padding: "10%"
     },
-    button: {
-        marginBottom: 0,
-        marginLeft: 8,
-        marginRight: 8,
-        borderWidth: 0,
-    },
-    pagination_x: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        flexDirection: 'row',
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'transparent'
-    }
-
 });
 
 

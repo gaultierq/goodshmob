@@ -163,6 +163,9 @@ export default {
         "slider_intro_4": "<bold><black>Share</black></bold> your\n<bold>coups de coeurs</bold>\nwith anyone you wamt",
         "slider_intro_4_bis": "<bold>Friends</bold>,\nFamily,\nWorkmates,\nFans,\n...\n",
         "credentials": "Keep all you love",
+        "button_start": "Start",
+        "button_next": "Next",
+        "button_skip": "Skip"
     },
     "popular_screen":{
         "title": "Add your first wishs",

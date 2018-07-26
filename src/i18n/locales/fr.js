@@ -161,7 +161,10 @@ export default {
         "slider_intro_3": "<bold><black>Suis</black>\nles listes</bold>\nqui t’intéressent",
         "slider_intro_4": "<bold><black>Partage</black> tes\n coups de coeurs</bold>\navec qui tu veux",
         "slider_intro_4_bis": "<bold>Amis</bold>,\nFamille,\nCollègues,\nFans,\n...\n",
-        "credentials": "Keep all you love"
+        "credentials": "Keep all you love",
+        "button_start": "Commencer",
+        "button_next": "Suivant",
+        "button_skip": "Passer"
     },
     "popular_screen":{
         "title": "Enregistrer vos premières envies",
