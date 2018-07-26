@@ -517,6 +517,7 @@ export default class App {
                     screen: 'goodsh.NetworkScreen', // unique ID registered with Navigation.registerScreen
                     icon: require('./img2/feed.png'),
                     selectedIcon: require('./img2/feed-active.png'),
+                    title: i18n.t('tabs.network.title'),
                     navigatorStyle,
                     iconInsets
                 },
