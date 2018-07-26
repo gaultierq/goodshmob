@@ -283,19 +283,6 @@ export function displayHomeSearch(navigator: RNNNavigator, token: SearchToken) {
     });
 }
 
-export function displaySearchUser(navigator: RNNNavigator, token: SearchToken) {
-
-    navigator.showModal({
-        screen: 'goodsh.UserSearchScreen', // unique ID registered with Navigation.registerScreen
-        passProps: {
-            onClickClose: () => navigator.dismissModal(),
-            token
-        },
-        navigatorButtons: CANCELABLE_MODAL,
-    });
-}
-
-
 export function displayChangeTitle({navigator, lineup}: {navigator: RNNNavigator, lineup: Lineup}) {
     let {id, name} = lineup;
 
