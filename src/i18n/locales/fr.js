@@ -20,6 +20,7 @@ export default {
         filter: {
             empty: "Pas de résultat",
             deepsearch: "Chercher dans toutes mes listes",
+            lineup_search: "Chercher dans toutes les listes",
         },
         search: {
             placeholder: "##Rechercher",
@@ -201,7 +202,8 @@ export default {
     },
     "search_bar":{
         "me_placeholder":"##Rechercher dans mes listes",
-        "network_placeholder":"##Rechercher dans mon réseau"
+        "network_placeholder":"##Rechercher dans mon réseau",
+        "lineup_placeholder":"##Rechercher dans les listes"
     },
     "network_search_tabs":{
         "savings":"LISTES",

@@ -45,6 +45,7 @@ import EditUserProfileScreen from "./screens/edituserprofile"
 import PopularItemsScreen from "./screens/popularitems"
 import GIndicator from "./screens/indicator"
 import UserSearchScreen from "./screens/usersearch"
+import LineupSearchScreen from "./screens/LineupSearch"
 
 
 function wrap(screenName,screenCreator,store,provider) {
@@ -115,5 +116,6 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.NavBarButtonIndicator', () => GIndicator, store, Provider);
     wrap('goodsh.TouchableSearchBar', () => TouchableSearchBar, store, Provider);
     wrap('goodsh.UserSearchScreen', () => UserSearchScreen, store, Provider);
+    wrap('goodsh.LineupSearchScreen', () => LineupSearchScreen, store, Provider);
 
 }

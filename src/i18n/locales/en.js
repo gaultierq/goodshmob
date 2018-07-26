@@ -24,6 +24,7 @@ export default {
         filter: {
             empty: "Search in my lists on the server",
             deepsearch: "Search in all my lists",
+            lineup_search: "Search in all lists",
         },
         goodsh : {
             title: "GoodshBox"
@@ -202,7 +203,8 @@ export default {
     },
     "search_bar":{
         "me_placeholder":"##Search in your lists",
-        "network_placeholder":"##Browse your network"
+        "network_placeholder":"##Browse your network",
+        "lineup_placeholder":"##Browse all lists"
     },
     "network_search_tabs":{
         "savings":"LISTS",
