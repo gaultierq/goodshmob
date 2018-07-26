@@ -64,22 +64,11 @@ export default class SearchSavingAndLineupPage extends React.Component<SUP, SUS>
                 algoliaFilter: `NOT type:List AND NOT user_id:${currentUserId()}`,
                 token: props.token
             },
-            search: {
-                search: __createAlgoliaSearcher({
-                    index: index,
-                    parseResponse: createResultFromHit,
-                }),
-                missingSearchPermissions: searchOptions => _.isEmpty(searchOptions.token) ? PERMISSION_EMPTY_INPUT : null,
-                renderMissingPermission: (searchOptions, missingSearchPermission): Node => {
-                    if (missingSearchPermission === PERMISSION_EMPTY_INPUT) {
-                        return <BlankSearch
-                            icon={renderBlankIcon('savings')}
-                            text={i18n.t("lineups.filter.lineup_search")}
-                        />
-                    }
-                    return <View/>
-                }
-            }
+            search: __createAlgoliaSearcher({
+                index: index,
+                parseResponse: createResultFromHit,
+            })
+
         }
     }
 
@@ -98,6 +87,16 @@ export default class SearchSavingAndLineupPage extends React.Component<SUP, SUS>
                         searchEngine={this.state.search}
                         renderResults={(state, onLoadMore) => <SearchListResults searchState={state} onLoadMore={onLoadMore} renderItem={({item}) => renderLineupFromOtherPeople(this.props.navigator, item)} />}
                         searchOptions={this.state.searchOptions}
+                        missingSearchPermissions={ searchOptions => _.isEmpty(searchOptions.token) ? PERMISSION_EMPTY_INPUT : null}
+                        renderMissingPermission={(searchOptions, missingSearchPermission): Node => {
+                            if (missingSearchPermission === PERMISSION_EMPTY_INPUT) {
+                                return <BlankSearch
+                                    icon={renderBlankIcon('savings')}
+                                    text={i18n.t("lineups.filter.lineup_search")}
+                                />
+                            }
+                            return <View/>
+                        }}
                     />
                 </View>
             </GoodshContext.Provider>
