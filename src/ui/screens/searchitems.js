@@ -26,6 +26,7 @@ import TabBar from "react-native-tab-view/src/TabBar"
 import PagerPan from "react-native-tab-view/src/PagerPan"
 import SearchGeneric from "./search/SearchGeneric"
 import SearchPlaces from "./search/SearchPlaces"
+import {renderTabBarFactory} from "../UIComponents"
 
 
 type Props = {
@@ -60,13 +61,17 @@ export default class SearchItems extends Screen<Props, State> {
             style={{flex: 1}}
             navigationState={{...this.state}}
             renderScene={this.renderScene.bind(this)}
-            renderTabBar={props => <TabBar {...TAB_BAR_PROPS} {...props}/>}
+            renderTabBar={renderTabBarFactory(this.isFocused.bind(this))}
             renderPager={props => <PagerPan {...props} />}
             swipeEnabled={false}
             onIndexChange={index => {
                 this.setState({index})
             }}
         />
+    }
+
+    isFocused(route) {
+        return this.state.index === ROUTES.indexOf(route)
     }
 
     renderScene({ route}: *) {

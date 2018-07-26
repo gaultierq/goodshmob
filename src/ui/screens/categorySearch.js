@@ -22,6 +22,7 @@ import {PagerPan, TabBar, TabView} from "react-native-tab-view"
 import BrowseGeneric from "./search/BrowseGeneric"
 import BrowsePlaces from "./search/BrowsePlaces"
 import {connect} from "react-redux"
+import {renderTabBarFactory} from "../UIComponents"
 
 type Props = NavigableProps & {
 };
@@ -64,13 +65,17 @@ export default class CategorySearchScreen extends Screen<Props, State> {
             style={{flex: 1}}
             navigationState={{...this.state}}
             renderScene={this.renderScene.bind(this)}
-            renderTabBar={props => <TabBar {...TAB_BAR_PROPS} {...props}/>}
+            renderTabBar={renderTabBarFactory(this.isFocused.bind(this))}
             renderPager={props => <PagerPan {...props} />}
             swipeEnabled={false}
             onIndexChange={index => {
                 this.setState({index})
             }}
         />
+    }
+
+    isFocused(route) {
+        return this.state.index === ROUTES.indexOf(route)
     }
 
     renderScene({ route}: *) {

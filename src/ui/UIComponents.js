@@ -4,7 +4,7 @@ import React, {Component} from 'react'
 import {Image, LayoutAnimation, Platform, StyleSheet, Text, UIManager, View} from 'react-native'
 import {AVATAR_BACKGROUNDS, Colors} from "./colors"
 import GTouchable from "./GTouchable"
-import {BACKGROUND_COLOR, LINEUP_PADDING, STYLES} from "./UIStyles"
+import {BACKGROUND_COLOR, LINEUP_PADDING, STYLES, TAB_BAR_PROPS, TAB_BAR_STYLES} from "./UIStyles"
 import Spinner from 'react-native-spinkit'
 import type {Lineup, RNNNavigator, User} from "../types"
 import {ViewStyle} from "../types"
@@ -17,6 +17,7 @@ import {SFP_TEXT_REGULAR} from "./fonts"
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import {GAction} from "./rights"
 import {L_ADD_ITEM, L_FOLLOW, L_SHARE, L_UNFOLLOW} from "./lineupRights"
+import {TabBar} from "react-native-tab-view"
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
@@ -375,3 +376,17 @@ export function getNavButtonForAction(action: GAction, id: string) {
     throw action + " not found"
 
 }
+
+
+export const renderTabBarFactory = (isFocused: any => boolean) => (props: any) => (
+    <TabBar
+        renderLabel={({route}) => (
+            <Text
+                style={[{paddingVertical: 14}, TAB_BAR_STYLES.label, {color: isFocused(route) ? Colors.green : Colors.black}]}>
+                {_.toUpper(route.title)}
+            </Text>
+        )}
+        {...TAB_BAR_PROPS}
+        {...props}
+    />
+)

@@ -27,7 +27,13 @@ import {displayHomeSearch, startAddItem} from "../Nav"
 import Screen from "../components/Screen"
 import {PROFILE_CLICKED} from "../components/MyAvatar"
 import OnBoardingManager from "../../managers/OnBoardingManager"
-import {floatingButtonScrollListener, getAddButton, getClearButton, scheduleOpacityAnimation} from "../UIComponents"
+import {
+    floatingButtonScrollListener,
+    getAddButton,
+    getClearButton,
+    renderTabBarFactory,
+    scheduleOpacityAnimation
+} from "../UIComponents"
 import {Tip, TipConfig} from "../components/Tip"
 import {HomeOnBoardingHelper} from "./HomeOnBoardingHelper"
 import {PagerPan, TabBar, TabView} from "react-native-tab-view"
@@ -239,29 +245,17 @@ export default class HomeScreen extends Screen<Props, State> {
                     style={{flex: 1}}
                     navigationState={{...this.state, visible: this.isVisible()}}
                     renderScene={this.renderScene.bind(this)}
-                    renderTabBar={props => (
-                        <TabBar
-                            renderLabel={({route}) => (
-                                <Text
-                                    style={[{paddingVertical: 14}, TAB_BAR_STYLES.label, {color: this.isFocused(route) ? Colors.green : Colors.black}]}>
-                                    {_.toUpper(route.title)}
-                                </Text>
-                            )
-                            }
-                            {...TAB_BAR_PROPS}
-                            {...props}
-                        />
-                    )}
+                    renderTabBar={renderTabBarFactory(this.isFocused.bind(this))}
                     renderPager={props => <PagerPan {...props} />}
                     swipeEnabled={false}
                     onIndexChange={index => {
                         this.setState({index}, () => this.refreshRightButtons())
-                    }}
+                    }
+                    }
                 />
             </View>
         )
     }
-
 
     refreshRightButtons() {
         this.props.navigator.setButtons(this.state.index === 0 ? getAddButton() : getClearButton())
@@ -307,9 +301,7 @@ export default class HomeScreen extends Screen<Props, State> {
 
 
     isFocused(route) {
-        let ix = ROUTES.indexOf(route)
-        let focused = this.state.index === ix
-        return focused
+        return this.state.index === ROUTES.indexOf(route)
     }
 
     renderTip() {

@@ -297,4 +297,3 @@ export const TAB_BAR_PROPS = {
     labelStyle: TAB_BAR_STYLES.label
 }
 
-
