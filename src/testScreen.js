@@ -41,7 +41,7 @@ export const activityDetail3 = {
         screen: 'goodsh.ActivityDetailScreen',
     },
     passProps: {
-        activityId: "e21a4e19-c3e5-4a29-a5c2-c9483d933533",
+        activityId: "cc1dcde2-70f2-4001-9519-f767dd8bfea6",
         activityType: "savings"
     }
 };

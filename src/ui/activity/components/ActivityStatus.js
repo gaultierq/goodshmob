@@ -9,7 +9,7 @@ import Octicons from "react-native-vector-icons/Octicons"
 import {seeUser} from "../../Nav"
 import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "../../fonts"
 import GTouchable from "../../GTouchable"
-import {isAsking, isSaving, isSending, timeSinceActivity} from "../../../helpers/DataUtils"
+import {isAsking, isSaving, isSending, sanitizeActivityType, timeSinceActivity} from "../../../helpers/DataUtils"
 import {fullName, savingCount} from "../../../helpers/StringUtils"
 import {Avatar} from "../../UIComponents"
 import HTMLView from "react-native-htmlview/HTMLView"
@@ -43,6 +43,10 @@ export default class ActivityStatus extends React.Component<Props, State> {
 
     render() {
         const {activity, navigator, skipLineup, style, cardStyle, children} = this.props;
+
+        //TODO: clear db from this type
+        if (sanitizeActivityType(activity.type) === 'posts') return null
+
 
         let {content, textNode} = this.getParams(activity, skipLineup)();
 
