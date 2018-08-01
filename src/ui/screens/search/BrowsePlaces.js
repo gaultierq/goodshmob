@@ -33,7 +33,8 @@ type SMS = {
 
 type SMP = {
     navigator: RNNNavigator,
-    data: any
+    focused?: boolean,
+
 }
 export type BrowseItemsGenOptions = {
     algoliaFilter?: string,
@@ -52,7 +53,7 @@ export type BrowseItemsPlacesOptions = BrowseItemsGenOptions & {
 export default class BrowsePlaces extends React.Component<SMP, SMS> {
 
 
-    motor: ISearchMotor
+    searchMotor: ISearchMotor<BrowseItemsPlacesOptions>
     positionSelector: IPositionSelector
 
     constructor(props: SMP) {
@@ -116,8 +117,8 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
                     searchEngine={this.search}
                     renderResults={this._renderResults}
                     searchOptions={this.state.searchOptions}
-                    ref={ref => this.motor = ref}
-                    missingSearchPermissions={this._missingSearchPermissions}
+                    ref={ref => this.searchMotor = ref}
+                    canSearch={this._canSearch}
                     renderMissingPermission={this._renderMissingPermission}
                 />
 
@@ -130,7 +131,8 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
             </View>
         )
     }
-    _missingSearchPermissions = searchOptions => {
+    _canSearch = searchOptions => {
+        if (!this.props.focused) return 'not_focused'
         if (searchOptions.permissionError) return searchOptions.permissionError
 
         if (!searchOptions.lat || !searchOptions.lng) {
@@ -147,6 +149,12 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
     _renderResults = (state: SearchState) => {
         if (this.state.mapDisplay) return <GMap searchState={state} onItemPressed={(item) => seeActivityDetails(this.props.navigator, item)}/>
         else return <SearchListResults searchState={state} renderItem={renderItem.bind(this)}/>
+    }
+
+
+    componentDidUpdate() {
+        //disapointing
+        if (this.searchMotor) this.searchMotor.search(this.state.searchOptions, false)
     }
 
 

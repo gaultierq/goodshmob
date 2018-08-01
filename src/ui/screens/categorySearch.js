@@ -17,8 +17,7 @@ import Screen from "../components/Screen"
 import {SEARCH_CATEGORIES_TYPE} from "../../helpers/SearchHelper"
 import * as Api from "../../managers/Api"
 import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
-import {TAB_BAR_PROPS} from "../UIStyles"
-import {PagerPan, TabBar, TabView} from "react-native-tab-view"
+import {PagerPan, TabView} from "react-native-tab-view"
 import BrowseGeneric from "./search/BrowseGeneric"
 import BrowsePlaces from "./search/BrowsePlaces"
 import {connect} from "react-redux"
@@ -29,7 +28,7 @@ type Props = NavigableProps & {
 
 type State = {
     index: number,
-    routes: any
+    routes: any,
 };
 
 const ROUTES = SEARCH_CATEGORIES_TYPE.map(t=> ({key: t, title: i18n.t("search_item_screen.tabs." + t)}))
@@ -60,6 +59,7 @@ export default class CategorySearchScreen extends Screen<Props, State> {
         )
     }
 
+
     render() {
         return <TabView
             style={{flex: 1}}
@@ -81,9 +81,10 @@ export default class CategorySearchScreen extends Screen<Props, State> {
     renderScene({ route}: *) {
         let ix = ROUTES.indexOf(route)
         let focused = this.state.index === ix
+        const visible: boolean = super.isVisible()
         switch (route.key) {
-            case 'places': return <BrowsePlaces navigator={this.props.navigator}/>
-            default: return <BrowseGeneric navigator={this.props.navigator} category={route.key} />
+            case 'places': return <BrowsePlaces navigator={this.props.navigator} focused={visible && focused} />
+            default: return <BrowseGeneric navigator={this.props.navigator} category={route.key} focused={visible && focused} />
         }
     }
 }

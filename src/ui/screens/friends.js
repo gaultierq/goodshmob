@@ -47,7 +47,7 @@ export default class FriendsScreen extends Screen<Props, State> {
     onNavigatorEvent(event: any) { // this is the onPress handler for the two buttons together
         if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
             if (event.id === 'friendsSearch') {
-                this.props.navigator.showModal({
+                this.props.navigator.push({
                     screen: 'goodsh.UserSearchScreen',
                     title: i18n.t("search.in_users"),
                     navigatorButtons: Nav.CANCELABLE_MODAL

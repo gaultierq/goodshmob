@@ -64,14 +64,14 @@ export default class SearchUserPage extends React.Component<SUP, SUS> {
                     searchEngine={this.search}
                     renderResults={(state, onLoadMore) => <SearchListResults searchState={state} renderItem={renderUser(this.props.navigator)} />}
                     searchOptions={this.state.searchOptions}
-                    missingSearchPermissions={this._missingSearchPermissions}
+                    canSearch={this._canSearch}
                     renderMissingPermission={this._renderMissingPermission}
                 />
             </View>
         )
     }
 
-    _missingSearchPermissions = searchOptions => _.isEmpty(searchOptions.token) ? PERMISSION_EMPTY_INPUT : null
+    _canSearch = searchOptions => _.isEmpty(searchOptions.token) ? PERMISSION_EMPTY_INPUT : null
 
     _renderMissingPermission = (searchOptions, missingSearchPermission): Node => {
         if (missingSearchPermission === PERMISSION_EMPTY_INPUT) {

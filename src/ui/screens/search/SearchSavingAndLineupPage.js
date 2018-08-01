@@ -85,7 +85,7 @@ export default class SearchSavingAndLineupPage extends React.Component<SUP, SUS>
                     searchEngine={this.search}
                     renderResults={(state, onLoadMore) => <SearchListResults searchState={state} onLoadMore={onLoadMore} renderItem={renderSavingOrLineup(this.props.navigator)} />}
                     searchOptions={this.state.searchOptions}
-                    missingSearchPermissions={this._missingSearchPermissions}
+                    canSearch={this._canSearch}
                     renderMissingPermission={this._renderMissingPermission}
                 />
             </View>
@@ -102,7 +102,7 @@ export default class SearchSavingAndLineupPage extends React.Component<SUP, SUS>
         return <View/>
     }
 
-    _missingSearchPermissions = searchOptions => _.isEmpty(searchOptions.token) ? PERMISSION_EMPTY_INPUT : null
+    _canSearch = searchOptions => _.isEmpty(searchOptions.token) ? PERMISSION_EMPTY_INPUT : null
 }
 
 

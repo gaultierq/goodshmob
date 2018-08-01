@@ -56,13 +56,13 @@ export default class SearchGeneric extends React.Component<SMP, SMS> {
                         renderItem={renderResource.bind(this)}
                     />}
                     searchOptions={this.state.searchOptions}
-                    missingSearchPermissions={this._missingSearchPermissions}
+                    canSearch={this._canSearch}
                     renderMissingPermission={this._renderMissingPermission}
                 />
             </View>
         )
     }
-    _missingSearchPermissions = searchOptions => {
+    _canSearch = searchOptions => {
         if (!_.isEmpty(searchOptions.input)) {
             return null
         }

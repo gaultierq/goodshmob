@@ -106,7 +106,7 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  S & Screen
     }
 
 
-    isVisible() {
+    isVisible(): boolean {
         return this.getVisible(this.props, this.state);
     }
 

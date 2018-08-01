@@ -57,7 +57,7 @@ export default class SearchPlaces extends React.Component<SMP, SMS> {
 
     search: SearchEngine<SearchItemsPlacesOptions> = __createSearchItemSearcher('places')
 
-    missingSearchPermissions = (searchOptions: SearchItemsPlacesOptions) => {
+    canSearch = (searchOptions: SearchItemsPlacesOptions) => {
         if (_.isEmpty(searchOptions.input)) {
             return PERMISSION_EMPTY_INPUT
         }
@@ -105,7 +105,7 @@ export default class SearchPlaces extends React.Component<SMP, SMS> {
                     searchEngine={this.search}
                     renderResults={this._renderResults}
                     searchOptions={this.state.searchOptions}
-                    missingSearchPermissions={this.missingSearchPermissions}
+                    canSearch={this.canSearch}
                     renderMissingPermission={this.renderMissingPermission}
                 />
 

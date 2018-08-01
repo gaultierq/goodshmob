@@ -24,7 +24,7 @@ import type {SearchEngine, SearchOptions, SearchResult, SearchState,} from "../.
 
 //search query KEY: token x category x options
 export interface ISearchMotor<SO> {
-    search1(options: SO, soft: boolean): void;
+    search(options: SO, soft: boolean): void;
 }
 
 export type Props<SO> = {
@@ -33,7 +33,7 @@ export type Props<SO> = {
     ref?: ISearchMotor<SO> => void,
     searchOptions: SO,
     //returns null if can search
-    missingSearchPermissions: (searchOptions: SO) => ?string,
+    canSearch: (searchOptions: SO) => ?string,
     renderMissingPermission?: (searchOptions: SO, missingPermission: string) => Node
 
 };
@@ -42,7 +42,7 @@ export type Props<SO> = {
 export type State = {
     searches: { [SearchKey]: SearchState},
     searchKey?: string,
-    missingSearchPermission: ?string,
+    canSearch: ?string,
 };
 
 // this guy is responsible for making search requests
@@ -50,7 +50,7 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
 
     state : State = {
         searches: {},
-        missingSearchPermission: null
+        canSearch: null
     };
 
     static defaultProps = {index: 0, autoSearch: true, hideSearchBar: false};
@@ -83,7 +83,7 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
         return JSON.stringify(opt)
     }
 
-    search1(options: SO, soft: boolean = false) {
+    search(options: SO, soft: boolean = false) {
         this._debounceSearch(options, 0)
     }
 
@@ -99,11 +99,13 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
     }
 
     renderSearchPage(searchState: SearchState) {
-        const missingSearchPermission = this.state.missingSearchPermission
-        const engine = this.props.searchEngine
+        const canSearch = this.state.canSearch
         const {renderMissingPermission} = this.props
-        if (missingSearchPermission != null && renderMissingPermission) {
-            return renderMissingPermission(this.props.searchOptions, missingSearchPermission)
+        if (canSearch != null) {
+            if (renderMissingPermission) {
+                return renderMissingPermission(this.props.searchOptions, canSearch)
+            }
+            return null
         }
 
         return this.props.renderResults(searchState, this.onLoadMore.bind(this))
@@ -119,8 +121,6 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
             }
         )
     }
-
-
 
     componentDidUpdate(prevProps: Props<SO>) {
         const searchOptions = this.props.searchOptions
@@ -143,15 +143,14 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
 
 
         const searchEngine = this.props.searchEngine;
-        const {missingSearchPermissions} = this.props
         let generateSearchKey = this.generateSearchKey.bind(this)
 
         let searchKey = ''
         let prevSearchState: SearchState;
 
-        let missingSearchPermission = missingSearchPermissions(searchOptions)
-        this.setState({missingSearchPermission})
-        if (missingSearchPermission) return
+        let canSearch = this.props.canSearch(searchOptions)
+        this.setState({canSearch})
+        if (canSearch) return
 
 
         searchKey = generateSearchKey(searchOptions)

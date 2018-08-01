@@ -14,6 +14,7 @@ import {AlgoliaClient, createResultFromHit} from "../../../helpers/AlgoliaUtils"
 import Config from 'react-native-config'
 import {SocialScopeSelector} from "./socialscopeselector"
 import SearchListResults from "../searchListResults"
+import type {ISearchMotor} from "../searchMotor"
 
 export type BrowseItemsGenOptions = {
     algoliaFilter?: string
@@ -25,7 +26,7 @@ type SMS = {
 }
 type SMP = {
     category: SearchItemCategoryType,
-    data: any
+    focused?: boolean,
 }
 
 @connect(state => ({
@@ -33,6 +34,8 @@ type SMP = {
 }))
 @logged
 export default class BrowseGeneric extends React.Component<SMP, SMS> {
+
+    searchMotor: ISearchMotor<BrowseItemsGenOptions>
 
     constructor(props: SMP) {
         super(props)
@@ -65,9 +68,6 @@ export default class BrowseGeneric extends React.Component<SMP, SMS> {
         parseResponse: (hits) => createResultFromHit(hits, {}, true),
     })
 
-
-    _missingSearchPermissions = (searchOptions: BrowseItemsGenOptions) => null
-
     render() {
         return (
             <View style={{flex: 1}}>
@@ -82,13 +82,19 @@ export default class BrowseGeneric extends React.Component<SMP, SMS> {
                 }/>
 
                 <SearchMotor
+                    ref={ref=>this.searchMotor = ref}
                     searchEngine={this.search}
                     renderResults={(state, onLoadMore)=> <SearchListResults searchState={state} onLoadMore={onLoadMore} renderItem={renderItem.bind(this)} />}
                     searchOptions={this.state.searchOptions}
-                    missingSearchPermissions={this._missingSearchPermissions}
+                    canSearch={(searchOptions: BrowseItemsGenOptions) => !this.props.focused ? 'not_focused' : null}
                 />
             </View>
         )
+    }
+
+    componentDidUpdate() {
+        //disapointing
+        if (this.searchMotor) this.searchMotor.search(this.state.searchOptions, false)
     }
 
 

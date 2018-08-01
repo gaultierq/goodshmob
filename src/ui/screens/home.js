@@ -19,7 +19,6 @@ import {
 
 import {connect} from "react-redux"
 import type {Id, RNNNavigator, Saving} from "../../types"
-import {TAB_BAR_PROPS, TAB_BAR_STYLES} from "../UIStyles"
 import {currentGoodshboxId, currentUser, logged} from "../../managers/CurrentUser"
 import {CheckBox} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation'
@@ -36,13 +35,12 @@ import {
 } from "../UIComponents"
 import {Tip, TipConfig} from "../components/Tip"
 import {HomeOnBoardingHelper} from "./HomeOnBoardingHelper"
-import {PagerPan, TabBar, TabView} from "react-native-tab-view"
+import {PagerPan, TabView} from "react-native-tab-view"
 import MyGoodsh from "./MyGoodsh"
 import MyInterests from "./MyInterests"
 import {fullName2} from "../../helpers/StringUtils"
 import {currentUserFilter} from "../../redux/selectors"
 import NotificationManager from '../../managers/NotificationManager'
-import {Colors} from "../colors"
 
 type Props = {
     userId: Id,

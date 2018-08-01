@@ -214,7 +214,7 @@ export function __createAlgoliaSearcher<SO: any>(
             query['aroundRadius'] = 1000 * 10
         }
 
-        console.log(`algolia: searching ${token}`, searchOptions, query);
+        console.log(`%c algolia: sending`, 'background: #FCFCFC; color: #E36995', searchOptions, query);
 
         return new Promise((resolve, reject) => {
 
