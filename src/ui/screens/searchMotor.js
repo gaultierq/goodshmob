@@ -132,15 +132,20 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
         }
     }
 
-    _debounceSearch(searchOptions: SO, page: number) {
-        return _.debounce(() => this.tryPerformSearch(searchOptions, page), 500, {
-            'leading': true,
-        })();
-    }
+    // _debounceSearch(searchOptions: SO, page: number) {
+    //     console.debug("_debounceSearch")
+    //     return _.debounce(() => this.tryPerformSearch(searchOptions, page), 500, {
+    //         'leading': true,
+    //     })();
+    // }
+
+    _debounceSearch = _.debounce((searchOptions: SO, page: number) => this.tryPerformSearch(searchOptions, page), 500, {
+        'leading': true,
+    })
 
 
     async tryPerformSearch(searchOptions: SO, page: number) {
-
+        console.debug("tryPerformSearch")
 
         const searchEngine = this.props.searchEngine;
         let generateSearchKey = this.generateSearchKey.bind(this)
