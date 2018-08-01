@@ -1,14 +1,11 @@
 import type {Node} from 'react'
 // @flow
 import React, {Component} from 'react'
-import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {ActivityIndicator, Image, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {logged} from "../../managers/CurrentUser"
 import {Navigation} from 'react-native-navigation'
 import {SFP_TEXT_MEDIUM} from "../fonts"
 import {Colors} from "../colors"
-
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
 type Props = {
     text: string,
@@ -50,21 +47,21 @@ export default class BlankSearch extends Component<Props, State> {
 }
 
 export function renderBlankIcon(category: string): Node {
-    const color = Colors.greyish
-    const size = 50
+    const size = 70
 
     switch (category) {
         case 'places':
-            return <MaterialIcons name="restaurant" size={size} color={color}/>;
+            return <Image style={{width: size}} source={require('../../img2/restaurants.png')} resizeMode="contain"/>
         case 'musics':
-            return <MaterialIcons name="library-music" size={size} color={color}/>;
+            return <Image style={{width: size}} source={require('../../img2/music.png')} resizeMode="contain"/>
         case 'consumer_goods':
-            return <SimpleLineIcons name="present" size={size} color={color}/>;
+            return <Image style={{width: size}} source={require('../../img2/stuff.png')} resizeMode="contain"/>
         case 'movies':
-            return <MaterialIcons name="movie" size={size} color={color}/>;
+            return <Image style={{width: size}} source={require('../../img2/film.png')} resizeMode="contain"/>
         case 'users':
-            return <MaterialIcons name="face" size={size} color={color}/>;
+            return <Image style={{width: size}} source={require('../../img2/users.png')} resizeMode="contain"/>
         case 'savings':
-            return <MaterialIcons name="list" size={size} color={color}/>;
+            return <Image style={{width: size}} source={require('../../img2/list.png')} resizeMode="contain"/>
+
     }
 }

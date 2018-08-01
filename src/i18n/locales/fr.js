@@ -203,7 +203,9 @@ export default {
     "search_bar":{
         "me_placeholder":"Rechercher dans mes listes",
         "network_placeholder":"Rechercher dans mon réseau",
-        "lineup_placeholder":"Chercher des listes a suivre"
+        "lineup_placeholder":"Chercher des listes a suivre",
+        "places_placeholder":"Chercher restaurants, des bars ...",
+        "users_placeholder":"Chercher des utilisateurs"
     },
     "network_search_tabs":{
         "savings":"LISTES",
@@ -238,7 +240,7 @@ export default {
         "placeholder": {
             "consumer_goods":"livre, cadeau, gadget,\nchaussures, vin, jouet...",
             "places":"restaurant, café,\nboutique, hôtel, musée,\nville, plage, lieu touristique...",
-            "movies":"film,https://www.coinbase.com/device_confirmations/confirm_email?token=V3kVavdVq9sWdh3pudiWCC série, documentaire, émission... ",
+            "movies":"film, série, documentaire, émission... ",
             "musics":"titre, artiste, album...",
             "savings": "Saisir des mots-clés pour trouver des listes à suivre",
             "users": "Chercher des membres à suivre",

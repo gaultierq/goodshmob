@@ -91,6 +91,7 @@ export default class SearchPlaces extends React.Component<SMP, SMS> {
                     style={styles1.searchBar}
                     placeholder={i18n.t('search_item_screen.searchbar_placeholder.places')}
                     autoFocus={this.props.focused}
+
                 />
 
                 <SearchPlacesOption
