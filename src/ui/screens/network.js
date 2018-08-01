@@ -141,7 +141,6 @@ class NetworkScreen extends Screen<Props, State> {
                     screen: 'goodsh.FriendsScreen',
                     title: i18n.t("community.screens.friends"),
                     passProps:{
-                        style: {marginTop: 38},
                         userId: currentUserId(),
                     },
                     navigatorButtons: {
