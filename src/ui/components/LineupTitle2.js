@@ -117,24 +117,18 @@ export default class LineupTitle2 extends Component<Props, State> {
             //<Text key={'savings-count-medal'} style={{ color: Colors.greyish }}>{ `(${savingCount})` }</Text>,
             this.renderMedal(_.get(lineup, 'meta.savingsCount', -1), "th-large", it),
             this.renderMedal(_.get(lineup, 'meta.followersCount', -1), "star", it, _.get(lineup, 'meta.followed', false) ? Colors.green : undefined),
-            (canFollow && <View style={{flexDirection: 'row', height: 15}} key={'follow-button'}>
-                {it.next().value && this.renderMedalDot()}
-                <GTouchable
-                    style={{
-                        // backgroundColor: 'red',
-
-                    }}
+            (canFollow &&
+                <Text
                     onPress={()=>{
                         followLineupPending(this.props.dispatch, lineup)
-                    }}>
-                    <Text style={{
+                    }}
+                    style={{
                         color: Colors.green,
                         fontSize: 14,
                         fontFamily: SFP_TEXT_BOLD
                         // backgroundColor: 'blue'
-                    }}>{i18n.t('actions.follow')}</Text>
-                </GTouchable>
-            </View>)
+                    }}>  {i18n.t('actions.follow')}</Text>
+            )
         ];
     }
 
