@@ -93,6 +93,8 @@
 	<string>Some description</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Some description</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Some description</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Some description</string>
 	<key>NSPhotoLibraryUsageDescription</key>
