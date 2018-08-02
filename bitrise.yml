@@ -9,9 +9,9 @@ workflows:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone: {}
     - slack@2.6.3:
-        run_if: .IsCI
+        run_if: ".IsCI"
         inputs:
-        - message: "Build started... on branch $BITRISE_GIT_BRANCH ($GIT_CLONE_COMMIT_MESSAGE_SUBJECT)"
+        - message: Build started... on branch $BITRISE_GIT_BRANCH ($GIT_CLONE_COMMIT_MESSAGE_SUBJECT)
         - webhook_url: "$SLACK_WEBHOOK_URL"
     - git-clone:
         run_if: true
@@ -27,10 +27,8 @@ workflows:
 
             #!/usr/bin/env bash -ex
             ./goodshmob-build/prepare-env.sh
-
     - install-react-native@0.9.1: {}
     - yarn@0.0.4: {}
-
   _prepare-android:
     steps:
     - git-clone:
@@ -40,7 +38,6 @@ workflows:
         - clone_into_dir: "./android/keystores"
         - branch: master
         - commit: ''
-#    - install-missing-android-tools: {}
   _deploy-android:
     steps:
     - hockeyapp-deploy-android:
@@ -56,8 +53,8 @@ workflows:
         run_if: 'true'
         inputs:
         - manifest_file: "$BITRISE_SOURCE_DIR/android/app/src/main/AndroidManifest.xml"
-        - version_name: '$GOODSH_BUILD_VERSION'
-        - version_code: '$GOODSH_BUILD_VERSION_CODE'
+        - version_name: "$GOODSH_BUILD_VERSION"
+        - version_code: "$GOODSH_BUILD_VERSION_CODE"
     - gradle-runner@1.8.0:
         inputs:
         - gradle_file: "$GRADLE_BUILD_FILE_PATH"
@@ -82,8 +79,8 @@ workflows:
         run_if: 'true'
         inputs:
         - plist_path: "$BITRISE_SOURCE_DIR/ios/goodshmob/Info.plist"
-        - build_version: '$GOODSH_BUILD_VERSION'
-        - build_short_version_string: '$GOODSH_BUILD_SHORT_VERSION'
+        - build_version: "$GOODSH_BUILD_VERSION"
+        - build_short_version_string: "$GOODSH_BUILD_SHORT_VERSION"
     - xcode-archive:
         inputs:
         - export_method: "$GOODSH_BUILD_XCODE_EXPORT_METHOD"
@@ -91,11 +88,6 @@ workflows:
         - configuration: "$GOODSH_BUILD_IOS_CONFIGURATION"
         - project_path: "$BITRISE_WORKSPACE_PATH"
         - output_tool: xcodebuild
-#        - force_team_id: "$GOODSH_BUILD_IOS_TEAM_ID"
-#        - force_code_sign_identity: "$GOODSH_BUILD_CODE_SIGN_IDENTITY"
-#        - force_provisioning_profile_specifier: "$GOODSH_PROVISIONING_PROFILE_SPECIFIER"
-#        - force_provisioning_profile: "$GOODSH_PROVISIONING_PROFILE"
-
   _deploy-ios:
     steps:
     - hockeyapp-deploy@2.4.2:
@@ -105,13 +97,12 @@ workflows:
         - app_id: "$GOODSH_BUILD_HOCKEY_APP_IOS_APP_ID"
         - notify: '0'
         - notes: "$GIT_CLONE_COMMIT_MESSAGE_SUBJECT"
-
   _add_version:
     steps:
     - script@1.1.5:
         is_always_run: true
         inputs:
-        - content: |2-
+        - content: |-
             #!/usr/bin/env bash -ex
 
             cd goodshmob-build
@@ -126,14 +117,12 @@ workflows:
 
             cd ..
             git checkout android/app/src/main/AndroidManifest.xml ios/goodshmob/Info.plist
-
-
   _upload_sourcemap_ios:
     steps:
     - script@1.1.5:
         title: Upload sourcemaps ios
         inputs:
-        - content: |2-
+        - content: |-
             #!/usr/bin/env bash -ex
             npm install -g bugsnag-sourcemaps
 
@@ -151,13 +140,12 @@ workflows:
                 --source-map ios-release.bundle.map \
                 --minified-url main.jsbundle \
                 --upload-sources
-
   _upload_sourcemap_android:
     steps:
     - script@1.1.5:
         title: Upload sourcemaps android
         inputs:
-        - content: |2-
+        - content: |-
             #!/usr/bin/env bash -ex
             npm install -g bugsnag-sourcemaps
 
@@ -175,29 +163,24 @@ workflows:
                 --source-map android-release.bundle.map \
                 --minified-url index.android.bundle \
                 --upload-sources
-
   _clean:
     steps:
     - script@1.1.5:
         title: Clean
         is_always_run: true
         inputs:
-        - content: |2-
+        - content: |-
             #!/usr/bin/env bash -ex
             git checkout android/app/src/main/AndroidManifest.xml ios/goodshmob/Info.plist
-
-            ./goodshmob-build/prepare-env.sh cleanup
-
   _slack_end:
     steps:
     - slack@2.7.1:
-        run_if: .IsCI
+        run_if: ".IsCI"
         is_always_run: true
         inputs:
         - message: "$GOODSH_BUILD_SLACK_MESSAGE_OK"
         - message_on_error: "$GOODSH_BUILD_SLACK_MESSAGE_KO"
         - webhook_url: "$SLACK_WEBHOOK_URL"
-
   android:
     before_run:
     - _prepare
@@ -206,9 +189,7 @@ workflows:
     - _upload_sourcemap_android
     - _deploy-android
     - _add_version
-    - _clean
     - _slack_end
-
   ios:
     before_run:
     - _prepare
@@ -217,9 +198,7 @@ workflows:
     - _upload_sourcemap_ios
     - _deploy-ios
     - _add_version
-    - _clean
     - _slack_end
-
   build:
     before_run:
     - _prepare
@@ -232,27 +211,10 @@ workflows:
     - _deploy-ios
     - _deploy-android
     - _add_version
-    - _clean
     - _slack_end
-
   build_test:
     before_run:
     - _upload_sourcemap_android
-#    - _prepare
-    # - _slack_end
-    # - _prepare-ios
-#     - _prepare-android
-#    - _build-android
-#    - _build-ios
-    # - _deploy-ios
-    # - _deploy-android
-#    - _add_version
-    # steps:
-    # - slack@2.6.3:
-    #     inputs:
-    #     - message: 'Build SUCCESSFUL: [$BITRISE_GIT_BRANCH]: $GIT_CLONE_COMMIT_MESSAGE_SUBJECT'
-    #     - webhook_url: "$SLACK_WEBHOOK_URL"
-
 app:
   envs:
   - opts:
@@ -277,7 +239,7 @@ app:
   - SLACK_WEBHOOK_URL: https://hooks.slack.com/services/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
 trigger_map:
 - push_branch: master
-  workflow: build
+  workflow: ios
 - push_branch: preprod
   workflow: build
 - push_branch: prod
