@@ -4,13 +4,15 @@ import type {Node} from 'react'
 import React from 'react'
 import {StyleSheet, Text, TextInput, View,} from 'react-native'
 import type {SearchEngine, SearchItemCategoryType,} from "../../../helpers/SearchHelper"
-import {__createSearchItemSearcher, PERMISSION_EMPTY_INPUT, renderResource} from "../../../helpers/SearchHelper"
+import {__createSearchItemSearcher, PERMISSION_EMPTY_INPUT} from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import {LINEUP_PADDING, NAV_BACKGROUND_COLOR} from "../../UIStyles"
 import GSearchBar2 from "../../components/GSearchBar2"
 import SearchMotor from "../searchMotor"
 import SearchListResults from "../searchListResults"
 import BlankSearch, {renderBlankIcon} from "../../../ui/components/BlankSearch"
+import ItemCell from "../../components/ItemCell"
+import GTouchable from "../../GTouchable"
 
 export type SearchItemsGenOptions = {input: string}
 
@@ -21,7 +23,8 @@ type SMS = {
 type SMP = {
     category: SearchItemCategoryType,
     placeholder: string,
-    focused?: boolean
+    focused?: boolean,
+    onItemSelected: () => void
 }
 
 export default class SearchGeneric extends React.Component<SMP, SMS> {
@@ -53,7 +56,7 @@ export default class SearchGeneric extends React.Component<SMP, SMS> {
                     searchEngine={this.search}
                     renderResults={(state, onLoadMore) => <SearchListResults
                         searchState={state}
-                        renderItem={renderResource.bind(this)}
+                        renderItem={this._renderItem}
                     />}
                     searchOptions={this.state.searchOptions}
                     canSearch={this._canSearch}
@@ -62,6 +65,13 @@ export default class SearchGeneric extends React.Component<SMP, SMS> {
             </View>
         )
     }
+
+    _renderItem = ({item}) => (
+        <GTouchable onPress={() => this.props.onItemSelected(item)}>
+            <ItemCell item={item}/>
+        </GTouchable>
+    )
+
     _canSearch = searchOptions => {
         if (!_.isEmpty(searchOptions.input)) {
             return null

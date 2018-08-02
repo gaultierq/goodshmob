@@ -296,35 +296,3 @@ export function renderItem({item}: {item: Saving}) {
         </GTouchable>
     )
 }
-
-
-export function onNewItemSelected(item: Item, navigator: RNNNavigator) {
-    let cancel = navigator.dismissAllModals
-
-    navigator.showModal({
-        screen: 'goodsh.AddItemScreen',
-        title: i18n.t("add_item_screen.title"),
-        animationType: 'none',
-        passProps: {
-            itemId: item.id,
-            itemType: item.type,
-            item,
-            onCancel: cancel,
-            onAdded: cancel,
-        },
-    });
-}
-
-export function renderResource({item}: {item: Item}) {
-
-    //TODO: this is hack
-    if (!item) return null;
-
-
-    return (
-        <GTouchable onPress={() => onNewItemSelected(item, this.props.navigator) }>
-            <ItemCell item={item}/>
-        </GTouchable>
-    )
-}
-

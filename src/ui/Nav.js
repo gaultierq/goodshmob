@@ -76,7 +76,9 @@ export function startAddItem(navigator: *, defaultLineup: Id | Lineup) {
         title: i18n.t('search_item_screen.title'),
         passProps: {
             defaultLineup,
-            onCancel: cancel
+            onCancel: cancel,
+            defaultLineupId,
+            defaultLineup
         }, // Object that will be passed as props to the pushed screen (optional)
     })
 }

@@ -40,7 +40,7 @@ type State = {
     visibility?: Visibility,
     reqAdd?: number,
     reqFetch?: number,
-    selectedLineupId?: Id,
+    selectedLineupId: Id,
 };
 
 
@@ -94,7 +94,7 @@ export default class AddItemScreen extends Screen<Props, State> {
         let item = this.getItem();
         if (!item) return null;
 
-        const {description, visibility, selectedLineupId, showLineupList} = this.state;
+        const {description, visibility, selectedLineupId} = this.state;
 
         let grey = Colors.greyishBrown;
         let req = this.state.reqAdd;

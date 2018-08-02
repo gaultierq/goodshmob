@@ -6,10 +6,8 @@ import {StyleSheet, Text, TextInput, View,} from 'react-native'
 import type {SearchEngine, SearchState} from "../../../helpers/SearchHelper"
 import {
     __createSearchItemSearcher,
-    onNewItemSelected,
     PERMISSION_EMPTY_INPUT,
-    PERMISSION_EMPTY_POSITION,
-    renderResource
+    PERMISSION_EMPTY_POSITION
 } from "../../../helpers/SearchHelper"
 import {LINEUP_PADDING, NAV_BACKGROUND_COLOR} from "../../UIStyles"
 import {renderAskPermission, SearchPlacesOption} from "./searchplacesoption"
@@ -23,6 +21,8 @@ import ActionButton from "react-native-action-button"
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import BlankSearch, {renderBlankIcon} from "../../../ui/components/BlankSearch"
 import GMap from "../../components/GMap"
+import GTouchable from "../../GTouchable"
+import ItemCell from "../../components/ItemCell"
 
 export type SearchItemsPlacesOptions = SearchItemsGenOptions & {
     lat?: ?number,
@@ -37,7 +37,8 @@ type SMS = {
 }
 type SMP = {
     navigator: RNNNavigator,
-    focused?: boolean
+    focused?: boolean,
+    onItemSelected: () => void
 }
 
 export default class SearchPlaces extends React.Component<SMP, SMS> {
@@ -120,10 +121,17 @@ export default class SearchPlaces extends React.Component<SMP, SMS> {
     }
 
     _renderResults = (state: SearchState) => {
-        if (this.state.mapDisplay) return <GMap searchState={state} onItemPressed={(item) => onNewItemSelected(item, this.props.navigator)}/>
+        if (this.state.mapDisplay) return <GMap searchState={state} onItemPressed={(item) => this.props.onItemSelected(item)}/>
 
-        return <SearchListResults searchState={state} renderItem={renderResource.bind(this)}/>
+        return <SearchListResults searchState={state} renderItem={this._renderItem}
+        />
     }
+
+    _renderItem = ({item}) => (
+        <GTouchable onPress={() => this.props.onItemSelected(item)}>
+            <ItemCell item={item}/>
+        </GTouchable>
+    )
 }
 
 //TODO: factorize

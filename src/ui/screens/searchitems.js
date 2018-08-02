@@ -17,7 +17,7 @@ import {
 } from 'react-native'
 import {SEARCH_CATEGORIES_TYPE} from "../../helpers/SearchHelper"
 import Screen from "../components/Screen"
-import type {Item, Lineup, RNNNavigator} from "../../types"
+import type {Id, Item, Lineup, RNNNavigator} from "../../types"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import {findBestSearchCategory} from "../../helpers/Classifier"
 import {TabView} from "react-native-tab-view"
@@ -29,7 +29,8 @@ import {renderTabBarFactory} from "../UIComponents"
 
 type Props = {
     onItemSelected?: (item: Item, navigator: RNNNavigator) => void,
-    defaultLineup?: Lineup
+    defaultLineup?: Lineup,
+    defaultLineupId?: Id,
 };
 
 const ROUTES = SEARCH_CATEGORIES_TYPE.map(t=> ({key: t, title: i18n.t("search_item_screen.tabs." + t)}))
@@ -76,17 +77,22 @@ export default class SearchItems extends Screen<Props, State> {
         let ix = ROUTES.indexOf(route)
         let focused = this.state.index === ix
         switch (route.key) {
-            case 'places': return <SearchPlaces focused={focused} navigator={this.props.navigator}/>
+            case 'places': return (
+                <SearchPlaces focused={focused} navigator={this.props.navigator} onItemSelected={this._onItemSelected}/>
+            )
             default: return (
                 <SearchGeneric
                     focused={focused}
                     navigator={this.props.navigator}
                     category={route.key}
                     placeholder={i18n.t('search_item_screen.searchbar_placeholder.' + route.key)}
+                    onItemSelected={this._onItemSelected}
                 />
             )
         }
     }
+
+    _onItemSelected= (item: Item) => onNewItemSelected(item, this.props.navigator, this.props.defaultLineupId)
 
     findBestIndex(props: Props): number {
         let categories = SEARCH_CATEGORIES_TYPE.map( type => ({
@@ -108,3 +114,21 @@ export default class SearchItems extends Screen<Props, State> {
 }
 
 
+
+export function onNewItemSelected(item: Item, navigator: RNNNavigator, selectedLineupId: Id) {
+    let cancel = navigator.dismissAllModals
+
+    navigator.showModal({
+        screen: 'goodsh.AddItemScreen',
+        title: i18n.t("add_item_screen.title"),
+        animationType: 'none',
+        passProps: {
+            itemId: item.id,
+            itemType: item.type,
+            item,
+            onCancel: cancel,
+            onAdded: cancel,
+            defaultLineupId: selectedLineupId
+        },
+    });
+}
