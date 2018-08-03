@@ -87,6 +87,22 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Nous avons besoin de votre position pour vous proposer les lieux autour de vous</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Some description</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Some description</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Some description</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Some description</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Some description</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Some description</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Some description</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Some description</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
