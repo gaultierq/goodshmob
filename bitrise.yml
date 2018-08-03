@@ -81,7 +81,7 @@ workflows:
         - plist_path: "$BITRISE_SOURCE_DIR/ios/goodshmob/Info.plist"
         - build_version: "$GOODSH_BUILD_VERSION"
         - build_short_version_string: "$GOODSH_BUILD_SHORT_VERSION"
-    - xcode-archive:
+    - xcode-archive@2.4.11:
         inputs:
         - export_method: "$GOODSH_BUILD_XCODE_EXPORT_METHOD"
         - scheme: "$BITRISE_SCHEME"
@@ -97,13 +97,6 @@ workflows:
         - app_id: "$GOODSH_BUILD_HOCKEY_APP_IOS_APP_ID"
         - notify: '0'
         - notes: "$GIT_CLONE_COMMIT_MESSAGE_SUBJECT"
-    - deploy-to-itunesconnect-deliver:
-        run_if: '{{enveq "GOODSH_BUILD_TESTFLIGHT_DEPLOY" "true"}}'
-        inputs:
-        - itunescon_user: "$ITUNES_CONNECT_USER"
-        - password: "$ITUNES_CONNECT_PASSWORD"
-        - app_id: "$GOODSH_BUILD_IOS_APP_ID"
-        - team_id: "$GOODSH_BUILD_IOS_TEAM_ID"
   _add_version:
     steps:
     - script@1.1.5:
@@ -248,6 +241,6 @@ trigger_map:
 - push_branch: master
   workflow: ios
 - push_branch: preprod
-  workflow: build
+  workflow: ios
 - push_branch: prod
-  workflow: build
+  workflow: ios
