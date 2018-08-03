@@ -81,7 +81,7 @@ workflows:
         - plist_path: "$BITRISE_SOURCE_DIR/ios/goodshmob/Info.plist"
         - build_version: "$GOODSH_BUILD_VERSION"
         - build_short_version_string: "$GOODSH_BUILD_SHORT_VERSION"
-    - xcode-archive@2.4.11:
+    - xcode-archive@2.4.10:
         inputs:
         - export_method: "$GOODSH_BUILD_XCODE_EXPORT_METHOD"
         - scheme: "$BITRISE_SCHEME"
