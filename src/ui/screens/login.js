@@ -286,7 +286,7 @@ class Login extends Component<Props, State> {
 
         let result
         try {
-            result = await LoginManager.logInWithReadPermissions(['public_profile', 'email', 'user_friends'])
+            result = await LoginManager.logInWithReadPermissions(['public_profile', 'email'])
         }
         catch (err) {
             console.warn('Login fail with error: ' + error);
