@@ -20,7 +20,7 @@ export default {
         filter: {
             empty: "Pas de résultat",
             deepsearch: "Chercher dans toutes mes listes",
-            lineup_search: "Trouver des listes à suivre",
+            lineup_search: "Saisir des mots-clés pour trouver des listes à suivre",
         },
         search: {
             placeholder: "Rechercher",

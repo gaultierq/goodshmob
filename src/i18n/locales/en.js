@@ -24,7 +24,7 @@ export default {
         filter: {
             empty: "Search in my lists on the server",
             deepsearch: "Search in all my lists",
-            lineup_search: "Find lists to follow",
+            lineup_search: "Tap keywords for interesting lists to follow",
         },
         goodsh : {
             title: "GoodshBox"
