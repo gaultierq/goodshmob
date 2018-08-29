@@ -36,6 +36,9 @@ import {actions as userActions, actionTypes as userActionTypes} from "./redux/Us
 import firebase from 'react-native-firebase'
 import {Alert, AsyncStorage, Dimensions, Linking, StyleSheet, TouchableOpacity, ToastAndroid} from 'react-native'
 import {NAV_BACKGROUND_COLOR} from "./ui/UIStyles"
+import * as Nav from "./ui/Nav"
+import Timeout from 'await-timeout'
+
 
 type AppMode = 'idle' | 'init_cache' | 'logged' | 'unlogged' | 'upgrading_cache' | 'unknown'
 type AppConfig = {
@@ -340,9 +343,18 @@ export default class App {
     initialLink = null
 
     async obtainInitialLink() {
-        if (this.initialLinkFetched) return this.initialLink
-        this.initialLinkFetched = true
-        return await firebase.links().getInitialLink()
+        // if (this.initialLinkFetched) return this.initialLink
+        // this.initialLinkFetched = true
+        const promise = firebase.links().getInitialLink()
+        try {
+            return await Timeout.wrap(promise, 500, 'Timeout while obtaining initial link');
+        }
+        catch(err) {
+            console.warn(err)
+            return null
+        }
+
+        // return await firebase.links().getInitialLink()
     }
 
     async onAppConfigChanged(oldConfig: AppConfig) {
@@ -359,10 +371,10 @@ export default class App {
                 this.logger.warn(`test screen not found${testScreenName}`);
             }
         }
-        let navigatorStyle = {...UI.NavStyles};
 
         // this.logger.info("DEBUGGGGGGGG")
         let url = await this.obtainInitialLink()
+        //i dont have this log
         this.logger.info("dynamic link", url)
         if (url) {
             sendMessage(`to see your content, please log in ${url}`, {timeout: 60000})
@@ -375,7 +387,7 @@ export default class App {
             case 'logged':
                 let userId = currentUserId()
                 if (testScreen) {
-                    Object.assign(testScreen.screen, {navigatorStyle});
+                    Object.assign(testScreen.screen, {navigatorStyle: UI.NavStyles});
                     Navigation.startSingleScreenApp(testScreen);
                 }
                 else {
@@ -402,9 +414,7 @@ export default class App {
                         Navigation.startSingleScreenApp({
                             screen: {
                                 screen: 'goodsh.EditUserProfileScreen',
-                                navigatorStyle: {
-                                    ...navigatorStyle,
-                                },
+                                navigatorStyle: UI.NavStyles,
 
                             },
                             passProps: {
@@ -424,7 +434,10 @@ export default class App {
                         DeviceManager.checkAndSendDiff();
 
                         //TODO: find a better way of delaying this Linking init
+                        this.logger.log('booting posting main callback')
                         setTimeout(async ()=> {
+                            this.logger.log('booting main callback')
+
                             Linking.addEventListener('url', ({url}) => {
                                 if (url) this.logger.log('Linking: url event: ', url);
                                 NavManager.goToDeeplink(url);
@@ -434,13 +447,13 @@ export default class App {
 
                             this.logger.debug("deeplinking input: ", initialUrl, initialLink)
 
-                            NavManager.goToDeeplink(initialUrl || initialLink);
+                            this.launchMain(initialUrl || initialLink)
 
                         }, 500)
 
 
 
-                        this.launchMain(navigatorStyle);
+                        //this.launchMain(navigatorStyle);
                     }
                 }
                 break;
@@ -477,14 +490,22 @@ export default class App {
         }
     }
 
-    launchMain(navigatorStyle) {
+    launchMain(initialLink?: string) {
+
+
+
+        // NavManager.goToDeeplink(initialLink)
+        let parseDeeplink = NavManager.parseDeeplink(initialLink)
+        let {mainTabIndex, modal} = parseDeeplink
+
+        this.logger.debug("launching main: ", initialLink, parseDeeplink)
 
         let tabsStyle = { // optional, add this if you want to style the tab bar beyond the defaults
             tabBarButtonColor: Colors.black, // optional, change the color of the tab icons and text (also unselected)
             tabBarSelectedButtonColor: Colors.green, // optional, change the color of the selected tab icon and text (only selected)
             tabBarBackgroundColor: NAV_BACKGROUND_COLOR,
             forceTitlesDisplay: false,
-            initialTabIndex: 0,
+            initialTabIndex: mainTabIndex || 0,
         };
         let iconInsets = { // add this to change icon position (optional, iOS only).
             top: 6, // optional, default is 0.
@@ -499,7 +520,7 @@ export default class App {
                     screen: 'goodsh.HomeScreen',
                     icon: require('./img2/home.png'),
                     selectedIcon: require('./img2/home-active.png'),
-                    navigatorStyle: [navigatorStyle],
+                    navigatorStyle: UI.NavStyles,
                     iconInsets,
                     passProps: {
                         userId: currentUserId()
@@ -510,7 +531,7 @@ export default class App {
                     icon: require('./img2/search.png'),
                     selectedIcon: require('./img2/searchActive.png'),
                     title: i18n.t('tabs.category_search.title'),
-                    navigatorStyle,
+                    navigatorStyle: UI.NavStyles,
                     iconInsets
                 },
                 {
@@ -518,7 +539,7 @@ export default class App {
                     icon: require('./img2/feed.png'),
                     selectedIcon: require('./img2/feed-active.png'),
                     title: i18n.t('tabs.network.title'),
-                    navigatorStyle,
+                    navigatorStyle: UI.NavStyles,
                     iconInsets
                 },
             ],
@@ -529,7 +550,7 @@ export default class App {
                 // bottomTabBadgeBackgroundColor: 'green', // Optional, change badge background color. Android only
                 backButtonImage: require('./img2/leftBackArrowGrey.png'),
                 hideBackButtonTitle: true,
-                ...navigatorStyle, //added when showing modals, on ios
+                ...UI.NavStyles, //added when showing modals, on ios
                 ...tabsStyle,
             },
             // passProps: {
@@ -557,7 +578,15 @@ export default class App {
             },
             passProps: {}, // simple serializable object that will pass as props to all top screens (optional)
             //animationType: 'slide-down' // optional, add transition animation to root change: 'none', 'slide-down', 'fade'
-        });
+        })
+
+        if (modal) {
+            Navigation.showModal({
+                ...modal,
+                navigatorButtons: Nav.CANCELABLE_MODAL,
+            })
+        }
+
     }
 
     startUnlogged() {

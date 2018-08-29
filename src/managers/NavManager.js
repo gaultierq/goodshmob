@@ -11,6 +11,9 @@ import {getLineup} from "../helpers/DataAccessors"
 
 // export const DEEPLINK_OPEN_SCREEN_IN_MODAL = 'DEEPLINK_OPEN_SCREEN_IN_MODAL';
 
+type RNNModal = any
+
+
 class _NavManager implements NavManager {
     id = Math.random();
 
@@ -18,99 +21,122 @@ class _NavManager implements NavManager {
     }
 
     init() {
-        // Navigation.setEventHandler('myUniqueIdHere', (event) => {
-        //     if (event.type === 'DeepLink') {
-        //         const payload = event.payload; // (optional) The payload
-        //
-        //         switch (event.link) {
-        //             case DEEPLINK_OPEN_SCREEN_IN_MODAL:
-        //                 console.info('deeplink received:' , event);
-        //                 this.goToDeeplink(payload.target);
-        //                 break;
-        //         }
-        //     }
-        // })
     }
 
 
     toString() {
-        return "Messenger-" + this.id;
+        return "NavManager-" + this.id;
     }
 
-    //options is a quick fix
+    //options is a quick fix ?
+    //return true if handled
     goToDeeplink(deeplink: Deeplink, options?: any) {
-        console.info('goToDeeplink: ' + deeplink);
-        if (!deeplink) return false;
 
-        let url = new URL(deeplink, "", true);
+
+        const result = this.parseDeeplink(deeplink, options)
+
+        let {modal, handler} = result
+
+        console.info('Deeplink caught: ', deeplink, result);
+
+        if (modal) {
+            Navigation.showModal({
+                ...modal,
+                navigatorButtons: Nav.CANCELABLE_MODAL,
+            })
+            return true
+        }
+        else if (handler) {
+            //TODO: remove
+            handler()
+            return true
+        }
+        return false
+    }
+
+    parseDeeplink(deeplink: ?string, options?: any) {
+
+
+        if (!deeplink) return {}
+
+        let url = new URL(deeplink, "", true)
         //gds://goodsh.io/lineup/15
-        let pathname = url.pathname;
-        if (!pathname) return false;
-        let parts = pathname.split('/');
-        //let main = parts[0];
-        let main = _.nth(parts, 1);
+        let pathname = url.pathname || ''
+        let parts = pathname.split('/')
+
+        let main = _.nth(parts, 1)
 
 
-        let modal;
+        let modal: RNNModal
+        let handler: any
+        let mainTabIndex: number
+
+
+        //after RNN v2, try to see if there is a static "switchToTab"
+        if (main === 'explore' || main === 'discover') {
+            mainTabIndex = 1
+        }
         if (main === 'lists') {
-            let id = _.nth(parts, 2);
-            if (!isId(id)) return false;
-
-            if (url.query && url.query.origin === 'long_press') {
+            let id = _.nth(parts, 2)
+            if (!isId(id)) {
+            }
+            else if (url.query && url.query.origin === 'long_press') {
                 if (options) {
                     let {dispatch, navigator} = options
-                    getLineup(id).then(lineup => displayLineupActionMenu(navigator, dispatch, lineup))
+                    handler = () => getLineup(id).then(lineup => displayLineupActionMenu(navigator, dispatch, lineup))
                 }
-                return
             }
-            this.showModal({
-                screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
-                passProps: {
-                    lineupId: id,
-                },
-            });
-            return true;
+            else {
+                modal = {
+                    screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
+                    passProps: {
+                        lineupId: id,
+                    },
+                }
+
+            }
         }
         if (main === 'users') {
-            let id = _.nth(parts, 2);
-            if (!isId(id)) return false;
+            let id = _.nth(parts, 2)
 
-            if (url.query && url.query.origin === 'long_press') {
-                this.showModal({
+            if (!isId(id)) {
+            }
+            else if (url.query && url.query.origin === 'long_press') {
+                modal = {
                     screen: 'goodsh.UserSheet', // unique ID registered with Navigation.registerScreen
                     animationType: 'none',
                     passProps: {
                         userId: id,
                     },
-                });
-                return
+                }
             }
-
-            this.showModal({
-                screen: 'goodsh.UserScreen', // unique ID registered with Navigation.registerScreen
-                passProps: {
-                    userId: id,
-                },
-            });
-            return true;
+            else {
+                modal = {
+                    screen: 'goodsh.UserScreen', // unique ID registered with Navigation.registerScreen
+                    passProps: {
+                        userId: id,
+                    },
+                }
+            }
         }
         if (isActivityType(main)) {
-            let activityType = main;
-            let id = _.nth(parts, 2);
-            if (!isId(id)) return false;
-            let _3rd = _.nth(parts, 3);
-            if (_3rd === 'comments') {
-                this.showModal({
+            let activityType = main
+            let id = _.nth(parts, 2)
+            let _3rd = _.nth(parts, 3)
+            if (!isId(id)) {
+            }
+            else if (_3rd === 'comments') {
+
+                modal = {
                     screen: 'goodsh.CommentsScreen', // unique ID registered with Navigation.registerScreen
                     passProps: {
                         activityId: id,
                         activityType: activityType
                     },
-                });
-                return true;
+                }
             }
-            if (activityType === 'asks') {
-                this.showModal({
+            else if (activityType === 'asks') {
+                modal = {
                     screen: 'goodsh.CommentsScreen', // unique ID registered with Navigation.registerScreen
                     // title: fullName(user),
                     passProps: {
@@ -119,28 +145,19 @@ class _NavManager implements NavManager {
                         autoFocus: true
                     },
                     navigatorButtons: CANCELABLE_MODAL
-                })
+                }
             }
             else {
-                this.showModal({
+                modal = {
                     screen: 'goodsh.ActivityDetailScreen',
                     passProps: {activityId: id, activityType}
-                })
+                }
             }
-
-
         }
+        return {modal, handler, mainTabIndex}
     }
 
-    showModal(modal: any) {
-        Navigation.showModal({
-            ...modal,
-            navigatorButtons: Nav.CANCELABLE_MODAL,
-        })
-    }
-
-
-    //temporary: should be provided by the backend
+//temporary: should be provided by the backend
     localDeeplink(activity: Activity): Deeplink {
         const activityType = sanitizeActivityType(activity.type);
         if (!activityType) return null;
@@ -171,7 +188,9 @@ export interface NavManager {
 
     goToDeeplink(url: Deeplink): boolean;
 
-    localDeeplink(activity: activity): Deeplink;
+    localDeeplink(activity: Activity): Deeplink;
+
+    parseDeeplink(url: Deeplink): {modal?: RNNModal, handler?: any, mainTabIndex?: number}
 }
 
 module.exports = new _NavManager();
