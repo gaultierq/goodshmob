@@ -3,7 +3,7 @@
 import type {Node} from 'react'
 import React from 'react'
 import {StyleSheet, Text, TextInput, View,} from 'react-native'
-import type {SearchEngine, SearchItemCategoryType,} from "../../../helpers/SearchHelper"
+import type {SearchEngine, } from "../../../helpers/SearchHelper"
 import {__createAlgoliaSearcher, makeBrowseAlgoliaFilter2, renderItem} from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import SearchMotor from "../searchMotor"
@@ -15,6 +15,7 @@ import Config from 'react-native-config'
 import {SocialScopeSelector} from "./socialscopeselector"
 import SearchListResults from "../searchListResults"
 import type {ISearchMotor} from "../searchMotor"
+import type {SearchItemCategoryType} from "../../../helpers/SearchConstants"
 
 export type BrowseItemsGenOptions = {
     algoliaFilter?: string

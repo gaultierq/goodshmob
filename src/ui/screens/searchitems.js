@@ -15,7 +15,7 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native'
-import {SEARCH_CATEGORIES_TYPE} from "../../helpers/SearchHelper"
+import {SEARCH_CATEGORIES_TYPE} from "../../helpers/SearchConstants"
 import Screen from "../components/Screen"
 import type {Id, Item, Lineup, RNNNavigator} from "../../types"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"

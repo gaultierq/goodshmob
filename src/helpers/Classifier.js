@@ -3,7 +3,7 @@
 
 import type {Item, Lineup} from "../types"
 import Fuse from "fuse.js"
-import type {SearchCategory} from "./SearchHelper"
+import type {SearchCategory} from "./SearchConstants"
 
 class Token {
 

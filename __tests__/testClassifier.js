@@ -2,7 +2,7 @@
 
 import {findBestSearchCategory} from "../src/helpers/Classifier"
 import type {Lineup} from "../src/types"
-import {SEARCH_ITEM_CATEGORIES} from "../src/helpers/SearchHelper"
+import {SEARCH_ITEM_CATEGORIES} from "../src/helpers/SearchConstants"
 
 //from ruby
 const DEFAULT_LIST_NAMES_FR = [

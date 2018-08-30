@@ -14,7 +14,7 @@ import {
 import {currentUserId} from "../../managers/CurrentUser"
 import type {NavigableProps} from "../../types"
 import Screen from "../components/Screen"
-import {SEARCH_CATEGORIES_TYPE} from "../../helpers/SearchHelper"
+import {SEARCH_CATEGORIES_TYPE} from "../../helpers/SearchConstants"
 import * as Api from "../../managers/Api"
 import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
 import {PagerPan, TabView} from "react-native-tab-view"
@@ -24,7 +24,8 @@ import {connect} from "react-redux"
 import {renderTabBarFactory} from "../UIComponents"
 
 type Props = NavigableProps & {
-};
+    initialIndex: number
+}
 
 type State = {
     index: number,
@@ -39,13 +40,17 @@ export default class CategorySearchScreen extends Screen<Props, State> {
     static navigatorStyle = {
         navBarNoBorder: true,
         topBarElevationShadowEnabled: false
-    };
+    }
+
+    static defaultProps = {
+        initialIndex: 0
+    }
 
     constructor(props: Props) {
         super(props)
         this.state = {
             routes: ROUTES,
-            index: 0
+            index: props.initialIndex
         }
     }
 

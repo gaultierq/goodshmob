@@ -3,7 +3,7 @@
 import type {Node} from 'react'
 import React from 'react'
 import {StyleSheet, Text, TextInput, View,} from 'react-native'
-import type {SearchEngine, SearchItemCategoryType,} from "../../../helpers/SearchHelper"
+import type {SearchEngine, } from "../../../helpers/SearchHelper"
 import {__createSearchItemSearcher, PERMISSION_EMPTY_INPUT} from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import {LINEUP_PADDING, NAV_BACKGROUND_COLOR} from "../../UIStyles"
@@ -13,6 +13,7 @@ import SearchListResults from "../searchListResults"
 import BlankSearch, {renderBlankIcon} from "../../../ui/components/BlankSearch"
 import ItemCell from "../../components/ItemCell"
 import GTouchable from "../../GTouchable"
+import type {SearchItemCategoryType} from "../../../helpers/SearchConstants"
 
 export type SearchItemsGenOptions = {input: string}
 

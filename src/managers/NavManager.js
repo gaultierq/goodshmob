@@ -8,11 +8,15 @@ import {CANCELABLE_MODAL, displayLineupActionMenu} from "../ui/Nav"
 import URL from "url-parse"
 import Config from 'react-native-config'
 import {getLineup} from "../helpers/DataAccessors"
+import {SearchItemCategoryType, SEARCH_CATEGORIES_TYPE} from "../helpers/SearchConstants"
 
 // export const DEEPLINK_OPEN_SCREEN_IN_MODAL = 'DEEPLINK_OPEN_SCREEN_IN_MODAL';
 
 type RNNModal = any
+type RNNTab = {
+    screen: string,
 
+}
 
 class _NavManager implements NavManager {
     id = Math.random();
@@ -69,17 +73,31 @@ class _NavManager implements NavManager {
 
         let modal: RNNModal
         let handler: any
-        let mainTabIndex: number
+        let tab: any
 
 
         //after RNN v2, try to see if there is a static "switchToTab"
         if (main === 'explore' || main === 'discover') {
-            mainTabIndex = 1
+            let itemType = _.nth(parts, 2)
+            tab = {
+                screen: 'goodsh.CategorySearchScreen',
+            }
+
+            if (itemType) {
+                const initialIndex = Math.max(SEARCH_CATEGORIES_TYPE.indexOf(itemType), 0)
+                tab = {
+                    ...tab,
+                    passProps: {
+                        initialIndex
+                    }
+                }
+            }
+
+
         }
         if (main === 'lists') {
             let id = _.nth(parts, 2)
-            if (!isId(id)) {
-            }
+            if (!isId(id)) {}
             else if (url.query && url.query.origin === 'long_press') {
                 if (options) {
                     let {dispatch, navigator} = options
@@ -154,7 +172,7 @@ class _NavManager implements NavManager {
                 }
             }
         }
-        return {modal, handler, mainTabIndex}
+        return {modal, handler, tab}
     }
 
 //temporary: should be provided by the backend
@@ -190,7 +208,7 @@ export interface NavManager {
 
     localDeeplink(activity: Activity): Deeplink;
 
-    parseDeeplink(url: Deeplink): {modal?: RNNModal, handler?: any, mainTabIndex?: number}
+    parseDeeplink(url: Deeplink): {modal?: RNNModal, handler?: any, tab?: RNNTab}
 }
 
 module.exports = new _NavManager();

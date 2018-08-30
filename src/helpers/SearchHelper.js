@@ -2,10 +2,8 @@
 
 import type {Node} from 'react'
 import * as React from 'react'
-import type {Id, Lineup, List, RNNNavigator, Saving, SearchToken, User} from "../types"
-import {Item, RequestState} from "../types"
-import BlankSearch, {renderBlankIcon} from "../ui/components/BlankSearch"
-import Config from 'react-native-config'
+import type {Lineup, List, RNNNavigator, Saving, User} from "../types"
+import {RequestState} from "../types"
 import {renderLineupFromOtherPeople} from "../ui/UIComponents"
 import {seeActivityDetails, seeUser} from "../ui/Nav"
 import GTouchable from "../ui/GTouchable"
@@ -19,6 +17,8 @@ import * as Api from "../managers/Api"
 import {Call} from "../managers/Api"
 import normalize from 'json-api-normalizer'
 import {currentUserId} from "../managers/CurrentUser"
+import type {SearchItemCategoryType} from "./SearchConstants"
+
 export type SearchCategoryType = string;
 
 // A single page of result returned by search engine
@@ -52,46 +52,16 @@ export type SearchState = {
     data?: Array<List | Saving>,
 };
 
-export type SearchCategory = {
-    type: SearchCategoryType,
-    defaultOptions?: SearchOptions,
-
-    // bad: only used for algolia
-    parseResponse?: (hits: []) => *,
-
-    renderItem: (item: *) => ?Node,
-
-    //no results
-    renderEmpty: Node,
-
-
-    tabName?: string,
-    description?: string,
-    onItemSelected?: () => void,
-    renderOptions?: ?RenderOptions,
-
-}
-
-export type RenderOptions = (SearchOptions, SearchOptions => void) => React.Element<any>
-
-export type SearchItemCategoryType = "consumer_goods" | "places" | "musics" | "movies";
-
 // QG to EA: let's try to follow the camel case convention for types
 export type FRIEND_FILTER_TYPE = "me" | "friends" | "all" ;
 
-export const SEARCH_CATEGORIES_TYPE: SearchItemCategoryType[] = ["consumer_goods", "places", "musics", "movies"]
+
 
 
 
 // wrong type, used for tests, FIXME
 // $FlowFixMe
-export const SEARCH_ITEM_CATEGORIES: SearchCategory[] = SEARCH_CATEGORIES_TYPE.map(type => (
-    {
-        type: type,
-        tabName: i18n.t("search_item_screen.tabs." + type),
-        description: i18n.t("search_item_screen.placeholder." + type),
-    }
-))
+
 
 export function renderSavingOrLineup(navigator: RNNNavigator) {
 
