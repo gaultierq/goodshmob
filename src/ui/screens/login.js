@@ -286,10 +286,10 @@ class Login extends Component<Props, State> {
 
         let result
         try {
-            result = await LoginManager.logInWithReadPermissions(['public_profile', 'email'])
+            result = await LoginManager.logInWithReadPermissions(['public_profile', 'email', 'user_friends'])
         }
         catch (err) {
-            console.warn('Login fail with error: ' + error);
+            console.warn('Login fail with error: ' + err);
             throw err
         }
         if (!result) throw 'Login result not found'
