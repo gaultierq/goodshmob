@@ -540,12 +540,17 @@ export default class App {
             },
         ]
 
+        const tabs = [...TABS]
+
         let tabScreen = _.get(tab, 'screen')
         let initialTabIndex = 0
         if (tabScreen) {
             let i = TABS.length
             for (; --i > 0; ) {
-                if (TABS[i].screen === tabScreen) break
+                if (tabs[i].screen === tabScreen) {
+                    tabs[i] = {...tabs[i], ...tab}
+                    break
+                }
             }
             initialTabIndex = i
         }
@@ -560,7 +565,7 @@ export default class App {
 
 
         Navigation.startTabBasedApp({
-            tabs: TABS,
+            tabs: tabs,
             tabsStyle,
             appStyle: {
                 orientation: 'portrait', // Sets a specific orientation to the entire app. Default: 'auto'. Supported values: 'auto', 'landscape', 'portrait'
