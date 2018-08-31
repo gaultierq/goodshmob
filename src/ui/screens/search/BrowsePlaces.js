@@ -34,6 +34,7 @@ type SMS = {
 type SMP = {
     navigator: RNNNavigator,
     focused?: boolean,
+    scope?: string
 
 }
 export type BrowseItemsGenOptions = {
@@ -95,7 +96,9 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
         const mapDisplay = this.state.mapDisplay
         return (
             <View style={{flex: 1}}>
-                <SocialScopeSelector onScopeChange={scope => {
+                <SocialScopeSelector
+                    initialValue={this.props.scope}
+                    onScopeChange={scope => {
                     this.setState({
                         searchOptions: {
                             ...this.state.searchOptions,

@@ -24,7 +24,8 @@ import {connect} from "react-redux"
 import {renderTabBarFactory} from "../UIComponents"
 
 type Props = NavigableProps & {
-    initialIndex: number
+    initialIndex: number,
+    searchOptions?: any
 }
 
 type State = {
@@ -88,8 +89,25 @@ export default class CategorySearchScreen extends Screen<Props, State> {
         let focused = this.state.index === ix
         const visible: boolean = super.isVisible()
         switch (route.key) {
-            case 'places': return <BrowsePlaces navigator={this.props.navigator} focused={visible && focused} />
-            default: return <BrowseGeneric navigator={this.props.navigator} category={route.key} focused={visible && focused} />
+            case 'places': return (
+                <BrowsePlaces
+                    navigator={this.props.navigator}
+                    focused={visible && focused}
+                    {
+                        ...this.props.searchOptions[route.key]
+                    }
+                />
+            )
+            default: return (
+                <BrowseGeneric
+                    navigator={this.props.navigator}
+                    category={route.key}
+                    focused={visible && focused}
+                    {
+                        ...this.props.searchOptions[route.key]
+                    }
+                />
+            )
         }
     }
 }

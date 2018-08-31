@@ -4,11 +4,13 @@ import React, {Component} from 'react'
 import {Colors} from "../../colors"
 import SwitchSelector from 'react-native-switch-selector'
 import {View} from "react-native"
+import {indexOfOr0} from "../../../helpers/ArrayUtil"
 
 type SocialScope = 'me' | 'friends' | 'all'
 
 export type Pr = {
     onScopeChange: SocialScope => void,
+    initialValue?: string,
 
 };
 
@@ -27,6 +29,7 @@ export class SocialScopeSelector extends Component<Pr, St> {
         return (
             <View style={{padding: 12}}>
                 <SwitchSelector
+                    initial={indexOfOr0(options, el => el.type === this.props.initialValue)}
                     options={options.map((o,i) => ({...o, value: i}))}
                     onPress={position => this.props.onScopeChange(options[position].type)}
                     textColor={Colors.black}

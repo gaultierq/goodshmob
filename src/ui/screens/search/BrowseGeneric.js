@@ -28,6 +28,7 @@ type SMS = {
 type SMP = {
     category: SearchItemCategoryType,
     focused?: boolean,
+    scope?: string
 }
 
 @connect(state => ({
@@ -73,14 +74,16 @@ export default class BrowseGeneric extends React.Component<SMP, SMS> {
         return (
             <View style={{flex: 1}}>
 
-                <SocialScopeSelector onScopeChange={scope => {
-                    this.setState({
-                        searchOptions: {
-                            ...this.state.searchOptions,
-                            algoliaFilter: makeBrowseAlgoliaFilter2(scope, this.props.category, this.getUser())
-                        }
-                    })}
-                }/>
+                <SocialScopeSelector
+                    initialValue={this.props.scope}
+                    onScopeChange={scope => {
+                        this.setState({
+                            searchOptions: {
+                                ...this.state.searchOptions,
+                                algoliaFilter: makeBrowseAlgoliaFilter2(scope, this.props.category, this.getUser())
+                            }
+                        })}
+                    }/>
 
                 <SearchMotor
                     ref={ref=>this.searchMotor = ref}

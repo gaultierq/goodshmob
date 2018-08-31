@@ -17,3 +17,15 @@ export function areNotEquals(array1, array2) {
     }
     return false;
 }
+
+export function indexOfOr0(array, predicate) {
+    if (array && predicate) {
+        let i = 0
+        const length = array.length
+        for (; i < length; i ++) {
+            let el = array[i]
+            if (predicate(el)) return i
+        }
+    }
+    return 0
+}

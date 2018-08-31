@@ -88,7 +88,10 @@ class _NavManager implements NavManager {
                 tab = {
                     ...tab,
                     passProps: {
-                        initialIndex
+                        initialIndex,
+                        searchOptions: {
+                            [itemType]: url.query
+                        }
                     }
                 }
             }
