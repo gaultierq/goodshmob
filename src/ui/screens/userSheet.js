@@ -132,7 +132,7 @@ export default class UserSheet extends Component<Props, State> {
         return <View>
 
             <View style={styles.avatarWrapper}>
-                <Avatar user={user} size={50} style={styles.avatar}/>
+                <Avatar user={user} size={100} style={styles.avatar}/>
                 <Text style={styles.username}>{fullName(user)}</Text>
                 {/*<Text style={styles.city}>#Paris, France</Text>*/}
             </View>

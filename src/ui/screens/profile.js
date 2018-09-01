@@ -219,7 +219,7 @@ export default class Profile extends Component<Props, State> {
             alignItems: 'center',
         }}
         >
-            <Avatar user={user} />
+            <Avatar user={user} size={100} />
             {user && <Text style={styles.userName}>{user.firstName + " " + user.lastName}</Text>}
 
         </View>;
