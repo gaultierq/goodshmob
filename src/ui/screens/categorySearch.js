@@ -44,7 +44,8 @@ export default class CategorySearchScreen extends Screen<Props, State> {
     }
 
     static defaultProps = {
-        initialIndex: 0
+        initialIndex: 0,
+        searchOptions: {},
     }
 
     constructor(props: Props) {
