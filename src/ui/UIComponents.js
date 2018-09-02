@@ -62,15 +62,12 @@ export class Avatar extends Component<Props, State> {
         let uri = null
 
         if (user) {
+            uri = user.image
 
-            if (user.provider === 'facebook' && user.uid) {
-                uri = `https://graph.facebook.com/${user.uid}/picture`
-                if (size > 75) {
-                    uri += "?type=large"
-                }
+            //hack relying on the fact that we only have facebook images
+            if (user.provider === 'facebook' && user.uid && size > 75) {
+                uri += "?type=large"
             }
-
-            if (_.isNull(uri)) uri = user.image
 
             if (_.isNull(uri)) {
 
