@@ -8,6 +8,7 @@ import MapView, {Marker} from 'react-native-maps'
 import {AlgoliaClient} from "../../helpers/AlgoliaUtils"
 import Config from 'react-native-config'
 import SearchUserPage from "./search/SearchUserPage"
+import BrowsePlaces from "./search/BrowsePlaces"
 
 type Props = {
 };
@@ -84,5 +85,9 @@ export default class TestScreen extends Component<Props, State> {
 
     render() {
         return <SearchUserPage />
+    }
+
+    render() {
+        return <BrowsePlaces navigator={null} focused={true} mapDisplay={true} />
     }
 }

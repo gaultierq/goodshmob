@@ -4,7 +4,12 @@ import type {Node} from 'react'
 import React from 'react'
 import {Button, StyleSheet, Text, TextInput, View,} from 'react-native'
 import type {SearchEngine, SearchState} from "../../../helpers/SearchHelper"
-import {__createAlgoliaSearcher, makeBrowseAlgoliaFilter2, renderItem, PERMISSION_EMPTY_POSITION} from "../../../helpers/SearchHelper"
+import {
+    __createAlgoliaSearcher,
+    makeBrowseAlgoliaFilter2,
+    PERMISSION_EMPTY_POSITION,
+    renderItem
+} from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import type {ISearchMotor} from "../searchMotor"
 import SearchMotor from "../searchMotor"
@@ -14,39 +19,40 @@ import {connect} from "react-redux"
 import {AlgoliaClient, createResultFromHit} from "../../../helpers/AlgoliaUtils"
 import Config from 'react-native-config'
 import {SocialScopeSelector} from "./socialscopeselector"
-import type {GeoPosition, IPositionSelector} from "./searchplacesoption"
-import {SearchPlacesOption, renderAskPermission} from "./searchplacesoption"
+import type {GeoStatus, IPositionSelector} from "./searchplacesoption"
+import {renderAskPermission, SearchPlacesOption} from "./searchplacesoption"
 import type {RNNNavigator} from "../../../types"
 import SearchListResults from "../searchListResults"
-import GMap from "../../components/GMap"
+import type {Region} from "../../components/GMap"
+import GMap, {regionFrom} from "../../components/GMap"
 import {Colors} from "../../colors"
 import ActionButton from "react-native-action-button"
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import {seeActivityDetails} from "../../Nav"
 import {GoodshContext} from "../../UIComponents"
+import GTouchable from "../../GTouchable"
+import {hexToRgbaWithHalpha} from "../../../helpers/DebugUtils"
 
 
 type SMS = {
-    searchOptions: BrowseItemsPlacesOptions,
+    searchOptions?: BrowseItemsPlacesOptions,
     mapDisplay: boolean,
     scope?: string,
+    displayRefreshButton?: boolean
 }
 
 type SMP = {
     navigator: RNNNavigator,
     focused?: boolean,
     scope?: string,
+    mapDisplay?: boolean
 
 }
 export type BrowseItemsGenOptions = {
     algoliaFilter?: string,
 }
 
-export type BrowseItemsPlacesOptions = BrowseItemsGenOptions & {
-    lat?: number,
-    lng?: number,
-    permissionError?: ?string
-}
+export type BrowseItemsPlacesOptions = BrowseItemsGenOptions & GeoStatus
 
 @connect(state => ({
     data: state.data,
@@ -54,21 +60,20 @@ export type BrowseItemsPlacesOptions = BrowseItemsGenOptions & {
 @logged
 export default class BrowsePlaces extends React.Component<SMP, SMS> {
 
-
     searchMotor: ISearchMotor<BrowseItemsPlacesOptions>
     positionSelector: IPositionSelector
 
     constructor(props: SMP) {
         super(props)
 
-
         this.state = {
-            mapDisplay: false,
+            mapDisplay: props.mapDisplay || true,
             searchOptions: {
                 algoliaFilter: makeBrowseAlgoliaFilter2('me', 'places', this.getUser()),
                 permissionError: PERMISSION_EMPTY_POSITION,
             },
-            scope: props.scope || 'me'
+            scope: props.scope || 'me',
+            // displayRefreshButton: true
         }
     }
     index: Promise<any> = new Promise(resolve => {
@@ -110,14 +115,19 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
                         })}
                     }/>
 
-
                 <SearchPlacesOption
                     ref={ref => this.positionSelector = ref}
                     navigator={this.props.navigator}
-                    onNewOptions={(pos: GeoPosition) => {
+                    onNewOptions={(pos: GeoStatus) => {
+                        console.debug("::onNewOptions::", pos)
+
+                        //what to do ?
+                        pos = {...pos, radius: 10000}
+
                         this.setState({searchOptions: {...this.state.searchOptions, ...pos}})
                     }}
                 />
+
                 <GoodshContext.Provider value={{userOwnResources: this.state.scope === 'me'}}>
 
                     <SearchMotor
@@ -128,6 +138,7 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
                         canSearch={this._canSearch}
                         renderMissingPermission={this._renderMissingPermission}
                     />
+
                 </GoodshContext.Provider>
 
                 <ActionButton buttonColor={Colors.orange}
@@ -155,8 +166,73 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
     }
 
     _renderResults = (state: SearchState) => {
-        if (this.state.mapDisplay) return <GMap searchState={state} onItemPressed={(item) => seeActivityDetails(this.props.navigator, item)}/>
-        else return <SearchListResults searchState={state} renderItem={renderItem.bind(this)}/>
+        if (this.state.mapDisplay) {
+            const region: Region = this.getRegion()
+
+
+            return (
+                <View style={{flex:1}}>
+                    {
+                        this.state.displayRefreshButton && (
+                            <View style={{
+                                flex:1,
+                                position: 'absolute',
+                                zIndex: 1000,
+                                width: "100%",
+                                paddingTop: 20,
+                                paddingHorizontal: "10%",
+
+                            }}>
+                                <GTouchable style={{
+                                    flex: 1,
+                                    width: "100%",
+                                    backgroundColor: hexToRgbaWithHalpha(Colors.darkOrange, 0.8),
+                                    borderRadius: 20,
+                                    height: 40,
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}>
+                                    <Text style={{
+                                        paddingHorizontal: 20,
+                                        color: Colors.white,
+                                        alignSelf: 'center'}}>
+                                        Rechercher dans cette zone
+                                    </Text>
+                                </GTouchable>
+
+
+                            </View>)
+                    }
+                    <GMap
+                        searchState={state}
+                        onItemPressed={(item) => seeActivityDetails(this.props.navigator, item)}
+                        region={region}
+                        onRegionChange={reg => {
+                            let ar0 = region.latitudeDelta * region.longitudeDelta
+                            let ar1 = reg.latitudeDelta * reg.longitudeDelta
+
+                            if ((ar1 - ar0) / ar0 > 0.1) this.setState({displayRefreshButton: true})
+
+                        }}
+                    />
+                </View>
+            )
+        }
+
+        else return (
+            <SearchListResults
+                searchState={state}
+                renderItem={renderItem.bind(this)}
+            />
+        )
+    }
+
+    getRegion() {
+        if (this.state.searchOptions) {
+            let {lat, lng, radius} = this.state.searchOptions
+            return regionFrom(lat, lng, radius)
+        }
+        return null
     }
 
     componentDidUpdate(prevProps: SMP) {

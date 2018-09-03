@@ -9,14 +9,15 @@ import memoize from "memoize-one";
 export type Props = {
     searchState: SearchState,
     setRef?: () => void,
-    onItemPressed: (item: any) => void
+    onItemPressed: (item: any) => void,
+    onRegionChange?: Region => void,
 };
 
 type State = {
-
+    // region: ?Region, //user set region
 }
 
-type Region = {
+export type Region = {
     latitude: number,
     longitude: number,
     latitudeDelta: number,
@@ -30,7 +31,17 @@ export default class GMap extends Component<Props, State>  {
     getData = memoize(data => _.flatten(data))
     center: Region
 
+    constructor(props: Props) {
+        super(props)
+        // this.state = {
+        //     region: null
+        // }
+    }
+
     render() {
+
+        const {...attr} = this.props
+
         const requestState = _.get(this.props, 'searchState.requestState', [])
 
         const data = this.getData(_.get(this.props, 'searchState.data', []))
@@ -45,7 +56,9 @@ export default class GMap extends Component<Props, State>  {
                 <MapView
                     style={{flex:1}}
                     provider={'google'}
-                    region={this.center}>
+                    region={this.center}
+                    {...attr}
+                >
                     {data && data.map((result, i) => {
                         return this.renderMarker(i, result)
                     })}
@@ -112,3 +125,52 @@ export default class GMap extends Component<Props, State>  {
 
 }
 
+//use me
+export function getRegionForCoordinates(points) {
+    // points should be an array of { latitude: X, longitude: Y }
+    let minX, maxX, minY, maxY;
+
+    // init first point
+    ((point) => {
+        minX = point.latitude;
+        maxX = point.latitude;
+        minY = point.longitude;
+        maxY = point.longitude;
+    })(points[0]);
+
+    // calculate rect
+    points.map((point) => {
+        minX = Math.min(minX, point.latitude);
+        maxX = Math.max(maxX, point.latitude);
+        minY = Math.min(minY, point.longitude);
+        maxY = Math.max(maxY, point.longitude);
+    });
+
+    const midX = (minX + maxX) / 2;
+    const midY = (minY + maxY) / 2;
+    const deltaX = (maxX - minX);
+    const deltaY = (maxY - minY);
+
+    return {
+        latitude: midX,
+        longitude: midY,
+        latitudeDelta: deltaX,
+        longitudeDelta: deltaY
+    };
+}
+
+export function regionFrom(lat, lng, distance) {
+    if (!_.isNumber(lat) || !_.isNumber(lng) || !_.isNumber(distance)) return null
+
+    const oneDegreeOfLatitudeInMeters = 111.32 * 1000;
+
+    const latitudeDelta = distance / oneDegreeOfLatitudeInMeters;
+    const longitudeDelta = distance / (oneDegreeOfLatitudeInMeters * Math.cos(lat * (Math.PI / 180)));
+
+    return {
+        latitude: lat,
+        longitude: lng,
+        latitudeDelta,
+        longitudeDelta,
+    }
+}

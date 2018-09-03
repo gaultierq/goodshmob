@@ -28,7 +28,6 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import {Navigation} from 'react-native-navigation'
 import {CANCELABLE_SEARCH_MODAL} from "../../Nav"
 import type {RNNNavigator} from "../../../types"
-import OpenAppSettings from "react-native-app-settings"
 import Geolocation from "../../../managers/GeoLocation"
 import {PERMISSION_EMPTY_POSITION} from "../../../helpers/SearchHelper"
 import Permissions from 'react-native-permissions'
@@ -37,7 +36,8 @@ import Permissions from 'react-native-permissions'
 export type GeoStatus = {
     lat?: number,
     lng?: number,
-    permissionError: string | null
+    permissionError: ?string,
+    radius?: number
 }
 
 export type SearchPlacesProps = {
@@ -144,6 +144,7 @@ export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlace
                                 // style={{backgroundColor:'red'}}
                                 onPress={()=>{
                                     const navigator = this.props.navigator;
+
                                     navigator.showModal({
                                         screen: 'goodsh.PlacesAutocomplete',
                                         navigatorButtons: CANCELABLE_SEARCH_MODAL(),
@@ -346,9 +347,11 @@ function getCurrentGeoStatus(): Promise<GeoStatus> {
         } else {
             return Geolocation.getPosition()
                 .then(position => {
-                    geoPosition = {lat: position.latitude,
+                    geoPosition = {
+                        lat: position.latitude,
                         lng: position.longitude,
-                        permissionError: null}
+                        permissionError: null,
+                    }
                     return geoPosition
                 })
         }

@@ -171,13 +171,16 @@ export function __createAlgoliaSearcher<SO: any>(
 )
     : (searchOptions: SO, page: number,) => Promise<SearchResult> {
 
-    return (searchOptions: SearchOptions, page: number): Promise<*> => {
+    return (searchOptions: SO, page: number): Promise<*> => {
 
         //searching
         const token = searchOptions.token || ''
 
         let query = {
-            ...config.query, filters: searchOptions.algoliaFilter, page, query: token,
+            ...config.query,
+            filters: searchOptions.algoliaFilter,
+            page,
+            query: token,
         }
         if (config.geoSearch) {
             const aroundLatLng = `${searchOptions.lat}, ${searchOptions.lng}`

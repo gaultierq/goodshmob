@@ -97,7 +97,7 @@ export default class SearchPlaces extends React.Component<SMP, SMS> {
 
                 <SearchPlacesOption
                     navigator={this.props.navigator}
-                    onNewOptions={(pos: GeoPosition) => {
+                    onNewOptions={(pos: GeoStatus) => {
                         this.setState({searchOptions: {...this.state.searchOptions, ...pos}})
                     }}
                 />
