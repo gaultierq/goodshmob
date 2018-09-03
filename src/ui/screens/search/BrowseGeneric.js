@@ -6,7 +6,7 @@ import {StyleSheet, Text, TextInput, View,} from 'react-native'
 import type {SearchEngine, } from "../../../helpers/SearchHelper"
 import {__createAlgoliaSearcher, makeBrowseAlgoliaFilter2, renderItem} from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
-import SearchMotor from "../searchMotor"
+import SearchMotor, {Props} from "../searchMotor"
 import {currentUserId, logged} from "../../../managers/CurrentUser"
 import {buildData} from "../../../helpers/DataUtils"
 import {connect} from "react-redux"
@@ -96,11 +96,13 @@ export default class BrowseGeneric extends React.Component<SMP, SMS> {
         )
     }
 
-    componentDidUpdate() {
-        //disapointing
-        if (this.searchMotor) this.searchMotor.search(this.state.searchOptions, false)
+    componentDidUpdate(prevProps: SMP) {
+        // for "don't search on 1st render" feature
+        if (prevProps.focused !== this.props.focused) {
+            //disapointing
+            if (this.searchMotor) this.searchMotor.search(this.state.searchOptions, false)
+        }
     }
-
 
     getUser() {
         return buildData(this.props.data, "users", currentUserId())

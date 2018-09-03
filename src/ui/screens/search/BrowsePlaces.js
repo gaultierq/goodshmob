@@ -154,13 +154,13 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
         else return <SearchListResults searchState={state} renderItem={renderItem.bind(this)}/>
     }
 
-
-    componentDidUpdate() {
-        //disapointing
-        if (this.searchMotor) this.searchMotor.search(this.state.searchOptions, false)
+    componentDidUpdate(prevProps: SMP) {
+        // for "don't search on 1st render" feature
+        if (prevProps.focused !== this.props.focused) {
+            //disapointing
+            if (this.searchMotor) this.searchMotor.search(this.state.searchOptions, false)
+        }
     }
-
-
 
     //TODO: use selector
     getUser() {

@@ -84,6 +84,7 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
     }
 
     search(options: SO, soft: boolean = false) {
+        console.info('::search')
         this._debounceSearch(options, 0)
     }
 
@@ -128,6 +129,7 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
             //why ?
             && !!searchOptions
         ) {
+            console.info('componentDidUpdate:: search')
             this._debounceSearch(searchOptions, 0)
         }
     }
