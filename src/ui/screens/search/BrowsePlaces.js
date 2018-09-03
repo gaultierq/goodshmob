@@ -23,18 +23,19 @@ import {Colors} from "../../colors"
 import ActionButton from "react-native-action-button"
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import {seeActivityDetails} from "../../Nav"
+import {GoodshContext} from "../../UIComponents"
 
 
 type SMS = {
     searchOptions: BrowseItemsPlacesOptions,
-    mapDisplay: boolean
-
+    mapDisplay: boolean,
+    scope?: string,
 }
 
 type SMP = {
     navigator: RNNNavigator,
     focused?: boolean,
-    scope?: string
+    scope?: string,
 
 }
 export type BrowseItemsGenOptions = {
@@ -44,7 +45,7 @@ export type BrowseItemsGenOptions = {
 export type BrowseItemsPlacesOptions = BrowseItemsGenOptions & {
     lat?: number,
     lng?: number,
-    permissionError: ?string
+    permissionError?: ?string
 }
 
 @connect(state => ({
@@ -67,6 +68,7 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
                 algoliaFilter: makeBrowseAlgoliaFilter2('me', 'places', this.getUser()),
                 permissionError: PERMISSION_EMPTY_POSITION,
             },
+            scope: props.scope || 'me'
         }
     }
     index: Promise<any> = new Promise(resolve => {
@@ -99,13 +101,14 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
                 <SocialScopeSelector
                     initialValue={this.props.scope}
                     onScopeChange={scope => {
-                    this.setState({
-                        searchOptions: {
-                            ...this.state.searchOptions,
-                            algoliaFilter: makeBrowseAlgoliaFilter2(scope, 'places', this.getUser())
-                        }
-                    })}
-                }/>
+                        this.setState({
+                            searchOptions: {
+                                ...this.state.searchOptions,
+                                algoliaFilter: makeBrowseAlgoliaFilter2(scope, 'places', this.getUser())
+                            },
+                            scope,
+                        })}
+                    }/>
 
 
                 <SearchPlacesOption
@@ -115,15 +118,17 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
                         this.setState({searchOptions: {...this.state.searchOptions, ...pos}})
                     }}
                 />
+                <GoodshContext.Provider value={{userOwnResources: this.state.scope === 'me'}}>
 
-                <SearchMotor
-                    searchEngine={this.search}
-                    renderResults={this._renderResults}
-                    searchOptions={this.state.searchOptions}
-                    ref={ref => this.searchMotor = ref}
-                    canSearch={this._canSearch}
-                    renderMissingPermission={this._renderMissingPermission}
-                />
+                    <SearchMotor
+                        searchEngine={this.search}
+                        renderResults={this._renderResults}
+                        searchOptions={this.state.searchOptions}
+                        ref={ref => this.searchMotor = ref}
+                        canSearch={this._canSearch}
+                        renderMissingPermission={this._renderMissingPermission}
+                    />
+                </GoodshContext.Provider>
 
                 <ActionButton buttonColor={Colors.orange}
                               icon={<MaterialIcon name={mapDisplay ? 'list' : 'map'} color={Colors.white} size={32} />}

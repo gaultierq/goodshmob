@@ -43,7 +43,10 @@ export default class ItemCell extends React.Component<Props, State> {
                         style={styles.title}
                         numberOfLines={this.props.displayDetails ? 7 : 3}
                     >{resource.title}</Text>
-                    <Text style={styles.subtitle}>{resource.subtitle}</Text>
+                    {resource.subtitle && <Text style={styles.subtitle}>{resource.subtitle}</Text>}
+                    {
+                        this.props.children
+                    }
                 </View>
             </View>
         )

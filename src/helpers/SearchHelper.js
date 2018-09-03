@@ -4,13 +4,12 @@ import type {Node} from 'react'
 import * as React from 'react'
 import type {Lineup, List, RNNNavigator, Saving, User} from "../types"
 import {RequestState} from "../types"
-import {renderLineupFromOtherPeople} from "../ui/UIComponents"
+import {GoodshContext, renderLineupFromOtherPeople} from "../ui/UIComponents"
 import {seeActivityDetails, seeUser} from "../ui/Nav"
 import GTouchable from "../ui/GTouchable"
 import ItemCell from "../ui/components/ItemCell"
 import UserItem from "../ui/screens/userItem"
-import {StyleSheet} from "react-native"
-import {GeoPosition} from "../ui/screens/search/searchplacesoption"
+import {StyleSheet, Text} from "react-native"
 import type {SearchItemsGenOptions} from "../ui/screens/search/SearchGeneric"
 import {buildData} from "./DataUtils"
 import * as Api from "../managers/Api"
@@ -18,6 +17,8 @@ import {Call} from "../managers/Api"
 import normalize from 'json-api-normalizer'
 import {currentUserId} from "../managers/CurrentUser"
 import type {SearchItemCategoryType} from "./SearchConstants"
+import {fullName} from "./StringUtils"
+import {Colors} from "../ui/colors"
 
 export type SearchCategoryType = string;
 
@@ -117,7 +118,7 @@ function __searchItems<SO: SearchItemsGenOptions>(category: SearchCategoryType, 
                 resolve(call);
                 call.addQuery({'search[lat]': options.lat})
                     .addQuery({'search[lng]': options.lng});
-                    resolve(call);
+                resolve(call);
             } else {
                 resolve(call);
             }
@@ -261,8 +262,25 @@ export function renderItem({item}: {item: Saving}) {
     if (!resource) return null;
 
     return (
-        <GTouchable onPress={() => seeActivityDetails(this.props.navigator, saving)}>
-            <ItemCell item={resource}/>
-        </GTouchable>
+        <GoodshContext.Consumer>
+            { ({userOwnResources}) => (
+                <GTouchable onPress={() => seeActivityDetails(this.props.navigator, saving)}>
+                    <ItemCell item={resource} >
+                        {
+                            !userOwnResources && (
+                                <Text style={{color: Colors.greyish, fontSize: 14}}>
+                                    {
+                                        i18n.t("by", {who: fullName(saving.user)})
+                                    }
+                                </Text>
+                            )
+                        }
+
+                    </ItemCell>
+                </GTouchable>
+            )}
+
+
+        </GoodshContext.Consumer>
     )
 }

@@ -6,7 +6,7 @@ import {StyleSheet, Text, TextInput, View,} from 'react-native'
 import type {SearchEngine, } from "../../../helpers/SearchHelper"
 import {__createAlgoliaSearcher, makeBrowseAlgoliaFilter2, renderItem} from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
-import SearchMotor, {Props} from "../searchMotor"
+import SearchMotor from "../searchMotor"
 import {currentUserId, logged} from "../../../managers/CurrentUser"
 import {buildData} from "../../../helpers/DataUtils"
 import {connect} from "react-redux"
@@ -16,6 +16,7 @@ import {SocialScopeSelector} from "./socialscopeselector"
 import SearchListResults from "../searchListResults"
 import type {ISearchMotor} from "../searchMotor"
 import type {SearchItemCategoryType} from "../../../helpers/SearchConstants"
+import {GoodshContext} from "../../UIComponents"
 
 export type BrowseItemsGenOptions = {
     algoliaFilter?: string
@@ -23,12 +24,13 @@ export type BrowseItemsGenOptions = {
 
 type SMS = {
     searchOptions: BrowseItemsGenOptions,
+    scope: string
 
 }
 type SMP = {
     category: SearchItemCategoryType,
     focused?: boolean,
-    scope?: string
+    scope?: string,
 }
 
 @connect(state => ({
@@ -44,8 +46,9 @@ export default class BrowseGeneric extends React.Component<SMP, SMS> {
 
         this.state = {
             searchOptions: {
-                algoliaFilter: makeBrowseAlgoliaFilter2('me', this.props.category, this.getUser())
+                algoliaFilter: makeBrowseAlgoliaFilter2('me', this.props.category, this.getUser()),
             },
+            scope: props.scope || 'me'
         }
     }
 
@@ -81,17 +84,20 @@ export default class BrowseGeneric extends React.Component<SMP, SMS> {
                             searchOptions: {
                                 ...this.state.searchOptions,
                                 algoliaFilter: makeBrowseAlgoliaFilter2(scope, this.props.category, this.getUser())
-                            }
+                            },
+                            scope,
                         })}
                     }/>
 
-                <SearchMotor
-                    ref={ref=>this.searchMotor = ref}
-                    searchEngine={this.search}
-                    renderResults={(state, onLoadMore)=> <SearchListResults searchState={state} onLoadMore={onLoadMore} renderItem={renderItem.bind(this)} />}
-                    searchOptions={this.state.searchOptions}
-                    canSearch={(searchOptions: BrowseItemsGenOptions) => !this.props.focused ? 'not_focused' : null}
-                />
+                <GoodshContext.Provider value={{userOwnResources: this.state.scope === 'me'}}>
+                    <SearchMotor
+                        ref={ref=>this.searchMotor = ref}
+                        searchEngine={this.search}
+                        renderResults={(state, onLoadMore)=> <SearchListResults searchState={state} onLoadMore={onLoadMore} renderItem={renderItem.bind(this)} />}
+                        searchOptions={this.state.searchOptions}
+                        canSearch={(searchOptions: BrowseItemsGenOptions) => !this.props.focused ? 'not_focused' : null}
+                    />
+                </GoodshContext.Provider>
             </View>
         )
     }

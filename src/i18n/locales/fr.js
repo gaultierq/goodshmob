@@ -475,5 +475,6 @@ export default {
         lineup_count: "Listes",
         friend_count: "Contacts",
     },
-    current_location: "Autour de moi"
+    current_location: "Autour de moi",
+    by: "par %{who}"
 };
