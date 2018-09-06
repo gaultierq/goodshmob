@@ -54,6 +54,9 @@ export type BrowseItemsGenOptions = {
 
 export type BrowseItemsPlacesOptions = BrowseItemsGenOptions & GeoStatus
 
+const DEFAULT_RAD = 1000
+
+
 @connect(state => ({
     data: state.data,
 }))
@@ -122,7 +125,8 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
                         console.debug("::onNewOptions::", pos)
 
                         //what to do ?
-                        pos = {...pos, radius: 10000}
+
+                        pos = {...pos, radius: DEFAULT_RAD}
 
                         this.setState({searchOptions: {...this.state.searchOptions, ...pos}})
                     }}
@@ -183,15 +187,27 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
                                 paddingHorizontal: "10%",
 
                             }}>
-                                <GTouchable style={{
-                                    flex: 1,
-                                    width: "100%",
-                                    backgroundColor: hexToRgbaWithHalpha(Colors.darkOrange, 0.8),
-                                    borderRadius: 20,
-                                    height: 40,
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                }}>
+                                <GTouchable
+                                    style={{
+                                        flex: 1,
+                                        width: "100%",
+                                        backgroundColor: hexToRgbaWithHalpha(Colors.darkOrange, 0.8),
+                                        borderRadius: 20,
+                                        height: 40,
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                    }}
+                                    onPress={()=>{
+                                        //what to do ?
+                                        //pos = {...pos, radius: 10000}
+                                        let pos = {
+                                            lat: this.region.latitude,
+                                            lng: this.region.longitude,
+                                            radius: DEFAULT_RAD,
+                                        }
+                                        this.setState({searchOptions: {...this.state.searchOptions, ...pos}})
+                                    }}
+                                >
                                     <Text style={{
                                         paddingHorizontal: 20,
                                         color: Colors.white,
@@ -206,12 +222,13 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
                     <GMap
                         searchState={state}
                         onItemPressed={(item) => seeActivityDetails(this.props.navigator, item)}
-                        region={region}
+                        initialRegion={region}
                         onRegionChange={reg => {
+                            this.region = reg
+                            //doesnt work on translation...
                             let ar0 = region.latitudeDelta * region.longitudeDelta
                             let ar1 = reg.latitudeDelta * reg.longitudeDelta
-
-                            if ((ar1 - ar0) / ar0 > 0.1) this.setState({displayRefreshButton: true})
+                            this.setState({displayRefreshButton: (ar1 - ar0) / ar0 > 0.1})
 
                         }}
                     />

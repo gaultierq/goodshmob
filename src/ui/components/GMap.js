@@ -56,7 +56,7 @@ export default class GMap extends Component<Props, State>  {
                 <MapView
                     style={{flex:1}}
                     provider={'google'}
-                    region={this.center}
+                    // region={this.center}
                     {...attr}
                 >
                     {data && data.map((result, i) => {

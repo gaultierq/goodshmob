@@ -185,7 +185,7 @@ export function __createAlgoliaSearcher<SO: any>(
         if (config.geoSearch) {
             const aroundLatLng = `${searchOptions.lat}, ${searchOptions.lng}`
             query['aroundLatLng'] = aroundLatLng
-            query['aroundRadius'] = 1000 * 10
+            query['aroundRadius'] = searchOptions.radius
         }
 
         console.log(`%c algolia: sending`, 'background: #FCFCFC; color: #E36995', searchOptions, query);
