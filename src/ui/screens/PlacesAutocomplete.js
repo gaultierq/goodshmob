@@ -28,6 +28,10 @@ export default class PlacesAutocomplete extends Screen<Props, State> {
         tapBackgroundToDismiss: true,
     };
 
+    componentWillMount () {
+        this.props.navigator.setTitle({title: 'Choisir une adresse'})
+    }
+
     constructor(props) {
         super(props);
         props.navigator.setStyle({...UI.NavStyles,

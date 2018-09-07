@@ -112,7 +112,7 @@ export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlace
 
         return (
             <View style={{
-                backgroundColor: NavStyles.navBarBackgroundColor,
+                // backgroundColor: NavStyles.navBarBackgroundColor,
                 flex: 0,
                 flexDirection: 'row',
 
