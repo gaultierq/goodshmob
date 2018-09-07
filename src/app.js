@@ -63,7 +63,7 @@ export default class App {
 
     upgradingCache: boolean = false;
 
-    hydrated: boolean;
+    // hydrated: boolean;
 
     logger;
 
@@ -73,6 +73,27 @@ export default class App {
 
         //when store is ready
         this.initialize();
+
+        setTimeout(()=> {
+            this.logger.info(`== APP CHECK== 0`)
+        })
+        setTimeout(()=> {
+            this.logger.info(`== APP CHECK== 1`)
+        }, 0)
+        setTimeout(()=> {
+            this.logger.info(`== APP CHECK== 2.1`)
+        }, 1)
+        setTimeout(()=> {
+            this.logger.info(`== APP CHECK== 2.2`)
+        }, 10)
+        setTimeout(()=> {
+            this.logger.info(`== APP CHECK== 2.3`)
+        }, 100)
+
+
+        setTimeout(()=> {
+            this.logger.info(`== APP CHECK==`, this)
+        }, 5000)
     }
 
     spawn() {
@@ -93,8 +114,6 @@ export default class App {
         //TODO: doesnt work yet
         //GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
         console.disableYellowBox = true;
-        //dont know it doesnt work
-        //const __USE_CACHE_LOCAL__ = false;
 
         this.prepareRedux();
 
@@ -126,39 +145,50 @@ export default class App {
         this.store = createStore(
             reducer,
             window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-            compose(
-                applyMiddleware(thunk/*, logger*/),
-                autoRehydrate()
-            )
-        );
+            this.getEnhancer()
+        )
 
+
+        this.configPersistStore()
+
+        this.getCurrentCacheVersion().then(cacheVersion => {
+            this.cacheVersion = cacheVersion || 0;
+            this.logger.info(`cache version=${this.cacheVersion}`)
+            this.refreshApp()
+        });
+        // since react-redux only works on components, we need to subscribe this class manually
+        // FIXME: we should listen only part of the store, not all dispatchs
+        this.store.subscribe(this.onStoreUpdate.bind(this));
+    }
+
+    getEnhancer() {
+        if (Config.USE_CACHE_LOCAL === "false")  return applyMiddleware(thunk/*, logger*/)
+        return compose(
+            applyMiddleware(thunk/*, logger*/),
+            autoRehydrate()
+        )
+    }
+
+    configPersistStore() {
+        if (Config.USE_CACHE_LOCAL === "false") return
         // begin periodically persisting the store
         let persistConfig = {
             storage: AsyncStorage,
             transforms: [createTransform(immutableTransform.in, immutableTransform.out, immutableTransform.config)],
             // whitelist: ['auth','device']
-        };
-
-        if (!__USE_CACHE_LOCAL__) {
-            persistConfig = {...persistConfig, whitelist: ['auth', 'device', 'stat', 'config']};
         }
 
-        persistStore(this.store,
+        if (Config.USE_CACHE_LOCAL === "mix") {
+            persistConfig = {...persistConfig, whitelist: ['auth', 'device', 'stat', 'config']}
+        }
+
+        persistStore(
+            this.store,
             persistConfig,
             () => {
-                this.logger.log("persist store complete");
-                this.hydrated = true;
-                //configureApp();
+                this.logger.log("persist store complete")
             }
-        );
-
-        this.getCurrentCacheVersion().then(cacheVersion => {
-            this.cacheVersion = cacheVersion || 0;
-            this.logger.info(`cache version=${this.cacheVersion}`);
-        });
-        // since react-redux only works on components, we need to subscribe this class manually
-        // FIXME: we should listen only part of the store, not all dispatchs
-        this.store.subscribe(this.onStoreUpdate.bind(this));
+        )
     }
 
     onStoreUpdate() {
@@ -168,33 +198,37 @@ export default class App {
             this.initialize();
         }
 
-        this.logger.log('app store update :)');
+        this.logger.log('app store update');
 
         setTimeout(() => {
             this.refreshApp();
         });
     }
 
+    // getting the singleton ready.
+    // before to be able to initialize, we need to have the store ready
+
     initialize() {
-        if (this.initializing) {
-            this.logger.debug("app already initializing");
+        if (this.initializing || this.initialized) {
+            this.logger.debug(`app already ${this.initialized ? "initialized" : "initializing"}`);
             return;
         }
-        if (this.initialized) {
-            this.logger.debug("app already initialized");
-            return;
+
+        if (Config.USE_CACHE_LOCAL !== "false") {
+            //waiting rehydration before starting app
+            let rehydrated = this.store.getState().app.rehydrated;
+            if (!rehydrated) {
+                this.logger.debug("waiting for rehydration");
+                return;
+            }
+
+            if (this.cacheVersion === undefined) {
+                this.logger.debug("waiting for cache version");
+                return;
+            }
         }
-        //waiting rehydration before starting app
-        let rehydrated = this.store.getState().app.rehydrated;
-        if (!rehydrated) {
-            this.logger.debug("waiting for rehydration");
-            return;
-        }
-        if (this.cacheVersion === undefined) {
-            this.logger.debug("waiting for cache version");
-            return;
-        }
-        this.logger.debug("== app init ==");
+
+        this.logger.debug("== app initialize ==");
         this.initializing = true;
 
 
@@ -264,26 +298,6 @@ export default class App {
 
         this.initialized = true;
         this.initializing = false;
-        this.onAppReady()
-    }
-
-    onAppReady() {
-        // OnBoardingManager.listenToStepChange({
-        //     triggerOnListen: true,
-        //     callback: (step?:OnBoardingStep) => {
-        //         if (step === 'notification') {
-        //             if (isLogged()) {
-        //                 let callback = () => {
-        //                     OnBoardingManager.onDisplayed('notification')
-        //                 }
-        //                 NotificationManager.requestPermissionsForLoggedUser()
-        //                     .catch(callback)
-        //                     .then(callback)
-        //             }
-        //
-        //         }
-        //     }
-        // })
     }
 
     registerScreens() {
@@ -295,7 +309,8 @@ export default class App {
     }
 
     refreshApp() {
-        // let mode: AppMode = 'unknown';
+        this.logger.log('refreshing app')
+
         let config = {}
         //invalidate cache if needed
         let cacheVersion = this.cacheVersion;
@@ -345,6 +360,7 @@ export default class App {
     async obtainInitialLink() {
         // if (this.initialLinkFetched) return this.initialLink
         // this.initialLinkFetched = true
+        this.logger.debug("obtaining InitialLink")
         const promise = firebase.links().getInitialLink()
         try {
             return await Timeout.wrap(promise, 500, 'Timeout while obtaining initial link');
@@ -352,6 +368,9 @@ export default class App {
         catch(err) {
             console.warn(err)
             return null
+        }
+        finally {
+            this.logger.debug("InitialLink obtained")
         }
 
         // return await firebase.links().getInitialLink()
@@ -613,6 +632,7 @@ export default class App {
     }
 
     startUnlogged() {
+        if (!this.initialized) throw "Initialize the app before displaying screens."
         Navigation.startSingleScreenApp({
             screen: {
                 label: 'Login',
