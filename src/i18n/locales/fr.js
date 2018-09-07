@@ -476,5 +476,6 @@ export default {
         friend_count: "Contacts",
     },
     current_location: "Autour de moi",
-    by: "par %{who}"
+    by: "par %{who}",
+    search_here: "Rechercher dans cette zone"
 };

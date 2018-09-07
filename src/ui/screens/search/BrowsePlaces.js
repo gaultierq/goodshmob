@@ -24,12 +24,12 @@ import {renderAskPermission, SearchPlacesOption} from "./searchplacesoption"
 import type {RNNNavigator} from "../../../types"
 import SearchListResults from "../searchListResults"
 import type {Region} from "../../components/GMap"
-import GMap, {regionFrom} from "../../components/GMap"
+import GMap, {mFromLatDelta, mFromLngDelta, regionFrom} from "../../components/GMap"
 import {Colors} from "../../colors"
 import ActionButton from "react-native-action-button"
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import {seeActivityDetails} from "../../Nav"
-import {GoodshContext} from "../../UIComponents"
+import {GoodshContext, registerLayoutAnimation, scheduleOpacityAnimation} from "../../UIComponents"
 import GTouchable from "../../GTouchable"
 import {hexToRgbaWithHalpha} from "../../../helpers/DebugUtils"
 
@@ -54,8 +54,9 @@ export type BrowseItemsGenOptions = {
 
 export type BrowseItemsPlacesOptions = BrowseItemsGenOptions & GeoStatus
 
-const DEFAULT_RAD = 1000
+const DEFAULT_RAD = 5000
 
+const logger = rootlogger.createLogger('browse places')
 
 @connect(state => ({
     data: state.data,
@@ -169,9 +170,11 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
         return renderAskPermission(missingPermission, (status) => this.setState({searchOptions: {...this.state.searchOptions, ...status}}))
     }
 
+    region: Region
+
     _renderResults = (state: SearchState) => {
         if (this.state.mapDisplay) {
-            const region: Region = this.getRegion()
+            const region: ?Region = this.getRegion()
 
 
             return (
@@ -198,21 +201,37 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
                                         justifyContent: 'center',
                                     }}
                                     onPress={()=>{
-                                        //what to do ?
-                                        //pos = {...pos, radius: 10000}
+
+                                        let radius = Math.round(
+                                            Math.max(
+                                                mFromLatDelta(this.region.latitudeDelta),
+                                                mFromLngDelta(this.region.latitude, this.region.longitudeDelta)
+                                            )
+                                        )
+
+                                        //pour algolia
                                         let pos = {
                                             lat: this.region.latitude,
                                             lng: this.region.longitude,
-                                            radius: DEFAULT_RAD,
+                                            radius: radius
                                         }
-                                        this.setState({searchOptions: {...this.state.searchOptions, ...pos}})
+
+
+                                        this.setState({
+                                                searchOptions: {
+                                                    ...this.state.searchOptions,
+                                                    ...pos
+                                                },
+                                                displayRefreshButton: false,
+                                            }
+                                        )
                                     }}
                                 >
                                     <Text style={{
                                         paddingHorizontal: 20,
                                         color: Colors.white,
                                         alignSelf: 'center'}}>
-                                        Rechercher dans cette zone
+                                        {i18n.t('search_here')}
                                     </Text>
                                 </GTouchable>
 
@@ -224,11 +243,13 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
                         onItemPressed={(item) => seeActivityDetails(this.props.navigator, item)}
                         initialRegion={region}
                         onRegionChange={reg => {
+                            // logger.debug(`region = `, reg)
                             this.region = reg
                             //doesnt work on translation...
-                            let ar0 = region.latitudeDelta * region.longitudeDelta
-                            let ar1 = reg.latitudeDelta * reg.longitudeDelta
-                            this.setState({displayRefreshButton: (ar1 - ar0) / ar0 > 0.1})
+                            // let ar0 = region.latitudeDelta * region.longitudeDelta
+                            // let ar1 = reg.latitudeDelta * reg.longitudeDelta
+                            this.setState({displayRefreshButton: true})
+                            scheduleOpacityAnimation()
 
                         }}
                     />

@@ -36,7 +36,7 @@ import Permissions from 'react-native-permissions'
 export type GeoStatus = {
     lat?: number,
     lng?: number,
-    permissionError: ?string,
+    permissionError?: ?string,
     radius?: number
 }
 

@@ -3,7 +3,7 @@ import React, {Component} from 'react'
 import {ActivityIndicator, Image, Text, View} from 'react-native'
 import MapView, {Callout, Marker} from 'react-native-maps'
 import type {SearchState} from "../../helpers/SearchHelper"
-import memoize from "memoize-one";
+import memoize from "memoize-one"
 
 
 export type Props = {
@@ -162,10 +162,8 @@ export function getRegionForCoordinates(points) {
 export function regionFrom(lat, lng, distance) {
     if (!_.isNumber(lat) || !_.isNumber(lng) || !_.isNumber(distance)) return null
 
-    const oneDegreeOfLatitudeInMeters = 111.32 * 1000;
-
-    const latitudeDelta = distance / oneDegreeOfLatitudeInMeters;
-    const longitudeDelta = distance / (oneDegreeOfLatitudeInMeters * Math.cos(lat * (Math.PI / 180)));
+    const latitudeDelta = distance / (111.32 * 1000);
+    const longitudeDelta = distance / (111.32 * 1000 * Math.cos(lat * (Math.PI / 180)));
 
     return {
         latitude: lat,
@@ -174,3 +172,13 @@ export function regionFrom(lat, lng, distance) {
         longitudeDelta,
     }
 }
+
+export function mFromLatDelta(latitudeDelta: number) {
+    return 111.32 * 1000 * latitudeDelta
+}
+
+export function mFromLngDelta(latitude: number, longitudeDelta: number) {
+    return 111.32 * 1000 * Math.cos(latitude* (Math.PI / 180)) * longitudeDelta
+}
+
+
