@@ -74,7 +74,8 @@ export default class Profile extends Component<Props, State> {
     }
 
     render() {
-        let user = this.getUser(currentUserId());
+        const userId = currentUserId()
+        let user = userId && this.getUser(userId);
 
         return (
 

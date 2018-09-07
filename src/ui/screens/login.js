@@ -65,6 +65,10 @@ class Login extends Component<Props, State> {
         });
     }
 
+    componentDidMount(){
+        this.refreshNavigator()
+    }
+
     render() {
         let marg = 40;
 
@@ -266,7 +270,7 @@ class Login extends Component<Props, State> {
         const i = this.state.index
         this.props.navigator.setButtons({
             leftButtons: i > 0 ? [BUTTON_BACK] : [],
-            rightButtons: i < SLIDE_N && i > 0 ? [BUTTON_SKIP] : [],
+            rightButtons: i < SLIDE_N && i >= 0 ? [BUTTON_SKIP] : [],
         })
     }
 

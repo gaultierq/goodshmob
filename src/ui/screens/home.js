@@ -162,10 +162,12 @@ export default class HomeScreen extends Screen<Props, State> {
     }
 
     componentDidMount() {
+        this.logger.debug("componentDidMount")
         this._mounted = true
     }
 
     componentWillUnmount() {
+        this.logger.debug("componentWillUnmount")
         this._mounted = false
         this.onBoardingHelper.clearTapTarget()
     }
@@ -195,10 +197,8 @@ export default class HomeScreen extends Screen<Props, State> {
             this.logger.debug("found info to display:", type)
             switch (type) {
                 case "focus_add":
-                    if (this._mounted) {
-                        this.onBoardingHelper.handleFocusAdd(() => {
-                            return this._mounted
-                        })
+                    if (this._mounted && !!this.props.currentUser) {
+                        this.onBoardingHelper.handleFocusAdd(() => this._mounted && !!this.props.currentUser)
                     }
                     break
                 case "notification_permissions":
@@ -225,10 +225,12 @@ export default class HomeScreen extends Screen<Props, State> {
 
     }
 
+    //!\\ hypothesis: logout => store.currentUser becomes null => update is triggered
+    //    => focusAdd is posted natively => component is unmounted
+    //    => the native code doesnt find the unmounted component
     componentDidUpdate() {
         this.refreshOnBoarding()
     }
-
 
     render() {
 

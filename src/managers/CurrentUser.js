@@ -36,10 +36,9 @@ class CurrentUser {
         return this.buildUser(this.id());
     }
 
-    //this shoulw always return something !== null if user is logged
+    //this should always return something !== null if user is logged
     buildUser(id: Id) {
-        const user = buildData(this.store.getState().data, "users", id)
-        return id ? user || {id, dummy: true} : null;
+        return id ? buildData(this.store.getState().data, "users", id) || {id, dummy: true} : null;
     }
 
     currentGoodshboxId() {
