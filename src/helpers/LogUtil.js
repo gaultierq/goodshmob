@@ -1,6 +1,7 @@
 //@flow
 
 export const logFormat = (level: GLoggerLevel) => {
+    if (__IS_ANDROID__) return null
     switch (level) {
         case "log": return 'color: #aaaaaa'
         case "debug": return 'color: #aaaaaa'

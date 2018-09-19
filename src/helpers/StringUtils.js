@@ -68,3 +68,18 @@ export function isId(id: string) {
 export function isPositive(number: number) {
     return _.isFinite(number) && number >= 0
 }
+
+
+export function flatDiff(left, right) {
+
+    let allKeys = _.union(_.keys(left), _.keys(right));
+
+    return _.transform(allKeys, (diff, key) => {
+        let leftValue = left[key];
+        let rightValue = right[key];
+
+        if (leftValue != rightValue) {
+            diff[key] = {leftValue, rightValue}
+        }
+    }, {});
+}

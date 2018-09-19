@@ -1,8 +1,7 @@
 // @flow
 
-import Immutable from 'seamless-immutable'
 import * as types from "./actionTypes"
-import {CLEAR_CACHE, INIT_CACHE, SET_USER_NULL, UPGRADE_CACHE} from "./actionTypes"
+import {CLEAR_CACHE, SET_CACHE_VERSION, SET_USER_NULL} from "./actionTypes"
 import {camelize} from 'camelize-object-key'
 
 export function createWithReducers(appReducers) {
@@ -19,13 +18,11 @@ export function createWithReducers(appReducers) {
             case SET_USER_NULL:
                 state = undefined;
                 break;
-            // case INVALIDATE_CACHE:
-            //     state = emptyCache(state, state.config.cacheVersion);
-            //     break;
-            case UPGRADE_CACHE:
-            case INIT_CACHE:
             case CLEAR_CACHE:
                 state = emptyCache(state);
+                break;
+            case SET_CACHE_VERSION:
+                state = {...state, app: {...state.app, cacheVersion: action.cacheVersion}}
                 break;
         }
 
@@ -58,16 +55,16 @@ export function authReducer(state = {}, action) {
     return state;
 }
 
-export function deviceReducer(state = Immutable({}), action) {
+export function deviceReducer(state = {}, action) {
 
     switch (action.type) {
         case types.SAVE_DEVICE.success():
-            let currentDeviceId = action.payload.data.id;
-            let attr = action.payload.data.attributes;
-            let {fcmToken, ...attr2} = attr;
-            let device = {currentDeviceId, fcmToken, ...attr2};
-            device = camelize(device);
-            state = state.merge(device);
+            let currentDeviceId = action.payload.data.id
+            let attr = action.payload.data.attributes
+            let {fcmToken, ...attr2} = attr
+            let device = {currentDeviceId, fcmToken, ...attr2}
+            device = camelize(device)
+            state = {...state, device}
             break;
     }
     return state;

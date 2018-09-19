@@ -18,7 +18,7 @@ import * as UI from "./ui/UIStyles"
 import {NAV_BACKGROUND_COLOR} from "./ui/UIStyles"
 import {AlgoliaClient} from "./helpers/AlgoliaUtils"
 import {Statistics} from "./managers/Statistics"
-import {CLEAR_CACHE} from "./auth/actionTypes"
+import {CLEAR_CACHE, SET_CACHE_VERSION} from "./auth/actionTypes"
 import Config from 'react-native-config'
 import {Provider} from "react-redux"
 import {Messenger, sendMessage} from "./managers/Messenger"
@@ -36,8 +36,7 @@ import firebase from 'react-native-firebase'
 import {Alert, AsyncStorage, Dimensions, Linking, StyleSheet, ToastAndroid, TouchableOpacity} from 'react-native'
 import * as Nav from "./ui/Nav"
 import Timeout from 'await-timeout'
-import type {GLogger} from "../flow-typed/goodshmob"
-import {isPositive} from "./helpers/StringUtils"
+import {flatDiff, isPositive} from "./helpers/StringUtils"
 import watch from "redux-watch"
 import type {Id} from "./types"
 
@@ -45,13 +44,13 @@ import type {Id} from "./types"
 type AppConfig = {
 
     currentUserId?: Id,
-    userData: null | 'fetching' | true,
+    userData?: null | 'fetching' | true,
+    userWithName?: boolean,
 
 
     fetchingCacheVersion?: boolean,
     upgradingCacheVersion?: boolean,
 
-    cacheVersion: number,
     hydration: 'no' | 'hydrating' | 'hydrated',
     init: 'no' | 'initializing' | 'initialized',
 }
@@ -60,12 +59,13 @@ type AppConfig = {
 export default class App {
 
     state: AppConfig =  {
-        cacheVersion: -1,
         hydration: 'no',
         init: 'no',
         userData: null
 
     }
+
+    renderedState: any
 
     //temp hack
     initialLinkFetched = false
@@ -97,62 +97,10 @@ export default class App {
 
         this.logger.log('spawning app')
 
-        // I.1.
-        if (!isPositive(this.state.cacheVersion)) {
-            if (this.state.fetchingCacheVersion) {
-                this.logger.warn('re-fetching cache version')
-            }
-            this.setState({fetchingCacheVersion: true})
-            let cacheVS = await this.readCurrentCacheVersion()
-            let cacheVersion = _.toNumber(cacheVS)
-
-            await this.setState({cacheVersion, fetchingCacheVersion: false})
-        }
-        if (!isPositive(this.state.cacheVersion)) throw 'failed to fetch cache version'
-
-        // I.2
-        const confCacheV = _.toNumber(Config.CACHE_VERSION)
-        if (this.state.cacheVersion < confCacheV) {
-            this.setState({upgradingCacheVersion: true})
-            this.store.dispatch({type: CLEAR_CACHE})
-            await this.writeCurrentCacheVersion(this.state.cacheVersion)
-            await this.setState({cacheVersion: this.state.cacheVersion, upgradingCacheVersion: false})
-        }
-        if (this.state.cacheVersion < confCacheV) throw 'failed to upgrade cache version'
 
         // II. 1
         if (!this.store) {
             this.store = this.createStore()
-
-            let userChangeSubscription: ?() => void
-            // listening .auth to know if uer is logged.
-
-            this.subAndTrig('auth.currentUserId', (currentUserId, previousCurrentUserId) => {
-                this.logger.debug('currentUserId has changed', previousCurrentUserId, ' -> ', currentUserId)
-
-                this.setState({currentUserId})
-
-                if (currentUserId) {
-
-                    userChangeSubscription = this.subAndTrig(
-                        `data.users.${currentUserId}`,
-                        (user, pu) => {
-                            this.logger.debug('userData has changed', pu, ' -> ', user)
-                            //logged user has changed
-                            this.setState({userData: user})
-                        })
-                }
-                else {
-                    if (userChangeSubscription) userChangeSubscription()
-                    this.setState({userData: null})
-                }
-            })
-
-            // listening .data.user to know if user has a firstname lastname
-
-
-            let registerScreens = require('./ui/allScreens').default;
-            registerScreens(this.store, Provider);
         }
 
         // II. 2
@@ -162,12 +110,86 @@ export default class App {
             this.setState({hydration: 'hydrated'})
         }
 
+        const confCacheV = _.toNumber(Config.CACHE_VERSION)
+
+
+        let currentCacheVersion = _.get(this.store.getState(), 'app.cacheVersion', -1)
+        if (currentCacheVersion < confCacheV) {
+            // upgrading cache
+            this.setState({upgradingCacheVersion: true})
+            this.store.dispatch({type: CLEAR_CACHE})
+            this.store.dispatch({type: SET_CACHE_VERSION, cacheVersion: confCacheV})
+            this.setState({upgradingCacheVersion: false})
+        }
+
+
         // III.
         if (this.state.init!== 'initialized') {
             this.setState({init: 'initializing'})
             this.initializeManagers()
             this.setState({init: 'initialized'})
         }
+
+
+
+        // IV
+        this.logger.info('registering screens')
+        let registerScreens = require('./ui/allScreens').default;
+        registerScreens(this.store, Provider);
+
+        // V.
+        this.listenToUserStoreChanges()
+    }
+
+    listenToUserStoreChanges() {
+        let userChangeSubscription: ?() => void
+        // listening .auth to know if uer is logged.
+
+        this.subAndTrig('auth.currentUserId', (currentUserId, previousCurrentUserId) => {
+            //i have a user id, and i m notified of any changes
+            this.logger.debug('currentUserId has changed', previousCurrentUserId, ' -> ', currentUserId)
+
+
+            this.setState({currentUserId})
+
+            // listening for user data changes
+            if (currentUserId) {
+
+                userChangeSubscription = this.subAndTrig(
+                    `data.users.${currentUserId}`,
+                    (user, pu) => {
+                        this.logger.debug('userData has changed', pu, ' -> ', user)
+
+
+                        if (!user) {
+                            // I have a half user
+                            this.setState({userData: 'fetching'})
+
+                            const action = userActions
+                                .getUser(currentUserId).force()
+                                .createActionDispatchee(userActionTypes.GET_USER)
+
+                            this.store.dispatch(action)
+                        }
+                        else {
+                            // I have a full user
+                            this.setState({userData: true})
+                            BugsnagManager.setUser(user.attributes)
+                        }
+
+                        //logged user has changed
+                        this.setState({userWithName: this.userHasVitalInfo(user)})
+
+
+                    })
+            }
+            else {
+                // don't have a user here
+                if (userChangeSubscription) userChangeSubscription()
+                this.setState({userData: null, userWithName: false})
+                BugsnagManager.clearUser()
+            }
+        })
     }
 
     subAndTrig(path, callback) {
@@ -241,54 +263,20 @@ export default class App {
 
     prepareDevEnv() {
         this.logger = rootlogger.createLogger("app")
+        this.logger.debug(`spawning app with env`, Config);
+
         if (module && module.hot) {
             global.reloads = 0;
-            // module.hot.accept(() => {
-            //     ++global.reloads;
-            //     console.info(`hot reload (#${global.reloads})`);
-            // });
         }
 
-        //initGlobal(false);
-        this.logger.debug(`spawning app with env`, Config);
-        //this.hydrated = false;
-
-        //see the network requests in the debugger
-        //TODO: doesnt work yet
-        //GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
-
-        // $FlowFixMe
         console.disableYellowBox = true
 
-    }
-
-
-    async setState(statePart: any) {
-        return new Promise((resolve, reject) => {
-            let oldState = this.state
-            this.state = {...this.state, ...statePart}
-            this.logger.debug('new state', this.state)
-
-            resolve()
-
-            if (!_.isEqual(this.state, oldState)) {
-
-                setTimeout(async () => {
-
-                    await this.refresh()
-                })
-            }
-        })
-
-    }
-
-    // getting the singleton ready.
-    initializeManagers() {
         // $FlowFixMe
         if (ErrorUtils && Config.SKIP_EMPTY_CACHE_ON_UNHANDLED_ERROR !== 'true') {
             const previousHandler = ErrorUtils.getGlobalHandler();
 
             ErrorUtils.setGlobalHandler((error, isFatal) => {
+                this.logger.error("caught error", error)
                 try {
                     this.store.dispatch({type: CLEAR_CACHE});
                 }
@@ -298,6 +286,34 @@ export default class App {
 
             })
         }
+    }
+
+    async setState(statePart: any) {
+        return new Promise((resolve, reject) => {
+            this.state = {...this.state, ...statePart}
+            this.logger.debug('new state', this.state)
+
+            resolve()
+
+            setTimeout(async () => {
+
+                let diff = flatDiff(this.renderedState || {}, this.state)
+                if (!_.isEmpty(diff)) {
+                    this.logger.debug('refreshing', diff)
+                    this.renderedState = this.state
+                    await this.refresh()
+                }
+                else {
+                    this.logger.debug('refresh saved')
+                }
+
+            })
+        })
+
+    }
+
+    // getting the singleton ready.
+    initializeManagers() {
 
         StoreManager.init(this.store);
         CurrentUser.init(this.store);
@@ -363,7 +379,9 @@ export default class App {
     }
 
     async writeCurrentCacheVersion(version: number) {
+        this.logger.debug('writing to cache', version)
         AsyncStorage.setItem('@goodsh:cacheVersion', ""+version);
+        this.logger.debug('writed to cache', version)
     }
 
     async obtainInitialLink() {
@@ -386,8 +404,6 @@ export default class App {
     }
 
     async refresh() {
-        this.logger.debug("refresh")
-
 
         //does it make any sense ?
         if (this.state.init !== 'initialized') {
@@ -413,27 +429,16 @@ export default class App {
             else {
                 const userData = this.state.userData
                 if (userData === 'fetching') {
-                    //load user
-                    if (!__IS_ANDROID__) {
-                        RNProgressHUB.showSpinIndeterminate()
-                    }
+                    //loading user
+                    if (!__IS_ANDROID__) RNProgressHUB.showSpinIndeterminate()
+                    return
                 }
-                else if (userData == null) {
-                    await this.setState({userData: 'fetching'})
-
-                    const action = userActions
-                        .getUser(currentUserId()).force()
-                        .createActionDispatchee(userActionTypes.GET_USER)
-
-                    this.store.dispatch(action).then(() => {
-                        if (!__IS_ANDROID__) {
-                            RNProgressHUB.dismiss()
-                        }
-
-                    })
-
+                else if (userData === true) {
+                    if (!__IS_ANDROID__) RNProgressHUB.dismiss()
                 }
-                else if (!this.userHasVitalInfo(userData)) {
+
+                if (this.state.userWithName === false) {
+
 
                     Navigation.startSingleScreenApp({
                         screen: {
@@ -450,8 +455,6 @@ export default class App {
                 else {
                     //TODO: move
                     await NotificationManager.init()
-
-                    BugsnagManager.setUser(currentUser());
 
                     DeviceManager.checkAndSendDiff();
 
@@ -478,8 +481,6 @@ export default class App {
             }
         }
         else {
-            //TODO: listener in the manager
-            BugsnagManager.clearUser();
             this.startUnlogged();
         }
     }
