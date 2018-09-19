@@ -1,13 +1,14 @@
 // @flow
 
-import {REHYDRATE} from 'redux-persist/constants'
+import {REHYDRATE} from 'redux-persist'
 
 export const CONNECTIVITY_CHANGE = 'CONNECTIVITY_CHANGE';
 
 export default (state = {}, action) => {
+    console.log("debug::", action)
     switch (action.type) {
-        case REHYDRATE:
-            return {...state, rehydrated: true};
+        // case REHYDRATE:
+        //     return {...state, rehydrated: true};
         case CONNECTIVITY_CHANGE:
             return {...state, connected: action.connected};
     }
