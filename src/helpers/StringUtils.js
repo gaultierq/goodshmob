@@ -63,5 +63,8 @@ export function firstLetter(string: string): string {
 
 export function isId(id: string) {
     return /^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/g.test(id)
+}
 
+export function isPositive(number: number) {
+    return _.isFinite(number) && number >= 0
 }
