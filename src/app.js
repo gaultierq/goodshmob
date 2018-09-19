@@ -37,7 +37,7 @@ import {Alert, AsyncStorage, Dimensions, Linking, StyleSheet, ToastAndroid, Touc
 import * as Nav from "./ui/Nav"
 import Timeout from 'await-timeout'
 import type {GLogger} from "../flow-typed/goodshmob"
-import {isPositive} from "./helpers/StringUtils"
+import {flatDiff, isPositive} from "./helpers/StringUtils"
 import watch from "redux-watch"
 import type {Id} from "./types"
 
@@ -45,7 +45,8 @@ import type {Id} from "./types"
 type AppConfig = {
 
     currentUserId?: Id,
-    userData: null | 'fetching' | true,
+    userData?: null | 'fetching' | true,
+    userWithName?: boolean,
 
 
     fetchingCacheVersion?: boolean,
@@ -66,6 +67,8 @@ export default class App {
         userData: null
 
     }
+
+    renderedState: any
 
     //temp hack
     initialLinkFetched = false
@@ -124,33 +127,11 @@ export default class App {
         if (!this.store) {
             this.store = this.createStore()
 
-            let userChangeSubscription: ?() => void
-            // listening .auth to know if uer is logged.
-
-            this.subAndTrig('auth.currentUserId', (currentUserId, previousCurrentUserId) => {
-                this.logger.debug('currentUserId has changed', previousCurrentUserId, ' -> ', currentUserId)
-
-                this.setState({currentUserId})
-
-                if (currentUserId) {
-
-                    userChangeSubscription = this.subAndTrig(
-                        `data.users.${currentUserId}`,
-                        (user, pu) => {
-                            this.logger.debug('userData has changed', pu, ' -> ', user)
-                            //logged user has changed
-                            this.setState({userData: user})
-                        })
-                }
-                else {
-                    if (userChangeSubscription) userChangeSubscription()
-                    this.setState({userData: null})
-                }
-            })
+            this.listeToUserStoreChanges()
 
             // listening .data.user to know if user has a firstname lastname
 
-
+            this.logger.info('registering screens')
             let registerScreens = require('./ui/allScreens').default;
             registerScreens(this.store, Provider);
         }
@@ -168,6 +149,39 @@ export default class App {
             this.initializeManagers()
             this.setState({init: 'initialized'})
         }
+    }
+
+    listeToUserStoreChanges() {
+        let userChangeSubscription: ?() => void
+        // listening .auth to know if uer is logged.
+
+        this.subAndTrig('auth.currentUserId', (currentUserId, previousCurrentUserId) => {
+            this.logger.debug('currentUserId has changed', previousCurrentUserId, ' -> ', currentUserId)
+
+
+            this.setState({currentUserId})
+
+            // listening for user data changes
+            if (currentUserId) {
+
+                userChangeSubscription = this.subAndTrig(
+                    `data.users.${currentUserId}`,
+                    (user, pu) => {
+                        this.logger.debug('userData has changed', pu, ' -> ', user)
+                        //logged user has changed
+                        this.setState(
+                            {
+                                userData: !!user,
+                                userWithName: this.userHasVitalInfo(user)
+                            }
+                        )
+                    })
+            }
+            else {
+                if (userChangeSubscription) userChangeSubscription()
+                this.setState({userData: null, userWithName: false})
+            }
+        })
     }
 
     subAndTrig(path, callback) {
@@ -271,13 +285,21 @@ export default class App {
 
             resolve()
 
-            if (!_.isEqual(this.state, oldState)) {
+            setTimeout(async () => {
 
-                setTimeout(async () => {
-
+                let diff = flatDiff(this.state, this.renderedState || {})
+                if (!_.isEmpty(diff)) {
+                    this.logger.debug('refreshing', diff)
+                    this.renderedState = this.state
                     await this.refresh()
-                })
-            }
+                }
+                else {
+                    this.logger.debug('refresh saved')
+                }
+
+            })
+
+
         })
 
     }
@@ -386,8 +408,6 @@ export default class App {
     }
 
     async refresh() {
-        this.logger.debug("refresh")
-
 
         //does it make any sense ?
         if (this.state.init !== 'initialized') {
@@ -433,7 +453,7 @@ export default class App {
                     })
 
                 }
-                else if (!this.userHasVitalInfo(userData)) {
+                else if (this.state.userWithName === false) {
 
                     Navigation.startSingleScreenApp({
                         screen: {

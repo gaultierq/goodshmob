@@ -6,6 +6,7 @@ import * as appActions from "../auth/actions"
 import * as DeviceInfo from 'react-native-device-info'
 //import {toUppercase} from "./utils/StringUtils";
 import * as StringUtils from "../helpers/StringUtils"
+import {flatDiff} from "../helpers/StringUtils"
 
 
 let instance: DeviceManager;
@@ -64,20 +65,6 @@ class DeviceManager {
             })
 
     }
-}
-
-function flatDiff(left, right) {
-
-    let allKeys = _.union(_.keys(left), _.keys(right));
-
-    return _.transform(allKeys, (diff, key) => {
-        let leftValue = left[key];
-        let rightValue = right[key];
-
-        if (leftValue != rightValue) {
-            diff[key] = {leftValue, rightValue}
-        }
-    }, {});
 }
 
 export function init(store) {
