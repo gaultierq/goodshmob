@@ -4,7 +4,6 @@ import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native'
 import {connect} from "react-redux"
 import {currentUser, isCurrentUser, logged} from "../../managers/CurrentUser"
 import {FullScreenLoader, MainBackground} from "../UIComponents"
-import Immutable from 'seamless-immutable'
 import * as Api from "../../managers/Api"
 import {Call} from "../../managers/Api"
 import Feed from "../components/feed"
@@ -353,7 +352,7 @@ const actions = (() => {
 
 
 const reducer = (() => {
-    const initialState = Immutable(Api.initialListState());
+    const initialState = Api.initialListState()
 
     return (state = initialState, action = {}) => {
 

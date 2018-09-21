@@ -1,4 +1,3 @@
-import Immutable from 'seamless-immutable'
 import util from 'util'
 import normalize from 'json-api-normalizer'
 import build from 'redux-object'
@@ -78,18 +77,18 @@ test('testing activities_fixtures2', () => {
 //
 // });
 
-test('testing pagination', () => {
-    // let result1 = Util.parse(require("./activities_fixtures.json"));
-    // let result2 = Util.parse(require("./activities_fixtures2.json"));
-    let result1 = [{id: 13}, {id: 14}];
-    let result2 = [{id: 100}, {id: 120}];
-
-
-    let currentState = Immutable(result1);
-    let nextState = Immutable.merge(currentState, result2);
-
-    console.log("next State: " , nextState);
-});
+// test('testing pagination', () => {
+//     // let result1 = Util.parse(require("./activities_fixtures.json"));
+//     // let result2 = Util.parse(require("./activities_fixtures2.json"));
+//     let result1 = [{id: 13}, {id: 14}];
+//     let result2 = [{id: 100}, {id: 120}];
+//
+//
+//     let currentState = Immutable(result1);
+//     let nextState = Immutable.merge(currentState, result2);
+//
+//     console.log("next State: " , nextState);
+// });
 
 
 test('testing meta', () => {

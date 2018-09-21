@@ -4,14 +4,7 @@ import React from 'react'
 import {Keyboard, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
-import {
-    activityFeedProps,
-    FOLLOW_RIGHT_BUTTON,
-    getAddButton,
-    getNavButtonForAction,
-    UNFOLLOW_RIGHT_BUTTON
-} from "../UIComponents"
-import Immutable from 'seamless-immutable'
+import {activityFeedProps, getNavButtonForAction} from "../UIComponents"
 import * as Api from "../../managers/Api"
 import Feed from "../components/feed"
 import type {Id, Lineup, RNNNavigator, Saving} from "../../types"
@@ -23,16 +16,10 @@ import Screen from "./../components/Screen"
 import * as UI from "../UIStyles"
 import {STYLES} from "../UIStyles"
 import {fullName} from "../../helpers/StringUtils"
-import {
-    FETCH_LINEUP,
-    FETCH_SAVINGS,
-    fetchLineup,
-    followLineupPending,
-    unfollowLineupPending,
-} from "../lineup/actions"
+import {FETCH_LINEUP, FETCH_SAVINGS, fetchLineup, followLineupPending, unfollowLineupPending,} from "../lineup/actions"
 import {UNSAVE} from "../activity/actionTypes"
 import * as authActions from "../../auth/actions"
-import {GLineupAction, L_ADD_ITEM, L_FOLLOW, L_UNFOLLOW, LineupRights} from "../lineupRights"
+import {GLineupAction, LineupRights} from "../lineupRights"
 import {LINEUP_AND_SAVING_SELECTOR} from "../../helpers/ModelUtils"
 import {createSelector} from "reselect"
 
@@ -280,7 +267,7 @@ const actions = {
 
 
 const reducer = (() => {
-    const initialState = Immutable(Api.initialListState());
+    const initialState = Api.initialListState()
 
     return (state = initialState, action = {}) => {
 

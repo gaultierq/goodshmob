@@ -5,8 +5,8 @@ import React from 'react'
 import {ScrollView, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
-import Immutable from 'seamless-immutable'
 import * as Api from "../../managers/Api"
+import {reduceList2} from "../../managers/Api"
 import Feed from "../components/feed"
 import ApiAction from "../../helpers/ApiAction"
 import UserActivity from "../activity/components/UserActivity"
@@ -18,6 +18,7 @@ import GTouchable from "../GTouchable"
 import ShareButton from "../components/ShareButton"
 import {STYLES} from "../UIStyles"
 import {TRANSPARENT_SPACER} from "../UIComponents"
+import {FETCH_ACTIVITIES} from "../networkActions"
 
 type Props = {
     navigator: *,
@@ -183,14 +184,11 @@ export class InteractionScreen extends Screen<Props, State> {
         }
         return null;
     }
-
 }
 
-export const reducer = (state = Immutable(Api.initialListState()), action) => {
-    return Api.reduceList(state, action, {fetchFirst: FETCH_INTERACTIONS});
-};
-
-
+export const reducer = (state = Api.initialListState(), action) => {
+    return reduceList2(state, action, FETCH_ACTIVITIES)
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -201,4 +199,4 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent',
         margin: 10
     },
-});
+})

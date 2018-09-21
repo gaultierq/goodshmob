@@ -16,7 +16,7 @@ import {
 } from 'react-native'
 
 import {connect} from "react-redux"
-import {isCurrentUserId, logged} from "../../managers/CurrentUser"
+import {logged} from "../../managers/CurrentUser"
 import {SearchBar} from 'react-native-elements'
 import type {Id, List, User} from "../../types"
 import type {Props as FeedProps} from "../components/feed"
@@ -27,8 +27,6 @@ import {mergeItemsAndPendings} from "../../helpers/ModelUtils"
 import Screen from "../components/Screen"
 
 import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
-import {GoodshContext} from "../UIComponents"
-import Immutable from 'seamless-immutable'
 import LineupCell from "../components/LineupCell"
 import * as Api from "../../managers/Api"
 import GTouchable from "../GTouchable"
@@ -134,7 +132,7 @@ export class LineupListScreen extends Screen<Props, State> {
 }
 
 const reducer = (() => {
-    const initialState = Immutable(Api.initialListState());
+    const initialState = Api.initialListState()
 
     let getPath = userId => `users.${userId}.relationships.lists.data`;
 

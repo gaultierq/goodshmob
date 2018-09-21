@@ -1,7 +1,6 @@
 // @flow
 import React, {Component} from 'react'
 import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native'
-import Immutable from 'seamless-immutable'
 import * as Api from "../../managers/Api"
 import {Call} from "../../managers/Api"
 import type {Activity, ActivityType, Id} from "../../types"
@@ -68,7 +67,7 @@ export const COMMENT_CREATION: PendingAction<COMMENT_CREATION_PAYLOAD>  = pendin
 );
 
 const reducer = (() => {
-    const initialState = Immutable(Api.initialListState());
+    const initialState = Api.initialListState()
 
     return (state = initialState, action = {}) => {
 

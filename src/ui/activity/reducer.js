@@ -1,34 +1,32 @@
 // @flow
 
-import Immutable from 'seamless-immutable'
-import * as types from './actionTypes'
 import {sanitizeActivityType, updateSplice0} from "../../helpers/DataUtils"
 import update from "immutability-helper"
+import dotprop from "dot-prop-immutable"
+import {CREATE_LIKE, DELETE_LIKE, MOVE_SAVING, UNSAVE} from "./actionTypes"
 
 
 export default function reduce(state:any = {}, action: any) {
     switch (action.type) {
-        case types.MOVE_SAVING.success():
+        case MOVE_SAVING.success():
             let {savingId, originalLineupId, targetLineupId} = action.options;
 
             state = saveOrUnsave(savingId, originalLineupId, state);
             state = saveOrUnsave(savingId, targetLineupId, state, {id: savingId, type: 'savings'});
 
             break;
-        case types.CREATE_LIKE.success():
+        case CREATE_LIKE.success():
             break;
-        case types.DELETE_LIKE.success():{
+        case DELETE_LIKE.success():{
             let {type, id} = action.options;
             type = sanitizeActivityType(type);
-
-            state = Immutable.setIn(state, [type, id, "meta", "liked"], false);
-            let newVar = [type, id, "meta", "likes-count"];
-
-            let count = state.getIn(newVar);
-            state = Immutable.setIn(state, newVar, --count);
+            state = dotprop.set(state, `${type}.${id}.meta.liked`, false)
+            let likeCountPath = `${type}.${id}.meta.likes-count`
+            let likeCount = _.get(state, likeCountPath)
+            state = dotprop.set(state, likeCountPath, --likeCount)
             break;
         }
-        case types.UNSAVE.success():{
+        case UNSAVE.success():{
             const {id, lineupId} = action.options;
 
             state = saveOrUnsave(id, lineupId, state);
