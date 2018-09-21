@@ -81,9 +81,9 @@ class Login extends Component<Props, State> {
                 color: Colors.white,
                 textAlign:'center',
 
-                textShadowColor: 'rgba(0, 0, 0, 1)',
-                textShadowOffset: {width: -1, height: 1},
-                textShadowRadius: 8,
+                // textShadowColor: 'rgba(0, 0, 0, 1)',
+                // textShadowOffset: {width: -1, height: 1},
+                // textShadowRadius: 8,
             },
             bold: {
                 fontSize: 36,
@@ -140,9 +140,9 @@ class Login extends Component<Props, State> {
                 paddingVertical: 12,
 
 
-                textShadowColor: 'rgba(0, 0, 0, 1)',
-                textShadowOffset: {width: -1, height: 1},
-                textShadowRadius: 3,
+                // textShadowColor: 'rgba(0, 0, 0, 1)',
+                // textShadowOffset: {width: -1, height: 1},
+                // textShadowRadius: 3,
 
             }} onPress={this.next.bind(this)}
             >

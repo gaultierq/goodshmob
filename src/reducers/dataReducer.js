@@ -1,14 +1,13 @@
 import {API_DATA_SUCCESS, TRUNCATE_DATA} from '../managers/Api'
-import Immutable from 'seamless-immutable'
 import {Statistics} from "../managers/Statistics"
 import update from "immutability-helper"
 import {updateSplice0} from "../helpers/DataUtils"
 import type {ApiActionName} from "../helpers/ApiAction"
 import merge from "../helpers/DeepMerge"
 
-const initialState = Immutable({
-    meta: {},
-});
+const initialState = () => ({
+    meta: {}
+})
 
 export const CREATE_PENDING_ACTION = "CREATE_PENDING_ACTION";
 export const REMOVE_PENDING_ACTION = "REMOVE_PENDING_ACTION";
@@ -33,7 +32,7 @@ export  function config(state = initConfig, action) {
 }
 
 
-export function data(state = initialState, action) {
+export function data(state = initialState(), action) {
     switch (action.type) {
         case API_DATA_SUCCESS:
 
@@ -47,7 +46,7 @@ export function data(state = initialState, action) {
             }
             return result;
         case TRUNCATE_DATA:
-            return initialState
+            return initialState()
         default:
             return state;
     }

@@ -39,9 +39,10 @@ class _NavManager implements NavManager {
 
         const result = this.parseDeeplink(deeplink, options)
 
+        console.debug('go to link: ', deeplink, result);
+
         let {modal, handler} = result
 
-        console.info('Deeplink caught: ', deeplink, result);
 
         if (modal) {
             Navigation.showModal({

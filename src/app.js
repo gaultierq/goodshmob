@@ -10,7 +10,7 @@ import thunk from "redux-thunk"
 import * as Api from './managers/Api'
 import {persistCombineReducers, persistStore} from 'redux-persist'
 import * as CurrentUser from './managers/CurrentUser'
-import {currentUser, currentUserId} from './managers/CurrentUser'
+import {currentUserId} from './managers/CurrentUser'
 import * as globalProps from 'react-native-global-props'
 import NotificationManager from './managers/NotificationManager'
 import * as DeviceManager from "./managers/DeviceManager"
@@ -18,7 +18,7 @@ import * as UI from "./ui/UIStyles"
 import {NAV_BACKGROUND_COLOR} from "./ui/UIStyles"
 import {AlgoliaClient} from "./helpers/AlgoliaUtils"
 import {Statistics} from "./managers/Statistics"
-import {CLEAR_CACHE, SET_CACHE_VERSION} from "./auth/actionTypes"
+import {CLEAR_CACHE} from "./auth/actionTypes"
 import Config from 'react-native-config'
 import {Provider} from "react-redux"
 import {Messenger, sendMessage} from "./managers/Messenger"
@@ -29,7 +29,8 @@ import Analytics from "./managers/Analytics"
 import OnBoardingManager from "./managers/OnBoardingManager"
 import StoreManager from "./managers/StoreManager"
 import BugsnagManager from "./managers/BugsnagManager"
-import RNAccountKit, {Color,} from 'react-native-facebook-account-kit'
+import * as AccountKitManager from "./managers/AccountKitManager"
+
 import RNProgressHUB from 'react-native-progresshub'
 import {actions as userActions, actionTypes as userActionTypes} from "./redux/UserActions"
 import firebase from 'react-native-firebase'
@@ -41,6 +42,7 @@ import type {GLogger} from "../flow-typed/goodshmob"
 import {flatDiff, isPositive} from "./helpers/StringUtils"
 import watch from "redux-watch"
 import type {Id} from "./types"
+import {getFirstDefined} from "./helpers/LangUtil"
 
 
 type AppConfig = {
@@ -55,6 +57,8 @@ type AppConfig = {
 
     hydration: 'no' | 'hydrating' | 'hydrated',
     init: 'no' | 'initializing' | 'initialized',
+
+    initialDeeplink?: string,
 }
 
 
@@ -82,16 +86,6 @@ export default class App {
     }
 
 
-    /**
-     * I. cache version:
-     *  1. fetch it (async)
-     *  2. is it ok with the one from the config, if not clear cache and upgrade version (async)
-     * II. redux store
-     *  1. create
-     *  2. hydrate (async)
-     * III. initialize the managers
-     * IV. fetch missing info if needed (async)
-     */
     async spawn() {
 
         // I.0
@@ -100,9 +94,12 @@ export default class App {
         this.logger.log('spawning app')
 
 
+
+        const confCacheV: number = _.toNumber(Config.CACHE_VERSION)
+
         // II. 1
         if (!this.store) {
-            this.store = this.createStore()
+            this.store = this.createStore(confCacheV)
         }
 
         // II. 2
@@ -112,45 +109,68 @@ export default class App {
             this.setState({hydration: 'hydrated'})
         }
 
-        const confCacheV = _.toNumber(Config.CACHE_VERSION)
+        // IV. get initial links, and listen for links
+        const initialDeeplink = await this.obtainInitialLinks()
+        this.setState({initialDeeplink})
 
-
-        let currentCacheVersion = _.get(this.store.getState(), 'app.cacheVersion', -1)
-        if (currentCacheVersion < confCacheV) {
-            // upgrading cache
-            this.setState({upgradingCacheVersion: true})
-            this.store.dispatch({type: CLEAR_CACHE})
-            this.store.dispatch({type: SET_CACHE_VERSION, cacheVersion: confCacheV})
-            this.setState({upgradingCacheVersion: false})
-        }
-
+        // IV
+        this.logger.info('registering screens')
+        let registerScreens = require('./ui/allScreens').default
+        registerScreens(this.store, Provider)
 
         // III.
-        if (this.state.init!== 'initialized') {
+        if (this.state.init !== 'initialized') {
             this.setState({init: 'initializing'})
             this.initializeManagers()
             this.setState({init: 'initialized'})
         }
 
-
-
-        // IV
-        this.logger.info('registering screens')
-        let registerScreens = require('./ui/allScreens').default;
-        registerScreens(this.store, Provider);
-
         // V.
         this.listenToUserStoreChanges()
+    }
+
+    async obtainInitialLinks() {
+        // will listen to internal links and probably the ones
+        // clicked outside, when the app is opened
+        Linking.addEventListener('url', ({url}) => {
+            this.logger.info('Linking: deeplink caught: ', url)
+            NavManager.goToDeeplink(url)
+        })
+
+        // listening to firebase dynamic links
+        firebase.links().onLink((url) => {
+            this.logger.info("dynamic links: onLink", url)
+        })
+
+        let [initialDeeplink, initialDynamicLink, initialNotificationLink] = await Promise.all([
+            // deeplinks; eg: somebody click on a link in whatsapp
+            Linking.getInitialURL(),
+
+            // firebase dynamic link: will probably check the device entropy,
+            // and make a request to Firebase
+            this.obtainInitiaDynamiclLink(),
+
+            NotificationManager.getInitialNotificationLink()
+        ])
+
+        let deeplink = getFirstDefined(initialDeeplink, initialDynamicLink, initialNotificationLink)
+        if (deeplink) {
+            this.logger.info('deeplink found', {initialDeeplink, initialDynamicLink, initialNotificationLink})
+        }
+        return deeplink
     }
 
     listenToUserStoreChanges() {
         let userChangeSubscription: ?() => void
         // listening .auth to know if uer is logged.
 
-        this.subAndTrig('auth.currentUserId', (currentUserId, previousCurrentUserId) => {
-            //i have a user id, and i m notified of any changes
-            this.logger.debug('currentUserId has changed', previousCurrentUserId, ' -> ', currentUserId)
 
+        //1. user logged or not logged
+
+
+        this.subAndTrig('auth.currentUserId', (currentUserId, previousCurrentUserId) => {
+            //i have a user id, and i m notified of any changes (=logout)
+            this.logger.debug('currentUserId has changed', previousCurrentUserId, ' -> ', currentUserId)
 
             this.setState({currentUserId})
 
@@ -177,6 +197,7 @@ export default class App {
                             // I have a full user
                             this.setState({userData: true})
                             BugsnagManager.setUser(user.attributes)
+                            DeviceManager.checkAndSendDiff()
                         }
 
                         //logged user has changed
@@ -234,10 +255,6 @@ export default class App {
         return fun
     }
 
-    watcher(path: string) {
-        return watch(this.store.getState, path)
-    }
-
     prepareUI() {
 
         const {height, width} = Dimensions.get('window');
@@ -273,11 +290,13 @@ export default class App {
         })
     }
 
-    createStore() {
+    createStore(version: number) {
 // begin periodically persisting the store
         let persistConfig = {
             key: 'primary',
             storage: AsyncStorage,
+            debug: true,
+            version
             // transforms: [createTransform(immutableTransform.in, immutableTransform.out, immutableTransform.config)],
             // whitelist: ['auth','device']
         }
@@ -316,7 +335,7 @@ export default class App {
             const previousHandler = ErrorUtils.getGlobalHandler();
 
             ErrorUtils.setGlobalHandler((error, isFatal) => {
-                this.logger.error("caught error", error)
+                this.logger.warn("caught error", error)
                 try {
                     this.store.dispatch({type: CLEAR_CACHE});
                 }
@@ -365,34 +384,8 @@ export default class App {
         Analytics.init();
         OnBoardingManager.init(this.store);
         BugsnagManager.init(this.store);
-
-        RNAccountKit.configure({
-            theme: {
-                // Background
-                backgroundColor: Color.hex(Colors.green),
-                // Button
-                buttonBackgroundColor: Color.hex(Colors.facebookBlue),
-                buttonBorderColor: Color.hex(Colors.facebookBlue),
-                buttonTextColor: Color.hex(Colors.white),
-                // Button disabled
-                buttonDisabledBackgroundColor: Color.hex(Colors.greyish),
-                buttonDisabledBorderColor: Color.hex(Colors.greyish),
-                buttonDisabledTextColor: Color.hex(Colors.white),
-                // // Header
-                headerBackgroundColor: Color.hex(Colors.green),
-                headerButtonTextColor: Color.hex(Colors.white),
-                headerTextColor: Color.hex(Colors.white),
-                // Others
-                iconColor: Color.hex(Colors.white),
-                titleColor: Color.hex(Colors.white),
-                textColor: Color.hex(Colors.white),
-            }})
-
-        firebase.links().onLink((url) => {
-            this.logger.info("dynamic links: onLink", url)
-        });
-
-
+        NotificationManager.init(currentUserId())
+        AccountKitManager.configure()
 
         //api in the end: we don't want to make any request during the app init
         Api.init(this.store);
@@ -414,19 +407,7 @@ export default class App {
         return !_.isEmpty(fn) && !_.isEmpty(ln)
     }
 
-    async readCurrentCacheVersion() {
-        return AsyncStorage.getItem('@goodsh:cacheVersion');
-    }
-
-    async writeCurrentCacheVersion(version: number) {
-        this.logger.debug('writing to cache', version)
-        AsyncStorage.setItem('@goodsh:cacheVersion', ""+version);
-        this.logger.debug('writed to cache', version)
-    }
-
-    async obtainInitialLink() {
-        // if (this.initialLinkFetched) return this.initialLink
-        // this.initialLinkFetched = true
+    async obtainInitiaDynamiclLink() {
         this.logger.debug("obtaining InitialLink")
         const promise = firebase.links().getInitialLink()
         try {
@@ -452,7 +433,7 @@ export default class App {
         }
         let testScreen = this.getTestScreen()
         //TODO: move me
-        let url = await this.obtainInitialLink()
+        let url = await this.obtainInitiaDynamiclLink()
 
 
         if (url) {
@@ -493,30 +474,7 @@ export default class App {
 
                 }
                 else {
-                    //TODO: move
-                    await NotificationManager.init()
-
-                    DeviceManager.checkAndSendDiff();
-
-                    //TODO: find a better way of delaying this Linking init
-                    this.logger.log('booting posting main callback')
-                    setTimeout(async ()=> {
-                        this.logger.log('booting main callback')
-
-                        Linking.addEventListener('url', ({url}) => {
-                            if (url) this.logger.log('Linking: url event: ', url);
-                            NavManager.goToDeeplink(url);
-                        })
-                        let initialUrl = await Linking.getInitialURL()
-                        let initialLink = await this.obtainInitialLink()
-
-                        this.logger.debug("deeplinking input: ", initialUrl, initialLink)
-
-                        this.launchMain(initialUrl || initialLink)
-
-                    }, 500)
-
-                    //this.launchMain(navigatorStyle);
+                    this.launchMain(this.state.initialDeeplink)
                 }
             }
         }
@@ -540,7 +498,6 @@ export default class App {
     }
 
     launchMain(initialLink?: string) {
-
         // NavManager.goToDeeplink(initialLink)
         let parseDeeplink = NavManager.parseDeeplink(initialLink)
         let {tab, modal} = parseDeeplink

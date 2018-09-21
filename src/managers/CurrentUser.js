@@ -6,9 +6,8 @@ import type {Id, ms, User} from "../types"
 import Scope from "./Scope"
 import watch from 'redux-watch'
 import EventBus from 'eventbusjs'
+import {CURRENT_USER_ID_CHANGE} from "./ManagerUtils"
 
-
-export const USER_CHANGE = 'USER_CHANGE';
 
 class CurrentUser {
 
@@ -24,7 +23,7 @@ class CurrentUser {
             const user = this.buildUser(newVal);
             console.info(`auth: new user=${JSON.stringify(user)}`);
 
-            EventBus.dispatch(USER_CHANGE, {user});
+            EventBus.dispatch(CURRENT_USER_ID_CHANGE, {user});
         }))
     }
 
@@ -79,35 +78,6 @@ export function currentGoodshboxId() {
 export function logged(target) {
     // return target;
     return Scope(target);
-}
-
-export function listenToUserChange(options: {onUser?:(user: User) => void, onNoUser?:() => void, triggerOnListen?:boolean}) {
-    const {onUser, onNoUser, triggerOnListen} = options;
-
-
-    let callback = user => {
-        if (user) onUser && onUser(user);
-        else onNoUser && onNoUser();
-    };
-
-    let triggering;
-    const eventName = USER_CHANGE;
-
-    EventBus.addEventListener(eventName, event => {
-        if (triggering) {
-            console.warn("looping");
-            return;
-        }
-
-        const {user} = event.target;
-        callback(user);
-    });
-
-    if (triggerOnListen) {
-        triggering = true;
-        callback(currentUser());
-        triggering = false;
-    }
 }
 
 export function isLogged() {
