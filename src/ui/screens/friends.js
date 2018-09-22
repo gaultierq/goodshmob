@@ -62,7 +62,7 @@ export default class FriendsScreen extends Screen<Props, State> {
             userId,
             renderItem,
             data,
-            ...attr,
+            ...attr
         } = this.props;
 
 

@@ -30,8 +30,8 @@ import PlacesAutocomplete from './screens/PlacesAutocomplete'
 import UserNav from './components/UserNav'
 import TouchableSearchBar from './components/TouchableSearchBar'
 import LineupNav from './components/LineupNav'
-import RnRenderPerfs from 'rn-render-perfs'
-import Perf from 'ReactPerf'
+// import RnRenderPerfs from 'rn-render-perfs'
+// import Perf from 'ReactPerf'
 import React from 'react'
 import {View} from 'react-native'
 import UnsaveScreen from "./screens/unsave"
@@ -51,19 +51,19 @@ import LineupSearchScreen from "./screens/LineupSearch"
 function wrap(screenName,screenCreator,store,provider) {
 
     if (__DEBUG_PERFS__) {
-        let Screen = screenCreator();
-        screenCreator = () => class extends React.Component {
-            render () {
-                let perf = Perf;
-                setTimeout(() => perf.start());
-                return (
-                    <View style={{flex: 1}}>
-                        {<Screen {...this.props} />}
-                        <RnRenderPerfs monitor={perf} />
-                    </View>
-                )
-            }
-        };
+        // let Screen = screenCreator();
+        // screenCreator = () => class extends React.Component {
+        //     render () {
+        //         let perf = Perf;
+        //         setTimeout(() => perf.start());
+        //         return (
+        //             <View style={{flex: 1}}>
+        //                 {<Screen {...this.props} />}
+        //                 <RnRenderPerfs monitor={perf} />
+        //             </View>
+        //         )
+        //     }
+        // };
     }
 
 

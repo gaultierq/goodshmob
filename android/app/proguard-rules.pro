@@ -15,6 +15,7 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+<<<<<<< ours
 
 # Disabling obfuscation is useful if you collect stack traces from production crashes
 # (unless you are using a system that supports de-obfuscate the stack traces).
@@ -89,3 +90,5 @@
 
 -keep class it.goodsh.mob.BuildConfig { *; }
 -keep class it.goodsh.mob.debug.BuildConfig { *; }
+=======
+>>>>>>> theirs
