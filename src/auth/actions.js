@@ -33,7 +33,8 @@ export function logout(dispatch) {
 }
 
 export function loginWith(service: 'facebook'|'account_kit', token: string) {
-    return new Api.Call()
+    const call = new Api.Call()
+    return call
         .withMethod('POST')
         .withRoute(`auth/${service}/generate_token`)
         .withBody({auth: {access_token: token}})

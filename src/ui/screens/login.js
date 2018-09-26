@@ -331,7 +331,6 @@ class Login extends Component<Props, State> {
             console.debug("already executing action");
             return;
         }
-
         Api.safeExecBlock.call(
             this,
             loginFunction,

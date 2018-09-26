@@ -77,7 +77,7 @@ export default class GTouchable extends Component<Props, State>  {
         else {
             _onPress = onPress;
         }
-        let _style = this.props.disabled && disabledStyle ? [style, disabledStyle] : style;
+        let _style = this.props.disabled && disabledStyle ? [{activeOpacity: 0.8}, style, disabledStyle] : [{activeOpacity: 0.8}, style];
         // return React.createElement(__IS_IOS__ ? TouchableOpacity : TouchableNativeFeedback, {onPress: _onPress, ...attributes});
         return React.createElement(TouchableOpacity, {onPress: _onPress, style: _style, ...attributes});
     }

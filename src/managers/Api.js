@@ -311,6 +311,7 @@ export class Call {
         return this.url.toString();
     }
 
+
     //options.trigger = 0,1,2,3,4... 0 is an user action, 10 is from system
     // error management:
     // - no connectivity => sticky snack, do not display anything on screen
@@ -320,9 +321,9 @@ export class Call {
     createActionDispatchee(apiAction: ApiAction, options?: {
         trigger?: any,
         mergeOptions?: {drop?: boolean},
-    } = {}): Dispatchee {
-        const call = this;
-        const {trigger = TRIGGER_USER_DIRECT_ACTION} = options;
+    }): Dispatchee {
+        const call = this
+        const {trigger = TRIGGER_USER_DIRECT_ACTION} = options || {}
 
         return (dispatch) => {
             let tic = Date.now();

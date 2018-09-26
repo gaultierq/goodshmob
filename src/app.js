@@ -34,7 +34,7 @@ import RNAccountKit, {Color,} from 'react-native-facebook-account-kit'
 import RNProgressHUB from 'react-native-progresshub'
 import {actions as userActions, actionTypes as userActionTypes} from "./redux/UserActions"
 import firebase from 'react-native-firebase'
-import {Alert, AsyncStorage, Dimensions, Linking, StyleSheet, TouchableOpacity, ToastAndroid} from 'react-native'
+import {Alert, Text, AsyncStorage, Dimensions, Linking, StyleSheet, TouchableOpacity, ToastAndroid} from 'react-native'
 import {NAV_BACKGROUND_COLOR} from "./ui/UIStyles"
 import * as Nav from "./ui/Nav"
 import Timeout from 'await-timeout'
@@ -107,16 +107,21 @@ export default class App {
         const {height, width} = Dimensions.get('window');
         this.logger.info(`window dimensions=${width}x${height}`);
 
-        globalProps.setCustomText({
-            style: {
-                fontFamily: SFP_TEXT_REGULAR,
-                color: Colors.black,
-            }
-        });
+        // globalProps.setCustomText({
+        //     style: {
+        //         fontFamily: SFP_TEXT_REGULAR,
+        //         color: Colors.black,
+        //     }
+        // })
+        if (Text.defaultProps == null) Text.defaultProps = {};
+        Text.defaultProps.style  = {
+            fontFamily: SFP_TEXT_REGULAR,
+            color: Colors.black
+        }
 
-        globalProps.setCustomTouchableOpacity({
-            activeOpacity: 0.8
-        });
+        // globalProps.setCustomTouchableOpacity({
+        //     activeOpacity: 0.8
+        // });
     }
 
     prepareRedux() {
