@@ -11,7 +11,6 @@ import * as Api from './managers/Api'
 import {persistCombineReducers, persistStore} from 'redux-persist'
 import * as CurrentUser from './managers/CurrentUser'
 import {currentUserId} from './managers/CurrentUser'
-import * as globalProps from 'react-native-global-props'
 import NotificationManager from './managers/NotificationManager'
 import * as DeviceManager from "./managers/DeviceManager"
 import * as UI from "./ui/UIStyles"
@@ -34,12 +33,11 @@ import * as AccountKitManager from "./managers/AccountKitManager"
 import RNProgressHUB from 'react-native-progresshub'
 import {actions as userActions, actionTypes as userActionTypes} from "./redux/UserActions"
 import firebase from 'react-native-firebase'
-import {Alert, Text, AsyncStorage, Dimensions, Linking, StyleSheet, TouchableOpacity, ToastAndroid} from 'react-native'
-import {NAV_BACKGROUND_COLOR} from "./ui/UIStyles"
+import {Alert, AsyncStorage, Dimensions, Linking, StyleSheet, Text, ToastAndroid, TouchableOpacity} from 'react-native'
 import * as Nav from "./ui/Nav"
 import Timeout from 'await-timeout'
 import type {GLogger} from "../flow-typed/goodshmob"
-import {flatDiff, isPositive} from "./helpers/StringUtils"
+import {flatDiff} from "./helpers/StringUtils"
 import watch from "redux-watch"
 import type {Id} from "./types"
 import {getFirstDefined} from "./helpers/LangUtil"
