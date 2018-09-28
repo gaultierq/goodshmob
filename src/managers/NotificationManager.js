@@ -70,12 +70,11 @@ class _NotificationManager implements NotificationManager {
 
         // get the notification that opened the app
         let notificationOpen: NotificationOpen = await RNFirebase.app().notifications().getInitialNotification()
-
+        const deeplink = _.get(notificationOpen, 'notification._data.deeplink')
         if (notificationOpen) {
-            logger.info("getInitialNotificationLink:", notificationOpen);
+            logger.info("app opened from notification with deeplink:", deeplink, notificationOpen);
         }
-
-        return _.get(notificationOpen, '_data.deeplink')
+        return deeplink
     }
 
     configure() {

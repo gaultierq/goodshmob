@@ -606,10 +606,13 @@ export default class App {
         })
 
         if (modal) {
-            Navigation.showModal({
-                ...modal,
-                navigatorButtons: Nav.CANCELABLE_MODAL,
-            })
+            setTimeout(()=> {
+                Navigation.showModal({
+                    ...modal,
+                    navigatorButtons: Nav.CANCELABLE_MODAL,
+                })
+            }, 500)
+
         }
 
     }
