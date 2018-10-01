@@ -75,7 +75,8 @@ export default {
         in_items: "Saisir le nom à enregistrer",
         in_network: "Rechercher dans mon réseau",
         in_users: "Rechercher quelqu'un",
-        in_feed: "Rechercher dans mes listes",
+        in_my_lists: "Rechercher dans mes listes",
+        in_his_lists: "Rechercher dans ses listes",
         by: "par",
         category: {
             "me": "Moi",

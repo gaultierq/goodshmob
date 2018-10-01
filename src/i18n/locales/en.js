@@ -75,7 +75,8 @@ export default {
         in_items: "Find anything",
         in_network: "Search in my network",
         in_users: "Find users",
-        in_feed: "In my lists",
+        in_my_lists: "Search in my lists",
+        in_his_lists: "Search",
         by: "by",
         category: {
             "me": "Me",

@@ -238,19 +238,8 @@ export default class Feed extends Component<Props, State>  {
         }
 
         const filter = this.props.filter;
-        let emptyFilter = false
-        let filteredItems = null
         if (filter) {
-            // allViews.push(this.renderSearchBar(filter));
-            // allViews.push(filter.renderFilter());
-            let wasEmpty = _.isEmpty(items)
-            // filteredItems = filter.applyFilter(items);
             items = filter.applyFilter(items);
-
-            emptyFilter = !wasEmpty && _.isEmpty(items)
-            // if (_.isEmpty(items)) {
-            //     return filter.emptyFilterResult(filter.token)
-            // }
         }
 
         const style1 = [style];
