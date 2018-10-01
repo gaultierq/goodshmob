@@ -9,6 +9,7 @@ import URL from "url-parse"
 import Config from 'react-native-config'
 import {getLineup} from "../helpers/DataAccessors"
 import {SearchItemCategoryType, SEARCH_CATEGORIES_TYPE} from "../helpers/SearchConstants"
+import {getTabIndex} from "../app"
 
 // export const DEEPLINK_OPEN_SCREEN_IN_MODAL = 'DEEPLINK_OPEN_SCREEN_IN_MODAL';
 
@@ -41,13 +42,20 @@ class _NavManager implements NavManager {
 
         console.debug('go to link: ', deeplink, result);
 
-        let {modal, handler} = result
+        let {modal, handler, tab} = result
 
 
         if (modal) {
             Navigation.showModal({
                 ...modal,
                 navigatorButtons: Nav.CANCELABLE_MODAL,
+            })
+            return true
+        }
+        else if (tab) {
+            Navigation.handleDeepLink({
+                link: 'topLevelIndex',
+                payload: getTabIndex(tab)
             })
             return true
         }

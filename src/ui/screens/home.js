@@ -43,7 +43,6 @@ import {currentUserFilter} from "../../redux/selectors"
 import NotificationManager from '../../managers/NotificationManager'
 
 type Props = {
-    userId: Id,
     navigator: RNNNavigator
 };
 
@@ -142,6 +141,11 @@ export default class HomeScreen extends Screen<Props, State> {
                         animated: true
                     });
                     break;
+                case "topLevelIndex":
+                    this.props.navigator.switchToTab({
+                        tabIndex: event.payload
+                    });
+                    break
             }
         }
 

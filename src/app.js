@@ -59,6 +59,39 @@ type AppConfig = {
     initialDeeplink?: string,
 }
 
+const iconInsets = { // add this to change icon position (optional, iOS only).
+    top: 6, // optional, default is 0.
+    left: 0, // optional, default is 0.
+    bottom: -6, // optional, default is 0.
+    right: 0 // optional, default is 0.
+}
+
+const TABS = [
+    {
+        screen: 'goodsh.HomeScreen',
+        icon: require('./img2/home.png'),
+        selectedIcon: require('./img2/home-active.png'),
+        navigatorStyle: UI.NavStyles,
+        iconInsets,
+    },
+    {
+        screen: 'goodsh.CategorySearchScreen',
+        icon: require('./img2/search.png'),
+        selectedIcon: require('./img2/searchActive.png'),
+        title: i18n.t('tabs.category_search.title'),
+        navigatorStyle: UI.NavStyles,
+        iconInsets,
+    },
+    {
+        screen: 'goodsh.NetworkScreen', // unique ID registered with Navigation.registerScreen
+        icon: require('./img2/feed.png'),
+        selectedIcon: require('./img2/feed-active.png'),
+        title: i18n.t('tabs.network.title'),
+        navigatorStyle: UI.NavStyles,
+        iconInsets
+    },
+]
+
 
 export default class App {
 
@@ -501,61 +534,7 @@ export default class App {
         let {tab, modal} = parseDeeplink
 
         this.logger.debug("launching main: ", initialLink, parseDeeplink)
-
-
-        let iconInsets = { // add this to change icon position (optional, iOS only).
-            top: 6, // optional, default is 0.
-            left: 0, // optional, default is 0.
-            bottom: -6, // optional, default is 0.
-            right: 0 // optional, default is 0.
-        }
-
-        const TABS = [
-            {
-                screen: 'goodsh.HomeScreen',
-                icon: require('./img2/home.png'),
-                selectedIcon: require('./img2/home-active.png'),
-                navigatorStyle: UI.NavStyles,
-                iconInsets,
-                passProps: {
-                    userId: currentUserId(),
-                }
-            },
-            {
-                screen: 'goodsh.CategorySearchScreen',
-                icon: require('./img2/search.png'),
-                selectedIcon: require('./img2/searchActive.png'),
-                title: i18n.t('tabs.category_search.title'),
-                navigatorStyle: UI.NavStyles,
-                iconInsets,
-                passProps: {
-                    userId: currentUserId()
-                }
-            },
-            {
-                screen: 'goodsh.NetworkScreen', // unique ID registered with Navigation.registerScreen
-                icon: require('./img2/feed.png'),
-                selectedIcon: require('./img2/feed-active.png'),
-                title: i18n.t('tabs.network.title'),
-                navigatorStyle: UI.NavStyles,
-                iconInsets
-            },
-        ]
-
-        const tabs = [...TABS]
-
-        let tabScreen = _.get(tab, 'screen')
-        let initialTabIndex = 0
-        if (tabScreen) {
-            let i = TABS.length
-            for (; --i > 0; ) {
-                if (tabs[i].screen === tabScreen) {
-                    tabs[i] = {...tabs[i], ...tab}
-                    break
-                }
-            }
-            initialTabIndex = i
-        }
+        let initialTabIndex = getTabIndex(tab)
 
         let tabsStyle = { // optional, add this if you want to style the tab bar beyond the defaults
             tabBarButtonColor: Colors.black, // optional, change the color of the tab icons and text (also unselected)
@@ -567,7 +546,7 @@ export default class App {
 
 
         Navigation.startTabBasedApp({
-            tabs: tabs,
+            tabs: TABS,
             tabsStyle,
             appStyle: {
                 orientation: 'portrait', // Sets a specific orientation to the entire app. Default: 'auto'. Supported values: 'auto', 'landscape', 'portrait'
@@ -635,4 +614,20 @@ export default class App {
         });
     }
 
+}
+
+export function getTabIndex(tab) {
+    let tabScreen = _.get(tab, 'screen')
+    let initialTabIndex = 0
+    if (tabScreen) {
+        let i = TABS.length
+        for (; --i > 0;) {
+            if (TABS[i].screen === tabScreen) {
+                TABS[i] = {...TABS[i], ...tab}
+                break
+            }
+        }
+        initialTabIndex = i
+    }
+    return initialTabIndex
 }
