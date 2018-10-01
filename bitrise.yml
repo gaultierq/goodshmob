@@ -63,6 +63,12 @@ workflows:
         - gradlew_path: "$GRADLEW_PATH"
   _prepare-ios:
     steps:
+    - script@1.1.5:
+        is_always_run: true
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash -ex
+            gem update --system 2.7.6
     - fastlane-match@0.1.0:
         inputs:
         - git_url: git@github.com:goodshopping/ios-certs
