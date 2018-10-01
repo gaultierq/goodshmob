@@ -64,7 +64,7 @@ export function deviceReducer(state = {}, action) {
             let {fcmToken, ...attr2} = attr
             let device = {currentDeviceId, fcmToken, ...attr2}
             device = camelize(device)
-            state = {...state, device}
+            state = {...state, ...device}
             break;
     }
     return state;

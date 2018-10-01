@@ -91,7 +91,7 @@ export default class BrowseGeneric extends React.Component<SMP, SMS> {
 
                 <GoodshContext.Provider value={{userOwnResources: this.state.scope === 'me'}}>
                     <SearchMotor
-                        ref={ref=>this.searchMotor = ref}
+                        innerRef={ref => this.searchMotor = ref}
                         searchEngine={this.search}
                         renderResults={(state, onLoadMore)=> <SearchListResults searchState={state} onLoadMore={onLoadMore} renderItem={renderItem.bind(this)} />}
                         searchOptions={this.state.searchOptions}

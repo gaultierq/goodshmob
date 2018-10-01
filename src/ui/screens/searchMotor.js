@@ -30,7 +30,7 @@ export interface ISearchMotor<SO> {
 export type Props<SO> = {
     searchEngine: SearchEngine<SO>,
     renderResults: (SearchState, () => void) => Node,
-    ref?: ISearchMotor<SO> => void,
+    innerRef?: any => void,
     searchOptions: SO,
     //returns null if can search
     canSearch: (searchOptions: SO) => ?string,

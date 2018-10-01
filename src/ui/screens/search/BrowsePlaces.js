@@ -139,7 +139,7 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
                         searchEngine={this.search}
                         renderResults={this._renderResults}
                         searchOptions={this.state.searchOptions}
-                        ref={ref => this.searchMotor = ref}
+                        innerRef={ref => this.searchMotor = ref}
                         canSearch={this._canSearch}
                         renderMissingPermission={this._renderMissingPermission}
                     />
