@@ -18,7 +18,6 @@ import GTouchable from "../GTouchable"
 import ShareButton from "../components/ShareButton"
 import {STYLES} from "../UIStyles"
 import {TRANSPARENT_SPACER} from "../UIComponents"
-import {FETCH_ACTIVITIES} from "../networkActions"
 
 type Props = {
     navigator: *,
@@ -187,7 +186,7 @@ export class InteractionScreen extends Screen<Props, State> {
 }
 
 export const reducer = (state = Api.initialListState(), action) => {
-    return reduceList2(state, action, FETCH_ACTIVITIES)
+    return reduceList2(state, action, FETCH_INTERACTIONS)
 }
 
 const styles = StyleSheet.create({
