@@ -421,7 +421,7 @@ export default {
     common: {
         empty_feed_generic: "Quand on aime on partage.\nCrée ton réseau de contacts.",
         api: {
-            generic_error: "Oups... Problème de connexion."
+            generic_error: "Oups... Il y a quelquechose qui cloche."
         }
     },
     ask: {
