@@ -205,9 +205,9 @@ export default class HomeScreen extends Screen<Props, State> {
                         this.onBoardingHelper.handleFocusAdd(() => this._mounted && !!this.props.currentUser)
                     }
                     break
-                case "notification_permissions":
-                    NotificationManager.requestPermissionsForLoggedUser()
-                    break
+                // case "notification_permissions":
+                //     NotificationManager.requestPermissionsForLoggedUser()
+                //     break
                 case "popular":
                     if (this.state.popularDisplayCount === 0) {
                         this.setState({popularDisplayCount: 1}, () => {

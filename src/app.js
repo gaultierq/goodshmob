@@ -202,7 +202,9 @@ export default class App {
         this.subAndTrig('auth.currentUserId', (currentUserId, previousCurrentUserId) => {
             //i have a user id, and i m notified of any changes (=logout)
             this.logger.debug('currentUserId has changed', previousCurrentUserId, ' -> ', currentUserId)
-
+            setTimeout(() => {
+                NotificationManager.requestPermissionsForLoggedUser()
+            }, 3000)
             this.setState({currentUserId})
 
             // listening for user data changes
