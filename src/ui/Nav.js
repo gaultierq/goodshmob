@@ -55,7 +55,7 @@ export const CANCELABLE_SEARCH_MODAL = () => ({
 });
 
 export function startAddItem(navigator: *, defaultLineup: Id | Lineup) {
-
+    console.info(`starting to add item in`, defaultLineup)
 
     let defaultLineupId
 

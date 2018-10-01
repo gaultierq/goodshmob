@@ -67,7 +67,7 @@
 		"react-native-fetch-polyfill": "^1.1.2",
 		"react-native-firebase": "^4.0.5",
 		"react-native-global-props": "^1.1.3",
-		"react-native-google-places-autocomplete": "^1.3.6",
+		"react-native-google-places-autocomplete": "^1.3.9",
 		"react-native-htmlview": "^0.13.0",
 		"react-native-i18n": "^2.0.9",
 		"react-native-keyboard-aware-scroll-view": "^0.4.1",
@@ -103,6 +103,7 @@
 		"redux-persist": "^5.10.0",
 		"redux-thunk": "^2.2.0",
 		"redux-watch": "^1.1.1",
+		"schedule": "0.4.0",
 		"reselect": "^3.0.1",
 		"url-parse": "^1.2.0",
 		"xcode": "^0.9.3"

@@ -156,7 +156,7 @@ export default class MyGoodsh extends Screen<Props, State> {
                     />
                 )}
                 ListHeaderComponent={(
-                    <GTouchable onPress={() => startAddItem(navigator, item)}>
+                    !item.pending && <GTouchable onPress={() => startAddItem(navigator, item)}>
                         {LineupHorizontal.renderPlus({style:{marginRight: 10}}, targetRef)}
                     </GTouchable>)
                 }

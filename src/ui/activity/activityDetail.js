@@ -384,7 +384,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
 
                     <Text style={{flex:1, fontSize: 12, alignItems: 'center', lineHeight: 22, color: Colors.greyishBrown, marginLeft: 0}}>
-                        {__IS_IOS__ && this.renderMedals(othersCommentators)}
+                        {/*{__IS_IOS__ && this.renderMedals(othersCommentators)}*/}
                         {i18n.t(
                             `activity_screen.comments.${asWell ? 'has_commented_this_as_well' : 'has_commented_this'}`,
                             {

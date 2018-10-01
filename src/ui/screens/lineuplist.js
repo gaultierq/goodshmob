@@ -99,7 +99,8 @@ export class LineupListScreen extends Screen<Props, State> {
                 id: pending.id,
                 name: pending.payload.listName,
                 savings: [],
-                type: 'lists' //here ? or reducer ?
+                type: 'lists', //here ? or reducer ?
+                pending: true,
             }),
             {afterI: 0}
         );
