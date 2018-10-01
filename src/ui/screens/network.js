@@ -204,7 +204,7 @@ class NetworkScreen extends Screen<Props, State> {
                     hasMore={!network1.hasNoMore}
                     scrollUpOnBack={scrollUpOnBack}
                     ListEmptyComponent={<View><Text style={STYLES.empty_message}>{i18n.t('community.empty_screen')}</Text><ShareButton text={i18n.t('actions.invite')}/></View>}
-                    initialNumToRender={5}
+                    // initialNumToRender={5}
                     decorateLoadMoreCall={(sections: any[], call: Call) => call.addQuery({id_lt: _.last(sections).id})}
                     visibility={super.getVisibility()}
                     SectionSeparatorComponent={({leadingItem, trailingItem, leadingSection, section, trailingSection}) => {
