@@ -98,7 +98,7 @@ export class Avatar extends Component<Props, State> {
         let params
         if (uri) {
             params = {
-                source: uri,
+                source: {uri},
                 fallbackSource: require('../img2/default-avatar.png')
             }
         }
