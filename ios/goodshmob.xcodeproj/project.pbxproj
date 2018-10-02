@@ -1931,7 +1931,7 @@
 					"$(PROJECT_DIR)",
 				);
 				GOODSH_URL_SCHEME = goodshlocal;
-				GOOGLE_MAPS_API_KEY = "AIzaSyCTUa6mMxziglVEBf-5AkHFtWv9ir-auSs";
+				GOOGLE_MAPS_API_KEY = AIzaSyA3cg_wCUvPnGu6LdKk1twrE_YBCWDQ0Hs;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../node_modules/react-native-navigation/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-i18n/ios",
@@ -1998,7 +1998,7 @@
 					"$(PROJECT_DIR)",
 				);
 				GOODSH_URL_SCHEME = goodshrelease;
-				GOOGLE_MAPS_API_KEY = "AIzaSyCTUa6mMxziglVEBf-5AkHFtWv9ir-auSs";
+				GOOGLE_MAPS_API_KEY = AIzaSyA3cg_wCUvPnGu6LdKk1twrE_YBCWDQ0Hs;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../node_modules/react-native-navigation/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-i18n/ios",
@@ -2209,7 +2209,7 @@
 					"$(PROJECT_DIR)",
 				);
 				GOODSH_URL_SCHEME = goodshpreprod;
-				GOOGLE_MAPS_API_KEY = "AIzaSyCTUa6mMxziglVEBf-5AkHFtWv9ir-auSs";
+				GOOGLE_MAPS_API_KEY = AIzaSyA3cg_wCUvPnGu6LdKk1twrE_YBCWDQ0Hs;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../node_modules/react-native-navigation/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-i18n/ios",
@@ -2321,7 +2321,7 @@
 					"$(PROJECT_DIR)",
 				);
 				GOODSH_URL_SCHEME = goodshdev;
-				GOOGLE_MAPS_API_KEY = "AIzaSyCTUa6mMxziglVEBf-5AkHFtWv9ir-auSs";
+				GOOGLE_MAPS_API_KEY = AIzaSyA3cg_wCUvPnGu6LdKk1twrE_YBCWDQ0Hs;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../node_modules/react-native-navigation/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-i18n/ios",
@@ -2433,7 +2433,7 @@
 					"$(PROJECT_DIR)",
 				);
 				GOODSH_URL_SCHEME = goodsh;
-				GOOGLE_MAPS_API_KEY = "AIzaSyCTUa6mMxziglVEBf-5AkHFtWv9ir-auSs";
+				GOOGLE_MAPS_API_KEY = AIzaSyA3cg_wCUvPnGu6LdKk1twrE_YBCWDQ0Hs;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../node_modules/react-native-navigation/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-i18n/ios",

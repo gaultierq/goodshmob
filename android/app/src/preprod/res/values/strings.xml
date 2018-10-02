@@ -4,7 +4,7 @@
     <string name="ak_client_token">a516457024951ecd2f68d7125e70b5c0</string>
     <string name="ak_login_protocol_scheme">ak1933031383391822</string>
     <string name="bugsnag_api_key">f5136193bd74c794739ab36caae0107c</string>
-    <string name="google_maps_api_key">AIzaSyCadBVAWijfbLgaClsEaubXPdfq6pkagGk</string>
+    <string name="google_maps_api_key">AIzaSyB_XhCAaUCg1orv6nmpNYoILC2UrOaJ2LI</string>
     <string name="host_url">goodshitapp-preprod.herokuapp.com</string>
     <string name="host_url2">goodshitapp-preprod.herokuapp.com</string>
     <string name="goodsh_protocol_scheme">goodshpreprod</string>
