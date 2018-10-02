@@ -547,12 +547,15 @@ export default class App {
             tabBarSelectedButtonColor: Colors.green, // optional, change the color of the selected tab icon and text (only selected)
             tabBarBackgroundColor: NAV_BACKGROUND_COLOR,
             forceTitlesDisplay: false,
-            initialTabIndex: initialTabIndex,
+            initialTabIndex,
+        }
+        let tabs = [...TABS]
+        if (tab) {
+            tabs[initialTabIndex] = tab
         }
 
-
         Navigation.startTabBasedApp({
-            tabs: TABS,
+            tabs,
             tabsStyle,
             appStyle: {
                 orientation: 'portrait', // Sets a specific orientation to the entire app. Default: 'auto'. Supported values: 'auto', 'landscape', 'portrait'

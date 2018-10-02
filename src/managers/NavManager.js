@@ -54,8 +54,8 @@ class _NavManager implements NavManager {
         }
         else if (tab) {
             Navigation.handleDeepLink({
-                link: 'topLevelIndex',
-                payload: getTabIndex(tab)
+                link: 'topTab',
+                payload: tab
             })
             return true
         }

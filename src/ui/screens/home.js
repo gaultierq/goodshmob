@@ -141,11 +141,11 @@ export default class HomeScreen extends Screen<Props, State> {
                         animated: true
                     });
                     break;
-                case "topLevelIndex":
-                    this.props.navigator.switchToTab({
-                        tabIndex: event.payload
-                    });
-                    break
+                // case "topLevelIndex":
+                //     this.props.navigator.switchToTab({
+                //         tabIndex: event.payload
+                //     });
+                //     break
             }
         }
 

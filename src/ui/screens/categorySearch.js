@@ -3,7 +3,7 @@
 import React from 'react'
 import {
     ActivityIndicator,
-    FlatList,
+    FlatList, Keyboard,
     Platform,
     RefreshControl,
     StyleSheet,
@@ -22,6 +22,8 @@ import BrowseGeneric from "./search/BrowseGeneric"
 import BrowsePlaces from "./search/BrowsePlaces"
 import {connect} from "react-redux"
 import {renderTabBarFactory} from "../UIComponents"
+import {PROFILE_CLICKED} from "../components/MyAvatar"
+import {getTabIndex} from "../../app"
 
 type Props = NavigableProps & {
     initialIndex: number,
@@ -31,6 +33,7 @@ type Props = NavigableProps & {
 type State = {
     index: number,
     routes: any,
+    searchOptions?: any
 };
 
 const ROUTES = SEARCH_CATEGORIES_TYPE.map(t=> ({key: t, title: i18n.t("search_item_screen.tabs." + t)}))
@@ -48,12 +51,39 @@ export default class CategorySearchScreen extends Screen<Props, State> {
         searchOptions: {},
     }
 
+    propsToState(props) {
+        return {
+            index: props.initialIndex,
+            searchOptions: props.searchOptions
+        }
+    }
+
     constructor(props: Props) {
         super(props)
         this.state = {
             routes: ROUTES,
-            index: props.initialIndex
         }
+        this.state = { ...this.state, ...this.propsToState(props)}
+        props.navigator.addOnNavigatorEvent(event => {
+            if (event.type === 'DeepLink') {
+                switch (event.link) {
+                    case "topTab":
+                        // this.props.navigator.switchToTab({
+                        //     tabIndex: event.payload
+                        // });
+                        let tab = event.payload
+                        if (tab.screen === 'goodsh.CategorySearchScreen') {
+                            this.props.navigator.switchToTab({
+                                tabIndex: getTabIndex(tab)
+                            })
+                            let props = tab.passProps
+                            this.setState({...this.state, ...this.propsToState(props)})
+                        }
+
+                        break
+                }
+            }
+        })
     }
 
     componentDidMount() {
@@ -95,7 +125,7 @@ export default class CategorySearchScreen extends Screen<Props, State> {
                     navigator={this.props.navigator}
                     focused={visible && focused}
                     {
-                        ...this.props.searchOptions[route.key]
+                        ...this.state.searchOptions[route.key]
                     }
                 />
             )
@@ -105,7 +135,7 @@ export default class CategorySearchScreen extends Screen<Props, State> {
                     category={route.key}
                     focused={visible && focused}
                     {
-                        ...this.props.searchOptions[route.key]
+                        ...this.state.searchOptions[route.key]
                     }
                 />
             )
