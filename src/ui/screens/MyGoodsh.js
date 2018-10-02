@@ -85,7 +85,6 @@ export default class MyGoodsh extends Screen<Props, State> {
                             data: [goodshbox],
                             title: i18n.t("lineups.goodsh.title"),
                             subtitle: ` (${savingCount})`,
-                            onPress: () => seeList(navigator, goodshbox),
                             renderItem: ({item, index}) => (
                                 <LineupH1
                                     lineup={item}
@@ -94,9 +93,9 @@ export default class MyGoodsh extends Screen<Props, State> {
                                     renderEmpty={this.renderEmptyLineup(navigator, item)}
                                 />
                             ),
-                            renderSectionHeader: () => this.renderSectionHeader(
+                            renderSectionHeader: () => <GTouchable onPress={() => seeList(navigator, goodshbox)}>{this.renderSectionHeader(
                                 i18n.t("lineups.goodsh.title"),
-                            )
+                            )}</GTouchable>
                         } : false,
                         {
                             data: _.slice(lineups, 1),
