@@ -59,9 +59,10 @@ export class Avatar extends Component<Props, State> {
     render() {
         const {user, style, size, ...attributes} = this.props;
 
-        let uri = null
+
 
         if (user) {
+            let uri = null
             uri = user.image
 
             //hack relying on the fact that we only have facebook images
@@ -98,8 +99,7 @@ export class Avatar extends Component<Props, State> {
         //TODO: image placeholder
         return (
             <GImage
-                source={{ uri }}
-                fallbackSource={require('../img2/default-avatar.png')}
+                source={require('../img2/default-avatar.png')}
                 style={[{
                     height: size,
                     width: size,
