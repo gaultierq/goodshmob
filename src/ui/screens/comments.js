@@ -316,10 +316,9 @@ class CommentsScreen extends Screen<Props, State> {
         // let comment : Comment = item.pending ? item : buildData(this.props.data, "comments", item.id);
         let comments = (_.isArray(item) && item || [item]).map(c => c.pending ? c : buildData(this.props.data, "comments", c.id));
 
-        //why ?
-        if (_.isEmpty(comments)) return null;
-
-        const user = _.head(comments).user;
+        const firstComment = _.head(comments)
+        if (!firstComment) return null
+        const user = firstComment.user;
         return (
             <View style={{padding: 12, paddingTop: 0, paddingBottom: 15, }}>
                 <CommentCell
