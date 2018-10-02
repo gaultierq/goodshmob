@@ -6,6 +6,7 @@ import {Colors} from "../colors"
 import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "../fonts"
 import type {Deeplink} from "../../types"
 import NavManager from "../../managers/NavManager"
+import {Navigation} from 'react-native-navigation'
 
 type Props = {
     title: string,
@@ -33,11 +34,11 @@ export default class InAppNotif extends React.Component<Props, State> {
                 alignItems: 'center',
             }}>
                 <GTouchable onPress={() => {
+                    Navigation.dismissInAppNotification()
+                    setTimeout(() => {
+                        NavManager.goToDeeplink(this.props.deeplink)
+                    }, 200)
 
-                    if (NavManager.goToDeeplink(this.props.deeplink)) {
-                        console.info('went to deeplink')
-                        //TODO: dismiss inAppNotif
-                    }
                 }} style={{
                     // backgroundColor: 'blue'
                 }}>
