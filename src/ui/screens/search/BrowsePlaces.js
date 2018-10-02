@@ -120,10 +120,10 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
                     }/>
 
                 <SearchPlacesOption
-                    ref={ref => this.positionSelector = ref}
+                    innerRef={ref => this.positionSelector = ref}
                     navigator={this.props.navigator}
                     onNewOptions={(pos: GeoStatus) => {
-                        console.debug("::onNewOptions::", pos)
+                        logger.debug("::onNewOptions::", pos)
 
                         //what to do ?
 
@@ -276,8 +276,11 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
     componentDidUpdate(prevProps: SMP) {
         // for "don't search on 1st render" feature
         if (prevProps.focused !== this.props.focused) {
+            logger.debug("componentDidUpdate", this.props)
             //disapointing
-            if (this.searchMotor) this.searchMotor.search(this.state.searchOptions, false)
+            setTimeout(() => {
+                if (this.searchMotor) this.searchMotor.search(this.state.searchOptions, false)
+            })
         }
     }
 

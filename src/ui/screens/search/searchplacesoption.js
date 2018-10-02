@@ -45,7 +45,7 @@ export type SearchPlacesProps = {
     onNewOptions: GeoStatus => void,
     onSearchSubmited?: void => void,
     navigator: RNNNavigator,
-    ref?: IPositionSelector => void,
+    innerRef?: IPositionSelector => void,
 
 };
 
@@ -89,8 +89,8 @@ export class SearchPlacesOption extends Component<SearchPlacesProps, SearchPlace
     }
 
     componentDidMount() {
-        if (this.props.ref) {
-            this.props.ref(this)
+        if (this.props.innerRef) {
+            this.props.innerRef(this)
         }
         this.setStateAndNotify(this.state)
     }

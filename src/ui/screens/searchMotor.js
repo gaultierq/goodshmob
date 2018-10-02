@@ -57,8 +57,8 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
 
 
     componentDidMount() {
-        if (this.props.ref) {
-            this.props.ref(this)
+        if (this.props.innerRef) {
+            this.props.innerRef(this)
         }
         const searchOptions = this.props.searchOptions
         this.tryPerformSearch(searchOptions, 0)
@@ -157,7 +157,10 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
 
         let canSearch = this.props.canSearch(searchOptions)
         this.setState({canSearch})
-        if (canSearch) return
+        if (canSearch) {
+            console.debug("search aborted:", canSearch)
+            return
+        }
 
 
         searchKey = generateSearchKey(searchOptions)

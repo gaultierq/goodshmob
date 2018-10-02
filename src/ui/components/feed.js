@@ -86,6 +86,7 @@ type FeedFetchOption = {
     trigger?: any,
     drop?: boolean
 }
+const logger = rootlogger.createLogger('feed')
 
 // const LAST_EMPTY_RESULT_WAIT_MS = 5 * 60 * 1000;
 const LAST_EMPTY_RESULT_WAIT_MS = Config.LAST_EMPTY_RESULT_WAIT_MS;
@@ -120,9 +121,6 @@ export default class Feed extends Component<Props, State>  {
             isFetchingFirst: 'idle',
             isFetchingMore: 'idle',
         }
-        // this.console = props.displayName ? createConsole(props.displayName) : console
-        // this.console = console.createLogger({group: 'feed', groupName: props.displayName})
-        this.console = rootlogger.createLogger('feed')
 
         this.createdAt = Date.now();
         this.postFetchFirst();
@@ -148,9 +146,7 @@ export default class Feed extends Component<Props, State>  {
             console.warn("Error while forming load more call")
         }
         return call
-
     }
-
 
     componentDidUpdate(prevProps: Props, prevState: State, snapshot) {
         this.postFetchFirst();
@@ -159,7 +155,7 @@ export default class Feed extends Component<Props, State>  {
     shouldComponentUpdate(nextProps: Props, nextState: State) {
         if (!__ENABLE_PERF_OPTIM__) return true;
         if (nextProps.visibility === 'hidden') {
-            this.console.debug('feed component update saved');
+            logger.debug('feed component update saved');
             return false;
         }
         return true;
@@ -169,7 +165,7 @@ export default class Feed extends Component<Props, State>  {
     postFetchFirst() {
         setTimeout(() => {
             if (this.state.isFetchingFirst !== 'idle') {
-                this.console.debug(`postFetchFirst was not performed, isFetchingFirst=${this.state.isFetchingFirst}`);
+                logger.debug(`postFetchFirst was not performed, isFetchingFirst=${this.state.isFetchingFirst}`);
                 return;
             }
             let trigger = this.hasItems() ? TRIGGER_USER_INDIRECT_ACTION : TRIGGER_USER_DIRECT_ACTION;
@@ -178,11 +174,11 @@ export default class Feed extends Component<Props, State>  {
             const canotFetch = this.cannotFetchReason('isFetchingFirst', options);
 
             if (canotFetch === null) {
-                this.console.debug('posting first fetch')
+                logger.debug('posting first fetch')
                 this.fetchIt(options)
             }
             else {
-                this.console.debug(`postFetchFirst was not performed: reason=${canotFetch}`);
+                //logger.debug(`postFetchFirst was not performed: reason=${canotFetch}`);
             }
         });
     }
@@ -232,7 +228,7 @@ export default class Feed extends Component<Props, State>  {
             // if (this.manager.isSuccess('isFetchingFirst', this)) return this.renderEmpty()
 
             // if (!ListFooterComponent && !ListHeaderComponent) {
-            //     this.console.warn("rendering hole", this.state)
+            //     logger.warn("rendering hole", this.state)
             //     return this.renderEmpty()
             // }
         }
@@ -360,7 +356,7 @@ export default class Feed extends Component<Props, State>  {
 
             if (remainingRows < 5) {
                 if (this.gentleFetchMore()) {
-                    this.console.debug("Only " + remainingRows + " left. Prefetching...");
+                    logger.debug("Only " + remainingRows + " left. Prefetching...");
                 }
             }
         }
@@ -368,7 +364,7 @@ export default class Feed extends Component<Props, State>  {
 
     onEndReached() {
         if (this.gentleFetchMore()) {
-            this.console.debug("onEndReached => fetching more");
+            logger.debug("onEndReached => fetching more");
         }
     }
 
@@ -377,7 +373,7 @@ export default class Feed extends Component<Props, State>  {
             return this.fetchMore({trigger: TRIGGER_USER_INDIRECT_ACTION});
         }
         else {
-            this.console.debug("== end of feed ==");
+            logger.debug("== end of feed ==");
             return false;
         }
     }
@@ -385,7 +381,7 @@ export default class Feed extends Component<Props, State>  {
     canFetch(requestName: string = 'isFetchingFirst', options: FeedFetchOption = {loadMore: false}): boolean {
         const reason = this.cannotFetchReason(requestName, options);
         if (reason) {
-            this.console.debug(`cannot fetch: ${reason}`)
+            // logger.debug(`cannot fetch: ${reason}`)
         }
         return reason === null
     }
@@ -469,7 +465,7 @@ export default class Feed extends Component<Props, State>  {
             this.props
                 .dispatch(call.createActionDispatchee(fetchSrc.action, {trigger, ...fetchSrc.options, mergeOptions: {drop, hasLess: !!loadMore}}))
                 .then(({data, links})=> {
-                    this.console.debug("disptachForAction" + JSON.stringify(this.props.fetchSrc.action));
+                    logger.debug("disptachForAction" + JSON.stringify(this.props.fetchSrc.action));
                     if (!data) {
                         reqTrack.fail();
                         // this.setState({[requestName]: 'ko'});
@@ -496,7 +492,7 @@ export default class Feed extends Component<Props, State>  {
                     }
                     resolve(data);
                 }, err => {
-                    this.console.warn("feed error:", err);
+                    logger.warn("feed error:", err);
                     this.lastFetchFail = Date.now();
                     reqTrack.fail()
                     // this.setState({[requestName]: 'ko'});

@@ -40,6 +40,7 @@ type SMP = {
 export default class BrowseGeneric extends React.Component<SMP, SMS> {
 
     searchMotor: ISearchMotor<BrowseItemsGenOptions>
+    logger;
 
     constructor(props: SMP) {
         super(props)
@@ -50,6 +51,7 @@ export default class BrowseGeneric extends React.Component<SMP, SMS> {
             },
             scope: props.scope || 'me'
         }
+        this.logger = rootlogger.createLogger(`browse ${this.props.category}`)
     }
 
     _index = new Promise(resolve => {
@@ -104,9 +106,13 @@ export default class BrowseGeneric extends React.Component<SMP, SMS> {
 
     componentDidUpdate(prevProps: SMP) {
         // for "don't search on 1st render" feature
+        this.logger.debug("componentDidUpdate", this.props)
         if (prevProps.focused !== this.props.focused) {
             //disapointing
-            if (this.searchMotor) this.searchMotor.search(this.state.searchOptions, false)
+            setTimeout(() => {
+                if (this.searchMotor) this.searchMotor.search(this.state.searchOptions, false)
+            })
+
         }
     }
 
