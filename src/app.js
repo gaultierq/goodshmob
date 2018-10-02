@@ -110,7 +110,7 @@ export default class App {
 
     store: any
     logger: GLogger
-
+    persistor: any
 
     constructor() {
         this.spawn();
@@ -124,8 +124,6 @@ export default class App {
 
         this.logger.log('spawning app')
 
-
-
         const confCacheV: number = _.toNumber(Config.CACHE_VERSION)
 
         // II. 1
@@ -136,7 +134,7 @@ export default class App {
         // II. 2
         if (this.state.hydration !== 'hydrated') {
             this.setState({hydration: 'hydrating'})
-            await this.hydrateStore()
+            this.persistor = await this.createHydratedStore()
             this.setState({hydration: 'hydrated'})
         }
 
@@ -158,6 +156,12 @@ export default class App {
 
         // V.
         this.listenToUserStoreChanges()
+    }
+
+    async purge() {
+        if (this.persistor) {
+            (await this.persistor.purge())
+        }
     }
 
     async obtainInitialLinks() {
@@ -310,14 +314,14 @@ export default class App {
         // });
     }
 
-    async hydrateStore() {
+    async createHydratedStore() {
         return new Promise((resolve, reject) => {
-            persistStore(
+            let persistor = persistStore(
                 this.store,
                 null,
                 () => {
                     this.logger.log("store hydrated")
-                    resolve()
+                    resolve(persistor)
                 }
             )
         })
