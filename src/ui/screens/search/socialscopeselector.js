@@ -16,16 +16,18 @@ export type Pr = {
 
 type St = {}
 
+const options = [
+    {label: i18n.t("search.category.me"), type: 'me'},
+    {label: i18n.t("search.category.friends"), type: 'friends'},
+    {label: i18n.t("search.category.all"), type: 'all'},
+]
+
 export class SocialScopeSelector extends Component<Pr, St> {
 
     render() {
 
-        const options = [
-            {label: i18n.t("search.category.me"), type: 'me'},
-            {label: i18n.t("search.category.friends"), type: 'friends'},
-            {label: i18n.t("search.category.all"), type: 'all'},
-        ]
 
+        const initialValue = this.props.initialValue
         return (
             <View style={{padding: 12}}>
                 <SwitchSelector
@@ -37,10 +39,16 @@ export class SocialScopeSelector extends Component<Pr, St> {
                     buttonColor={Colors.green}
                     borderColor={Colors.green}
                     sliderWidth={0}
+                    value={this.index(this.props.value)}
                 />
             </View>
         )
 
+    }
+
+    index(v) {
+        if (!v) return null
+        return indexOfOr0(options, el => el.type === v)
     }
 }
 

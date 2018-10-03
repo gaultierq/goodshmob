@@ -119,13 +119,14 @@ export default class CategorySearchScreen extends Screen<Props, State> {
         let ix = ROUTES.indexOf(route)
         let focused = this.state.index === ix
         const visible: boolean = super.isVisible()
+        const options = this.state.searchOptions[route.key] || {}
         switch (route.key) {
             case 'places': return (
                 <BrowsePlaces
                     navigator={this.props.navigator}
                     focused={visible && focused}
                     {
-                        ...this.state.searchOptions[route.key]
+                        ...options
                     }
                 />
             )
@@ -135,7 +136,7 @@ export default class CategorySearchScreen extends Screen<Props, State> {
                     category={route.key}
                     focused={visible && focused}
                     {
-                        ...this.state.searchOptions[route.key]
+                        ...options
                     }
                 />
             )

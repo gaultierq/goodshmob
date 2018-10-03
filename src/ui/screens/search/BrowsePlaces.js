@@ -68,16 +68,19 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
     positionSelector: IPositionSelector
     logger = rootlogger.createLogger('browse places')
 
+    static defaultProps = {scope: 'me', mapDisplay: true}
+
     constructor(props: SMP) {
         super(props)
-
+        let {navigator, data, ...p} = props
+        this.logger.debug('construct', p)
         this.state = {
-            mapDisplay: props.mapDisplay || true,
+            mapDisplay: props.mapDisplay,
             searchOptions: {
                 algoliaFilter: makeBrowseAlgoliaFilter2('me', 'places', this.getUser()),
                 permissionError: PERMISSION_EMPTY_POSITION,
             },
-            scope: props.scope || 'me',
+            scope: props.scope,
             // displayRefreshButton: true
         }
     }
@@ -105,11 +108,13 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
 
 
     render() {
+        const {navigator, data, ...props} = this.props
+        this.logger.debug('render', props, this.state)
         const mapDisplay = this.state.mapDisplay
         return (
             <View style={{flex: 1}}>
                 <SocialScopeSelector
-                    initialValue={this.props.scope}
+                    initialValue={props.scope}
                     onScopeChange={scope => {
                         this.setState({
                             searchOptions: {
@@ -118,7 +123,9 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
                             },
                             scope,
                         })}
-                    }/>
+                    }
+                    value={this.state.scope}
+                />
 
                 <SearchPlacesOption
                     innerRef={ref => this.positionSelector = ref}
@@ -177,7 +184,6 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
     _renderResults = (state: SearchState) => {
         if (this.state.mapDisplay) {
             const region: ?Region = this.getRegion()
-
 
             return (
                 <View style={{flex:1}}>
@@ -275,15 +281,44 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
         return null
     }
 
+    //https://www.reddit.com/r/reactjs/comments/93r7je/how_to_update_state_when_prop_changes/
     componentDidUpdate(prevProps: SMP) {
+
+        let nl = p => {
+            let {navigator, data, ...pp} = p
+            return pp
+        }
+        this.logger.debug('componentDidUpdate', nl(this.props), nl(prevProps))
         // for "don't search on 1st render" feature
         if (prevProps.focused !== this.props.focused) {
-            logger.debug("componentDidUpdate", this.props)
             //disapointing
             setTimeout(() => {
                 if (this.searchMotor) this.searchMotor.search(this.state.searchOptions, false)
             })
         }
+        let partialSO = null
+
+        let set = (k,v) => {
+            partialSO = _.set(partialSO || {}, k, v)
+            this.logger.debug('debug:: set', k, v, partialSO)
+        }
+
+        if (prevProps.scope !== this.props.scope) {
+            this.setState({scope: this.props.scope})
+            set('algoliaFilter', makeBrowseAlgoliaFilter2(this.props.scope, 'places', this.getUser()))
+        }
+
+        let mutSearchOpt = (a: string)  => {
+            if (prevProps[a] !== this.props[a]) {
+                set(a, this.props[a])
+            }
+        }
+        ['lat', 'lng', 'radius'].forEach(o => mutSearchOpt(o))
+        if (partialSO) {
+            this.logger.debug('update from props', partialSO)
+            this.setState({searchOptions: {...this.state.searchOptions, ...partialSO}})
+        }
+
     }
 
     //TODO: use selector

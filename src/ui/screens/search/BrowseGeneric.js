@@ -42,6 +42,9 @@ export default class BrowseGeneric extends React.Component<SMP, SMS> {
     searchMotor: ISearchMotor<BrowseItemsGenOptions>
     logger;
 
+
+    static defaultProps = {scope: 'me'}
+
     constructor(props: SMP) {
         super(props)
 
@@ -49,7 +52,7 @@ export default class BrowseGeneric extends React.Component<SMP, SMS> {
             searchOptions: {
                 algoliaFilter: makeBrowseAlgoliaFilter2('me', this.props.category, this.getUser()),
             },
-            scope: props.scope || 'me'
+            scope: props.scope
         }
         this.logger = rootlogger.createLogger(`browse ${this.props.category}`)
     }
@@ -89,7 +92,9 @@ export default class BrowseGeneric extends React.Component<SMP, SMS> {
                             },
                             scope,
                         })}
-                    }/>
+                    }
+                    value={this.state.scope}
+                />
 
                 <GoodshContext.Provider value={{userOwnResources: this.state.scope === 'me'}}>
                     <SearchMotor
@@ -112,8 +117,23 @@ export default class BrowseGeneric extends React.Component<SMP, SMS> {
             setTimeout(() => {
                 if (this.searchMotor) this.searchMotor.search(this.state.searchOptions, false)
             })
-
         }
+        let partialSO = null
+
+        let set = (k,v) => {
+            partialSO = _.set(partialSO || {}, k, v)
+            this.logger.debug('debug:: set', k, v, partialSO)
+        }
+        if (prevProps.scope !== this.props.scope) {
+            this.setState({scope: this.props.scope})
+            set('algoliaFilter', makeBrowseAlgoliaFilter2(this.props.scope, 'places', this.getUser()))
+        }
+        if (partialSO) {
+            this.logger.debug('update from props', partialSO)
+            this.setState({searchOptions: {...this.state.searchOptions, ...partialSO}})
+        }
+
+
     }
 
     getUser() {

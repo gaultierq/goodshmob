@@ -250,7 +250,7 @@ export function makeBrowseAlgoliaFilter2(friendFilter: FRIEND_FILTER_TYPE, categ
         case 'all':
             return defaultQuery
         default:
-            console.error('Unknown friend filter')
+            console.error('Unknown friend filter' + friendFilter)
             return ''
     }
 }
