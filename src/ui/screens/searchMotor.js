@@ -31,7 +31,7 @@ export type Props<SO> = {
     searchEngine: SearchEngine<SO>,
     renderResults: (SearchState, () => void) => Node,
     innerRef?: any => void,
-    searchOptions: SO,
+    searchOptions: ?SO,
     //returns null if can search
     canSearch: (searchOptions: SO) => ?string,
     renderMissingPermission?: (searchOptions: SO, missingPermission: string) => Node

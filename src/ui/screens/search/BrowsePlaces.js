@@ -32,6 +32,7 @@ import {seeActivityDetails} from "../../Nav"
 import {GoodshContext, registerLayoutAnimation, scheduleOpacityAnimation} from "../../UIComponents"
 import GTouchable from "../../GTouchable"
 import {hexToRgbaWithHalpha} from "../../../helpers/DebugUtils"
+import {flatDiff} from "../../../helpers/StringUtils"
 
 
 type SMS = {
@@ -41,13 +42,13 @@ type SMS = {
     displayRefreshButton?: boolean
 }
 
-type SMP = {
+type SMP = ?GeoStatus & {
     navigator: RNNNavigator,
     focused?: boolean,
     scope?: string,
     mapDisplay?: boolean
-
 }
+
 export type BrowseItemsGenOptions = {
     algoliaFilter?: string,
 }
@@ -56,7 +57,6 @@ export type BrowseItemsPlacesOptions = BrowseItemsGenOptions & GeoStatus
 
 const DEFAULT_RAD = 5000
 
-const logger = rootlogger.createLogger('browse places')
 
 @connect(state => ({
     data: state.data,
@@ -66,6 +66,7 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
 
     searchMotor: ISearchMotor<BrowseItemsPlacesOptions>
     positionSelector: IPositionSelector
+    logger = rootlogger.createLogger('browse places')
 
     constructor(props: SMP) {
         super(props)
@@ -123,7 +124,7 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
                     innerRef={ref => this.positionSelector = ref}
                     navigator={this.props.navigator}
                     onNewOptions={(pos: GeoStatus) => {
-                        logger.debug("::onNewOptions::", pos)
+                        this.logger.debug("::onNewOptions::", pos)
 
                         //what to do ?
 
@@ -155,6 +156,7 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
             </View>
         )
     }
+
     _canSearch = searchOptions => {
         if (!this.props.focused) return 'not_focused'
         if (searchOptions.permissionError) return searchOptions.permissionError

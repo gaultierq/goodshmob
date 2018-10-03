@@ -45,7 +45,7 @@ export type SearchPlacesProps = {
     onNewOptions: GeoStatus => void,
     onSearchSubmited?: void => void,
     navigator: RNNNavigator,
-    innerRef?: IPositionSelector => void,
+    innerRef?: any => void,
 
 };
 
