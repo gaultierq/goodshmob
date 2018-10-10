@@ -27,8 +27,11 @@ type State = {
 
 const logger = rootlogger.createLogger('contact list')
 
+const SET_CONTACTS = 'SET_CONTACTS'
+
 @logged
 @connect((state, ownProps) => ({
+    contacts: state.contacts
 }))
 export default class ContactList extends React.Component<Props, State> {
 
@@ -83,7 +86,7 @@ export default class ContactList extends React.Component<Props, State> {
     render() {
         return (
             <FlatList
-                data={this.state.contacts}
+                data={this.props.contacts.data}
                 renderItem={this.props.renderItem}
                 // ListFooterComponent={() => this.props.onLoadMore ? this.renderSearchFooter(searchState) : null}
                 keyExtractor={(item) => item.id}
@@ -95,10 +98,8 @@ export default class ContactList extends React.Component<Props, State> {
     syncContacts() {
         Contacts.getAll((err, contacts) => {
             if (err) throw err;
-
-            // contacts returned
-            logger.debug("contacts retreived", contacts)
             this.setState({contacts})
+            this.props.dispatch({type: SET_CONTACTS, data: contacts})
         })
     }
 
@@ -107,4 +108,14 @@ export default class ContactList extends React.Component<Props, State> {
             <PeopleRowI leftText={contact.givenName + " " + contact.familyName}/>
         )
     }
+}
+
+export const reducer =  (state = {data: []}, action = {}) => {
+
+    switch (action.type) {
+        case SET_CONTACTS: {
+            state = {...state, data: action.data}
+        }
+    }
+    return state;
 }
