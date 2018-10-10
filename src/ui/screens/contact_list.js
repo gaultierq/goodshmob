@@ -9,13 +9,14 @@ import BottomSheet from "react-native-bottomsheet"
 import i18n from "../../i18n/i18n"
 import type {RNNNavigator} from "../../types"
 import Contacts from 'react-native-contacts'
-import PeopleRowI from "../activity/components/PeopleRow"
+import PersonRowI from "../activity/components/PeopleRow"
 
 type Contact = {
     recordID: string,
     rawContactId: string,
     givenName: string,
     familyName: string,
+    thumbnailPath: string,
 }
 
 type Props = {
@@ -122,21 +123,24 @@ export default class ContactList extends React.Component<Props, State> {
     static renderItem(contact: Contact) {
         logger.debug('rendering', contact)
         return (
-            <PeopleRowI key={contact.rawContactId} leftText={ContactList.getName(contact)}/>
+            <PersonRowI
+                person={toPerson(contact)}
+                key={contact.rawContactId}
+                style={{
+                    margin: 16
+                }}
+            />
         )
     }
+}
 
-    static getName(contact: Contact) {
-        let append = (l, r) => {
-            if (_.isEmpty(r)) return l
-            if (_.isEmpty(l)) return r
-            return l + " " + r
-        }
-        let {givenName, familyName} = contact
-        return append(givenName, familyName)
+function toPerson(contact: Contact) {
+    return {
+        firstName: contact.givenName,
+        lastName: contact.familyName,
+        image: contact.thumbnailPath,
+        id: __IS_IOS__ ? contact.recordID : contact.rawContactId
     }
-
-
 }
 
 export const reducer =  (state = {data: []}, action = {}) => {

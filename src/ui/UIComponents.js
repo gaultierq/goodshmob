@@ -18,6 +18,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import {GAction} from "./rights"
 import {L_ADD_ITEM, L_FOLLOW, L_SHARE, L_UNFOLLOW} from "./lineupRights"
 import {TabBar} from "react-native-tab-view"
+import {GAvatar} from "./GAvatar"
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
@@ -44,82 +45,23 @@ export const MainBackground = (props) => <View
 
 type Props = {
     user: User,
-    size?: number,
+    size: number,
     style?: ViewStyle
 }
 type State = {}
 
 export class Avatar extends Component<Props, State> {
 
-
-    static defaultProps = {
-        size: 40
-    }
-
     render() {
-        const {user, style, size, ...attributes} = this.props;
 
-        let uri = null
-
-        if (user) {
-            uri = user.image
-
-            //hack relying on the fact that we only have facebook images
-            if (user.provider === 'facebook' && user.uid && size > 75) {
-                uri += "?type=large"
-            }
-
-            if (_.isNull(uri)) {
-
-                const colorId = hashCode(user.id) % AVATAR_BACKGROUNDS.length
-                const color = AVATAR_BACKGROUNDS[colorId]
-
-                const initials = firstLetter(user.firstName) + firstLetter(user.lastName)
-                if (initials.length === 0) return null
-
-                return <View style={[{
-                    height: size,
-                    width: size,
-                    borderRadius: size / 2,
-                    backgroundColor: color,
-                    paddingLeft: size / 20,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                }, style]}>
-                    <Text style={{
-                        color: Colors.white,
-                        fontFamily: SFP_TEXT_REGULAR,
-                        fontSize: size / 2.3
-                    }}>{initials.toUpperCase()}</Text>
-                </View>
-            }
-        }
-
-        let params
-        if (uri) {
-            params = {
-                source: {uri},
-                fallbackSource: require('../img2/default-avatar.png')
-            }
-        }
-        else {
-            params = {
-                source: require('../img2/default-avatar.png')
-            }
-
+        let {user, ...others} = this.props.user
+        let person = {...user}
+        if (user.provider === 'facebook' && user.uid && this.props.size > 75) {
+            person.image += "?type=large"
         }
 
         return (
-            <GImage
-                {...params}
-                style={[{
-                    height: size,
-                    width: size,
-                    borderRadius: size / 2,
-
-                }, style]}
-                {...attributes}
-            />
+            <GAvatar person={person} {...others} />
         )
     }
 }

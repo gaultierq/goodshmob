@@ -5,14 +5,16 @@ import React from 'react'
 
 
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import type {TextStyle} from "../../../types"
+import type {Person, TextStyle} from "../../../types"
 import {ViewStyle} from "../../../types"
 import {Colors} from "../../colors"
 import {SFP_TEXT_BOLD} from "../../fonts"
+import {GAvatar} from "../../GAvatar"
+import {fullName} from "../../../helpers/StringUtils"
 
 type Props = {
-    leftImage?: Node,
-    leftText: string,
+    person: Person,
+    noImage?: boolean,
     children?: Node,
     rightComponent?: Node,
     small?: boolean,
@@ -23,18 +25,27 @@ type Props = {
 type State = {
 };
 
-export default class PeopleRowI extends React.Component<Props, State> {
+export default class PersonRowI extends React.Component<Props, State> {
 
     render() {
+
+        let {person, noImage} = this.props
+
         return <View style={[{flex:1, }, this.props.style, styles.userContainer]}>
             {
-                this.props.leftImage
+                !noImage && <GAvatar person={person} size={30} style={{marginRight: 8}} />
             }
 
             <View style={{flex:1}}>
                 <View style={[styles.rightContainer]}>
-                    <Text style={[styles.rightText, this.props.textStyle]}>{this.props.leftText}</Text>
-                    {this.props.rightComponent}
+                    <Text style={[styles.rightText, this.props.textStyle]}>
+                        {
+                            fullName(this.props.person)
+                        }
+                    </Text>
+                    {
+                        this.props.rightComponent
+                    }
                 </View>
                 {this.props.children}
             </View>

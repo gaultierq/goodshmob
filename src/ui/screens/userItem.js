@@ -16,10 +16,10 @@ import {
 import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
 import type {NavigableProps, RequestState, User} from "../../types"
-import UserRowI from "../activity/components/UserRowI"
 import {Colors} from "../colors"
 import GTouchable from "../GTouchable"
 import {openUserSheet} from "../Nav"
+import PersonRowI from "../activity/components/PeopleRow"
 
 
 type Props = NavigableProps & {
@@ -41,7 +41,8 @@ export default class UserItem extends Component<Props, State> {
         let user = this.props.user;
         return (
             <View style={{flex: 1, flexDirection: 'row'}}>
-                <UserRowI user={user}
+                <PersonRowI
+                    person={user}
                     navigator={this.props.navigator}
                     style={styles.userRow}
                 />

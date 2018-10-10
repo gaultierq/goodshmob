@@ -91,7 +91,13 @@ export type User = Base & {
     timezone: any,
     goodshbox: List,
     lists: any,
+}
 
+export type Person = {
+    firstName: string,
+    lastName: string,
+    image: string,
+    id: string
 }
 
 export type Comment = Base & {
