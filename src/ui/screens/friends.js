@@ -17,6 +17,7 @@ import {actions as userActions, actionTypes as userActionTypes} from "../../redu
 import ShareButton from "../components/ShareButton"
 import * as Nav from "../Nav"
 import UserSearchScreen from "./usersearch"
+import PersonRowI from "../activity/components/PeopleRow"
 
 
 type Props = {
@@ -102,7 +103,8 @@ export default class FriendsScreen extends Screen<Props, State> {
             <GTouchable
                 onLongPress={() => {openUserSheet(this.props.navigator, user)}}
                 onPress={()=> {seeUser(this.props.navigator, user)}}>
-                <FriendCell friend={user} containerStyle={{paddingHorizontal: LINEUP_PADDING, paddingVertical: 10}}/>
+                {/*<FriendCell friend={user} containerStyle={{paddingHorizontal: LINEUP_PADDING, paddingVertical: 10}}/>*/}
+                <PersonRowI person={user} style={{margin: 16}}/>
             </GTouchable>
         )
     }

@@ -55,6 +55,8 @@ export class Avatar extends Component<Props, State> {
     render() {
 
         let {user, ...others} = this.props.user
+        if (!user) return null
+
         let person = {...user}
         if (user.provider === 'facebook' && user.uid && this.props.size > 75) {
             person.image += "?type=large"

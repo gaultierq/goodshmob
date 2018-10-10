@@ -17,6 +17,7 @@ import GTouchable from "../GTouchable"
 import {userFirstName} from "../../helpers/StringUtils"
 import {Colors} from "../colors"
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import PersonRowI from "../activity/components/PeopleRow"
 
 type Props = {
     data?: any,
@@ -74,19 +75,17 @@ export default class SendScreen extends Component<Props, State> {
             <GTouchable
                 disabled={sent}
                 onPress={()=>this.setState({selected: isSelected ? null : id})}>
-                <FriendCell
-                    friend={friend}
-                    childrenBelow={!sent}
-                >
+                <View>
+                    <PersonRowI person={friend} style={{margin: 16}}/>
                     {
-                        this.renderChildren(isSelected, sent, friend)
+                        !sent && this.renderInput(isSelected, sent, friend)
                     }
-                </FriendCell>
+                </View>
             </GTouchable>
         )
     }
 
-    renderChildren(isSelected: boolean, sent: boolean, friend: User) {
+    renderInput(isSelected: boolean, sent: boolean, friend: User) {
         if (sent) return <Text style={UI.TEXT_LESS_IMPORTANT}>{i18n.t("send_screen.sent")}</Text>
         return isSelected &&
             <View style={{flex: 1}}>
