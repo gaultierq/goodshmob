@@ -108,6 +108,20 @@ export default class ContactList extends React.Component<Props, State> {
             <PeopleRowI leftText={contact.givenName + " " + contact.familyName}/>
         )
     }
+
+    static getName(contact: Contact) {
+        let append = (l, r) => {
+            if (_.isEmpty(r)) return l
+            if (_.isEmpty(l)) return r
+            return l + " " + r
+        }
+        let {givenName, familyName} = contact
+        return (
+            <PeopleRowI leftText={append(givenName, familyName)}/>
+        )
+    }
+
+
 }
 
 export const reducer =  (state = {data: []}, action = {}) => {
