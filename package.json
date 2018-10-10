@@ -57,6 +57,7 @@
 		"react-native-bottomsheet": "^1.8.1",
 		"react-native-cached-image": "^1.4.3",
 		"react-native-config": "^0.9.1",
+		"react-native-contacts": "^2.2.4",
 		"react-native-device-info": "^0.21.5",
 		"react-native-easy-grid": "^0.2.0",
 		"react-native-elements": "^0.19.1",
@@ -103,8 +104,8 @@
 		"redux-persist": "^5.10.0",
 		"redux-thunk": "^2.2.0",
 		"redux-watch": "^1.1.1",
-		"schedule": "0.4.0",
 		"reselect": "^3.0.1",
+		"schedule": "0.4.0",
 		"url-parse": "^1.2.0",
 		"xcode": "^0.9.3"
 	},

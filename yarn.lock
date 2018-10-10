@@ -5644,6 +5644,10 @@ react-native-config@^0.9.1:
   version "0.9.1"
   resolved "https://registry.yarnpkg.com/react-native-config/-/react-native-config-0.9.1.tgz#6cf1c680c0e2ac99115cb83c508c161fa950c210"
 
+react-native-contacts@^2.2.4:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/react-native-contacts/-/react-native-contacts-2.2.4.tgz#6038aefdae6725073536e40bd350bcf255e48062"
+
 react-native-device-info@^0.21.5:
   version "0.21.5"
   resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-0.21.5.tgz#99478a2d68182e012297f2d63f2bd1b788106dee"

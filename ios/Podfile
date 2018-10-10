@@ -49,6 +49,8 @@ target 'goodshmob' do
 
   pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'
 
+  pod 'react-native-contacts', :path => '../node_modules/react-native-contacts'
+
 end
 
 post_install do |installer|

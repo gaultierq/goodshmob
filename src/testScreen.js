@@ -275,6 +275,12 @@ export const categorySearch = {
         title: 'Test goodsh.CategorySearchScreen',
     },
 }
+export const ContactList = {
+    screen: {
+        screen: 'goodsh.ContactList',
+        title: 'Test goodsh.ContactList',
+    },
+}
 
 export const test = {
     screen: {

@@ -43,7 +43,6 @@ export default class UserItem extends Component<Props, State> {
             <View style={{flex: 1, flexDirection: 'row'}}>
                 <UserRowI user={user}
                     navigator={this.props.navigator}
-                    //rightComponent={this.renderConnectButton(item)}
                     style={styles.userRow}
                 />
                 <View style={{ alignItems:'flex-end', justifyContent: 'center', paddingHorizontal: 10}}>{
