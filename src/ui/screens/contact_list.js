@@ -1,7 +1,7 @@
 // @flow
 import type {Node} from 'react'
 import React from 'react'
-import {FlatList, Keyboard, ScrollView, StyleSheet, Text, TextInput, View} from 'react-native'
+import {FlatList, Keyboard, ScrollView, StyleSheet, Text, RefreshControl, View} from 'react-native'
 import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
@@ -12,6 +12,8 @@ import Contacts from 'react-native-contacts'
 import PeopleRowI from "../activity/components/PeopleRow"
 
 type Contact = {
+    recordID: string,
+    rawContactId: string,
     givenName: string,
     familyName: string,
 }
@@ -22,7 +24,8 @@ type Props = {
 }
 
 type State = {
-    contacts: Contact[]
+    contacts: Contact[],
+    syncing: boolean
 }
 
 const logger = rootlogger.createLogger('contact list')
@@ -36,7 +39,8 @@ const SET_CONTACTS = 'SET_CONTACTS'
 export default class ContactList extends React.Component<Props, State> {
 
     static defaultProps = {
-        renderItem: ({item}) => ContactList.renderItem(item)
+        renderItem: ({item}) => ContactList.renderItem(item),
+        syncing: false
     }
 
     state = {
@@ -91,21 +95,34 @@ export default class ContactList extends React.Component<Props, State> {
                 // ListFooterComponent={() => this.props.onLoadMore ? this.renderSearchFooter(searchState) : null}
                 keyExtractor={(item) => item.id}
                 onScrollBeginDrag={Keyboard.dismiss}
-                keyboardShouldPersistTaps='always'/>
+                keyboardShouldPersistTaps='always'
+                refreshControl={<RefreshControl
+                    refreshing={this.state.syncing}
+                    onRefresh={this.onRefresh.bind(this)}
+                />}
+            />
         )
     }
 
+    onRefresh() {
+        this.syncContacts()
+    }
+
     syncContacts() {
+        if (this.state.syncing) return
+        this.setState({syncing: true})
         Contacts.getAll((err, contacts) => {
             if (err) throw err;
             this.setState({contacts})
             this.props.dispatch({type: SET_CONTACTS, data: contacts})
+            this.setState({syncing: false})
         })
     }
 
     static renderItem(contact: Contact) {
+        logger.debug('rendering', contact)
         return (
-            <PeopleRowI leftText={contact.givenName + " " + contact.familyName}/>
+            <PeopleRowI key={contact.rawContactId} leftText={ContactList.getName(contact)}/>
         )
     }
 
@@ -116,9 +133,7 @@ export default class ContactList extends React.Component<Props, State> {
             return l + " " + r
         }
         let {givenName, familyName} = contact
-        return (
-            <PeopleRowI leftText={append(givenName, familyName)}/>
-        )
+        return append(givenName, familyName)
     }
 
 
