@@ -57,6 +57,6 @@ export default class PersonRowI extends React.Component<Props, State> {
 
 const styles = StyleSheet.create({
     userContainer: {alignItems: 'center', flexDirection: 'row'},
-    rightContainer: {flexDirection: 'row'},
+    rightContainer: {flexDirection: 'row', justifyContent: 'space-between'},
     rightText: {alignSelf: 'center', fontSize: 13, color: Colors.black, fontFamily: SFP_TEXT_BOLD}
 });

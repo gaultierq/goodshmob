@@ -37,12 +37,10 @@ export default class UserActivity extends React.Component<Props, State> {
         )
     }
 
-    right(activityTime) {
+    right(activityTime: string) {
         let text= activityTime ? TimeUtils.timeSince(Date.parse(activityTime)):'';
         return (
-            !!text && <View style={{flex: 1, alignSelf: 'center', justifyContent: 'flex-end'}}>
-                <Text style={[styles.userText, {alignSelf: 'flex-end'}]}>{text}</Text>
-            </View>
+            !!text && <Text style={[styles.userText]}>{text}</Text>
         );
     }
 }

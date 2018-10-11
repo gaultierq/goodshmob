@@ -47,6 +47,7 @@ import GIndicator from "./screens/indicator"
 import UserSearchScreen from "./screens/usersearch"
 import LineupSearchScreen from "./screens/LineupSearch"
 import ContactList from "./screens/contact_list"
+import Community from "./screens/community"
 
 
 function wrap(screenName,screenCreator,store,provider) {
@@ -119,5 +120,6 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.UserSearchScreen', () => UserSearchScreen, store, Provider);
     wrap('goodsh.LineupSearchScreen', () => LineupSearchScreen, store, Provider);
     wrap('goodsh.ContactList', () => ContactList, store, Provider);
+    wrap('goodsh.Community', () => Community, store, Provider);
 
 }

@@ -219,6 +219,10 @@ export default {
         },
         "empty_screen": "Découvre ici les actus de tes contacts."
     },
+    "contacts":{
+        "empty_screen": "Vous n'avez pas encore importé vos contacts.",
+        "empty_screen_button": "Importer",
+    },
     "my_interests_screen":{
         "empty_screen": "Explore les listes de tes amis, et suis les plus intéressantes !",
         "search_lists": "Trouver des listes à suivre",
@@ -480,5 +484,6 @@ export default {
     },
     current_location: "Autour de moi",
     by: "par %{who}",
-    search_here: "Rechercher dans cette zone"
+    search_here: "Rechercher dans cette zone",
+    invite: "Inviter"
 };

@@ -220,6 +220,10 @@ export default {
         },
         "empty_screen": "The goodsh of your friends are here.\nInvite them to share your tips with them."
     },
+    "contacts":{
+        "empty_screen": "You haven't imported your contacts yet.",
+        "empty_screen_button": "Import",
+    },
     "my_interests_screen":{
         "empty_screen": "You will find every list you follow here.\nExplore your friends lists, and find them here !",
         "search_lists": "Find lists to follow",
@@ -479,5 +483,6 @@ export default {
     },
     "current_location": "Around me",
     by: "by %{who}",
-    search_here: "Search here"
+    search_here: "Search here",
+    invite: "Invite"
 };

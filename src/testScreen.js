@@ -275,11 +275,21 @@ export const categorySearch = {
         title: 'Test goodsh.CategorySearchScreen',
     },
 }
-export const ContactList = {
+export const contacts = {
     screen: {
         screen: 'goodsh.ContactList',
         title: 'Test goodsh.ContactList',
     },
+}
+export const community = {
+    screen: {
+        screen: 'goodsh.Community',
+        title: 'Test goodsh.Community',
+
+    },
+    passProps: {
+        initialIndex: 1
+    }
 }
 
 export const test = {
@@ -293,23 +303,3 @@ export const test = {
     }
 };
 
-//change this line
-
- // testScreen = test;
-// testScreen = profileScreen;
-// testScreen = commentsScreen;
-// testScreen = communityScreen;
-//  testScreen = sendScreen;
-//  testScreen = homeScreen;
-//  testScreen = interactionsScreen;
-//  testScreen = userScreen;
-//  testScreen = addItemScreen;
- // testScreen = addItemScreen2;
-// testScreen = networkSearchScreen;
-//  testScreen = searchItemsScreen;
-//  testScreen = homeSearchItemsScreen;
-//  testScreen = networkScreen;
-//  testScreen = lineupScreen;
-//  testScreen = activityDetailScreen;
-//  testScreen = loginScreen;
-//  testScreen = friendScreen;

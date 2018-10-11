@@ -138,20 +138,20 @@ class NetworkScreen extends Screen<Props, State> {
 
             if (event.id === 'friends') {
                 navigator.showModal({
-                    screen: 'goodsh.FriendsScreen',
+                    screen: 'goodsh.Community',
                     title: i18n.t("community.screens.friends"),
-                    passProps:{
-                        userId: currentUserId(),
-                    },
+                    // passProps:{
+                    //     userId: currentUserId(),
+                    // },
                     navigatorButtons: {
                         ...Nav.CANCELABLE_MODAL,
-                        rightButtons: [
-
-                            {
-                                id: 'friendsSearch',
-                                icon: require('../../img2/searchHeaderIcon.png'),
-                            },
-                        ]
+                        // rightButtons: [
+                        //
+                        //     {
+                        //         id: 'friendsSearch',
+                        //         icon: require('../../img2/searchHeaderIcon.png'),
+                        //     },
+                        // ]
                     }
                 });
             }
