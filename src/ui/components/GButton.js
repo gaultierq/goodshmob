@@ -2,18 +2,18 @@
 
 import React from 'react'
 import {Share, StyleSheet, Text, View} from 'react-native'
-import Button from 'apsl-react-native-button'
 import {Colors} from "../colors"
 import {SFP_TEXT_MEDIUM} from "../fonts"
+import GTouchable from "../GTouchable"
 
 type Props = {
     text: string,
-    onPress: () => void
+    onPress: ?() => void
 }
 type State = {
 }
 
-export default class ShareButton extends React.Component<Props, State> {
+export default class GButton extends React.Component<Props, State> {
 
     constructor(props: Props) {
         super(props);
@@ -22,11 +22,11 @@ export default class ShareButton extends React.Component<Props, State> {
     render() {
         return (
             <View>
-                <Button
+                <GTouchable
                     style={styles.button}
                     onPress={this.props.onPress}>
                     <Text style={styles.buttonText}>{this.props.text}</Text>
-                </Button>
+                </GTouchable>
             </View>
         );
     }

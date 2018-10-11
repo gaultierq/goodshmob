@@ -6,7 +6,7 @@ import {TouchableNativeFeedback, TouchableOpacity, View,} from 'react-native'
 import type {ms} from "../types"
 
 export type Props = {
-    onPress?: () => void,
+    onPress: ?() => void,
     noprotect?: boolean,
     onDoublePress?: () => void,
     deactivated?: boolean, //skip the gtouchable completely
@@ -77,12 +77,13 @@ export default class GTouchable extends Component<Props, State>  {
         else {
             _onPress = onPress;
         }
-        let _style = this.props.disabled && disabledStyle ? [{activeOpacity: 0.8}, style, disabledStyle] : [{activeOpacity: 0.8}, style];
+
+        let _style = (this.props.disabled || !_onPress) && disabledStyle ? [{activeOpacity: 0.8}, style, disabledStyle] : [{activeOpacity: 0.8}, style];
         // return React.createElement(__IS_IOS__ ? TouchableOpacity : TouchableNativeFeedback, {onPress: _onPress, ...attributes});
         return React.createElement(TouchableOpacity, {onPress: _onPress, style: _style, ...attributes});
     }
 
-    execProtectedPress(now: ms, exec: ()=>void) {
+    execProtectedPress(now: ms, exec: ?()=>void) {
         if (this.lastExec + DELAY > now) {
             console.debug("click protected");
 

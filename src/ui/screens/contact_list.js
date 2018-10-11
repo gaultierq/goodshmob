@@ -1,7 +1,7 @@
 // @flow
 import type {Node} from 'react'
 import React from 'react'
-import {FlatList, Keyboard, RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native'
+import {FlatList, Keyboard, Linking, RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
@@ -13,6 +13,7 @@ import PersonRowI from "../activity/components/PeopleRow"
 import {STYLES} from "../UIStyles"
 import GButton from "../components/GButton"
 import Screen from "../components/Screen"
+import _Messenger from "../../managers/Messenger"
 
 export type Contact = {
     recordID: string,
@@ -20,6 +21,14 @@ export type Contact = {
     givenName: string,
     familyName: string,
     thumbnailPath: string,
+    emailAddresses: [{
+        label: string,
+        email: string,
+    }],
+    phoneNumbers: [{
+        label: string,
+        number: string,
+    }]
 }
 
 type Props = {
@@ -144,6 +153,7 @@ export default class ContactList extends Screen<Props, State> {
 }
 
 function renderItem(contact: Contact) {
+
     return (
         <PersonRowI
             person={toPerson(contact)}
@@ -156,6 +166,7 @@ function renderItem(contact: Contact) {
 }
 
 export function toPerson(contact: Contact) {
+    logger.debug("contact", contact)
     return {
         firstName: contact.givenName,
         lastName: contact.familyName,
@@ -163,6 +174,38 @@ export function toPerson(contact: Contact) {
         id: __IS_IOS__ ? contact.recordID : contact.rawContactId
     }
 }
+
+export function createHandler(contact: Contact, title: string, message: string): ?() => void {
+    let email = _.get(contact, 'emailAddresses[0].email')
+    let url
+    if (!_.isEmpty(email)) {
+        //launch email app
+        url = `mailto:${email}}?subject=${encodeURIComponent(title)}&message=${encodeURIComponent(message)}`;
+    }
+    let number = _.get(contact, 'phoneNumbers[0].number')
+    number = _.replace(number, ' ', '');
+    if (!_.isEmpty(number)) {
+        //launch sms
+        url = `sms:${number}?body=${encodeURIComponent(message)}`
+    }
+    if (url) {
+        return () => {
+            logger.info("opening share url:", url)
+            Linking.canOpenURL(url).then(supported => {
+                if (supported) {
+                    Linking.openURL(url)
+                } else {
+                    let message = "Impossible de partager avec ce contact"
+                    _Messenger.sendMessage(message)
+                }
+            });
+        }
+    }
+    return null
+
+}
+
+
 
 export const reducer =  (state = {data: []}, action = {}) => {
 

@@ -17,12 +17,13 @@ import Screen from "../components/Screen"
 import {PagerPan, TabView} from "react-native-tab-view"
 import {connect} from "react-redux"
 import {renderTabBarFactory} from "../UIComponents"
-import ContactList, {toPerson} from "./contact_list"
+import ContactList, {createHandler, toPerson} from "./contact_list"
 import FriendsScreen from "./friends"
 import {currentUserId} from "../../managers/CurrentUser"
 import PersonRowI from "../activity/components/PeopleRow"
 import GButton from "../components/GButton"
 import type {Contact} from "./contact_list"
+import GTouchable from "../GTouchable"
 
 type Props = NavigableProps & {
     initialIndex: number,
@@ -101,14 +102,18 @@ export default class CommunityScreen extends Screen<Props, State> {
 }
 
 function renderContact(contact: Contact) {
+    let onPress = createHandler(contact, i18n.t('share_goodsh.title'), i18n.t('share_goodsh.message'))
     return (
-        <PersonRowI
-            person={toPerson(contact)}
-            key={contact.rawContactId}
-            style={{
-                margin: 16
-            }}
-            rightComponent={<GButton text={i18n.t('invite')} onPress={()=>{}}/>}
-        />
+        <GTouchable onPress={onPress}>
+            <PersonRowI
+                person={toPerson(contact)}
+                key={contact.rawContactId}
+                style={{
+                    margin: 16
+                }}
+             G   rightComponent={<GButton text={i18n.t('invite')} onPress={onPress}/>}
+            />
+        </GTouchable>
+
     )
 }
