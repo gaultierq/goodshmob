@@ -24,6 +24,7 @@ import {currentUser, currentUserId} from "../../managers/CurrentUser"
 import PersonRowI from "../activity/components/PeopleRow"
 import GButton from "../components/GButton"
 import AppShareButton from "../components/AppShareButton"
+import {LINEUP_PADDING} from "../UIStyles"
 
 type Props = NavigableProps & {
     initialIndex: number,
@@ -120,7 +121,7 @@ function renderContact(contact: Contact) {
             person={toPerson(contact)}
             key={contact.rawContactId}
             style={{
-                margin: 16
+                margin: LINEUP_PADDING
             }}
             rightComponent={<GButton text={i18n.t('invite')} onPress={onPress}/>}
         />

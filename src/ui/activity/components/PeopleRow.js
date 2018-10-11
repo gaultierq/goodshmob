@@ -11,6 +11,7 @@ import {Colors} from "../../colors"
 import {SFP_TEXT_BOLD} from "../../fonts"
 import {GAvatar} from "../../GAvatar"
 import {fullName} from "../../../helpers/StringUtils"
+import {LINEUP_PADDING} from "../../UIStyles"
 
 type Props = {
     person: Person,
@@ -33,7 +34,7 @@ export default class PersonRowI extends React.Component<Props, State> {
 
         return <View style={[{flex:1, }, this.props.style, styles.userContainer]}>
             {
-                !noImage && <GAvatar person={person} size={30} style={{marginRight: 8}} />
+                !noImage && <GAvatar person={person} style={{marginRight: LINEUP_PADDING}} />
             }
 
             <View style={{flex:1}}>
@@ -58,5 +59,5 @@ export default class PersonRowI extends React.Component<Props, State> {
 const styles = StyleSheet.create({
     userContainer: {alignItems: 'center', flexDirection: 'row'},
     rightContainer: {flexDirection: 'row', justifyContent: 'space-between'},
-    rightText: {alignSelf: 'center', fontSize: 13, color: Colors.black, fontFamily: SFP_TEXT_BOLD}
+    rightText: {alignSelf: 'center', fontSize: 18, color: Colors.black, fontFamily: SFP_TEXT_BOLD}
 });

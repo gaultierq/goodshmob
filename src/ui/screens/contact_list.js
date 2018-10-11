@@ -7,13 +7,12 @@ import {logged} from "../../managers/CurrentUser"
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import BottomSheet from "react-native-bottomsheet"
 import i18n from "../../i18n/i18n"
-import type {RNNNavigator} from "../../types"
+import type {OutMessage, RNNNavigator} from "../../types"
 import Contacts from 'react-native-contacts'
 import PersonRowI from "../activity/components/PeopleRow"
-import {openLinkSafely, STYLES} from "../UIStyles"
+import {LINEUP_PADDING, openLinkSafely, STYLES} from "../UIStyles"
 import GButton from "../components/GButton"
 import Screen from "../components/Screen"
-import AppShareButton from "../components/AppShareButton"
 
 export type Contact = {
     recordID: string,
@@ -166,7 +165,7 @@ function renderItem(contact: Contact) {
             person={toPerson(contact)}
             key={contact.rawContactId}
             style={{
-                margin: 16
+                margin: LINEUP_PADDING
             }}
         />
     )
@@ -180,10 +179,6 @@ export function toPerson(contact: Contact) {
         image: contact.thumbnailPath,
         id: __IS_IOS__ ? contact.recordID : contact.rawContactId
     }
-}
-
-export type Message = {
-    title: string, body: string
 }
 
 export function splitContacts(contact: Contact[] = [], prioPhone: boolean) {
@@ -202,7 +197,7 @@ export function splitContacts(contact: Contact[] = [], prioPhone: boolean) {
     })
 }
 
-export function createHandler(contact: Contact, message: Message, options?: any): ?() => void {
+export function createHandler(contact: Contact, message: OutMessage, options?: any): ?() => void {
     let email = _.get(contact, 'emailAddresses[0].email')
     let {title, body} = message
     let url
@@ -219,7 +214,7 @@ export function createHandler(contact: Contact, message: Message, options?: any)
 }
 
 
-export function createSmsUri(phones: string[], message: Message): string {
+export function createSmsUri(phones: string[], message: OutMessage): string {
     let {title, body} = message
     return `sms:${phones.join(',')}?body=${encodeURIComponent(body)}`
 }

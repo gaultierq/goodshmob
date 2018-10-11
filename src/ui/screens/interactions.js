@@ -103,10 +103,8 @@ export class InteractionScreen extends Screen<Props, State> {
                     navigator={this.props.navigator}
                     style={{paddingLeft: 12, paddingRight: 12}}
                 >
-                </UserActivity>
-                <View style={{marginLeft: 51, marginTop: -4}}>
                     {content}
-                </View>
+                </UserActivity>
             </GTouchable>
         )
     }

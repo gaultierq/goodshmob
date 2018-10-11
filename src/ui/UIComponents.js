@@ -45,7 +45,7 @@ export const MainBackground = (props) => <View
 
 type Props = {
     user: User,
-    size: number,
+    size?: number,
     style?: ViewStyle
 }
 type State = {}

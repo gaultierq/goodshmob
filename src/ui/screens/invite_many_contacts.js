@@ -9,7 +9,7 @@ import ContactList, {createSmsUri, splitContacts, toPerson} from "./contact_list
 import PersonRowI from "../activity/components/PeopleRow"
 import CheckBox from 'react-native-check-box'
 import GButton from "../components/GButton"
-import {openLinkSafely} from "../UIStyles"
+import {LINEUP_PADDING, openLinkSafely} from "../UIStyles"
 
 type Props = {
 };
@@ -37,7 +37,7 @@ export default class InviteManyContacts extends Screen<Props, State> {
                 />
                 <GButton
                     disabled={_.isEmpty(this.state.toInvite)}
-                    style={{margin: 16}} text={"invite"}
+                    style={{margin: LINEUP_PADDING}} text={"invite"}
                     onPress={()=>{
                     logger.debug("inviting", this.state.toInvite)
                     let contacts = _.values(this.state.toInvite)
@@ -60,7 +60,7 @@ export default class InviteManyContacts extends Screen<Props, State> {
                 person={perso}
                 key={contact.rawContactId}
                 style={{
-                    margin: 16,
+                    margin: LINEUP_PADDING,
                     opacity: disabled ? 0.5 : 1
                 }}
                 rightComponent={(

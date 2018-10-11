@@ -76,7 +76,7 @@ export default class SendScreen extends Component<Props, State> {
                 disabled={sent}
                 onPress={()=>this.setState({selected: isSelected ? null : id})}>
                 <View>
-                    <PersonRowI person={friend} style={{margin: 16}}/>
+                    <PersonRowI person={friend} style={{margin: LINEUP_PADDING}}/>
                     {
                         !sent && this.renderInput(isSelected, sent, friend)
                     }

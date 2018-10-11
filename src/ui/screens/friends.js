@@ -12,7 +12,7 @@ import Screen from "../components/Screen"
 import GTouchable from "../GTouchable"
 import * as Nav from "../Nav"
 import {openUserSheet, seeUser} from "../Nav"
-import {STYLES} from "../UIStyles"
+import {LINEUP_PADDING, STYLES} from "../UIStyles"
 import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
 import AppShareButton from "../components/AppShareButton"
 import PersonRowI from "../activity/components/PeopleRow"
@@ -101,7 +101,7 @@ export default class FriendsScreen extends Screen<Props, State> {
                 onLongPress={() => {openUserSheet(this.props.navigator, user)}}
                 onPress={()=> {seeUser(this.props.navigator, user)}}>
                 {/*<FriendCell friend={user} containerStyle={{paddingHorizontal: LINEUP_PADDING, paddingVertical: 10}}/>*/}
-                <PersonRowI person={user} style={{margin: 16}}/>
+                <PersonRowI person={user} style={{margin: LINEUP_PADDING}}/>
             </GTouchable>
         )
     }

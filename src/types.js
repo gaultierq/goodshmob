@@ -203,3 +203,7 @@ export type GListState = {
     list: Array<any>,
     hasMore?: boolean
 }
+
+export type OutMessage = {
+    title: string, body: string
+}
