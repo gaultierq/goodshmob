@@ -8,26 +8,23 @@ import GTouchable from "../GTouchable"
 
 type Props = {
     text: string,
-    onPress: ?() => void
+    onPress: ?() => void,
+    style?: any,
 }
 type State = {
 }
 
 export default class GButton extends React.Component<Props, State> {
 
-    constructor(props: Props) {
-        super(props);
-    }
-
     render() {
+        const {style, text, ...attr} = this.props
         return (
-            <View>
-                <GTouchable
-                    style={styles.button}
-                    onPress={this.props.onPress}>
-                    <Text style={styles.buttonText}>{this.props.text}</Text>
-                </GTouchable>
-            </View>
+            <GTouchable
+                style={[styles.button, style]}
+                {...attr}
+            >
+                <Text style={styles.buttonText}>{text}</Text>
+            </GTouchable>
         );
     }
 }
@@ -39,9 +36,12 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         paddingHorizontal: 12,
         paddingVertical: 6,
+        alignItems: 'center',
     },
     buttonText: {
         color: Colors.white,
+        textAlignVertical: 'center',
+
         fontSize: 17,
         fontFamily: SFP_TEXT_MEDIUM,
         fontWeight: 'bold'

@@ -3,6 +3,7 @@
 import React from 'react'
 import {Share, StyleSheet, Text, View} from 'react-native'
 import GButton from "./GButton"
+import {LINEUP_PADDING} from "../UIStyles"
 
 type Props = {
     text: string
@@ -16,7 +17,9 @@ export default class ShareButton extends React.Component<Props, State> {
         return (
             <GButton
                 text={this.props.text}
-                onPress={this.share.bind(this)}/>
+                onPress={this.share.bind(this)}
+                style={{margin: LINEUP_PADDING}}
+            />
         )
     }
 

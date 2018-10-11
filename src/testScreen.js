@@ -301,5 +301,13 @@ export const test = {
     passProps: {
         itemId: "8ab94a3c-43b2-4e5c-acfb-d4ff268f93b1",
     }
-};
+}
 
+
+export const inviteManyContacts = {
+    screen: {
+        screen: 'goodsh.InviteManyContacts',
+        title: 'Test goodsh.InviteManyContacts',
+
+    },
+}

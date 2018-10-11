@@ -484,5 +484,6 @@ export default {
     "current_location": "Around me",
     by: "by %{who}",
     search_here: "Search here",
-    invite: "Invite"
+    invite: "Invite",
+    skip: "Skip",
 };

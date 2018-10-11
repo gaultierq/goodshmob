@@ -54,7 +54,7 @@ export class Avatar extends Component<Props, State> {
 
     render() {
 
-        let {user, ...others} = this.props.user
+        let {user, ...others} = this.props
         if (!user) return null
 
         let person = {...user}

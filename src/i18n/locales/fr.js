@@ -485,5 +485,6 @@ export default {
     current_location: "Autour de moi",
     by: "par %{who}",
     search_here: "Rechercher dans cette zone",
-    invite: "Inviter"
+    invite: "Inviter",
+    skip: "Passer",
 };

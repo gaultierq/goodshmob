@@ -143,11 +143,11 @@ export default class PopularItemsScreen extends Screen<Props, State> {
             this,
             () => this.props.saveManyItems(itemIds, listByItemId),
             'reqAdd'
-        ).then(this.props.onFinished)
+        ).then(this._finish)
     }
 
     _finish = () => {
-        this.props.onFinished && this.props.onFinished()
+        this.props.onFinished && this.props.onFinished(this.props.navigator)
     }
 }
 

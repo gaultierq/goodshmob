@@ -56,6 +56,7 @@
 		"react-native-app-settings": "^2.0.0",
 		"react-native-bottomsheet": "^1.8.1",
 		"react-native-cached-image": "^1.4.3",
+		"react-native-check-box": "^2.1.3",
 		"react-native-config": "^0.9.1",
 		"react-native-contacts": "^2.2.4",
 		"react-native-device-info": "^0.21.5",

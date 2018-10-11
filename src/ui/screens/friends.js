@@ -89,7 +89,6 @@ export default class FriendsScreen extends Screen<Props, State> {
                         options: {userId}
                     }}
                     ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t('friends.empty_screen')}</Text>}
-                    ListHeaderComponent={<ShareButton text={i18n.t('actions.invite')}/>}
                     {...attr}
                 />
         );

@@ -10,10 +10,11 @@ import i18n from "../../i18n/i18n"
 import type {RNNNavigator} from "../../types"
 import Contacts from 'react-native-contacts'
 import PersonRowI from "../activity/components/PeopleRow"
-import {STYLES} from "../UIStyles"
+import {openLinkSafely, STYLES} from "../UIStyles"
 import GButton from "../components/GButton"
 import Screen from "../components/Screen"
 import _Messenger from "../../managers/Messenger"
+import ShareButton from "../components/ShareButton"
 
 export type Contact = {
     recordID: string,
@@ -33,7 +34,8 @@ export type Contact = {
 
 type Props = {
     navigator: RNNNavigator,
-    renderItem: any => Node
+    renderItem: any => Node,
+    onlyPhones?: boolean
 }
 
 type State = {
@@ -133,6 +135,7 @@ export default class ContactList extends Screen<Props, State> {
                     refreshing={this.state.syncing}
                     onRefresh={this.onRefresh.bind(this)}
                 />}
+                ListHeaderComponent={<ShareButton text={i18n.t('actions.invite')}/>}
             />
         )
     }
@@ -145,7 +148,7 @@ export default class ContactList extends Screen<Props, State> {
         if (this.state.syncing) return
         this.setState({syncing: true})
         Contacts.getAll((err, contacts) => {
-            if (err) throw err;
+            if (err) throw err
             this.props.dispatch({type: SET_CONTACTS, data: contacts})
             this.setState({syncing: false})
         })
@@ -175,35 +178,48 @@ export function toPerson(contact: Contact) {
     }
 }
 
-export function createHandler(contact: Contact, title: string, message: string): ?() => void {
+export type Message = {
+    title: string, body: string
+}
+
+export function splitContacts(contact: Contact[] = [], prioPhone: boolean) {
+
+    return _.reduce(contact, (result, c) => {
+        let email = _.first(c.emailAddresses.map(ea => ea.email))
+        let phone = _.first(c.phoneNumbers.map(pn => pn.number))
+        let addIfIs = (arr, el) => el && arr.push(el)
+        let o = [() => addIfIs(result.emails, email), () => addIfIs(result.phones, phone)]
+        if (prioPhone) _.reverse(o)
+        o.forEach(c => c())
+        return result
+    }, {
+        phones: [],
+        emails: []
+    })
+}
+
+export function createHandler(contact: Contact, message: Message, options?: any): ?() => void {
     let email = _.get(contact, 'emailAddresses[0].email')
+    let {title, body} = message
     let url
     if (!_.isEmpty(email)) {
         //launch email app
-        url = `mailto:${email}}?subject=${encodeURIComponent(title)}&message=${encodeURIComponent(message)}`;
+        url = `mailto:${email}}?subject=${encodeURIComponent(title)}&message=${encodeURIComponent(body)}`;
     }
     let number = _.get(contact, 'phoneNumbers[0].number')
-    number = _.replace(number, ' ', '');
     if (!_.isEmpty(number)) {
-        //launch sms
-        url = `sms:${number}?body=${encodeURIComponent(message)}`
+        url = createSmsUri([number], message)
     }
-    if (url) {
-        return () => {
-            logger.info("opening share url:", url)
-            Linking.canOpenURL(url).then(supported => {
-                if (supported) {
-                    Linking.openURL(url)
-                } else {
-                    let message = "Impossible de partager avec ce contact"
-                    _Messenger.sendMessage(message)
-                }
-            });
-        }
-    }
-    return null
+    return url ? (() => openLinkSafely(url)) : null
 
 }
+
+
+export function createSmsUri(phones: string[], message: Message): string {
+    let {title, body} = message
+    return `sms:${phones.join(',')}?body=${encodeURIComponent(body)}`
+}
+
 
 
 
