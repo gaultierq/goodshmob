@@ -207,3 +207,8 @@ export type GListState = {
 export type OutMessage = {
     title: string, body: string
 }
+
+export type NavParams = {
+    dispatch: any,
+    navigator: RNNNavigator,
+}
