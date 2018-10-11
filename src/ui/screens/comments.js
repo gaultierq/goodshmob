@@ -208,7 +208,6 @@ class CommentsScreen extends Screen<Props, State> {
     renderDescription(activity: Activity) {
         return <ActivityStatus
             activity={activity}
-            // skipLineup={this.props.skipLineup}
             navigator={this.props.navigator}
             descriptionNumberOfLines={8}
             // style={{

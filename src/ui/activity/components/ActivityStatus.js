@@ -21,7 +21,6 @@ import Config from 'react-native-config'
 type Props = {
     activity: Activity,
     navigator: RNNNavigator,
-    skipLineup?: boolean,
     style?:*,
     cardStyle?: ViewStyle,
     descriptionContainerStyle?:*,
@@ -42,13 +41,13 @@ export default class ActivityStatus extends React.Component<Props, State> {
     };
 
     render() {
-        const {activity, navigator, skipLineup, style, cardStyle, children} = this.props;
+        const {activity, navigator, style, cardStyle, children} = this.props;
 
         //TODO: clear db from this type
         if (sanitizeActivityType(activity.type) === 'posts') return null
 
 
-        let {content, textNode} = this.getParams(activity, skipLineup)();
+        let {content, textNode} = this.getParams(activity)();
 
         return (
             <View style={[styles.mainContainer, style]}>
@@ -114,15 +113,15 @@ export default class ActivityStatus extends React.Component<Props, State> {
         )
     }
 
-    getParams(activity:Activity, skipLineup?: boolean): () => any {
-        if (isSaving(activity) && !skipLineup) return this._renderSavedInList
+    getParams(activity:Activity): () => any {
+        if (isSaving(activity)) return this._renderSavedInList
         else if (isSending(activity)) return this._renderSendTo
         else if (isAsking(activity)) return this.renderAsk;
         else throw "christ"
     }
 
-    getMainUrl(activity:Activity, skipLineup?: boolean): ?string {
-        if (isSaving(activity) && !skipLineup) return this.buildLineupUrl(activity.target)
+    getMainUrl(activity:Activity): ?string {
+        if (isSaving(activity)) return this.buildLineupUrl(activity.target)
         else if (isSending(activity)) return this.buildUserUrl(activity.target)
         else if (isAsking(activity)) return null
         else throw "christ"

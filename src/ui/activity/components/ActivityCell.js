@@ -34,7 +34,6 @@ type Props = {
     activityType: ActivityType,
     navigator: any,
     onPressItem: (any) => void,
-    skipLineup?: boolean;
     skipDescription?: boolean;
 };
 
@@ -89,7 +88,6 @@ export default class ActivityCell extends React.Component<Props, State> {
 
                     <ActivityStatus
                         activity={activity}
-                        skipLineup={this.props.skipLineup}
                         descriptionNumberOfLines={3}
                         navigator={this.props.navigator}
                         withMenu={true}

@@ -209,7 +209,6 @@ class ActivityDetailScreen extends Screen<Props, State> {
         const padding = 16;
         return <ActivityStatus
             activity={activity}
-            skipLineup={this.props.skipLineup}
             navigator={this.props.navigator}
             style={[style]}
             cardStyle={[{
