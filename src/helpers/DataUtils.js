@@ -180,6 +180,10 @@ export function isAsking(activity: Activity) {
     return activity && activity.type &&  sanitizeActivityType(activity.type) === 'asks';
 }
 
+export function isComment(activity: Activity) {
+    return activity && activity.type &&  sanitizeActivityType(activity.type) === 'comments';
+}
+
 export function timeSinceActivity(activity: Activity) {
     return activity ? TimeUtils.timeSince(Date.parse(activity.updatedAt || activity.createdAt)):'';
 }

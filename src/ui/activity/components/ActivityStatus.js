@@ -12,7 +12,7 @@ import GTouchable from "../../GTouchable"
 import {sanitizeActivityType, timeSinceActivity} from "../../../helpers/DataUtils"
 import {Avatar} from "../../UIComponents"
 import {connect} from "react-redux"
-import {getMainUrl, getHtml, showResourceActions} from "../../ActivityHelper"
+import {getMainUrl, getActivityText, showResourceActions} from "../../ActivityHelper"
 
 type Props = {
     activity: Activity,
@@ -43,7 +43,7 @@ export default class ActivityStatus extends React.Component<Props, State> {
         if (sanitizeActivityType(activity.type) === 'posts') return null
 
         let navP = this.getNavParams()
-        let {content, textNode} = getHtml(activity, navP);
+        let {content, textNode} = getActivityText(activity, navP);
 
         return (
             <View style={[styles.mainContainer, style]}>

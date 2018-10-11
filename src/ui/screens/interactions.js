@@ -18,6 +18,7 @@ import GTouchable from "../GTouchable"
 import AppShareButton from "../components/AppShareButton"
 import {STYLES} from "../UIStyles"
 import {TRANSPARENT_SPACER} from "../UIComponents"
+import {getActivityText} from "../ActivityHelper"
 
 type Props = {
     navigator: *,
@@ -109,25 +110,14 @@ export class InteractionScreen extends Screen<Props, State> {
         )
     }
 
-
-    /*
-    activity: {
-        type:
-        user: {
-            firstName:
-            lastName:
-        }
-        resource: {
-            type:
-            content: (if Ask)
-
-            resource: {
-                title:
-            }
-        }
+    getNavParams() {
+        const {navigator, dispatch} = this.props
+        return {navigator, dispatch}
     }
-    */
+
     renderContentByType(activity:Activity) {
+        return getActivityText(activity, this.getNavParams())
+
         if (!activity) return null;
         let type = activity.type.toLowerCase();
         const resource = activity.resource;
