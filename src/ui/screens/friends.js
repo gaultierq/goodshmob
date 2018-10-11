@@ -14,7 +14,7 @@ import * as Nav from "../Nav"
 import {openUserSheet, seeUser} from "../Nav"
 import {STYLES} from "../UIStyles"
 import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
-import ShareButton from "../components/ShareButton"
+import AppShareButton from "../components/AppShareButton"
 import PersonRowI from "../activity/components/PeopleRow"
 
 

@@ -13,8 +13,7 @@ import PersonRowI from "../activity/components/PeopleRow"
 import {openLinkSafely, STYLES} from "../UIStyles"
 import GButton from "../components/GButton"
 import Screen from "../components/Screen"
-import _Messenger from "../../managers/Messenger"
-import ShareButton from "../components/ShareButton"
+import AppShareButton from "../components/AppShareButton"
 
 export type Contact = {
     recordID: string,
@@ -60,22 +59,26 @@ export default class ContactList extends Screen<Props, State> {
     state = {
     }
 
-    // constructor() {
-    // }
-
     componentDidMount() {
+        Contacts.checkPermission((err, permission) => {
+            if (err) throw err;
+            if (permission === 'authorized') {
+                this.syncContacts()
+            }
+        })
+    }
+
+    addNavButton() {
         const navigator = this.props.navigator
         if (navigator) {
-            // this.props.navigator.setButtons({
-            //     // ...ActivityDetailScreen.navigatorButtons,
-            //     rightButtons: [{
-            //         id: 'contact_screen_options',
-            //         icon: require('../../img2/moreDotsGrey.png'),
-            //         // disableIconTint: true,
-            //     }]
-            // })
-
-
+            this.props.navigator.setButtons({
+                // ...ActivityDetailScreen.navigatorButtons,
+                rightButtons: [{
+                    id: 'contact_screen_options',
+                    icon: require('../../img2/moreDotsGrey.png'),
+                    // disableIconTint: true,
+                }]
+            })
             navigator.addOnNavigatorEvent((event) => {
 
                 if (event.type === 'NavBarButtonPress') {
@@ -91,9 +94,9 @@ export default class ContactList extends Screen<Props, State> {
                             switch (value) {
                                 case 0:
                                     this.syncContacts()
-                                    break;
+                                    break
                             }
-                        });
+                        })
                     }
                 }
             })
@@ -116,10 +119,11 @@ export default class ContactList extends Screen<Props, State> {
     }
 
     render() {
+        let {contacts, ...attr} = this.props
         return (
             <FlatList
-                data={this.props.contacts.data}
-                renderItem={this.props.renderItem}
+                data={contacts.data}
+                // renderItem={this.props.renderItem}
                 // ListFooterComponent={() => this.props.onLoadMore ? this.renderSearchFooter(searchState) : null}
                 keyExtractor={(item) => item.id}
                 onScrollBeginDrag={Keyboard.dismiss}
@@ -135,7 +139,7 @@ export default class ContactList extends Screen<Props, State> {
                     refreshing={this.state.syncing}
                     onRefresh={this.onRefresh.bind(this)}
                 />}
-                ListHeaderComponent={<ShareButton text={i18n.t('actions.invite')}/>}
+                {...attr}
             />
         )
     }

@@ -20,9 +20,10 @@ import {renderTabBarFactory} from "../UIComponents"
 import type {Contact} from "./contact_list"
 import ContactList, {createHandler, toPerson} from "./contact_list"
 import FriendsScreen from "./friends"
-import {currentUserId} from "../../managers/CurrentUser"
+import {currentUser, currentUserId} from "../../managers/CurrentUser"
 import PersonRowI from "../activity/components/PeopleRow"
 import GButton from "../components/GButton"
+import AppShareButton from "../components/AppShareButton"
 
 type Props = NavigableProps & {
     initialIndex: number,
@@ -53,8 +54,15 @@ export default class CommunityScreen extends Screen<Props, State> {
 
     constructor(props: Props) {
         super(props)
+
+        const routes = ROUTES
+        if (_.get(currentUser(), 'meta.friendsCount') === 0) {
+            _.remove(routes, r => r.key === 'friends')
+        }
+
+
         this.state = {
-            routes: ROUTES,
+            routes,
             index: _.toNumber(props.initialIndex)
         }
     }
@@ -64,7 +72,7 @@ export default class CommunityScreen extends Screen<Props, State> {
             style={{flex: 1}}
             navigationState={{...this.state}}
             renderScene={this.renderScene.bind(this)}
-            renderTabBar={renderTabBarFactory(this.isFocused.bind(this))}
+            renderTabBar={this.state.routes.length === 1 ? ()=>null : renderTabBarFactory(this.isFocused.bind(this))}
             renderPager={props => <PagerPan {...props} />}
             swipeEnabled={false}
             onIndexChange={index => {
@@ -93,6 +101,7 @@ export default class CommunityScreen extends Screen<Props, State> {
                 <ContactList
                     navigator={this.props.navigator}
                     renderItem={({item}) => renderContact(item)}
+                    ListHeaderComponent={<AppShareButton text={i18n.t('actions.invite')}/>}
                     // focused={visible && focused}
                 />
             )

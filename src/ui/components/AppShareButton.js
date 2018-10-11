@@ -11,7 +11,7 @@ type Props = {
 type State = {
 }
 
-export default class ShareButton extends React.Component<Props, State> {
+export default class AppShareButton extends React.Component<Props, State> {
 
     render() {
         return (

@@ -15,7 +15,7 @@ import type {Activity} from "../../types"
 import Screen from "../components/Screen"
 import NavManager from "../../managers/NavManager"
 import GTouchable from "../GTouchable"
-import ShareButton from "../components/ShareButton"
+import AppShareButton from "../components/AppShareButton"
 import {STYLES} from "../UIStyles"
 import {TRANSPARENT_SPACER} from "../UIComponents"
 
@@ -64,7 +64,7 @@ export class InteractionScreen extends Screen<Props, State> {
                     contentContainerStyle={{paddingTop: 10}}
                     ListEmptyComponent={
                         <View>
-                            <ShareButton text={i18n.t('actions.invite')}/>
+                            <AppShareButton text={i18n.t('actions.invite')}/>
                             <Text style={STYLES.empty_message}>{i18n.t('interactions.empty_screen')}</Text>
                         </View>
                     }
