@@ -101,6 +101,9 @@ export default {
             added_somewhere: "added it",
             to: "%{from} sent %{what} to %{to}",
             ask: "%{asker} needs some tips!",
+            answer: "%{answerer} anszered '%{what}'",
+            comment: "%{commenter} a commenté %{what}",
+            like: "%{liker} a aimé %{what}",
         },
         buttons:{
             "comment": {

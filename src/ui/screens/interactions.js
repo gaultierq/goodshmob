@@ -9,16 +9,13 @@ import * as Api from "../../managers/Api"
 import {reduceList2} from "../../managers/Api"
 import Feed from "../components/feed"
 import ApiAction from "../../helpers/ApiAction"
-import UserActivity from "../activity/components/UserActivity"
-import {buildData, sanitizeActivityType} from "../../helpers/DataUtils"
+import {buildData} from "../../helpers/DataUtils"
 import type {Activity} from "../../types"
 import Screen from "../components/Screen"
-import NavManager from "../../managers/NavManager"
-import GTouchable from "../GTouchable"
 import AppShareButton from "../components/AppShareButton"
-import {STYLES} from "../UIStyles"
+import {LINEUP_PADDING, STYLES} from "../UIStyles"
 import {TRANSPARENT_SPACER} from "../UIComponents"
-import {getActivityText} from "../ActivityHelper"
+import ActivityStatus from "../activity/components/ActivityStatus"
 
 type Props = {
     navigator: *,
@@ -42,21 +39,19 @@ const mapStateToProps = (state, ownProps) => ({
 export class InteractionScreen extends Screen<Props, State> {
 
 
-    state = {};
-
     render() {
         let {interaction} = this.props
         let list = interaction.list
 
         return (
-            <View style={styles.container}>
+            <View style={{flex: 1,}}>
 
                 <Feed
                     initialNumToRender={10}
                     data={list}
                     renderItem={this.renderItem.bind(this)}
                     fetchSrc={{
-                        callFactory: this.fetchInteractions.bind(this),
+                        callFactory: InteractionScreen.fetchInteractions.bind(this),
                         useLinks: true,
                         action: FETCH_INTERACTIONS,
                     }}
@@ -76,8 +71,7 @@ export class InteractionScreen extends Screen<Props, State> {
         );
     }
 
-    //"interactions?include=user,resource,resource.resource&page=#{page}"
-    fetchInteractions() {
+    static fetchInteractions() {
         return new Api.Call().withMethod('GET')
             .withRoute(`interactions`)
             .include("user,resource,resource.resource")
@@ -85,105 +79,17 @@ export class InteractionScreen extends Screen<Props, State> {
 
     renderItem({item}) {
         let activity: Activity = buildData(this.props.data, item.type, item.id);
-        if (!activity) return null
-
-        let user = activity.user;
-        let createdAt = activity.createdAt;
-        let content = this.renderContentByType(activity);
-
-        if (!content) return null;
-
-        return (
-            <GTouchable
-                onPress={() => {
-                    NavManager.goToDeeplink(NavManager.localDeeplink(activity));
-                }}>
-                <UserActivity
-                    activityTime={createdAt}
-                    user={user}
-                    navigator={this.props.navigator}
-                    style={{paddingLeft: 12, paddingRight: 12}}
-                >
-                    {content}
-                </UserActivity>
-            </GTouchable>
-        )
-    }
-
-    getNavParams() {
-        const {navigator, dispatch} = this.props
-        return {navigator, dispatch}
-    }
-
-    renderContentByType(activity:Activity) {
-        return getActivityText(activity, this.getNavParams())
-
-        if (!activity) return null;
-        let type = activity.type.toLowerCase();
-        const resource = activity.resource;
-
-        const user = activity.user;
-
-        const isAsk = sanitizeActivityType(resource.type) === 'asks';
-
-        let build = (key) => {
-
-
-            let username = user.firstName + " " + user.lastName;
-
-            if (!resource) {
-                console.warn(`say QG no resource found on activityId=${activity.id} type=${activity.type}`);
-            }
-            else {
-
-                if (isAsk) {
-                    // return <Text style={{fontSize: 12}}>{username + " ask"}</Text>
-                    return <Text style={{fontSize: 14}}>
-                        {i18n.t(key, {username, what: resource.content})}
-                    </Text>
-                }
-                else {
-                    let innerResource = resource.resource;
-                    if (!innerResource) {
-                        console.warn("No resource for " , activity);
-                        return null;
-                    }
-                    let item_title = _.toUpper(innerResource.title);
-
-                    return <Text style={{fontSize: 14}}>
-                        {i18n.t(key, {username, what: item_title})}
-                    </Text>
-                }
-            }
-
-        };
-
-        switch(type) {
-            case 'answer':
-                return build("interactions.answer");
-            case 'comment':
-                if (isAsk) return build("interactions.comment_ask");
-                return build("interactions.comment");
-            case 'like':
-                return build("interactions.like");
-            default:
-                console.error("unhandled type:" + type);
-        }
-        return null;
+        return (<ActivityStatus
+            activity={activity}
+            descriptionNumberOfLines={3}
+            navigator={this.props.navigator}
+            cardStyle={{
+                paddingHorizontal: LINEUP_PADDING,
+                paddingVertical: 10,}}
+        />)
     }
 }
 
 export const reducer = (state = Api.initialListState(), action) => {
     return reduceList2(state, action, FETCH_INTERACTIONS)
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "white",
-    },
-    description: {
-        backgroundColor: 'transparent',
-        margin: 10
-    },
-})

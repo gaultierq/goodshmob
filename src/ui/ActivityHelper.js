@@ -3,7 +3,7 @@ import {fullName, savingCount} from "../helpers/StringUtils"
 import HTMLView from "react-native-htmlview/HTMLView"
 import React from "react"
 import Config from "react-native-config"
-import {isAsking, isSaving, isSending} from "../helpers/DataUtils"
+import {isAsking, isComment, isLike, isSaving, isSending, sanitizeActivityType} from "../helpers/DataUtils"
 import {StyleSheet} from "react-native"
 import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "./fonts"
 import {Colors} from "./colors"
@@ -15,7 +15,8 @@ export function getActivityText(activity: Activity, navP: NavParams): () => any 
     if (isSaving(activity)) return _renderSavedInList(activity, navP)
     else if (isSending(activity)) return _renderSendTo(activity)
     else if (isAsking(activity)) return renderAsk(activity)
-    else if (isComment(activity)) return renderAsk(activity)
+    else if (isComment(activity)) return renderComment(activity)
+    else if (isLike(activity)) return renderLike(activity)
     else throw "christ:" + activity.type
 }
 
@@ -28,7 +29,7 @@ export function getMainUrl(activity: Activity): ?string {
 
 function _renderSavedInList(activity: Activity, navP: NavParams) {
     let target = activity.target
-
+    let item = activity.resource
     const user = activity.user
     let textNode = (
         <HTMLView
@@ -41,7 +42,7 @@ function _renderSavedInList(activity: Activity, navP: NavParams) {
                 {
                     adder: getUserHtml(user),
                     lineup: getLineupHtml(target),
-                    what: getItemHtml(activity)
+                    what: getItemHtml(item)
                 }
             )}</div>`}
             stylesheet={htmlStyles}
@@ -74,8 +75,8 @@ function decorateUrlWithLongPress(url: string): URL {
     return result
 }
 
-function getItemHtml(activity: Activity) {
-    return `<i>${truncate(activity.resource.title)}</i>`
+function getItemHtml(item: Item) {
+    return `<i>${truncate(item.title)}</i>`
 }
 
 function truncate(string: string) {
@@ -88,13 +89,14 @@ function truncate(string: string) {
 function _renderSendTo(activity) {
     let target = activity.target
     const user = activity.user
+    const item = activity.resource
     let textNode = <HTMLView
         // renderNode={renderNode}
         value={`<div>${i18n.t("activity_item.header.to",
             {
                 from: getUserHtml(user),
                 to: getUserHtml(target),
-                what: getItemHtml(activity)
+                what: getItemHtml(item)
             }
         )}</div>`}
         stylesheet={htmlStyles}
@@ -107,15 +109,63 @@ function _renderSendTo(activity) {
 }
 
 function renderComment(activity) {
-    let target = activity.target
+    let resource = _.get(activity, 'resource')
+
+
+    if (sanitizeActivityType(resource.type) === 'asks') {
+        return renderAnswerToAsk(activity)
+    }
+    //saving
+    //send
+    let item = resource.resource
+
+
     const user = activity.user
     let textNode = <HTMLView
         // renderNode={renderNode}
-        value={`<div>${i18n.t("activity_item.header.to",
+        value={`<div>${i18n.t("activity_item.header.comment",
             {
-                from: getUserHtml(user),
-                to: getUserHtml(target),
-                what: getItemHtml(activity)
+                commenter: getUserHtml(user),
+                what: getItemHtml(item)
+            }
+        )}</div>`}
+        stylesheet={htmlStyles}
+    />
+
+    return {
+        textNode,
+        content: activity.description
+    }
+}
+
+function renderAnswerToAsk(activity) {
+    const user = activity.user
+    const resource = _.get(activity, 'resource')
+    let textNode = <HTMLView
+        value={`<div>${i18n.t("activity_item.header.answer",
+            {
+                answerer: getUserHtml(user),
+                what: `<i>${truncate(resource.content)}</i>`
+            }
+        )}</div>`}
+        stylesheet={htmlStyles}
+    />
+
+    return {
+        textNode,
+        content: activity.description
+    }
+}
+
+function renderLike(activity) {
+    let resource = _.get(activity, 'resource.resource')
+    const user = activity.user
+    let textNode = <HTMLView
+        // renderNode={renderNode}
+        value={`<div>${i18n.t("activity_item.header.like",
+            {
+                liker: getUserHtml(user),
+                what: getItemHtml(resource)
             }
         )}</div>`}
         stylesheet={htmlStyles}

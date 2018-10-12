@@ -100,7 +100,10 @@ export default {
             in: "%{adder} dans %{lineup}",
             added_somewhere: "l'a ajouté",
             to: "%{from} a envoyé %{what} à %{to}",
-            ask: "a besoin de recos !",
+            ask: "%{asker} a besoin de recos !",
+            answer: "%{answerer} a répondu à '%{what}'",
+            comment: "%{commenter} a commenté %{what}",
+            like: "%{liker} a aimé %{what}",
         },
         buttons:{
             "comment": {
