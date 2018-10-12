@@ -492,4 +492,5 @@ export default {
     search_here: "Rechercher dans cette zone",
     invite: "Inviter",
     skip: "Passer",
+    save_congratz: "<big>Félicitations !!!</big>\n<bold>%{item_title}</bold> a été enregistré dans la <bold>%{list_name}</bold>\n\nN'hésite pas à partager tes pépites avec tes amis !",
 };

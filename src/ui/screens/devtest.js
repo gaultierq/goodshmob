@@ -9,6 +9,7 @@ import {AlgoliaClient} from "../../helpers/AlgoliaUtils"
 import Config from 'react-native-config'
 import SearchUserPage from "./search/SearchUserPage"
 import BrowsePlaces from "./search/BrowsePlaces"
+import GButton from "../components/GButton"
 
 type Props = {
 };
@@ -89,5 +90,20 @@ export default class TestScreen extends Component<Props, State> {
 
     render() {
         return <BrowsePlaces navigator={null} focused={true} mapDisplay={true} />
+    }
+
+    render() {
+        return (
+            <GButton text={'show sheet'} onPress={() => {
+                this.props.navigator.showModal({
+                    screen: 'goodsh.SaveCongratz', // unique ID registered with Navigation.registerScreen
+                    animationType: 'none',
+                    passProps: {
+                        onClickClose: () => this.props.navigator.dismissModal({animationType: 'none',}),
+                    },
+                    navigatorStyle: {navBarHidden: true},
+                });
+            }} />
+        )
     }
 }
