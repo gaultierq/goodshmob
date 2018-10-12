@@ -3,7 +3,7 @@ import type {Node} from 'react'
 import React from 'react'
 import {FlatList, Keyboard, Linking, RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {connect} from "react-redux"
-import {logged} from "../../managers/CurrentUser"
+import {isCurrentUser, logged} from "../../managers/CurrentUser"
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import BottomSheet from "react-native-bottomsheet"
 import i18n from "../../i18n/i18n"
@@ -13,6 +13,7 @@ import PersonRowI from "../activity/components/PeopleRow"
 import {LINEUP_PADDING, openLinkSafely, STYLES} from "../UIStyles"
 import GButton from "../components/GButton"
 import Screen from "../components/Screen"
+import GSearchBar2 from "../components/GSearchBar2"
 
 export type Contact = {
     recordID: string,
@@ -37,7 +38,10 @@ type Props = {
 }
 
 type State = {
-    syncing?: boolean
+    syncing?: boolean,
+    searching?: boolean,
+    filter?: string,
+    searchResult?: Contact[]
 }
 
 const logger = rootlogger.createLogger('contact list')
@@ -119,28 +123,65 @@ export default class ContactList extends Screen<Props, State> {
 
     render() {
         let {contacts, ...attr} = this.props
+
+        let data, empty
+        if (_.isEmpty(this.state.filter)) {
+            data = contacts.data
+            empty = (
+                <View>
+                    <Text style={STYLES.empty_message}>{i18n.t('contacts.empty_screen')}</Text>
+                    <GButton text={i18n.t('contacts.empty_screen_button')} onPress={this.syncContacts.bind(this)}/>
+                </View>
+            )
+        }
+        else {
+            data = this.state.searchResult || []
+            empty = (
+                <View>
+                    <Text style={STYLES.empty_message}>{i18n.t('contacts.empty_search')}</Text>
+                </View>
+            )
+        }
+
+        logger.debug("render", data, this.state)
+
         return (
             <FlatList
-                data={contacts.data}
-                // renderItem={this.props.renderItem}
-                // ListFooterComponent={() => this.props.onLoadMore ? this.renderSearchFooter(searchState) : null}
+                data={data}
                 keyExtractor={(item) => item.id}
                 onScrollBeginDrag={Keyboard.dismiss}
                 keyboardShouldPersistTaps='always'
-                ListEmptyComponent={(
-                    <View>
-                        <Text style={STYLES.empty_message}>{i18n.t('contacts.empty_screen')}</Text>
-                        <GButton text={i18n.t('contacts.empty_screen_button')} onPress={this.syncContacts.bind(this)}/>
-                    </View>
-                )
-                }
+                ListEmptyComponent={empty}
                 refreshControl={<RefreshControl
                     refreshing={this.state.syncing}
                     onRefresh={this.onRefresh.bind(this)}
                 />}
                 {...attr}
+                ListHeaderComponent={
+                    (
+                        <GSearchBar2
+                            value={this.state.filter}
+                            onChangeText={filter => this.onChangeFilter(filter)}
+                            placeholder={i18n.t('search.in_my_contacts')}
+                            style={{padding: LINEUP_PADDING}}
+                        />
+                    )
+                }
             />
         )
+    }
+
+    onChangeFilter(filter:string) {
+        this.setState({filter, searching: true})
+
+        Contacts.getContactsMatchingString(this.state.filter, (err, response) => {
+            if (err) throw err
+            this.setState({
+                searchResult: response,
+                searching: false
+            })
+        })
+
     }
 
     onRefresh() {
@@ -163,7 +204,7 @@ function renderItem(contact: Contact) {
     return (
         <PersonRowI
             person={toPerson(contact)}
-            key={contact.rawContactId}
+            key={getId(contact)}
             style={{
                 margin: LINEUP_PADDING
             }}
@@ -172,13 +213,16 @@ function renderItem(contact: Contact) {
 }
 
 export function toPerson(contact: Contact) {
-    logger.debug("contact", contact)
     return {
         firstName: contact.givenName,
         lastName: contact.familyName,
         image: contact.thumbnailPath,
-        id: __IS_IOS__ ? contact.recordID : contact.rawContactId
+        id: getId(contact)
     }
+}
+
+export function getId(contact: Contact) {
+    return __IS_IOS__ ? contact.recordID : contact.rawContactId
 }
 
 export function splitContacts(contact: Contact[] = [], prioPhone: boolean) {

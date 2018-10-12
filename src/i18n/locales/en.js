@@ -75,6 +75,7 @@ export default {
         in_items: "Find anything",
         in_network: "Search in my network",
         in_users: "Find users",
+        in_my_contacts: "Rechercher dans mes contacts",
         in_my_lists: "Search in my lists",
         in_his_lists: "Search",
         by: "by",
@@ -225,6 +226,7 @@ export default {
     },
     "contacts":{
         "empty_screen": "You haven't imported your contacts yet.",
+        "empty_search": "No result found",
         "empty_screen_button": "Import",
     },
     "my_interests_screen":{

@@ -75,6 +75,7 @@ export default {
         in_items: "Saisir le nom à enregistrer",
         in_network: "Rechercher dans mon réseau",
         in_users: "Rechercher quelqu'un",
+        in_my_contacts: "Rechercher dans mes contacts",
         in_my_lists: "Rechercher dans mes listes",
         in_his_lists: "Rechercher dans ses listes",
         by: "par",
@@ -224,6 +225,7 @@ export default {
     },
     "contacts":{
         "empty_screen": "Vous n'avez pas encore importé vos contacts.",
+        "empty_search": "Pas de résultat trouvé",
         "empty_screen_button": "Importer",
     },
     "my_interests_screen":{
