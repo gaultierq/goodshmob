@@ -75,6 +75,7 @@ export default {
         in_items: "Saisir le nom à enregistrer",
         in_network: "Rechercher dans mon réseau",
         in_users: "Rechercher quelqu'un",
+        in_my_contacts: "Rechercher dans mes contacts",
         in_my_lists: "Rechercher dans mes listes",
         in_his_lists: "Rechercher dans ses listes",
         by: "par",
@@ -100,7 +101,10 @@ export default {
             in: "%{adder} dans %{lineup}",
             added_somewhere: "l'a ajouté",
             to: "%{from} a envoyé %{what} à %{to}",
-            ask: "a besoin de recos !",
+            ask: "%{asker} a besoin de recos !",
+            answer: "%{answerer} a répondu à '%{what}'",
+            comment: "%{commenter} a commenté %{what}",
+            like: "%{liker} a aimé %{what}",
         },
         buttons:{
             "comment": {
@@ -219,6 +223,11 @@ export default {
         },
         "empty_screen": "Découvre ici les actus de tes contacts."
     },
+    "contacts":{
+        "empty_screen": "Vous n'avez pas encore importé vos contacts.",
+        "empty_search": "Pas de résultat trouvé",
+        "empty_screen_button": "Importer",
+    },
     "my_interests_screen":{
         "empty_screen": "Explore les listes de tes amis, et suis les plus intéressantes !",
         "search_lists": "Trouver des listes à suivre",
@@ -266,8 +275,14 @@ export default {
         "add_comment_placeholder":"Répondre"
     },
     "send_screen":{
-        "add_description_placeholder":"Adresser un petit mot à %{recipient}",
-        "sent": "Envoyé"
+        "add_description_placeholder": "Ajouter une note à l'envoi",
+        "sent": "Envoyé",
+        actions: {
+            send: "Envoyer",
+            sending: "envoi en cours",
+            send_ok: "✓  envoyé",
+            send_ko: "Réessayer",
+        }
     },
     "interactions":{
         "saving":"a enregistré %{what}",
@@ -391,9 +406,11 @@ export default {
         change: "Modifier",
         change_title: "Modifier le titre",
         edit_saving_menu: "Éditer ce goodsh",
+        contact_list_options: "Options des contacts",
         share: "Partager",
         share_list: "Partager cette liste",
         change_description: "Modifier la description",
+        sync_contact_list: "Synchroniser la liste",
         move: "Déplacer",
         change_name: "Changer le nom de cette liste",
         undo: "Annuler",
@@ -478,5 +495,8 @@ export default {
     },
     current_location: "Autour de moi",
     by: "par %{who}",
-    search_here: "Rechercher dans cette zone"
-};
+    search_here: "Rechercher dans cette zone",
+    invite: "Inviter",
+    skip: "Passer",
+    save_congratz: "<big>Félicitations !!!</big>\n<bold>%{item_title}</bold> a été enregistré dans la <bold>%{list_name}</bold>\n\nN'hésite pas à partager tes pépites avec tes amis !",
+}

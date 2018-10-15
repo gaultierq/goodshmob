@@ -22,7 +22,7 @@ import type {Id, Lineup, RNNNavigator, Saving} from "../../types"
 import {ViewStyle} from "../../types"
 import {logged} from "../../managers/CurrentUser"
 import {Navigation} from 'react-native-navigation'
-import {displayActivityActions, seeActivityDetails, seeList} from "../Nav"
+import {displaySavingActions, seeActivityDetails, seeList} from "../Nav"
 import {Colors} from "../colors"
 import Feed from "../components/feed"
 import LineupCellSaving from "../components/LineupCellSaving"
@@ -192,7 +192,7 @@ export const LineupH1 = connect()((props: Props1) => {
                 <GTouchable
                     onPress={() => seeActivityDetails(navigator, saving)}
                     onLongPress={saving.pending ? null : ()=> {
-                        displayActivityActions(navigator, props.dispatch, saving.id, saving.type)
+                        displaySavingActions(navigator, props.dispatch, saving.id, saving.type)
                     }}
                 >
                     <LineupCellSaving item={saving.resource} />

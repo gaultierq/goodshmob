@@ -13,6 +13,7 @@ import * as Nav from "../Nav"
 import {Colors} from "../colors"
 import GTouchable from "../GTouchable"
 import Sheet from "../components/sheet"
+import {LINEUP_PADDING} from "../UIStyles"
 
 
 type Props = {
@@ -66,7 +67,7 @@ class ShareScreen extends Component<Props, State> {
                 }}>
                     {renderSharedObject && renderSharedObject()}
 
-                    <View style={{margin: 16, flexDirection: 'row', justifyContent: 'space-around'}}>
+                    <View style={{margin: LINEUP_PADDING, flexDirection: 'row', justifyContent: 'space-around'}}>
                         <GTouchable
                             style={styles.button}
                             onPress={()=>this.copyToClipboard()}

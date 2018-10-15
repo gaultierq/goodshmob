@@ -99,26 +99,4 @@ export default class AddLineupSheet extends Component<Props, State> {
                 });
         }
     }
-
 }
-
-
-const styles = StyleSheet.create({
-    container: {
-        // flex: 1,
-    },
-    header: {
-        // flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        // padding: 10,
-        // marginTop: 10,
-        // marginBottom: 10,
-    },
-    headerText:{
-        flex: 1,
-        textAlignVertical: 'center',
-
-        fontSize: 16,
-    },
-});

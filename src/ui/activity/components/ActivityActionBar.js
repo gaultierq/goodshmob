@@ -12,18 +12,8 @@ import {fullName, toUppercase} from "../../../helpers/StringUtils"
 import {buildData, sanitizeActivityType} from "../../../helpers/DataUtils"
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import {default as FeatherIcon} from 'react-native-vector-icons/Feather'
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors"
-import {
-    A_BUY,
-    A_LIKE,
-    A_SAVE,
-    A_UNLIKE,
-    A_UNSAVE,
-    ActivityRights,
-    canPerformAction,
-    getPendingLikeStatus
-} from "../../rights"
+import {getPendingLikeStatus} from "../../ActivityHelper"
 import {CREATE_COMMENT} from "../../screens/comments"
 import GTouchable from "../../GTouchable"
 import * as Nav from "../../Nav"
@@ -33,6 +23,7 @@ import StoreManager from "../../../managers/StoreManager"
 import _Messenger from "../../../managers/Messenger"
 import {SFP_TEXT_MEDIUM} from "../../fonts"
 import {LINEUP_PADDING} from "../../UIStyles"
+import {A_BUY, A_LIKE, A_SAVE, A_UNLIKE, A_UNSAVE, GSavingAction, SavingRights} from "../../savingRights"
 
 export type ActivityActionType = 'comment'| 'like'| 'unlike'| 'share'| 'save'| 'unsave'| 'see'| 'buy'| 'answer';
 const ACTIONS = ['comment', 'like', 'unlike','share', 'save', 'unsave', 'see', 'buy', 'answer'];
@@ -64,13 +55,13 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
         //let activity: Model.Activity = this.props.activity;
 
-        let ar = new ActivityRights(activity);
+        let ar = new SavingRights(activity);
 
 
         let leftButtons = this.getButtons(['comment', 'answer', 'like', 'unlike', 'share'], activity);
 
         let rightButtons
-        if (ar.canSave()) {
+        if (ar.canExec(A_SAVE)) {
             rightButtons = (
                 <GTouchable onPress={()=> {
                     this.execSave(activity)
@@ -229,25 +220,25 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     }
 
     canUnsave(activity: Activity) {
-        return canPerformAction(A_UNSAVE, {activity})
+        return A_UNSAVE.canExec({activity}.activity)
     }
 
     canSave(activity: Activity) {
-        return canPerformAction(A_SAVE, {activity})
+        return A_SAVE.canExec({activity}.activity)
     }
 
     canLike(activity: Activity) {
         let pendingLike = this.getPendingLikeStatus(activity);
-        return pendingLike ? pendingLike === -1 : canPerformAction(A_LIKE, {activity})
+        return pendingLike ? pendingLike === -1 : A_LIKE.canExec({activity}.activity)
     }
 
     canUnlike(activity: Activity) {
         let pendingLike = this.getPendingLikeStatus(activity);
-        return pendingLike ? pendingLike === 1 : canPerformAction(A_UNLIKE, {activity})
+        return pendingLike ? pendingLike === 1 : A_UNLIKE.canExec({activity}.activity)
     }
 
     canBuy(activity: Activity) {
-        return canPerformAction(A_BUY, {activity})
+        return A_BUY.canExec({activity}.activity)
     }
 
 

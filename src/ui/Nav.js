@@ -128,7 +128,7 @@ export function seeActivityDetails(navigator: RNNNavigator, activity: Activity) 
 
 
 //FIXME: check for rights (if activity not in cache, display something, request + loader)
-export function displayActivityActions(navigator: RNNNavigator, dispatch: *, activityId: Id, activityType: ActivityType) {
+export function displaySavingActions(navigator: RNNNavigator, dispatch: *, activityId: Id, activityType: ActivityType) {
     BottomSheet.showBottomSheetWithOptions({
         options: [
             i18n.t("actions.change_description"),
@@ -169,6 +169,39 @@ export function displayActivityActions(navigator: RNNNavigator, dispatch: *, act
         }
     });
 }
+
+
+
+
+export function displaySavingActions2(
+    navigator: RNNNavigator, dispatch: *, activityId: Id, activityType: ActivityType) {
+
+    let menuAction : LineupMenuAction[] =
+        _.filter(LineupRights.getActions(lineup), filter)
+            .map(a => MENU_ACTIONS.get(a))
+            .filter(a => !!a)
+
+    BottomSheet.showBottomSheetWithOptions({
+            options: [
+                ...menuAction.map(a => a.label),
+                i18n.t("actions.cancel")
+            ],
+            title: lineup.name,
+            // dark: true,
+            // destructiveButtonIndex: 2,
+            cancelButtonIndex: menuAction.length,
+        }, (value) => {
+            const lineupMenuAction = menuAction[value];
+            if (lineupMenuAction) {
+                lineupMenuAction.handler({navigator, dispatch, lineup})
+            }
+        }
+    );
+}
+
+
+
+
 
 let createShareIntent = (what, url) => {
     let prepareIntentContent = (title, url) => {

@@ -5,18 +5,15 @@ import React, {Component} from 'react'
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
 import {connect} from "react-redux"
 import {currentUserId, logged} from "../../managers/CurrentUser"
-import type {Dispatchee, Id, Item, User} from "../../types"
+import type {Dispatchee, Item, RequestState, User} from "../../types"
 import FriendsFeed from "./friends"
-import FriendCell from "../components/FriendCell"
-import * as UI from "../UIStyles"
 import {LINEUP_PADDING} from "../UIStyles"
-import SmartInput from "../components/SmartInput"
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-import {MainBackground, TRANSPARENT_SPACER} from "../UIComponents"
-import GTouchable from "../GTouchable"
-import {userFirstName} from "../../helpers/StringUtils"
+import PersonRowI from "../activity/components/PeopleRow"
+import GButton from "../components/GButton"
+import * as Api from "../../managers/Api"
 import {Colors} from "../colors"
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import {renderTextAndDots} from "../UIComponents"
 
 type Props = {
     data?: any,
@@ -25,8 +22,8 @@ type Props = {
 };
 
 type State = {
-    sent: {[Id]: string},
-    selected?: Id
+    message: string,
+    reqSendFriend: { Id?: RequestState}
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -38,85 +35,81 @@ const mapStateToProps = (state, ownProps) => ({
 export default class SendScreen extends Component<Props, State> {
 
     state = {
-        sent: {},
+        message: "",
+        reqSendFriend: {}
     };
 
     render() {
-        const {navigator, sendAction} = this.props;
+        const {navigator} = this.props;
 
         return (
-            <MainBackground>
-                <KeyboardAwareScrollView
-                    contentContainerStyle={{padding: LINEUP_PADDING, flex:1}}
-                    scrollEnabled={false}
-                    keyboardShouldPersistTaps='always'
-                >
-                    <FriendsFeed
-                        userId={currentUserId()}
-                        navigator={navigator}
-                        renderItem={(friend) => this.renderItem(friend)}
-                        ItemSeparatorComponent={TRANSPARENT_SPACER()}
-                    />
+            <KeyboardAwareScrollView
+                contentContainerStyle={{flex:1}}
+                scrollEnabled={false}
+                keyboardShouldPersistTaps='always'
+            >
 
-                </KeyboardAwareScrollView>
-            </MainBackground>
+                <FriendsFeed
+                    userId={currentUserId()}
+                    navigator={navigator}
+                    renderItem={(friend) => this.renderItem(friend)}
+                    ListHeaderComponent={
+                        <TextInput
+                            style={{
+                                fontSize: 24,
+                                margin: LINEUP_PADDING,
+                            }}
+                            onChangeText={message => this.setState({message})}
+                            placeholder={i18n.t("send_screen.add_description_placeholder")}
+                            multiline={true}
+                            autoFocus={true}
+                            numberOfLines={3}
+                        />
+                    }
+                />
+
+            </KeyboardAwareScrollView>
         )
     }
 
     renderItem(friend: Item) : Node {
+        if (!friend) return null
 
-        let id = friend.id;
-
-        let sent : boolean = id in this.state.sent;
-
-        let isSelected = id === this.state.selected;
         return (
-            <GTouchable
-                disabled={sent}
-                onPress={()=>this.setState({selected: isSelected ? null : id})}>
-                <FriendCell
-                    friend={friend}
-                    childrenBelow={!sent}
-                >
-                    {
-                        this.renderChildren(isSelected, sent, friend)
-                    }
-                </FriendCell>
-            </GTouchable>
+            <PersonRowI
+                person={friend}
+                key={friend.id}
+                style={{
+                    margin: LINEUP_PADDING
+                }}
+                rightComponent={this.rightComp(friend)}
+            />
         )
     }
 
-    renderChildren(isSelected: boolean, sent: boolean, friend: User) {
-        if (sent) return <Text style={UI.TEXT_LESS_IMPORTANT}>{i18n.t("send_screen.sent")}</Text>
-        return isSelected &&
-            <View style={{flex: 1}}>
-                <SmartInput
-                    containerStyle={{
-                        paddingVertical: 6,
-                        // backgroundColor: 'red'
-                    }}
-                    inputStyle={{
-                        fontSize: 16
-                    }}
-                    // inputContainerStyle={{borderRadius: 1}}
-                    execAction={(input: string) => {
-                        return this.props.dispatch(this.props.sendAction(friend, input))
-                            .then((info, err)=> {
-                                const targetId = info.data.relationships.target.data.id;
-                                let sent = this.state.sent;
-                                sent[targetId] = true;
-                                this.setState({sent})
-                            });
-                    }}
-                    placeholder={i18n.t("send_screen.add_description_placeholder", {recipient: userFirstName(friend)})}
-                    autoFocus
-                    height={35}
-                    numberOfLines={1}
-                    canSendDefault={true}
-                    returnKeyType={'send'}
-                    button={<MaterialIcons name="send" size={28} color={Colors.greyishBrown} />}
-                />
-            </View>;
+    rightComp(friend: User) {
+        let id = friend.id
+        let req = this.state.reqSendFriend[id]
+        const style = {fontSize: 16, color: Colors.brownishGrey}
+
+        if (req === "ok") return  <Text style={style}>{i18n.t("send_screen.actions.send_ok")}</Text>
+        if (req === "ko") return <GButton text={i18n.t('send_screen.actions.send_ko')} onPress={() => this._sendTo(friend)}/>
+        if (req === "sending") return renderTextAndDots(i18n.t('send_screen.actions.sending'), style)
+        return <GButton text={i18n.t('actions.send')} onPress={() => this._sendTo(friend)}/>
     }
 
+    _sendTo = (friend: User) => {
+        let id = friend.id
+
+        Api.safeDispatchAction.call(
+            this,
+            this.props.dispatch,
+            this.props.sendAction(friend, this.state.message),
+            `reqSendFriend.[${id}]`
+        )
+    }
+
+
 }
+
+

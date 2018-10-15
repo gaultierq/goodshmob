@@ -17,7 +17,7 @@ import {CANCELABLE_MODAL2, seeActivityDetails} from "../Nav"
 import Screen from "../components/Screen"
 import {LINEUP_PADDING, renderSimpleButton, STYLES} from "../UIStyles"
 import {Colors} from "../colors"
-import ShareButton from "../components/ShareButton"
+import AppShareButton from "../components/AppShareButton"
 import {Call, safeDispatchAction} from "../../managers/Api"
 import {buildData} from "../../helpers/DataUtils"
 import ActivityStatus from "../activity/components/ActivityStatus"
@@ -42,7 +42,7 @@ type NetworkSection = {
     network: state.network,
     data: state.data,
     pending: state.pending,
-    activity: state.activity
+    activity: state.saving
 }))
 class NetworkScreen extends Screen<Props, State> {
 
@@ -138,20 +138,20 @@ class NetworkScreen extends Screen<Props, State> {
 
             if (event.id === 'friends') {
                 navigator.showModal({
-                    screen: 'goodsh.FriendsScreen',
+                    screen: 'goodsh.Community',
                     title: i18n.t("community.screens.friends"),
-                    passProps:{
-                        userId: currentUserId(),
-                    },
+                    // passProps:{
+                    //     userId: currentUserId(),
+                    // },
                     navigatorButtons: {
                         ...Nav.CANCELABLE_MODAL,
-                        rightButtons: [
-
-                            {
-                                id: 'friendsSearch',
-                                icon: require('../../img2/searchHeaderIcon.png'),
-                            },
-                        ]
+                        // rightButtons: [
+                        //
+                        //     {
+                        //         id: 'friendsSearch',
+                        //         icon: require('../../img2/searchHeaderIcon.png'),
+                        //     },
+                        // ]
                     }
                 });
             }
@@ -203,7 +203,7 @@ class NetworkScreen extends Screen<Props, State> {
                     }}
                     hasMore={!network1.hasNoMore}
                     scrollUpOnBack={scrollUpOnBack}
-                    ListEmptyComponent={<View><Text style={STYLES.empty_message}>{i18n.t('community.empty_screen')}</Text><ShareButton text={i18n.t('actions.invite')}/></View>}
+                    ListEmptyComponent={<View><Text style={STYLES.empty_message}>{i18n.t('community.empty_screen')}</Text><AppShareButton text={i18n.t('actions.invite')}/></View>}
                     // initialNumToRender={5}
                     decorateLoadMoreCall={(sections: any[], call: Call) => call.addQuery({id_lt: _.last(sections).id})}
                     visibility={super.getVisibility()}

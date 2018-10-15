@@ -275,6 +275,22 @@ export const categorySearch = {
         title: 'Test goodsh.CategorySearchScreen',
     },
 }
+export const contacts = {
+    screen: {
+        screen: 'goodsh.ContactList',
+        title: 'Test goodsh.ContactList',
+    },
+}
+export const community = {
+    screen: {
+        screen: 'goodsh.Community',
+        title: 'Test goodsh.Community',
+
+    },
+    passProps: {
+        initialIndex: 1
+    }
+}
 
 export const test = {
     screen: {
@@ -285,25 +301,13 @@ export const test = {
     passProps: {
         itemId: "8ab94a3c-43b2-4e5c-acfb-d4ff268f93b1",
     }
-};
+}
 
-//change this line
 
- // testScreen = test;
-// testScreen = profileScreen;
-// testScreen = commentsScreen;
-// testScreen = communityScreen;
-//  testScreen = sendScreen;
-//  testScreen = homeScreen;
-//  testScreen = interactionsScreen;
-//  testScreen = userScreen;
-//  testScreen = addItemScreen;
- // testScreen = addItemScreen2;
-// testScreen = networkSearchScreen;
-//  testScreen = searchItemsScreen;
-//  testScreen = homeSearchItemsScreen;
-//  testScreen = networkScreen;
-//  testScreen = lineupScreen;
-//  testScreen = activityDetailScreen;
-//  testScreen = loginScreen;
-//  testScreen = friendScreen;
+export const inviteManyContacts = {
+    screen: {
+        screen: 'goodsh.InviteManyContacts',
+        title: 'Test goodsh.InviteManyContacts',
+
+    },
+}

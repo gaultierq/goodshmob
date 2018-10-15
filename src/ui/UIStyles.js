@@ -85,9 +85,6 @@ export function styleMargin(left?: number, top?: number, right?: number, bottom?
     return styleLTRB(arguments, "margin");
 }
 
-//TODO: convert to stylesheet
-export const TEXT_LESS_IMPORTANT = {fontSize: 12, color: Colors.greyish};
-
 export const LINEUP_PADDING = 15
 
 type ButtonOptions = {disabled?: boolean, loading?: boolean, style?: ViewStyle, textStyle?: TextStyle};
@@ -141,12 +138,12 @@ export function renderLink(
 
     return renderSimpleLink(text, handler, options);
 }
-export function openLinkSafely(url: string) {
+export function openLinkSafely(url: ?string) {
     Linking.canOpenURL(url).then(supported => {
         if (supported) {
             Linking.openURL(url);
         } else {
-            console.log("Don't know how to open URI: " + url);
+            console.log("Don't know how to open URI: ", url);
         }
     })
 }

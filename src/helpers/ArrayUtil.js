@@ -29,3 +29,17 @@ export function indexOfOr0(array, predicate) {
     }
     return 0
 }
+
+export function toggle(array, element) {
+
+    if (_.isArray(array)) {
+        let i = _.indexOf(array, element)
+        if (i === -1) {
+            array.push(element)
+        }
+        else {
+            array.splice(i, 1)
+        }
+    }
+
+}

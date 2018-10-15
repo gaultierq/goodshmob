@@ -91,7 +91,13 @@ export type User = Base & {
     timezone: any,
     goodshbox: List,
     lists: any,
+}
 
+export type Person = {
+    firstName: string,
+    lastName: string,
+    image: string,
+    id: string
 }
 
 export type Comment = Base & {
@@ -196,4 +202,13 @@ export type ImageStyle = ____ImageStyleProp_Internal
 export type GListState = {
     list: Array<any>,
     hasMore?: boolean
+}
+
+export type OutMessage = {
+    title: string, body: string
+}
+
+export type NavParams = {
+    dispatch: any,
+    navigator: RNNNavigator,
 }

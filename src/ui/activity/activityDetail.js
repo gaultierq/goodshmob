@@ -33,7 +33,7 @@ import ActivityActionBar from "./components/ActivityActionBar"
 import FeedSeparator from "./components/FeedSeparator"
 import {mergeItemsAndPendings} from "../../helpers/ModelUtils"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
-import {CLOSE_MODAL, displayActivityActions} from "../Nav"
+import {CLOSE_MODAL, displaySavingActions} from "../Nav"
 import * as Api from "../../managers/Api"
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
@@ -83,7 +83,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
             if (event.type === 'NavBarButtonPress') {
                 if (event.id === EDIT_SAVING) {
-                    displayActivityActions(props.navigator, this.props.dispatch, this.props.activityId, this.props.activityType);
+                    displaySavingActions(props.navigator, this.props.dispatch, this.props.activityId, this.props.activityType);
                 }
             }
         });
@@ -209,7 +209,6 @@ class ActivityDetailScreen extends Screen<Props, State> {
         const padding = 16;
         return <ActivityStatus
             activity={activity}
-            skipLineup={this.props.skipLineup}
             navigator={this.props.navigator}
             style={[style]}
             cardStyle={[{

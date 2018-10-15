@@ -22,7 +22,7 @@ import type {Id, RNNNavigator, Saving} from "../../types"
 import {currentGoodshboxId, currentUser, logged} from "../../managers/CurrentUser"
 import {CheckBox} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation'
-import {displayHomeSearch, startAddItem} from "../Nav"
+import {CLOSE_MODAL, displayHomeSearch, startAddItem} from "../Nav"
 import Screen from "../components/Screen"
 import {PROFILE_CLICKED} from "../components/MyAvatar"
 import OnBoardingManager from "../../managers/OnBoardingManager"
@@ -41,6 +41,7 @@ import MyInterests from "./MyInterests"
 import {fullName2} from "../../helpers/StringUtils"
 import {currentUserFilter} from "../../redux/selectors"
 import NotificationManager from '../../managers/NotificationManager'
+import * as Nav from "../Nav"
 
 type Props = {
     navigator: RNNNavigator
@@ -106,6 +107,7 @@ export default class HomeScreen extends Screen<Props, State> {
     constructor(props: Props){
         super(props);
         props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+        // setTimeout(()=>this.startTunnel(), 2000)
     }
 
     componentWillAppear() {
@@ -211,16 +213,8 @@ export default class HomeScreen extends Screen<Props, State> {
                 case "popular":
                     if (this.state.popularDisplayCount === 0) {
                         this.setState({popularDisplayCount: 1}, () => {
-                            this.props.navigator.showModal({
-                                screen: 'goodsh.PopularItemsScreen',
-                                backButtonHidden: true,
-                                passProps: {
-                                    onFinished: () => {
-                                        OnBoardingManager.postOnDismissed("popular")
-                                        this.props.navigator.dismissModal()
-                                    }
-                                },
-                            })
+
+                            this.startTunnel()
                         })
                     }
                     break
@@ -229,7 +223,34 @@ export default class HomeScreen extends Screen<Props, State> {
 
     }
 
-    //!\\ hypothesis: logout => store.currentUser becomes null => update is triggered
+    startTunnel() {
+        this.props.navigator.showModal({
+            screen: 'goodsh.PopularItemsScreen',
+            backButtonHidden: true,
+            passProps: {
+                onFinished: (navigator) => {
+
+                    navigator.push({
+                        screen: 'goodsh.InviteManyContacts',
+                        title: i18n.t('actions.invite'),
+                        backButtonHidden: true,
+                        navigatorButtons: {
+                            leftButtons: [],
+                            rightButtons: [
+                                {
+                                    id: CLOSE_MODAL,
+                                    title: i18n.t('skip'),
+                                }
+                            ]
+                        }
+                    })
+                }
+            },
+
+        })
+    }
+
+//!\\ hypothesis: logout => store.currentUser becomes null => update is triggered
     //    => focusAdd is posted natively => component is unmounted
     //    => the native code doesnt find the unmounted component
     componentDidUpdate() {

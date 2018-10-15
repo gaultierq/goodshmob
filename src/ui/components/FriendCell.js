@@ -22,8 +22,6 @@ export default class FriendCell extends React.Component<Props, State> {
 
     render() {
 
-
-
         const {friend, children, childrenBelow, containerStyle} = this.props;
         if (!friend) {
             console.warn("trying to display friend cell without a friend");

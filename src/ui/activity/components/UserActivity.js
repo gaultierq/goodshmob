@@ -7,7 +7,7 @@ import * as TimeUtils from '../../../helpers/TimeUtils'
 import type {User} from "../../../types"
 import {ViewStyle} from "../../../types"
 import {Colors} from "../../colors"
-import UserRowI from "./UserRowI"
+import PersonRowI from "./PeopleRow"
 
 type Props = {
     activityTime: string,
@@ -24,23 +24,23 @@ export default class UserActivity extends React.Component<Props, State> {
     render() {
         const {
             activityTime,
+            user,
             ...attributes
         } = this.props;
 
-
-
-        return <UserRowI
-            rightComponent={this.right(activityTime)}
-            {...attributes}
-        />
+        return (
+            <PersonRowI
+                person={user}
+                rightComponent={this.right(activityTime)}
+                {...attributes}
+            />
+        )
     }
 
-    right(activityTime) {
+    right(activityTime: string) {
         let text= activityTime ? TimeUtils.timeSince(Date.parse(activityTime)):'';
         return (
-            !!text && <View style={{flex: 1, alignSelf: 'center', justifyContent: 'flex-end'}}>
-                <Text style={[styles.userText, {alignSelf: 'flex-end'}]}>{text}</Text>
-            </View>
+            !!text && <Text style={[styles.userText]}>{text}</Text>
         );
     }
 }

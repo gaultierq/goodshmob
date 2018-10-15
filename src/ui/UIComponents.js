@@ -2,7 +2,7 @@
 
 import React, {Component} from 'react'
 import {Image, LayoutAnimation, Platform, StyleSheet, Text, UIManager, View} from 'react-native'
-import {AVATAR_BACKGROUNDS, Colors} from "./colors"
+import {Colors} from "./colors"
 import GTouchable from "./GTouchable"
 import {BACKGROUND_COLOR, LINEUP_PADDING, STYLES, TAB_BAR_PROPS, TAB_BAR_STYLES} from "./UIStyles"
 import Spinner from 'react-native-spinkit'
@@ -11,13 +11,10 @@ import {ViewStyle} from "../types"
 import {displayLineupActionMenu, seeList} from "./Nav"
 import LineupHorizontal from "./components/LineupHorizontal"
 import LineupTitle2 from "./components/LineupTitle2"
-import GImage from "./components/GImage"
-import {firstLetter, hashCode} from "../helpers/StringUtils"
-import {SFP_TEXT_REGULAR} from "./fonts"
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import {GAction} from "./rights"
-import {L_ADD_ITEM, L_FOLLOW, L_SHARE, L_UNFOLLOW} from "./lineupRights"
+import {GLineupAction, L_ADD_ITEM, L_FOLLOW, L_SHARE, L_UNFOLLOW} from "./lineupRights"
 import {TabBar} from "react-native-tab-view"
+import {GAvatar} from "./GAvatar"
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
@@ -51,75 +48,18 @@ type State = {}
 
 export class Avatar extends Component<Props, State> {
 
-
-    static defaultProps = {
-        size: 40
-    }
-
     render() {
-        const {user, style, size, ...attributes} = this.props;
 
-        let uri = null
+        let {user, ...others} = this.props
+        if (!user) return null
 
-        if (user) {
-            uri = user.image
-
-            //hack relying on the fact that we only have facebook images
-            if (user.provider === 'facebook' && user.uid && size > 75) {
-                uri += "?type=large"
-            }
-
-            if (_.isNull(uri)) {
-
-                const colorId = hashCode(user.id) % AVATAR_BACKGROUNDS.length
-                const color = AVATAR_BACKGROUNDS[colorId]
-
-                const initials = firstLetter(user.firstName) + firstLetter(user.lastName)
-                if (initials.length === 0) return null
-
-                return <View style={[{
-                    height: size,
-                    width: size,
-                    borderRadius: size / 2,
-                    backgroundColor: color,
-                    paddingLeft: size / 20,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                }, style]}>
-                    <Text style={{
-                        color: Colors.white,
-                        fontFamily: SFP_TEXT_REGULAR,
-                        fontSize: size / 2.3
-                    }}>{initials.toUpperCase()}</Text>
-                </View>
-            }
-        }
-
-        let params
-        if (uri) {
-            params = {
-                source: {uri},
-                fallbackSource: require('../img2/default-avatar.png')
-            }
-        }
-        else {
-            params = {
-                source: require('../img2/default-avatar.png')
-            }
-
+        let person = {...user}
+        if (user.provider === 'facebook' && user.uid && this.props.size > 75) {
+            person.image += "?type=large"
         }
 
         return (
-            <GImage
-                {...params}
-                style={[{
-                    height: size,
-                    width: size,
-                    borderRadius: size / 2,
-
-                }, style]}
-                {...attributes}
-            />
+            <GAvatar person={person} {...others} />
         )
     }
 }
@@ -385,7 +325,7 @@ export let getClearButton = function () {
 export const RED_SQUARE = (size = 100) => () => <View style={{width: size, height: size, backgroundColor: 'red'}} />
 
 
-export function getNavButtonForAction(action: GAction, id: string) {
+export function getNavButtonForAction(action: GLineupAction, id: string) {
     if (action === L_ADD_ITEM) return ADD_ITEM_RIGHT_BUTTON(id)
     if (action === L_FOLLOW) return FOLLOW_RIGHT_BUTTON(id)
     if (action === L_UNFOLLOW) return UNFOLLOW_RIGHT_BUTTON(id)
@@ -406,4 +346,16 @@ export const renderTabBarFactory = (isFocused: any => boolean) => (props: any) =
         {...TAB_BAR_PROPS}
         {...props}
     />
+)
+
+
+export const renderTextAndDots = (text: string, style?: any) => (
+    <View style={{flexDirection: 'row', justifyContent:'center', alignItems: 'flex-end'}}>
+        <Text style={[{fontSize: 10, marginRight: 2, alignSelf: "center"}, style]}>{text}</Text>
+        <Spinner
+            isVisible={true}
+            size={10}
+            type={"ThreeBounce"}
+            color={Colors.black}/>
+    </View>
 )
