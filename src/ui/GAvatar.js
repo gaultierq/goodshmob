@@ -78,6 +78,8 @@ export class GAvatar extends Component<Props, State> {
                     height: size,
                     width: size,
                     borderRadius: size / 2,
+                    borderWidth: StyleSheet.hairlineWidth,
+                    borderColor: Colors.greyish,
 
                 }, style]}
                 {...attributes}
