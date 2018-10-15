@@ -2,14 +2,15 @@
 
 import type {User} from "../types"
 import {isCurrentUser} from "../managers/CurrentUser"
-import {GAction} from "./rights"
 
 const GUserActions = []
 
-export class GUserAction extends GAction {
+export class GUserAction {
+
+    name: string
 
     constructor(name: string, priority: number = 0) {
-        super(name, priority)
+        this.name = name
         GUserActions.push(this)
     }
 

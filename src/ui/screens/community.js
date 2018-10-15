@@ -104,8 +104,6 @@ export default class CommunityScreen extends Screen<Props, State> {
                     <ContactList
                         navigator={this.props.navigator}
                         renderItem={({item}) => renderContact(item)}
-                        ListHeaderComponent={<AppShareButton text={i18n.t('actions.invite')}/>}
-                        // focused={visible && focused}
                     />
                 </View>
             )

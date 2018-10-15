@@ -13,7 +13,7 @@ import {Avatar} from "../../UIComponents"
 import {seeUser} from "../../Nav"
 import GTouchable from "../../GTouchable"
 import * as activityAction from "../actions"
-import {A_BUY, canPerformAction, getPendingLikeStatus} from "../../rights"
+import {getPendingLikeStatus} from "../../ActivityHelper"
 import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC} from "../../fonts"
 import {ACTIVITY_CELL_BACKGROUND, Colors} from "../../colors"
 import User from "react-native-firebase/lib/modules/auth/User"
@@ -25,6 +25,7 @@ import FeedSeparator from "./FeedSeparator"
 import {UpdateTracker} from "../../UpdateTracker"
 import Button from 'apsl-react-native-button'
 import Icon from 'react-native-vector-icons/Feather'
+import {A_BUY} from "../../savingRights"
 
 
 type Props = {
@@ -134,7 +135,7 @@ export default class ActivityCell extends React.Component<Props, State> {
     }
 
     renderBuyButton(activity:Activity) {
-        return canPerformAction(A_BUY, {activity}) /*new ActionRights(activity).canBuy()*/ && <Button
+        return A_BUY.canExec({activity}.activity) /*new ActionRights(activity).canBuy()*/ && <Button
             onPress={() => {
                 this.execBuy(activity)
             }}

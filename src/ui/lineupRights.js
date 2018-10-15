@@ -3,14 +3,15 @@
 import type {Lineup} from "../types"
 import {isCurrentUser} from "../managers/CurrentUser"
 import {isFollowed} from "./activity/components/FollowButton"
-import {GAction} from "./rights"
 
 const GLineupActions = []
 
-export class GLineupAction extends GAction {
+export class GLineupAction {
+
+    name: string
 
     constructor(name: string, priority: number = 0) {
-        super(name, priority)
+        this.name = name
         GLineupActions.push(this)
     }
 

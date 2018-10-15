@@ -2,7 +2,7 @@
 
 import React, {Component} from 'react'
 import {Image, LayoutAnimation, Platform, StyleSheet, Text, UIManager, View} from 'react-native'
-import {AVATAR_BACKGROUNDS, Colors} from "./colors"
+import {Colors} from "./colors"
 import GTouchable from "./GTouchable"
 import {BACKGROUND_COLOR, LINEUP_PADDING, STYLES, TAB_BAR_PROPS, TAB_BAR_STYLES} from "./UIStyles"
 import Spinner from 'react-native-spinkit'
@@ -11,12 +11,8 @@ import {ViewStyle} from "../types"
 import {displayLineupActionMenu, seeList} from "./Nav"
 import LineupHorizontal from "./components/LineupHorizontal"
 import LineupTitle2 from "./components/LineupTitle2"
-import GImage from "./components/GImage"
-import {firstLetter, hashCode} from "../helpers/StringUtils"
-import {SFP_TEXT_REGULAR} from "./fonts"
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import {GAction} from "./rights"
-import {L_ADD_ITEM, L_FOLLOW, L_SHARE, L_UNFOLLOW} from "./lineupRights"
+import {GLineupAction, L_ADD_ITEM, L_FOLLOW, L_SHARE, L_UNFOLLOW} from "./lineupRights"
 import {TabBar} from "react-native-tab-view"
 import {GAvatar} from "./GAvatar"
 
@@ -329,7 +325,7 @@ export let getClearButton = function () {
 export const RED_SQUARE = (size = 100) => () => <View style={{width: size, height: size, backgroundColor: 'red'}} />
 
 
-export function getNavButtonForAction(action: GAction, id: string) {
+export function getNavButtonForAction(action: GLineupAction, id: string) {
     if (action === L_ADD_ITEM) return ADD_ITEM_RIGHT_BUTTON(id)
     if (action === L_FOLLOW) return FOLLOW_RIGHT_BUTTON(id)
     if (action === L_UNFOLLOW) return UNFOLLOW_RIGHT_BUTTON(id)

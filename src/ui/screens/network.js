@@ -42,7 +42,7 @@ type NetworkSection = {
     network: state.network,
     data: state.data,
     pending: state.pending,
-    activity: state.activity
+    activity: state.saving
 }))
 class NetworkScreen extends Screen<Props, State> {
 

@@ -9,6 +9,7 @@ import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "./fonts"
 import {Colors} from "./colors"
 import NavManager from "../managers/NavManager"
 import URL from "url-parse"
+import {CREATE_LIKE, DELETE_LIKE} from "./activity/actionTypes"
 
 
 export function getActivityText(activity: Activity, navP: NavParams): () => any {
@@ -225,3 +226,14 @@ const htmlStyles = StyleSheet.create({
         color: Colors.black
     },
 })
+
+export function getPendingLikeStatus(pending, activity) {
+    let pendingLikes = _.filter(pending[CREATE_LIKE], (o) => o.payload.activityId === activity.id)
+    let pendingUnlikes = _.filter(pending[DELETE_LIKE], (o) => o.payload.activityId === activity.id)
+
+    let both = _.concat(pendingLikes, pendingUnlikes)
+    both = _.orderBy(both, 'insertedAt')
+    let last = _.last(both)
+
+    return last ? (last.pendingActionType === 'like' ? 1 : -1) : 0
+}
