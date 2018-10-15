@@ -14,6 +14,7 @@ import {LINEUP_PADDING, openLinkSafely, STYLES} from "../UIStyles"
 import GButton from "../components/GButton"
 import Screen from "../components/Screen"
 import GSearchBar2 from "../components/GSearchBar2"
+import {fullName} from "../../helpers/StringUtils"
 
 export type Contact = {
     recordID: string,
@@ -193,6 +194,7 @@ export default class ContactList extends Screen<Props, State> {
         this.setState({syncing: true})
         Contacts.getAll((err, contacts) => {
             if (err) throw err
+            contacts = _.sortBy(contacts, c => fullName(toPerson(c)))
             this.props.dispatch({type: SET_CONTACTS, data: contacts})
             this.setState({syncing: false})
         })

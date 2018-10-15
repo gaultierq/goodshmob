@@ -5,16 +5,14 @@ import React, {Component} from 'react'
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
 import {connect} from "react-redux"
 import {currentUserId, logged} from "../../managers/CurrentUser"
-import type {Dispatchee, Id, Item, RequestState, User} from "../../types"
+import type {Dispatchee, Item, RequestState, User} from "../../types"
 import FriendsFeed from "./friends"
-import * as UI from "../UIStyles"
 import {LINEUP_PADDING} from "../UIStyles"
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import PersonRowI from "../activity/components/PeopleRow"
 import GButton from "../components/GButton"
 import * as Api from "../../managers/Api"
 import {Colors} from "../colors"
-import Spinner from "react-native-spinkit"
 import {renderTextAndDots} from "../UIComponents"
 
 type Props = {
@@ -42,7 +40,7 @@ export default class SendScreen extends Component<Props, State> {
     };
 
     render() {
-        const {navigator, sendAction} = this.props;
+        const {navigator} = this.props;
 
         return (
             <KeyboardAwareScrollView
@@ -51,21 +49,23 @@ export default class SendScreen extends Component<Props, State> {
                 keyboardShouldPersistTaps='always'
             >
 
-                <TextInput
-                    style={{
-                        fontSize: 24,
-                        margin: LINEUP_PADDING,
-                    }}
-                    onChangeText={message => this.setState({message})}
-                    placeholder={i18n.t("send_screen.add_description_placeholder")}
-                    multiline={true}
-                    numberOfLines={3}
-                />
-
                 <FriendsFeed
                     userId={currentUserId()}
                     navigator={navigator}
                     renderItem={(friend) => this.renderItem(friend)}
+                    ListHeaderComponent={
+                        <TextInput
+                            style={{
+                                fontSize: 24,
+                                margin: LINEUP_PADDING,
+                            }}
+                            onChangeText={message => this.setState({message})}
+                            placeholder={i18n.t("send_screen.add_description_placeholder")}
+                            multiline={true}
+                            autoFocus={true}
+                            numberOfLines={3}
+                        />
+                    }
                 />
 
             </KeyboardAwareScrollView>
