@@ -85,9 +85,6 @@ export function styleMargin(left?: number, top?: number, right?: number, bottom?
     return styleLTRB(arguments, "margin");
 }
 
-//TODO: convert to stylesheet
-export const TEXT_LESS_IMPORTANT = {fontSize: 12, color: Colors.greyish};
-
 export const LINEUP_PADDING = 15
 
 type ButtonOptions = {disabled?: boolean, loading?: boolean, style?: ViewStyle, textStyle?: TextStyle};

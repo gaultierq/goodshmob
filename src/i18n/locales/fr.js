@@ -275,8 +275,14 @@ export default {
         "add_comment_placeholder":"Répondre"
     },
     "send_screen":{
-        "add_description_placeholder":"Adresser un petit mot à %{recipient}",
-        "sent": "Envoyé"
+        "add_description_placeholder": "Ajouter une note à l'envoi",
+        "sent": "Envoyé",
+        actions: {
+            send: "Envoyer",
+            sending: "envoi en cours",
+            send_ok: "✓  envoyé",
+            send_ko: "Réessayer",
+        }
     },
     "interactions":{
         "saving":"a enregistré %{what}",
@@ -493,4 +499,4 @@ export default {
     invite: "Inviter",
     skip: "Passer",
     save_congratz: "<big>Félicitations !!!</big>\n<bold>%{item_title}</bold> a été enregistré dans la <bold>%{list_name}</bold>\n\nN'hésite pas à partager tes pépites avec tes amis !",
-};
+}

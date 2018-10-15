@@ -561,7 +561,8 @@ export function safeExecBlock(block, stateName: string) {
 
     let setRequestState: (reqFetch: RequestState) => () => Promise<*> = (reqFetch: RequestState) => {
         return () => new Promise((resolve, reject) => {
-            this.setState({[stateName]: reqFetch}, resolve);
+            const pStat = _.set({}, stateName, reqFetch)
+            this.setState(pStat, resolve);
         });
 
     };

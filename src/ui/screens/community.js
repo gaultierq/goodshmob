@@ -8,7 +8,7 @@ import {
     Platform,
     RefreshControl,
     StyleSheet,
-    Text,
+    Text, TextInput,
     TouchableOpacity,
     View
 } from 'react-native'
@@ -25,6 +25,7 @@ import PersonRowI from "../activity/components/PeopleRow"
 import GButton from "../components/GButton"
 import AppShareButton from "../components/AppShareButton"
 import {LINEUP_PADDING} from "../UIStyles"
+import {Colors} from "../colors"
 
 type Props = NavigableProps & {
     initialIndex: number,
@@ -99,12 +100,14 @@ export default class CommunityScreen extends Screen<Props, State> {
                 />
             )
             case 'contacts': return (
-                <ContactList
-                    navigator={this.props.navigator}
-                    renderItem={({item}) => renderContact(item)}
-                    ListHeaderComponent={<AppShareButton text={i18n.t('actions.invite')}/>}
-                    // focused={visible && focused}
-                />
+                <View>
+                    <ContactList
+                        navigator={this.props.navigator}
+                        renderItem={({item}) => renderContact(item)}
+                        ListHeaderComponent={<AppShareButton text={i18n.t('actions.invite')}/>}
+                        // focused={visible && focused}
+                    />
+                </View>
             )
         }
     }

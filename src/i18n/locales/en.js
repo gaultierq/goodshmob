@@ -275,8 +275,14 @@ export default {
         "add_comment_placeholder":"Reply"
     },
     "send_screen":{
-        "add_description_placeholder":"Add a note to %{recipient}",
-        "sent": "Sent"
+        "add_description_placeholder": "Ajouter une note à l'envoi",
+        "sent": "Sent",
+        actions: {
+            send: "Send",
+            sending: "sending",
+            send_ok: "sent",
+            send_ko: "Retry",
+        }
     },
     "interactions":{
         "saving":"saved %{what}",

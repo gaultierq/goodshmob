@@ -29,7 +29,7 @@ import {getLanguages} from 'react-native-i18n'
 import {RequestManager} from "../../managers/request"
 import Spinner from 'react-native-spinkit'
 import Config from "react-native-config"
-import {FullScreenLoader} from "../UIComponents"
+import {FullScreenLoader, renderTextAndDots} from "../UIComponents"
 import BugsnagManager from "../../managers/BugsnagManager"
 
 export type FeedSource = {
@@ -539,18 +539,7 @@ export default class Feed extends Component<Props, State>  {
                 {
                     this.manager.isSending('isFetchingMore', this) &&
                     !recentlyCreated &&
-                    !this.props.doNotDisplayFetchMoreLoader &&
-                    (
-                        <View style={{flex:1, flexDirection: 'row',
-                            margin:12, justifyContent:'center', alignItems: 'flex-end'}}>
-                            <Text style={{fontSize: 10, marginRight: 2, alignSelf: "center"}}>{i18n.t('loadmore')}</Text>
-                            <Spinner
-                                isVisible={true}
-                                size={8}
-                                type={"ThreeBounce"}
-                                color={Colors.black}/>
-                        </View>
-                    )
+                    !this.props.doNotDisplayFetchMoreLoader && renderTextAndDots(i18n.t('loadmore'))
                 }
                 {
                     this.manager.isFail('isFetchingMore', this) && this.renderFail(() => this.fetchMore({trigger: TRIGGER_USER_DIRECT_ACTION}))

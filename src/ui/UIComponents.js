@@ -351,3 +351,15 @@ export const renderTabBarFactory = (isFocused: any => boolean) => (props: any) =
         {...props}
     />
 )
+
+
+export const renderTextAndDots = (text: string, style?: any) => (
+    <View style={{flexDirection: 'row', justifyContent:'center', alignItems: 'flex-end'}}>
+        <Text style={[{fontSize: 10, marginRight: 2, alignSelf: "center"}, style]}>{text}</Text>
+        <Spinner
+            isVisible={true}
+            size={10}
+            type={"ThreeBounce"}
+            color={Colors.black}/>
+    </View>
+)
