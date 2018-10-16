@@ -3,7 +3,7 @@
 import React from 'react'
 import {Share, StyleSheet, Text, View} from 'react-native'
 import {Colors} from "../colors"
-import {SFP_TEXT_MEDIUM} from "../fonts"
+import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts"
 import GTouchable from "../GTouchable"
 
 type Props = {
@@ -35,15 +35,14 @@ const styles = StyleSheet.create({
         borderWidth: 0,
         borderRadius: 4,
         paddingHorizontal: 12,
-        paddingVertical: 6,
+        paddingVertical: 10,
         alignItems: 'center',
     },
     buttonText: {
         color: Colors.white,
         textAlignVertical: 'center',
-
-        fontSize: 17,
-        fontFamily: SFP_TEXT_MEDIUM,
+        fontSize: 18,
+        fontFamily: SFP_TEXT_BOLD,
         fontWeight: 'bold'
     }
 })

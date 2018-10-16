@@ -26,6 +26,7 @@ import GButton from "../components/GButton"
 import AppShareButton from "../components/AppShareButton"
 import {LINEUP_PADDING} from "../UIStyles"
 import {Colors} from "../colors"
+import InviteManyContacts from "./invite_many_contacts"
 
 type Props = NavigableProps & {
     initialIndex: number,
@@ -61,7 +62,6 @@ export default class CommunityScreen extends Screen<Props, State> {
         if (_.get(currentUser(), 'meta.friendsCount') === 0) {
             _.remove(routes, r => r.key === 'friends')
         }
-
 
         this.state = {
             routes,
@@ -100,32 +100,11 @@ export default class CommunityScreen extends Screen<Props, State> {
                 />
             )
             case 'contacts': return (
-                <View>
-                    <ContactList
-                        navigator={this.props.navigator}
-                        renderItem={({item}) => renderContact(item)}
-                    />
-                </View>
+                <InviteManyContacts
+                    navigator={this.props.navigator}
+                    // renderItem={({item}) => renderContact(item)}
+                />
             )
         }
     }
-}
-
-function renderContact(contact: Contact) {
-    let onPress = createHandler(
-        contact, {
-            title: i18n.t('share_goodsh.title'),
-            body: i18n.t('share_goodsh.message')
-        })
-    return (
-        <PersonRowI
-            person={toPerson(contact)}
-            key={contact.rawContactId}
-            style={{
-                margin: LINEUP_PADDING
-            }}
-            rightComponent={<GButton text={i18n.t('invite')} onPress={onPress}/>}
-        />
-
-    )
 }
