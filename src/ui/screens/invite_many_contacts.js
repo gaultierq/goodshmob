@@ -1,20 +1,22 @@
 // @flow
 import React from 'react'
 import {Platform, StyleSheet, Text, TextInput, View} from 'react-native'
-import type {Props as LineupProps} from "./lineuplist"
 import Screen from "../components/Screen"
 import {connect} from "react-redux"
 import type {Contact} from "./contact_list"
 import ContactList, {createSmsUri, splitContacts, toPerson} from "./contact_list"
 import PersonRowI from "../activity/components/PeopleRow"
-import CheckBox from 'react-native-check-box'
 import GButton from "../components/GButton"
 import {LINEUP_PADDING, openLinkSafely} from "../UIStyles"
 import {scheduleOpacityAnimation} from "../UIComponents"
 import {fullName} from "../../helpers/StringUtils"
+import GTouchable from "../GTouchable"
+import Icon from 'react-native-vector-icons/MaterialIcons'
+import {Colors} from "../colors"
+import {SFP_TEXT_MEDIUM} from "../fonts"
 
 type Props = {
-};
+}
 
 type State = {
     toInvite: { string?: Contact}
@@ -68,6 +70,7 @@ export default class InviteManyContacts extends Screen<Props, State> {
     renderContact(contact: Contact) {
         const perso = toPerson(contact)
         let disabled = splitContacts([contact], true).phones.length === 0
+        let checked = !!this.state.toInvite[perso.id]
         return (
             <PersonRowI
                 person={perso}
@@ -77,24 +80,35 @@ export default class InviteManyContacts extends Screen<Props, State> {
                     opacity: disabled ? 0.5 : 1
                 }}
                 rightComponent={(
-                    <CheckBox
-                        disabled={disabled}
-                        onClick={()=>{
-                            let toInvite = {...this.state.toInvite}
-                            if (toInvite[perso.id]) {
-                                delete toInvite[perso.id]
-                            }
-                            else {
-                                toInvite[perso.id] = contact
-                            }
-                            this.setState({
-                                toInvite
-                            })
+                    <GTouchable onPress={()=>{
+                        let toInvite = {...this.state.toInvite}
+                        if (toInvite[perso.id]) {
+                            delete toInvite[perso.id]
+                        }
+                        else {
+                            toInvite[perso.id] = contact
+                        }
 
-                            scheduleOpacityAnimation()
-                        }}
-                        isChecked={!!this.state.toInvite[perso.id]}
-                    />
+                        this.setState({toInvite});
+                        // scheduleOpacityAnimation()
+                    }}>
+                        {checked
+                            ? <Icon style={{padding: 8}} name="check-box" size={24} color={Colors.green} />
+                            : <Text style={{
+                                fontSize: 16,
+                                fontFamily: SFP_TEXT_MEDIUM,
+                                color: Colors.green,
+                                borderColor: Colors.green,
+                                borderWidth: 1,
+                                borderRadius: 8,
+                                paddingHorizontal: 12,
+                                paddingVertical: 6,
+                            }}>
+                                {i18n.t('invite')}
+                            </Text>
+                        }
+                    </GTouchable>
+
                 )}
 
             />
