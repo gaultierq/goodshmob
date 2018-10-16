@@ -89,6 +89,7 @@ const styles1 = StyleSheet.create({
     searchBar: {
         paddingTop: 10,
         paddingBottom: 5,
-        paddingHorizontal: LINEUP_PADDING, backgroundColor: NAV_BACKGROUND_COLOR
+        paddingHorizontal: LINEUP_PADDING,
+        // backgroundColor: NAV_BACKGROUND_COLOR
     }
 })

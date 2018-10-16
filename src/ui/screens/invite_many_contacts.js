@@ -8,7 +8,6 @@ import ContactList, {createSmsUri, splitContacts, toPerson} from "./contact_list
 import PersonRowI from "../activity/components/PeopleRow"
 import GButton from "../components/GButton"
 import {LINEUP_PADDING, openLinkSafely} from "../UIStyles"
-import {scheduleOpacityAnimation} from "../UIComponents"
 import {fullName} from "../../helpers/StringUtils"
 import GTouchable from "../GTouchable"
 import Icon from 'react-native-vector-icons/MaterialIcons'

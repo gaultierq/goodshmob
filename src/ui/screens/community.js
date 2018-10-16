@@ -27,6 +27,8 @@ import AppShareButton from "../components/AppShareButton"
 import {LINEUP_PADDING} from "../UIStyles"
 import {Colors} from "../colors"
 import InviteManyContacts from "./invite_many_contacts"
+import {displaySavingActions} from "../Nav"
+import * as Nav from "../Nav"
 
 type Props = NavigableProps & {
     initialIndex: number,
@@ -41,6 +43,8 @@ type State = {
 const ROUTES = [
     {key: 'friends', title: "amis"}, {key: 'contacts', title: 'contacts'}
 ]
+
+const NAV_USER_SEARCH = 'user_search'
 
 @connect()
 export default class CommunityScreen extends Screen<Props, State> {
@@ -67,14 +71,38 @@ export default class CommunityScreen extends Screen<Props, State> {
             routes,
             index: _.toNumber(props.initialIndex)
         }
+
+        props.navigator.addOnNavigatorEvent((event) => {
+
+            if (event.type === 'NavBarButtonPress') {
+                if (event.id === NAV_USER_SEARCH) {
+                    this.props.navigator.showModal({
+                        screen: 'goodsh.UserSearchScreen',
+                        title: i18n.t("search.in_users"),
+                        navigatorButtons: Nav.CANCELABLE_MODAL
+                    });
+                }
+            }
+        });
     }
 
+
+
     render() {
+
+        this.props.navigator.setButtons({
+            // leftButtons: [],
+            rightButtons: this.state.index === 0 ? [{
+                id: NAV_USER_SEARCH,
+                icon: require('../../img2/search.png'),
+            }] : []
+        })
+
         return <TabView
             style={{flex: 1}}
             navigationState={{...this.state}}
             renderScene={this.renderScene.bind(this)}
-            renderTabBar={this.state.routes.length === 1 ? ()=>null : renderTabBarFactory(this.isFocused.bind(this))}
+            renderTabBar={this.state.routes.length === 1 ? () => null : renderTabBarFactory(this.isFocused.bind(this))}
             renderPager={props => <PagerPan {...props} />}
             swipeEnabled={false}
             onIndexChange={index => {

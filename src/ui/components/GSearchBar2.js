@@ -49,12 +49,12 @@ export default class GSearchBar2 extends Component<Props, State> {
             <View style={[{flexDirection: 'row'}, style]}>
 
                 <View style={[{flexDirection: 'row', flex:1}, styles.inputContainer]}>
-                    <Octicons name="search" size={16} color={color1} style={{
+                    <Octicons name="search" size={18} color={color1} style={{
                         justifyContent: 'center',
                         alignItems: 'center',
                         alignSelf: 'center',
                         paddingRight: 6,
-                        // backgroundColor: 'red'
+                        paddingTop: 2,
                     }}/>
                     <View style={[{flex:1, justifyContent: 'center',}]}>
                         <TextInput
@@ -115,16 +115,17 @@ export default class GSearchBar2 extends Component<Props, State> {
 
 const styles = StyleSheet.create({
     input: {
-        fontSize: 17,
+        fontSize: 18,
         fontFamily: SFP_TEXT_REGULAR,
         padding: 0,
+        paddingVertical: 6,
 
 
     },
     inputContainer: {
-        height: 36,
+        height: 38,
         paddingHorizontal: 14,
-        paddingVertical: 4,
+        // paddingVertical: 4,
         borderRadius: SEARCH_INPUT_RADIUS,
         backgroundColor: 'rgba(142,142,142,0.12)',
     },

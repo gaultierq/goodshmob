@@ -311,3 +311,10 @@ export const inviteManyContacts = {
 
     },
 }
+export const UserSearchScreen = {
+    screen: {
+        screen: 'goodsh.UserSearchScreen',
+        title: 'Test goodsh.UserSearchScreen',
+
+    },
+}
