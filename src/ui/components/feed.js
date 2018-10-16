@@ -57,7 +57,8 @@ export type Props = {
     listRef ?:(any => void | string),
     doNotDisplayFetchMoreLoader?: boolean,
     decorateLoadMoreCall?: (sections: any[], call: Call) => Call,
-    getFlatItems?: () => any[]
+    getFlatItems?: () => any[],
+    autoRefreshMs?: ms, // if set, the head of the feed will be reloaded every time the feed become visible again
 };
 
 export type FilterConfig<T> = {
@@ -68,7 +69,7 @@ export type FilterConfig<T> = {
 };
 
 type State = {
-    isFetchingFirst: RequestState,
+    isFetchingHead: RequestState,
     isFetchingMore: RequestState,
 
     isPulling?: boolean,
@@ -86,7 +87,6 @@ type FeedFetchOption = {
     trigger?: any,
     drop?: boolean
 }
-const logger = rootlogger.createLogger('feed')
 
 // const LAST_EMPTY_RESULT_WAIT_MS = 5 * 60 * 1000;
 const LAST_EMPTY_RESULT_WAIT_MS = Config.LAST_EMPTY_RESULT_WAIT_MS;
@@ -105,25 +105,25 @@ export default class Feed extends Component<Props, State>  {
 
     createdAt: ms;
     firstRenderAt: ms;
-    firstLoaderTimeout: number;
-    _listener: ()=>boolean;
     lastFetchFail: number;
     manager: RequestManager = new RequestManager();
-    console: GLogger;
     filterNode: Node;
+    logger: GLogger;
 
     constructor(props: Props) {
         super(props);
+        this.logger = rootlogger.createLogger('feed' + (props.displayName ? `:${props.displayName}`: ''))
         this.state = {
             initialLoaderVisibility: 'idle',
             decorateLoadMoreCall: props.decorateLoadMoreCall || this._defaultDecorateLoadMoreCall(),
             tempDisplayName: props.displayName,
-            isFetchingFirst: 'idle',
+            isFetchingHead: 'idle',
             isFetchingMore: 'idle',
         }
 
         this.createdAt = Date.now();
-        this.postFetchFirst();
+        this.fetchHead();
+
     }
 
     _defaultDecorateLoadMoreCall = () => (sections: any[], call: Call) => {
@@ -148,45 +148,62 @@ export default class Feed extends Component<Props, State>  {
         return call
     }
 
-    componentDidUpdate(prevProps: Props, prevState: State, snapshot) {
-        this.postFetchFirst();
+    componentDidUpdate(prevProps: Props, prevState: State, snapshot: any) {
+        // if (Feed.becameVisible(prevProps, this.props)) {
+        if (this.isVisible()) {
+
+            let shouldFetch = false
+            if (this.props.autoRefreshMs) {
+                let events = this.manager.getEvents(this, 'isFetchingHead');
+                let lastOk = _.last(events.filter(e=> e.status === 'ok'));
+                shouldFetch = !(lastOk && Date.now() < lastOk.date + this.props.autoRefreshMs);
+
+            }
+            else {
+                shouldFetch = this.state.isFetchingHead === 'idle'
+            }
+
+            if (shouldFetch) {
+                this.logger.debug("componentDidUpdate: fetchHead")
+                this.fetchHead()
+            }
+            else {
+                this.logger.debug("componentDidUpdate: fetchHead skipped")
+            }
+        }
+
+    }
+
+    static becameVisible(prevProps: Props, props: Props) {
+        return props.visibility === 'visible' && props.visibility !== prevProps.visibility;
+
     }
 
     shouldComponentUpdate(nextProps: Props, nextState: State) {
         if (!__ENABLE_PERF_OPTIM__) return true;
         if (nextProps.visibility === 'hidden') {
-            logger.debug('feed component update saved');
+            this.logger.debug('feed component update saved');
             return false;
         }
         return true;
     }
 
 
-    postFetchFirst() {
-        setTimeout(() => {
-            if (this.state.isFetchingFirst !== 'idle') {
-                logger.debug(`postFetchFirst was not performed, isFetchingFirst=${this.state.isFetchingFirst}`);
-                return;
-            }
-            let trigger = this.hasItems() ? TRIGGER_USER_INDIRECT_ACTION : TRIGGER_USER_DIRECT_ACTION;
-            const options = {loadMore: false, trigger};
+    fetchHead() {
+        let trigger = this.hasItems() ? TRIGGER_USER_INDIRECT_ACTION : TRIGGER_USER_DIRECT_ACTION;
 
-            const canotFetch = this.cannotFetchReason('isFetchingFirst', options);
+        const options = {loadMore: false, trigger};
 
-            if (canotFetch === null) {
-                logger.debug('posting first fetch')
-                this.fetchIt(options)
-            }
-            else {
-                //logger.debug(`postFetchFirst was not performed: reason=${canotFetch}`);
-            }
-        });
+        const canotFetch = this.cannotFetchReason('isFetchingHead', options);
+
+        if (canotFetch === null) {
+            this.logger.debug('posting first fetch')
+            this.fetchIt(options)
+        }
+        else {
+            //this.logger.debug(`postFetchFirst was not performed: reason=${canotFetch}`);
+        }
     }
-    // type = _.sample(['CircleFlip', 'Bounce', 'Wave', 'WanderingCubes', 'Pulse', 'ChasingDots', 'ThreeBounce', 'Circle', '9CubeGrid', 'WordPress', 'FadingCircle', 'FadingCircleAlt', 'Arc', 'ArcAlt']);
-    type = _.sample(['Bounce']);
-    color = _.sample([Colors.greyish]);
-    color = _.sample([Colors.green]);
-
 
     render() {
 
@@ -219,16 +236,16 @@ export default class Feed extends Component<Props, State>  {
         // rendering rules
         // 1. if has some items to display, display them
         if (!this.hasItems()) {
-            if (this.manager.isSending('isFetchingFirst', this)) return <FullScreenLoader/>
-            if (this.manager.isFail('isFetchingFirst', this)) return this.renderFail(()=>this.tryFetchIt())
-            if (this.state.isFetchingFirst === 'idle' && fetchSrc) return null
+            if (this.manager.isSending('isFetchingHead', this)) return <FullScreenLoader/>
+            if (this.manager.isFail('isFetchingHead', this)) return this.renderFail(()=>this.tryFetchIt())
+            if (this.state.isFetchingHead === 'idle' && fetchSrc) return null
 
 
             //FIX: this line would ignore header & footer + empty component (comments ActivityDescription on 1st comment)
-            // if (this.manager.isSuccess('isFetchingFirst', this)) return this.renderEmpty()
+            // if (this.manager.isSuccess('isFetchingHead', this)) return this.renderEmpty()
 
             // if (!ListFooterComponent && !ListHeaderComponent) {
-            //     logger.warn("rendering hole", this.state)
+            //     this.logger.warn("rendering hole", this.state)
             //     return this.renderEmpty()
             // }
         }
@@ -239,10 +256,10 @@ export default class Feed extends Component<Props, State>  {
         }
 
         const style1 = [style];
-        if ((this.state.isFetchingFirst === 'sending' || this.state.isFetchingFirst === 'idle') && !this.hasItems()) style1.push({minHeight: 150});
+        if ((this.state.isFetchingHead === 'sending' || this.state.isFetchingHead === 'idle') && !this.hasItems()) style1.push({minHeight: 150});
 
 
-        const someCondition = this.state.isFetchingFirst !== 'sending' && this.state.isFetchingFirst !== 'idle' || this.hasItems()
+        const someCondition = this.state.isFetchingHead !== 'sending' && this.state.isFetchingHead !== 'idle' || this.hasItems()
         let params =  {
             ref: listRef,
             renderItem,
@@ -317,8 +334,8 @@ export default class Feed extends Component<Props, State>  {
         return this.getElementCount() === 0
     }
 
-    isFetchingFirst() {
-        return this.state.isFetchingFirst === 'sending';
+    isFetchingHead() {
+        return this.state.isFetchingHead === 'sending';
     }
 
     isFetchingMore() {
@@ -356,7 +373,7 @@ export default class Feed extends Component<Props, State>  {
 
             if (remainingRows < 5) {
                 if (this.gentleFetchMore()) {
-                    logger.debug("Only " + remainingRows + " left. Prefetching...");
+                    this.logger.debug("Only " + remainingRows + " left. Prefetching...");
                 }
             }
         }
@@ -364,7 +381,7 @@ export default class Feed extends Component<Props, State>  {
 
     onEndReached() {
         if (this.gentleFetchMore()) {
-            logger.debug("onEndReached => fetching more");
+            this.logger.debug("onEndReached => fetching more");
         }
     }
 
@@ -373,21 +390,21 @@ export default class Feed extends Component<Props, State>  {
             return this.fetchMore({trigger: TRIGGER_USER_INDIRECT_ACTION});
         }
         else {
-            logger.debug("== end of feed ==");
+            this.logger.debug("== end of feed ==");
             return false;
         }
     }
 
-    canFetch(requestName: string = 'isFetchingFirst', options: FeedFetchOption = {loadMore: false}): boolean {
+    canFetch(requestName: string = 'isFetchingHead', options: FeedFetchOption = {loadMore: false}): boolean {
         const reason = this.cannotFetchReason(requestName, options);
         if (reason) {
-            // logger.debug(`cannot fetch: ${reason}`)
+            // this.logger.debug(`cannot fetch: ${reason}`)
         }
         return reason === null
     }
 
 
-    cannotFetchReason(requestName: string = 'isFetchingFirst', options: FeedFetchOption = {loadMore: false}): string  | null {
+    cannotFetchReason(requestName: string = 'isFetchingHead', options: FeedFetchOption = {loadMore: false}): string  | null {
         if (this.isFiltering()) return "filtering list";
         if (!this.isVisible()) return "not visible";
         if (!this.props.fetchSrc) return "no fetch sources";
@@ -400,7 +417,7 @@ export default class Feed extends Component<Props, State>  {
             {
                 let lastFail = _.last(events.filter(e=> e.status === 'ko'));
                 if (lastFail && Date.now() < lastFail.date + 30 * 1000) {
-                    // this.logger.debug("debounced fetch: recent failure");
+                    // this.this.logger.debug("debounced fetch: recent failure");
                     return "debounced: recent failure";
                 }
             }
@@ -420,7 +437,7 @@ export default class Feed extends Component<Props, State>  {
 
     tryFetchIt(options?: FeedFetchOption = {loadMore: false}) {
         let {loadMore} = options;
-        let requestName = loadMore ? 'isFetchingMore' : 'isFetchingFirst';
+        let requestName = loadMore ? 'isFetchingMore' : 'isFetchingHead';
         if (this.canFetch(requestName, options)) {
             this.fetchIt(options)
             return true;
@@ -430,7 +447,7 @@ export default class Feed extends Component<Props, State>  {
 
     fetchIt(options?: FeedFetchOption = {}) {
         let {loadMore, trigger, drop} = options;
-        let requestName = loadMore ? 'isFetchingMore' : 'isFetchingFirst';
+        let requestName = loadMore ? 'isFetchingMore' : 'isFetchingHead';
 
         // $FlowFixMe
         return new Promise((resolve, reject) => {
@@ -465,7 +482,7 @@ export default class Feed extends Component<Props, State>  {
             this.props
                 .dispatch(call.createActionDispatchee(fetchSrc.action, {trigger, ...fetchSrc.options, mergeOptions: {drop, hasLess: !!loadMore}}))
                 .then(({data, links})=> {
-                    logger.debug("disptachForAction" + JSON.stringify(this.props.fetchSrc.action));
+                    this.logger.debug("disptachForAction" + JSON.stringify(this.props.fetchSrc.action));
                     if (!data) {
                         reqTrack.fail();
                         // this.setState({[requestName]: 'ko'});
@@ -492,12 +509,12 @@ export default class Feed extends Component<Props, State>  {
                     }
                     resolve(data);
                 }, err => {
-                    logger.warn("feed error:", err);
+                    this.logger.warn("feed error:", err);
                     this.lastFetchFail = Date.now();
                     reqTrack.fail()
                     // this.setState({[requestName]: 'ko'});
                     // reject(err);
-                    // this.logger.warn("test::finsih")
+                    // this.this.logger.warn("test::finsih")
 
                 })
         });
@@ -523,7 +540,7 @@ export default class Feed extends Component<Props, State>  {
     }
 
     renderRefreshControl() {
-        let displayLoader = (this.isFetchingFirst() && !this.hasItems()) || this.state.isPulling;
+        let displayLoader = (this.isFetchingHead() && !this.hasItems()) || this.state.isPulling;
         return (<RefreshControl
             refreshing={!!displayLoader}
             onRefresh={this.onRefresh.bind(this)}

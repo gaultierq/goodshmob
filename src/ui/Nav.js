@@ -24,15 +24,7 @@ import LineupTitle2 from "./components/LineupTitle2"
 export const CLOSE_MODAL = 'close_modal';
 
 //if on the right, crash on android (something related to: "frozen", "enabled")
-export const CANCELABLE_MODAL = {
-    leftButtons: [
-        {
-            id: CLOSE_MODAL,
-            icon: require('../img2/closeXGrey.png')
-        }
-    ],
-    rightButtons: []
-}
+
 export const CANCELABLE_MODAL2 = {
     leftButtons: [
         {
@@ -41,7 +33,8 @@ export const CANCELABLE_MODAL2 = {
         }
     ],
     rightButtons: []
-};
+}
+export const CANCELABLE_MODAL = CANCELABLE_MODAL2
 
 export const CANCELABLE_SEARCH_MODAL = () => ({
     rightButtons: __IS_ANDROID__ ? [] : [

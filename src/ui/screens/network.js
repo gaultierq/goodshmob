@@ -101,12 +101,12 @@ class NetworkScreen extends Screen<Props, State> {
         // });
     }
 
-    componentWillAppear() {
+    componentDidAppear() {
         this.props.navigator.setDrawerEnabled({side: 'right', enabled: true});
         this.props.navigator.setDrawerEnabled({side: 'left', enabled: false});
     }
 
-    componentWillDisappear() {
+    componentDidDisappear() {
         this.props.navigator.setDrawerEnabled({side: 'right', enabled: false});
     }
 
@@ -202,6 +202,7 @@ class NetworkScreen extends Screen<Props, State> {
                         options: {userId}
                     }}
                     hasMore={!network1.hasNoMore}
+                    autoRefreshMs={10000}
                     scrollUpOnBack={scrollUpOnBack}
                     ListEmptyComponent={<View><Text style={STYLES.empty_message}>{i18n.t('community.empty_screen')}</Text><AppShareButton text={i18n.t('actions.invite')}/></View>}
                     // initialNumToRender={5}
