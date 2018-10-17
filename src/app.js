@@ -501,6 +501,7 @@ export default class App {
                     Navigation.startSingleScreenApp({
                         screen: {
                             screen: 'goodsh.EditUserProfileScreen',
+                            title: i18n.t('edit_profile_screen.title'),
                             navigatorStyle: UI.NavStyles,
 
                         },

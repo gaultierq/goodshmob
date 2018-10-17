@@ -188,6 +188,9 @@ export default {
         "title":"Feedback",
         "subtitle":"##Comment tu la trouves ? Tu la kiffes ? Qu'est-ce qui manque cruellement ? On a très envie de savoir...",
     },
+    "edit_profile_screen":{
+        "title": "Complétez votre profil",
+    },
     "detail_screen":{
         "related_activities_title": "Autres activités"
     },

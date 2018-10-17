@@ -34,7 +34,7 @@ export default class UserNav extends Component<Props, State> {
                 <Avatar
                     user={user}
                     size={imageDim}/>
-                
+
                 <Text style={{
                     fontSize: 20,
                     fontFamily: SFP_TEXT_MEDIUM,

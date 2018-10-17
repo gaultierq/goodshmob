@@ -131,7 +131,7 @@ export default class ContactList extends Screen<Props, State> {
             empty = (
                 <View>
                     <Text style={STYLES.empty_message}>{i18n.t('contacts.empty_screen')}</Text>
-                    <GButton text={i18n.t('contacts.empty_screen_button')} onPress={this.syncContacts.bind(this)}/>
+                    <GButton style={{marginHorizontal: LINEUP_PADDING}} text={i18n.t('contacts.empty_screen_button')} onPress={this.syncContacts.bind(this)}/>
                 </View>
             )
         }

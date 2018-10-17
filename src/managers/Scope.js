@@ -28,6 +28,7 @@ function Scope(DecoratedComponent) {
 }
 
 function getDisplayName(Component) {
+    if (!Component) return 'null'
     return Component.displayName || Component.name || 'Component';
 }
 

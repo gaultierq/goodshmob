@@ -8,22 +8,22 @@ export function configure() {
     RNAccountKit.configure({
         theme: {
             // Background
-            backgroundColor: Color.hex(Colors.green),
+            backgroundColor: Color.hex(Colors.white),
             // Button
-            buttonBackgroundColor: Color.hex(Colors.facebookBlue),
-            buttonBorderColor: Color.hex(Colors.facebookBlue),
+            buttonBackgroundColor: Color.hex(Colors.green),
+            buttonBorderColor: Color.hex(Colors.green),
             buttonTextColor: Color.hex(Colors.white),
             // Button disabled
-            buttonDisabledBackgroundColor: Color.hex(Colors.greyish),
-            buttonDisabledBorderColor: Color.hex(Colors.greyish),
+            buttonDisabledBackgroundColor: Color.hex(Colors.lightGreen),
+            buttonDisabledBorderColor: Color.hex(Colors.lightGreen),
             buttonDisabledTextColor: Color.hex(Colors.white),
             // // Header
-            headerBackgroundColor: Color.hex(Colors.green),
-            headerButtonTextColor: Color.hex(Colors.white),
-            headerTextColor: Color.hex(Colors.white),
+            headerBackgroundColor: Color.hex(Colors.white),
+            headerButtonTextColor: Color.hex(Colors.black),
+            headerTextColor: Color.hex(Colors.black),
             // Others
-            iconColor: Color.hex(Colors.white),
-            titleColor: Color.hex(Colors.white),
-            textColor: Color.hex(Colors.white),
+            iconColor: Color.hex(Colors.green),
+            titleColor: Color.hex(Colors.black),
+            textColor: Color.hex(Colors.black),
         }})
 }

@@ -189,6 +189,9 @@ export default {
         "title":"Feedback",
         "subtitle":"##Is this what you've been dreaming of? How good do you feel? What's badly missing? We can't wait to know…"
     },
+    "edit_profile_screen":{
+        "title": "Complete your profile",
+    },
     "detail_screen":{
         "related_activities_title": "Related activities"
     },

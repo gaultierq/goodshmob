@@ -4,7 +4,7 @@ import {Platform, StyleSheet, Text, TextInput, View} from 'react-native'
 import type {Props as LineupProps} from "./lineuplist"
 import Screen from "../components/Screen"
 import type {Id, RequestState} from "../../types"
-import {renderSimpleButton} from "../UIStyles"
+import {LINEUP_PADDING, renderSimpleButton} from "../UIStyles"
 import * as Api from "../../managers/Api"
 import {safeDispatchAction} from "../../managers/Api"
 import ApiAction from "../../helpers/ApiAction"
@@ -15,6 +15,7 @@ import {Avatar, FullScreenLoader} from "../UIComponents"
 import {Colors} from "../colors"
 import _Messenger from "../../managers/Messenger"
 import Http404 from "./errors/404"
+import {currentUserId, logged} from "../../managers/CurrentUser"
 
 type Props = LineupProps & {
     userId: Id
@@ -23,29 +24,37 @@ type Props = LineupProps & {
 type State = {
     reqSave?: RequestState,
     reqFetchUser?: RequestState,
-    userId: Id,
     firstName: string,
     lastName: string,
     updated: boolean,
-    user: any,
+    userId: Id
 };
 
+@logged
 @connect(state => ({
     data: state.data,
 }))
-export default class EditUserProfileScreen extends Screen<Props, State> {
+export default class EditUserProfileScreen extends React.Component<Props, State> {
 
-    state = {
-        firstName: '',
-        lastName: '',
-        updated: false,
+    static defaultProps = {
+        userId: currentUserId()
+    }
+
+    constructor(props: Props) {
+        super(props)
+        this.state = {
+            firstName: '',
+            lastName: '',
+            updated: false,
+            userId: props.userId || currentUserId()
+        }
     }
 
     componentDidMount() {
         Api.safeDispatchAction.call(
             this,
             this.props.dispatch,
-            userActions.getUser(this.props.userId).createActionDispatchee(userActionTypes.GET_USER),
+            userActions.getUser(this.state.userId).createActionDispatchee(userActionTypes.GET_USER),
             'reqFetchUser'
         )
             .then(() => {
@@ -75,11 +84,10 @@ export default class EditUserProfileScreen extends Screen<Props, State> {
 
                 <View style={styles.headerWrapper}>
                     <Avatar user={user} />
-                    <Text style={{marginTop: 10}}>
+                    <Text style={{marginTop: 10, fontSize: 16, color: Colors.greyishBrown}}>
                         {i18n.t("form.description.user_name")}
                     </Text>
                 </View>
-
 
                 <TextInput
                     placeholder={i18n.t("form.label.first_name")}
@@ -130,13 +138,13 @@ export default class EditUserProfileScreen extends Screen<Props, State> {
     }
 
     getUser() {
-        return buildData(this.props.data, 'users', this.props.userId);
+        return buildData(this.props.data, 'users', this.state.userId);
     }
 
     saveUserDispatchee() {
         let {firstName, lastName} = this.state
         return new Api.Call().withMethod('PATCH')
-            .withRoute(`users/${this.props.userId}`)
+            .withRoute(`users/${this.state.userId}`)
             .withBody({user: {first_name: firstName, last_name: lastName}})
             .createActionDispatchee(PATCH_USER)
     }
@@ -154,9 +162,9 @@ const styles = StyleSheet.create({
     input: {
         backgroundColor: Colors.grey3,
         borderRadius: 4,
-        fontSize: 25,
-        height: 70,
-        margin: 10,
+        fontSize: 22,
+        height: 60,
+        margin: LINEUP_PADDING,
         padding: 8,
     },
     headerWrapper: {

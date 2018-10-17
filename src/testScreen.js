@@ -214,13 +214,13 @@ export const editUserProfileScreen = {
     screen: {
         screen: 'goodsh.EditUserProfileScreen',
     },
-    passProps: {
-        user: {
-            id: "662a61d0-5473-4d09-9410-c63aadc12e6c",
-            firstName: "Quentin",
-            lastName: "Gaultier"
-        }
-    },
+    // passProps: {
+        // user: {
+        //     id: "662a61d0-5473-4d09-9410-c63aadc12e6c",
+        //     firstName: "Quentin",
+        //     lastName: "Gaultier"
+        // }
+    // },
 }
 
 export const myInterests = {
