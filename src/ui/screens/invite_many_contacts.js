@@ -94,12 +94,12 @@ export default class InviteManyContacts extends Screen<Props, State> {
                         {checked
                             ? <Icon style={{padding: 8}} name="check-box" size={24} color={Colors.green} />
                             : <Text style={{
-                                fontSize: 16,
+                                fontSize: 18,
                                 fontFamily: SFP_TEXT_MEDIUM,
-                                color: Colors.green,
-                                borderColor: Colors.green,
-                                borderWidth: 1,
-                                borderRadius: 8,
+                                color: Colors.black,
+                                // borderColor: Colors.green,
+                                // borderWidth: 1,
+                                // borderRadius: 8,
                                 paddingHorizontal: 12,
                                 paddingVertical: 6,
                             }}>
