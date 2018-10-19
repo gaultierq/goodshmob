@@ -5,5 +5,4 @@ export const SAVE_DEVICE = ApiAction.create('save_device', 'save new device info
 export const USER_LOGOUT = ApiAction.create('user_logout', 'user logged out');
 export const SET_USER_NULL = 'SET_USER_NULL';
 export const CLEAR_CACHE = 'CLEAR_CACHE';
-export const SET_CACHE_VERSION = 'SET_CACHE_VERSION'
 export const FETCH_ME = ApiAction.create('fetch_me', 'get user information')

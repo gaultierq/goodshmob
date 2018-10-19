@@ -14,7 +14,7 @@ export function logoutOffline(dispatch) {
     }
     finally {
         FacebookLoginManager.logOut()
-        __APP__.purge()
+        __APP__.cachePurge()
         dispatch({type: SET_USER_NULL})
 
 

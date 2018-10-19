@@ -93,7 +93,12 @@ const TABS = [
 ]
 
 
-export default class App {
+
+export type GoodshApp = {
+
+}
+
+export default class App implements GoodshApp {
 
     state: AppConfig =  {
         hydration: 'no',
@@ -158,10 +163,20 @@ export default class App {
         this.listenToUserStoreChanges()
     }
 
-    async purge() {
+    async cachePurge() {
         if (this.persistor) {
-            (await this.persistor.purge())
+            return this.persistor.purge()
         }
+        return Promise.reject()
+    }
+
+    async cacheFlush() {
+        if (this.persistor) {
+            this.logger.info('flushing cache')
+            return this.persistor.flush()
+        }
+        return Promise.reject()
+
     }
 
     async obtainInitialLinks() {

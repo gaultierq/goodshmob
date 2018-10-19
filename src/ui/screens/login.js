@@ -309,7 +309,18 @@ class Login extends Component<Props, State> {
             token = Config.DEBUG_FACEBOOK_TOKEN;
         }
         console.info("facebook token:" + token);
-        return await this.props.dispatch(appActions.loginWith('facebook', token))
+        (await this.props.dispatch(appActions.loginWith('facebook', token)))
+
+        try {
+            (await __APP__.cacheFlush())
+            console.info("login finished");
+        }
+        catch (e) {
+            console.error("login flush failed", e)
+            throw e
+        }
+
+        return Promise.resolve()
     }
 
     async handleAccountKitLogin(): Promise<User> {
@@ -319,9 +330,11 @@ class Login extends Component<Props, State> {
             token = data && data.token;
         }
         if (token) {
-            return await this.props.dispatch(appActions.loginWith('account_kit', token))
+            (await this.props.dispatch(appActions.loginWith('account_kit', token)))
+            (await __APP__.cacheFlush())
+            return Promise.resolve()
         }
-        return null
+        return Promise.reject()
     }
 
     execLogin(useAccountKit: boolean) {
@@ -331,6 +344,7 @@ class Login extends Component<Props, State> {
             console.debug("already executing action");
             return;
         }
+
         Api.safeExecBlock.call(
             this,
             loginFunction,

@@ -1,7 +1,7 @@
 // @flow
 
 import * as types from "./actionTypes"
-import {CLEAR_CACHE, SET_CACHE_VERSION, SET_USER_NULL} from "./actionTypes"
+import {CLEAR_CACHE, SET_USER_NULL} from "./actionTypes"
 import {camelize} from 'camelize-object-key'
 
 export function createWithReducers(appReducers) {
@@ -16,13 +16,11 @@ export function createWithReducers(appReducers) {
 
         switch (action.type) {
             case SET_USER_NULL:
-                state = undefined;
+                state = {_persist: {...state._persist}}
+                // state = undefined
                 break;
             case CLEAR_CACHE:
                 state = emptyCache(state);
-                break;
-            case SET_CACHE_VERSION:
-                state = {...state, app: {...state.app, cacheVersion: action.cacheVersion}}
                 break;
         }
 
