@@ -30,7 +30,7 @@ class _NotificationManager implements NotificationManager {
             onUser: () => {},
             onNoUser: () => {},
             triggerOnListen: {payload: currentUserId},
-    }
+        }
         listenToLoginChange(options)
     }
 
@@ -78,22 +78,11 @@ class _NotificationManager implements NotificationManager {
     }
 
     configure() {
-        if (this.configured) throw 'already configured'
+        if (this.configured) return
         this.configured = true
 
         let firebase = RNFirebase.app()
         // let messaging = firebase.messaging();
-
-        // messaging.getToken().then((token) => {
-        //     logger.info("fcm:token=" + token);
-        // }, (err) => logger.error(err));
-
-        // get the notification that opened the app
-        // firebase.notifications().getInitialNotification().then((notificationOpen: NotificationOpen) => {
-        //     logger.log('getInitialNotification', notificationOpen)
-        //     if (notificationOpen) this.handleNotif(notificationOpen.notification)
-        // })
-
 
         //android: receiving notification when app in foreground
         firebase.notifications().onNotification((notification: Notification) => {
@@ -111,7 +100,7 @@ class _NotificationManager implements NotificationManager {
         });
 
         firebase.notifications().onNotificationDisplayed((notification: Notification) => {
-            logger.info('onNotificationDisplayed', notification)
+            logger.info('on notification nisplayed', notification)
         });
 
         //android: triggered when app opening from notification
@@ -121,24 +110,14 @@ class _NotificationManager implements NotificationManager {
         });
     }
 
-    requestPermissionsForLoggedUser(): Promise<boolean> {
-        return new Promise((resolve,reject) => {
-            if (!__WITH_NOTIFICATIONS__) {
-                reject('notifications are not enabled on device')
-            }
-            else {
-                logger.info('request Permissions For LoggedUser')
-                RNFirebase
-                    .app()
-                    .messaging()
-                    .requestPermission()
-                    .then( () => {
-                        logger.info('notification permission granted')
-                        this.configure()
-                        resolve()
-                    }, reject)
-            }
-        })
+    async requestPermissionsForLoggedUser(): Promise<void> {
+        if (!__WITH_NOTIFICATIONS__) Promise.reject('with_notifications = true')
+
+        logger.info('requesting permissions for logged user')
+        await RNFirebase.app().messaging().requestPermission()
+        logger.info('notification permission granted')
+
+        this.configure()
     }
 
     handleNotif = (notif: any) => {

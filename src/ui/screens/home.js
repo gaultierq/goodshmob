@@ -19,7 +19,7 @@ import {
 
 import {connect} from "react-redux"
 import type {Id, RNNNavigator, Saving} from "../../types"
-import {currentGoodshboxId, currentUser, logged} from "../../managers/CurrentUser"
+import {currentGoodshboxId, currentUser, isLogged, logged} from "../../managers/CurrentUser"
 import {CheckBox} from 'react-native-elements'
 import {Navigation} from 'react-native-navigation'
 import {CLOSE_MODAL, displayHomeSearch, startAddItem} from "../Nav"
@@ -41,7 +41,7 @@ import MyInterests from "./MyInterests"
 import {fullName2} from "../../helpers/StringUtils"
 import {currentUserFilter} from "../../redux/selectors"
 import NotificationManager from '../../managers/NotificationManager'
-import * as Nav from "../Nav"
+import {ScreenVisibilityListener as RNNScreenVisibilityListener} from 'react-native-navigation'
 
 type Props = {
     navigator: RNNNavigator
@@ -203,17 +203,16 @@ export default class HomeScreen extends Screen<Props, State> {
             this.logger.debug("found info to display:", type)
             switch (type) {
                 case "focus_add":
-                    if (this._mounted && !!this.props.currentUser) {
-                        this.onBoardingHelper.handleFocusAdd(() => this._mounted && !!this.props.currentUser)
+                    if (this._mounted && isLogged()) {
+                        this.onBoardingHelper.handleFocusAdd(() => this._mounted && isLogged())
                     }
                     break
-                // case "notification_permissions":
-                //     NotificationManager.requestPermissionsForLoggedUser()
-                //     break
+                case "notification_permissions":
+                    NotificationManager.requestPermissionsForLoggedUser()
+                    break
                 case "popular":
                     if (this.state.popularDisplayCount === 0) {
                         this.setState({popularDisplayCount: 1}, () => {
-
                             this.startTunnel()
                         })
                     }
@@ -229,6 +228,24 @@ export default class HomeScreen extends Screen<Props, State> {
             backButtonHidden: true,
             passProps: {
                 onFinished: (navigator) => {
+
+                    //this is a hack because of RNN v1 limitations
+                    let listener = new RNNScreenVisibilityListener({
+                        didAppear: ({screen, startTime, endTime, commandType}) => {
+                            if (screen === 'goodsh.InviteManyContacts') {
+                                this.logger.debug("hack visib listener: appear", screen)
+                            }
+                        },
+                        didDisappear: ({screen, startTime, endTime, commandType}) => {
+                            this.logger.debug("hack visib listener: disappear", screen)
+                            if (screen === 'goodsh.InviteManyContacts') {
+                                listener.unregister()
+                                OnBoardingManager.postOnDismissed("popular")
+                            }
+                        }
+                    })
+                    listener.register()
+
 
                     navigator.push({
                         screen: 'goodsh.InviteManyContacts',

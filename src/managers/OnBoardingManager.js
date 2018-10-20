@@ -40,7 +40,7 @@ const ALL_INFOS = [
     {
         type: 'focus_add',
         group: 'full_focus',
-        timeAfter: TIME_BETWEEN_TIPS_MS,
+        timeAfter: 10000 - 1,
         priority: 2
     },
     {

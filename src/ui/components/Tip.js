@@ -31,6 +31,12 @@ export class Tip extends React.Component<Props, State> {
             <Grid style={[{
                 borderRadius: RADIUS,
                 backgroundColor: Colors.white,
+
+                shadowColor: Colors.greyishBrown,
+                shadowOffset: {width: 4, height: 4},
+                shadowOpacity: 0.3,
+                shadowRadius: 6,
+
             }, style]}>
                 <Row style={{
                     padding: SPACING,

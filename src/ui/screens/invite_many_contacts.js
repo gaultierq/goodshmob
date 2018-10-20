@@ -113,6 +113,5 @@ export default class InviteManyContacts extends Screen<Props, State> {
             />
         )
     }
-
 }
 
