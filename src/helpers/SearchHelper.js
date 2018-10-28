@@ -144,13 +144,7 @@ function __searchItems<SO: SearchItemsGenOptions>(category: SearchCategoryType, 
                 call
                     .run()
                     .then(response=>{
-                        let data = normalize(response.json);
-
-                        let results = response.json.data.map(d=>{
-                            return buildData(data, d.type, d.id);
-                        });
-
-                        resolve({results, page, nbPages: 0});
+                        resolve({results: response.json, page, nbPages: 0});
                     }, err=> {
                         //console.warn(err)
                         reject(err);

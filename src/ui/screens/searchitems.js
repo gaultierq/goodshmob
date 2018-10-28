@@ -119,12 +119,10 @@ export function onNewItemSelected(item: Item, navigator: RNNNavigator, selectedL
     let cancel = navigator.dismissAllModals
 
     navigator.showModal({
-        screen: 'goodsh.AddItemScreen',
+        screen: 'goodsh.CreateItemScreen',
         title: i18n.t("add_item_screen.title"),
         animationType: 'none',
         passProps: {
-            itemId: item.id,
-            itemType: item.type,
             item,
             onCancel: cancel,
             onAdded: cancel,

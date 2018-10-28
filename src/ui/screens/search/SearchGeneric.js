@@ -58,6 +58,8 @@ export default class SearchGeneric extends React.Component<SMP, SMS> {
                     renderResults={(state, onLoadMore) => <SearchListResults
                         searchState={state}
                         renderItem={this._renderItem}
+                        keyExtractor={item => item.uid}
+                        onLoadMore={onLoadMore}
                     />}
                     searchOptions={this.state.searchOptions}
                     canSearch={this._canSearch}

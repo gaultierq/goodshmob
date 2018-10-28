@@ -19,27 +19,15 @@ export type State = {}
 
 export default class SearchListResults extends Component<Props, State> {
 
-    renderSearchFooter(searchState: SearchState) {
-        if (!searchState) return null;
-        let nextPage = searchState.page + 1;
-        let hasMore = nextPage < (searchState.nbPages || 1);
-        if (!hasMore) return null;
-
-        let isLoadingMore = searchState.requestState === 'sending';
-
-        return (<Button
-            isLoading={isLoadingMore}
-            isDisabled={isLoadingMore}
-            onPress={()=>{this.props.onLoadMore && this.props.onLoadMore()}}
-            style={{marginTop: 15, padding: 8, borderColor: "transparent",}}
-            disabledStyle={{marginTop: 15, padding: 8, borderColor: "transparent",}}>
-
-            <Text style={{color: isLoadingMore ? Colors.greyishBrown : Colors.black}}>{i18n.t('actions.load_more')}</Text>
-        </Button>);
+    static defaultProps = {
+        keyExtractor: item => item.id
     }
 
     render() {
-        let searchState = this.props.searchState || {}
+
+        const {searchState = {}, onLoadMore, ...attr} = this.props
+
+        // let searchState = this.props.searchState || {}
         if (searchState.requestState === 'sending' && searchState.page === 0) return <FullScreenLoader/>
         if (searchState.requestState === 'ko')
             return <Text style={{alignSelf: "center", marginTop: 20}}>{i18n.t("errors.generic")}</Text>
@@ -59,12 +47,33 @@ export default class SearchListResults extends Component<Props, State> {
         return (
             <FlatList
                 data={data}
-                renderItem={this.props.renderItem}
-                ListFooterComponent={() => this.props.onLoadMore ? this.renderSearchFooter(searchState) : null}
-                keyExtractor={(item) => item.id}
+                // renderItem={this.props.renderItem}
+                ListFooterComponent={() => onLoadMore ? this.renderSearchFooter(searchState) : null}
+                keyExtractor={this.props.keyExtractor}
                 onScrollBeginDrag={Keyboard.dismiss}
-                keyboardShouldPersistTaps='always'/>
+                keyboardShouldPersistTaps='always'
+                {...attr}
+            />
         )
+    }
+
+    renderSearchFooter(searchState: SearchState) {
+        if (!searchState) return null;
+        let nextPage = searchState.page + 1;
+        let hasMore = nextPage < (searchState.nbPages || 1);
+        if (!hasMore) return null;
+
+        let isLoadingMore = searchState.requestState === 'sending';
+
+        return (<Button
+            isLoading={isLoadingMore}
+            isDisabled={isLoadingMore}
+            onPress={()=>{this.props.onLoadMore && this.props.onLoadMore()}}
+            style={{marginTop: 15, padding: 8, borderColor: "transparent",}}
+            disabledStyle={{marginTop: 15, padding: 8, borderColor: "transparent",}}>
+
+            <Text style={{color: isLoadingMore ? Colors.greyishBrown : Colors.black}}>{i18n.t('actions.load_more')}</Text>
+        </Button>);
     }
 
 }
