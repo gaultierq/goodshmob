@@ -7,7 +7,7 @@ import type {Contact} from "./contact_list"
 import ContactList, {createSmsUri, splitContacts, toPerson} from "./contact_list"
 import PersonRowI from "../activity/components/PeopleRow"
 import GButton from "../components/GButton"
-import {LINEUP_PADDING, openLinkSafely} from "../UIStyles"
+import {LINEUP_PADDING, openLinkSafely, selectDimension} from "../UIStyles"
 import {fullName} from "../../helpers/StringUtils"
 import GTouchable from "../GTouchable"
 import Icon from 'react-native-vector-icons/MaterialIcons'
@@ -94,12 +94,9 @@ export default class InviteManyContacts extends Screen<Props, State> {
                         {checked
                             ? <Icon style={{padding: 8}} name="check-box" size={24} color={Colors.green} />
                             : <Text style={{
-                                fontSize: 18,
+                                fontSize: selectDimension({small: 14, normal: 16, big: 18}),
                                 fontFamily: SFP_TEXT_MEDIUM,
-                                color: Colors.black,
-                                // borderColor: Colors.green,
-                                // borderWidth: 1,
-                                // borderRadius: 8,
+                                color: Colors.greyishBrown,
                                 paddingHorizontal: 12,
                                 paddingVertical: 6,
                             }}>

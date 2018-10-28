@@ -222,6 +222,19 @@ export const STYLES = StyleSheet.create({
     }
 });
 
+export type DimensionSelector = {
+    small: any,
+    normal: any,
+    big: any,
+}
+export const selectDimension = (obj: DimensionSelector) => {
+    if (__DEVICE_WIDTH__ < 400) return obj.small
+    if (__DEVICE_WIDTH__ < 600) return obj.normal
+    return obj.big
+
+}
+export const {ROW_TITLE_STYLE} = StyleSheet.create({ROW_TITLE_STYLE: {fontSize: selectDimension({small: 14, normal: 16, big: 17}), color: Colors.black, fontFamily: SFP_TEXT_REGULAR}})
+
 export const FEED_INITIAL_LOADER_DURATION = 400;
 
 

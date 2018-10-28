@@ -43,6 +43,5 @@ const styles = StyleSheet.create({
         textAlignVertical: 'center',
         fontSize: 18,
         fontFamily: SFP_TEXT_BOLD,
-        fontWeight: 'bold'
     }
 })

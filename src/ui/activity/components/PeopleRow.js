@@ -11,7 +11,7 @@ import {Colors} from "../../colors"
 import {SFP_TEXT_BOLD} from "../../fonts"
 import {GAvatar} from "../../GAvatar"
 import {fullName} from "../../../helpers/StringUtils"
-import {LINEUP_PADDING} from "../../UIStyles"
+import {LINEUP_PADDING, ROW_TITLE_STYLE} from "../../UIStyles"
 
 type Props = {
     person: Person,
@@ -39,7 +39,7 @@ export default class PersonRowI extends React.Component<Props, State> {
 
             <View style={{flex:1}}>
                 <View style={[styles.rightContainer]}>
-                    <Text style={[styles.rightText, this.props.textStyle]}>
+                    <Text style={[ROW_TITLE_STYLE, styles.rightText, this.props.textStyle]}>
                         {
                             fullName(this.props.person)
                         }
@@ -59,5 +59,5 @@ export default class PersonRowI extends React.Component<Props, State> {
 const styles = StyleSheet.create({
     userContainer: {alignItems: 'center', flexDirection: 'row'},
     rightContainer: {flexDirection: 'row', justifyContent: 'space-between'},
-    rightText: {alignSelf: 'center', fontSize: 18, color: Colors.black, fontFamily: SFP_TEXT_BOLD}
+    rightText: { alignSelf: 'center', }
 });
