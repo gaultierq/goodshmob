@@ -194,6 +194,7 @@ export default class ContactList extends Screen<Props, State> {
         this.setState({syncing: true})
         Contacts.getAll((err, contacts) => {
             if (err) throw err
+            contacts = _.filter(contacts, c => !_.isEmpty(fullName(toPerson(c))))
             contacts = _.sortBy(contacts, c => fullName(toPerson(c)))
             this.props.dispatch({type: SET_CONTACTS, data: contacts})
             this.setState({syncing: false})

@@ -8,6 +8,7 @@ import {ViewStyle} from "../types"
 import GImage from "./components/GImage"
 import {firstLetter, hashCode} from "../helpers/StringUtils"
 import {SFP_TEXT_REGULAR} from "./fonts"
+import {selectDimension} from "./UIStyles"
 
 type Props = {
     person: Person,
@@ -20,7 +21,7 @@ export class GAvatar extends Component<Props, State> {
 
 
     static defaultProps = {
-        size: 40
+        size: selectDimension({small: 34, normal: 36, big: 40})
     }
 
     render() {
