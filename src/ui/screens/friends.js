@@ -2,7 +2,7 @@
 
 import type {Node} from 'react'
 import React from 'react'
-import {Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Image, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
 import Feed from "../components/feed"
@@ -15,6 +15,8 @@ import {openUserSheet, seeUser} from "../Nav"
 import {LINEUP_PADDING, STYLES} from "../UIStyles"
 import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
 import PersonRowI from "../activity/components/PeopleRow"
+import {displayLineupActionMenu} from "../Nav"
+import {L_SHARE} from "../lineupRights"
 
 
 type Props = {
@@ -82,17 +84,17 @@ export default class FriendsList extends Screen<Props, State> {
         }
 
         return (
-                <Feed
-                    data={friends}
-                    renderItem={({item}) => (renderItem||this.renderItem.bind(this))(item)}
-                    fetchSrc={{
-                        callFactory,
-                        action,
-                        options: {userId}
-                    }}
-                    ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t('friends.empty_screen')}</Text>}
-                    {...attr}
-                />
+            <Feed
+                data={friends}
+                renderItem={({item}) => (renderItem||this.renderItem.bind(this))(item)}
+                fetchSrc={{
+                    callFactory,
+                    action,
+                    options: {userId}
+                }}
+                ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t('friends.empty_screen')}</Text>}
+                {...attr}
+            />
         );
     }
 
@@ -102,8 +104,16 @@ export default class FriendsList extends Screen<Props, State> {
             <GTouchable
                 onLongPress={() => {openUserSheet(this.props.navigator, user)}}
                 onPress={()=> {seeUser(this.props.navigator, user)}}>
-                {/*<FriendCell friend={user} containerStyle={{paddingHorizontal: LINEUP_PADDING, paddingVertical: 10}}/>*/}
-                <PersonRowI person={user} style={{margin: LINEUP_PADDING}}/>
+                <PersonRowI
+                    person={user}
+                    style={{margin: LINEUP_PADDING}}
+                    rightComponent={<GTouchable style={{
+                        paddingLeft: 0,
+                        paddingVertical: 16,
+                    }} onPress={() => openUserSheet(this.props.navigator, user)}>
+                        <Image source={require('../../img2/sidedots.png')} resizeMode="contain"/>
+                    </GTouchable>}
+                />
             </GTouchable>
         )
     }
