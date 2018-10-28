@@ -14,7 +14,6 @@ import * as Nav from "../Nav"
 import {openUserSheet, seeUser} from "../Nav"
 import {LINEUP_PADDING, STYLES} from "../UIStyles"
 import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
-import AppShareButton from "../components/AppShareButton"
 import PersonRowI from "../activity/components/PeopleRow"
 
 
@@ -30,16 +29,20 @@ type Props = {
 type State = {
 };
 
-const mapStateToProps = (state, ownProps) => ({
-    data: state.data,
-});
-
 @logged
-@connect(mapStateToProps)
-export default class FriendsScreen extends Screen<Props, State> {
+@connect(state => ({
+    data: state.data,
+}))
+export default class FriendsList extends Screen<Props, State> {
 
     constructor(props: Props){
         super(props);
+        props.navigator.setButtons({
+            rightButtons: [{
+                id: 'friendsSearch',
+                icon: require('../../img2/search.png'),
+            }]
+        })
         props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
@@ -48,8 +51,7 @@ export default class FriendsScreen extends Screen<Props, State> {
             if (event.id === 'friendsSearch') {
                 this.props.navigator.push({
                     screen: 'goodsh.UserSearchScreen',
-                    title: i18n.t("search.in_users"),
-                    navigatorButtons: Nav.CANCELABLE_MODAL
+                    title: i18n.t("search.in_users")
                 });
             }
         }
