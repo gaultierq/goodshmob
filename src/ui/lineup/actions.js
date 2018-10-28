@@ -2,7 +2,7 @@
 
 import * as Api from "../../managers/Api"
 import {Call} from "../../managers/Api"
-import type {Id, ItemType, List, ms} from "../../types"
+import type {Id, IItem, ItemType, List, ms} from "../../types"
 import {CREATE_LINEUP, DELETE_LINEUP, EDIT_LINEUP, SAVE_ITEM} from "./actionTypes"
 import type {PendingAction} from "../../helpers/ModelUtils"
 import {pendingActionWrapper} from "../../helpers/ModelUtils"
@@ -56,14 +56,14 @@ export const CREATE_SAVING: PendingAction<SAVING_CREATION_PAYLOAD>  = pendingAct
         .addQuery({'include': '*.*'})
 )
 
-export type ITEM_AND_SAVING_CREATION_PAYLOAD = {itemUid: string, provider: string, lineupId: Id, privacy: Visibility, description: string}
+export type ITEM_AND_SAVING_CREATION_PAYLOAD = {item: IItem, lineupId: Id, privacy: Visibility, description: string}
 
 export const CREATE_ITEM_AND_SAVING: PendingAction<ITEM_AND_SAVING_CREATION_PAYLOAD>  = pendingActionWrapper(
     SAVE_ITEM,
-    ({itemUid, provider, lineupId, privacy, description}: ITEM_AND_SAVING_CREATION_PAYLOAD) => new Api.Call()
+    ({item, lineupId, privacy, description}: ITEM_AND_SAVING_CREATION_PAYLOAD) => new Api.Call()
         .withMethod('POST')
-        .withRoute(`items/create`)
-        .withBody({uid: itemUid, provider, saving: { list_id: lineupId, privacy, description}})
+        .withRoute(`items/make`)
+        .withBody({item, saving: { list_id: lineupId, privacy, description}})
         .addQuery({'include': '*.*'})
 )
 

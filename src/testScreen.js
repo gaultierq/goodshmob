@@ -152,14 +152,16 @@ export const networkSearchScreen = {
     passProps: {
         token: "films"
     }
-};
+}
 
 export const SearchItems = {
     screen: {
         screen: 'goodsh.SearchItems',
         title: 'Test SearchItems',
     },
+
     passProps: {
+        // initialIndex: 2,
         onItemSelected: (item: Item, navigator: RNNNavigator) => {
 
             navigator.showModal({
@@ -176,7 +178,7 @@ export const SearchItems = {
 
         },
     }
-};
+}
 
 
 export const homeSearchItemsScreen = {

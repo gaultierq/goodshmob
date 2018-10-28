@@ -31,6 +31,7 @@ type Props = {
     onItemSelected?: (item: Item, navigator: RNNNavigator) => void,
     defaultLineup?: Lineup,
     defaultLineupId?: Id,
+    initialIndex?: number
 };
 
 const ROUTES = SEARCH_CATEGORIES_TYPE.map(t=> ({key: t, title: i18n.t("search_item_screen.tabs." + t)}))
@@ -95,6 +96,8 @@ export default class SearchItems extends Screen<Props, State> {
     _onItemSelected= (item: Item) => onNewItemSelected(item, this.props.navigator, this.props.defaultLineupId)
 
     findBestIndex(props: Props): number {
+
+        if (this.props.initialIndex) return this.props.initialIndex
         let categories = SEARCH_CATEGORIES_TYPE.map( type => ({
                 tabName: i18n.t("search_item_screen.tabs." + type),
                 description: i18n.t("search_item_screen.placeholder." + type),

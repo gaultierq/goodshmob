@@ -11,10 +11,8 @@ import ItemCell from "../ui/components/ItemCell"
 import UserItem from "../ui/screens/userItem"
 import {StyleSheet, Text} from "react-native"
 import type {SearchItemsGenOptions} from "../ui/screens/search/SearchGeneric"
-import {buildData} from "./DataUtils"
 import * as Api from "../managers/Api"
 import {Call} from "../managers/Api"
-import normalize from 'json-api-normalizer'
 import {currentUserId} from "../managers/CurrentUser"
 import type {SearchItemCategoryType} from "./SearchConstants"
 import {fullName} from "./StringUtils"
@@ -144,6 +142,7 @@ function __searchItems<SO: SearchItemsGenOptions>(category: SearchCategoryType, 
                 call
                     .run()
                     .then(response=>{
+
                         resolve({results: response.json, page, nbPages: 0});
                     }, err=> {
                         //console.warn(err)

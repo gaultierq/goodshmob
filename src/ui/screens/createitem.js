@@ -63,13 +63,12 @@ export default class CreateItemScreen extends Screen<Props, State> {
         const delayMs = 10;
 
         this.props.dispatch(CREATE_ITEM_AND_SAVING.pending({
-                itemUid: this.props.item.uid,
-                provider: this.props.item.provider,
+                item: this.getItem(),
                 lineupId,
                 privacy: visibility,
                 description,
             }, {
-                scope: {itemId: this.props.itemId, lineupId},
+                // scope: {itemId: this.props.item.uid, lineupId},
                 lineupId: lineupId,
                 delayMs: delayMs
             }
