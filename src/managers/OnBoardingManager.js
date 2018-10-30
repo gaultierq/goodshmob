@@ -5,6 +5,7 @@ import Config from 'react-native-config'
 import type {ms} from "../types"
 import NotificationManager from './NotificationManager'
 import * as __ from "lodash"
+import {Colors} from "../ui/colors"
 
 const DISPLAYED = 'DISPLAYED';
 const DISMISSED = 'DISMISSED';
@@ -83,6 +84,20 @@ const ALL_INFOS = [
             type: 'private',
             keys: 'tips.full_private',
             materialIcon: 'lock',
+        }
+    },
+    {
+        type: 'invite',
+        group: 'tip',
+        maxDisplay: 3000000,
+        priority: 7,
+        timeAfter: TIME_BETWEEN_TIPS_MS,
+        extraData: {
+            type: 'invite',
+            keys: 'tips.invite',
+            materialIcon: 'people',
+            link: `${Config.GOODSH_PROTOCOL_SCHEME}://it/openmodal?screen=goodsh.InviteManyContacts&title=${encodeURIComponent(i18n.t('actions.invite'))}`,
+            color: Colors.orange,
         }
     }
 ]
@@ -194,6 +209,7 @@ class _OnBoardingManager implements OnBoardingManager {
             case "noise":
             case "visibility":
             case "private":
+            case "invite":
                 return true
             default:
                 return false

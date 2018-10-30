@@ -83,3 +83,4 @@ ios-release.bundle.meta
 
 .env.old
 ios/goodshmob/GoogleService-Info.plist
+dump.rdb

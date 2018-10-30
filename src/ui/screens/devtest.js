@@ -3,13 +3,14 @@ import React, {Component} from 'react'
 import {Clipboard, Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
 import {CheckBox} from "react-native-elements"
 import {Navigation} from "react-native-navigation"
-import GTouchable from "../GTouchable"
 import MapView, {Marker} from 'react-native-maps'
 import {AlgoliaClient} from "../../helpers/AlgoliaUtils"
 import Config from 'react-native-config'
 import SearchUserPage from "./search/SearchUserPage"
 import BrowsePlaces from "./search/BrowsePlaces"
 import GButton from "../components/GButton"
+import {renderTip} from "../components/Tip"
+import {Colors} from "../colors"
 
 type Props = {
 };
@@ -105,5 +106,22 @@ export default class TestScreen extends Component<Props, State> {
                 });
             }} />
         )
+    }
+
+    render() {
+        return (
+            <View style={{width: "100%", height: 350}}>
+                {
+                    renderTip({
+                        type: 'invite',
+                        keys: 'tips.invite',
+                        materialIcon: 'people',
+                        link: `${Config.GOODSH_PROTOCOL_SCHEME}://it/openmodal?screen=goodsh.InviteManyContacts&title=${encodeURIComponent(i18n.t('actions.invite'))}`,
+                        color: Colors.orange,
+                    })
+                }
+            </View>
+        )
+
     }
 }

@@ -18,10 +18,10 @@ import {
 } from 'react-native'
 
 import {connect} from "react-redux"
-import type {Id, RNNNavigator, Saving} from "../../types"
+import type {RNNNavigator, Saving} from "../../types"
 import {currentGoodshboxId, currentUser, isLogged, logged} from "../../managers/CurrentUser"
 import {CheckBox} from 'react-native-elements'
-import {Navigation} from 'react-native-navigation'
+import {Navigation, ScreenVisibilityListener as RNNScreenVisibilityListener} from 'react-native-navigation'
 import {CLOSE_MODAL, displayHomeSearch, startAddItem} from "../Nav"
 import Screen from "../components/Screen"
 import {PROFILE_CLICKED} from "../components/MyAvatar"
@@ -33,7 +33,7 @@ import {
     renderTabBarFactory,
     scheduleOpacityAnimation
 } from "../UIComponents"
-import {Tip, TipConfig} from "../components/Tip"
+import {renderTip, TipConfig} from "../components/Tip"
 import {HomeOnBoardingHelper} from "./HomeOnBoardingHelper"
 import {PagerPan, TabView} from "react-native-tab-view"
 import MyGoodsh from "./MyGoodsh"
@@ -41,7 +41,6 @@ import MyInterests from "./MyInterests"
 import {fullName2} from "../../helpers/StringUtils"
 import {currentUserFilter} from "../../redux/selectors"
 import NotificationManager from '../../managers/NotificationManager'
-import {ScreenVisibilityListener as RNNScreenVisibilityListener} from 'react-native-navigation'
 
 type Props = {
     navigator: RNNNavigator
@@ -51,7 +50,7 @@ type State = {
     focusedSaving?: Saving,
     isActionButtonVisible: boolean,
     filterFocused?: boolean,
-    currentTip?:TipConfig,
+    currentTip?: TipConfig,
     popularDisplayCount?: number,
     index: number,
 }
@@ -321,7 +320,7 @@ export default class HomeScreen extends Screen<Props, State> {
                         // ItemSeparatorComponent={() => <View style={{height: StyleSheet.hairlineWidth, backgroundColor: Colors.white}} />}
                         ItemSeparatorComponent={() => null}
                         ListHeaderComponent={
-                            !this.state.filterFocused && this.state.currentTip && this.renderTip()
+                            !this.state.filterFocused && this.state.currentTip && renderTip(this.state.currentTip)
                         }
                         targetRef={this._targetRef("add", i18n.t("home.wizard.action_button_label"), i18n.t("home.wizard.action_button_body"))}
                         onFilterFocusChange={filterFocused => new Promise(resolved => {
@@ -344,24 +343,6 @@ export default class HomeScreen extends Screen<Props, State> {
 
     isFocused(route) {
         return this.state.index === ROUTES.indexOf(route)
-    }
-
-    renderTip() {
-        const currentTip = this.state.currentTip;
-        let keys = currentTip.keys;
-        let res = {};
-        ['title', 'text', 'button'].forEach(k=> {
-            res[k] = i18n.t(`${keys}.${k}`)
-        })
-        return <Tip
-            {...res}
-            materialIcon={currentTip.materialIcon}
-            style={{margin: 10}}
-            onClickClose={() => {
-                OnBoardingManager.postOnDismissed(currentTip.type)
-            }}
-
-        />;
     }
 
     static getDerivedStateFromProps(props: Props, state: State) {

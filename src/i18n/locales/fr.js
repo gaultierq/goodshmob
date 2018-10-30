@@ -60,6 +60,11 @@ export default {
             text: "Pour un goodsh complètement privé, active le cadenas",
             button: "OK"
         },
+        invite: {
+            title: "Inviter",
+            text: "Invite tes amis pour profiter pleinement de goodsh.it",
+            button: "Inviter"
+        },
     },
     home: {
         wizard: {

@@ -60,6 +60,11 @@ export default {
             text: "For a fully private goodsh, tap the lock",
             button: "OK"
         },
+        invite: {
+            title: "Invite",
+            text: "Invite your friends to enjoy fully goodsh.it",
+            button: "Invite"
+        },
     },
     home: {
         wizard: {

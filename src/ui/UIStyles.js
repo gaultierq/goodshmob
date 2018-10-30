@@ -139,6 +139,7 @@ export function renderLink(
     return renderSimpleLink(text, handler, options);
 }
 export function openLinkSafely(url: ?string) {
+    console.log("openLinkSafely", url);
     Linking.canOpenURL(url).then(supported => {
         if (supported) {
             Linking.openURL(url);

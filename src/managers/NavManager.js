@@ -8,8 +8,7 @@ import {CANCELABLE_MODAL, displayLineupActionMenu} from "../ui/Nav"
 import URL from "url-parse"
 import Config from 'react-native-config'
 import {getLineup} from "../helpers/DataAccessors"
-import {SearchItemCategoryType, SEARCH_CATEGORIES_TYPE} from "../helpers/SearchConstants"
-import {getTabIndex} from "../app"
+import {SEARCH_CATEGORIES_TYPE} from "../helpers/SearchConstants"
 
 // export const DEEPLINK_OPEN_SCREEN_IN_MODAL = 'DEEPLINK_OPEN_SCREEN_IN_MODAL';
 
@@ -77,6 +76,7 @@ class _NavManager implements NavManager {
         let pathname = url.pathname || ''
         let parts = pathname.split('/')
 
+        let prot = _.nth(parts, 0)
         let main = _.nth(parts, 1)
 
 
@@ -84,6 +84,9 @@ class _NavManager implements NavManager {
         let handler: any
         let tab: any
 
+        if (url.protocol === `${Config.GOODSH_PROTOCOL_SCHEME}:` && main === 'openmodal' ) {
+            modal = url.query
+        }
 
         //after RNN v2, try to see if there is a static "switchToTab"
         if (main === 'explore' || main === 'discover') {
