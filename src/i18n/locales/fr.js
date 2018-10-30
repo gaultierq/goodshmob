@@ -512,4 +512,5 @@ export default {
         one: "Inviter %{name}",
         other: "Inviter %{count} contacts"
     },
+    invite_contacts: "Inviter des contacts"
 }

@@ -102,7 +102,7 @@ export function renderSimpleButton(
             style={[{marginBottom: 0}, STYLES.button, style]}
             disabledStyle={STYLES.disabledButton}
         >
-            <Text style={[{fontFamily: SFP_TEXT_MEDIUM, fontSize: 18}, textStyle, ]}>{text}</Text>
+            <Text style={[SIMPLE_BUTTON_TEXT_STYLE, textStyle, ]}>{text}</Text>
         </Button>
     );
 }
@@ -235,6 +235,8 @@ export const selectDimension = (obj: DimensionSelector) => {
 
 }
 export const {ROW_TITLE_STYLE} = StyleSheet.create({ROW_TITLE_STYLE: {fontSize: selectDimension({small: 14, normal: 16, big: 17}), color: Colors.black, fontFamily: SFP_TEXT_REGULAR}})
+
+export const {SIMPLE_BUTTON_TEXT_STYLE} = StyleSheet.create({SIMPLE_BUTTON_TEXT_STYLE: {fontFamily: SFP_TEXT_MEDIUM, fontSize: 18}})
 
 export const FEED_INITIAL_LOADER_DURATION = 400;
 
