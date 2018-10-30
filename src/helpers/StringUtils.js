@@ -44,7 +44,7 @@ export const fullName2 = ({firstName, lastName} = {}) => _.join([firstName, last
 
 export function fullName(user: Person): string {
     let {firstName, lastName} = user || {}
-    return _.join([firstName, lastName], ' ')
+    return _.trim(_.join([firstName, lastName], ' '))
 }
 
 export function savingCount(lineup: Lineup) {
