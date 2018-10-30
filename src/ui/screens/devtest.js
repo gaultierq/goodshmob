@@ -9,7 +9,7 @@ import Config from 'react-native-config'
 import SearchUserPage from "./search/SearchUserPage"
 import BrowsePlaces from "./search/BrowsePlaces"
 import GButton from "../components/GButton"
-import {renderTip} from "../components/Tip"
+import {renderTip} from "./home"
 import {Colors} from "../colors"
 
 type Props = {

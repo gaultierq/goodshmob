@@ -3,11 +3,10 @@ import {Image, Linking, StyleSheet, Text, TextInput, TouchableOpacity, View} fro
 import {Colors} from "../colors"
 import {SFP_TEXT_MEDIUM} from "../fonts"
 import GTouchable from "../GTouchable"
+import type {Color, Url} from "../../types"
 import {ViewStyle} from "../../types"
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import {Col, Grid, Row} from "react-native-easy-grid"
-import type {Color, Url} from "../../types"
-import OnBoardingManager from "../../managers/OnBoardingManager"
 import {openLinkSafely} from "../UIStyles"
 
 type Props = {
@@ -60,9 +59,11 @@ export class Tip extends React.Component<Props, State> {
                         // backgroundColor:'green',
                         fontFamily: SFP_TEXT_MEDIUM,
                     }}>{title}</Text>
-                    <GTouchable onPress={onClickClose} style={{position: 'absolute', right: 10, top: 10}}>
-                        <Image source={require('../../img2/closeXWhite.png')} resizeMode="contain" />
-                    </GTouchable>
+                    {
+                        onClickClose && <GTouchable onPress={onClickClose} style={{position: 'absolute', right: 10, top: 10}}>
+                            <Image source={require('../../img2/closeXWhite.png')} resizeMode="contain" />
+                        </GTouchable>
+                    }
                 </Row>
                 <Row style={{
                     // backgroundColor: 'green',
@@ -130,20 +131,3 @@ export type TipConfig = {
 
 }
 
-export function renderTip(currentTip: TipConfig) {
-
-    let {keys, ...attr} = currentTip;
-    let res = {};
-    ['title', 'text', 'button'].forEach(k=> {
-        res[k] = i18n.t(`${keys}.${k}`)
-    })
-    return <Tip
-        {...res}
-        {...attr}
-        style={{margin: 10}}
-        onClickClose={() => {
-            OnBoardingManager.postOnDismissed(currentTip.type)
-        }}
-
-    />;
-}

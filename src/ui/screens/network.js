@@ -2,8 +2,14 @@
 
 import React from 'react'
 import {
-    ActivityIndicator, Dimensions, FlatList, Platform, RefreshControl, Text,
-    TouchableOpacity, View
+    ActivityIndicator,
+    Dimensions,
+    FlatList,
+    Platform,
+    RefreshControl,
+    Text,
+    TouchableOpacity,
+    View
 } from 'react-native'
 import {connect} from "react-redux"
 import {currentUser, currentUserId, logged} from "../../managers/CurrentUser"
@@ -13,7 +19,7 @@ import Feed from "../components/feed"
 import type {Activity, Id, NavigableProps} from "../../types"
 import {FETCH_ACTIVITIES, fetchMyNetwork} from "../networkActions"
 import * as Nav from "../Nav"
-import {CANCELABLE_MODAL2, seeActivityDetails} from "../Nav"
+import {seeActivityDetails} from "../Nav"
 import Screen from "../components/Screen"
 import {LINEUP_PADDING, renderSimpleButton, STYLES} from "../UIStyles"
 import {Colors} from "../colors"
@@ -24,7 +30,8 @@ import ActivityStatus from "../activity/components/ActivityStatus"
 import {SFP_TEXT_MEDIUM} from "../fonts"
 import AskInput from "../components/AskInput"
 import GTouchable from "../GTouchable"
-import * as UI from "../UIStyles"
+import Config from "react-native-config"
+import {Tip} from "../components/Tip"
 
 type Props = NavigableProps;
 
@@ -230,13 +237,35 @@ class NetworkScreen extends Screen<Props, State> {
                         return null
 
                     }}
+                    ListFooterComponent={
+                        <Tip
+                            button={i18n.t('tips.invite.button')}
+                            text={i18n.t('tips.invite.text')}
+                            title={i18n.t('tips.invite.title')}
+                            color={Colors.orange}
+                            link={`${Config.GOODSH_PROTOCOL_SCHEME}://it/openmodal?screen=goodsh.InviteManyContacts&title=${encodeURIComponent(i18n.t('actions.invite'))}`}
+                            style={{marginVertical: LINEUP_PADDING}}
+                        />
+                    }
                     {...attr}
                     contentOffset={{x: 0, y: 100}}
+
                 />
 
             </View>
         );
     }
+
+    /*
+    renderTip({
+                            type: 'invite',
+                            keys: 'tips.invite',
+                            materialIcon: 'people',
+                            link: `${Config.GOODSH_PROTOCOL_SCHEME}://it/openmodal?screen=goodsh.InviteManyContacts&title=${encodeURIComponent(i18n.t('actions.invite'))}`,
+                            color: Colors.orange,
+                        })
+
+     */
 
     renderAskInput() {
         return <GTouchable onPress={() => this.showAsk()}><AskInput editable={false} pointerEvents='none'/></GTouchable>

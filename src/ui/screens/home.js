@@ -33,7 +33,8 @@ import {
     renderTabBarFactory,
     scheduleOpacityAnimation
 } from "../UIComponents"
-import {renderTip, TipConfig} from "../components/Tip"
+import type {TipConfig} from "../components/Tip"
+import {Tip} from "../components/Tip"
 import {HomeOnBoardingHelper} from "./HomeOnBoardingHelper"
 import {PagerPan, TabView} from "react-native-tab-view"
 import MyGoodsh from "./MyGoodsh"
@@ -60,6 +61,25 @@ const ROUTES = [
     {key: `my_goodsh`, title: i18n.t("home.tabs.my_goodsh")},
     {key: `my_interests`, title: i18n.t("home.tabs.my_interests")},
 ]
+
+export function renderTip(currentTip: TipConfig) {
+
+    let {keys, ...attr} = currentTip
+    let res = {};
+    ['title', 'text', 'button'].forEach(k => {
+        res[k] = i18n.t(`${keys}.${k}`)
+    })
+    return <Tip
+        {...res}
+        {...attr}
+        style={{margin: 10}}
+        onClickClose={() => {
+            OnBoardingManager.postOnDismissed(currentTip.type)
+        }}
+
+    />
+}
+
 @logged
 @connect((state, props)=>({
     config: state.config,
