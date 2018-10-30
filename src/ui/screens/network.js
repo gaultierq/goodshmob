@@ -211,7 +211,7 @@ class NetworkScreen extends Screen<Props, State> {
                     hasMore={!network1.hasNoMore}
                     autoRefreshMs={10000}
                     scrollUpOnBack={scrollUpOnBack}
-                    ListEmptyComponent={<View><Text style={STYLES.empty_message}>{i18n.t('community.empty_screen')}</Text><AppShareButton text={i18n.t('actions.invite')}/></View>}
+                    // ListEmptyComponent={<View><Text style={STYLES.empty_message}>{i18n.t('community.empty_screen')}</Text><AppShareButton text={i18n.t('actions.invite')}/></View>}
                     // initialNumToRender={5}
                     decorateLoadMoreCall={(sections: any[], call: Call) => call.addQuery({id_lt: _.last(sections).id})}
                     visibility={super.getVisibility()}
@@ -244,7 +244,7 @@ class NetworkScreen extends Screen<Props, State> {
                             title={i18n.t('tips.invite.title')}
                             color={Colors.orange}
                             link={`${Config.GOODSH_PROTOCOL_SCHEME}://it/openmodal?screen=goodsh.InviteManyContacts&title=${encodeURIComponent(i18n.t('actions.invite'))}`}
-                            style={{marginVertical: LINEUP_PADDING}}
+                            style={{margin: LINEUP_PADDING}}
                         />
                     }
                     {...attr}
