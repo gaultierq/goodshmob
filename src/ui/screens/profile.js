@@ -17,7 +17,7 @@ import {
 } from 'react-native'
 import {connect} from 'react-redux'
 import {currentUserId, logged} from "../../managers/CurrentUser"
-import type {Id, ms, RequestState, User} from "../../types"
+import type {Id, ms, RequestState, RNNNavigator, User} from "../../types"
 import {buildData} from "../../helpers/DataUtils"
 import * as Api from "../../managers/Api"
 import * as authActions from '../../auth/actions'
@@ -34,19 +34,19 @@ import {SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "../fonts"
 import FeedSeparator from "../activity/components/FeedSeparator"
 import {getDeviceInfo} from "../../managers/DeviceManager"
 import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
+import {CLOSE_MODAL} from "../Nav"
 
 type Props = {
-    // userId: Id,
+    navigator: RNNNavigator,
     data: any
-};
+}
 
 type State = {
     //user?: User
     feedback?: string,
     reqLogout?: RequestState,
     devMenu?: boolean
-};
-
+}
 
 @logged
 @connect(state => ({
@@ -57,6 +57,7 @@ export default class Profile extends Component<Props, State> {
 
     state = {user: null};
 
+    clicksMs: ms
 
     componentWillMount() {
         // let {userId} = this.props;
@@ -91,25 +92,30 @@ export default class Profile extends Component<Props, State> {
                     {this.renderUser(user)}
                 </View>
 
-                <View style={{
-                }}>
-
+                <View >
                     <FeedSeparator/>
-                    <GTouchable style={styles.headerContainer} onPress={() => {
-                        this.sendFeedback(encodeURIComponent(i18n.t('profile_screen.subtitle')))
-                    }}>
-                        <Text style={styles.header}>{i18n.t('profile_screen.title')}</Text>
-                        {this.renderChevron()}
-                    </GTouchable>
+                    {
+                        this.renderButton(i18n.t('actions.invite'), () => {
+                            this.props.navigator.showModal({
+                                screen: 'goodsh.InviteManyContacts',
+                                title: i18n.t('actions.invite'),
+                                navigatorButtons: Nav.CANCELABLE_MODAL,
+                            })
 
+                        })
+                    }
                     <FeedSeparator/>
-
-                    <GTouchable style={styles.headerContainer} onPress={() => {
-                        openLinkSafely("https://goodsh.it/terms");
-                    }}>
-                        <Text style={styles.header}>{i18n.t('actions.terms')}</Text>
-                        {this.renderChevron()}
-                    </GTouchable>
+                    {
+                        this.renderButton(i18n.t('profile_screen.title'), () => {
+                            this.sendFeedback(encodeURIComponent(i18n.t('profile_screen.subtitle')))
+                        })
+                    }
+                    <FeedSeparator/>
+                    {
+                        this.renderButton(i18n.t('actions.terms'), () => {
+                            openLinkSafely("https://goodsh.it/terms");
+                        })
+                    }
                     <FeedSeparator/>
 
                 </View>
@@ -155,7 +161,14 @@ export default class Profile extends Component<Props, State> {
         );
     }
 
-    clicksMs: ms
+    renderButton(text: string, onPress: () => void) {
+        return (
+            <GTouchable style={styles.headerContainer} onPress={onPress}>
+                <Text style={styles.header}>{text}</Text>
+                {this.renderChevron()}
+            </GTouchable>
+        )
+    }
 
     renderVersion() {
         let handler = () => {
