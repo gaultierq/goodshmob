@@ -51,30 +51,6 @@ const ALL_INFOS = [
         priority: 3
     },
     {
-        type: 'visibility',
-        group: 'tip',
-        maxDisplay: 30000,
-        priority: 4,
-        timeAfter: TIME_BETWEEN_TIPS_MS,
-        extraData: {
-            type: 'visibility',
-            keys: 'tips.visibility',
-            materialIcon: 'lock',
-        }
-    },
-    {
-        type: 'noise',
-        group: 'tip',
-        maxDisplay: 30000,
-        priority: 5,
-        timeAfter: TIME_BETWEEN_TIPS_MS,
-        extraData: {
-            type: 'noise',
-            keys: 'tips.noise',
-            materialIcon: 'notifications-off',
-        }
-    },
-    {
         type: 'private',
         group: 'tip',
         maxDisplay: 30000,
