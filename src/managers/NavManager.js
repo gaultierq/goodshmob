@@ -84,7 +84,7 @@ class _NavManager implements NavManager {
         let handler: any
         let tab: any
 
-        if (url.protocol === `${Config.GOODSH_PROTOCOL_SCHEME}:` && main === 'openmodal' ) {
+        if (main === 'openmodal' ) {
             modal = url.query
         }
 
