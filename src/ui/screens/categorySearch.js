@@ -11,7 +11,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native'
-import {currentUserId} from "../../managers/CurrentUser"
+import {currentGoodshboxId, currentUserId} from "../../managers/CurrentUser"
 import type {NavigableProps} from "../../types"
 import Screen from "../components/Screen"
 import {SEARCH_CATEGORIES_TYPE} from "../../helpers/SearchConstants"
@@ -21,9 +21,10 @@ import {PagerPan, TabView} from "react-native-tab-view"
 import BrowseGeneric from "./search/BrowseGeneric"
 import BrowsePlaces from "./search/BrowsePlaces"
 import {connect} from "react-redux"
-import {renderTabBarFactory} from "../UIComponents"
+import {getAddButton, renderTabBarFactory} from "../UIComponents"
 import {PROFILE_CLICKED} from "../components/MyAvatar"
 import {getTabIndex} from "../../app"
+import {startAddItem} from "../Nav"
 
 type Props = NavigableProps & {
     initialIndex: number,
@@ -64,7 +65,15 @@ export default class CategorySearchScreen extends Screen<Props, State> {
             routes: ROUTES,
         }
         this.state = { ...this.state, ...this.propsToState(props)}
+
+
+        this.props.navigator.setButtons(getAddButton())
+
         props.navigator.addOnNavigatorEvent(event => {
+            if (event.id === 'add') {
+                startAddItem(this.props.navigator, currentGoodshboxId())
+                return
+            }
             if (event.type === 'DeepLink') {
                 switch (event.link) {
                     case "topTab":
