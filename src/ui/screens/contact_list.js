@@ -263,7 +263,7 @@ export function createHandler(contact: Contact, message: OutMessage, options?: a
 
 export function createSmsUri(phones: string[], message: OutMessage): string {
     let {title, body} = message
-    return `sms:${phones.join(',')}${__IS_IOS__ ? '&' : '?' }body=${encodeURIComponent(body)}`
+    return `sms:${phones.join(',')}${__IS_IOS__ ? '&' : '?' }body=${body}`
 }
 
 

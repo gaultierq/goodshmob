@@ -67,7 +67,16 @@ export default class CategorySearchScreen extends Screen<Props, State> {
         this.state = { ...this.state, ...this.propsToState(props)}
 
 
-        this.props.navigator.setButtons(getAddButton())
+        this.props.navigator.setButtons({
+            rightButtons: [
+                {
+                    // icon: require('../img2/add-intro.png'),
+                    icon: require('../../img2/add_green.png'),
+                    disableIconTint: true,
+                    id: 'add'
+                }
+            ]
+        })
 
         props.navigator.addOnNavigatorEvent(event => {
             if (event.id === 'add') {
