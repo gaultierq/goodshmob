@@ -15,6 +15,8 @@ import GButton from "../components/GButton"
 import Screen from "../components/Screen"
 import GSearchBar2 from "../components/GSearchBar2"
 import {fullName} from "../../helpers/StringUtils"
+import Permissions from 'react-native-permissions'
+
 
 export type Contact = {
     recordID: string,
@@ -42,7 +44,8 @@ type State = {
     syncing?: boolean,
     searching?: boolean,
     filter?: string,
-    searchResult?: Contact[]
+    searchResult?: Contact[],
+    permission: string,
 }
 
 const logger = rootlogger.createLogger('contact list')
@@ -61,14 +64,17 @@ export default class ContactList extends Screen<Props, State> {
     }
 
     state = {
+        permission: 'unknown'
     }
 
     componentDidMount() {
-        Contacts.checkPermission((err, permission) => {
-            if (err) throw err;
+        Permissions.check('contacts').then(permission => {
+            this.setState({ permission })
+
             if (permission === 'authorized') {
                 this.syncContacts()
             }
+
         })
     }
 
@@ -128,12 +134,29 @@ export default class ContactList extends Screen<Props, State> {
         let data, empty
         if (_.isEmpty(this.state.filter)) {
             data = contacts.data
-            empty = (
-                <View>
-                    <Text style={STYLES.empty_message}>{i18n.t('contacts.empty_screen')}</Text>
-                    <GButton style={{marginHorizontal: LINEUP_PADDING}} text={i18n.t('contacts.empty_screen_button')} onPress={this.syncContacts.bind(this)}/>
-                </View>
-            )
+            if (this.state.permission === 'authorized') {
+                // empty = (
+                //     <View>
+                //         <Text style={STYLES.empty_message}>{i18n.t('contacts.empty_screen')}</Text>
+                //         <GButton style={{marginHorizontal: LINEUP_PADDING}} text={i18n.t('contacts.empty_screen_button')} onPress={ () => {this.syncContacts()}}/>
+                //     </View>
+                // )
+                empty = null
+            }
+            else {
+                empty = (
+                    <View>
+                        <Text style={STYLES.empty_message}>{i18n.t('contacts.empty_screen')}</Text>
+                        <GButton style={{marginHorizontal: LINEUP_PADDING}} text={i18n.t('contacts.empty_screen_button')} onPress={ () => {
+                            this.askPermissions().then(() => {
+                            this.syncContacts()
+                        })
+
+                        }}/>
+                    </View>
+                )
+            }
+
         }
         else {
             data = this.state.searchResult || []
@@ -158,18 +181,22 @@ export default class ContactList extends Screen<Props, State> {
                     onRefresh={this.onRefresh.bind(this)}
                 />}
                 {...attr}
-                ListHeaderComponent={
-                    (
-                        <GSearchBar2
-                            value={this.state.filter}
-                            onChangeText={filter => this.onChangeFilter(filter)}
-                            placeholder={i18n.t('search.in_my_contacts')}
-                            style={{padding: LINEUP_PADDING}}
-                        />
-                    )
+                ListHeaderComponent={ this.displayFilter() &&
+                (
+                    <GSearchBar2
+                        value={this.state.filter}
+                        onChangeText={filter => this.onChangeFilter(filter)}
+                        placeholder={i18n.t('search.in_my_contacts')}
+                        style={{padding: LINEUP_PADDING}}
+                    />
+                )
                 }
             />
         )
+    }
+
+    displayFilter() {
+        return this.state.permission === 'authorized' || _.size(this.props.contacts.data) > 0
     }
 
     onChangeFilter(filter:string) {
@@ -189,16 +216,28 @@ export default class ContactList extends Screen<Props, State> {
         this.syncContacts()
     }
 
-    syncContacts() {
+    async syncContacts() {
         if (this.state.syncing) return
         this.setState({syncing: true})
-        Contacts.getAll((err, contacts) => {
-            if (err) throw err
-            contacts = _.filter(contacts, c => !_.isEmpty(fullName(toPerson(c))))
-            contacts = _.sortBy(contacts, c => fullName(toPerson(c)))
-            this.props.dispatch({type: SET_CONTACTS, data: contacts})
-            this.setState({syncing: false})
-        })
+
+        if (this.state.permission === 'authorized') {
+            Contacts.getAll((err, contacts) => {
+                if (err) throw err
+                contacts = _.filter(contacts, c => !_.isEmpty(fullName(toPerson(c))))
+                contacts = _.sortBy(contacts, c => fullName(toPerson(c)))
+                this.props.dispatch({type: SET_CONTACTS, data: contacts})
+                this.setState({syncing: false})
+            })
+        }
+        else {
+            logger.warn(`trying to sync contacts without the right permissions: ${this.state.permission}`)
+        }
+    }
+
+    async askPermissions() {
+        let permission = await Permissions.request('contacts')
+        logger.info(`permissions: ${permission}`)
+        await this.setState({permission})
     }
 }
 
