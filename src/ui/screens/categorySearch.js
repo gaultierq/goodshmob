@@ -3,7 +3,8 @@
 import React from 'react'
 import {
     ActivityIndicator,
-    FlatList, Keyboard,
+    FlatList,
+    Keyboard,
     Platform,
     RefreshControl,
     StyleSheet,
@@ -21,8 +22,7 @@ import {PagerPan, TabView} from "react-native-tab-view"
 import BrowseGeneric from "./search/BrowseGeneric"
 import BrowsePlaces from "./search/BrowsePlaces"
 import {connect} from "react-redux"
-import {getAddButton, renderTabBarFactory} from "../UIComponents"
-import {PROFILE_CLICKED} from "../components/MyAvatar"
+import {renderTabBarFactory} from "../UIComponents"
 import {getTabIndex} from "../../app"
 import {startAddItem} from "../Nav"
 
@@ -34,7 +34,7 @@ type Props = NavigableProps & {
 type State = {
     index: number,
     routes: any,
-    searchOptions?: any
+    searchOptions: any
 };
 
 const ROUTES = SEARCH_CATEGORIES_TYPE.map(t=> ({key: t, title: i18n.t("search_item_screen.tabs." + t)}))
@@ -49,10 +49,10 @@ export default class CategorySearchScreen extends Screen<Props, State> {
 
     static defaultProps = {
         initialIndex: 0,
-        searchOptions: {},
+        searchOptions: _.transform(SEARCH_CATEGORIES_TYPE, (result, t) => _.set(result, t, {scope: 'all'}),{}),
     }
 
-    propsToState(props) {
+    propsToState(props: Props) {
         return {
             index: props.initialIndex,
             searchOptions: props.searchOptions
@@ -61,12 +61,7 @@ export default class CategorySearchScreen extends Screen<Props, State> {
 
     constructor(props: Props) {
         super(props)
-        this.state = {
-            routes: ROUTES,
-        }
-        this.state = { ...this.state, ...this.propsToState(props)}
-
-
+        this.state = { routes: ROUTES, ...this.propsToState(props)}
         this.props.navigator.setButtons({
             rightButtons: [
                 {
@@ -137,7 +132,7 @@ export default class CategorySearchScreen extends Screen<Props, State> {
         let ix = ROUTES.indexOf(route)
         let focused = this.state.index === ix
         const visible: boolean = super.isVisible()
-        const options = this.state.searchOptions[route.key] || {}
+        const options = this.state.searchOptions[route.key] 
         switch (route.key) {
             case 'places': return (
                 <BrowsePlaces
