@@ -25,6 +25,7 @@ import {connect} from "react-redux"
 import {renderTabBarFactory} from "../UIComponents"
 import {getTabIndex} from "../../app"
 import {startAddItem} from "../Nav"
+import * as UI from "../UIStyles"
 
 type Props = NavigableProps & {
     initialIndex: number,
@@ -62,6 +63,13 @@ export default class CategorySearchScreen extends Screen<Props, State> {
     constructor(props: Props) {
         super(props)
         this.state = { routes: ROUTES, ...this.propsToState(props)}
+
+        this.props.navigator.setStyle({
+            ...UI.NavStyles,
+            navBarCustomView: 'goodsh.SearchNav',
+            navBarCustomViewInitialProps: { placeholder: 'test', onPress: () => alert('toto') }
+        });
+
         this.props.navigator.setButtons({
             rightButtons: [
                 {
@@ -132,7 +140,7 @@ export default class CategorySearchScreen extends Screen<Props, State> {
         let ix = ROUTES.indexOf(route)
         let focused = this.state.index === ix
         const visible: boolean = super.isVisible()
-        const options = this.state.searchOptions[route.key] 
+        const options = this.state.searchOptions[route.key]
         switch (route.key) {
             case 'places': return (
                 <BrowsePlaces

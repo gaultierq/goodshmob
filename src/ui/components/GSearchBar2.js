@@ -17,7 +17,7 @@ export type Props = {
     onCancel?: () => void,
     cancelTitle?: string,
     style?: any,
-    onChangeText: string => void,
+    onChangeText?: string => void,
     ref?: any => string,
     editable?: boolean,
 

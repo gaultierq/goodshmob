@@ -50,6 +50,7 @@ import ContactList from "./screens/contact_list"
 import Community from "./screens/community"
 import InviteManyContacts from "./screens/invite_many_contacts"
 import SaveCongratz from "./screens/save_congratz"
+import SearchNav from "./components/SearchNav"
 
 
 function wrap(screenName,screenCreator,store,provider) {
@@ -125,5 +126,6 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.Community', () => Community, store, Provider);
     wrap('goodsh.InviteManyContacts', () => InviteManyContacts, store, Provider);
     wrap('goodsh.SaveCongratz', () => SaveCongratz, store, Provider);
+    wrap('goodsh.SearchNav', () => SearchNav, store, Provider);
 
 }
