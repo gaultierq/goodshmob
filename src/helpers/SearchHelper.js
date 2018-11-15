@@ -4,7 +4,7 @@ import type {Node} from 'react'
 import * as React from 'react'
 import type {Lineup, List, RNNNavigator, Saving, User} from "../types"
 import {RequestState} from "../types"
-import {GoodshContext, renderLineupFromOtherPeople} from "../ui/UIComponents"
+import {GoodshContext, renderLineup} from "../ui/UIComponents"
 import {seeActivityDetails, seeUser} from "../ui/Nav"
 import GTouchable from "../ui/GTouchable"
 import ItemCell from "../ui/components/ItemCell"
@@ -71,21 +71,11 @@ export function renderSavingOrLineup(navigator: RNNNavigator) {
 
 
         if (isLineup) {
-            return renderLineupFromOtherPeople(navigator, item)
+            return renderLineup(navigator, item)
         }
         else {
-            let saving = item;
+            return renderSaving2(item)
 
-            let resource = saving.resource;
-
-            //TODO: this is hack
-            if (!resource) return null;
-
-            return (
-                <GTouchable onPress={() => seeActivityDetails(navigator, saving)}>
-                    <ItemCell item={resource}/>
-                </GTouchable>
-            )
         }
     }
 }
@@ -260,7 +250,12 @@ export function makeBrowseAlgoliaFilter2(friendFilter: FRIEND_FILTER_TYPE, categ
     }
 }
 
-export function renderItem({item}: {item: Saving}) {
+export function renderSaving({item}: {item: Saving}) {
+    return renderSaving2(item)
+}
+
+
+export function renderSaving2(item: Saving) {
 
     let saving = item;
 
@@ -287,8 +282,6 @@ export function renderItem({item}: {item: Saving}) {
                     </ItemCell>
                 </GTouchable>
             )}
-
-
         </GoodshContext.Consumer>
     )
 }

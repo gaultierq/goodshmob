@@ -195,17 +195,19 @@ export function renderLineupMenu(navigator: RNNNavigator, dispatch: any, lineup:
     );
 }
 
-export function renderLineupFromOtherPeople(navigator: RNNNavigator, lineup: Lineup) {
+export function renderLineup(navigator: RNNNavigator, lineup: Lineup) {
 
-    return (<GTouchable
-        onPress={() => seeList(navigator, lineup)}>
+    return (
+        <GTouchable
+            onPress={() => seeList(navigator, lineup)}>
 
-        <LineupHorizontal
-            lineup={lineup}
-            style={{paddingBottom: 10}}
-            renderTitle={(l: Lineup) => <LineupTitle2 dataResolver={id => lineup} lineupId={lineup.id}/>}
-        />
-    </GTouchable>);
+            <LineupHorizontal
+                lineup={lineup}
+                style={{paddingBottom: 10}}
+                renderTitle={(l: Lineup) => <LineupTitle2 dataResolver={id => lineup} lineupId={lineup.id}/>}
+            />
+        </GTouchable>
+    )
 }
 
 export const GoodshContext = React.createContext({userOwnResources: true});

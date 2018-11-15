@@ -4,7 +4,7 @@ import type {Node} from 'react'
 import React from 'react'
 import {StyleSheet, Text, TextInput, View,} from 'react-native'
 import type {SearchEngine, } from "../../../helpers/SearchHelper"
-import {__createAlgoliaSearcher, makeBrowseAlgoliaFilter2, renderItem} from "../../../helpers/SearchHelper"
+import {__createAlgoliaSearcher, makeBrowseAlgoliaFilter2, renderSaving} from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import SearchMotor from "../searchMotor"
 import {currentUserId, logged} from "../../../managers/CurrentUser"
@@ -100,7 +100,7 @@ export default class BrowseGeneric extends React.Component<SMP, SMS> {
                     <SearchMotor
                         innerRef={ref => this.searchMotor = ref}
                         searchEngine={this.search}
-                        renderResults={(state, onLoadMore)=> <SearchListResults searchState={state} onLoadMore={onLoadMore} renderItem={renderItem.bind(this)} />}
+                        renderResults={(state, onLoadMore)=> <SearchListResults searchState={state} onLoadMore={onLoadMore} renderItem={renderSaving.bind(this)} />}
                         searchOptions={this.state.searchOptions}
                         canSearch={(searchOptions: BrowseItemsGenOptions) => !this.props.focused ? 'not_focused' : null}
                     />

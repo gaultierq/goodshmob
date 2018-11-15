@@ -59,10 +59,6 @@ export default class LineupTitle2 extends Component<Props, State> {
                             <View style={{
                                 flex:1,
                                 flexDirection: 'row',
-                                // justifyContent: 'space-between',
-                                // backgroundColor: 'orange'
-                                // paddingTop: 15,
-                                // paddingBottom: 10,
                             }}>
                                 <Text style={STYLES.SECTION_TITLE}>
                                     {lineup.name}
@@ -85,7 +81,6 @@ export default class LineupTitle2 extends Component<Props, State> {
                                 flexDirection: 'row',
                                 alignItems: 'center',
                                 flex: 0,
-                                // backgroundColor: 'yellow'
                             }}>
                                 <Text style={styles.smallText}>{i18n.t('search.by')}</Text>
                                 <PersonRowI

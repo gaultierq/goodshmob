@@ -18,7 +18,7 @@ import {currentUserId} from "../../../managers/CurrentUser"
 import {createResultFromHit} from "../../../helpers/AlgoliaUtils"
 import SearchListResults from "../searchListResults"
 import BlankSearch, {renderBlankIcon} from "../../components/BlankSearch"
-import {renderLineupFromOtherPeople, GoodshContext} from "../../../ui/UIComponents"
+import {renderLineup, GoodshContext} from "../../../ui/UIComponents"
 
 export type SearchUserOptions = {
     token: string
@@ -85,7 +85,7 @@ export default class SearchSavingAndLineupPage extends React.Component<SUP, SUS>
                     />
                     <SearchMotor
                         searchEngine={this.state.search}
-                        renderResults={(state, onLoadMore) => <SearchListResults searchState={state} onLoadMore={onLoadMore} renderItem={({item}) => renderLineupFromOtherPeople(this.props.navigator, item)} />}
+                        renderResults={(state, onLoadMore) => <SearchListResults searchState={state} onLoadMore={onLoadMore} renderItem={({item}) => renderLineup(this.props.navigator, item)} />}
                         searchOptions={this.state.searchOptions}
                         canSearch={ searchOptions => _.isEmpty(searchOptions.token) ? PERMISSION_EMPTY_INPUT : null}
                         renderMissingPermission={(searchOptions, missingSearchPermission): Node => {
