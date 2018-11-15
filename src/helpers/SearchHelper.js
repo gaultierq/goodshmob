@@ -218,7 +218,7 @@ export function __createAlgoliaSearcher<SO: any>(
 }
 
 
-export function makeBrowseAlgoliaFilter2(friendFilter: FRIEND_FILTER_TYPE, category: string, user: User): string {
+export function makeBrowseAlgoliaFilter2(friendFilter: FRIEND_FILTER_TYPE, category: ?string, user: User): string {
 
 
     let CATEGORY_TO_TYPE = {
@@ -228,11 +228,17 @@ export function makeBrowseAlgoliaFilter2(friendFilter: FRIEND_FILTER_TYPE, categ
         movies: '(type:Movie OR type:TvShow)'
     }
 
+    let append = (left: string, right: string) => [left, right].filter(s => _.isEmpty(s)).join(" AND ")
 
-    let defaultQuery = `${CATEGORY_TO_TYPE[category]}`
+    let defaultQuery = ""
+    if (category ) {
+        defaultQuery += `${CATEGORY_TO_TYPE[category]}`
+    }
+
     switch(friendFilter) {
         case 'me':
-            return `${defaultQuery} AND user_id:${currentUserId()}`
+            return append(defaultQuery, `user_id:${currentUserId()}`)
+
         case 'friends': {
             if (!user.friends) {
                 console.log('Could not find user friends, resorting to all')
@@ -243,8 +249,7 @@ export function makeBrowseAlgoliaFilter2(friendFilter: FRIEND_FILTER_TYPE, categ
             user.friends.forEach((friend, index) => {
                 query += (index === 0 ? '' : ' OR ') + `user_id:${friend.id}`
             })
-
-            return defaultQuery + ` AND (${query})`
+            return append(defaultQuery, `(${query})`)
         }
 
         case 'all':

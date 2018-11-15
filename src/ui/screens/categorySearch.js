@@ -26,6 +26,7 @@ import {renderTabBarFactory} from "../UIComponents"
 import {getTabIndex} from "../../app"
 import {startAddItem} from "../Nav"
 import * as UI from "../UIStyles"
+import * as Nav from "../Nav"
 
 type Props = NavigableProps & {
     initialIndex: number,
@@ -67,7 +68,14 @@ export default class CategorySearchScreen extends Screen<Props, State> {
         this.props.navigator.setStyle({
             ...UI.NavStyles,
             navBarCustomView: 'goodsh.SearchNav',
-            navBarCustomViewInitialProps: { placeholder: 'test', onPress: () => alert('toto') }
+            navBarCustomViewInitialProps: { placeholder: i18n.t('search._'), onPress: () => {
+                    this.props.navigator.showModal({
+                        screen: 'goodsh.SearchSavingsOrUsers',
+                        title: i18n.t("search._"),
+                        navigatorButtons: Nav.CANCELABLE_MODAL,
+                    });
+                }
+            }
         });
 
         this.props.navigator.setButtons({

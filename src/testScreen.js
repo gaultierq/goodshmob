@@ -318,3 +318,10 @@ export const UserSearchScreen = {
 
     },
 }
+export const SearchSavingsOrUsers = {
+    screen: {
+        screen: 'goodsh.SearchSavingsOrUsers',
+        title: 'Test goodsh.SearchSavingsOrUsers',
+
+    },
+}

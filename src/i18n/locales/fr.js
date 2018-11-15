@@ -77,6 +77,8 @@ export default {
         }
     },
     search: {
+        _: "Rechercher",
+        deep: "Recherche étendue",
         in_items: "Saisir le nom à enregistrer",
         in_network: "Rechercher dans mon réseau",
         in_users: "Rechercher quelqu'un",
@@ -512,5 +514,5 @@ export default {
         one: "Inviter %{name}",
         other: "Inviter %{count} contacts"
     },
-    invite_contacts: "Inviter des contacts"
+    invite_contacts: "Inviter des contacts",
 }

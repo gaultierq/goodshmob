@@ -77,6 +77,8 @@ export default {
         }
     },
     search:{
+        _: "Search",
+        deep: "Deep search",
         in_items: "Find anything",
         in_network: "Search in my network",
         in_users: "Find users",
@@ -216,10 +218,10 @@ export default {
     },
     "search_bar":{
         "me_placeholder":"Search in your lists",
-        "network_placeholder":"Browse your network",
-        "lineup_placeholder":"Search lists to follow",
+        "network_placeholder": "Browse your network",
+        "lineup_placeholder": "Search lists to follow",
         "places_placeholder":"Search for restaurants, bars...",
-        "users_placeholder":"Search for users"
+        "users_placeholder":"Search for users",
     },
     "network_search_tabs":{
         "savings":"LISTS",

@@ -27,7 +27,7 @@ import {Navigation} from 'react-native-navigation'
 import type {Visibility} from "./additem"
 import type {FilterConfig} from "../components/feed"
 import GSearchBar2 from "../components/GSearchBar2"
-import {isCurrentUser} from "../../managers/CurrentUser"
+import {isCurrentUser, isCurrentUserId} from "../../managers/CurrentUser"
 
 
 type Props = LineupListProps & {
@@ -99,7 +99,7 @@ export default class UserLineups extends Screen<Props, State> {
                 <GSearchBar2
                     value={this.state.filter}
                     onChangeText={filter => this.setState({filter})}
-                    placeholder={isCurrentUser(this.props.userId) ? i18n.t('search.in_my_lists') : i18n.t('search.in_his_lists')}
+                    placeholder={isCurrentUserId(this.props.userId) ? i18n.t('search.in_my_lists') : i18n.t('search.in_his_lists')}
                     cancelFunctionRef={f => this.cancelSearch = f}
                 />
             </View>

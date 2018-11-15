@@ -31,7 +31,7 @@ type SUS = {
 }
 type SUP = {
     navigator?: RNNNavigator,
-    token: string
+    token?: string
 }
 
 export default class SearchSavingAndLineupPage extends React.Component<SUP, SUS> {
