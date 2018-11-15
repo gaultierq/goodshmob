@@ -250,6 +250,7 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
                         searchState={state}
                         onItemPressed={(item) => seeActivityDetails(this.props.navigator, item)}
                         initialRegion={region}
+                        showsUserLocation={true}
                         onRegionChange={reg => {
                             // logger.debug(`region = `, reg)
                             this.region = reg
