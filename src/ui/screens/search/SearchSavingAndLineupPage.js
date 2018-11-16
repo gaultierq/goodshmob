@@ -3,19 +3,21 @@
 import type {Node} from 'react'
 import React from 'react'
 import {StyleSheet, Text, TextInput, View,} from 'react-native'
-import type {SearchEngine,} from "../../../helpers/SearchHelper"
+import type {FRIEND_FILTER_TYPE, SearchEngine,} from "../../../helpers/SearchHelper"
 import {
-    __createAlgoliaSearcher, makeBrowseAlgoliaFilter2, PERMISSION_EMPTY_INPUT,
+    __createAlgoliaSearcher,
+    makeBrowseAlgoliaFilter2,
+    PERMISSION_EMPTY_INPUT,
     renderSavingOrLineup
 } from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
-import {LINEUP_PADDING, NAV_BACKGROUND_COLOR} from "../../UIStyles"
+import {LINEUP_PADDING} from "../../UIStyles"
 import GSearchBar2 from "../../components/GSearchBar2"
 import SearchMotor from "../searchMotor"
 import type {RNNNavigator} from "../../../types"
 import {AlgoliaClient} from "./../../../helpers/AlgoliaUtils"
 import Config from 'react-native-config'
-import {currentUser, currentUserId} from "../../../managers/CurrentUser"
+import {currentUser} from "../../../managers/CurrentUser"
 import {createResultFromHit} from "../../../helpers/AlgoliaUtils"
 import SearchListResults from "../searchListResults"
 import BlankSearch, {renderBlankIcon} from "../../components/BlankSearch"
@@ -103,7 +105,7 @@ export default class SearchSavingAndLineupPage extends React.Component<SUP, SUS>
         if (missingSearchPermission === PERMISSION_EMPTY_INPUT) {
             return <BlankSearch
                 icon={renderBlankIcon('savings')}
-                text={i18n.t("lineups.filter.deepsearch")}
+                text={this.props.scope === 'me' ? i18n.t("lineups.filter.deepsearch") : i18n.t("lineups.filter.lineup_search")}
             />
         }
         return <View/>
