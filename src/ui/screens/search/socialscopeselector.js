@@ -39,6 +39,7 @@ export class SocialScopeSelector extends Component<Pr, St> {
                     buttonColor={Colors.green}
                     borderColor={Colors.green}
                     sliderWidth={0}
+                    fontSize={17}
                     value={this.index(this.props.value)}
                 />
             </View>

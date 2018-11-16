@@ -192,7 +192,7 @@ export function __createAlgoliaSearcher<SO: any>(
                     }
                     let result = content;
                     let hits = result.hits;
-                    console.log(`search result lists: ${hits.length}`, hits);
+                    console.log(`search result: ${hits.length} hits`, hits);
 
                     let searchResult = config.parseResponse(hits);
 
