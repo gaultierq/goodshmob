@@ -187,6 +187,7 @@ export function createResultFromHit(hits, options = {}, withoutToken: boolean = 
         }
     });
 
+    console.debug("search results:", searchResult)
     return searchResult;
 }
 export function createResultFromHit2(hits, options = {}) {

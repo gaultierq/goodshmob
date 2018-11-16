@@ -269,10 +269,12 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
         else return (
             <SearchListResults
                 searchState={state}
-                renderItem={renderSaving.bind(this)}
+                renderItem={this._renderSaving}
             />
         )
     }
+
+    _renderSaving = (item) => renderSaving(item, this.props.navigator)
 
     getRegion() {
         if (this.state.searchOptions) {

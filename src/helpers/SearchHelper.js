@@ -74,7 +74,7 @@ export function renderSavingOrLineup(navigator: RNNNavigator) {
             return renderLineup(navigator, item)
         }
         else {
-            return renderSaving2(item)
+            return renderSaving2(item, navigator)
 
         }
     }
@@ -218,7 +218,7 @@ export function makeBrowseAlgoliaFilter2(friendFilter: FRIEND_FILTER_TYPE, categ
         movies: '(type:Movie OR type:TvShow)'
     }
 
-    let append = (left: string, right: string) => [left, right].filter(s => _.isEmpty(s)).join(" AND ")
+    let append = (left: string, right: string) => [left, right].filter(s => !_.isEmpty(s)).join(" AND ")
 
     let defaultQuery = ""
     if (category ) {
@@ -250,12 +250,12 @@ export function makeBrowseAlgoliaFilter2(friendFilter: FRIEND_FILTER_TYPE, categ
     }
 }
 
-export function renderSaving({item}: {item: Saving}) {
-    return renderSaving2(item)
+export function renderSaving({item}: {item: Saving}, navigator: RNNNavigator) {
+    return renderSaving2(item, navigator)
 }
 
 
-export function renderSaving2(item: Saving) {
+export function renderSaving2(item: Saving, navigator: RNNNavigator) {
 
     let saving = item;
 
@@ -267,7 +267,7 @@ export function renderSaving2(item: Saving) {
     return (
         <GoodshContext.Consumer>
             { ({userOwnResources}) => (
-                <GTouchable onPress={() => seeActivityDetails(this.props.navigator, saving)}>
+                <GTouchable onPress={() => seeActivityDetails(navigator, saving)}>
                     <ItemCell item={resource} >
                         {
                             !userOwnResources && (
