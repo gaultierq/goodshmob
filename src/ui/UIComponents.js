@@ -8,13 +8,20 @@ import {BACKGROUND_COLOR, LINEUP_PADDING, STYLES, TAB_BAR_PROPS, TAB_BAR_STYLES}
 import Spinner from 'react-native-spinkit'
 import type {Lineup, RNNNavigator, User} from "../types"
 import {ViewStyle} from "../types"
-import {displayLineupActionMenu, seeList} from "./Nav"
+import {CANCELABLE_MODAL2, displayLineupActionMenu, seeList, startAddItem} from "./Nav"
 import LineupHorizontal from "./components/LineupHorizontal"
 import LineupTitle2 from "./components/LineupTitle2"
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import {GLineupAction, L_ADD_ITEM, L_FOLLOW, L_SHARE, L_UNFOLLOW} from "./lineupRights"
 import {TabBar} from "react-native-tab-view"
 import {GAvatar} from "./GAvatar"
+import GButton from "./components/GButton"
+import * as Nav from "./Nav"
+import {currentGoodshboxId} from "../managers/CurrentUser"
+import type {Element} from "react"
+import type {FRIEND_FILTER_TYPE} from "../helpers/SearchHelper"
+import {SEARCH_CATEGORIES_TYPE} from "../helpers/SearchConstants"
+import i18n from "../i18n/i18n"
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
@@ -361,3 +368,58 @@ export const renderTextAndDots = (text: string, style?: any) => (
             color={Colors.black}/>
     </View>
 )
+
+
+
+
+const {RENDER_EMPTY_RESULT_TEXT} = StyleSheet.create({
+    RENDER_EMPTY_RESULT_TEXT: {
+        fontSize: 25,
+        lineHeight: 35,
+        color: Colors.greyish,
+        alignSelf: "center",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+});
+
+export const RENDER_EMPTY_RESULT = () => (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: LINEUP_PADDING}}>
+        <Text style={RENDER_EMPTY_RESULT_TEXT}>{i18n.t("lineups.search.empty")}</Text>
+    </View>
+)
+export const RENDER_EMPTY_ME_RESULT = (navigator: RNNNavigator, category: SEARCH_CATEGORIES_TYPE) : () => Element<any> => () => (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: LINEUP_PADDING}}>
+        <Text style={RENDER_EMPTY_RESULT_TEXT}>{i18n.t("lineups.search.empty_add")}</Text>
+        <GButton style={{margin: LINEUP_PADDING}} text={i18n.t("actions.add")} onPress={() => {
+
+            navigator.push({
+                screen: 'goodsh.SearchItems',
+                navigatorButtons: CANCELABLE_MODAL2,
+                title: i18n.t('search_item_screen.title'),
+                animationType: 'fade',
+                animated: false,
+                passProps: {
+                    defaultLineupId: currentGoodshboxId(),
+                    initialCategory: category,
+                    onClickClose: () => navigator.pop({animationType: 'fade', }),
+                }
+            })
+
+        }}/>
+    </View>
+)
+
+export const RENDER_NO_FRIEND_ERROR = (navigator: RNNNavigator) : () => Element<any> => () => (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: LINEUP_PADDING}}>
+        <Text style={RENDER_EMPTY_RESULT_TEXT}>{i18n.t("tips.invite.text")}</Text>
+        <GButton style={{margin: LINEUP_PADDING}} text={i18n.t("actions.invite")} onPress={() => {
+            navigator.showModal({
+                screen: 'goodsh.Community',
+                title: i18n.t("community.screens.friends"),
+                navigatorButtons: Nav.CANCELABLE_MODAL
+            });
+        }}/>
+    </View>
+)
+

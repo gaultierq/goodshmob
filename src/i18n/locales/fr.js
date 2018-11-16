@@ -17,14 +17,15 @@ export default {
         }
     },
     lineups: {
+        search: {
+            placeholder: "Rechercher",
+            empty: "Pas de résultat",
+            empty_add: "Nous n'avons rien trouvé ! Ajoutez vos premiers coups de cœur !",
+        },
         filter: {
             empty: "Pas de résultat",
             deepsearch: "Chercher dans toutes mes listes",
             lineup_search: "Saisir des mots-clés pour trouver des listes à suivre",
-        },
-        search: {
-            placeholder: "Rechercher",
-            empty: "Pas de résultat.",
         },
         goodsh : {
             title: "À ranger plus tard"
@@ -228,7 +229,7 @@ export default {
     },
     "community":{
         "screens": {
-            "friends":"Mes contacts",
+            "friends":"Communauté",
             "notifications":"Notifications",
         },
         "empty_screen": "Découvre ici les actus de tes contacts."

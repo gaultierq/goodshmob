@@ -20,6 +20,7 @@ export default {
         search: {
             placeholder: "Search",
             empty: "No result",
+            empty_add: "Nothing to display ! Add your first items",
         },
         filter: {
             empty: "Search in my lists on the server",

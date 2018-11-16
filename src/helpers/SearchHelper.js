@@ -1,10 +1,10 @@
 // @flow
 
-import type {Node} from 'react'
+import type {Element, Node} from 'react'
 import * as React from 'react'
 import type {Lineup, List, RNNNavigator, Saving, User} from "../types"
 import {RequestState} from "../types"
-import {GoodshContext, renderLineup} from "../ui/UIComponents"
+import {GoodshContext, RENDER_EMPTY_ME_RESULT, RENDER_EMPTY_RESULT, renderLineup} from "../ui/UIComponents"
 import {seeActivityDetails, seeUser} from "../ui/Nav"
 import GTouchable from "../ui/GTouchable"
 import ItemCell from "../ui/components/ItemCell"
@@ -19,6 +19,7 @@ import {currentUserId} from "../managers/CurrentUser"
 import type {SearchItemCategoryType} from "./SearchConstants"
 import {fullName} from "./StringUtils"
 import {Colors} from "../ui/colors"
+import {SEARCH_CATEGORIES_TYPE} from "./SearchConstants"
 
 export type SearchCategoryType = string;
 
@@ -35,6 +36,7 @@ export const PERMISSION_EMPTY_INPUT = 'empty_input'
 
 // Happens when the user is selecting a place
 export const PERMISSION_EMPTY_POSITION = 'empty_position'
+export const PERMISSION_NO_FRIEND = 'no_friend'
 
 
 export type SearchOptions = {
@@ -230,7 +232,7 @@ export function makeBrowseAlgoliaFilter2(friendFilter: FRIEND_FILTER_TYPE, categ
             return append(defaultQuery, `user_id:${currentUserId()}`)
 
         case 'friends': {
-            if (!user.friends) {
+            if (_.isEmpty(user.friends)) {
                 console.log('Could not find user friends, resorting to all')
                 return defaultQuery
             }
@@ -284,4 +286,12 @@ export function renderSaving2(item: Saving, navigator: RNNNavigator) {
             )}
         </GoodshContext.Consumer>
     )
+}
+
+export const renderEmptyResults = (scope: FRIEND_FILTER_TYPE, category: SEARCH_CATEGORIES_TYPE, navigator: RNNNavigator): ?() => Element<any>  => {
+    switch (scope) {
+        case "me": return RENDER_EMPTY_ME_RESULT(navigator, category)
+        case "friends": return RENDER_EMPTY_RESULT
+        case "all": return RENDER_EMPTY_RESULT
+    }
 }

@@ -4,21 +4,25 @@ import type {Node} from 'react'
 import React, {Component} from 'react'
 import type {SearchState} from "../../helpers/SearchHelper"
 import {FlatList, Keyboard, StyleSheet, Text, View} from "react-native"
-import {FullScreenLoader} from "../UIComponents"
+import {FullScreenLoader, RENDER_EMPTY_RESULT} from "../UIComponents"
 import {Colors} from "../colors"
 import Button from 'apsl-react-native-button'
-import {SFP_TEXT_BOLD} from "../fonts"
 
 
 export type Props = {
     searchState: SearchState,
     renderItem: any => Node,
-    onLoadMore?: () => void
+    onLoadMore?: () => void,
+    EmptyComponent?: ?() => Element<any>
 }
 
 export type State = {}
 
 export default class SearchListResults extends Component<Props, State> {
+
+    static defaultProps = {
+        EmptyComponent: RENDER_EMPTY_RESULT
+    }
 
     renderSearchFooter(searchState: SearchState) {
         if (!searchState) return null;
@@ -42,24 +46,12 @@ export default class SearchListResults extends Component<Props, State> {
     render() {
         let searchState = this.props.searchState || {}
         if (searchState.requestState === 'sending' && searchState.page === 0) return <FullScreenLoader/>
-        if (searchState.requestState === 'ko')
-            return <Text style={styles.text}>{i18n.t("errors.generic")}</Text>
-        if (searchState.data && searchState.data.length === 0) {
-            return <Text style={styles.text}>{i18n.t("lineups.search.empty")}</Text>
-        }
-
-
-        const data = _.flatten(searchState.data)
-
-        if (data.length === 0 ) {
-            return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                <Text style={styles.text}>{i18n.t("lineups.search.empty")}</Text>
-            </View>
-        }
+        if (searchState.requestState === 'ko') return <Text style={styles.text}>{i18n.t("errors.generic")}</Text>
+        if (_.flatten(searchState.data).length === 0 ) return this.props.EmptyComponent()
 
         return (
             <FlatList
-                data={data}
+                data={_.flatten(searchState.data)}
                 renderItem={this.props.renderItem}
                 ListFooterComponent={() => this.props.onLoadMore ? this.renderSearchFooter(searchState) : null}
                 keyExtractor={(item) => item.id}
@@ -70,11 +62,3 @@ export default class SearchListResults extends Component<Props, State> {
 
 }
 
-const styles = StyleSheet.create({
-    text: {
-        fontSize: 25,
-        lineHeight: 35,
-        color: Colors.greyish,
-        alignSelf: "center",
-    },
-});

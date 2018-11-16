@@ -1,10 +1,15 @@
 // @flow
 
-import type {Node} from 'react'
+import type {Element} from 'react'
 import React from 'react'
 import {StyleSheet, Text, TextInput, View,} from 'react-native'
-import type {SearchEngine, } from "../../../helpers/SearchHelper"
-import {__createAlgoliaSearcher, makeBrowseAlgoliaFilter2, renderSaving} from "../../../helpers/SearchHelper"
+import type {FRIEND_FILTER_TYPE, SearchEngine,} from "../../../helpers/SearchHelper"
+import {
+    __createAlgoliaSearcher,
+    makeBrowseAlgoliaFilter2, PERMISSION_EMPTY_POSITION, PERMISSION_NO_FRIEND,
+    renderEmptyResults,
+    renderSaving
+} from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import SearchMotor from "../searchMotor"
 import {currentUserId, logged} from "../../../managers/CurrentUser"
@@ -16,7 +21,11 @@ import {SocialScopeSelector} from "./socialscopeselector"
 import SearchListResults from "../searchListResults"
 import type {ISearchMotor} from "../searchMotor"
 import type {SearchItemCategoryType} from "../../../helpers/SearchConstants"
-import {GoodshContext} from "../../UIComponents"
+import {GoodshContext, RENDER_EMPTY_ME_RESULT, RENDER_EMPTY_RESULT, RENDER_NO_FRIEND_ERROR} from "../../UIComponents"
+import {SEARCH_CATEGORIES_TYPE} from "../../../helpers/SearchConstants"
+import type {RNNNavigator} from "../../../types"
+import {renderAskPermission} from "./searchplacesoption"
+import {BrowseItemsPlacesOptions} from "./BrowsePlaces"
 
 export type BrowseItemsGenOptions = {
     algoliaFilter?: string
@@ -24,7 +33,7 @@ export type BrowseItemsGenOptions = {
 
 type SMS = {
     searchOptions: BrowseItemsGenOptions,
-    scope: string
+    scope: FRIEND_FILTER_TYPE
 
 }
 type SMP = {
@@ -40,7 +49,7 @@ type SMP = {
 export default class BrowseGeneric extends React.Component<SMP, SMS> {
 
     searchMotor: ISearchMotor<BrowseItemsGenOptions>
-    logger;
+    logger: GLogger;
 
 
     static defaultProps = {scope: 'me'}
@@ -100,9 +109,18 @@ export default class BrowseGeneric extends React.Component<SMP, SMS> {
                     <SearchMotor
                         innerRef={ref => this.searchMotor = ref}
                         searchEngine={this.search}
-                        renderResults={(state, onLoadMore)=> <SearchListResults searchState={state} onLoadMore={onLoadMore} renderItem={this._renderSaving} />}
+                        renderResults={(state, onLoadMore) => (
+                            <SearchListResults
+                                searchState={state}
+                                onLoadMore={onLoadMore}
+                                renderItem={this._renderSaving}
+                                EmptyComponent={renderEmptyResults(this.state.scope, this.props.category, this.props.navigator)}
+                            />
+                        )
+                        }
                         searchOptions={this.state.searchOptions}
-                        canSearch={(searchOptions: BrowseItemsGenOptions) => !this.props.focused ? 'not_focused' : null}
+                        canSearch={this._canSearch}
+                        renderMissingPermission={this._renderMissingPermission}
                     />
                 </GoodshContext.Provider>
             </View>
@@ -110,6 +128,19 @@ export default class BrowseGeneric extends React.Component<SMP, SMS> {
     }
 
     _renderSaving = (item) => renderSaving(item, this.props.navigator)
+
+    _renderMissingPermission = (searchOptions: BrowseItemsPlacesOptions, missingPermission: string) => {
+        if (missingPermission === PERMISSION_NO_FRIEND) {
+            return RENDER_NO_FRIEND_ERROR(this.props.navigator)()
+        }
+        return null
+    }
+
+    _canSearch= (searchoptions) => {
+        if (this.state.scope === 'friends' && _.isEmpty(this.getUser().friends)) return PERMISSION_NO_FRIEND
+
+        return !this.props.focused ? 'not_focused' : null
+    }
 
     componentDidUpdate(prevProps: SMP) {
         // for "don't search on 1st render" feature

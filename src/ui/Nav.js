@@ -20,6 +20,7 @@ import LineupCellSaving from "./components/LineupCellSaving"
 import {deleteLineup, followLineupPending, unfollowLineupPending} from "./lineup/actions"
 import {GLineupAction, L_DELETE, L_FOLLOW, L_RENAME, L_SHARE, L_UNFOLLOW, LineupRights} from "./lineupRights"
 import LineupTitle2 from "./components/LineupTitle2"
+import {SEARCH_CATEGORIES_TYPE} from "../helpers/SearchConstants"
 
 export const CLOSE_MODAL = 'close_modal';
 
@@ -47,7 +48,7 @@ export const CANCELABLE_SEARCH_MODAL = () => ({
     leftButtons: []
 });
 
-export function startAddItem(navigator: *, defaultLineup: Id | Lineup) {
+export function startAddItem(navigator: *, defaultLineup: Id | Lineup, options: any = {}) {
     console.info(`starting to add item in`, defaultLineup)
 
     let defaultLineupId
@@ -71,8 +72,9 @@ export function startAddItem(navigator: *, defaultLineup: Id | Lineup) {
             defaultLineup,
             onCancel: cancel,
             defaultLineupId,
-            defaultLineup
-        }, // Object that will be passed as props to the pushed screen (optional)
+            defaultLineup,
+            ...options,
+        },
     })
 }
 

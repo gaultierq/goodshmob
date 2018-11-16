@@ -3,11 +3,11 @@
 import type {Node} from 'react'
 import React from 'react'
 import {Button, StyleSheet, Text, TextInput, View,} from 'react-native'
-import type {SearchEngine, SearchState} from "../../../helpers/SearchHelper"
+import type {FRIEND_FILTER_TYPE, SearchEngine, SearchState} from "../../../helpers/SearchHelper"
 import {
     __createAlgoliaSearcher,
     makeBrowseAlgoliaFilter2,
-    PERMISSION_EMPTY_POSITION,
+    PERMISSION_EMPTY_POSITION, renderEmptyResults,
     renderSaving
 } from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
@@ -38,14 +38,14 @@ import {flatDiff} from "../../../helpers/StringUtils"
 type SMS = {
     searchOptions?: BrowseItemsPlacesOptions,
     mapDisplay: boolean,
-    scope?: string,
+    scope: FRIEND_FILTER_TYPE,
     displayRefreshButton?: boolean
 }
 
 type SMP = ?GeoStatus & {
     navigator: RNNNavigator,
     focused?: boolean,
-    scope?: string,
+    scope: FRIEND_FILTER_TYPE,
     mapDisplay?: boolean
 }
 
@@ -270,6 +270,7 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
             <SearchListResults
                 searchState={state}
                 renderItem={this._renderSaving}
+                EmptyComponent={renderEmptyResults(this.state.scope, 'places', this.props.navigator)}
             />
         )
     }

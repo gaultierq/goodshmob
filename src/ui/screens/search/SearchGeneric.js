@@ -55,10 +55,12 @@ export default class SearchGeneric extends React.Component<SMP, SMS> {
                 />
                 <SearchMotor
                     searchEngine={this.search}
-                    renderResults={(state, onLoadMore) => <SearchListResults
-                        searchState={state}
-                        renderItem={this._renderItem}
-                    />}
+                    renderResults={(state, onLoadMore) => (
+                        <SearchListResults
+                            searchState={state}
+                            renderItem={this._renderItem}
+                        />
+                    )}
                     searchOptions={this.state.searchOptions}
                     canSearch={this._canSearch}
                     renderMissingPermission={this._renderMissingPermission}

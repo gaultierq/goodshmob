@@ -25,12 +25,14 @@ import PagerPan from "react-native-tab-view/src/PagerPan"
 import SearchGeneric from "./search/SearchGeneric"
 import SearchPlaces from "./search/SearchPlaces"
 import {renderTabBarFactory} from "../UIComponents"
+import type {SearchItemCategoryType} from "../../helpers/SearchConstants"
 
 
 type Props = {
     onItemSelected?: (item: Item, navigator: RNNNavigator) => void,
     defaultLineup?: Lineup,
     defaultLineupId?: Id,
+    initialCategory?: SearchItemCategoryType,
 };
 
 const ROUTES = SEARCH_CATEGORIES_TYPE.map(t=> ({key: t, title: i18n.t("search_item_screen.tabs." + t)}))
@@ -95,6 +97,10 @@ export default class SearchItems extends Screen<Props, State> {
     _onItemSelected= (item: Item) => onNewItemSelected(item, this.props.navigator, this.props.defaultLineupId)
 
     findBestIndex(props: Props): number {
+        if (props.initialCategory) {
+            let ix =  SEARCH_CATEGORIES_TYPE.indexOf(props.initialCategory)
+            if (ix >= 0) return ix
+        }
         let categories = SEARCH_CATEGORIES_TYPE.map( type => ({
                 tabName: i18n.t("search_item_screen.tabs." + type),
                 description: i18n.t("search_item_screen.placeholder." + type),
