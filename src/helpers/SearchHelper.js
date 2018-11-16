@@ -4,7 +4,7 @@ import type {Node} from 'react'
 import * as React from 'react'
 import type {Lineup, List, RNNNavigator, Saving, User} from "../types"
 import {RequestState} from "../types"
-import {GoodshContext, renderLineupFromOtherPeople} from "../ui/UIComponents"
+import {GoodshContext, renderLineup} from "../ui/UIComponents"
 import {seeActivityDetails, seeUser} from "../ui/Nav"
 import GTouchable from "../ui/GTouchable"
 import ItemCell from "../ui/components/ItemCell"
@@ -70,22 +70,12 @@ export function renderSavingOrLineup(navigator: RNNNavigator) {
         let isLineup = item.type === 'lists';
 
 
-        if (isLineup) {
-            return renderLineupFromOtherPeople(navigator, item)
+        if (item.type === 'lists') {
+            return renderLineup(navigator, item)
         }
         else {
-            let saving = item;
+            return renderSaving2(item, navigator)
 
-            let resource = saving.resource;
-
-            //TODO: this is hack
-            if (!resource) return null;
-
-            return (
-                <GTouchable onPress={() => seeActivityDetails(navigator, saving)}>
-                    <ItemCell item={resource}/>
-                </GTouchable>
-            )
         }
     }
 }
@@ -202,7 +192,7 @@ export function __createAlgoliaSearcher<SO: any>(
                     }
                     let result = content;
                     let hits = result.hits;
-                    console.log(`search result lists: ${hits.length}`, hits);
+                    console.log(`search result: ${hits.length} hits`, hits);
 
                     let searchResult = config.parseResponse(hits);
 
@@ -218,7 +208,7 @@ export function __createAlgoliaSearcher<SO: any>(
 }
 
 
-export function makeBrowseAlgoliaFilter2(friendFilter: FRIEND_FILTER_TYPE, category: string, user: User): string {
+export function makeBrowseAlgoliaFilter2(friendFilter: FRIEND_FILTER_TYPE, category: ?string, user: User): string {
 
 
     let CATEGORY_TO_TYPE = {
@@ -228,11 +218,17 @@ export function makeBrowseAlgoliaFilter2(friendFilter: FRIEND_FILTER_TYPE, categ
         movies: '(type:Movie OR type:TvShow)'
     }
 
+    let append = (left: string, right: string) => [left, right].filter(s => !_.isEmpty(s)).join(" AND ")
 
-    let defaultQuery = `${CATEGORY_TO_TYPE[category]}`
+    let defaultQuery = ""
+    if (category ) {
+        defaultQuery += `${CATEGORY_TO_TYPE[category]}`
+    }
+
     switch(friendFilter) {
         case 'me':
-            return `${defaultQuery} AND user_id:${currentUserId()}`
+            return append(defaultQuery, `user_id:${currentUserId()}`)
+
         case 'friends': {
             if (!user.friends) {
                 console.log('Could not find user friends, resorting to all')
@@ -243,8 +239,7 @@ export function makeBrowseAlgoliaFilter2(friendFilter: FRIEND_FILTER_TYPE, categ
             user.friends.forEach((friend, index) => {
                 query += (index === 0 ? '' : ' OR ') + `user_id:${friend.id}`
             })
-
-            return defaultQuery + ` AND (${query})`
+            return append(defaultQuery, `(${query})`)
         }
 
         case 'all':
@@ -255,7 +250,12 @@ export function makeBrowseAlgoliaFilter2(friendFilter: FRIEND_FILTER_TYPE, categ
     }
 }
 
-export function renderItem({item}: {item: Saving}) {
+export function renderSaving({item}: {item: Saving}, navigator: RNNNavigator) {
+    return renderSaving2(item, navigator)
+}
+
+
+export function renderSaving2(item: Saving, navigator: RNNNavigator) {
 
     let saving = item;
 
@@ -267,7 +267,7 @@ export function renderItem({item}: {item: Saving}) {
     return (
         <GoodshContext.Consumer>
             { ({userOwnResources}) => (
-                <GTouchable onPress={() => seeActivityDetails(this.props.navigator, saving)}>
+                <GTouchable onPress={() => seeActivityDetails(navigator, saving)}>
                     <ItemCell item={resource} >
                         {
                             !userOwnResources && (
@@ -282,8 +282,6 @@ export function renderItem({item}: {item: Saving}) {
                     </ItemCell>
                 </GTouchable>
             )}
-
-
         </GoodshContext.Consumer>
     )
 }

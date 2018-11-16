@@ -301,8 +301,9 @@ function sendItem(itemId: Id, user: User, description?: Description = "", privac
 export function displayHomeSearch(navigator: RNNNavigator, token: SearchToken) {
 
     navigator.showModal({
-        screen: 'goodsh.HomeSearchScreen', // unique ID registered with Navigation.registerScreen
+        screen: 'goodsh.HomeSearchScreen',
         // animationType: 'none',
+        title: i18n.t('search.deep'),
         backButtonHidden: true,
         passProps: {
             onClickClose: () => navigator.dismissModal(),

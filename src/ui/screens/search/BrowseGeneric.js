@@ -4,7 +4,7 @@ import type {Node} from 'react'
 import React from 'react'
 import {StyleSheet, Text, TextInput, View,} from 'react-native'
 import type {SearchEngine, } from "../../../helpers/SearchHelper"
-import {__createAlgoliaSearcher, makeBrowseAlgoliaFilter2, renderItem} from "../../../helpers/SearchHelper"
+import {__createAlgoliaSearcher, makeBrowseAlgoliaFilter2, renderSaving} from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import SearchMotor from "../searchMotor"
 import {currentUserId, logged} from "../../../managers/CurrentUser"
@@ -50,7 +50,7 @@ export default class BrowseGeneric extends React.Component<SMP, SMS> {
 
         this.state = {
             searchOptions: {
-                algoliaFilter: makeBrowseAlgoliaFilter2('me', this.props.category, this.getUser()),
+                algoliaFilter: makeBrowseAlgoliaFilter2(this.props.scope, props.category, this.getUser()),
             },
             scope: props.scope
         }
@@ -100,7 +100,7 @@ export default class BrowseGeneric extends React.Component<SMP, SMS> {
                     <SearchMotor
                         innerRef={ref => this.searchMotor = ref}
                         searchEngine={this.search}
-                        renderResults={(state, onLoadMore)=> <SearchListResults searchState={state} onLoadMore={onLoadMore} renderItem={renderItem.bind(this)} />}
+                        renderResults={(state, onLoadMore)=> <SearchListResults searchState={state} onLoadMore={onLoadMore} renderItem={this._renderSaving} />}
                         searchOptions={this.state.searchOptions}
                         canSearch={(searchOptions: BrowseItemsGenOptions) => !this.props.focused ? 'not_focused' : null}
                     />
@@ -108,6 +108,8 @@ export default class BrowseGeneric extends React.Component<SMP, SMS> {
             </View>
         )
     }
+
+    _renderSaving = (item) => renderSaving(item, this.props.navigator)
 
     componentDidUpdate(prevProps: SMP) {
         // for "don't search on 1st render" feature

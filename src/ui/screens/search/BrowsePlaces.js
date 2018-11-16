@@ -8,7 +8,7 @@ import {
     __createAlgoliaSearcher,
     makeBrowseAlgoliaFilter2,
     PERMISSION_EMPTY_POSITION,
-    renderItem
+    renderSaving
 } from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import type {ISearchMotor} from "../searchMotor"
@@ -269,10 +269,12 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
         else return (
             <SearchListResults
                 searchState={state}
-                renderItem={renderItem.bind(this)}
+                renderItem={this._renderSaving}
             />
         )
     }
+
+    _renderSaving = (item) => renderSaving(item, this.props.navigator)
 
     getRegion() {
         if (this.state.searchOptions) {

@@ -7,6 +7,7 @@ import {FlatList, Keyboard, StyleSheet, Text, View} from "react-native"
 import {FullScreenLoader} from "../UIComponents"
 import {Colors} from "../colors"
 import Button from 'apsl-react-native-button'
+import {SFP_TEXT_BOLD} from "../fonts"
 
 
 export type Props = {
@@ -42,9 +43,9 @@ export default class SearchListResults extends Component<Props, State> {
         let searchState = this.props.searchState || {}
         if (searchState.requestState === 'sending' && searchState.page === 0) return <FullScreenLoader/>
         if (searchState.requestState === 'ko')
-            return <Text style={{alignSelf: "center", marginTop: 20}}>{i18n.t("errors.generic")}</Text>
+            return <Text style={styles.text}>{i18n.t("errors.generic")}</Text>
         if (searchState.data && searchState.data.length === 0) {
-            return <Text style={{alignSelf: "center", marginTop: 20}}>{i18n.t("lineups.search.empty")}</Text>
+            return <Text style={styles.text}>{i18n.t("lineups.search.empty")}</Text>
         }
 
 
@@ -52,7 +53,7 @@ export default class SearchListResults extends Component<Props, State> {
 
         if (data.length === 0 ) {
             return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                <Text>{i18n.t("lineups.search.empty")}</Text>
+                <Text style={styles.text}>{i18n.t("lineups.search.empty")}</Text>
             </View>
         }
 
@@ -68,3 +69,12 @@ export default class SearchListResults extends Component<Props, State> {
     }
 
 }
+
+const styles = StyleSheet.create({
+    text: {
+        fontSize: 25,
+        lineHeight: 35,
+        color: Colors.greyish,
+        alignSelf: "center",
+    },
+});

@@ -5,7 +5,7 @@ import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} f
 import type {
     SearchCategoryType, SearchEngine, SearchOptions, SearchResult,
 } from "./SearchHelper"
-import type {RNNNavigator, SearchToken} from "../types"
+import type {Id, List, RNNNavigator, SearchToken} from "../types"
 import algoliasearch from 'algoliasearch/reactnative'
 import * as appActions from "../auth/actions"
 
@@ -150,11 +150,11 @@ export function createResultFromHit(hits, options = {}, withoutToken: boolean = 
             description
         } = h;
 
-        user2 = {
+        let user2 = {
             firstName: user.first_name,
             lastName: user.last_name,
             ...user
-        };
+        }
 
         let saving = {
             id: objectID,
@@ -187,6 +187,7 @@ export function createResultFromHit(hits, options = {}, withoutToken: boolean = 
         }
     });
 
+    console.debug("search results:", searchResult)
     return searchResult;
 }
 export function createResultFromHit2(hits, options = {}) {

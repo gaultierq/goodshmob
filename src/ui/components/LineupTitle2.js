@@ -59,10 +59,6 @@ export default class LineupTitle2 extends Component<Props, State> {
                             <View style={{
                                 flex:1,
                                 flexDirection: 'row',
-                                // justifyContent: 'space-between',
-                                // backgroundColor: 'orange'
-                                // paddingTop: 15,
-                                // paddingBottom: 10,
                             }}>
                                 <Text style={STYLES.SECTION_TITLE}>
                                     {lineup.name}
@@ -85,7 +81,6 @@ export default class LineupTitle2 extends Component<Props, State> {
                                 flexDirection: 'row',
                                 alignItems: 'center',
                                 flex: 0,
-                                // backgroundColor: 'yellow'
                             }}>
                                 <Text style={styles.smallText}>{i18n.t('search.by')}</Text>
                                 <PersonRowI
@@ -113,11 +108,11 @@ export default class LineupTitle2 extends Component<Props, State> {
         let lr = new LineupRights(lineup, this.props.pending)
         let canFollow = lr.canExec(L_FOLLOW)
         return [
-            //<Text key={'savings-count-medal'} style={{ color: Colors.greyish }}>{ `(${savingCount})` }</Text>,
             this.renderMedal(_.get(lineup, 'meta.savingsCount', -1), "th-large", it),
             this.renderMedal(_.get(lineup, 'meta.followersCount', -1), "star", it, _.get(lineup, 'meta.followed', false) ? Colors.green : undefined),
             (canFollow &&
                 <Text
+                    key={"follow"}
                     onPress={()=>{
                         followLineupPending(this.props.dispatch, lineup)
                     }}

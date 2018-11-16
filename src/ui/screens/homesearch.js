@@ -28,6 +28,7 @@ export default class HomeSearchScreen extends Screen<Props, State> {
             <SearchSavingAndLineupPage
                 navigator={this.props.navigator}
                 token={this.props.token}
+                scope={'me'}
             />
         )
     }
