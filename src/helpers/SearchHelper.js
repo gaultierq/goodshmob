@@ -70,7 +70,7 @@ export function renderSavingOrLineup(navigator: RNNNavigator) {
         let isLineup = item.type === 'lists';
 
 
-        if (isLineup) {
+        if (item.type === 'lists') {
             return renderLineup(navigator, item)
         }
         else {

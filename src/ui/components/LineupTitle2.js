@@ -108,11 +108,11 @@ export default class LineupTitle2 extends Component<Props, State> {
         let lr = new LineupRights(lineup, this.props.pending)
         let canFollow = lr.canExec(L_FOLLOW)
         return [
-            //<Text key={'savings-count-medal'} style={{ color: Colors.greyish }}>{ `(${savingCount})` }</Text>,
             this.renderMedal(_.get(lineup, 'meta.savingsCount', -1), "th-large", it),
             this.renderMedal(_.get(lineup, 'meta.followersCount', -1), "star", it, _.get(lineup, 'meta.followed', false) ? Colors.green : undefined),
             (canFollow &&
                 <Text
+                    key={"follow"}
                     onPress={()=>{
                         followLineupPending(this.props.dispatch, lineup)
                     }}

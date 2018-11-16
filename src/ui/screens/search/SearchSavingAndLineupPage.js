@@ -5,8 +5,7 @@ import React from 'react'
 import {StyleSheet, Text, TextInput, View,} from 'react-native'
 import type {SearchEngine,} from "../../../helpers/SearchHelper"
 import {
-    __createAlgoliaSearcher, FRIEND_FILTER_TYPE, makeBrowseAlgoliaFilter2, PERMISSION_EMPTY_INPUT,
-    renderSaving,
+    __createAlgoliaSearcher, makeBrowseAlgoliaFilter2, PERMISSION_EMPTY_INPUT,
     renderSavingOrLineup
 } from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
