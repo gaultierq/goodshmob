@@ -63,13 +63,13 @@ export default {
         },
         invite: {
             title: "Inviter",
-            text: "Invite tes amis pour profiter pleinement de goodsh.it",
+            text: "Invite tes amis pour voir leurs coups de cœur et envies",
             button: "Inviter"
         },
     },
     home: {
         wizard: {
-            action_button_label : "Ajouter un coup de cœur,\nune envie, un conseil.",
+            action_button_label : "Ajouter un coup de cœur\nou une envie.",
             action_button_body : "Livre, film, série, resto, musique...",
         },
         tabs: {
