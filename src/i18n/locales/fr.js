@@ -342,7 +342,7 @@ export default {
     send_object: "te recommande %{what} - via goodsh.it",
     goodsh_url: "https:\/\/goodsh.it\/",
     friends: {
-        empty_screen: "Profite pleinement de goodsh.it et invite des proches.",
+        empty_screen: "Invite des amis.",
         buttons: {
             connect: "Connecter",
             disconnect: "Déconnecter",
