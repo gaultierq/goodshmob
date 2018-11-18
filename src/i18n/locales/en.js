@@ -174,7 +174,7 @@ export default {
         "slider_intro_1": "The app to\n" + "<bold>keep</bold> \n" + "all you <bold>love</bold>",
         "slider_intro_2": "<bold><black>Create</black></bold>\nlists\namong",
         "slider_intro_3": "<bold><black>Follow</black></bold>\nlists\nthat interest you",
-        "slider_intro_4": "<bold><black>Share</black></bold>\nyour coups de cœurs\nwith anyone you wamt",
+        "slider_intro_4": "<bold><black>Share</black></bold>\nyour coups de cœurs\nwith anyone you want",
         "slider_intro_4_bis": "<bold>Friends</bold>,\nfamily,\nworkmates,\nfans,\n...\n",
         "credentials": "Keep all you love",
         "button_start": "Start",
