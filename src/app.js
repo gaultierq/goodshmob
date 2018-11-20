@@ -597,13 +597,14 @@ export default class App implements GoodshApp {
                     enabled: false,
                 },
                 style: { // ( iOS only )
-                    drawerShadow: false, // optional, add this if you want a side menu drawer shadow
+                    drawerShadow: true, // optional, add this if you want a side menu drawer shadow
                     contentOverlayColor: 'rgba(0,0,0,0.15)', // optional, add this if you want a overlay color when drawer is open
                     leftDrawerWidth: 90, // optional, add this if you want a define left drawer width (50=percent)
                     rightDrawerWidth: 90 // optional, add this if you want a define right drawer width (50=percent)
                 },
                 type: 'TheSideBar', // optional, iOS only, types: 'TheSideBar', 'MMDrawer' default: 'MMDrawer'
                 animationType: 'slide-and-scale', //optional, iOS only, for MMDrawer: 'door', 'parallax', 'slide', 'slide-and-scale'
+                disableOpenGesture: true,
                 // for TheSideBar: 'airbnb', 'facebook', 'luvocracy','wunder-list'
                 // disableOpenGesture: true// optional, can the drawer be opened with a swipe instead of button
             },

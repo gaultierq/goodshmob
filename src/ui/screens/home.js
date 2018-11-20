@@ -129,15 +129,15 @@ export default class HomeScreen extends Screen<Props, State> {
         // setTimeout(()=>this.startTunnel(), 2000)
     }
 
-    componentWillAppear() {
-        this.props.navigator.setDrawerEnabled({side: 'left', enabled: true});
-        this.props.navigator.setDrawerEnabled({side: 'right', enabled: false});
-    }
+    // componentWillAppear() {
+    //     this.props.navigator.setDrawerEnabled({side: 'left', enabled: true});
+    //     this.props.navigator.setDrawerEnabled({side: 'right', enabled: false});
+    // }
 
 
-    componentWillDisappear() {
-        this.props.navigator.setDrawerEnabled({side: 'left', enabled: false});
-    }
+    // componentWillDisappear() {
+    //     this.props.navigator.setDrawerEnabled({side: 'left', enabled: false});
+    // }
 
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
         //console.debug("home:onNavigatorEvent" , event);

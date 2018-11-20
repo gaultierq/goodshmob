@@ -108,14 +108,14 @@ class NetworkScreen extends Screen<Props, State> {
         // });
     }
 
-    componentDidAppear() {
-        this.props.navigator.setDrawerEnabled({side: 'right', enabled: true});
-        this.props.navigator.setDrawerEnabled({side: 'left', enabled: false});
-    }
-
-    componentDidDisappear() {
-        this.props.navigator.setDrawerEnabled({side: 'right', enabled: false});
-    }
+    // componentDidAppear() {
+    //     this.props.navigator.setDrawerEnabled({side: 'right', enabled: true});
+    //     this.props.navigator.setDrawerEnabled({side: 'left', enabled: false});
+    // }
+    //
+    // componentDidDisappear() {
+    //     this.props.navigator.setDrawerEnabled({side: 'right', enabled: false});
+    // }
 
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
         console.debug("network:onNavigatorEvent" , event);
