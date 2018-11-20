@@ -257,7 +257,9 @@ export default {
             "consumer_goods":"BOOK & OTHER",
             "places":"PLACE",
             "movies":"MOVIE & TV",
-            "musics":"MUSIC"
+            "musics":"MUSIC",
+            savings: "Lists",
+            users: "Members",
         },
         "placeholder": {
             "consumer_goods":"books, gifts, shoes,\nwine, games, products...",

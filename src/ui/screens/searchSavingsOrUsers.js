@@ -30,7 +30,7 @@ type State = {
     routes: any,
 };
 
-const ROUTES = ["savings", "users"].map(t=> ({key: t, title: t /*i18n.t("search_item_screen.tabs." + t)*/}))
+const ROUTES = ["savings", "users"].map(t=> ({key: t, title: i18n.t("search_item_screen.tabs." + t)}))
 
 @connect()
 export default class SearchSavingsOrUsers extends Screen<Props, State> {

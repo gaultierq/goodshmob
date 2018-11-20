@@ -4,7 +4,15 @@ import React, {Component} from 'react'
 import {Image, LayoutAnimation, Platform, StyleSheet, Text, UIManager, View} from 'react-native'
 import {Colors} from "./colors"
 import GTouchable from "./GTouchable"
-import {BACKGROUND_COLOR, LINEUP_PADDING, STYLES, TAB_BAR_PROPS, TAB_BAR_STYLES} from "./UIStyles"
+import {
+    BACKGROUND_COLOR,
+    LINEUP_PADDING,
+    openLinkSafely,
+    openModalStatic,
+    STYLES,
+    TAB_BAR_PROPS,
+    TAB_BAR_STYLES
+} from "./UIStyles"
 import Spinner from 'react-native-spinkit'
 import type {Lineup, RNNNavigator, User} from "../types"
 import {ViewStyle} from "../types"
@@ -22,6 +30,7 @@ import type {Element} from "react"
 import type {FRIEND_FILTER_TYPE} from "../helpers/SearchHelper"
 import {SEARCH_CATEGORIES_TYPE} from "../helpers/SearchConstants"
 import i18n from "../i18n/i18n"
+import Config from "react-native-config"
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
@@ -410,15 +419,11 @@ export const RENDER_EMPTY_ME_RESULT = (navigator: RNNNavigator, category: SEARCH
     </View>
 )
 
-export const RENDER_NO_FRIEND_ERROR = (navigator: RNNNavigator) : () => Element<any> => () => (
+export const RENDER_NO_FRIEND_ERROR : () => Element<any> = ()  => (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: LINEUP_PADDING}}>
         <Text style={RENDER_EMPTY_RESULT_TEXT}>{i18n.t("tips.invite.text")}</Text>
         <GButton style={{margin: LINEUP_PADDING}} text={i18n.t("actions.invite")} onPress={() => {
-            navigator.showModal({
-                screen: 'goodsh.Community',
-                title: i18n.t("community.screens.friends"),
-                navigatorButtons: Nav.CANCELABLE_MODAL
-            });
+            openModalStatic('goodsh.Community', i18n.t('community.screens.friends'))
         }}/>
     </View>
 )

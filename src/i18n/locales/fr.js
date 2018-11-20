@@ -256,7 +256,9 @@ export default {
             "consumer_goods":"LIVRE\n&\nAUTRE",
             "places":"LIEU",
             "movies":"FILM\n&\nSERIE",
-            "musics":"SON"
+            "musics":"SON",
+            savings: "Listes",
+            users: "Membres",
         },
         "placeholder": {
             "consumer_goods":"livre, cadeau, gadget,\nchaussures, vin, jouet...",

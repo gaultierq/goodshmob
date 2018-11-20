@@ -6,11 +6,13 @@ import {StyleSheet, Text, TextInput, View,} from 'react-native'
 import type {FRIEND_FILTER_TYPE, SearchEngine,} from "../../../helpers/SearchHelper"
 import {
     __createAlgoliaSearcher,
-    makeBrowseAlgoliaFilter2, PERMISSION_EMPTY_POSITION, PERMISSION_NO_FRIEND,
+    makeBrowseAlgoliaFilter2,
+    PERMISSION_NO_FRIEND,
     renderEmptyResults,
     renderSaving
 } from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
+import type {ISearchMotor} from "../searchMotor"
 import SearchMotor from "../searchMotor"
 import {currentUserId, logged} from "../../../managers/CurrentUser"
 import {buildData} from "../../../helpers/DataUtils"
@@ -19,12 +21,8 @@ import {AlgoliaClient, createResultFromHit} from "../../../helpers/AlgoliaUtils"
 import Config from 'react-native-config'
 import {SocialScopeSelector} from "./socialscopeselector"
 import SearchListResults from "../searchListResults"
-import type {ISearchMotor} from "../searchMotor"
 import type {SearchItemCategoryType} from "../../../helpers/SearchConstants"
-import {GoodshContext, RENDER_EMPTY_ME_RESULT, RENDER_EMPTY_RESULT, RENDER_NO_FRIEND_ERROR} from "../../UIComponents"
-import {SEARCH_CATEGORIES_TYPE} from "../../../helpers/SearchConstants"
-import type {RNNNavigator} from "../../../types"
-import {renderAskPermission} from "./searchplacesoption"
+import {GoodshContext, RENDER_NO_FRIEND_ERROR} from "../../UIComponents"
 import {BrowseItemsPlacesOptions} from "./BrowsePlaces"
 
 export type BrowseItemsGenOptions = {
@@ -131,7 +129,7 @@ export default class BrowseGeneric extends React.Component<SMP, SMS> {
 
     _renderMissingPermission = (searchOptions: BrowseItemsPlacesOptions, missingPermission: string) => {
         if (missingPermission === PERMISSION_NO_FRIEND) {
-            return RENDER_NO_FRIEND_ERROR(this.props.navigator)()
+            return RENDER_NO_FRIEND_ERROR()
         }
         return null
     }

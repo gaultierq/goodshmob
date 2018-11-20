@@ -7,7 +7,7 @@ import type {FRIEND_FILTER_TYPE, SearchEngine, SearchState} from "../../../helpe
 import {
     __createAlgoliaSearcher,
     makeBrowseAlgoliaFilter2,
-    PERMISSION_EMPTY_POSITION, renderEmptyResults,
+    PERMISSION_EMPTY_POSITION, PERMISSION_NO_FRIEND, renderEmptyResults,
     renderSaving
 } from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
@@ -29,7 +29,12 @@ import {Colors} from "../../colors"
 import ActionButton from "react-native-action-button"
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import {seeActivityDetails} from "../../Nav"
-import {GoodshContext, registerLayoutAnimation, scheduleOpacityAnimation} from "../../UIComponents"
+import {
+    GoodshContext,
+    registerLayoutAnimation,
+    RENDER_NO_FRIEND_ERROR,
+    scheduleOpacityAnimation
+} from "../../UIComponents"
 import GTouchable from "../../GTouchable"
 import {hexToRgbaWithHalpha} from "../../../helpers/DebugUtils"
 import {flatDiff} from "../../../helpers/StringUtils"
@@ -165,6 +170,7 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
     }
 
     _canSearch = searchOptions => {
+        if (this.state.scope === 'friends' && _.isEmpty(this.getUser().friends)) return PERMISSION_NO_FRIEND
         if (!this.props.focused) return 'not_focused'
         if (searchOptions.permissionError) return searchOptions.permissionError
 
@@ -176,6 +182,9 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
     }
 
     _renderMissingPermission = (searchOptions: BrowseItemsPlacesOptions, missingPermission: string) => {
+        if (missingPermission === PERMISSION_NO_FRIEND) {
+            return RENDER_NO_FRIEND_ERROR()
+        }
         return renderAskPermission(missingPermission, (status) => this.setState({searchOptions: {...this.state.searchOptions, ...status}}))
     }
 
