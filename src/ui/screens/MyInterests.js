@@ -28,7 +28,7 @@ import * as Api from "../../managers/Api"
 import {Call, reduceList2} from "../../managers/Api"
 import ApiAction from "../../helpers/ApiAction"
 import type {Id} from "../../types"
-import {renderSimpleButton, STYLES} from "../UIStyles"
+import {LINEUP_PADDING, openModalStatic, renderSimpleButton, STYLES} from "../UIStyles"
 import {GoodshContext, LINEUP_SECTIONS} from "../UIComponents"
 import {buildData, updateSplice0} from "../../helpers/DataUtils"
 import {FOLLOW_LINEUP, UNFOLLOW_LINEUP} from "../lineup/actions"
@@ -36,6 +36,7 @@ import {mergeItemsAndPendings2} from "../../helpers/ModelUtils"
 import {Colors} from "../colors"
 import {CANCELABLE_MODAL2} from "../Nav"
 import {SFP_TEXT_REGULAR} from "../fonts"
+import GButton from "../components/GButton"
 
 
 type Props = {
@@ -91,14 +92,9 @@ export default class MyInterests extends Screen<Props, State> {
                     sections={sections}
                     ListHeaderComponent={() => (
                         <View style={{marginVertical: 10}}>
-                            {
-                                renderSimpleButton(
-                                    i18n.t('my_interests_screen.search_lists'),
-                                    () => this.showSearch(),
-                                    {loading: false,
-                                        style: {backgroundColor: Colors.green, borderWidth: 0, borderRadius: 4, margin: 12},
-                                        textStyle: {fontWeight: "bold", fontSize: 18, color: Colors.white, fontFamily: SFP_TEXT_REGULAR, }})
-                            }
+                            <GButton style={{margin: LINEUP_PADDING}} onPress={() => {
+                                openModalStatic('goodsh.SearchSavingsOrUsers', i18n.t('my_interests_screen.search_lists_title'))
+                            }} text={i18n.t('my_interests_screen.search_lists')}></GButton>
                         </View>
                     )}
                     ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t('my_interests_screen.empty_screen')}</Text>}
