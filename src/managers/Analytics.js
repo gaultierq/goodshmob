@@ -1,5 +1,6 @@
 // @flow
 import {ScreenVisibilityListener as RNNScreenVisibilityListener} from 'react-native-navigation'
+import BugsnagManager from "./BugsnagManager"
 
 let Answers;
 
@@ -14,6 +15,7 @@ class _Analytics implements Analytics {
             didAppear: ({screen, startTime, endTime, commandType}) => {
                 console.debug('screenVisibility', `Screen ${screen} displayed in ${endTime - startTime} millis after [${commandType}]`);
                 this.screen(screen, {"displayedInMs": endTime - startTime});
+                BugsnagManager.leaveBreadcrumb(screen, {type: 'screen appear'});
             }
         });
     }

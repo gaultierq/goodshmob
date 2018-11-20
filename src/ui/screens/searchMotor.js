@@ -71,11 +71,8 @@ export default class SearchMotor<SO> extends Component<Props<SO>, State> impleme
             <KeyboardAvoidingView behavior={ (Platform.OS === 'ios') ? 'padding' : null }
                   keyboardVerticalOffset={Platform.OS === 'ios' ? 50 : 0}
                   style={[{flex:1, backgroundColor: 'white'}]}>
-
                 {this.renderSearchPage(this.getSearchState(searchKey))}
             </KeyboardAvoidingView>
-
-
         );
     }
 
