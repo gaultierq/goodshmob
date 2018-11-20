@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>NSContactsUsageDescription</key>
-	<string>Voir mes contacts téléphoniques pour inviter des amis/string>
+	<string>Voir mes contacts téléphoniques pour inviter des amis</string>
 	<key>AccountKitClientToken</key>
 	<string>$(ACCOUNT_KIT_CLIENT_TOKEN)</string>
 	<key>BugsnagAPIKey</key>
