@@ -7,6 +7,7 @@ import * as DeviceInfo from 'react-native-device-info'
 //import {toUppercase} from "./utils/StringUtils";
 import * as StringUtils from "../helpers/StringUtils"
 import {flatDiff} from "../helpers/StringUtils"
+import Permissions from "react-native-permissions"
 
 
 let instance: DeviceManager;
@@ -79,11 +80,10 @@ export function getDeviceInfo(property: string) {
     return instance.getInfo(property);
 }
 
-export function generateCurrentDevice(): Promise<Device> {
-    let firebase = RNFirebase.app();
-    let messaging = firebase.messaging();
+async function generateCurrentDevice(): Promise<Device> {
+    let messaging = RNFirebase.app().messaging();
 
-    const result = {};
+    const result = {}
 
     let adapt = (fields, prepend, withPrefix = false) => {
         fields.reduce((result, input) => {
@@ -113,7 +113,8 @@ export function generateCurrentDevice(): Promise<Device> {
             }
             return result;
         }, result);
-    };
+    }
+
     adapt([
         {fxName: "getUniqueID", deviceKey: "uniqueId"},"manufacturer","brand","model","deviceId","systemName",
         "systemVersion","bundleId","buildNumber","version","readableVersion",
@@ -121,13 +122,10 @@ export function generateCurrentDevice(): Promise<Device> {
     ], "get");
     adapt(["emulator","tablet"], "is", true);
 
-    return messaging.getToken().then(fcmToken=>{
-        result.fcmToken = fcmToken;
+    result.fcmToken = await messaging.getToken()
+    result.permissionReadContacts = await Permissions.check('contacts')
+    result.permissionNotifications = __IS_ANDROID__ ?
+        (await messaging.hasPermission() ? "authorized" : "denied") : await Permissions.check('notification')
 
-        //temp, so backend is has the token
-        // result.token = fcmToken;
-
-        //console.info(`device manager: generated device:${JSON.stringify(result)}`);
-        return result
-    });
+    return result
 }
