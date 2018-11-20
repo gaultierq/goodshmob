@@ -598,24 +598,13 @@ export const LINEUP_AND_SAVING_SELECTOR = createSelector(
         if (lineup) {
             if (!_.isEmpty(rawPendingCreatedSavings)) {
                 savings = rawPendingCreatedSavings.map(pending => {
-                        const result = {
+                    return {
                             id: pending.id,
                             lineupId: pending.payload.lineupId,
                             itemId: pending.payload.itemId,
-                            pending: true
+                            pending: true,
+                            resource: pending.payload.item
                         }
-
-                        // $FlowFixMe
-                        Object.defineProperty(
-                            result,
-                            'resource',
-                            {
-                                get: () => {
-                                    return buildData(data, pending.payload.itemType, pending.payload.itemId)
-                                },
-                            },
-                        )
-                        return result
                     }
                 )
             }

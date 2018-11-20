@@ -79,12 +79,6 @@ export default class LineupHorizontal extends Component<Props, State> {
         renderEmpty: (list: Lineup) => LineupHorizontal.defaultRenderEmpty()
     }
 
-    constructor(props: Props) {
-        super(props);
-        // this.updateTracker = new UpdateTracker(
-        //     nextProps => this.makeRefObject(nextProps),
-        // );
-    }
 
     componentDidMount() {
         if (!this.props.lineup || !this.props.savings) {

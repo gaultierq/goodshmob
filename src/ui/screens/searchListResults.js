@@ -21,7 +21,30 @@ export type State = {}
 export default class SearchListResults extends Component<Props, State> {
 
     static defaultProps = {
+        keyExtractor: item => item.id,
         EmptyComponent: RENDER_EMPTY_RESULT
+    }
+
+    render() {
+
+        const {searchState = {}, onLoadMore, ...attr} = this.props
+
+        // let searchState = this.props.searchState || {}
+        if (searchState.requestState === 'sending' && searchState.page === 0) return <FullScreenLoader/>
+        if (searchState.requestState === 'ko') return <Text style={styles.text}>{i18n.t("errors.generic")}</Text>
+        if (_.flatten(searchState.data).length === 0 ) return this.props.EmptyComponent()
+
+        return (
+            <FlatList
+                data={_.flatten(searchState.data)}
+                // renderItem={this.props.renderItem}
+                ListFooterComponent={() => onLoadMore ? this.renderSearchFooter(searchState) : null}
+                keyExtractor={this.props.keyExtractor}
+                onScrollBeginDrag={Keyboard.dismiss}
+                keyboardShouldPersistTaps='always'
+                {...attr}
+            />
+        )
     }
 
     renderSearchFooter(searchState: SearchState) {
@@ -41,23 +64,6 @@ export default class SearchListResults extends Component<Props, State> {
 
             <Text style={{color: isLoadingMore ? Colors.greyishBrown : Colors.black}}>{i18n.t('actions.load_more')}</Text>
         </Button>);
-    }
-
-    render() {
-        let searchState = this.props.searchState || {}
-        if (searchState.requestState === 'sending' && searchState.page === 0) return <FullScreenLoader/>
-        if (searchState.requestState === 'ko') return <Text style={styles.text}>{i18n.t("errors.generic")}</Text>
-        if (_.flatten(searchState.data).length === 0 ) return this.props.EmptyComponent()
-
-        return (
-            <FlatList
-                data={_.flatten(searchState.data)}
-                renderItem={this.props.renderItem}
-                ListFooterComponent={() => this.props.onLoadMore ? this.renderSearchFooter(searchState) : null}
-                keyExtractor={(item) => item.id}
-                onScrollBeginDrag={Keyboard.dismiss}
-                keyboardShouldPersistTaps='always'/>
-        )
     }
 
 }

@@ -87,15 +87,17 @@ export default class ActivityCell extends React.Component<Props, State> {
 
                 <View>
 
-                    <ActivityStatus
-                        activity={activity}
-                        descriptionNumberOfLines={3}
-                        navigator={this.props.navigator}
-                        withMenu={true}
-                        cardStyle={{
-                            paddingHorizontal: LINEUP_PADDING,
-                            paddingVertical: 10,}}
-                    />
+                    <GTouchable onPress={this.props.onPressItem}>
+                        <ActivityStatus
+                            activity={activity}
+                            descriptionNumberOfLines={3}
+                            navigator={this.props.navigator}
+                            withMenu={true}
+                            cardStyle={{
+                                paddingHorizontal: LINEUP_PADDING,
+                                paddingVertical: 10,}}
+                        />
+                    </GTouchable>
                     <FeedSeparator/>
 
                     <GTouchable activeOpacity={0.9} onPress={this.props.onPressItem} onDoublePress={() => {

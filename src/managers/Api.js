@@ -427,11 +427,7 @@ export class Call {
                     }
                     return {json: "ok", original: resp};
                 }
-                let status = resp.status;
-
-                return resp.json().then(err => {
-                    throw {...err, status: status}
-                });
+                throw resp
             });
     }
 

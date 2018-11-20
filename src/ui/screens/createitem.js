@@ -2,31 +2,19 @@
 import React from 'react'
 import {ActivityIndicator, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
 import {CheckBox} from "react-native-elements"
-import {openLinkSafely, renderSimpleButton, STYLES} from "../UIStyles"
-import type {Id, Item, ItemType} from "../../types"
-import {CREATE_SAVING, fetchItemCall} from "../lineup/actions"
+import type {Id} from "../../types"
+import {CREATE_ITEM_AND_SAVING, CREATE_SAVING} from "../lineup/actions"
 import {logged} from "../../managers/CurrentUser"
 import {connect} from "react-redux"
-import {buildData} from "../../helpers/DataUtils"
-import ItemCell from "../components/ItemCell"
 import Screen from "../components/Screen"
-import {safeDispatchAction} from "../../managers/Api"
-import {FETCH_ITEM} from "../lineup/actionTypes"
-import {Colors} from "../colors"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
-import Sheet from "../components/sheet"
-import {CANCELABLE_MODAL} from "../Nav"
 import _Messenger from "../../managers/Messenger"
-import {SFP_TEXT_ITALIC, SFP_TEXT_REGULAR} from "../fonts"
-import GTouchable from "../GTouchable"
 import AddItemScreen2 from "./additem2"
 
 type Props = {
     defaultLineupId: Id,
     defaultDescription: Description,
-    itemId: Id,
-    itemType: ItemType,
-    item?: Item,
+    item: IItem,
     onAdded: () => void,
     navigator: *,
     data: *
@@ -47,7 +35,7 @@ type State = {
 @connect((state, ownProps) => ({
     data: state.data,
 }))
-export default class AddItemScreen extends Screen<Props, State> {
+export default class CreateItemScreen extends Screen<Props, State> {
 
     static navigatorStyle = {
         navBarHidden: true,
@@ -65,34 +53,20 @@ export default class AddItemScreen extends Screen<Props, State> {
     }
 
     getItem() {
-        return this.props.item || buildData(this.props.data, this.props.itemType, this.props.itemId)
-    }
-
-    componentDidAppear() {
-        safeDispatchAction.call(
-            this,
-            this.props.dispatch,
-            fetchItemCall(this.props.itemId).include('*').createActionDispatchee(FETCH_ITEM),
-            'reqFetch'
-        )
-        if (this.textInput) {
-            this.textInput.focus()
-        }
+        return this.props.item
     }
 
     _doAdd = (lineupId: Id, visibility: Visibility, description: string) => {
 
+        const delayMs = 4000
 
-        const delayMs = 4000;
-
-        this.props.dispatch(CREATE_SAVING.pending({
-                itemId: this.props.itemId,
-                itemType: this.props.itemType,
+        this.props.dispatch(CREATE_ITEM_AND_SAVING.pending({
+                item: this.getItem(),
                 lineupId,
                 privacy: visibility,
                 description,
             }, {
-                scope: {itemId: this.props.itemId, lineupId},
+                // scope: {itemId: this.props.item.uid, lineupId},
                 lineupId: lineupId,
                 delayMs: delayMs
             }

@@ -20,6 +20,7 @@ import UserScreen from './screens/user'
 import HomeSearchScreen from './screens/homesearch'
 import CategorySearchScreen from './screens/categorySearch'
 import AddItemScreen from './screens/additem'
+import CreateItemScreen from './screens/createitem'
 import TestScreen from './screens/devtest'
 import AskScreen from './screens/asksheet'
 import UserSheet from './screens/userSheet'
@@ -102,6 +103,7 @@ export default function registerScreens(store, Provider) {
     wrap('goodsh.HomeSearchScreen', () => HomeSearchScreen, store, Provider);
     wrap('goodsh.CategorySearchScreen', () => CategorySearchScreen, store, Provider);
     wrap('goodsh.AddItemScreen', () => AddItemScreen, store, Provider);
+    wrap('goodsh.CreateItemScreen', () => CreateItemScreen, store, Provider);
     wrap('goodsh.TestScreen', () => TestScreen, store, Provider);
     wrap('goodsh.InteractionScreen', () => InteractionScreen, store, Provider);
     wrap('goodsh.MyAvatar', () => MyAvatar, store, Provider);

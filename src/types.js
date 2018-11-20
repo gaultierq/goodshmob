@@ -17,15 +17,18 @@ export type NavigableProps = {
     navigator: RNNNavigator
 };
 
-export type Item = Base & {
+export type Item = Base & IItem & {
+    type: string,
+    activitiesCount: number,
+}
+
+export type IItem = {
     title: string,
     subtitle: String,
     url: String,
     uid: number,
     image: String,
     provider: any,
-    type: string,
-    activitiesCount: number,
     description: string,
 }
 
@@ -115,13 +118,13 @@ export type Sending = Activity & {
 }
 
 /**
-privacy=0 (public)
-description: facebook-like
-user: creator
-target: null
-resource: item-id
-related-activities: other activities on this item from people in my network
-*/
+ privacy=0 (public)
+ description: facebook-like
+ user: creator
+ target: null
+ resource: item-id
+ related-activities: other activities on this item from people in my network
+ */
 export type Post = Activity & {
 }
 

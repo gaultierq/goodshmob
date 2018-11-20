@@ -119,23 +119,13 @@ class _StoreManager implements StoreManager {
     synthetizePendingSavings(storeData, storePending, lineupId) {
         const rawPending = _.filter(storePending[SAVE_ITEM], pending => pending.payload.lineupId === lineupId)
         return rawPending.map(pending => {
-                const result = {
+            return {
                     id: pending.id,
                     lineupId: pending.payload.lineupId,
                     itemId: pending.payload.itemId,
-                    pending: true
+                    pending: true,
+                    resource: pending.payload.item
                 }
-
-                Object.defineProperty(
-                    result,
-                    'resource',
-                    {
-                        get: () => {
-                            return buildData(storeData, pending.payload.itemType, pending.payload.itemId)
-                        },
-                    },
-                )
-                return result
             }
         )
     }
