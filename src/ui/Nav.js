@@ -61,12 +61,12 @@ export function startAddItem(navigator: *, defaultLineup: Id | Lineup, options: 
         defaultLineupId = defaultLineup.id
     }
 
-    let cancel = navigator.dismissAllModals
+    let cancel = () => navigator.dismissAllModals()
 
 
     navigator.showModal({
         screen: 'goodsh.SearchItems', // unique ID registered with Navigation.registerScreen
-        navigatorButtons: CANCELABLE_MODAL2,
+        navigatorButtons: CANCELABLE_MODAL,
         title: i18n.t('search_item_screen.title'),
         passProps: {
             defaultLineup,
