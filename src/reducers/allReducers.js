@@ -14,6 +14,7 @@ import OnBoardingManager from "../managers/OnBoardingManager"
 import {reducer as followed_lists} from "../ui/screens/MyInterests"
 import {reducer as popular_items} from "../ui/screens/popularitems"
 import {reducer as contacts} from "../ui/screens/contact_list"
+import {reducer as stream} from "../managers/Stream"
 
 
 import app from './app'

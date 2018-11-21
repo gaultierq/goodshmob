@@ -431,6 +431,10 @@ export class Call {
             });
     }
 
+    submit() {
+        return instance.submit(this)
+    }
+
     // exec() {
     //     //if (!this.method) throw new Error("call need a method");
     //     return instance.submit(this.url.toString(), this.method, this.body);

@@ -11,6 +11,7 @@ import BrowsePlaces from "./search/BrowsePlaces"
 import GButton from "../components/GButton"
 import {renderTip} from "./home"
 import {Colors} from "../colors"
+import Stream from "../../managers/Stream"
 
 type Props = {
 };
@@ -123,5 +124,19 @@ export default class TestScreen extends Component<Props, State> {
             </View>
         )
 
+    }
+
+    componentDidMount() {
+        Stream.obtainFeedToken('timeline_aggregated').then(token => {
+            this.setState({token})
+        })
+    }
+
+    render() {
+        return (
+            <View>
+                <Text>{this.state.token}</Text>
+            </View>
+        )
     }
 }
