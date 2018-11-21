@@ -127,15 +127,22 @@ export default class TestScreen extends Component<Props, State> {
     }
 
     componentDidMount() {
-        Stream.obtainFeedToken('timeline_aggregated').then(token => {
-            this.setState({token})
+        Stream.userSession('timeline_aggregated').then(session => {
+            if (session) {
+                let feed = session.feed('timeline_aggregated').get()
+                this.setState({feed})
+            }
+
         })
+
+
     }
 
     render() {
         return (
             <View>
                 <Text>{this.state.token}</Text>
+                <Text>{this.state.feed}</Text>
             </View>
         )
     }

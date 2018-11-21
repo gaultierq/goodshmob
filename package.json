@@ -40,6 +40,7 @@
 		"es6-symbol": "^3.1.1",
 		"eventbusjs": "^0.2.0",
 		"fuse.js": "^3.2.0",
+		"getstream": "^3.23.1",
 		"hoist-non-react-statics": "^2.3.1",
 		"immutability-helper": "^2.5.1",
 		"is-mergeable-object": "^1.1.0",
