@@ -20,26 +20,25 @@ class StreamManager {
         return this;
     }
 
-    async obtainFeedToken(feedName: string) {
-        let tok = _.get(this.store.getState(), `stream.tokens.${feedName}`)
-        if (!tok) {
+    async obtainUserSessionToken() {
+        let token = _.get(this.store.getState(), `stream.user_session_token`)
+        if (!token) {
             const response = await new Call()
                 .withMethod('GET')
                 .withRoute("stream/generate_token")
-                .addQuery({feed_name: feedName}).submit()
+                .submit()
 
             if (response.ok) {
-                let token = await response.text()
-                this.store.dispatch({type: SET_STREAM_TOKEN, feedName, token})
-                tok = token
+                token = await response.text()
+                this.store.dispatch({type: SET_STREAM_TOKEN, token})
             }
 
         }
-        return tok
+        return token
     }
 
-    async userSession(feedName: string) {
-        let token = await this.obtainFeedToken(feedName)
+    async userSession() {
+        let token = await this.obtainUserSessionToken()
         if (token) return this.client.createUserSession(token)
         return null
     }
@@ -49,7 +48,6 @@ class StreamManager {
 export const SET_STREAM_TOKEN = "SET_STREAM_TOKEN"
 export type SET_STREAM_TOKEN_ACTION = {
     type: string,
-    feedName: string,
     token: ?string
 }
 
@@ -58,7 +56,7 @@ export function reducer() {
 
         switch (action.type) {
             case SET_STREAM_TOKEN:
-                return dotprop.set(state, `tokens.${action.feedName}`, action.token);
+                return dotprop.set(state, `tokens.user_session_token`, action.token);
         }
 
         return state
