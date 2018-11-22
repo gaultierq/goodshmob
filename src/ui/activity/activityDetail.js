@@ -18,7 +18,7 @@ import {connect} from "react-redux"
 import {currentUser, currentUserId, logged} from "../../managers/CurrentUser"
 import ItemBody from "./components/ItemBody"
 import {buildData, getAskBackgroundColor, sanitizeActivityType, timeSinceActivity} from "../../helpers/DataUtils"
-import {Avatar, FullScreenLoader, MainBackground} from "../UIComponents"
+import {Avatar, FullScreenLoader, MainBackground, scheduleOpacityAnimation} from "../UIComponents"
 import type {Activity, ActivityType, Id, RequestState} from "../../types"
 import Screen from "../components/Screen"
 import {Colors} from "../colors"
@@ -36,6 +36,8 @@ import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import {CLOSE_MODAL, displaySavingActions} from "../Nav"
 import * as Api from "../../managers/Api"
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import MapView, {Callout, Marker} from 'react-native-maps'
+import {regionFrom, regionFrom2} from "../components/GMap"
 
 type Props = {
     activityId: Id,
@@ -131,6 +133,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
         if (!activity && this.state.reqFetch === 'sending') return <FullScreenLoader/>;
 
+        const item = activity.resource
         return (
             <MainBackground>
                 <KeyboardAwareScrollView
@@ -147,7 +150,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                     onPress={() => this.goBuy(activity)}
                                 >
                                     <ItemBody
-                                        item={activity.resource}
+                                        item={item}
                                         navigator={this.props.navigator}
                                         onPressItem={() => this.goBuy(activity)}
                                         onPress={() => this.goBuy(activity)}
@@ -171,6 +174,28 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                 />
 
                             </View>
+
+                            {sanitizeActivityType(_.get(item, 'type')) === 'places' && (
+                                <View style={{width: "100%", height: this.state.mapOpen ? __DEVICE_WIDTH__ : 100, opacity: this.state.mapReady ? this.state.mapOpen? 1 : 0.5: 0}}>
+                                    <FeedSeparator />
+                                    <MapView
+                                        style={{flex:1}}
+                                        provider={'google'}
+                                        initialRegion={regionFrom2(item.description, 2000)}
+                                        showsUserLocation={true}
+                                        onMapReady={event => this.setState({mapReady: true}, ()=> scheduleOpacityAnimation())}
+                                        scrollEnabled={!!this.state.mapOpen}
+                                        pitchEnabled={!!this.state.mapOpen}
+                                        rotateEnabled={!!this.state.mapOpen}
+                                        zoomEnabled={!!this.state.mapOpen}
+                                        onPress={()=>this.setState({mapOpen: !this.state.mapOpen}, ()=> scheduleOpacityAnimation())}
+                                    >
+                                        <Marker coordinate={item.description}/>
+                                    </MapView>
+                                    <FeedSeparator />
+                                </View>
+                            )
+                            }
 
                             <View style={{}}>
                                 <FeedSeparator />

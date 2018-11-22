@@ -159,6 +159,9 @@ export function getRegionForCoordinates(points) {
     };
 }
 
+export function regionFrom2({latitude, longitude}, distance) {
+    return regionFrom(latitude, longitude, distance)
+}
 export function regionFrom(lat, lng, distance) {
     if (!_.isNumber(lat) || !_.isNumber(lng) || !_.isNumber(distance)) return null
 
