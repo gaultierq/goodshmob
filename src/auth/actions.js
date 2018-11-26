@@ -6,6 +6,8 @@ import {SET_USER_NULL} from "./actionTypes"
 import {LoginManager as FacebookLoginManager} from "react-native-fbsdk"
 import type {Device} from "../types"
 import {ImageCacheManager} from 'react-native-cached-image'
+import CookieManager from 'react-native-cookies';
+
 
 export function logoutOffline(dispatch) {
     try {
@@ -16,10 +18,11 @@ export function logoutOffline(dispatch) {
         FacebookLoginManager.logOut()
         __APP__.cachePurge()
         dispatch({type: SET_USER_NULL})
-
-
     }
+    CookieManager.clearAll()
 }
+
+
 
 //if user lost auth, then offline logout
 export function logout(dispatch) {
