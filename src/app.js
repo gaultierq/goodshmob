@@ -28,6 +28,7 @@ import Analytics from "./managers/Analytics"
 import OnBoardingManager from "./managers/OnBoardingManager"
 import StoreManager from "./managers/StoreManager"
 import BugsnagManager from "./managers/BugsnagManager"
+import StreamManager from "./managers/Stream"
 import * as AccountKitManager from "./managers/AccountKitManager"
 
 import RNProgressHUB from 'react-native-progresshub'
@@ -439,6 +440,7 @@ export default class App implements GoodshApp {
         OnBoardingManager.init(this.store);
         BugsnagManager.init(this.store);
         NotificationManager.init(currentUserId())
+        StreamManager.init(this.store)
         AccountKitManager.configure()
 
         //api in the end: we don't want to make any request during the app init

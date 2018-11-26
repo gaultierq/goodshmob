@@ -1,6 +1,6 @@
 // @flow
 import React, {Component} from 'react'
-import {Clipboard, Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import {ScrollView, Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
 import {CheckBox} from "react-native-elements"
 import {Navigation} from "react-native-navigation"
 import MapView, {Marker} from 'react-native-maps'
@@ -11,6 +11,7 @@ import BrowsePlaces from "./search/BrowsePlaces"
 import GButton from "../components/GButton"
 import {renderTip} from "./home"
 import {Colors} from "../colors"
+import Stream from "../../managers/Stream"
 
 type Props = {
 };
@@ -123,5 +124,28 @@ export default class TestScreen extends Component<Props, State> {
             </View>
         )
 
+    }
+
+    componentDidMount() {
+        this.readFeed()
+    }
+
+    async readFeed() {
+        let session = await Stream.userSession()
+        let feed = await session.feed('timeline_aggregated').get({limit: 5})
+        console.info("feed response:", feed)
+        this.setState({feed})
+    }
+
+    render() {
+        return (
+            <ScrollView>
+
+                <View style={{flexDirection: 'row'}}>
+                    <Text style={{flex: 1}}>{JSON.stringify(this.state.feed, null, '\t')}</Text>
+                </View>
+
+            </ScrollView>
+        )
     }
 }
