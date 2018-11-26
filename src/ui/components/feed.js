@@ -24,10 +24,8 @@ import type {i18Key, ms, RequestState, Url} from "../../types"
 import {ViewStyle} from "../../types"
 import {renderSimpleButton} from "../UIStyles"
 import type {ScreenVisibility} from "./Screen"
-import {Colors} from "../colors"
 import {getLanguages} from 'react-native-i18n'
 import {RequestManager} from "../../managers/request"
-import Spinner from 'react-native-spinkit'
 import Config from "react-native-config"
 import {FullScreenLoader, renderTextAndDots} from "../UIComponents"
 import BugsnagManager from "../../managers/BugsnagManager"
@@ -36,7 +34,8 @@ export type FeedSource = {
     callFactory: ()=>Api.Call,
     useLinks?:boolean,
     action: ApiAction,
-    options?: any
+    options?: any,
+    onFetch?: Promise<*>
 }
 
 export type Props = {
@@ -517,6 +516,7 @@ export default class Feed extends Component<Props, State>  {
                     // this.this.logger.warn("test::finsih")
 
                 })
+                .then(this.props.fetchSrc.onFetch)
         });
     }
 

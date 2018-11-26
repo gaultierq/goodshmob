@@ -4,6 +4,7 @@ import dotprop from "dot-prop-immutable"
 import {Call} from "./Api"
 import Stream from 'getstream'
 import Config from 'react-native-config'
+import {currentUserId} from "./CurrentUser"
 
 const logger = rootlogger.createLogger("stream")
 
@@ -41,6 +42,19 @@ class StreamManager {
         let token = await this.obtainUserSessionToken()
         if (token) return this.client.createUserSession(token)
         return null
+    }
+
+    //return the number of new activity groups
+    async networkNewActivityCount() {
+        let userId = currentUserId()
+        if (!userId) return -1
+        let lastFetchedAGid = _.get(this.store.getState(), `network.${userId}.list[0].id`)
+        if (!lastFetchedAGid) return -1
+        let session = await this.userSession()
+        if (!session) return -1
+        let feed = await session.feed('timeline_aggregated').get({limit: 10})
+        let res = _.get(feed, 'results')
+        return _.findIndex(res, r => r.id === lastFetchedAGid)
     }
 
 }

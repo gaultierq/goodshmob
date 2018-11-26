@@ -13,6 +13,7 @@ import {
 } from 'react-native'
 import {connect} from "react-redux"
 import {currentUser, currentUserId, logged} from "../../managers/CurrentUser"
+import Stream from "../../managers/Stream"
 import ActivityCell from "../activity/components/ActivityCell"
 import {scheduleOpacityAnimation, TRANSPARENT_SPACER} from "../UIComponents"
 import Feed from "../components/feed"
@@ -43,6 +44,8 @@ type NetworkSection = {
     activityCount: number,
     data: Array<any>
 }
+
+const logger = rootlogger.createLogger('network')
 
 @logged
 @connect((state, ownProps) => ({
@@ -90,32 +93,20 @@ class NetworkScreen extends Screen<Props, State> {
     }
 
     componentDidMount() {
-        // const {height, width} = Dimensions.get('window');
-
-        // this.props.navigator.setStyle({
-        //     ...UI.NavStyles,
-        //     navBarCustomView: 'goodsh.TouchableSearchBar',
-        //     navBarCustomViewInitialProps: {
-        //         style: {
-        //             width: width - 130,
-        //             marginTop: __IS_IOS__ ? 0 : 10,
-        //         },
-        //         searchBarProps: {
-        //             placeholder: i18n.t('search.in_network')
-        //         },
-        //         onPress: this.showSearch.bind(this)
-        //     }
-        // });
+        this.refreshActivitiesCount()
     }
 
-    // componentDidAppear() {
-    //     this.props.navigator.setDrawerEnabled({side: 'right', enabled: true});
-    //     this.props.navigator.setDrawerEnabled({side: 'left', enabled: false});
-    // }
-    //
-    // componentDidDisappear() {
-    //     this.props.navigator.setDrawerEnabled({side: 'right', enabled: false});
-    // }
+    async refreshActivitiesCount() {
+        let count = await Stream.networkNewActivityCount()
+        logger.info("unfetched activities:", count)
+        if (count <= 0) count = null
+        this.props.navigator.setTabBadge({
+            tabIndex: 2,
+            badge: count,
+            // badgeColor: '#006400', // (optional) if missing, the badge will use the default color
+        });
+    }
+
 
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
         console.debug("network:onNavigatorEvent" , event);
@@ -165,6 +156,11 @@ class NetworkScreen extends Screen<Props, State> {
         }
     }
 
+    async onFetch() {
+        logger.info("on fetch")
+        this.refreshActivitiesCount()
+    }
+
     render() {
 
         const {network, data, navigator, ...attr} = this.props
@@ -206,7 +202,8 @@ class NetworkScreen extends Screen<Props, State> {
                         callFactory: fetchMyNetwork,
                         // useLinks: true,
                         action: FETCH_ACTIVITIES,
-                        options: {userId}
+                        options: {userId},
+                        onFetch: this.onFetch.bind(this)
                     }}
                     hasMore={!network1.hasNoMore}
                     autoRefreshMs={10000}
