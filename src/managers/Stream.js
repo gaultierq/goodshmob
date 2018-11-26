@@ -52,7 +52,7 @@ class StreamManager {
         if (!lastFetchedAGid) return -1
         let session = await this.userSession()
         if (!session) return -1
-        let feed = await session.feed('timeline_aggregated').get({limit: 10})
+        let feed = await session.feed('timeline_aggregated').get({limit: 50})
         let res = _.get(feed, 'results')
         return _.findIndex(res, r => r.id === lastFetchedAGid)
     }
