@@ -38,6 +38,7 @@ import {
 import GTouchable from "../../GTouchable"
 import {hexToRgbaWithHalpha} from "../../../helpers/DebugUtils"
 import {flatDiff} from "../../../helpers/StringUtils"
+import {LINEUP_PADDING} from "../../UIStyles"
 
 
 type SMS = {
@@ -260,6 +261,7 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
                         onItemPressed={(item) => seeActivityDetails(this.props.navigator, item)}
                         initialRegion={region}
                         showsUserLocation={true}
+
                         onRegionChange={reg => {
                             // logger.debug(`region = `, reg)
                             this.region = reg
@@ -270,6 +272,9 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
                             scheduleOpacityAnimation()
 
                         }}
+                        EmptyComponent={() => <View style={{position: 'absolute', backgroundColor: 'rgba(255,255,255,0.7)',
+                            borderRadius: 20,
+                            left: LINEUP_PADDING, right: LINEUP_PADDING, bottom: LINEUP_PADDING}}>{renderEmptyResults(this.state.scope, 'places', this.props.navigator)()}</View>}
                     />
                 </View>
             )

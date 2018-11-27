@@ -20,7 +20,7 @@ export default {
         search: {
             placeholder: "Rechercher",
             empty: "Pas de résultat",
-            empty_add: "Nous n'avons rien trouvé ! Ajoutez vos premiers coups de cœur !",
+            empty_add: "Nous n'avons rien trouvé ! <br><a href='%{link}'>Ajoutez</a> vos premiers <br>coups de cœur !",
         },
         filter: {
             empty: "Pas de résultat",
@@ -518,4 +518,9 @@ export default {
         other: "Inviter %{count} contacts"
     },
     invite_contacts: "Inviter des contacts",
+    explore: {
+        friends: {
+            empty: "<a href='%{link}'>Invite</a> tes amis pour voir leurs coups de cœur et envies",
+        }
+    }
 }

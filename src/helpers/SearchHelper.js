@@ -285,6 +285,6 @@ export const renderEmptyResults = (scope: FRIEND_FILTER_TYPE, category: SEARCH_C
     switch (scope) {
         case "me": return RENDER_EMPTY_ME_RESULT(navigator, category)
         case "friends": return RENDER_EMPTY_RESULT
-        case "all": return RENDER_EMPTY_RESULT
+        case "all": return RENDER_EMPTY_ME_RESULT(navigator, category)
     }
 }

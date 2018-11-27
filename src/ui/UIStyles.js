@@ -150,8 +150,12 @@ export function openLinkSafely(url: ?string) {
     })
 }
 
+export function createOpenModalLink(screen, title) {
+    return `${Config.GOODSH_PROTOCOL_SCHEME}://it/openmodal?screen=${screen}&title=${encodeURIComponent(title)}`
+}
+
 export function openModalStatic(screen: string, title: string) {
-    openLinkSafely(`${Config.GOODSH_PROTOCOL_SCHEME}://it/openmodal?screen=${screen}&title=${encodeURIComponent(title)}`)
+    openLinkSafely(createOpenModalLink(screen, title))
 }
 
 export const STYLES = StyleSheet.create({

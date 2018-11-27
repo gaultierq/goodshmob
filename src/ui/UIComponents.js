@@ -5,7 +5,7 @@ import {Image, LayoutAnimation, Platform, StyleSheet, Text, UIManager, View} fro
 import {Colors} from "./colors"
 import GTouchable from "./GTouchable"
 import {
-    BACKGROUND_COLOR,
+    BACKGROUND_COLOR, createOpenModalLink,
     LINEUP_PADDING,
     openLinkSafely,
     openModalStatic,
@@ -31,6 +31,9 @@ import type {FRIEND_FILTER_TYPE} from "../helpers/SearchHelper"
 import {SEARCH_CATEGORIES_TYPE} from "../helpers/SearchConstants"
 import i18n from "../i18n/i18n"
 import Config from "react-native-config"
+import HTMLView from "react-native-htmlview/HTMLView"
+import {showResourceActions} from "./ActivityHelper"
+import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "./fonts"
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
@@ -385,7 +388,7 @@ const {RENDER_EMPTY_RESULT_TEXT} = StyleSheet.create({
     RENDER_EMPTY_RESULT_TEXT: {
         fontSize: 25,
         lineHeight: 35,
-        color: Colors.greyish,
+        color: Colors.brownishGrey,
         alignSelf: "center",
         alignItems: "center",
         justifyContent: "center",
@@ -398,33 +401,63 @@ export const RENDER_EMPTY_RESULT = () => (
     </View>
 )
 export const RENDER_EMPTY_ME_RESULT = (navigator: RNNNavigator, category: SEARCH_CATEGORIES_TYPE) : () => Element<any> => () => (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: LINEUP_PADDING}}>
-        <Text style={RENDER_EMPTY_RESULT_TEXT}>{i18n.t("lineups.search.empty_add")}</Text>
-        <GButton style={{margin: LINEUP_PADDING}} text={i18n.t("actions.add")} onPress={() => {
-
-            navigator.push({
-                screen: 'goodsh.SearchItems',
-                navigatorButtons: CANCELABLE_MODAL2,
-                title: i18n.t('search_item_screen.title'),
-                animationType: 'fade',
-                animated: false,
-                passProps: {
-                    defaultLineupId: currentGoodshboxId(),
-                    initialCategory: category,
-                    onClickClose: () => navigator.pop({animationType: 'fade', }),
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', padding: LINEUP_PADDING}}>
+        <HTMLView
+            onLinkPress={pressed => {
+                if (pressed === createAddLink()) {
+                    navigator.push({
+                        screen: 'goodsh.SearchItems',
+                        navigatorButtons: CANCELABLE_MODAL2,
+                        title: i18n.t('search_item_screen.title'),
+                        animationType: 'fade',
+                        animated: false,
+                        passProps: {
+                            defaultLineupId: currentGoodshboxId(),
+                            initialCategory: category,
+                            onClickClose: () => navigator.pop({animationType: 'fade', }),
+                        }
+                    })
                 }
-            })
+            }
+            }
+            value={`<div>${i18n.t("lineups.search.empty_add", {link: createAddLink()})}</div>`}
+            stylesheet={htmlStyles}
+        />
 
-        }}/>
     </View>
 )
 
 export const RENDER_NO_FRIEND_ERROR : () => Element<any> = ()  => (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: LINEUP_PADDING}}>
-        <Text style={RENDER_EMPTY_RESULT_TEXT}>{i18n.t("tips.invite.text")}</Text>
-        <GButton style={{margin: LINEUP_PADDING}} text={i18n.t("actions.invite")} onPress={() => {
-            openModalStatic('goodsh.Community', i18n.t('community.screens.friends'))
-        }}/>
+
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', padding: LINEUP_PADDING}}>
+        <HTMLView
+            value={`<div>${i18n.t("explore.friends.empty", {link: createOpenModalLink('goodsh.Community', i18n.t('community.screens.friends'))})}</div>`}
+            stylesheet={htmlStyles}
+        />
     </View>
 )
+
+
+const htmlStyles = StyleSheet.create({
+
+    div: {
+        fontFamily: SFP_TEXT_MEDIUM,
+        fontSize: 20,
+        lineHeight: 32,
+        color: Colors.brownishGrey,
+        alignItems: 'center',
+    },
+    a: {
+        fontFamily: SFP_TEXT_BOLD,
+        fontSize: 22,
+        color: Colors.darkerBlack,
+    },
+})
+
+export function createAddLink() {
+    return `${Config.GOODSH_PROTOCOL_SCHEME}://it/openmodal?screen=goodsh.SearchItems&title=${
+        encodeURIComponent(i18n.t('search_item_screen.title'))
+        }`
+}
+
 

@@ -4,6 +4,7 @@ import {ActivityIndicator, Image, Text, View} from 'react-native'
 import MapView, {Callout, Marker} from 'react-native-maps'
 import type {SearchState} from "../../helpers/SearchHelper"
 import memoize from "memoize-one"
+import {Colors} from "../colors"
 
 
 export type Props = {
@@ -11,6 +12,7 @@ export type Props = {
     setRef?: () => void,
     onItemPressed: (item: any) => void,
     onRegionChange?: Region => void,
+    EmptyComponent?: () => any
 };
 
 type State = {
@@ -31,11 +33,12 @@ export default class GMap extends Component<Props, State>  {
     getData = memoize(data => _.flatten(data))
     center: Region
 
-    constructor(props: Props) {
-        super(props)
-        // this.state = {
-        //     region: null
-        // }
+    static defaultProps = {
+        EmptyComponent: () => (
+
+            <Text style={{backgroundColor: Colors.white, padding: 10}}>{i18n.t("lineups.search.empty")}</Text>
+
+        )
     }
 
     render() {
@@ -52,7 +55,7 @@ export default class GMap extends Component<Props, State>  {
         }
 
         return (
-            <View style={{flex:1, marginTop: 5}}>
+            <View style={{flex:1}}>
                 <MapView
                     style={{flex:1}}
                     provider={'google'}
@@ -67,11 +70,9 @@ export default class GMap extends Component<Props, State>  {
                     animating={true}
                     size="large"
                     style={{position: 'absolute', bottom: 30, left: 20}}
-                />}
-                {requestState === 'ok' && data.length === 0 &&
-                <View pointerEvents={'none'} style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>
-                    <Text style={{backgroundColor: 'white', padding: 10}}>{i18n.t("lineups.search.empty")}</Text>
-                </View>}
+                />
+                }
+                {requestState === 'ok' && data.length === 0 && this.props.EmptyComponent()}
             </View>
         )
     }
