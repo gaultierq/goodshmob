@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -28,6 +29,7 @@
 		1D3F9667D1C64B33906D46B8 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 11ABCE0FDBAC43E2A06EB3E4 /* libRNVectorIcons.a */; };
 		2054F13072464CE0B7BFC292 /* libRNI18n.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 17E0B663F753463295EFB4FD /* libRNI18n.a */; };
 		2404ACFCBC2548068D09BA29 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E8C66F8472B4B4A9934F4CA /* FBSDKShareKit.framework */; };
+		251CE7AC40B6497A8B89C3B4 /* libRNCookieManagerIOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF6A103491AA4B90A1366882 /* libRNCookieManagerIOS.a */; };
 		2ADAC4575131E564B1D66B8A /* libPods-goodshmob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A06E8505DD3F65927823475C /* libPods-goodshmob.a */; };
 		2CDEC027B0B94D4B8BC2F0EF /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AEA210FB7F134502882C575D /* Zocial.ttf */; };
 		31E72D55C53842BAB41A5E38 /* SFProDisplay-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7EFBE4B290284A7FB8329FF3 /* SFProDisplay-Light.otf */; };
@@ -60,6 +62,7 @@
 		BFA47067D8864920BA2BF128 /* Thonburi-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 83211284DF4F4A8897E908DC /* Thonburi-Bold.ttf */; };
 		C0882E191CDA40ECA24BEAEF /* libRNMaterialShowcase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BACB85B5C915456898EE135D /* libRNMaterialShowcase.a */; };
 		CF503881D2F548EBB3960199 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4DEA90B06B614D008A105408 /* Feather.ttf */; };
+		D02E4B1421ADF9F700D64E42 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D02E4B1521ADF9F700D64E42 /* libRCTPushNotification.a */; };
 		D087DD321FF363A20052651C /* MaterialShowcase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D087DD311FF363740052651C /* MaterialShowcase.framework */; };
 		D087DD331FF363A20052651C /* MaterialShowcase.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D087DD311FF363740052651C /* MaterialShowcase.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D08F4DF21F5E900C0018E2DD /* libReactNativeNavigation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D9D9891F5E8FAF003772C8 /* libReactNativeNavigation.a */; };
@@ -78,7 +81,6 @@
 		F17B8FB120A1D31900FAF469 /* AccountKitStrings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F17B8FAF20A1D31900FAF469 /* AccountKitStrings.bundle */; };
 		F17B8FB220A1D31900FAF469 /* AccountKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F17B8FB020A1D31900FAF469 /* AccountKit.framework */; };
 		F52F29A1D072424D85D70653 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F79D97351B445FE8CF44CB5 /* libRCTActionSheet.a */; };
-		251CE7AC40B6497A8B89C3B4 /* libRNCookieManagerIOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF6A103491AA4B90A1366882 /* libRNCookieManagerIOS.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -284,6 +286,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = 8AD256131D6DE5F600C7D842;
 			remoteInfo = BugsnagReactNative;
+		};
+		D02E4B0921ADF91F00D64E42 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D073067345284879AFBA6255 /* RNCookieManagerIOS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1BD725DA1CF77A8B005DBD79;
+			remoteInfo = RNCookieManagerIOS;
 		};
 		D05792C9203D4148002A68F5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -587,6 +596,8 @@
 		C9005B048F024717B4913BB2 /* RCTFBSDK.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTFBSDK.xcodeproj; path = "../node_modules/react-native-fbsdk/ios/RCTFBSDK.xcodeproj"; sourceTree = "<group>"; };
 		CB77874F92F7495C904FBF9C /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
 		CBBBED14AB462FFD29D4AEC4 /* Pods-goodshmob.dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-goodshmob.dev.xcconfig"; path = "Pods/Target Support Files/Pods-goodshmob/Pods-goodshmob.dev.xcconfig"; sourceTree = "<group>"; };
+		D02E4B1521ADF9F700D64E42 /* libRCTPushNotification.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRCTPushNotification.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D073067345284879AFBA6255 /* RNCookieManagerIOS.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNCookieManagerIOS.xcodeproj; path = "../node_modules/react-native-cookies/ios/RNCookieManagerIOS.xcodeproj"; sourceTree = "<group>"; };
 		D087DD2C1FF363740052651C /* MaterialShowcase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MaterialShowcase.xcodeproj; path = "../node_modules/react-native-material-showcase-ios/ios/material-showcase-ios/MaterialShowcase.xcodeproj"; sourceTree = "<group>"; };
 		D09DAD952088F1F200A80322 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D09DAD982088F1F200A80322 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -614,9 +625,8 @@
 		F18EF3BF20B7284D00FE9D89 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		F2001FE082D1450CB20A698F /* libRNOpenAppSettings.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNOpenAppSettings.a; sourceTree = "<group>"; };
 		F67A393C22434FF8ADFA75F4 /* SFProText-RegularItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProText-RegularItalic.otf"; path = "../src/assets/fonts/SFProText-RegularItalic.otf"; sourceTree = "<group>"; };
+		FF6A103491AA4B90A1366882 /* libRNCookieManagerIOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCookieManagerIOS.a; sourceTree = "<group>"; };
 		FF95AED0484E442B85B9D1D0 /* SFProText-LightItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProText-LightItalic.otf"; path = "../src/assets/fonts/SFProText-LightItalic.otf"; sourceTree = "<group>"; };
-		D073067345284879AFBA6255 /* RNCookieManagerIOS.xcodeproj */ = {isa = PBXFileReference; name = "RNCookieManagerIOS.xcodeproj"; path = "../node_modules/react-native-cookies/ios/RNCookieManagerIOS.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		FF6A103491AA4B90A1366882 /* libRNCookieManagerIOS.a */ = {isa = PBXFileReference; name = "libRNCookieManagerIOS.a"; path = "libRNCookieManagerIOS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -624,6 +634,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D02E4B1421ADF9F700D64E42 /* libRCTPushNotification.a in Frameworks */,
 				D0DF636F1FB6C9050000AD5E /* GameKit.framework in Frameworks */,
 				D08F4DF21F5E900C0018E2DD /* libReactNativeNavigation.a in Frameworks */,
 				F17B8FB220A1D31900FAF469 /* AccountKit.framework in Frameworks */,
@@ -932,6 +943,7 @@
 				F2001FE082D1450CB20A698F /* libRNOpenAppSettings.a */,
 				1A6722BFCEB84E8DB480CFFF /* libRNAccountKit.a */,
 				63D1185E5DF04E4E9784DD23 /* libRNProgressHUB.a */,
+				FF6A103491AA4B90A1366882 /* libRNCookieManagerIOS.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -957,6 +969,14 @@
 			isa = PBXGroup;
 			children = (
 				D00140DE1FAD8D3C002D9A3C /* libBugsnagReactNative.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D02E4B0621ADF91F00D64E42 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D02E4B0A21ADF91F00D64E42 /* libRNCookieManagerIOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1143,6 +1163,7 @@
 		F193B04D1EF44D979793D005 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D02E4B1521ADF9F700D64E42 /* libRCTPushNotification.a */,
 				F17B8FB020A1D31900FAF469 /* AccountKit.framework */,
 				F17B8FAF20A1D31900FAF469 /* AccountKitStrings.bundle */,
 				D0DF636E1FB6C9050000AD5E /* GameKit.framework */,
@@ -1286,6 +1307,10 @@
 				{
 					ProductGroup = F17B903020A1DD3000FAF469 /* Products */;
 					ProjectRef = 6E5BFCCE93424121BB5DB735 /* RNAccountKit.xcodeproj */;
+				},
+				{
+					ProductGroup = D02E4B0621ADF91F00D64E42 /* Products */;
+					ProjectRef = D073067345284879AFBA6255 /* RNCookieManagerIOS.xcodeproj */;
 				},
 				{
 					ProductGroup = D06F5B66201229630044AA7B /* Products */;
@@ -1541,6 +1566,13 @@
 			fileType = archive.ar;
 			path = libBugsnagReactNative.a;
 			remoteRef = D00140DD1FAD8D3C002D9A3C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D02E4B0A21ADF91F00D64E42 /* libRNCookieManagerIOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNCookieManagerIOS.a;
+			remoteRef = D02E4B0921ADF91F00D64E42 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		D05792CA203D4148002A68F5 /* libRNSVG.a */ = {

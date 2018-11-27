@@ -9,7 +9,8 @@ import {
     RefreshControl,
     Text,
     TouchableOpacity,
-    View
+    View,
+    PushNotificationIOS
 } from 'react-native'
 import {connect} from "react-redux"
 import {currentUser, currentUserId, logged} from "../../managers/CurrentUser"
@@ -105,6 +106,10 @@ class NetworkScreen extends Screen<Props, State> {
             badge: count,
             // badgeColor: '#006400', // (optional) if missing, the badge will use the default color
         });
+
+        // reset badge number to 0
+        // the spec today is: only goodsh editor notification set badge to 1
+        Platform.OS === 'ios' && PushNotificationIOS.setApplicationIconBadgeNumber(0)
     }
 
 
