@@ -131,7 +131,11 @@ class ActivityDetailScreen extends Screen<Props, State> {
 
         const isAsk = activity && sanitizeActivityType(activity.type) === 'asks';
 
-        if (!activity && this.state.reqFetch === 'sending') return <FullScreenLoader/>;
+
+        if (!activity) {
+            if (this.state.reqFetch === 'sending') return <FullScreenLoader/>
+            return null
+        }
 
         const item = activity.resource
         return (
