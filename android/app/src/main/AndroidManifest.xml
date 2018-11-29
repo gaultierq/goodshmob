@@ -12,7 +12,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.VIBRATE" />
+    
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <!-- reading contacts on api < 23 requires: -->
+    <uses-permission android:name="android.permission.READ_PROFILE" />
 
     <uses-sdk
         android:minSdkVersion="16"
