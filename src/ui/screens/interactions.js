@@ -25,7 +25,7 @@ type Props = {
 
 type State = {
 };
-
+const logger = rootlogger.createLogger('interactions')
 
 const FETCH_INTERACTIONS = ApiAction.create("fetch_interactions", "retrieve user notifications");
 
@@ -43,8 +43,11 @@ export class InteractionScreen extends Screen<Props, State> {
         let {interaction} = this.props
         let list = interaction.list
 
+        logger.log('render')
+
         return (
-            <View style={{flex: 1,}}>
+
+            <View style={{flex: 1, width: '100%', height: '100%', backgroundColor: Colors.white}}>
 
                 <Feed
                     initialNumToRender={10}
@@ -66,8 +69,8 @@ export class InteractionScreen extends Screen<Props, State> {
                     }
                     visibility={this.getVisibility()}
                 />
-
             </View>
+
         );
     }
 
