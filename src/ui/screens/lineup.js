@@ -1,10 +1,10 @@
 // @flow
 
 import React from 'react'
-import {Keyboard, ScrollView, StyleSheet, Text, View} from 'react-native'
+import {Image, ImageBackground, Keyboard, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
-import {activityFeedProps, getNavButtonForAction} from "../UIComponents"
+import {getNavButtonForAction, ListColumnsSelector, TRANSPARENT_SPACER} from "../UIComponents"
 import * as Api from "../../managers/Api"
 import Feed from "../components/feed"
 import type {Id, Lineup, RNNNavigator, Saving} from "../../types"
@@ -18,11 +18,12 @@ import {STYLES} from "../UIStyles"
 import {fullName} from "../../helpers/StringUtils"
 import {FETCH_LINEUP, FETCH_SAVINGS, fetchLineup, followLineupPending, unfollowLineupPending,} from "../lineup/actions"
 import {UNSAVE} from "../activity/actionTypes"
-import * as authActions from "../../auth/actions"
 import {GLineupAction, LineupRights} from "../lineupRights"
 import {LINEUP_AND_SAVING_SELECTOR} from "../../helpers/ModelUtils"
 import {createSelector} from "reselect"
-
+import FeedSeparator from "../activity/components/FeedSeparator"
+import {CachedImage} from 'react-native-cached-image'
+import GTouchable from "../GTouchable"
 
 type Props = {
     lineupId: string,
@@ -34,8 +35,8 @@ type Props = {
 type State = {
     title?: {title: string, titleImage: string},
     titleSet?: boolean,
-};
-
+    renderType: 'grid' | 'stream'
+}
 export const selector = createSelector(
     [
         LINEUP_AND_SAVING_SELECTOR,
@@ -44,10 +45,11 @@ export const selector = createSelector(
     ({lineup, savings}, pending) => {
 
         let actions = LineupRights.getActions(lineup, pending)
-        console.debug("DEBUG12: all actions", actions)
         return {lineup, savings, actions}
     }
 )
+
+const SPACER = 6
 
 @logged
 @connect(selector)
@@ -63,7 +65,8 @@ class LineupScreen extends Screen<Props, State> {
     actions: ?GLineupAction[]
 
     state = {
-        navBarState: {}
+        navBarState: {},
+        renderType: 'grid',
     }
 
     componentWillMount() {
@@ -199,33 +202,37 @@ class LineupScreen extends Screen<Props, State> {
             };
         }
 
+        const layout = this.calcLayout()
         return (
             <View style={styles.container}>
-                {lineup && lineup.description && <Text style={[styles.description]}>{lineup.description}</Text>}
+                <ListColumnsSelector size={30} onTabPressed={index=>this.setState({renderType: index === 0 ? 'grid' : 'stream'})}/>
+
+                <FeedSeparator style={{marginBottom: SPACER}}/>
+
                 <Feed
+                    key={"lineup-" + this.state.renderType }
                     data={savings}
-                    renderItem={item => this.renderItem(item, lineup)}
+                    renderItem={this.state.renderType === 'grid' ? this.renderItemGrid.bind(this) : this.renderItemStream.bind(this)}
                     fetchSrc={fetchSrc}
                     hasMore={true}
                     ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t("empty.lineup")}</Text>}
-                    {...activityFeedProps()}
+                    numColumns={layout.numColumns}
+                    ItemSeparatorComponent={TRANSPARENT_SPACER(SPACER)}
+                    style={{backgroundColor: Colors.white}}
                 />
             </View>
         );
     }
 
-    follow() {
-        Api.safeExecBlock.call(
-            this,
-            () => {
-                return authActions.logout(this.props.dispatch)
-            },
-            'reqLogout'
-        );
+    calcLayout() {
+        let numColumns = this.state.renderType === 'grid' ? 3 : 1
+        let cellWidth = (__DEVICE_WIDTH__ + SPACER) / numColumns - SPACER
+        let cellHeight = cellWidth
+        return {numColumns, cellWidth, cellHeight}
     }
 
-    renderItem(item, lineup) {
-        let saving: Saving = item.item;
+    renderItemStream({item}) {
+        let saving: Saving = item
 
         if (!saving['built']) return null;
 
@@ -238,6 +245,35 @@ class LineupScreen extends Screen<Props, State> {
             />
         )
     }
+
+    renderItemGrid({item, index}) {
+        let image = _.get(item, 'resource.image')
+        const layout = this.calcLayout()
+        index = index % layout.numColumns
+        return (
+            <GTouchable style={{
+                marginLeft: index > 0 ? SPACER / 2 : 0,
+                marginRight: index < layout.numColumns ? SPACER / 2 : 0,
+
+            }} onPress={() => seeActivityDetails(this.props.navigator, item)}>
+                <CachedImage
+                    source={{uri: image, }}
+                    style={[{
+                        width: layout.cellWidth,
+                        height: layout.cellHeight,
+                        backgroundColor: Colors.white,
+                        backgroundColor: 'blue',
+                        alignSelf: 'center',
+                        alignItems: 'center',
+                    }
+                    ]}
+                    resizeMode='cover'
+                    fallbackSource={require('../../img/goodsh_placeholder.png')}/>
+            </GTouchable>
+        )
+
+    }
+
 }
 
 
@@ -288,7 +324,7 @@ export {reducer, screen, actions};
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        // flex: 1,
         backgroundColor: Colors.white,
     },
     description: {
@@ -296,3 +332,5 @@ const styles = StyleSheet.create({
         margin: 10
     },
 });
+
+

@@ -6097,9 +6097,9 @@ react-native-swiper@^1.5.13:
   version "1.1.9"
   resolved "https://codeload.github.com/gaultierq/react-native-switch-selector/tar.gz/96f8077df19c376ff9504a6026f42a508915c5d5"
 
-react-native-tab-view@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-1.0.2.tgz#66e0bc6d38a227ed2b212e3a256b7902f6ce02ed"
+react-native-tab-view@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-1.3.1.tgz#f9932d6bd5ba7dad75ef9335a68f13d85ba5bd56"
   dependencies:
     prop-types "^15.6.1"
 

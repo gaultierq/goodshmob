@@ -1,39 +1,28 @@
 // @flow
 
+import type {Element} from "react"
 import React, {Component} from 'react'
 import {Image, LayoutAnimation, Platform, StyleSheet, Text, UIManager, View} from 'react-native'
 import {Colors} from "./colors"
 import GTouchable from "./GTouchable"
-import {
-    BACKGROUND_COLOR, createOpenModalLink,
-    LINEUP_PADDING,
-    openLinkSafely,
-    openModalStatic,
-    STYLES,
-    TAB_BAR_PROPS,
-    TAB_BAR_STYLES
-} from "./UIStyles"
+import {BACKGROUND_COLOR, createOpenModalLink, LINEUP_PADDING, STYLES, TAB_BAR_PROPS, TAB_BAR_STYLES} from "./UIStyles"
 import Spinner from 'react-native-spinkit'
 import type {Lineup, RNNNavigator, User} from "../types"
 import {ViewStyle} from "../types"
-import {CANCELABLE_MODAL2, displayLineupActionMenu, seeList, startAddItem} from "./Nav"
+import {CANCELABLE_MODAL2, displayLineupActionMenu, seeList} from "./Nav"
 import LineupHorizontal from "./components/LineupHorizontal"
 import LineupTitle2 from "./components/LineupTitle2"
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import {GLineupAction, L_ADD_ITEM, L_FOLLOW, L_SHARE, L_UNFOLLOW} from "./lineupRights"
 import {TabBar} from "react-native-tab-view"
 import {GAvatar} from "./GAvatar"
-import GButton from "./components/GButton"
-import * as Nav from "./Nav"
 import {currentGoodshboxId} from "../managers/CurrentUser"
-import type {Element} from "react"
-import type {FRIEND_FILTER_TYPE} from "../helpers/SearchHelper"
 import {SEARCH_CATEGORIES_TYPE} from "../helpers/SearchConstants"
 import i18n from "../i18n/i18n"
 import Config from "react-native-config"
 import HTMLView from "react-native-htmlview/HTMLView"
-import {showResourceActions} from "./ActivityHelper"
-import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "./fonts"
+import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "./fonts"
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
@@ -460,4 +449,49 @@ export function createAddLink() {
         }`
 }
 
+
+
+export class ListColumnsSelector extends Component<
+    {
+        onTabPressed?: number => void,
+        size: number,
+    },
+    {
+        index: number
+    }> {
+
+    state = {index: 0}
+
+
+    _select = (index: number) => {
+        this.setState({index})
+        const onTabPressed = this.props.onTabPressed
+        onTabPressed && onTabPressed(index)
+    }
+
+    render() {
+        return (
+            <View style={{justifyContent: 'space-around', flexDirection: 'row'}}>
+                <GTouchable style={{
+                    flex:1,
+                    alignItems: 'center',
+                    paddingVertical: 4,
+
+                }}  onPress={() => this._select(0)}>
+                    <MaterialCommunityIcons name="view-grid" size={this.props.size} color={this.state.index === 0 ? Colors.brownishGrey: Colors.grey3} />
+                </GTouchable>
+                <GTouchable style={{
+                    flex:1,
+                    alignItems: 'center',
+                    borderLeftWidth: StyleSheet.hairlineWidth,
+                    borderColor: Colors.greyish,
+                    paddingVertical: 4,
+                }} onPress={() => this._select(1)}>
+                    <MaterialCommunityIcons name="view-day" size={this.props.size} color={this.state.index === 1 ? Colors.brownishGrey: Colors.grey3} />
+                </GTouchable>
+
+            </View>
+        )
+    }
+}
 

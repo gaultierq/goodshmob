@@ -13,7 +13,7 @@ type State = {
 };
 export default class FeedSeparator extends React.Component<Props, State> {
     render() {
-        return <View style={[styles.sep, {marginVertical: this.props.vMargin}, this.props.style]}/>;
+        return <View style={[styles.sep, this.props.style]}/>;
     }
 }
 
