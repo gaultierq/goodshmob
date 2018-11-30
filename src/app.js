@@ -350,7 +350,7 @@ export default class App implements GoodshApp {
         let persistConfig = {
             key: 'primary',
             storage: AsyncStorage,
-            debug: true,
+            debug: __DEV__,
             version
             // transforms: [createTransform(immutableTransform.in, immutableTransform.out, immutableTransform.config)],
             // whitelist: ['auth','device']

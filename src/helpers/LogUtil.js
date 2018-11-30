@@ -1,7 +1,7 @@
 //@flow
 
-import {GLoggerLevel} from "../../flow-typed/goodshmob"
-import type {GLogger, GLoggerConfig, LogObj} from "../../flow-typed/goodshmob"
+import type {GLogger, GLoggerConfig, LogObj} from "../flow-typed/goodshmob"
+import Config from "react-native-config"
 
 export const logFormat = (level: GLoggerLevel) => {
     if (__IS_ANDROID__) return null
@@ -9,7 +9,7 @@ export const logFormat = (level: GLoggerLevel) => {
         case "log": return 'color: #aaaaaa'
         case "debug": return 'color: #aaaaaa'
         case "info": return 'color: #0000ff'
-        case "warning": return 'color: #ffa500'
+        case "warn": return 'color: #ffa500'
         case "error": return 'color: #ff0000'
         default: return null
     }
@@ -17,13 +17,9 @@ export const logFormat = (level: GLoggerLevel) => {
 const levels = ['log', 'debug', 'info', 'warn', 'error'];
 
 export const logFilter = conf => (level, group) => {
-    let confThreshold: GLoggerLevel
-    if (conf && (confThreshold = conf[group])) {
-        return levels.indexOf(level) < levels.indexOf(confThreshold)
-    }
-    return false
+    let confThreshold: GLoggerLevel = conf && conf[group]
+    return levels.indexOf(level) < levels.indexOf(confThreshold)
 }
-
 
 
 class Printer implements GLogger {
@@ -101,9 +97,15 @@ class GLoggerImplem implements GLogger {
         this.parent.doLog(log)
     }
 
-    createLogger(c: GLoggerConfig | string) {
-        const cfg = typeof c === 'string' ? {...this.conf, group: c} : {...this.conf, ...c}
-        return new GLoggerImplem({parent: this, conf: cfg})
+    createLogger(group: string) {
+        let conf: GLoggerConfig = {group}
+        let levelThreshold = getLevelThreshold(group)
+        if (levelThreshold) {
+            conf.filter = level => levels.indexOf(level) < levels.indexOf(levelThreshold)
+        }
+
+
+        return new GLoggerImplem({parent: this, conf})
     }
 }
 
@@ -111,4 +113,19 @@ class GLoggerImplem implements GLogger {
 export function createLogger(conf: GLoggerConfig): GLogger {
 
     return new GLoggerImplem({parent: new Printer(), conf})
+}
+
+let getLevelThreshold = function (group) {
+    let logConfig
+    let lc = Config.LOG_CONFIG
+    if (lc) {
+        lc = lc.replace(new RegExp("'", 'g'), '"');
+        try {
+            logConfig = JSON.parse(lc)
+        }
+        catch (e) {
+            console.error(e)
+        }
+    }
+    return _.get(logConfig, group)
 }

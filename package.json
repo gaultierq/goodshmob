@@ -102,7 +102,6 @@
 		"react-native-vector-icons": "4.5.0",
 		"react-redux": "^5.0.6",
 		"redux": "^3.7.2",
-		"redux-logger": "^3.0.6",
 		"redux-object": "^0.5.3",
 		"redux-persist": "^5.10.0",
 		"redux-thunk": "^2.2.0",

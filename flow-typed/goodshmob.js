@@ -36,5 +36,5 @@ export type GLoggerConfig = {
     group: GLoggerGroup,
 
     format?: GLoggerLevel => ?GLoggerStyle,
-    filter?: (GLoggerLevel, GLoggerGroup) => boolean,
+    filter?: GLoggerLevel => boolean,
 }

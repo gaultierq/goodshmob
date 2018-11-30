@@ -63,21 +63,9 @@ export function initGlobal() {
         }
     }
 
-    let logConfig
-    if (Config.LOG_CONFIG) {
-        try {
-            logConfig = JSON.parse(Config.LOG_CONFIG);
-        }
-        catch (e) {
-            console.error(e);
-        }
-    }
-
     global.rootlogger = createLogger({
         group: 'root',
-        //groupName: '',
         format: logFormat,
-        filter: logFilter(logConfig)
     })
 }
 
