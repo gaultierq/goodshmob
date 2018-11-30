@@ -137,7 +137,7 @@ function __searchItems<SO: SearchItemsGenOptions>(category: SearchCategoryType, 
 
                         resolve({results: response.json, page, nbPages: 0});
                     }, err=> {
-                        //console.warn(err)
+
                         reject(err);
                     });
             }, err => reject(err));

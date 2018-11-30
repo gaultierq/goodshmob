@@ -8,7 +8,7 @@ let makeI18nPlease = function () {
     const en = require('../src/i18n/locales/en')
     i18njs.translations = {en} // Optional ('en' is the default)
 
-    //console.log("translations: ", i18njs.translations);
+
 
     return {
         t: jest.fn((k, o) => i18njs.t("default." + k, o)),

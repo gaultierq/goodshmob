@@ -1770,10 +1770,11 @@ buffer-from@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/buffer-from/-/buffer-from-1.0.0.tgz#4cb8832d23612589b0406e9e2956c17f06fdf531"
 
-bugsnag-react-native@^2.5.3:
-  version "2.9.3"
-  resolved "https://registry.yarnpkg.com/bugsnag-react-native/-/bugsnag-react-native-2.9.3.tgz#0e8130cc08b18ac87bf24bbf75f089ce066eb4c7"
+bugsnag-react-native@^2.12.14:
+  version "2.12.4"
+  resolved "https://registry.yarnpkg.com/bugsnag-react-native/-/bugsnag-react-native-2.12.4.tgz#0a4383ff8c7e11cef9e43cecbcf3cf9d17b16d2e"
   dependencies:
+    iserror "^0.0.2"
     promise "^7"
     prop-types "^15.6.0"
 
@@ -3706,6 +3707,10 @@ isarray@1.0.0, isarray@~1.0.0:
 isarray@^2.0.1:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/isarray/-/isarray-2.0.4.tgz#38e7bcbb0f3ba1b7933c86ba1894ddfc3781bbb7"
+
+iserror@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/iserror/-/iserror-0.0.2.tgz#bd53451fe2f668b9f2402c1966787aaa2c7c0bf5"
 
 isexe@^2.0.0:
   version "2.0.0"

@@ -10,11 +10,11 @@ test('testing activities_fixtures', () => {
     //let result = Util.parse(require("./activities_fixtures2.json"));
     let result = parse(require("./activities_fixtures.json"), "./activities_fixtures.json");
 
-    //console.log(`logging it: ${JSON.stringify(Object.assign({}, result))}`);
+
     console.log(`logging it:`);
     logObject(result);
 
-    //console.log(JSON.stringify(normalized));
+
 
     expect(result).toBeDefined();
 

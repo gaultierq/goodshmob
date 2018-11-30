@@ -29,7 +29,7 @@ export default class Screen<P, S> extends Component<P & ScreenProps,  S & Screen
         if (!navigator) throw "please provide navigator";
 
         navigator.addOnNavigatorEvent((event) => {
-            //console.debug("home:onNavigatorEvent" , event);
+
 
             let id = event.id;
 

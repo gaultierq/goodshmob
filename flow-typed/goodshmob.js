@@ -12,8 +12,18 @@ export type Logger = {
     warn: (m: string, ...args) => void,
     error: (m: string, ...args) => void,
 }
+
+
+export type LogObj = {
+    args: Array<*>,
+    level: GLoggerLevel,
+    formats: Array<string>,
+    groups: Array<string>,
+}
+
 export type GLogger = Logger & {
-    createLogger: (conf: GLoggerConfig | string) => GLogger
+    createLogger: (conf: GLoggerConfig | string) => GLogger,
+    doLog: (log: LogObj) => void,
 }
 
 declare var rootlogger: GLogger;
@@ -22,12 +32,9 @@ export type GLoggerLevel = 'log'| 'debug'| 'info'| 'warn'| 'error'
 export type GLoggerGroup = string
 export type GLoggerStyle = string
 
-type GLoggerConfig = {
+export type GLoggerConfig = {
     group: GLoggerGroup,
-    groupName?: string,
-    format?: GLoggerLevel => ?GLoggerStyle,
 
-    //you can filter your message, and all your children messages
-    //return true if you want NOT to display the log
+    format?: GLoggerLevel => ?GLoggerStyle,
     filter?: (GLoggerLevel, GLoggerGroup) => boolean,
 }

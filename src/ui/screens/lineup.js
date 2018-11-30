@@ -97,7 +97,7 @@ class LineupScreen extends Screen<Props, State> {
 
     static refreshNavBar(navigator: RNNNavigator, lineupId: ?Id, lineup: ?Lineup) {
         //FIXME: rm platform specific code, https://github.com/wix/react-native-navigation/issues/1871
-        // console.debug('refreshing navbar', navBarState)
+
         if (__IS_IOS__ && lineupId) {
             // if (!navBarState.lineupName) return
 

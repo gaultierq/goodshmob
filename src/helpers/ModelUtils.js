@@ -83,11 +83,11 @@ function createFlatObject(source): Base {
     type = source.type;
 
     if (!type) {
-        //console.error(formatMsg("expecting type", type, source));
+
         return null;
     }
 
-    //console.debug(`creating object for type=${type}`);
+
 
     if (!type.endsWith("s")) thrown(`expecting plural`, type, source);
 
@@ -294,12 +294,12 @@ export class Merge<T, K> {
             result.reverse();
         }
 
-        //console.log(`merging ${JSON.stringify(this.mergeMe)} into ${JSON.stringify(this.mergeInto)}`);
+
         //(start, end)
         let segment = this.getSegment();
         if (segment) {
             //this log is useless as it fires when the source and target are the same
-            // console.debug(`merge: segment=${JSON.stringify(segment)}`);
+
         }
 
 

@@ -1,5 +1,8 @@
 //@flow
 
+import {GLoggerLevel} from "../../flow-typed/goodshmob"
+import type {GLogger, GLoggerConfig, LogObj} from "../../flow-typed/goodshmob"
+
 export const logFormat = (level: GLoggerLevel) => {
     if (__IS_ANDROID__) return null
     switch (level) {
@@ -11,54 +14,101 @@ export const logFormat = (level: GLoggerLevel) => {
         default: return null
     }
 }
+const levels = ['log', 'debug', 'info', 'warn', 'error'];
 
 export const logFilter = conf => (level, group) => {
     let confThreshold: GLoggerLevel
     if (conf && (confThreshold = conf[group])) {
-        //return false <=> keep
-        switch (level) {
-            case 'error': if (confThreshold === 'error') return false
-            case 'warn': if (confThreshold === 'warn') return false
-            case 'info': if (confThreshold === 'info') return false
-            case 'debug': if (confThreshold === 'debug') return false
-            case 'log': if (confThreshold === 'log') return false
-        }
-        return true
+        return levels.indexOf(level) < levels.indexOf(confThreshold)
     }
     return false
 }
-const levels = ['log', 'debug', 'info', 'warn', 'error'];
 
-export function createLogger(parent: Logger, conf: GLoggerConfig): GLogger {
 
-    const result: GLogger = {
-        createLogger: function(conf: GLoggerConfig | string) {
-            if (typeof conf === 'string') {
-                conf = {group: conf}
-            }
-            return createLogger(this, conf)
+
+class Printer implements GLogger {
+
+
+    doLog(log: LogObj) {
+        let {args, level, formats, groups} = log
+
+        let message = _.first(args)
+        if (_.isString(message)) {
+            args = _.tail(args)
         }
+        else {
+            message = ''
+        }
+
+        let group = _.first(groups)
+        if (group) {
+            message = `${group} > ${message}`
+        }
+
+
+        let formatString
+        if (!_.isEmpty(formats)) {
+            message = `%c ${message}`
+            formatString = _.first(formats) //formats.join(";")
+            args.unshift(formatString)
+        }
+        console[level](message, ...args)
     }
 
-    levels.forEach(level => {
-        result[level] = (msg: string, ...args: any) => {
-            let {group, groupName, format, filter} = conf
-            if (filter && filter(level, group)) {
-                return
-            }
+    createLogger(c: GLoggerConfig | string) {
+        throw "unexpected"
+    }
 
-            const prefix = groupName !== undefined ? groupName : group + ' >';
-            let message = `${prefix} ${msg}`
-            if (format) {
-                let styles = format(level)
-                if (styles) {
-                    message = `%c ${message}`
-                    args.unshift(styles)
-                }
+}
 
+
+class GLoggerImplem implements GLogger {
+
+    parent: GLogger
+    conf: GLoggerConfig
+
+    constructor(options: {parent: GLogger, conf: GLoggerConfig}) {
+        let {parent, conf} = options
+        this.parent = parent
+        this.conf = conf
+
+        //init
+        levels.forEach(level => {
+            this[level] = (message, ...args) => {
+
+                this.doLog({
+                    args: [message, ...args],
+                    level,
+                    formats: [],
+                    groups: [],
+                })
             }
-            parent[level].call(parent, message, ...args)
-        }
-    })
-    return result
+        })
+    }
+
+    //bubble up
+    doLog(log: LogObj) {
+        let {level} = log
+        //check if filtered
+        let {group, filter, format} = this.conf
+        if (filter && filter(level, group)) return
+
+        let f = format && format(level)
+        if (f) log.formats.push(f)
+        log.groups.push(group)
+
+
+        this.parent.doLog(log)
+    }
+
+    createLogger(c: GLoggerConfig | string) {
+        const cfg = typeof c === 'string' ? {...this.conf, group: c} : {...this.conf, ...c}
+        return new GLoggerImplem({parent: this, conf: cfg})
+    }
+}
+
+//use for init only
+export function createLogger(conf: GLoggerConfig): GLogger {
+
+    return new GLoggerImplem({parent: new Printer(), conf})
 }

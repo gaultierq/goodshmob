@@ -73,9 +73,9 @@ export function initGlobal() {
         }
     }
 
-    global.rootlogger = createLogger(global.console, {
+    global.rootlogger = createLogger({
         group: 'root',
-        groupName: '',
+        //groupName: '',
         format: logFormat,
         filter: logFilter(logConfig)
     })

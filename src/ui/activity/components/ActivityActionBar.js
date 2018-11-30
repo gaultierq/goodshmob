@@ -276,7 +276,7 @@ export default class ActivityActionBar extends React.Component<Props, State> {
                 delayMs: delayMs
             }
         )).then(pendingId => {
-            //console.info(`saving ${saving.id} unsaved`)
+
 
             _Messenger.sendMessage(
                 //MagicString
@@ -353,9 +353,9 @@ export default class ActivityActionBar extends React.Component<Props, State> {
     //         [
     //             {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
     //             {text: i18n.t("actions.ok"), onPress: () => {
-    //                 //console.log('OK Pressed');
+    //
     //                 this.props.dispatch(unsave(saving.id, saving.target.id)).then(() => {
-    //                     //console.info(`saving ${saving.id} unsaved`)
+    //
     //                     Snackbar.show({title: i18n.t("activity_action_bar.goodsh_deleted")});
     //                 });
     //             }
@@ -467,7 +467,7 @@ export function unsaveOnce(saving: Saving, dispatch: *) {
                     const delayMs = 4000;
 
                     dispatch(doUnsave(saving.pending, saving.id, lineupId, delayMs)).then((pendingId) => {
-                        //console.info(`saving ${saving.id} unsaved`)
+
                         _Messenger.sendMessage(
                             i18n.t("activity_action_bar.goodsh_deleted"),
                             {
