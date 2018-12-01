@@ -537,7 +537,7 @@ export function mergeItemsAndPendings2<T>(
 let lineupId = props => props.lineupId || _.get(props, 'lineup.id')
 let userId = props => props.userId || _.get(props, 'user.id')
 
-export const LINEUP_SECLECTOR = createSelector(
+export const LINEUP_SELECTOR = createSelector(
     [
         (state, props) => props.lineup,
         (state, props) => _.get(state, `data.lists.${lineupId(props)}`),
@@ -583,7 +583,7 @@ export const USER_SECLECTOR = createSelector(
 
 export const LINEUP_AND_SAVING_SELECTOR = createSelector(
     [
-        LINEUP_SECLECTOR,
+        LINEUP_SELECTOR,
         (state, props) => _.filter(state.pending[SAVE_ITEM], pending => pending.payload.lineupId === lineupId(props)),
         (state, props) => _.filter(state.pending[UNSAVE], pending => pending.payload.lineupId === lineupId(props)),
         state => state.data

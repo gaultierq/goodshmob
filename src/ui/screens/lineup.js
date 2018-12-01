@@ -4,7 +4,7 @@ import React from 'react'
 import {Image, ImageBackground, Keyboard, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
-import {Avatar, getNavButtonForAction, ListColumnsSelector, TRANSPARENT_SPACER} from "../UIComponents"
+import {getNavButtonForAction, ListColumnsSelector, TRANSPARENT_SPACER} from "../UIComponents"
 import * as Api from "../../managers/Api"
 import Feed from "../components/feed"
 import type {Id, Lineup, RNNNavigator, Saving} from "../../types"
@@ -23,11 +23,7 @@ import {createSelector} from "reselect"
 import FeedSeparator from "../activity/components/FeedSeparator"
 import {CachedImage} from 'react-native-cached-image'
 import GTouchable from "../GTouchable"
-import {Col, Grid, Row} from "react-native-easy-grid"
-import GButton from "../components/GButton"
-import {LINEUP_PADDING} from "../UIStyles"
-import {fullName2} from "../../helpers/StringUtils"
-import {SFP_TEXT_BOLD, SFP_TEXT_REGULAR} from "../fonts"
+import {LineupHeader} from "../lineup/LineupHeader"
 
 type Props = {
     lineupId: string,
@@ -125,16 +121,16 @@ class LineupScreen extends Screen<Props, State> {
 
     getButtons(actions) {
         let more = _.sortBy(actions, a => a.priority)
-        let _p = 0
-        const mains = _.remove(actions, a => {
-            if (a.priority <= _p) {
-                _p = a.priority
-                return true
-            }
-            return false
-        })
+        // let _p = 0
+        // const mains = _.remove(actions, a => {
+        //     if (a.priority <= _p) {
+        //         _p = a.priority
+        //         return true
+        //     }
+        //     return false
+        // })
 
-        return {mains, more}
+        return {mains: [], more}
     }
 
 // FIXME: terrible hack: watch store, refresh accordingly
@@ -185,7 +181,8 @@ class LineupScreen extends Screen<Props, State> {
             <View style={styles.container}>
 
 
-                {this.trucEnHaut(lineup)}
+                <LineupHeader lineup={lineup} navigator={this.props.navigator} />
+
                 <FeedSeparator/>
 
                 <ListColumnsSelector size={30}
@@ -207,86 +204,6 @@ class LineupScreen extends Screen<Props, State> {
             </View>
         );
     }
-
-    trucEnHaut(lineup: Lineup) {
-        const avatarContainerSize = LINEUP_PADDING * 7
-        const user = lineup.user
-        const savingsCount = _.get(lineup, 'meta.savingsCount')
-        const followersCount = _.get(lineup, 'meta.followersCount')
-
-        const styles = StyleSheet.create({
-            counters: {
-                fontFamily: SFP_TEXT_BOLD,
-                fontSize: 22,
-                color: Colors.black,
-            },
-            counters_names: {
-                fontFamily: SFP_TEXT_REGULAR,
-                fontSize: 18,
-                color: Colors.greyish,
-            },
-            button: {
-                color: Colors.green,
-                // backgroundColor: 'red',
-                fontFamily: SFP_TEXT_BOLD,
-                fontSize: 20,
-
-                borderWidth: 2,
-                borderColor: Colors.green,
-                borderRadius: 20,
-                alignItems: 'center',
-                justifyContent: 'center',
-                textAlign: 'center',
-                // margin: 20,
-            },
-            userName: {
-                alignItems: 'center',
-                fontFamily: SFP_TEXT_BOLD,
-                color: Colors.greyishBrown,
-                fontSize: 15,
-            }
-
-        })
-
-        return (
-            <View style={{flexDirection: 'row', margin: LINEUP_PADDING}}>
-                <View style={{
-                    alignItems: 'center',
-                    marginRight: LINEUP_PADDING
-                }}>
-                    <Avatar style={{alignItems: 'center',}} user={user}
-                            size={avatarContainerSize}/>
-                    <Text style={[{marginTop: 4}, styles.userName]}>{fullName2(user)}</Text>
-                </View>
-
-                <View style={{
-                    flex: 1,
-                    // backgroundColor: 'red',
-
-                }}>
-                    <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-around'}}>
-                        <View style={{alignItems: 'center',}}>
-                            <Text style={[styles.counters]}>{`${savingsCount}`}</Text>
-                            <Text style={[styles.counters_names]}>{`éléments`}</Text>
-                        </View>
-                        <View style={{alignItems: 'center',}}>
-                            <Text style={[styles.counters]}>{`${followersCount}`}</Text>
-                            <Text style={[styles.counters_names]}>{`abonnés`}</Text>
-                        </View>
-
-
-                    </View>
-                    <View style={{
-                        // backgroundColor: 'red',
-                        flex:1, flexDirection:'row', alignItems: 'flex-start', justifyContent: 'flex-start', }}>
-                        <Text onPress={()=>alert('t')} style={[{padding: 8, flex:1}, styles.button]}>Suivre</Text>
-                    </View>
-
-                </View>
-            </View>
-        )
-    }
-
     getFetchSrc(lineup: Lineup) {
         let fetchSrc
         if (lineup && lineup.savings) {

@@ -7,7 +7,7 @@ import {SFP_TEXT_MEDIUM} from "../fonts"
 import {Colors} from "../colors"
 import {Avatar} from "../UIComponents"
 import {createSelector} from "reselect"
-import {LINEUP_SECLECTOR} from "../../helpers/ModelUtils"
+import {LINEUP_SELECTOR} from "../../helpers/ModelUtils"
 import {connect} from "react-redux"
 import {NAV_BACKGROUND_COLOR} from "../UIStyles"
 
@@ -34,7 +34,7 @@ const getNavBarState = (lineup, pending) => {
 }
 export const selector = createSelector(
     [
-        LINEUP_SECLECTOR,
+        LINEUP_SELECTOR,
         state => state.pending
     ],
     (lineup, pending) => getNavBarState(lineup, pending)

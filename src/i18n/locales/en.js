@@ -438,6 +438,7 @@ export default {
         ask_friend: "Ask my network",
         logout: "Logout",
         follow: "Follow",
+        followed: "Followed",
         unfollow: "Unfollow",
         terms: "Terms and personal data",
         copy_link: "Copy link",

@@ -9,9 +9,11 @@ const GLineupActions = []
 export class GLineupAction {
 
     name: string
+    priority: number
 
     constructor(name: string, priority: number = 0) {
         this.name = name
+        this.priority = priority
         GLineupActions.push(this)
     }
 
