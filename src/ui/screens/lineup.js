@@ -4,7 +4,7 @@ import React from 'react'
 import {Image, ImageBackground, Keyboard, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
-import {getNavButtonForAction, ListColumnsSelector, TRANSPARENT_SPACER} from "../UIComponents"
+import {Avatar, getNavButtonForAction, ListColumnsSelector, TRANSPARENT_SPACER} from "../UIComponents"
 import * as Api from "../../managers/Api"
 import Feed from "../components/feed"
 import type {Id, Lineup, RNNNavigator, Saving} from "../../types"
@@ -15,7 +15,6 @@ import {Colors} from "../colors"
 import Screen from "./../components/Screen"
 import * as UI from "../UIStyles"
 import {STYLES} from "../UIStyles"
-import {fullName} from "../../helpers/StringUtils"
 import {FETCH_LINEUP, FETCH_SAVINGS, fetchLineup, followLineupPending, unfollowLineupPending,} from "../lineup/actions"
 import {UNSAVE} from "../activity/actionTypes"
 import {GLineupAction, LineupRights} from "../lineupRights"
@@ -24,6 +23,11 @@ import {createSelector} from "reselect"
 import FeedSeparator from "../activity/components/FeedSeparator"
 import {CachedImage} from 'react-native-cached-image'
 import GTouchable from "../GTouchable"
+import {Col, Grid, Row} from "react-native-easy-grid"
+import GButton from "../components/GButton"
+import {LINEUP_PADDING} from "../UIStyles"
+import {fullName2} from "../../helpers/StringUtils"
+import {SFP_TEXT_BOLD, SFP_TEXT_REGULAR} from "../fonts"
 
 type Props = {
     lineupId: string,
@@ -96,22 +100,10 @@ class LineupScreen extends Screen<Props, State> {
     }
 
     static refreshNavBar(navigator: RNNNavigator, lineupId: ?Id, lineup: ?Lineup) {
-        //FIXME: rm platform specific code, https://github.com/wix/react-native-navigation/issues/1871
 
-        if (__IS_IOS__ && lineupId) {
-            // if (!navBarState.lineupName) return
-
-        }
-        else if (__IS_ANDROID__ && lineup) {
-            const user = lineup.user
-            let subtitle = () => {
-                //FIXME: MagicString
-                return user && "par " + fullName(user)
-            };
+        if (lineup) {
             navigator.setTitle({title: lineup.name});
-            navigator.setSubTitle({subtitle: subtitle()});
         }
-
     }
 
     //TODO: improve code
@@ -186,31 +178,23 @@ class LineupScreen extends Screen<Props, State> {
         }
 
 
-        let fetchSrc;
-        if (lineup && lineup.savings) {
-            fetchSrc = {
-                callFactory:()=>actions.fetchSavings(this.props.lineupId),
-                action:FETCH_SAVINGS,
-                options: {listId: this.props.lineupId}
-            };
-        }
-        else {
-            fetchSrc = {
-                callFactory:() => fetchLineup(this.props.lineupId),
-                action: FETCH_LINEUP,
-                options: {listId: this.props.lineupId}
-            };
-        }
+        let fetchSrc = this.getFetchSrc(lineup)
 
         const layout = this.calcLayout()
         return (
             <View style={styles.container}>
-                <ListColumnsSelector size={30} onTabPressed={index=>this.setState({renderType: index === 0 ? 'grid' : 'stream'})}/>
 
-                <FeedSeparator style={{marginBottom: SPACER}}/>
+
+                {this.trucEnHaut(lineup)}
+                <FeedSeparator/>
+
+                <ListColumnsSelector size={30}
+                                     onTabPressed={index => this.setState({renderType: index === 0 ? 'grid' : 'stream'})}/>
+
+                <FeedSeparator/>
 
                 <Feed
-                    key={"lineup-" + this.state.renderType }
+                    key={"lineup-" + this.state.renderType}
                     data={savings}
                     renderItem={this.state.renderType === 'grid' ? this.renderItemGrid.bind(this) : this.renderItemStream.bind(this)}
                     fetchSrc={fetchSrc}
@@ -218,10 +202,108 @@ class LineupScreen extends Screen<Props, State> {
                     ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t("empty.lineup")}</Text>}
                     numColumns={layout.numColumns}
                     ItemSeparatorComponent={TRANSPARENT_SPACER(SPACER)}
-                    style={{backgroundColor: Colors.white}}
+                    style={{flex: 1, backgroundColor: Colors.white}}
                 />
             </View>
         );
+    }
+
+    trucEnHaut(lineup: Lineup) {
+        const avatarContainerSize = LINEUP_PADDING * 7
+        const user = lineup.user
+        const savingsCount = _.get(lineup, 'meta.savingsCount')
+        const followersCount = _.get(lineup, 'meta.followersCount')
+
+        const styles = StyleSheet.create({
+            counters: {
+                fontFamily: SFP_TEXT_BOLD,
+                fontSize: 22,
+                color: Colors.black,
+            },
+            counters_names: {
+                fontFamily: SFP_TEXT_REGULAR,
+                fontSize: 18,
+                color: Colors.greyish,
+            },
+            button: {
+                color: Colors.green,
+                // backgroundColor: 'red',
+                fontFamily: SFP_TEXT_BOLD,
+                fontSize: 20,
+
+                borderWidth: 2,
+                borderColor: Colors.green,
+                borderRadius: 20,
+                alignItems: 'center',
+                justifyContent: 'center',
+                textAlign: 'center',
+                // margin: 20,
+            },
+            userName: {
+                alignItems: 'center',
+                fontFamily: SFP_TEXT_BOLD,
+                color: Colors.greyishBrown,
+                fontSize: 15,
+            }
+
+        })
+
+        return (
+            <View style={{flexDirection: 'row', margin: LINEUP_PADDING}}>
+                <View style={{
+                    alignItems: 'center',
+                    marginRight: LINEUP_PADDING
+                }}>
+                    <Avatar style={{alignItems: 'center',}} user={user}
+                            size={avatarContainerSize}/>
+                    <Text style={[{marginTop: 4}, styles.userName]}>{fullName2(user)}</Text>
+                </View>
+
+                <View style={{
+                    flex: 1,
+                    // backgroundColor: 'red',
+
+                }}>
+                    <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-around'}}>
+                        <View style={{alignItems: 'center',}}>
+                            <Text style={[styles.counters]}>{`${savingsCount}`}</Text>
+                            <Text style={[styles.counters_names]}>{`éléments`}</Text>
+                        </View>
+                        <View style={{alignItems: 'center',}}>
+                            <Text style={[styles.counters]}>{`${followersCount}`}</Text>
+                            <Text style={[styles.counters_names]}>{`abonnés`}</Text>
+                        </View>
+
+
+                    </View>
+                    <View style={{
+                        // backgroundColor: 'red',
+                        flex:1, flexDirection:'row', alignItems: 'flex-start', justifyContent: 'flex-start', }}>
+                        <Text onPress={()=>alert('t')} style={[{padding: 8, flex:1}, styles.button]}>Suivre</Text>
+                    </View>
+
+                </View>
+            </View>
+        )
+    }
+
+    getFetchSrc(lineup: Lineup) {
+        let fetchSrc
+        if (lineup && lineup.savings) {
+            fetchSrc = {
+                callFactory: () => actions.fetchSavings(this.props.lineupId),
+                action: FETCH_SAVINGS,
+                options: {listId: this.props.lineupId}
+            }
+        }
+        else {
+            fetchSrc = {
+                callFactory: () => fetchLineup(this.props.lineupId),
+                action: FETCH_LINEUP,
+                options: {listId: this.props.lineupId}
+            }
+        }
+        return fetchSrc
     }
 
     calcLayout() {
@@ -254,6 +336,8 @@ class LineupScreen extends Screen<Props, State> {
             <GTouchable style={{
                 marginLeft: index > 0 ? SPACER / 2 : 0,
                 marginRight: index < layout.numColumns ? SPACER / 2 : 0,
+                borderWidth: StyleSheet.hairlineWidth,
+                borderColor: Colors.greying,
 
             }} onPress={() => seeActivityDetails(this.props.navigator, item)}>
                 <CachedImage
@@ -324,7 +408,7 @@ export {reducer, screen, actions};
 
 const styles = StyleSheet.create({
     container: {
-        // flex: 1,
+        flex: 1,
         backgroundColor: Colors.white,
     },
     description: {
