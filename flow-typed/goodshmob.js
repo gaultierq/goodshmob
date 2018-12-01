@@ -4,6 +4,7 @@ declare var __WITH_NOTIFICATIONS__: boolean
 declare var __IS_IOS__: boolean
 declare var __IS_ANDROID__: boolean
 declare var __APP__: GoodshApp
+declare var rootlogger: GLogger;
 
 export type Logger = {
     log: (m: string, ...args) => void,
@@ -26,7 +27,7 @@ export type GLogger = Logger & {
     doLog: (log: LogObj) => void,
 }
 
-declare var rootlogger: GLogger;
+
 
 export type GLoggerLevel = 'log'| 'debug'| 'info'| 'warn'| 'error'
 export type GLoggerGroup = string

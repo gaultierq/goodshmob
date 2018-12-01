@@ -4,7 +4,7 @@ import * as __ from "lodash"
 import _i18n from './i18n/i18n'
 import Config from 'react-native-config'
 import {Dimensions, Platform} from 'react-native'
-import {createLogger, logFilter, logFormat} from "./helpers/LogUtil"
+import NiceLogger from "./helpers/NiceLogger"
 
 
 const ALL_KEYS = [
@@ -31,6 +31,41 @@ const ALL_KEYS = [
     'ENABLE_PERF_OPTIM',
     'API_PAGINATION_PER_PAGE',
 ];
+
+let makeNiceLogConf = function () {
+    let thresholds = {}
+    let lc = Config.LOG_CONFIG
+    if (lc) {
+        lc = lc.replace(new RegExp("'", 'g'), '"')
+        try {
+            thresholds = JSON.parse(lc)
+        }
+        catch (e) {
+            console.error(e)
+        }
+    }
+
+    const logFormat = (level: GLoggerLevel) => {
+        if (__IS_ANDROID__) return null
+        switch (level) {
+            case "log":
+                return 'color: #aaaaaa'
+            case "debug":
+                return 'color: #aaaaaa'
+            case "info":
+                return 'color: #0000ff'
+            case "warn":
+                return 'color: #ffa500'
+            case "error":
+                return 'color: #ff0000'
+            default:
+                return null
+        }
+    }
+
+    const conf = {thresholds, formats: {root: logFormat}}
+    return conf
+}
 
 export function initGlobal() {
     global._ = __;
@@ -63,10 +98,10 @@ export function initGlobal() {
         }
     }
 
-    global.rootlogger = createLogger({
-        group: 'root',
-        format: logFormat,
-    })
+
+    const conf = makeNiceLogConf()
+    global.rootlogger = NiceLogger(conf)
+
 }
 
 let confToGlobal = function (config, throwIfAlreadyDefined) {
