@@ -443,6 +443,7 @@ const htmlStyles = StyleSheet.create({
         fontFamily: SFP_TEXT_BOLD,
         fontSize: 22,
         color: Colors.darkerBlack,
+        textDecorationLine: 'underline',
     },
 })
 
