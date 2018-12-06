@@ -64,7 +64,7 @@ export class Avatar extends Component<Props, State> {
         if (!user) return null
 
         let person = {...user}
-        if (person.image && person.image.match(Avatar.FACEBOOK_REGEX)) {
+        if (this.props.size > 75 && person.image && person.image.match(Avatar.FACEBOOK_REGEX)) {
             person.image += "?type=large"
         }
 
