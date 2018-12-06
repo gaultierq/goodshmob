@@ -263,7 +263,6 @@ class LineupScreen extends Screen<Props, State> {
                         width: layout.cellWidth,
                         height: layout.cellHeight,
                         backgroundColor: Colors.white,
-                        backgroundColor: 'blue',
                         alignSelf: 'center',
                         alignItems: 'center',
                     }
