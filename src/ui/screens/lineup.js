@@ -24,6 +24,7 @@ import FeedSeparator from "../activity/components/FeedSeparator"
 import {CachedImage} from 'react-native-cached-image'
 import GTouchable from "../GTouchable"
 import {LineupHeader} from "../lineup/LineupHeader"
+import {SFP_TEXT_MEDIUM} from "../fonts"
 
 type Props = {
     lineupId: string,
@@ -179,17 +180,6 @@ class LineupScreen extends Screen<Props, State> {
         const layout = this.calcLayout()
         return (
             <View style={styles.container}>
-
-
-                <LineupHeader lineup={lineup} navigator={this.props.navigator} />
-
-                <FeedSeparator/>
-
-                <ListColumnsSelector size={30}
-                                     onTabPressed={index => this.setState({renderType: index === 0 ? 'grid' : 'stream'})}/>
-
-                <FeedSeparator/>
-
                 <Feed
                     key={"lineup-" + this.state.renderType}
                     data={savings}
@@ -200,6 +190,16 @@ class LineupScreen extends Screen<Props, State> {
                     numColumns={layout.numColumns}
                     ItemSeparatorComponent={TRANSPARENT_SPACER(SPACER)}
                     style={{flex: 1, backgroundColor: Colors.white}}
+                    ListHeaderComponent={
+                        (
+                            <View>
+                                <LineupHeader lineup={lineup} navigator={this.props.navigator} />
+                                <FeedSeparator/>
+                                <ListColumnsSelector size={30}
+                                                     onTabPressed={index => this.setState({renderType: index === 0 ? 'grid' : 'stream'})}/>
+                                <FeedSeparator/>
+                            </View>
+                        )}
                 />
             </View>
         );
