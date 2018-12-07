@@ -20,7 +20,7 @@ export default {
         search: {
             placeholder: "Rechercher",
             empty: "Pas de résultat",
-            empty_add: "Nous n'avons rien trouvé ! <br><a href='%{link}'>Ajoutez</a> vos premiers <br>coups de cœur !",
+            empty_add: "Nous n'avons rien trouvé ! <br><a href='%{link}'>Ajoute</a> tes premiers <br>coups de cœur !",
         },
         filter: {
             empty: "Pas de résultat",
