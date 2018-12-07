@@ -7,7 +7,7 @@ class _GeoLocation implements GeoLocation {
 
     getPosition(): Promise<Position> {
         return this.getPositionAndSaveIt().then(position => position.coords, err => {throw err});
-        // console.log(`current position=${JSON.stringify(this.currentPosition)}`);
+
         // return this.currentPosition && this.currentPosition.coords;
     }
 

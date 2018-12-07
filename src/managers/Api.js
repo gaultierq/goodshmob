@@ -24,7 +24,6 @@ export const API_DATA_FAILURE = 'API_DATA_FAILURE';
 export const TRUNCATE_DATA = 'TRUNCATE_DATA';
 
 
-const CURRENT_API_VERSION = 'v2.0.0';
 export const API_END_POINT = Config.SERVER_URL;
 
 
@@ -33,6 +32,9 @@ export const TRIGGER_USER_INDIRECT_ACTION = 3;
 export const TRIGGER_SYSTEM = 5;
 
 type CallFactory = (payload: any) => Call;
+
+
+const logger = rootlogger.createLogger('api')
 
 class Api {
 
@@ -61,7 +63,7 @@ class Api {
     }
 
     handleConnection = connected => {
-        console.log('Api: ' + (connected ? 'online' : 'offline'));
+        logger.log('Api: ' + (connected ? 'online' : 'offline'));
         // this.isConnected = connected;
         this.store.dispatch({type: CONNECTIVITY_CHANGE, connected});
 
@@ -89,14 +91,14 @@ class Api {
     execPendings() {
 
         if (!this.isConnected()) {
-            console.debug('Api: exec pendings: no connection');
+            logger.debug('Api: exec pendings: no connection');
             return;
         }
 
         let pending = this.store.getState().pending;
         if (!pending) return;
         if (this.pendingAction) {
-            console.debug('already executing pending action');
+            logger.debug('already executing pending action');
             return;
         }
         let pendings = _.flatten(_.values(pending));
@@ -106,16 +108,16 @@ class Api {
         let pend = _.head(pendings);
 
         if (pend) {
-            console.debug('Api: exec pendings');
+            logger.debug('Api: exec pendings');
             let delay = pend.dueAt - Date.now();
             if (delay > 0) {
-                console.info(`execPendings: pending action found but not dued yet (schedueuled in ${delay} ms)`);
+                logger.info(`execPendings: pending action found but not dued yet (schedueuled in ${delay} ms)`);
                 setTimeout(()=>this.execPendings(), delay);
                 return;
             }
             this.pendingAction = pend;
             let call;
-            console.info(`execPendings: found pending action:${JSON.stringify(this.pendingAction)}`);
+            logger.info(`execPendings: found pending action:${JSON.stringify(this.pendingAction)}`);
 
             let name = this.pendingAction.pendingActionType;
 
@@ -126,11 +128,11 @@ class Api {
                     call = factory(this.pendingAction.payload);
                 }
                 else {
-                    console.warn(`factory not found for ${action}`);
+                    logger.warn(`factory not found for ${action}`);
                 }
             }
             else {
-                console.warn(`action not found for ${name}`);
+                logger.warn(`action not found for ${name}`);
             }
 
             // switch (name) {
@@ -163,17 +165,17 @@ class Api {
                 let options =  this.pendingAction.options;
                 this.store.dispatch(call.createActionDispatchee(ApiAction.create(name), options))
                     .then(() => finish(), err => {
-                        console.warn(err);
+                        logger.warn(err);
                         finish();
                     });
             }
             else {
-                console.warn("impossible to process pending action");
+                logger.warn("impossible to process pending action");
                 finish();
             }
         }
         else {
-            //console.debug("api: no pending action found");
+
         }
     }
 
@@ -221,13 +223,13 @@ class Api {
                     headers: this.headers()
                 }, body ? {body: JSON.stringify(body)} : null);
 
-                console.debug(`%c sending request url=${url}, options: ${JSON.stringify(options)}`, 'background: #FCFCFC; color: #E36995');
+                logger.debug(`%c sending request url=${url}, options: ${JSON.stringify(options)}`, 'background: #FCFCFC; color: #E36995');
                 fetch(url.toString(), options)
                     .catch(err=> {
                         reject(err);
                     })
                     .then(resp=> {
-                        console.log(resp)
+                        logger.log('response', resp)
                         setTimeout(()=> {
                             if (instance.auth() === auth) {
                                 resolve(resp);
@@ -336,7 +338,7 @@ export class Call {
                             return resp;
                         },
                         err => {
-                            // console.warn("test::1")
+
                             throw err
                         }
                     )
@@ -355,7 +357,7 @@ export class Call {
                         },
                         //useless
                         err => {
-                            // console.warn("test::2")
+
                             throw err
                         }
                     )
@@ -381,12 +383,12 @@ export class Call {
                         }
                     )
                     .then(response => {
-                            // console.warn("test::6")
+
                             resolve(response);
                         },
                         //1., 2.
                         error => {
-                            // console.warn("test::3")
+
                             if (trigger <= 2) {
                                 sendMessage(
                                     __IS_LOCAL__ ?
@@ -457,7 +459,7 @@ export class Call {
                     this.debugfailConfig = new DebugFailConfig(conf);
                 }
                 catch (e) {
-                    console.error(e);
+                    logger.error(e);
                 }
             }
         }
@@ -534,7 +536,7 @@ class FakeError extends ExtendableError {
 
 export function init(store) {
     instance.init(store);
-    console.info("Api initialized");
+    logger.info("Api initialized");
 }
 
 //enable the api to create call by itself
@@ -576,14 +578,14 @@ export function safeExecBlock(block, stateName: string) {
                 setRequestState('ok'),
                 err => {
                     setRequestState('ko')().then(()=> {
-                        console.warn(err);
+                        logger.warn(err);
                     });
                     throw err;
                 }
             );
     }
     else {
-        console.debug('exec block skipped');
+        logger.debug('exec block skipped');
         return new Promise();
     }
 }
@@ -632,7 +634,7 @@ export const reduceList2 = (state: STATE<SHELL>, action: REDUX_ACTION<SHELL>, ap
 
             let {mergeOptions = {}} = action.options
             if (mergeOptions.drop) {
-                console.debug("droping data");
+                logger.debug("droping data");
                 state = {...state, list: []}
             }
 
@@ -649,7 +651,7 @@ export const reduceList2 = (state: STATE<SHELL>, action: REDUX_ACTION<SHELL>, ap
                     .merge();
             }
             catch (e) {
-                console.error(e)
+                logger.error(e)
                 throw e
             }
 

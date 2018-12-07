@@ -435,6 +435,7 @@ export default {
         ask_friend: "Poser une question à mon réseau",
         logout: "Déconnexion",
         follow: "Suivre",
+        followed: "Suivie",
         unfollow: "Ne plus suivre",
         terms: "Conditions d'utilisation",
         copy_link: "Copier le lien",

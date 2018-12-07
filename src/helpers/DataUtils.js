@@ -113,7 +113,7 @@ export function doDataMergeInState(state, path, newList, options?: MergeOpts) {
     // let merged = mergeLists(currentList, newItems, options);
     //
     // if (merged === currentList) return state;
-    // console.log("doDataMergeInState: update");
+
     // return dotprop.set(state, path, merged);
 
 }

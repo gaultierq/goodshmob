@@ -15,7 +15,6 @@ import {Colors} from "../colors"
 import Screen from "./../components/Screen"
 import * as UI from "../UIStyles"
 import {STYLES} from "../UIStyles"
-import {fullName} from "../../helpers/StringUtils"
 import {FETCH_LINEUP, FETCH_SAVINGS, fetchLineup, followLineupPending, unfollowLineupPending,} from "../lineup/actions"
 import {UNSAVE} from "../activity/actionTypes"
 import {GLineupAction, LineupRights} from "../lineupRights"
@@ -24,6 +23,8 @@ import {createSelector} from "reselect"
 import FeedSeparator from "../activity/components/FeedSeparator"
 import {CachedImage} from 'react-native-cached-image'
 import GTouchable from "../GTouchable"
+import {LineupHeader} from "../lineup/LineupHeader"
+import {SFP_TEXT_MEDIUM} from "../fonts"
 
 type Props = {
     lineupId: string,
@@ -96,22 +97,10 @@ class LineupScreen extends Screen<Props, State> {
     }
 
     static refreshNavBar(navigator: RNNNavigator, lineupId: ?Id, lineup: ?Lineup) {
-        //FIXME: rm platform specific code, https://github.com/wix/react-native-navigation/issues/1871
-        // console.debug('refreshing navbar', navBarState)
-        if (__IS_IOS__ && lineupId) {
-            // if (!navBarState.lineupName) return
 
-        }
-        else if (__IS_ANDROID__ && lineup) {
-            const user = lineup.user
-            let subtitle = () => {
-                //FIXME: MagicString
-                return user && "par " + fullName(user)
-            };
+        if (lineup) {
             navigator.setTitle({title: lineup.name});
-            navigator.setSubTitle({subtitle: subtitle()});
         }
-
     }
 
     //TODO: improve code
@@ -133,16 +122,16 @@ class LineupScreen extends Screen<Props, State> {
 
     getButtons(actions) {
         let more = _.sortBy(actions, a => a.priority)
-        let _p = 0
-        const mains = _.remove(actions, a => {
-            if (a.priority <= _p) {
-                _p = a.priority
-                return true
-            }
-            return false
-        })
+        // let _p = 0
+        // const mains = _.remove(actions, a => {
+        //     if (a.priority <= _p) {
+        //         _p = a.priority
+        //         return true
+        //     }
+        //     return false
+        // })
 
-        return {mains, more}
+        return {mains: [], more}
     }
 
 // FIXME: terrible hack: watch store, refresh accordingly
@@ -186,31 +175,13 @@ class LineupScreen extends Screen<Props, State> {
         }
 
 
-        let fetchSrc;
-        if (lineup && lineup.savings) {
-            fetchSrc = {
-                callFactory:()=>actions.fetchSavings(this.props.lineupId),
-                action:FETCH_SAVINGS,
-                options: {listId: this.props.lineupId}
-            };
-        }
-        else {
-            fetchSrc = {
-                callFactory:() => fetchLineup(this.props.lineupId),
-                action: FETCH_LINEUP,
-                options: {listId: this.props.lineupId}
-            };
-        }
+        let fetchSrc = this.getFetchSrc(lineup)
 
         const layout = this.calcLayout()
         return (
             <View style={styles.container}>
-                <ListColumnsSelector size={30} onTabPressed={index=>this.setState({renderType: index === 0 ? 'grid' : 'stream'})}/>
-
-                <FeedSeparator style={{marginBottom: SPACER}}/>
-
                 <Feed
-                    key={"lineup-" + this.state.renderType }
+                    key={"lineup-" + this.state.renderType}
                     data={savings}
                     renderItem={this.state.renderType === 'grid' ? this.renderItemGrid.bind(this) : this.renderItemStream.bind(this)}
                     fetchSrc={fetchSrc}
@@ -218,10 +189,38 @@ class LineupScreen extends Screen<Props, State> {
                     ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t("empty.lineup")}</Text>}
                     numColumns={layout.numColumns}
                     ItemSeparatorComponent={TRANSPARENT_SPACER(SPACER)}
-                    style={{backgroundColor: Colors.white}}
+                    style={{flex: 1, backgroundColor: Colors.white}}
+                    ListHeaderComponent={
+                        (
+                            <View>
+                                <LineupHeader lineup={lineup} navigator={this.props.navigator} />
+                                <FeedSeparator/>
+                                <ListColumnsSelector size={30}
+                                                     onTabPressed={index => this.setState({renderType: index === 0 ? 'grid' : 'stream'})}/>
+                                <FeedSeparator/>
+                            </View>
+                        )}
                 />
             </View>
         );
+    }
+    getFetchSrc(lineup: Lineup) {
+        let fetchSrc
+        if (lineup && lineup.savings) {
+            fetchSrc = {
+                callFactory: () => actions.fetchSavings(this.props.lineupId),
+                action: FETCH_SAVINGS,
+                options: {listId: this.props.lineupId}
+            }
+        }
+        else {
+            fetchSrc = {
+                callFactory: () => fetchLineup(this.props.lineupId),
+                action: FETCH_LINEUP,
+                options: {listId: this.props.lineupId}
+            }
+        }
+        return fetchSrc
     }
 
     calcLayout() {
@@ -254,6 +253,8 @@ class LineupScreen extends Screen<Props, State> {
             <GTouchable style={{
                 marginLeft: index > 0 ? SPACER / 2 : 0,
                 marginRight: index < layout.numColumns ? SPACER / 2 : 0,
+                borderWidth: StyleSheet.hairlineWidth,
+                borderColor: Colors.greying,
 
             }} onPress={() => seeActivityDetails(this.props.navigator, item)}>
                 <CachedImage
@@ -262,7 +263,6 @@ class LineupScreen extends Screen<Props, State> {
                         width: layout.cellWidth,
                         height: layout.cellHeight,
                         backgroundColor: Colors.white,
-                        backgroundColor: 'blue',
                         alignSelf: 'center',
                         alignItems: 'center',
                     }
@@ -324,7 +324,7 @@ export {reducer, screen, actions};
 
 const styles = StyleSheet.create({
     container: {
-        // flex: 1,
+        flex: 1,
         backgroundColor: Colors.white,
     },
     description: {

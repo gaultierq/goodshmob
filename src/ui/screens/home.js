@@ -140,7 +140,7 @@ export default class HomeScreen extends Screen<Props, State> {
     // }
 
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
-        //console.debug("home:onNavigatorEvent" , event);
+
 
         if (__IS_IOS__ && event.id === 'bottomTabReselected' && this.feed) {
             //__IS_IOS__ because of: scrollToIndex should be used in conjunction with getItemLayout or onScrollToIndexFailed

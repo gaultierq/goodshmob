@@ -47,6 +47,10 @@ export type List =  Base & {
     user: User,
 }
 
+export type LineupMeta = {
+
+}
+
 export type Lineup = List;
 
 export type Base = {

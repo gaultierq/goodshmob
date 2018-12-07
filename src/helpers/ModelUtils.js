@@ -83,11 +83,11 @@ function createFlatObject(source): Base {
     type = source.type;
 
     if (!type) {
-        //console.error(formatMsg("expecting type", type, source));
+
         return null;
     }
 
-    //console.debug(`creating object for type=${type}`);
+
 
     if (!type.endsWith("s")) thrown(`expecting plural`, type, source);
 
@@ -294,12 +294,12 @@ export class Merge<T, K> {
             result.reverse();
         }
 
-        //console.log(`merging ${JSON.stringify(this.mergeMe)} into ${JSON.stringify(this.mergeInto)}`);
+
         //(start, end)
         let segment = this.getSegment();
         if (segment) {
             //this log is useless as it fires when the source and target are the same
-            // console.debug(`merge: segment=${JSON.stringify(segment)}`);
+
         }
 
 
@@ -537,7 +537,7 @@ export function mergeItemsAndPendings2<T>(
 let lineupId = props => props.lineupId || _.get(props, 'lineup.id')
 let userId = props => props.userId || _.get(props, 'user.id')
 
-export const LINEUP_SECLECTOR = createSelector(
+export const LINEUP_SELECTOR = createSelector(
     [
         (state, props) => props.lineup,
         (state, props) => _.get(state, `data.lists.${lineupId(props)}`),
@@ -583,7 +583,7 @@ export const USER_SECLECTOR = createSelector(
 
 export const LINEUP_AND_SAVING_SELECTOR = createSelector(
     [
-        LINEUP_SECLECTOR,
+        LINEUP_SELECTOR,
         (state, props) => _.filter(state.pending[SAVE_ITEM], pending => pending.payload.lineupId === lineupId(props)),
         (state, props) => _.filter(state.pending[UNSAVE], pending => pending.payload.lineupId === lineupId(props)),
         state => state.data

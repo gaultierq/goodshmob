@@ -16,6 +16,7 @@ import AppShareButton from "../components/AppShareButton"
 import {LINEUP_PADDING, STYLES} from "../UIStyles"
 import {TRANSPARENT_SPACER} from "../UIComponents"
 import ActivityStatus from "../activity/components/ActivityStatus"
+import {Colors} from "../colors"
 
 type Props = {
     navigator: *,
@@ -43,14 +44,12 @@ export class InteractionScreen extends Screen<Props, State> {
         let {interaction} = this.props
         let list = interaction.list
 
-        logger.log('render')
-
         return (
 
             <View style={{flex: 1, width: '100%', height: '100%', backgroundColor: Colors.white}}>
 
                 <Feed
-                    initialNumToRender={10}
+                    initialNumToRender={5}
                     data={list}
                     renderItem={this.renderItem.bind(this)}
                     fetchSrc={{

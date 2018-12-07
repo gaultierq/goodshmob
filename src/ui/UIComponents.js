@@ -56,15 +56,18 @@ type State = {}
 
 export class Avatar extends Component<Props, State> {
 
+    static FACEBOOK_REGEX = /^https:\/\/graph\.facebook\.com\/[0-9]+\/picture$/
+
     render() {
 
         let {user, ...others} = this.props
         if (!user) return null
 
         let person = {...user}
-        if (user.provider === 'facebook' && user.uid && this.props.size > 75) {
+        if (this.props.size > 75 && person.image && person.image.match(Avatar.FACEBOOK_REGEX)) {
             person.image += "?type=large"
         }
+
 
         return (
             <GAvatar person={person} {...others} />
@@ -440,6 +443,7 @@ const htmlStyles = StyleSheet.create({
         fontFamily: SFP_TEXT_BOLD,
         fontSize: 22,
         color: Colors.darkerBlack,
+        textDecorationLine: 'underline',
     },
 })
 

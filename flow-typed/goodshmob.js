@@ -4,6 +4,7 @@ declare var __WITH_NOTIFICATIONS__: boolean
 declare var __IS_IOS__: boolean
 declare var __IS_ANDROID__: boolean
 declare var __APP__: GoodshApp
+declare var rootlogger: GLogger;
 
 export type Logger = {
     log: (m: string, ...args) => void,
@@ -12,22 +13,29 @@ export type Logger = {
     warn: (m: string, ...args) => void,
     error: (m: string, ...args) => void,
 }
-export type GLogger = Logger & {
-    createLogger: (conf: GLoggerConfig | string) => GLogger
+
+
+export type LogObj = {
+    args: Array<*>,
+    level: GLoggerLevel,
+    formats: Array<string>,
+    groups: Array<string>,
 }
 
-declare var rootlogger: GLogger;
+export type GLogger = Logger & {
+    createLogger: (conf: GLoggerConfig | string) => GLogger,
+    doLog: (log: LogObj) => void,
+}
+
+
 
 export type GLoggerLevel = 'log'| 'debug'| 'info'| 'warn'| 'error'
 export type GLoggerGroup = string
 export type GLoggerStyle = string
 
-type GLoggerConfig = {
+export type GLoggerConfig = {
     group: GLoggerGroup,
-    groupName?: string,
-    format?: GLoggerLevel => ?GLoggerStyle,
 
-    //you can filter your message, and all your children messages
-    //return true if you want NOT to display the log
-    filter?: (GLoggerLevel, GLoggerGroup) => boolean,
+    format?: GLoggerLevel => ?GLoggerStyle,
+    filter?: GLoggerLevel => boolean,
 }
