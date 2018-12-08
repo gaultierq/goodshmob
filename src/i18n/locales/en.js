@@ -28,7 +28,7 @@ export default {
             lineup_search: "Tap keywords for interesting lists to follow",
         },
         goodsh : {
-            title: "GoodshBox"
+            title: "Catch-all Box"
         },
         mine : {
             title: "My lists"

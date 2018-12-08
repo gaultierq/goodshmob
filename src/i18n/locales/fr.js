@@ -20,7 +20,7 @@ export default {
         search: {
             placeholder: "Rechercher",
             empty: "Pas de résultat",
-            empty_add: "Nous n'avons rien trouvé ! <br><a href='%{link}'>Ajoutez</a> vos premiers <br>coups de cœur !",
+            empty_add: "Nous n'avons rien trouvé ! <br><a href='%{link}'>Ajoute</a> tes premiers <br>coups de cœur !",
         },
         filter: {
             empty: "Pas de résultat",
@@ -452,7 +452,7 @@ export default {
     common: {
         empty_feed_generic: "Quand on aime on partage.\nCrée ton réseau de contacts.",
         api: {
-            generic_error: "Oups... Il y a quelquechose qui cloche."
+            generic_error: "Oups... Prolème de connexion."
         }
     },
     ask: {
