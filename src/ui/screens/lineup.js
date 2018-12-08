@@ -4,7 +4,13 @@ import React from 'react'
 import {Image, ImageBackground, Keyboard, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
-import {getNavButtonForAction, ListColumnsSelector, TRANSPARENT_SPACER} from "../UIComponents"
+import {
+    getNavButtonForAction,
+    InnerPlus,
+    ListColumnsSelector,
+    renderInnerPlus,
+    TRANSPARENT_SPACER
+} from "../UIComponents"
 import * as Api from "../../managers/Api"
 import Feed from "../components/feed"
 import type {Id, Lineup, RNNNavigator, Saving} from "../../types"
@@ -24,6 +30,11 @@ import FeedSeparator from "../activity/components/FeedSeparator"
 import {CachedImage} from 'react-native-cached-image'
 import GTouchable from "../GTouchable"
 import {LineupHeader} from "../lineup/LineupHeader"
+
+import {createDetailsLink} from "../activity/activityDetail"
+import {openLinkSafely} from "../UIStyles"
+import {createOpenModalLink} from "../../managers/Links"
+import SearchItems from "./searchitems"
 
 type Props = {
     lineupId: string,
@@ -176,11 +187,18 @@ class LineupScreen extends Screen<Props, State> {
 
         let fetchSrc = this.getFetchSrc(lineup)
         let numColumns = this.state.renderType === 'grid' ? 3 : 1
+        let data
+        if (this.state.renderType === 'grid') {
+            data = _.concat([{type: 'plus_button'}], savings)
+        }
+        else {
+            data = savings
+        }
         return (
             <View style={styles.container}>
                 <Feed
                     key={"lineup-" + this.state.renderType}
-                    data={savings}
+                    data={data}
                     renderItem={this.state.renderType === 'grid' ? this.renderItemGrid.bind(this) : this.renderItemStream.bind(this)}
                     fetchSrc={fetchSrc}
                     hasMore={true}
@@ -228,10 +246,8 @@ class LineupScreen extends Screen<Props, State> {
     }
 
     renderItemStream({item}) {
+
         let saving: Saving = item
-
-        if (!saving['built']) return null;
-
         return (
             <ActivityCell
                 activity={saving}
@@ -243,27 +259,41 @@ class LineupScreen extends Screen<Props, State> {
     }
 
     renderItemGrid({item, index}) {
-        let image = _.get(item, 'resource.image')
+
+
         const layout = LineupScreen.calcGridLayout(__DEVICE_WIDTH__, 3)
         index = index % layout.numColumns
-        let styles = this.obtainGridStyles(layout)
+        let styles = LineupScreen.obtainGridStyles(layout)
 
+        let uri, child
+        if (item.type === 'plus_button') {
+            uri = SearchItems.createAddLink(this.props.lineupId)
+            child = (
+                <View style={{width: layout.cellWidth, height: layout.cellHeight}}>
+                    <InnerPlus plusStyle={{backgroundColor: Colors.green, borderRadius: 4,}}/>
+                </View>
+            )
+        }
+        else {
+            uri = createDetailsLink(item.id, item.type)
+            child = <CachedImage
+                source={{uri: _.get(item, 'resource.image'), }}
+                style={[styles.gridImg]}
+                resizeMode='cover'
+                fallbackSource={require('../../img/goodsh_placeholder.png')}/>
+        }
         return (
             <GTouchable style={[styles.gridCellCommon, index === 0 ? styles.gridCellL : index === layout.numColumns ? styles.gridCellR : null ]}
-                        onPress={() => seeActivityDetails(this.props.navigator, item)}>
-                <CachedImage
-                    source={{uri: image, }}
-                    style={[styles.gridImg]}
-                    resizeMode='cover'
-                    fallbackSource={require('../../img/goodsh_placeholder.png')}/>
+                        onPress={() => openLinkSafely(uri)}>
+                {child}
             </GTouchable>
         )
     }
 
 
-    gridStyles = {}
+    static gridStyles = {}
 
-    obtainGridStyles(layout: any) {
+    static obtainGridStyles(layout: any) {
         const width = layout.cellWidth
         const height = layout.cellHeight
         const key = `${width}x${height}`
@@ -279,6 +309,7 @@ class LineupScreen extends Screen<Props, State> {
             gridCellCommon: {
                 borderWidth: StyleSheet.hairlineWidth,
                 borderColor: Colors.greying,
+
             },
             gridCellR: {
                 marginLeft: SPACER / 2,

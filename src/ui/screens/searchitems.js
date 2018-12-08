@@ -15,6 +15,7 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native'
+import type {SearchItemCategoryType} from "../../helpers/SearchConstants"
 import {SEARCH_CATEGORIES_TYPE} from "../../helpers/SearchConstants"
 import Screen from "../components/Screen"
 import type {Id, Item, Lineup, RNNNavigator} from "../../types"
@@ -25,7 +26,7 @@ import PagerPan from "react-native-tab-view/src/PagerPan"
 import SearchGeneric from "./search/SearchGeneric"
 import SearchPlaces from "./search/SearchPlaces"
 import {renderTabBarFactory} from "../UIComponents"
-import type {SearchItemCategoryType} from "../../helpers/SearchConstants"
+import {createOpenModalLink} from "../../managers/Links"
 
 
 type Props = {
@@ -116,6 +117,9 @@ export default class SearchItems extends Screen<Props, State> {
             }
         }
         return 0
+    }
+    static createAddLink(defaultLineupId?: Id) {
+        return createOpenModalLink('goodsh.SearchItems', i18n.t('search_item_screen.title'), null/*{defaultLineupId}*/)
     }
 }
 

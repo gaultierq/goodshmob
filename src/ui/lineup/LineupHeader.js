@@ -64,9 +64,9 @@ export class LineupHeader extends Component<Props, State> {
                 }} style={[styles.button_dim, styles.button, styles.button_inactive]}>{i18n.t('actions.followed')}</Text>
             }
             else if (actions.indexOf(L_ADD_ITEM) >= 0) {
-                button = <Text onPress={()=>{
-                    startAddItem(this.props.navigator, lineup.id)
-                }} style={[styles.button_dim, styles.button, styles.button_inactive]}>{i18n.t('actions.add')}</Text>
+                // button = <Text onPress={()=>{
+                //     startAddItem(this.props.navigator, lineup.id)
+                // }} style={[styles.button_dim, styles.button, styles.button_inactive]}>{i18n.t('actions.add')}</Text>
             }
 
             if (actions.indexOf(L_SHARE) >= 0) {

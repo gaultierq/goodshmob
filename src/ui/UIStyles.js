@@ -8,7 +8,7 @@ import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from 
 import GTouchable from "./GTouchable"
 import type {ViewStyle} from "../types"
 import {TextStyle} from "../types"
-import Config from "react-native-config"
+import {createOpenModalLink} from "../managers/Links"
 
 export const BACKGROUND_COLOR = Colors.white;
 export const NAV_BACKGROUND_COLOR = Colors.dirtyWhite;
@@ -148,10 +148,6 @@ export function openLinkSafely(url: ?string) {
             console.log("Don't know how to open URI: ", url);
         }
     })
-}
-
-export function createOpenModalLink(screen, title) {
-    return `${Config.GOODSH_PROTOCOL_SCHEME}://it/openmodal?screen=${screen}&title=${encodeURIComponent(title)}`
 }
 
 export function openModalStatic(screen: string, title: string) {

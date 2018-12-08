@@ -36,8 +36,10 @@ import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import {CLOSE_MODAL, displaySavingActions} from "../Nav"
 import * as Api from "../../managers/Api"
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import MapView, {Callout, Marker} from 'react-native-maps'
-import {regionFrom, regionFrom2} from "../components/GMap"
+import MapView, {Marker} from 'react-native-maps'
+import {regionFrom2} from "../components/GMap"
+import i18n from "../../i18n/i18n"
+import {createOpenModalLink} from "../../managers/Links"
 
 type Props = {
     activityId: Id,
@@ -499,3 +501,7 @@ const styles = StyleSheet.create({
 let screen = ActivityDetailScreen;
 
 export {screen};
+
+export function createDetailsLink(activityId: Id, activityType: ActivityType) {
+    return createOpenModalLink("goodsh.ActivityDetailScreen", null, {activityId, activityType})
+}

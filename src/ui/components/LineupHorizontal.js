@@ -23,19 +23,18 @@ import {ViewStyle} from "../../types"
 import {logged} from "../../managers/CurrentUser"
 import {Navigation} from 'react-native-navigation'
 import {displaySavingActions, seeActivityDetails, seeList} from "../Nav"
-import {Colors} from "../colors"
 import Feed from "../components/feed"
 import LineupCellSaving from "../components/LineupCellSaving"
 
 import GTouchable from "../GTouchable"
 import {EmptyCell} from "./LineupCellSaving"
 import {LINEUP_PADDING} from "../UIStyles"
-import {renderLineupMenu} from "../UIComponents"
+import {InnerPlus, renderInnerPlus, renderLineupMenu} from "../UIComponents"
 import LineupTitle2 from "./LineupTitle2"
-import {createSelector} from "reselect"
 import * as Api from "../../managers/Api"
 import {FETCH_LINEUP, fetchLineup} from "../lineup/actions"
 import {LINEUP_AND_SAVING_SELECTOR} from "../../helpers/ModelUtils"
+import {Colors} from "../colors"
 
 // $FlowFixMe
 type Props = {
@@ -155,20 +154,11 @@ export default class LineupHorizontal extends Component<Props, State> {
     }
 
     static renderInnerPlus(ref?: () => void) {
-        const size = "60%"
-        return <View style={{
-            position: 'absolute',
-            width: size,
-            height: size,
-            alignItems: 'center',
-            justifyContent: 'center',
-        }}>
-            <Image
-                ref={ref}
-                source={require('./../../img2/plus_white.png')}
-            />
-        </View>;
+        return (
+            <InnerPlus ref={ref} plusStyle={{backgroundColor: Colors.white, borderRadius: 4,}}/>
+        )
     }
+
 }
 
 export type Props1 = {

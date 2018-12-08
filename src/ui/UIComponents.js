@@ -5,7 +5,7 @@ import React, {Component} from 'react'
 import {Image, LayoutAnimation, Platform, StyleSheet, Text, UIManager, View} from 'react-native'
 import {Colors} from "./colors"
 import GTouchable from "./GTouchable"
-import {BACKGROUND_COLOR, createOpenModalLink, LINEUP_PADDING, STYLES, TAB_BAR_PROPS, TAB_BAR_STYLES} from "./UIStyles"
+import {BACKGROUND_COLOR, LINEUP_PADDING, STYLES, TAB_BAR_PROPS, TAB_BAR_STYLES} from "./UIStyles"
 import Spinner from 'react-native-spinkit'
 import type {Lineup, RNNNavigator, User} from "../types"
 import {ViewStyle} from "../types"
@@ -20,9 +20,10 @@ import {GAvatar} from "./GAvatar"
 import {currentGoodshboxId} from "../managers/CurrentUser"
 import {SEARCH_CATEGORIES_TYPE} from "../helpers/SearchConstants"
 import i18n from "../i18n/i18n"
-import Config from "react-native-config"
 import HTMLView from "react-native-htmlview/HTMLView"
 import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "./fonts"
+import {createOpenModalLink} from "../managers/Links"
+import SearchItems from "./screens/searchitems"
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
@@ -396,7 +397,7 @@ export const RENDER_EMPTY_ME_RESULT = (navigator: RNNNavigator, category: SEARCH
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', padding: LINEUP_PADDING}}>
         <HTMLView
             onLinkPress={pressed => {
-                if (pressed === createAddLink()) {
+                if (pressed === SearchItems.createAddLink()) {
                     navigator.push({
                         screen: 'goodsh.SearchItems',
                         navigatorButtons: CANCELABLE_MODAL2,
@@ -412,7 +413,7 @@ export const RENDER_EMPTY_ME_RESULT = (navigator: RNNNavigator, category: SEARCH
                 }
             }
             }
-            value={`<div>${i18n.t("lineups.search.empty_add", {link: createAddLink()})}</div>`}
+            value={`<div>${i18n.t("lineups.search.empty_add", {link: SearchItems.createAddLink()})}</div>`}
             stylesheet={htmlStyles}
         />
 
@@ -446,12 +447,6 @@ const htmlStyles = StyleSheet.create({
         textDecorationLine: 'underline',
     },
 })
-
-export function createAddLink() {
-    return `${Config.GOODSH_PROTOCOL_SCHEME}://it/openmodal?screen=goodsh.SearchItems&title=${
-        encodeURIComponent(i18n.t('search_item_screen.title'))
-        }`
-}
 
 
 
@@ -499,3 +494,25 @@ export class ListColumnsSelector extends Component<
     }
 }
 
+
+export class InnerPlus extends Component<{plusStyle?: ViewStyle}, {}> {
+
+
+    render() {
+
+        let {plusStyle, ...props} = this.props
+        const size = "60%"
+        return (<View style={{
+                position: 'absolute',
+                width: "100%",
+                height: "100%",
+                alignItems: 'center',
+                justifyContent: 'center',
+                ...props
+            }}>
+                <View style={[{position: 'absolute', width: "5%", height: size,}, plusStyle]}/>
+                <View style={[{position: 'absolute', height: "5%", width: size,}, plusStyle]}/>
+            </View>
+        )
+    }
+}

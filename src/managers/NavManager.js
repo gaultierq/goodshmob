@@ -85,7 +85,18 @@ class _NavManager implements NavManager {
         let tab: any
 
         if (main === 'openmodal' ) {
-            modal = url.query
+            let {passProps, ...query} = url.query
+            modal = query
+            if (passProps) {
+                try {
+                    passProps = JSON.parse(passProps)
+                }
+                catch(e) {
+                    console.error(e)
+                    passProps = null
+                }
+                modal.passProps = passProps
+            }
         }
 
         //after RNN v2, try to see if there is a static "switchToTab"

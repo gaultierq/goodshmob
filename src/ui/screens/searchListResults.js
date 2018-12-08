@@ -13,7 +13,7 @@ export type Props = {
     searchState: SearchState,
     renderItem: any => Node,
     onLoadMore?: () => void,
-    EmptyComponent?: ?() => Element<any>
+    EmptyComponent?: ?() => any
 }
 
 export type State = {}
@@ -27,12 +27,16 @@ export default class SearchListResults extends Component<Props, State> {
 
     render() {
 
-        const {searchState = {}, onLoadMore, ...attr} = this.props
+        const {searchState = {}, onLoadMore, EmptyComponent, ...attr} = this.props
+
+        //strange, the default props does not work when opening the modal from a link.
+        // static js initialization is not working
+        let empty = EmptyComponent || RENDER_EMPTY_RESULT
 
         // let searchState = this.props.searchState || {}
         if (searchState.requestState === 'sending' && searchState.page === 0) return <FullScreenLoader/>
         if (searchState.requestState === 'ko') return <Text style={styles.text}>{i18n.t("errors.generic")}</Text>
-        if (_.flatten(searchState.data).length === 0 ) return this.props.EmptyComponent()
+        if (_.flatten(searchState.data).length === 0 ) return empty()
 
         return (
             <FlatList
@@ -65,6 +69,5 @@ export default class SearchListResults extends Component<Props, State> {
             <Text style={{color: isLoadingMore ? Colors.greyishBrown : Colors.black}}>{i18n.t('actions.load_more')}</Text>
         </Button>);
     }
-
 }
 
