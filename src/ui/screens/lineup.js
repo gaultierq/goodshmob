@@ -24,7 +24,6 @@ import FeedSeparator from "../activity/components/FeedSeparator"
 import {CachedImage} from 'react-native-cached-image'
 import GTouchable from "../GTouchable"
 import {LineupHeader} from "../lineup/LineupHeader"
-import {SFP_TEXT_MEDIUM} from "../fonts"
 
 type Props = {
     lineupId: string,
@@ -176,8 +175,7 @@ class LineupScreen extends Screen<Props, State> {
 
 
         let fetchSrc = this.getFetchSrc(lineup)
-
-        const layout = this.calcLayout()
+        let numColumns = this.state.renderType === 'grid' ? 3 : 1
         return (
             <View style={styles.container}>
                 <Feed
@@ -187,7 +185,7 @@ class LineupScreen extends Screen<Props, State> {
                     fetchSrc={fetchSrc}
                     hasMore={true}
                     ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t("empty.lineup")}</Text>}
-                    numColumns={layout.numColumns}
+                    numColumns={numColumns}
                     ItemSeparatorComponent={TRANSPARENT_SPACER(SPACER)}
                     style={{flex: 1, backgroundColor: Colors.white}}
                     ListHeaderComponent={
@@ -223,11 +221,10 @@ class LineupScreen extends Screen<Props, State> {
         return fetchSrc
     }
 
-    calcLayout() {
-        let numColumns = this.state.renderType === 'grid' ? 3 : 1
-        let cellWidth = (__DEVICE_WIDTH__ + SPACER) / numColumns - SPACER
-        let cellHeight = cellWidth
-        return {numColumns, cellWidth, cellHeight}
+    static calcGridLayout(width: number, numColumns: number) {
+        // if (this.state.renderType !== 'grid') throw "bad layout"
+        let cellWidth = (width + SPACER) / numColumns - SPACER
+        return {numColumns, cellWidth, cellHeight: cellWidth}
     }
 
     renderItemStream({item}) {
@@ -247,36 +244,70 @@ class LineupScreen extends Screen<Props, State> {
 
     renderItemGrid({item, index}) {
         let image = _.get(item, 'resource.image')
-        const layout = this.calcLayout()
+        const layout = LineupScreen.calcGridLayout(__DEVICE_WIDTH__, 3)
         index = index % layout.numColumns
-        return (
-            <GTouchable style={{
-                marginLeft: index > 0 ? SPACER / 2 : 0,
-                marginRight: index < layout.numColumns ? SPACER / 2 : 0,
-                borderWidth: StyleSheet.hairlineWidth,
-                borderColor: Colors.greying,
+        let styles = this.obtainGridStyles(layout)
 
-            }} onPress={() => seeActivityDetails(this.props.navigator, item)}>
+        return (
+            <GTouchable style={[styles.gridCellCommon, index === 0 ? styles.gridCellL : index === layout.numColumns ? styles.gridCellR : null ]}
+                        onPress={() => seeActivityDetails(this.props.navigator, item)}>
                 <CachedImage
                     source={{uri: image, }}
-                    style={[{
-                        width: layout.cellWidth,
-                        height: layout.cellHeight,
-                        backgroundColor: Colors.white,
-                        alignSelf: 'center',
-                        alignItems: 'center',
-                    }
-                    ]}
+                    style={[styles.gridImg]}
                     resizeMode='cover'
                     fallbackSource={require('../../img/goodsh_placeholder.png')}/>
             </GTouchable>
         )
-
     }
+
+
+    gridStyles = {}
+
+    obtainGridStyles(layout: any) {
+        const width = layout.cellWidth
+        const height = layout.cellHeight
+        const key = `${width}x${height}`
+
+        let res = this.gridStyles[key]
+        if (res) return res
+        res = StyleSheet.create({
+            gridCellL: {
+                marginLeft: 0,
+                marginRight: SPACER / 2,
+
+            },
+            gridCellCommon: {
+                borderWidth: StyleSheet.hairlineWidth,
+                borderColor: Colors.greying,
+            },
+            gridCellR: {
+                marginLeft: SPACER / 2,
+                marginRight: 0,
+            },
+            gridImg: {
+                width: width,
+                height: height,
+                backgroundColor: Colors.white,
+                alignSelf: 'center',
+                alignItems: 'center',
+            },
+        })
+        this.gridStyles[key] = res
+        return res
+    }
+
+
 
 }
 
 
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: Colors.white,
+    },
+})
 
 const actions = {
 
@@ -322,15 +353,6 @@ let screen = LineupScreen;
 export {reducer, screen, actions};
 
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: Colors.white,
-    },
-    description: {
-        backgroundColor: 'transparent',
-        margin: 10
-    },
-});
+
 
 
