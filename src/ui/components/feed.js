@@ -29,6 +29,8 @@ import {RequestManager} from "../../managers/request"
 import Config from "react-native-config"
 import {FullScreenLoader, renderTextAndDots} from "../UIComponents"
 import BugsnagManager from "../../managers/BugsnagManager"
+import {Colors} from "../colors"
+import Spinner from "react-native-spinkit"
 
 export type FeedSource = {
     callFactory: ()=>Api.Call,
@@ -556,7 +558,7 @@ export default class Feed extends Component<Props, State>  {
                 {
                     this.manager.isSending('isFetchingMore', this) &&
                     !recentlyCreated &&
-                    !this.props.doNotDisplayFetchMoreLoader && renderTextAndDots(i18n.t('loadmore'))
+                    !this.props.doNotDisplayFetchMoreLoader && (<Spinner style={{alignSelf: 'center'}} size={40} type={__IS_IOS__ ? "Arc" : "WanderingCubes"} color={Colors.grey3}/>)
                 }
                 {
                     this.manager.isFail('isFetchingMore', this) && this.renderFail(() => this.fetchMore({trigger: TRIGGER_USER_DIRECT_ACTION}))
