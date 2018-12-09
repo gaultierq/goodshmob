@@ -7,35 +7,19 @@ import {CheckBox} from "react-native-elements"
 import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
 import Screen from "../components/Screen"
-import {
-    CONNECT_RIGHT_BUTTON,
-    DISCONNECT_RIGHT_BUTTON,
-    LINEUP_SECTIONS,
-    MainBackground,
-    RIGHT_BUTTON_SPINNER,
-    scheduleOpacityAnimation
-} from "../UIComponents"
+import {LINEUP_SECTIONS, MainBackground, scheduleOpacityAnimation} from "../UIComponents"
 import {LINEUP_PADDING, STYLES} from "../UIStyles"
 import UserLineups from "./userLineups"
 import * as Api from "../../managers/Api"
-import {
-    actions as userActions,
-    actionTypes as userActionTypes,
-    CONNECT,
-    createFriendship,
-    deleteFriendship,
-    DISCONNECT
-} from "../../redux/UserActions"
-import {getUserActions, GUserAction, U_CONNECT, U_DISCONNECT} from "../userRights"
+import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
+import {getUserActions, GUserAction, U_CONNECT} from "../userRights"
 import {createSelector} from "reselect"
 import {USER_SECLECTOR} from "../../helpers/ModelUtils"
-import _Messenger from "../../managers/Messenger"
 import {UserHeader} from "../components/UserHeader"
 import {Colors} from "../colors"
 import {SFP_TEXT_BOLD} from "../fonts"
 import GTouchable from "../GTouchable"
-import {fullName2} from "../../helpers/StringUtils"
-import {CANCELABLE_MODAL2, CLOSE_MODAL} from "../Nav"
+import {CANCELABLE_MODAL2} from "../Nav"
 
 type Props = {
     userId: Id,
@@ -71,8 +55,6 @@ const selector = createSelector(
 @logged
 @connect(selector)
 export default class UserScreen extends Screen<Props, State> {
-
-    // static navigatorButtons = CANCELABLE_MODAL2
 
     static navigatorStyle = {
         drawUnderNavBar: true,
@@ -130,11 +112,15 @@ export default class UserScreen extends Screen<Props, State> {
                                 justifyContent: 'space-between',
                                 marginBottom: 12,
                             }}>
-                                <Text style={{color:Colors.black, fontSize: 24, fontFamily: SFP_TEXT_BOLD}}>{lineupsCount} listes - {savingsCount} éléments</Text>
+                                <Text style={{
+                                    color:Colors.greyishBrown,
+                                    fontSize: 24,
+                                    fontFamily: SFP_TEXT_BOLD
+                                }}>{lineupsCount} listes - {savingsCount} éléments</Text>
                                 <GTouchable onPress={() => {
                                     this.setState({showFilter: !this.state.showFilter})
                                     scheduleOpacityAnimation()
-                                }}><Image style={{tintColor: this.state.showFilter ? Colors.black : Colors.greyish}} source={require('../../img2/search.png')} resizeMode="contain"/>
+                                }}><Image style={{tintColor: this.state.showFilter ? Colors.black : Colors.brownishGrey}} source={require('../../img2/search.png')} resizeMode="contain"/>
                                 </GTouchable>
                             </View>
                         </View>
