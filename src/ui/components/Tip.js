@@ -7,7 +7,7 @@ import type {Color, Url} from "../../types"
 import {ViewStyle} from "../../types"
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import {Col, Grid, Row} from "react-native-easy-grid"
-import {openLinkSafely} from "../UIStyles"
+import {openLinkSafely} from "../../managers/Links"
 
 type Props = {
     text: string,

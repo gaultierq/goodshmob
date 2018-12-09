@@ -9,10 +9,10 @@ import Sheet from "../components/sheet"
 import {LINEUP_PADDING} from "../UIStyles"
 import {Colors} from "../colors"
 import type {Saving} from "../../types"
-import {Avatar} from "../UIComponents"
 import i18n from "../../i18n"
 import HTMLView from "react-native-htmlview"
 import {SFP_TEXT_BOLD, SFP_TEXT_REGULAR} from "../fonts"
+import {GAvatar} from "../GAvatar"
 
 
 type Props = {
@@ -52,7 +52,7 @@ export default class SaveCongratz extends Component<Props, State> {
                         <HTMLView value={`<div>${i18n.t("save_congratz", {item_title: title, list_name: listName})}</div>`} stylesheet={htmlStyles}/>
 
                         <View style={{flexDirection: 'row'}}>
-                            {friends.map(f => <Avatar user={f} key={f.id}/>)}
+                            {friends.map(f => <GAvatar person={f} key={f.id}/>)}
                         </View>
 
 

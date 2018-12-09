@@ -5,7 +5,6 @@ import {Navigation} from 'react-native-navigation'
 import type {Id, User} from "../../types"
 import {SFP_TEXT_MEDIUM} from "../fonts"
 import {Colors} from "../colors"
-import {Avatar} from "../UIComponents"
 import {createSelector} from "reselect"
 import {LINEUP_SELECTOR} from "../../helpers/ModelUtils"
 import {connect} from "react-redux"
@@ -77,9 +76,6 @@ export default class LineupNav extends Component<Props, State> {
                 alignItems: 'center',
                 justifyContent: 'center'}
             }>
-                {/*<Avatar*/}
-                    {/*user={user}*/}
-                    {/*size={imageDim}/>*/}
                 <Text style={{
                     fontSize: 17,
                     fontFamily: SFP_TEXT_MEDIUM,

@@ -27,19 +27,20 @@ import {Navigation} from 'react-native-navigation'
 import type {Visibility} from "./additem"
 import type {FilterConfig} from "../components/feed"
 import GSearchBar2 from "../components/GSearchBar2"
-import {isCurrentUser, isCurrentUserId} from "../../managers/CurrentUser"
+import {isCurrentUserId} from "../../managers/CurrentUser"
 
 
 type Props = LineupListProps & {
     userId: Id,
     navigator: RNNNavigator,
-    listRef?: any => void | string
+    listRef?: any => void | string,
+    hideFilter?: boolean
 };
 
 type State = {
     newLineupTitle?: string,
     newLineupPrivacy?: Visibility,
-    filter?:string
+    filter?: ?string
 };
 
 export default class UserLineups extends Screen<Props, State> {
@@ -52,6 +53,10 @@ export default class UserLineups extends Screen<Props, State> {
 
         const navigator = this.props.navigator;
 
+        const listRef: any => void = ref => {
+            this.listRef = ref;
+            if (this.props.listRef) this.props.listRef(ref)
+        }
         return (
             <View style={{flex:1}}>
                 <View style={{flex:1}}>
@@ -59,19 +64,15 @@ export default class UserLineups extends Screen<Props, State> {
                     <LineupListScreen
                         onLineupPressed={(lineup) => seeList(navigator, lineup)}
                         onSavingPressed={(saving) => seeActivityDetails(navigator, saving)}
-                        scrollUpOnBack={super.isVisible() ? ()=>false : null}
+                        scrollUpOnBack={super.isVisible() ? () => false : null}
                         visibility={'visible'}
                         // renderSectionHeader={({section}) => renderSectionHeader(section)}
                         renderSectionFooter={()=> <View style={{height: 25, width: "100%"}} />}
                         ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
                         filter={this.filter()}
                         {...this.props}
-                        listRef={ref => {
-                            this.listRef = ref;
-                            if (this.props.listRef) this.props.listRef(ref)
-                        }
-                        }
-                        ListHeaderComponent={<View>{[this.renderFilter(), this.props.ListHeaderComponent]}</View>}
+                        listRef={listRef}
+                        ListHeaderComponent={<View>{this.props.ListHeaderComponent}{this.renderFilter()}</View>}
                     />
                     {/*{_.isEmpty(this.state.filter) && this.state.isFilterFocused && this.renderSearchOverlay()}*/}
                 </View>
@@ -79,7 +80,14 @@ export default class UserLineups extends Screen<Props, State> {
         );
     }
 
+    componentDidUpdate(prevProps: Props) {
+        if (!!prevProps.hideFilter !== !!this.props.hideFilter) {
+            this.setState({filter: null})
+        }
+    }
+
     renderFilter() {
+        if (this.props.hideFilter) return null
         // const paddingVertical = this.state.isFilterFocused ? 8 : 5;
         const paddingVertical = 5;
         let style = {

@@ -437,6 +437,8 @@ export default {
         follow: "Suivre",
         followed: "Suivie",
         unfollow: "Ne plus suivre",
+        connect: "Se connecter",
+        connected: "Connectés",
         terms: "Conditions d'utilisation",
         copy_link: "Copier le lien",
         send_to_goodsher: "Envoyer à un contact",

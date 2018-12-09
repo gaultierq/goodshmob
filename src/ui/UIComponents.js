@@ -7,7 +7,7 @@ import {Colors} from "./colors"
 import GTouchable from "./GTouchable"
 import {BACKGROUND_COLOR, LINEUP_PADDING, STYLES, TAB_BAR_PROPS, TAB_BAR_STYLES} from "./UIStyles"
 import Spinner from 'react-native-spinkit'
-import type {Lineup, RNNNavigator, User} from "../types"
+import type {Lineup, RNNNavigator} from "../types"
 import {ViewStyle} from "../types"
 import {CANCELABLE_MODAL2, displayLineupActionMenu, seeList} from "./Nav"
 import LineupHorizontal from "./components/LineupHorizontal"
@@ -16,7 +16,6 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import {GLineupAction, L_ADD_ITEM, L_FOLLOW, L_SHARE, L_UNFOLLOW} from "./lineupRights"
 import {TabBar} from "react-native-tab-view"
-import {GAvatar} from "./GAvatar"
 import {currentGoodshboxId} from "../managers/CurrentUser"
 import {SEARCH_CATEGORIES_TYPE} from "../helpers/SearchConstants"
 import i18n from "../i18n/i18n"
@@ -45,36 +44,6 @@ export const MainBackground = (props) => <View
         height: '100%',
     }}>{props.children}
 </View>;
-
-
-
-type Props = {
-    user: User,
-    size?: number,
-    style?: ViewStyle
-}
-type State = {}
-
-export class Avatar extends Component<Props, State> {
-
-    static FACEBOOK_REGEX = /^https:\/\/graph\.facebook\.com\/[0-9]+\/picture$/
-
-    render() {
-
-        let {user, ...others} = this.props
-        if (!user) return null
-
-        let person = {...user}
-        if (this.props.size > 75 && person.image && person.image.match(Avatar.FACEBOOK_REGEX)) {
-            person.image += "?type=large"
-        }
-
-
-        return (
-            <GAvatar person={person} {...others} />
-        )
-    }
-}
 
 export const TRANSPARENT_SPACER = (height: number = 20) => ()=><View style={{height, backgroundColor: 'transparent'}}/>
 
@@ -373,9 +342,6 @@ export const renderTextAndDots = (text: string, style?: any) => (
             color={Colors.black}/>
     </View>
 )
-
-
-
 
 const {RENDER_EMPTY_RESULT_TEXT} = StyleSheet.create({
     RENDER_EMPTY_RESULT_TEXT: {

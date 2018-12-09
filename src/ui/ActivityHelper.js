@@ -2,7 +2,6 @@ import type {Activity, Lineup, NavParams, User} from "../types"
 import {fullName, savingCount} from "../helpers/StringUtils"
 import HTMLView from "react-native-htmlview/HTMLView"
 import React from "react"
-import Config from "react-native-config"
 import {isAsking, isComment, isLike, isSaving, isSending, sanitizeActivityType} from "../helpers/DataUtils"
 import {StyleSheet} from "react-native"
 import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "./fonts"
@@ -10,6 +9,7 @@ import {Colors} from "./colors"
 import NavManager from "../managers/NavManager"
 import URL from "url-parse"
 import {CREATE_LIKE, DELETE_LIKE} from "./activity/actionTypes"
+import {buildLineupUrl, buildUserUrl} from "../managers/Links"
 
 
 export function getActivityText(activity: Activity, navP: NavParams): () => any {
@@ -186,14 +186,6 @@ function getUserHtml(user: User) {
 function getLineupHtml(lineup: Lineup) {
     let lineupUrl = buildLineupUrl(lineup)
     return `<a href="${lineupUrl}">${truncate(lineup.name)}</a> (${savingCount(lineup)})`
-}
-
-function buildLineupUrl(lineup: Lineup): string {
-    return `${Config.GOODSH_PROTOCOL_SCHEME}://it/lists/${lineup.id}`
-}
-
-function buildUserUrl(user: User): string {
-    return `${Config.GOODSH_PROTOCOL_SCHEME}://it/users/${user.id}`
 }
 
 function renderAsk(activity: Activity) {

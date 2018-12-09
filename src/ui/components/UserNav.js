@@ -5,7 +5,7 @@ import {Navigation} from 'react-native-navigation'
 import type {User} from "../../types"
 import {fullName} from "../../helpers/StringUtils"
 import {SFP_TEXT_MEDIUM} from "../fonts"
-import {Avatar} from "../UIComponents"
+import {GAvatar} from "../GAvatar"
 
 
 type Props = {
@@ -31,9 +31,7 @@ export default class UserNav extends Component<Props, State> {
                 alignItems: 'center',
                 justifyContent: 'center'}
             }>
-                <Avatar
-                    user={user}
-                    size={imageDim}/>
+                <GAvatar person={user} size={imageDim}/>
 
                 <Text style={{
                     fontSize: 20,

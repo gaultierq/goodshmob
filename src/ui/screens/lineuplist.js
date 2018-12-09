@@ -57,7 +57,7 @@ type State = {
 export class LineupListScreen extends Screen<Props, State> {
 
 
-    constructor(props) {
+    constructor(props: Props) {
         super(props);
         this.state = {...super.state, isLoading: false, isLoadingMore: false,}
     }

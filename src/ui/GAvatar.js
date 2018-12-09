@@ -6,25 +6,40 @@ import {AVATAR_BACKGROUNDS, Colors} from "./colors"
 import type {Person} from "../types"
 import {ViewStyle} from "../types"
 import GImage from "./components/GImage"
-import {firstLetter, hashCode} from "../helpers/StringUtils"
+import {firstLetter, hashCode, isId} from "../helpers/StringUtils"
 import {SFP_TEXT_REGULAR} from "./fonts"
 import {selectDimension} from "./UIStyles"
+import {buildUserUrl, openLinkSafely} from "../managers/Links"
+import GTouchable from "./GTouchable"
 
 type Props = {
     person: Person,
     size: number,
-    style?: ViewStyle
+    style?: ViewStyle,
+    seeable?: boolean,
 }
 type State = {}
 
 export class GAvatar extends Component<Props, State> {
 
-
     static defaultProps = {
         size: selectDimension({small: 34, normal: 36, big: 40})
     }
+    static FACEBOOK_REGEX = /^https:\/\/graph\.facebook\.com\/[0-9]+\/picture$/
 
     render() {
+        if (this.props.seeable) {
+
+            const user = this.props.person
+            if (!user) throw "null user"
+            if (!isId(user.id)) throw "invalid user id:" + user.id
+
+            let uri = buildUserUrl(user)
+            return <GTouchable  onPress={() => openLinkSafely(uri)}>{this.renderInner()}</GTouchable>
+        }
+        return this.renderInner()
+    }
+    renderInner() {
         const {person, style, size, ...attributes} = this.props;
 
         let uri = null
@@ -60,6 +75,10 @@ export class GAvatar extends Component<Props, State> {
 
         let params
         if (uri) {
+            // make facebook images not blury
+            if (size >= 60 && uri.match(GAvatar.FACEBOOK_REGEX)) {
+                uri += "?type=large"
+            }
             params = {
                 source: {uri},
                 fallbackSource: require('../img2/default-avatar.png')

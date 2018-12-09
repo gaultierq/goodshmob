@@ -32,7 +32,7 @@ import GTouchable from "../GTouchable"
 import {LineupHeader} from "../lineup/LineupHeader"
 
 import {createDetailsLink} from "../activity/activityDetail"
-import {openLinkSafely} from "../UIStyles"
+import {openLinkSafely} from "../../managers/Links"
 import {createOpenModalLink} from "../../managers/Links"
 import SearchItems from "./searchitems"
 

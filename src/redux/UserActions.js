@@ -1,6 +1,9 @@
 import ApiAction from "../helpers/ApiAction"
 import * as Api from "../managers/Api"
-import type {Id} from "../types"
+import type {Id, User} from "../types"
+import {Dispatch} from "redux"
+import {Alert} from "react-native"
+import _Messenger from "../managers/Messenger"
 
 
 export const actionTypes = (() => {
@@ -72,4 +75,30 @@ export const deleteFriendship = (userId: string) => {
     return new Api.Call().withMethod('DELETE')
         .withRoute(`users/${userId}/friendships`);
 
+}
+
+export function disconnectFromUserWithAlert(user: User, ref: any, dispatch: Dispatch<*>) {
+    Alert.alert(
+        i18n.t("friends.alert.title"),
+        i18n.t("friends.alert.label"),
+        [
+            {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+            {
+                text: i18n.t("actions.ok"), onPress: () => {
+                    let action = deleteFriendship(user.id).createActionDispatchee(DISCONNECT)
+
+                    Api.safeDispatchAction.call(
+                        ref,
+                        dispatch,
+                        action,
+                        'reqDisconnect'
+                    ).then(() => {
+                            _Messenger.sendMessage(i18n.t("friends.messages.disconnect"))
+                        }
+                    )
+                }
+            },
+        ],
+        {cancelable: true}
+    )
 }

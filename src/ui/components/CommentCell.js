@@ -2,13 +2,13 @@
 import React, {Component} from 'react'
 import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-import {Avatar} from "../UIComponents"
 import type {Comment, User} from "../../types"
 import {styleMargin} from "../UIStyles"
 import {timeSinceActivity} from "../../helpers/DataUtils"
 import {Colors} from "../colors"
 import {SFP_TEXT_REGULAR} from "../fonts"
 import {Col, Grid, Row} from "react-native-easy-grid"
+import {GAvatar} from "../GAvatar"
 
 type Props = {
     comment: Comment | Array<Comment>,
@@ -74,7 +74,7 @@ export default class CommentCell extends Component<Props, State> {
                 }
                 <Row style={{ }}>
                     <Col style={{ width: dimension, justifyContent: 'flex-end'}}>
-                        {!rightDisplay && <Avatar user={user} size={24} style={{marginBottom: 3}}/>}
+                        {!rightDisplay && <GAvatar person={user} seeable size={24} style={{marginBottom: 3}}/>}
                     </Col>
                     <Col style={{ alignItems: rightDisplay ? 'flex-end': 'flex-start', }}>
                         {comments.map((comment: Comment, i) => <Row style={{marginTop: !!i ? 4 : 0}} key={comment.id}>

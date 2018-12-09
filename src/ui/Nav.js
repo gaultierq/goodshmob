@@ -92,7 +92,7 @@ export function seeList(navigator: RNNNavigator, lineup: Lineup) {
 export function seeUser(navigator: RNNNavigator, user: User) {
     navigator.showModal({
         screen: 'goodsh.UserScreen', // unique ID registered with Navigation.registerScreen
-        title: fullName(user),
+        // title: fullName(user),
         passProps: {
             userId: user.id,
             user

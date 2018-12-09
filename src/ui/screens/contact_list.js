@@ -10,12 +10,13 @@ import i18n from "../../i18n/i18n"
 import type {OutMessage, RNNNavigator} from "../../types"
 import Contacts from 'react-native-contacts'
 import PersonRowI from "../activity/components/PeopleRow"
-import {LINEUP_PADDING, openLinkSafely, STYLES} from "../UIStyles"
+import {LINEUP_PADDING, STYLES} from "../UIStyles"
 import GButton from "../components/GButton"
 import Screen from "../components/Screen"
 import GSearchBar2 from "../components/GSearchBar2"
 import {fullName} from "../../helpers/StringUtils"
 import Permissions from 'react-native-permissions'
+import {openLinkSafely} from "../../managers/Links"
 
 
 export type Contact = {

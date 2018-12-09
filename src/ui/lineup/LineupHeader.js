@@ -3,7 +3,6 @@
 import React, {Component} from 'react'
 import {Image, StyleSheet, Text, View} from 'react-native'
 import {LINEUP_PADDING} from "../UIStyles"
-import {Avatar} from "../UIComponents"
 import {fullName2} from "../../helpers/StringUtils"
 import {SFP_TEXT_BOLD, SFP_TEXT_REGULAR} from "../fonts"
 import {Colors} from "../colors"
@@ -12,9 +11,10 @@ import connect from "react-redux/es/connect/connect"
 import {LINEUP_SELECTOR} from "../../helpers/ModelUtils"
 import {createSelector} from "reselect"
 import {GLineupAction, L_ADD_ITEM, L_FOLLOW, L_SHARE, L_UNFOLLOW, LineupRights} from "../lineupRights"
-import {displayShareLineup, startAddItem} from "../Nav"
+import {displayShareLineup} from "../Nav"
 import {followLineupPending, unfollowLineupPending} from "./actions"
 import GTouchable from "../GTouchable"
+import {GAvatar} from "../GAvatar"
 
 type Props = {
     navigator: RNNNavigator,
@@ -96,7 +96,7 @@ export class LineupHeader extends Component<Props, State> {
                     alignItems: 'center',
                     marginRight: LINEUP_PADDING
                 }}>
-                    <Avatar style={{alignItems: 'center',}} user={user}
+                    <GAvatar person={user} seeable style={{alignItems: 'center',}}
                             size={avatarContainerSize}/>
                     <Text style={[{marginTop: 4}, styles.userName]}>{fullName2(user)}</Text>
                 </View>

@@ -7,7 +7,7 @@ import GTouchable from "../GTouchable"
 import {connect} from "react-redux"
 import {currentUserFilter} from "../../redux/selectors"
 import type {Id} from "../../types"
-import {Avatar} from "../UIComponents"
+import {GAvatar} from "../GAvatar"
 
 
 type Props = {
@@ -40,7 +40,7 @@ export default class MyAvatar extends Component<Props, State> {
                 });
 
             }}>
-                {user && <Avatar user={user} size={imageDim}/>}
+                {user && <GAvatar person={user} size={imageDim}/>}
             </GTouchable>
         )
 

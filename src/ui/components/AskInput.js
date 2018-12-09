@@ -23,8 +23,9 @@ import _Messenger from "../../managers/Messenger"
 import {Colors} from "../colors"
 import {SFP_TEXT_BOLD} from "../fonts"
 import {renderSimpleButton} from "../UIStyles"
-import {Avatar, scheduleOpacityAnimation} from "../UIComponents"
+import {scheduleOpacityAnimation} from "../UIComponents"
 import {FETCH_ACTIVITIES, fetchMyNetwork} from "../networkActions"
+import {GAvatar} from "../GAvatar"
 
 type Props = {
 };
@@ -58,7 +59,7 @@ export default class AskInput extends Component<Props, State> {
             <View style={{
                 // backgroundColor: 'red',
                 flexDirection: 'row', borderBottomWidth: StyleSheet.hairlineWidth, borderColor: Colors.greyish}}>
-                <Avatar user={currentUser()}/>
+                <GAvatar person={currentUser()}/>
                 <TextInput
                     editable={editable && !notEditable}
                     onSubmitEditing={this.createAsk.bind(this)}

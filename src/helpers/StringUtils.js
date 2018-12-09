@@ -40,7 +40,7 @@ export function logger(target, name, descriptor) {
 }
 
 
-export const fullName2 = ({firstName, lastName} = {}) => _.join([firstName, lastName], ' ')
+export const fullName2 = ({firstName, lastName} = {}, separator = ' ') => _.join([firstName, lastName], separator)
 
 export function fullName(user: Person): string {
     let {firstName, lastName} = user || {}

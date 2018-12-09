@@ -22,7 +22,7 @@ import {logged} from "../../managers/CurrentUser"
 import GTouchable from "../GTouchable"
 import Sheet from "../components/sheet"
 import _Messenger from "../../managers/Messenger"
-import {Avatar, FullScreenLoader} from "../UIComponents"
+import {FullScreenLoader} from "../UIComponents"
 import {Colors} from "../colors"
 import * as Api from "../../managers/Api"
 import {buildData} from "../../helpers/DataUtils"
@@ -31,13 +31,13 @@ import {
     actionTypes as userActionTypes,
     CONNECT,
     createFriendship,
-    deleteFriendship,
-    DISCONNECT
+    disconnectFromUserWithAlert
 } from "../../redux/UserActions"
 import {fullName} from "../../helpers/StringUtils"
 import Http404 from "./errors/404"
 import {SFP_TEXT_MEDIUM} from "../fonts"
 import {canExecUserAction, U_CONNECT, U_DISCONNECT} from "../userRights"
+import {GAvatar} from "../GAvatar"
 
 type Props = {
     user?: User,
@@ -132,7 +132,7 @@ export default class UserSheet extends Component<Props, State> {
         return <View>
 
             <View style={styles.avatarWrapper}>
-                <Avatar user={user} size={100} style={styles.avatar}/>
+                <GAvatar person={user} seeable size={100} style={styles.avatar}/>
                 <Text style={styles.username}>{fullName(user)}</Text>
                 {/*<Text style={styles.city}>#Paris, France</Text>*/}
             </View>
@@ -199,27 +199,13 @@ export default class UserSheet extends Component<Props, State> {
     }
 
     disconnectWith(user: User) {
-        Alert.alert(
-            i18n.t("friends.alert.title"),
-            i18n.t("friends.alert.label"),
-            [
-                {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-                {text: i18n.t("actions.ok"), onPress: () => {
-                        let action = deleteFriendship(user.id).createActionDispatchee(DISCONNECT);
-                        Api.safeDispatchAction.call(
-                            this,
-                            this.props.dispatch,
-                            action,
-                            'reqDisconnect'
-                        ).then(()=> {
-                                _Messenger.sendMessage(i18n.t("friends.messages.disconnect"));
-                            }
-                        );
-                    }},
-            ],
-            { cancelable: true }
-        )
+        const dispatch = this.props.dispatch
+        const ref = this
+
+        disconnectFromUserWithAlert(user, ref, dispatch)
     }
+
+
 }
 
 

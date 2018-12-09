@@ -18,7 +18,7 @@ import {connect} from "react-redux"
 import {currentUser, currentUserId, logged} from "../../managers/CurrentUser"
 import ItemBody from "./components/ItemBody"
 import {buildData, getAskBackgroundColor, sanitizeActivityType, timeSinceActivity} from "../../helpers/DataUtils"
-import {Avatar, FullScreenLoader, MainBackground, scheduleOpacityAnimation} from "../UIComponents"
+import {FullScreenLoader, MainBackground, scheduleOpacityAnimation} from "../UIComponents"
 import type {Activity, ActivityType, Id, RequestState} from "../../types"
 import Screen from "../components/Screen"
 import {Colors} from "../colors"
@@ -40,6 +40,7 @@ import MapView, {Marker} from 'react-native-maps'
 import {regionFrom2} from "../components/GMap"
 import i18n from "../../i18n/i18n"
 import {createOpenModalLink} from "../../managers/Links"
+import {GAvatar} from "../GAvatar"
 
 type Props = {
     activityId: Id,
@@ -363,7 +364,6 @@ class ActivityDetailScreen extends Screen<Props, State> {
                                     marginTop: 8,
                                 }}>
 
-                                    {/*<Avatar user={currentUser()} style={{marginLeft: 0, dim: 22}}/>*/}
 
 
                                     <CommentInput
@@ -441,7 +441,7 @@ class ActivityDetailScreen extends Screen<Props, State> {
         const width  = size + (size * shift) * Math.max(n-1, 0) + 5;
         return <View style={{flexDirection: 'row', marginRight: 10, height: 18}}>
             {
-                othersCommentators.map((user, i) => user && <Avatar key={`med-${i}`} user={user} size={size} style={{
+                othersCommentators.map((user, i) => user && <GAvatar person={user} key={`med-${i}`} size={size} style={{
                         // position: 'absolute',
                         // left: size * shift * i,
                         // zIndex: (10 - i),

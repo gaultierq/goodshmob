@@ -10,9 +10,9 @@ import {seeUser} from "../../Nav"
 import {SFP_TEXT_ITALIC} from "../../fonts"
 import GTouchable from "../../GTouchable"
 import {sanitizeActivityType, timeSinceActivity} from "../../../helpers/DataUtils"
-import {Avatar} from "../../UIComponents"
 import {connect} from "react-redux"
-import {getMainUrl, getActivityText, showResourceActions} from "../../ActivityHelper"
+import {getActivityText, getMainUrl, showResourceActions} from "../../ActivityHelper"
+import {GAvatar} from "../../GAvatar"
 
 type Props = {
     activity: Activity,
@@ -56,9 +56,7 @@ export default class ActivityStatus extends React.Component<Props, State> {
                         flexDirection: 'row', flex: 1,
                         // backgroundColor: 'purple',
                     }}>
-                        <GTouchable onPress={() => seeUser(navigator, activity.user)}>
-                            <Avatar user={activity.user} />
-                        </GTouchable>
+                        <GAvatar person={activity.user} seeable />
 
                         <View style={{
                             // backgroundColor: 'red',

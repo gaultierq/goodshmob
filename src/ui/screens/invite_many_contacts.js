@@ -7,12 +7,13 @@ import type {Contact} from "./contact_list"
 import ContactList, {createSmsUri, splitContacts, toPerson} from "./contact_list"
 import PersonRowI from "../activity/components/PeopleRow"
 import GButton from "../components/GButton"
-import {LINEUP_PADDING, openLinkSafely, selectDimension} from "../UIStyles"
+import {LINEUP_PADDING, selectDimension} from "../UIStyles"
 import {fullName} from "../../helpers/StringUtils"
 import GTouchable from "../GTouchable"
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import {Colors} from "../colors"
 import {SFP_TEXT_MEDIUM} from "../fonts"
+import {openLinkSafely} from "../../managers/Links"
 
 type Props = {
 }

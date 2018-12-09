@@ -9,7 +9,6 @@ import {buildData, getAskBackgroundColor, sanitizeActivityType} from "../../../h
 import type {Activity, ActivityType, Id, RNNNavigator} from "../../../types"
 import ItemBody from "./ItemBody"
 import ActivityActionBar from "./ActivityActionBar"
-import {Avatar} from "../../UIComponents"
 import {seeUser} from "../../Nav"
 import GTouchable from "../../GTouchable"
 import * as activityAction from "../actions"
@@ -26,6 +25,7 @@ import {UpdateTracker} from "../../UpdateTracker"
 import Button from 'apsl-react-native-button'
 import Icon from 'react-native-vector-icons/Feather'
 import {A_BUY} from "../../savingRights"
+import {GAvatar} from "../../GAvatar"
 
 
 type Props = {
@@ -175,34 +175,14 @@ export default class ActivityCell extends React.Component<Props, State> {
     renderUserAvatar(user: User, styles?: *) {
         let navigator: RNNNavigator = this.props.navigator;
         return this.wrapUserAvatar(
-            <GTouchable onPress={() => seeUser(navigator, user)}>
-                <Avatar user={user} size={AVATAR_DIM}/>
-            </GTouchable>,
-            styles
+            <GAvatar
+                person={user}
+                seeable
+                size={AVATAR_DIM}
+            />
+            , styles
         )
     }
-
-    // renderUserGeneral(user: User, user2?: User, style?:*) {
-    //     let navigator: RNNNavigator = this.props.navigator;
-    //     // let result = this.wrapUserAvatar(
-    //     return this.wrapUserAvatar(
-    //         <View style={_styles.userWrap}>
-    //             {this.renderAvatar(navigator, user)}
-    //             {user2 && <Image style={_styles.userImage} tintColor={Colors.black} source={require('../../../img2/rightArrowSmallGrey.png')}/>}
-    //             {user2 && this.renderAvatar(navigator, user2)}
-    //         </View>,
-    //         style
-    //     );
-    // }
-
-    // renderAvatar(navigator, user) {
-    //
-    //     return <GTouchable onPress={() => seeUser(navigator, user)}>
-    //         <Avatar user={user} style={{
-    //             dim: AVATAR_DIM,
-    //         }}/>
-    //     </GTouchable>;
-    // }
 
     wrapUserAvatar(children: Node, styles?: *) {
         const padding = 3;

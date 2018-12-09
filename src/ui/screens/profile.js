@@ -21,9 +21,7 @@ import type {Id, ms, RequestState, RNNNavigator, User} from "../../types"
 import {buildData} from "../../helpers/DataUtils"
 import * as Api from "../../managers/Api"
 import * as authActions from '../../auth/actions'
-
-import {Avatar} from "../UIComponents"
-import {openLinkSafely, renderSimpleButton, stylePadding} from "../UIStyles"
+import {renderSimpleButton, stylePadding} from "../UIStyles"
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import Toast from 'react-native-root-toast'
 import {CONFIG_SET} from "../../reducers/dataReducer"
@@ -34,7 +32,8 @@ import {SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "../fonts"
 import FeedSeparator from "../activity/components/FeedSeparator"
 import {getDeviceInfo} from "../../managers/DeviceManager"
 import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
-import {CLOSE_MODAL} from "../Nav"
+import {GAvatar} from "../GAvatar"
+import {openLinkSafely} from "../../managers/Links"
 
 type Props = {
     navigator: RNNNavigator,
@@ -233,7 +232,7 @@ export default class Profile extends Component<Props, State> {
             alignItems: 'center',
         }}
         >
-            <Avatar user={user} size={100} />
+            <GAvatar person={user} size={100} />
             {user && <Text style={styles.userName}>{user.firstName + " " + user.lastName}</Text>}
 
         </View>;

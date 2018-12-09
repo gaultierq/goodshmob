@@ -440,6 +440,8 @@ export default {
         follow: "Follow",
         followed: "Followed",
         unfollow: "Unfollow",
+        connect: "Connect",
+        connected: "Connected",
         terms: "Terms and personal data",
         copy_link: "Copy link",
         send_to_goodsher: "Send to another\nuser",

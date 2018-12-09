@@ -8,7 +8,7 @@ import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from 
 import GTouchable from "./GTouchable"
 import type {ViewStyle} from "../types"
 import {TextStyle} from "../types"
-import {createOpenModalLink} from "../managers/Links"
+import {createOpenModalLink, openLinkSafely} from "../managers/Links"
 
 export const BACKGROUND_COLOR = Colors.white;
 export const NAV_BACKGROUND_COLOR = Colors.dirtyWhite;
@@ -138,16 +138,6 @@ export function renderLink(
         })};
 
     return renderSimpleLink(text, handler, options);
-}
-export function openLinkSafely(url: ?string) {
-    console.log("openLinkSafely", url);
-    Linking.canOpenURL(url).then(supported => {
-        if (supported) {
-            Linking.openURL(url);
-        } else {
-            console.log("Don't know how to open URI: ", url);
-        }
-    })
 }
 
 export function openModalStatic(screen: string, title: string) {

@@ -27,8 +27,9 @@ import * as Api from "../../../managers/Api"
 import {FETCH_ITEM} from "../../lineup/actionTypes"
 import {fetchItemCall} from "../../lineup/actions"
 import GTouchable from "../../../ui/GTouchable"
-import {LINEUP_PADDING, openLinkSafely} from "../../UIStyles"
+import {LINEUP_PADDING} from "../../UIStyles"
 import FeedSeparator from "./FeedSeparator"
+import {openLinkSafely} from "../../../managers/Links"
 
 type Props = {
     item?: Item,

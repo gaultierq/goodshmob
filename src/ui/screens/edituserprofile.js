@@ -2,7 +2,6 @@
 import React from 'react'
 import {Platform, StyleSheet, Text, TextInput, View} from 'react-native'
 import type {Props as LineupProps} from "./lineuplist"
-import Screen from "../components/Screen"
 import type {Id, RequestState} from "../../types"
 import {LINEUP_PADDING, renderSimpleButton} from "../UIStyles"
 import * as Api from "../../managers/Api"
@@ -11,11 +10,12 @@ import ApiAction from "../../helpers/ApiAction"
 import {connect} from "react-redux"
 import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
 import {buildData} from "../../helpers/DataUtils"
-import {Avatar, FullScreenLoader} from "../UIComponents"
+import {FullScreenLoader} from "../UIComponents"
 import {Colors} from "../colors"
 import _Messenger from "../../managers/Messenger"
 import Http404 from "./errors/404"
 import {currentUserId, logged} from "../../managers/CurrentUser"
+import {GAvatar} from "../GAvatar"
 
 type Props = LineupProps & {
     userId: Id
@@ -83,7 +83,7 @@ export default class EditUserProfileScreen extends React.Component<Props, State>
             <View style={[styles.container]}>
 
                 <View style={styles.headerWrapper}>
-                    <Avatar user={user} />
+                    <GAvatar person={user} />
                     <Text style={{marginTop: 10, fontSize: 16, color: Colors.greyishBrown}}>
                         {i18n.t("form.description.user_name")}
                     </Text>

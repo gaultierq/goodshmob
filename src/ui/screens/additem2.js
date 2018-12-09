@@ -2,7 +2,7 @@
 import React from 'react'
 import {ActivityIndicator, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
 import {CheckBox} from "react-native-elements"
-import {openLinkSafely, renderSimpleButton, STYLES} from "../UIStyles"
+import {renderSimpleButton, STYLES} from "../UIStyles"
 import type {Id, IItem} from "../../types"
 import {logged} from "../../managers/CurrentUser"
 import {buildData} from "../../helpers/DataUtils"
@@ -13,6 +13,7 @@ import Sheet from "../components/sheet"
 import {CANCELABLE_MODAL} from "../Nav"
 import {SFP_TEXT_ITALIC, SFP_TEXT_REGULAR} from "../fonts"
 import GTouchable from "../GTouchable"
+import {openLinkSafely} from "../../managers/Links"
 
 type Props = {
     defaultLineupId: Id,

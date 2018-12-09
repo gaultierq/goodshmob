@@ -12,12 +12,11 @@ import {
     DISCONNECT_RIGHT_BUTTON,
     LINEUP_SECTIONS,
     MainBackground,
-    RIGHT_BUTTON_SPINNER
+    RIGHT_BUTTON_SPINNER,
+    scheduleOpacityAnimation
 } from "../UIComponents"
-import * as UI from "../UIStyles"
-import {STYLES} from "../UIStyles"
+import {LINEUP_PADDING, STYLES} from "../UIStyles"
 import UserLineups from "./userLineups"
-import {fullName} from "../../helpers/StringUtils"
 import * as Api from "../../managers/Api"
 import {
     actions as userActions,
@@ -31,18 +30,25 @@ import {getUserActions, GUserAction, U_CONNECT, U_DISCONNECT} from "../userRight
 import {createSelector} from "reselect"
 import {USER_SECLECTOR} from "../../helpers/ModelUtils"
 import _Messenger from "../../managers/Messenger"
+import {UserHeader} from "../components/UserHeader"
+import {Colors} from "../colors"
+import {SFP_TEXT_BOLD} from "../fonts"
+import GTouchable from "../GTouchable"
+import {fullName2} from "../../helpers/StringUtils"
+import {CANCELABLE_MODAL2, CLOSE_MODAL} from "../Nav"
 
 type Props = {
     userId: Id,
     navigator?: RNNNavigator,
     user?: ?User,
-    action?: GUserAction
+    action?: GUserAction,
 };
 
 type State = {
     reqFetchUser?: RequestState,
     reqConnect?: RequestState,
     reqDisconnect?: RequestState,
+    showFilter?: boolean,
 };
 
 
@@ -66,32 +72,19 @@ const selector = createSelector(
 @connect(selector)
 export default class UserScreen extends Screen<Props, State> {
 
+    // static navigatorButtons = CANCELABLE_MODAL2
+
     static navigatorStyle = {
-        navBarNoBorder: true,
-        topBarElevationShadowEnabled: false,
-        // those props only affect Android
-        navBarTitleTextCentered: true,
-        navBarSubTitleTextCentered: true,
-    };
+        drawUnderNavBar: true,
+        navBarTransparent: true,
+        navBarTranslucent: true,
+        navBarBackgroundColor: Colors.dirtyWhite,
+        topBarElevationShadowEnabled: false
+    }
 
-    unsubscribe: ?() => void
-
-
+    static navigatorButtons = CANCELABLE_MODAL2
 
     componentDidMount() {
-        this.unsubscribe = this.props.navigator.addOnNavigatorEvent(event => {
-            let user = this.getUser()
-            if (user) {
-                if (event.id === 'connect_' + user.id) {
-                    //followLineupPending(this.props.dispatch, user)
-                    this.connectWith(user)
-                }
-                else if (event.id === 'disconnect_' + user.id) {
-                    // unfollowLineupPending(this.props.dispatch, user)
-                    this.disconnectWith(user)
-                }
-            }
-        });
 
         Api.safeDispatchAction.call(
             this,
@@ -101,81 +94,19 @@ export default class UserScreen extends Screen<Props, State> {
         )
     }
 
-    connectWith(user: User) {
-        let action = createFriendship(user.id).createActionDispatchee(CONNECT);
-
-        Api.safeDispatchAction.call(
-            this,
-            this.props.dispatch,
-            action,
-            'reqConnect'
-        ).then(()=> {
-                _Messenger.sendMessage(i18n.t("friends.messages.connect"));
-            }
-        );
-    }
-
-    disconnectWith(user: User) {
-        Alert.alert(
-            i18n.t("friends.alert.title"),
-            i18n.t("friends.alert.label"),
-            [
-                {text: i18n.t("actions.cancel"), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-                {text: i18n.t("actions.ok"), onPress: () => {
-                        let action = deleteFriendship(user.id).createActionDispatchee(DISCONNECT);
-                        Api.safeDispatchAction.call(
-                            this,
-                            this.props.dispatch,
-                            action,
-                            'reqDisconnect'
-                        ).then(()=> {
-                                _Messenger.sendMessage(i18n.t("friends.messages.disconnect"));
-                            }
-                        );
-                    }},
-            ],
-            { cancelable: true }
-        )
-    }
-
-
-    componentWillUnmount() {
-        if (this.unsubscribe) this.unsubscribe()
-    }
-
     getUser() {
         return this.props.user
     }
 
-    getButtons(action: GUserAction, userId: Id): any {
-        if (this.state.reqConnect === 'sending' || this.state.reqDisconnect === 'sending') {
-            return {rightButtons: [RIGHT_BUTTON_SPINNER],}
-        }
-        if (action) {
-            if (action === U_CONNECT) return {rightButtons: [CONNECT_RIGHT_BUTTON(userId)],}
-            if (action === U_DISCONNECT) return {rightButtons: [DISCONNECT_RIGHT_BUTTON(userId)],}
-        }
-        return {rightButtons: []}
-    }
 
     render() {
         let user = this.getUser();
 
-        this.props.navigator.setButtons(this.getButtons(this.props.action, this.props.userId))
+        // this.props.navigator.setButtons(this.getButtons(this.props.action, this.props.userId))
+        const lineupsCount = _.get(user, 'meta.lineupsCount')
+        const savingsCount = _.get(user, 'meta.savingsCount')
 
         let userId = this.props.userId;
-        //FIXME: rm platform specific code, https://github.com/wix/react-native-navigation/issues/1871
-        if (this.isVisible() && user) {
-            if (__IS_IOS__) {
-                this.props.navigator.setStyle({...UI.NavStyles,
-                    navBarCustomView: 'goodsh.UserNav',
-                    navBarCustomViewInitialProps: { user }
-                });
-            }
-            else {
-                this.setNavigatorTitle(this.props.navigator, {title: fullName(user)})
-            }
-        }
 
         return (
             <MainBackground>
@@ -186,7 +117,30 @@ export default class UserScreen extends Screen<Props, State> {
                     navigator={this.props.navigator}
                     ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
                     renderSectionHeader={({section}) => section.renderSectionHeader()}
+                    ListHeaderComponent={(
+                        <View style={{marginTop: 30}}>
+                            <UserHeader avatarProps={{size: LINEUP_PADDING * 8,}}
+                                        avatarContainerStyle={{marginTop: 32,}}
+                                        navigator={this.props.navigator}
+                                        user={user}/>
+                            <View style={{
+                                alignItems: 'center',
+                                marginHorizontal: LINEUP_PADDING,
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                marginBottom: 12,
+                            }}>
+                                <Text style={{color:Colors.black, fontSize: 24, fontFamily: SFP_TEXT_BOLD}}>{lineupsCount} listes - {savingsCount} éléments</Text>
+                                <GTouchable onPress={() => {
+                                    this.setState({showFilter: !this.state.showFilter})
+                                    scheduleOpacityAnimation()
+                                }}><Image style={{tintColor: this.state.showFilter ? Colors.black : Colors.greyish}} source={require('../../img2/search.png')} resizeMode="contain"/>
+                                </GTouchable>
+                            </View>
+                        </View>
+                    )}
                     sectionMaker={LINEUP_SECTIONS(this.props.navigator, this.props.dispatch, userId)}
+                    hideFilter={!this.state.showFilter}
 
                 />
             </MainBackground>

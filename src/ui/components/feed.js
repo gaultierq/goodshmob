@@ -50,7 +50,7 @@ export type Props = {
     ListFooterComponent?: Node,
     ListEmptyComponent?: Node,
     style?: ViewStyle,
-    scrollUpOnBack?:() => ?boolean,
+    scrollUpOnBack?:?() => ?boolean,
     visibility?: ScreenVisibility,
     filter?:FilterConfig<any>,
     displayName?: string,
