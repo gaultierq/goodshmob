@@ -64,7 +64,7 @@ export default class UserScreen extends Screen<Props, State> {
         topBarElevationShadowEnabled: false
     }
 
-    static navigatorButtons = CANCELABLE_MODAL2
+    // static navigatorButtons = CANCELABLE_MODAL2
 
     componentDidMount() {
 

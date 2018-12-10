@@ -10,6 +10,7 @@ import android.app.Application;
 import android.content.Intent;
 
 import com.facebook.react.ReactApplication;
+import com.github.amarcruz.rntextsize.RNTextSizePackage;
 import com.psykar.cookiemanager.CookieManagerPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import com.amsoft.RNProgressHUB.RNProgressHUBPackage;
@@ -64,6 +65,7 @@ public class MainApplication extends NavigationApplication implements ReactAppli
   protected List<ReactPackage> getPackages() {
     return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new RNTextSizePackage(),
             new CookieManagerPackage(),
             new ReactNativeContacts(),
             new RNProgressHUBPackage(),

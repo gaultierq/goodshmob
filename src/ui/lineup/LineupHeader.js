@@ -3,8 +3,7 @@
 import React, {Component} from 'react'
 import {Image, StyleSheet, Text, View} from 'react-native'
 import {LINEUP_PADDING} from "../UIStyles"
-import {fullName2} from "../../helpers/StringUtils"
-import {SFP_TEXT_BOLD, SFP_TEXT_REGULAR} from "../fonts"
+import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts"
 import {Colors} from "../colors"
 import type {Lineup, RNNNavigator} from "../../types"
 import connect from "react-redux/es/connect/connect"
@@ -14,16 +13,11 @@ import {GLineupAction, L_ADD_ITEM, L_FOLLOW, L_SHARE, L_UNFOLLOW, LineupRights} 
 import {displayShareLineup} from "../Nav"
 import {followLineupPending, unfollowLineupPending} from "./actions"
 import GTouchable from "../GTouchable"
-import {GAvatar} from "../GAvatar"
-
-type Props = {
-    navigator: RNNNavigator,
-    lineup: Lineup,
-    actions?: GLineupAction[]
-}
-type State = {}
+import rnTextSize, { type TSFontSpecs, type TSMeasureResult} from 'react-native-text-size'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 
+const BACK_BUTTON_WIDTH = 40
 export const selector = createSelector(
     [
         LINEUP_SELECTOR,
@@ -36,27 +30,201 @@ export const selector = createSelector(
     }
 )
 
+const fontSpecs: TSFontSpecs = {
+    fontFamily: SFP_TEXT_BOLD,
+    fontSize: 40,
+}
+const logger = rootlogger.createLogger('LineupHeader')
+
+
+type Props = {
+    navigator: RNNNavigator,
+    lineup: Lineup,
+    actions?: GLineupAction[]
+}
+type State = {
+    buttonsWidth?: number,
+    backButtonWidth?: number,
+    wordsWidth: TSMeasureResult[],
+}
+
 @connect(selector)
 export class LineupHeader extends Component<Props, State> {
-
 
     static defaultProps = {
     }
 
+    state = {}
+
+
+    async calculateWordsWidth(words: string[]) {
+        if (this.state.wordsWidth) return
+        logger.info("calculateWordsWidth")
+        let results = await Promise.all(words.map(text => rnTextSize.measure({
+                text,
+                ...fontSpecs,
+            }
+            )
+            )
+        )
+        this.setState({wordsWidth: results})
+        logger.info("words dimensions:", results)
+    }
+
     render() {
+        let {lineup} = this.props
+
+        const name = lineup.name
+        if (!name) return null
+
+        let curChar = null, currWord = null
+        let words1 = []
+        for (var i = 0; i < name.length; i++) {
+            curChar = name.charAt(i)
+            if (curChar === ' ') {
+                if (currWord !== null) {
+                    words1.push(currWord)
+                    words1.push(' ')
+                    currWord = null
+                }
+            }
+            else {
+                if (currWord === null) currWord = ''
+                currWord += curChar
+            }
+        }
+        if (currWord) words1.push(currWord)
+        let words = words1
+
+        this.calculateWordsWidth(words)
+
+        if (!this.state.wordsWidth) return null
+
+        let widths = {
+            first: __DEVICE_WIDTH__ - 2 * LINEUP_PADDING - (this.state.backButtonWidth || BACK_BUTTON_WIDTH) - LINEUP_PADDING,
+            middle: __DEVICE_WIDTH__ - 2 * LINEUP_PADDING,
+            last: __DEVICE_WIDTH__ - 2 * LINEUP_PADDING - (this.state.buttonsWidth || 60)
+        }
+
+        let lines = []
+
+        // 1st pass, we forget about the trailing buttons
+        let currLine = null, curLineW = 0
+
+        for (let i = 0; i < words.length; i ++) {
+            let availWidth = lines.length === 0 ? widths.first : widths.middle
+            let w = words[i]
+            let ww = this.state.wordsWidth[i].width
+            if (curLineW + ww < availWidth) {
+                if (currLine === null) currLine = ''
+                currLine += w
+                curLineW += ww
+            }
+            else {
+                //not enough space
+                if (currLine !== null) {
+                    lines.push(currLine)
+                }
+                else {
+                    //word too long
+
+                }
+                currLine = w
+                curLineW = ww
+            }
+        }
+        if (currLine) lines.push(currLine)
+
+        //2nd pass: including the trailing buttons
+        let cut = 0
+        if (curLineW > widths.last) {
+            //need to cut it
+            for (let i = words.length; i --> 0;) {
+                let w = words[i]
+                let ww = this.state.wordsWidth[i].width
+                if (curLineW < widths.last) {
+                    //finish
+                    lines.push(currLine.substr(0, currLine.length - cut))
+                    lines.push(currLine.substr(currLine.length - cut))
+                    break
+
+                }
+                else {
+                    curLineW -= ww
+                    cut += w.length
+                }
+            }
+        }
+
+
+        return (
+            <View
+                style={{
+                    // flexWrap: "wrap",
+                    flex: 1,
+                    paddingHorizontal: LINEUP_PADDING,
+                }}>
+
+                {lines.map((line, i) => this.renderLine(line, {first: i === 0, last: i === lines.length - 1}))}
+
+            </View>
+        )
+    }
+
+    renderBackButton() {
+
+        return (
+            <GTouchable
+                onLayout={e => this.setState({  backButtonWidth: _.get(e, 'nativeEvent.layout.width') })}
+                onPress={() => this.props.navigator.dismissModal()}
+                style={{
+                    // paddingVertical: LINEUP_PADDING,
+                    paddingRight: LINEUP_PADDING
+                }}>
+                <Image source={require('../../img2/backArrowBlack.png')}
+                       style={{
+                           width: BACK_BUTTON_WIDTH,
+                       }}
+                />
+            </GTouchable>
+        )
+    }
+
+    renderLine(line: string, {first, last}: {first: boolean, last: boolean}) {
+        const lol = [fontSpecs, {
+
+            color: Colors.black,
+            // backgroundColor: 'green',
+        }]
+        return (
+            <View style={{
+                flex: 1, flexDirection: 'row',
+                // justifyContent: 'space-between',
+                alignItems: 'center',
+            }}>
+                {first && this.renderBackButton()}
+                <Text style={lol}>{line}</Text>
+                {last && <View onLayout={e => this.setState({  buttonsWidth: _.get(e, 'nativeEvent.layout.width') })} style={{
+                    // flex: 1,
+                    height: '100%',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-end',
+                    marginBottom: 18,
+                    // backgroundColor: 'purple',
+                }}>{this.renderButtons()}</View>}
+            </View>
+        )
+    }
+
+    renderButtons() {
         let {lineup, actions} = this.props
-
-        const avatarContainerSize = LINEUP_PADDING * 7
-        const user = lineup.user
-        const savingsCount = _.get(lineup, 'meta.savingsCount')
-        const followersCount = _.get(lineup, 'meta.followersCount')
-
         let button, shareB
         if (actions) {
             if (actions.indexOf(L_FOLLOW) >= 0) {
                 button = <Text onPress={()=>{
                     followLineupPending(this.props.dispatch, lineup)
-                }} style={[styles.button_dim, styles.button, styles.button_inactive]}>{i18n.t('actions.follow')}</Text>
+                }} style={[styles.button_dim, styles.button, styles.button_active]}>{i18n.t('actions.follow')}</Text>
             }
             else if (actions.indexOf(L_UNFOLLOW) >= 0) {
                 button = <Text onPress={()=>{
@@ -75,106 +243,51 @@ export class LineupHeader extends Component<Props, State> {
                         onPress={()=>{
                             displayShareLineup({
                                 navigator: this.props.navigator,
-                                lineup: this.props.lineup
+                                lineup: this.props.lineup,
                             })
                         }}
                         style={{
                             alignItems: 'center',
-                            // backgroundColor:'red',
-                            flex:1}}
+                            marginLeft: LINEUP_PADDING / 2,
+                        }}
                     >
-                        <Image source={__IS_IOS__ ? require('../../img2/share-ios.png') : require('../../img2/share-android.png')}
-                               resizeMode="contain"
-                               style={styles.share_image}/>
+                        <MaterialIcons style={{}} name={__IS_IOS__ ? 'share' : 'share'} size={24} color={Colors.grey}/>
+
                     </GTouchable>)
             }
         }
-
-        return (
-            <View style={{flexDirection: 'row', margin: LINEUP_PADDING}}>
-                <View style={{
-                    alignItems: 'center',
-                    marginRight: LINEUP_PADDING
-                }}>
-                    <GAvatar person={user} seeable style={{alignItems: 'center',}}
-                            size={avatarContainerSize}/>
-                    <Text style={[{marginTop: 4}, styles.userName]}>{fullName2(user)}</Text>
-                </View>
-
-                <View style={{
-                    flex: 1,
-                    // backgroundColor: 'red',
-
-                }}>
-                    <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-around'}}>
-                        <View style={{alignItems: 'center',}}>
-                            <Text style={[styles.counters]}>{`${savingsCount}`}</Text>
-                            <Text style={[styles.counters_names]}>{`éléments`}</Text>
-                        </View>
-                        <View style={{alignItems: 'center',}}>
-                            <Text style={[styles.counters]}>{`${followersCount}`}</Text>
-                            <Text style={[styles.counters_names]}>{`abonnés`}</Text>
-                        </View>
-                    </View>
-                    <View style={{
-                        // backgroundColor: 'red',
-                        flex:1, flexDirection:'row', alignItems: 'center', justifyContent: 'flex-start', }}>
-                        {button}
-                        {shareB}
-                    </View>
-
-                </View>
-            </View>
-        )
+        return [button, shareB]
     }
 }
 const styles = StyleSheet.create({
-    counters: {
-        fontFamily: SFP_TEXT_BOLD,
-        fontSize: 22,
-        color: Colors.greyishBrown,
-    },
-    counters_names: {
-        fontFamily: SFP_TEXT_REGULAR,
-        fontSize: 18,
-        color: Colors.greyish,
-    },
     button_dim: {
-        padding: 8, flex:1
+        paddingHorizontal: 8,
+        // paddingVertical: 8,
+        // flex:1
+        borderRadius: 12,
+        height: 24,
+        marginLeft: LINEUP_PADDING,
     },
     button: {
         color: Colors.green,
         backgroundColor: 'transparent',
         fontFamily: SFP_TEXT_BOLD,
-        fontSize: 20,
-        borderWidth: 2,
+        fontSize: 16,
         borderColor: Colors.green,
-        borderRadius: 20,
+
+        // backgroundColor: 'red',
+
         alignItems: 'center',
         justifyContent: 'center',
         textAlign: 'center',
-        // margin: 20,
     },
     button_active: {
-        color: Colors.white,
-        backgroundColor: Colors.green,
+        color: Colors.green,
+        borderWidth: 1,
 
     },
     button_inactive: {
-        color: Colors.green,
-        backgroundColor: 'transparent',
-    },
-
-    userName: {
-        alignItems: 'center',
-        fontFamily: SFP_TEXT_BOLD,
-        color: Colors.greyishBrown,
-        fontSize: 15,
-    },
-    share_image: {
-        alignSelf: 'center',
-        width: 80,
-        height: 80,
+        color: Colors.greyish,
     },
 
 })

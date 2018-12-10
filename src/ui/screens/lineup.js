@@ -4,24 +4,17 @@ import React from 'react'
 import {Image, ImageBackground, Keyboard, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
-import {
-    getNavButtonForAction,
-    InnerPlus,
-    ListColumnsSelector,
-    renderInnerPlus,
-    TRANSPARENT_SPACER
-} from "../UIComponents"
+import {InnerPlus, ListColumnsSelector, TRANSPARENT_SPACER} from "../UIComponents"
 import * as Api from "../../managers/Api"
 import Feed from "../components/feed"
-import type {Id, Lineup, RNNNavigator, Saving} from "../../types"
+import type {Lineup, Saving} from "../../types"
 import {doDataMergeInState} from "../../helpers/DataUtils"
 import ActivityCell from "../activity/components/ActivityCell"
-import {displayLineupActionMenu, displayShareLineup, seeActivityDetails, startAddItem} from "../Nav"
+import {CANCELABLE_MODAL2, seeActivityDetails} from "../Nav"
 import {Colors} from "../colors"
 import Screen from "./../components/Screen"
-import * as UI from "../UIStyles"
-import {STYLES} from "../UIStyles"
-import {FETCH_LINEUP, FETCH_SAVINGS, fetchLineup, followLineupPending, unfollowLineupPending,} from "../lineup/actions"
+import {LINEUP_PADDING, STYLES} from "../UIStyles"
+import {FETCH_LINEUP, FETCH_SAVINGS, fetchLineup,} from "../lineup/actions"
 import {UNSAVE} from "../activity/actionTypes"
 import {GLineupAction, LineupRights} from "../lineupRights"
 import {LINEUP_AND_SAVING_SELECTOR} from "../../helpers/ModelUtils"
@@ -33,8 +26,9 @@ import {LineupHeader} from "../lineup/LineupHeader"
 
 import {createDetailsLink} from "../activity/activityDetail"
 import {openLinkSafely} from "../../managers/Links"
-import {createOpenModalLink} from "../../managers/Links"
 import SearchItems from "./searchitems"
+import GImage from "../components/GImage"
+import {LineupMedals} from "../lineup/LineupMedals"
 
 type Props = {
     lineupId: string,
@@ -67,10 +61,17 @@ const SPACER = 6
 class LineupScreen extends Screen<Props, State> {
 
     static navigatorStyle = {
-        // those props only affect Android
-        navBarTitleTextCentered: true,
-        navBarSubTitleTextCentered: true,
+        navBarHidden: true,
     }
+    // static navigatorStyle = {
+    //     drawUnderNavBar: true,
+    //     navBarTransparent: true,
+    //     navBarTranslucent: true,
+    //     navBarBackgroundColor: Colors.dirtyWhite,
+    //     topBarElevationShadowEnabled: false
+    // }
+
+    static navigatorButtons = CANCELABLE_MODAL2
 
     unsubscribe: ?() => void
     actions: ?GLineupAction[]
@@ -80,110 +81,9 @@ class LineupScreen extends Screen<Props, State> {
         renderType: 'grid',
     }
 
-    componentWillMount() {
-        this.unsubscribe = this.props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-
-        this.props.navigator.setStyle({
-            ...UI.NavStyles,
-            navBarCustomView: 'goodsh.LineupNav',
-            navBarCustomViewInitialProps: {
-                lineupId: this.props.lineupId
-            }
-        })
-    }
-
-    componentWillUnmount() {
-        if (this.unsubscribe) this.unsubscribe()
-    }
-
-    componentDidAppear() {
-        LineupScreen.refreshNavBar(this.props.navigator, this.props.lineupId)
-    }
-
-    refreshNavigatorButtons() {
-        console.debug('refresh navigator buttons')
-        this.props.navigator.setButtons(this.getMainActionButton2(this.props.actions, this.props.lineupId))
-
-    }
-
-    static refreshNavBar(navigator: RNNNavigator, lineupId: ?Id, lineup: ?Lineup) {
-
-        if (lineup) {
-            navigator.setTitle({title: lineup.name});
-        }
-    }
-
-    //TODO: improve code
-    getMainActionButton2(actions: GLineupAction[], lineupId: Id): any {
-        let {mains, more} = this.getButtons(actions)
-
-        let rightButtons = mains.map(action => getNavButtonForAction(action, `${lineupId}`))
-        if (more.length > 0) {
-            rightButtons.push({
-                icon: require('../../img2/vertical-dots.png'),
-                id: 'more_' + lineupId
-            })
-        }
-        rightButtons.reverse()
-
-        console.debug("lineup " + lineupId + ": buttons:", rightButtons, actions)
-        return {rightButtons, fab: {}}
-    }
-
-    getButtons(actions) {
-        let more = _.sortBy(actions, a => a.priority)
-        // let _p = 0
-        // const mains = _.remove(actions, a => {
-        //     if (a.priority <= _p) {
-        //         _p = a.priority
-        //         return true
-        //     }
-        //     return false
-        // })
-
-        return {mains: [], more}
-    }
-
-// FIXME: terrible hack: watch store, refresh accordingly
-    onNavigatorEvent(event) {
-        console.debug('onNavigatorEvent', event)
-        let lineup = this.props.lineup
-        if (event.id === 'add_' + lineup.id) {
-            startAddItem(this.props.navigator, lineup.id)
-        }
-        else if (event.id === 'follow_' + lineup.id) {
-            followLineupPending(this.props.dispatch, lineup)
-        }
-        else if (event.id === 'share_' + lineup.id) {
-            displayShareLineup({
-                navigator: this.props.navigator,
-                lineup: this.props.lineup
-            })
-        }
-        else if (event.id === 'unfollow_' + lineup.id) {
-            unfollowLineupPending(this.props.dispatch, lineup)
-        }
-        else if (event.id === 'more_' + lineup.id) {
-            let {more} = this.getButtons(actions)
-            displayLineupActionMenu(this.props.navigator, this.props.dispatch, lineup, a => !more.includes(a))
-        }
-    }
-
-    // static getDerivedStateFromProps(props: Props, state: State) {
-    // }
-
 
     render() {
         const {lineup, savings} = this.props
-
-        LineupScreen.refreshNavBar(this.props.navigator, null, lineup)
-
-        //this is not very react compliant, but I didn't find a good way to do it yet
-        if (this.props.actions !== this.actions) {
-            this.refreshNavigatorButtons()
-            this.actions = this.props.actions
-        }
-
 
         let fetchSrc = this.getFetchSrc(lineup)
         let numColumns = this.state.renderType === 'grid' ? 3 : 1
@@ -208,12 +108,19 @@ class LineupScreen extends Screen<Props, State> {
                     style={{flex: 1, backgroundColor: Colors.white}}
                     ListHeaderComponent={
                         (
-                            <View>
-                                <LineupHeader lineup={lineup} navigator={this.props.navigator} />
-                                <FeedSeparator/>
-                                <ListColumnsSelector size={30}
-                                                     onTabPressed={index => this.setState({renderType: index === 0 ? 'grid' : 'stream'})}/>
-                                <FeedSeparator/>
+                            <View style={{marginTop: 40, }}>
+
+                                <View style={{flexDirection: 'row', flex:1}}>
+                                    <LineupHeader lineup={lineup} navigator={this.props.navigator} />
+                                </View>
+
+                                <LineupMedals navigator={this.props.navigator} lineup={lineup}/>
+                                <FeedSeparator style={{marginTop: LINEUP_PADDING}}/>
+                                <ListColumnsSelector
+                                    size={30}
+                                    onTabPressed={index => this.setState({renderType: index === 0 ? 'grid' : 'stream'})}
+                                />
+                                <FeedSeparator />
                             </View>
                         )}
                 />
@@ -270,13 +177,13 @@ class LineupScreen extends Screen<Props, State> {
             uri = SearchItems.createAddLink(this.props.lineupId)
             child = (
                 <View style={{width: layout.cellWidth, height: layout.cellHeight}}>
-                    <InnerPlus plusStyle={{backgroundColor: Colors.green, borderRadius: 4,}}/>
+                    <InnerPlus plusStyle={{backgroundColor: Colors.black, borderRadius: 4,}}/>
                 </View>
             )
         }
         else {
             uri = createDetailsLink(item.id, item.type)
-            child = <CachedImage
+            child = <GImage
                 source={{uri: _.get(item, 'resource.image'), }}
                 style={[styles.gridImg]}
                 resizeMode='cover'

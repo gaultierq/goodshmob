@@ -501,7 +501,7 @@ export default {
 
         },
         description: {
-            user_name: 'Veuillez indiquer vos noms et prénoms'
+            user_name: 'Veuillez indiquer votre nom'
         }
     },
     user_sheet: {

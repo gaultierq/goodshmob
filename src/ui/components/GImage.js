@@ -3,6 +3,8 @@ import React, {Component} from 'react'
 import {Image} from 'react-native'
 import {CachedImage} from 'react-native-cached-image'
 import Config from 'react-native-config'
+import {Colors} from "../colors"
+import Spinner from "react-native-spinkit"
 
 export type Props = {
     fallbackSource: any,
@@ -35,8 +37,8 @@ export default class GImage extends Component<Props, State>  {
                 useQueryParamsInCacheKey={true}
                 fallbackSource={this.props.fallbackSource}
                 activityIndicatorProps={{opacity: 0}}
-                {...this.props
-                }
+                loadingIndicator={props => <Spinner style={{alignSelf: 'center'}} type={"Pulse"} color={Colors.greying}/>}
+                {...this.props}
             />
         );
     }

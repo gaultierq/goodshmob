@@ -139,7 +139,9 @@ export const lineupScreen = {
     passProps: {
         // lineupId: 'c460d35f-e78c-410e-810c-27a7f198e28d',
         // lineupId: '6d9f8e0c-bf77-48d7-ad42-ac5ceafbe1f7', //olivier
-        lineupId: '37e67b05-c86c-4aeb-b3af-bf1c34862cd0', //local mine
+        // lineupId: 'bede4c55-2e48-4f95-9d13-a619907d7882', // titre pourri qg local
+        lineupId: 'a48a269f-a3b5-4018-8596-e2f6c723c1ef', // titre pourri not qg local
+        // lineupId: '37e67b05-c86c-4aeb-b3af-bf1c34862cd0', //local mine
         // lineupId: 'bffaf43b-f32c-424d-bae2-10cdc12fd192', //a benoit
     }
 };

@@ -34,3 +34,7 @@ export function openLinkSafely(url: ?string) {
         }
     })
 }
+
+export function pressToSeeUser(user: User) {
+    return () => openLinkSafely(buildUserUrl(user))
+}

@@ -220,7 +220,7 @@ export default class Profile extends Component<Props, State> {
                           width: 7,
                           height: 12,
                       }}
-        />;
+        />
     }
 
 // clicksMs;

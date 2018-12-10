@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import {Colors} from "../colors"
 
 import Swiper from 'react-native-swiper'
-import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "../fonts"
+import {SFP_TEXT_BOLD, SFP_TEXT_REGULAR} from "../fonts"
 
 import i18n from '../../i18n'
 import * as Api from "../../managers/Api"
