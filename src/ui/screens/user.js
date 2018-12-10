@@ -100,17 +100,22 @@ export default class UserScreen extends Screen<Props, State> {
                     ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
                     renderSectionHeader={({section}) => section.renderSectionHeader()}
                     ListHeaderComponent={(
-                        <View style={{marginTop: 30}}>
-                            <UserHeader avatarProps={{size: LINEUP_PADDING * 8,}}
-                                        avatarContainerStyle={{marginTop: 32,}}
+                        <View style={{
+                            marginTop: 40,
+                            // backgroundColor: 'green',
+                        }}>
+                            <UserHeader
+                                // avatarProps={{size: LINEUP_PADDING * 8,}}
+                                // avatarContainerStyle={{marginTop: 32,}}
                                         navigator={this.props.navigator}
                                         user={user}/>
+
                             <View style={{
                                 alignItems: 'center',
                                 marginHorizontal: LINEUP_PADDING,
                                 flexDirection: 'row',
                                 justifyContent: 'space-between',
-                                marginBottom: 12,
+                                marginVertical: 12,
                             }}>
                                 <Text style={{
                                     color:Colors.greyishBrown,

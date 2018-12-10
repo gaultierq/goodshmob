@@ -2,7 +2,7 @@
 
 import React, {Component} from 'react'
 import {Image, StyleSheet, Text, View} from 'react-native'
-import {LINEUP_PADDING} from "../UIStyles"
+import {HEADER_STYLES, LINEUP_PADDING} from "../UIStyles"
 import {SFP_TEXT_BOLD, SFP_TEXT_REGULAR} from "../fonts"
 import {Colors} from "../colors"
 import type {RequestState, RNNNavigator, User} from "../../types"
@@ -17,6 +17,7 @@ import * as Api from "../../managers/Api"
 import _Messenger from "../../managers/Messenger"
 import {Loader} from "../Loader"
 import {fullName2} from "../../helpers/StringUtils"
+import GTouchable from "../GTouchable"
 
 type Props = {
     navigator: RNNNavigator,
@@ -70,60 +71,139 @@ export class UserHeader extends Component<Props, State> {
 
         let button = this.getButton(actions, user)
 
+        const newVar = {
+            fontFamily: SFP_TEXT_BOLD,
+            fontSize: 40,
+            color: Colors.black,
+            alignItems: 'center',
+            // backgroundColor: 'blue',
+
+
+        }
         return (
+
+            // back , name | avatar, connect
             <View style={{
                 flexDirection: 'row',
-                // alignItems: 'flex-end',
-                margin: LINEUP_PADDING,
-                flex:1,
+                flex: 1,
             }}>
-                <View style={[{
-                    alignItems: 'flex-end',
-                    marginRight: LINEUP_PADDING,
-                    // backgroundColor: 'red',
-                }, avatarContainerStyle]}>
-                    <GAvatar person={user} {...avatarProps} />
+                <View
+                    style={{paddingLeft: LINEUP_PADDING}}
+                >
+                    <View style={{
+                        // flex:1,
+                        flexDirection: 'row',
+                        // paddingHorizontal: LINEUP_PADDING,
+                        // backgroundColor: 'red',
+                        alignItems: 'center',
+                    }}>
+                        {this.renderBackButton()}
+                        <Text style={newVar}>{user.firstName}</Text>
+                    </View>
+                    <View style={{flexDirection: 'row',
+                    }}>
+                        <Text style={newVar}>{user.lastName}</Text>
+                        {this.renderFriendsCount(followersCount)}
+                    </View>
                 </View>
 
-                <View style={{flexWrap: "wrap",
-                    flex:1,}}>
-                    <Text style={{
-                        fontFamily: SFP_TEXT_BOLD,
-                        fontSize: 40,
-                        color: Colors.black,
-
-
-                    }}>{fullName2(user, '\n')}</Text>
-                    <View style={{flexDirection: 'row', justifyContent: 'space-between',flex: 1,
-                        marginTop: 12}}>
-                        <View style={{alignItems: 'center',}}>
-                            <Text style={[styles.counters]}>{`${followersCount}`}</Text>
-                            <Text style={[styles.counters_names]}>{`amis`}</Text>
-                        </View>
+                {/*2nd column*/}
+                <View style={[{
+                    flex:1,
+                    alignItems: 'flex-end',
+                    // backgroundColor: 'red',
+                }, avatarContainerStyle]}>
+                    <GAvatar person={user} size={LINEUP_PADDING * 6} style={{marginBottom: 12, marginRight: LINEUP_PADDING,}}/>
+                    <View style={{position: 'absolute', bottom: 0, right: LINEUP_PADDING / 2}}>
                         {button}
                     </View>
+
                 </View>
 
             </View>
         )
     }
 
+
+    renderFriendsCount(followersCount: number) {
+        return (!!followersCount && <View style={{
+            flexDirection: 'row',
+            alignItems: 'flex-end',
+            marginBottom: 8,
+            marginLeft: LINEUP_PADDING,
+            // backgroundColor: 'red',
+        }}>
+            <Text style={[styles.counters, {marginRight: 4}]}>{`${followersCount}`}</Text>
+            <Text style={[styles.counters_names]}>{`amis`}</Text>
+        </View>)
+    }
+
+    renderBackButton() {
+
+        return (
+            <GTouchable
+                // onLayout={e => this.setState({  backButtonWidth: _.get(e, 'nativeEvent.layout.width') })}
+                onPress={() => this.props.navigator.dismissModal()}
+                style={{
+                    // paddingVertical: LINEUP_PADDING,
+                    paddingRight: LINEUP_PADDING,
+                    // backgroundColor: 'pink',
+                }}>
+                <Image source={require('../../img2/backArrowBlack.png')}
+                       style={{
+                           width: 40,
+                       }}
+                />
+            </GTouchable>
+        )
+    }
+
+
     getButton(actions, user) {
         let button
         if (actions) {
+
+            let gtouchStyle = {
+                backgroundColor: 'white',
+                height: 24,
+                borderWidth: 1,
+                borderRadius: 12,
+                paddingHorizontal: 4,
+                alignItems: 'center',
+                justifyContent: 'center',
+                textAlign: 'center',
+            }
+            let textStyle = {
+                fontFamily: SFP_TEXT_BOLD,
+                fontSize: 13,
+            }
             if (this.state.reqConnect === 'sending' || this.state.reqDisconnect === 'sending') {
                 button = <Loader size={40}/>
             }
             else if (actions.indexOf(U_CONNECT) >= 0) {
-                button = <Text onPress={() => {
-                    this.connectWith(user)
-                }} style={[styles.button_dim, styles.button, styles.button_active,]}>{i18n.t('actions.connect')}</Text>
+                button = <GTouchable
+                    style={[
+                        gtouchStyle, {
+                            borderColor: Colors.green,
+                        }]
+                    }  onPress={() => {this.connectWith(user)}}>
+                    <Text
+                        style={[textStyle, {
+                            color: Colors.green,
+                        }]
+                        }>{i18n.t('actions.connect')}</Text>
+                </GTouchable>
             }
             else if (actions.indexOf(U_DISCONNECT) >= 0) {
-                button = <Text onPress={() => {
-                    disconnectFromUserWithAlert(user, this, this.props.dispatch)
-                }}
-                               style={[styles.button_dim, styles.button, styles.button_inactive]}>{i18n.t('actions.connected')}</Text>
+                button = <GTouchable style={[
+                    gtouchStyle, {
+                        borderColor: Colors.greyish,
+                    }]
+                } onPress={() => {disconnectFromUserWithAlert(user, this, this.props.dispatch)}}>
+                    <Text style={[textStyle, {
+                        color: Colors.greyish,
+                    }]}>{i18n.t('actions.connected')}</Text>
+                </GTouchable>
             }
         }
         return button
@@ -147,42 +227,13 @@ export class UserHeader extends Component<Props, State> {
 const styles = StyleSheet.create({
     counters: {
         fontFamily: SFP_TEXT_BOLD,
-        fontSize: 22,
-        color: Colors.greyishBrown,
+        fontSize: 16,
+        color: Colors.black,
     },
     counters_names: {
         fontFamily: SFP_TEXT_REGULAR,
-        fontSize: 18,
+        fontSize: 14,
         color: Colors.greyish,
-    },
-    button_dim: {
-        paddingHorizontal: 12,
-        paddingVertical: 8,
-        // flex:1
-        borderRadius: 20,
-        height: 40,
-    },
-    button: {
-        color: Colors.green,
-        backgroundColor: 'transparent',
-        fontFamily: SFP_TEXT_BOLD,
-        fontSize: 18,
-        borderColor: Colors.green,
-
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: 'center',
-        // margin: 20,
-    },
-    button_active: {
-        // color: Colors.white,
-        // backgroundColor: Colors.green,
-        borderWidth: 1,
-
-    },
-    button_inactive: {
-        color: Colors.greyish,
-        backgroundColor: 'transparent',
     },
 
     userName: {

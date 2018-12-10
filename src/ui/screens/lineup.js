@@ -110,9 +110,9 @@ class LineupScreen extends Screen<Props, State> {
                         (
                             <View style={{marginTop: 40, }}>
 
-                                <View style={{flexDirection: 'row', flex:1}}>
-                                    <LineupHeader lineup={lineup} navigator={this.props.navigator} />
-                                </View>
+                                {/*<View style={{flexDirection: 'row', flex:1}}>*/}
+                                <LineupHeader lineup={lineup} navigator={this.props.navigator} />
+                                {/*</View>*/}
 
                                 <LineupMedals navigator={this.props.navigator} lineup={lineup}/>
                                 <FeedSeparator style={{marginTop: LINEUP_PADDING}}/>

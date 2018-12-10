@@ -2,7 +2,7 @@
 
 import React, {Component} from 'react'
 import {Image, StyleSheet, Text, View} from 'react-native'
-import {LINEUP_PADDING} from "../UIStyles"
+import {HEADER_STYLES, LINEUP_PADDING} from "../UIStyles"
 import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts"
 import {Colors} from "../colors"
 import type {Lineup, RNNNavigator} from "../../types"
@@ -99,7 +99,23 @@ export class LineupHeader extends Component<Props, State> {
         this.calculateWordsWidth(words)
 
         if (!this.state.wordsWidth) return null
+        let lines = this.getLines(words)
 
+        return (
+            <View
+                style={{
+                    // flexWrap: "wrap",
+                    flex: 1,
+                    paddingHorizontal: LINEUP_PADDING,
+                }}>
+
+                {lines.map((line, i) => this.renderLine(line, {first: i === 0, last: i === lines.length - 1}))}
+
+            </View>
+        )
+    }
+
+    getLines(words) {
         let widths = {
             first: __DEVICE_WIDTH__ - 2 * LINEUP_PADDING - (this.state.backButtonWidth || BACK_BUTTON_WIDTH) - LINEUP_PADDING,
             middle: __DEVICE_WIDTH__ - 2 * LINEUP_PADDING,
@@ -111,7 +127,7 @@ export class LineupHeader extends Component<Props, State> {
         // 1st pass, we forget about the trailing buttons
         let currLine = null, curLineW = 0
 
-        for (let i = 0; i < words.length; i ++) {
+        for (let i = 0; i < words.length; i++) {
             let availWidth = lines.length === 0 ? widths.first : widths.middle
             let w = words[i]
             let ww = this.state.wordsWidth[i].width
@@ -139,7 +155,7 @@ export class LineupHeader extends Component<Props, State> {
         let cut = 0
         if (curLineW > widths.last) {
             //need to cut it
-            for (let i = words.length; i --> 0;) {
+            for (let i = words.length; i-- > 0;) {
                 let w = words[i]
                 let ww = this.state.wordsWidth[i].width
                 if (curLineW < widths.last) {
@@ -155,20 +171,7 @@ export class LineupHeader extends Component<Props, State> {
                 }
             }
         }
-
-
-        return (
-            <View
-                style={{
-                    // flexWrap: "wrap",
-                    flex: 1,
-                    paddingHorizontal: LINEUP_PADDING,
-                }}>
-
-                {lines.map((line, i) => this.renderLine(line, {first: i === 0, last: i === lines.length - 1}))}
-
-            </View>
-        )
+        return lines
     }
 
     renderBackButton() {
@@ -198,7 +201,8 @@ export class LineupHeader extends Component<Props, State> {
         }]
         return (
             <View style={{
-                flex: 1, flexDirection: 'row',
+                flex: 1,
+                flexDirection: 'row',
                 // justifyContent: 'space-between',
                 alignItems: 'center',
             }}>
@@ -259,35 +263,4 @@ export class LineupHeader extends Component<Props, State> {
         return [button, shareB]
     }
 }
-const styles = StyleSheet.create({
-    button_dim: {
-        paddingHorizontal: 8,
-        // paddingVertical: 8,
-        // flex:1
-        borderRadius: 12,
-        height: 24,
-        marginLeft: LINEUP_PADDING,
-    },
-    button: {
-        color: Colors.green,
-        backgroundColor: 'transparent',
-        fontFamily: SFP_TEXT_BOLD,
-        fontSize: 16,
-        borderColor: Colors.green,
-
-        // backgroundColor: 'red',
-
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: 'center',
-    },
-    button_active: {
-        color: Colors.green,
-        borderWidth: 1,
-
-    },
-    button_inactive: {
-        color: Colors.greyish,
-    },
-
-})
+const styles = HEADER_STYLES

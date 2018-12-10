@@ -305,3 +305,36 @@ export const TAB_BAR_PROPS = {
     labelStyle: TAB_BAR_STYLES.label
 }
 
+
+
+export const HEADER_STYLES = StyleSheet.create({
+    button_dim: {
+        paddingHorizontal: 8,
+        // paddingVertical: 8,
+        // flex:1
+        borderRadius: 12,
+        height: 24,
+        marginLeft: LINEUP_PADDING,
+    },
+    button: {
+        color: Colors.green,
+        backgroundColor: 'transparent',
+        fontFamily: SFP_TEXT_BOLD,
+        fontSize: 16,
+        borderColor: Colors.green,
+        // backgroundColor: 'red',
+
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
+    },
+    button_active: {
+        color: Colors.green,
+        borderWidth: 1,
+    },
+    button_inactive: {
+        color: Colors.greyish,
+    },
+
+})
+
