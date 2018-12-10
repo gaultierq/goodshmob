@@ -135,6 +135,10 @@
 		<string>SFProText-Medium.otf</string>
 		<string>SFProText-Regular.otf</string>
 		<string>SFProText-RegularItalic.otf</string>
+		<string>AntDesign.ttf</string>
+		<string>FontAwesome5_Brands.ttf</string>
+		<string>FontAwesome5_Regular.ttf</string>
+		<string>FontAwesome5_Solid.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

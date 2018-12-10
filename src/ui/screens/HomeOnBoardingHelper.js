@@ -58,8 +58,10 @@ export class HomeOnBoardingHelper {
             if (!isMounted()) return
             OnBoardingManager.onDisplayed('focus_add')
 
+
             let appTourSequence = new AppTourSequence();
             this.appTourTargets.forEach(({ref, primaryText, secondaryText}) => {
+                if (!ref) throw "wtf1 where is my ref"
                 appTourSequence.add(this.createAppTourView(primaryText, secondaryText, ref));
             });
 

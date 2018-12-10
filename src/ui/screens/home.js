@@ -337,8 +337,6 @@ export default class HomeScreen extends Screen<Props, State> {
                         navigator={this.props.navigator}
                         listRef={ref => this.feed = ref}
                         onScroll={floatingButtonScrollListener.call(this)}
-                        // ItemSeparatorComponent={() => <View style={{height: StyleSheet.hairlineWidth, backgroundColor: Colors.white}} />}
-                        ItemSeparatorComponent={() => null}
                         ListHeaderComponent={
                             !this.state.filterFocused && this.state.currentTip && renderTip(this.state.currentTip)
                         }

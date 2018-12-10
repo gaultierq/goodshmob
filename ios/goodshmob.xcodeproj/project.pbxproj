@@ -81,6 +81,10 @@
 		F17B8FB220A1D31900FAF469 /* AccountKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F17B8FB020A1D31900FAF469 /* AccountKit.framework */; };
 		F52F29A1D072424D85D70653 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F79D97351B445FE8CF44CB5 /* libRCTActionSheet.a */; };
 		0A0115075B174D228CC0C44F /* libRNTextSize.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E29D56A8FDF4AC18959B790 /* libRNTextSize.a */; };
+		88450DACAB1C4B4D80B00EB1 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2B8F1E62295942D0B93356CD /* AntDesign.ttf */; };
+		7EA4BE0C50304910B83D3EC5 /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 562176A9434C427C8104BCB2 /* FontAwesome5_Brands.ttf */; };
+		11DABA01173F46CFB104DAD4 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6245E9EE4F83467BBF1A28C9 /* FontAwesome5_Regular.ttf */; };
+		2CAC1E993CEE4F88882567F4 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F49FEBE2C8284787BAAF6664 /* FontAwesome5_Solid.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -644,6 +648,10 @@
 		FF95AED0484E442B85B9D1D0 /* SFProText-LightItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProText-LightItalic.otf"; path = "../src/assets/fonts/SFProText-LightItalic.otf"; sourceTree = "<group>"; };
 		FBF38F1B2417473494236047 /* RNTextSize.xcodeproj */ = {isa = PBXFileReference; name = "RNTextSize.xcodeproj"; path = "../node_modules/react-native-text-size/ios/RNTextSize.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		4E29D56A8FDF4AC18959B790 /* libRNTextSize.a */ = {isa = PBXFileReference; name = "libRNTextSize.a"; path = "libRNTextSize.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		2B8F1E62295942D0B93356CD /* AntDesign.ttf */ = {isa = PBXFileReference; name = "AntDesign.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		562176A9434C427C8104BCB2 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; name = "FontAwesome5_Brands.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		6245E9EE4F83467BBF1A28C9 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; name = "FontAwesome5_Regular.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F49FEBE2C8284787BAAF6664 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; name = "FontAwesome5_Solid.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -938,6 +946,10 @@
 				C63D42D189554451A0C2113F /* SFProText-Medium.otf */,
 				D4679778DB004D97AC2294FA /* SFProText-Regular.otf */,
 				F67A393C22434FF8ADFA75F4 /* SFProText-RegularItalic.otf */,
+				2B8F1E62295942D0B93356CD /* AntDesign.ttf */,
+				562176A9434C427C8104BCB2 /* FontAwesome5_Brands.ttf */,
+				6245E9EE4F83467BBF1A28C9 /* FontAwesome5_Regular.ttf */,
+				F49FEBE2C8284787BAAF6664 /* FontAwesome5_Solid.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1857,6 +1869,10 @@
 				B096BAC853F3496CB6AA33EB /* SFProText-Regular.otf in Resources */,
 				0AA4110B85AA46D2BD30F4F5 /* SFProText-RegularItalic.otf in Resources */,
 				F17B8FB120A1D31900FAF469 /* AccountKitStrings.bundle in Resources */,
+				88450DACAB1C4B4D80B00EB1 /* AntDesign.ttf in Resources */,
+				7EA4BE0C50304910B83D3EC5 /* FontAwesome5_Brands.ttf in Resources */,
+				11DABA01173F46CFB104DAD4 /* FontAwesome5_Regular.ttf in Resources */,
+				2CAC1E993CEE4F88882567F4 /* FontAwesome5_Solid.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

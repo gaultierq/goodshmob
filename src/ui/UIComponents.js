@@ -463,19 +463,19 @@ export class ListColumnsSelector extends Component<
 
 export class InnerPlus extends Component<{plusStyle?: ViewStyle}, {}> {
 
-
     render() {
-
         let {plusStyle, ...props} = this.props
         const size = "60%"
-        return (<View style={{
-                position: 'absolute',
-                width: "100%",
-                height: "100%",
-                alignItems: 'center',
-                justifyContent: 'center',
-                ...props
-            }}>
+        return (<View
+                style={{
+                    position: 'absolute',
+                    width: "100%",
+                    height: "100%",
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}
+                {...props}
+            >
                 <View style={[{position: 'absolute', width: "5%", height: size,}, plusStyle]}/>
                 <View style={[{position: 'absolute', height: "5%", width: size,}, plusStyle]}/>
             </View>
