@@ -187,6 +187,8 @@ export function mergeLists<T, K>(mergeInto: Array<T>, mergeMe: Array<T>, options
 
 export class Merge<T, K> {
 
+    logger = rootlogger.createLogger('merge')
+
     target: Array<T>;
 
     source: Array<T>;
@@ -349,13 +351,13 @@ export class Merge<T, K> {
 
 
                 if (!resRemovedArr) {
-                    console.debug("mutation: 2");
+                    this.logger.debug("mutation: 2");
                     this.mutated = true;
                 }
                 else {
                     const shift = resRemovedArr.shift();
                     if (shift !== d) {
-                        console.debug(`mutation: shifted=${JSON.stringify(shift)} result=${JSON.stringify(d)}` );
+                        this.logger.debug(`mutation: shifted=${JSON.stringify(shift)} result=${JSON.stringify(d)}` );
                         this.mutated = true;
                     }
                 }
@@ -364,7 +366,7 @@ export class Merge<T, K> {
             });
 
         if (resRemovedArr && resRemovedArr.length > 0) {
-            console.debug("mutation: items leftovers "+ JSON.stringify(resRemovedArr));
+            this.logger.debug("mutation: items leftovers "+ JSON.stringify(resRemovedArr));
             this.mutated = true;
         }
 
@@ -372,7 +374,7 @@ export class Merge<T, K> {
             return this.target;
         }
 
-        console.debug(`merge mutation: 
+        this.logger.debug(`merge mutation: 
         target=${JSON.stringify(this.target)}\n
         source=${JSON.stringify(this.source)}\n
         result=${JSON.stringify(result)}\n
