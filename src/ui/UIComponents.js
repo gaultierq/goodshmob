@@ -7,7 +7,7 @@ import {Colors} from "./colors"
 import GTouchable from "./GTouchable"
 import {BACKGROUND_COLOR, LINEUP_PADDING, STYLES, TAB_BAR_PROPS, TAB_BAR_STYLES} from "./UIStyles"
 import Spinner from 'react-native-spinkit'
-import type {Lineup, RNNNavigator} from "../types"
+import type {Lineup, RNNNavigator, Url} from "../types"
 import {ViewStyle} from "../types"
 import {CANCELABLE_MODAL2, displayLineupActionMenu, seeList} from "./Nav"
 import LineupHorizontal from "./components/LineupHorizontal"
@@ -397,6 +397,17 @@ export const RENDER_NO_FRIEND_ERROR : () => Element<any> = ()  => (
 )
 
 
+export function renderLinkInText(i18Key: string, link: Url) {
+    return (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', padding: LINEUP_PADDING}}>
+            <HTMLView
+                value={`<div>${i18n.t(i18Key, {link})}</div>`}
+                stylesheet={htmlStyles}
+            />
+        </View>
+    )
+}
+
 const htmlStyles = StyleSheet.create({
 
     div: {
@@ -420,6 +431,7 @@ export class ListColumnsSelector extends Component<
     {
         onTabPressed?: number => void,
         size: number,
+        disabled?: boolean,
     },
     {
         index: number
@@ -437,22 +449,28 @@ export class ListColumnsSelector extends Component<
     render() {
         return (
             <View style={{justifyContent: 'space-around', flexDirection: 'row'}}>
-                <GTouchable style={{
-                    flex:1,
-                    alignItems: 'center',
-                    paddingVertical: 4,
+                <GTouchable
+                    disabled={this.props.disabled}
+                    onPress={() => this._select(0)}
+                    style={{
+                        flex:1,
+                        alignItems: 'center',
+                        paddingVertical: 4,
 
-                }}  onPress={() => this._select(0)}>
-                    <MaterialCommunityIcons name="view-grid" size={this.props.size} color={this.state.index === 0 ? Colors.brownishGrey: Colors.grey3} />
+                    }}>
+                    <MaterialCommunityIcons name="view-grid" size={this.props.size} color={!this.props.disabled && this.state.index === 0 ? Colors.brownishGrey: Colors.grey3} />
                 </GTouchable>
-                <GTouchable style={{
-                    flex:1,
-                    alignItems: 'center',
-                    borderLeftWidth: StyleSheet.hairlineWidth,
-                    borderColor: Colors.greyish,
-                    paddingVertical: 4,
-                }} onPress={() => this._select(1)}>
-                    <MaterialCommunityIcons name="view-day" size={this.props.size} color={this.state.index === 1 ? Colors.brownishGrey: Colors.grey3} />
+                <GTouchable
+                    onPress={() => this._select(1)}
+                    disabled={this.props.disabled}
+                    style={{
+                        flex:1,
+                        alignItems: 'center',
+                        borderLeftWidth: StyleSheet.hairlineWidth,
+                        borderColor: Colors.greyish,
+                        paddingVertical: 4,
+                    }}>
+                    <MaterialCommunityIcons name="view-day" size={this.props.size} color={!this.props.disabled && this.state.index === 1 ? Colors.brownishGrey: Colors.grey3} />
                 </GTouchable>
 
             </View>

@@ -4,7 +4,7 @@ import React from 'react'
 import {Image, ImageBackground, Keyboard, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
-import {InnerPlus, ListColumnsSelector, TRANSPARENT_SPACER} from "../UIComponents"
+import {InnerPlus, ListColumnsSelector, renderLinkInText, TRANSPARENT_SPACER} from "../UIComponents"
 import * as Api from "../../managers/Api"
 import Feed from "../components/feed"
 import type {Lineup, Saving} from "../../types"
@@ -17,7 +17,7 @@ import {LINEUP_PADDING, STYLES} from "../UIStyles"
 import {FETCH_LINEUP, FETCH_SAVINGS, fetchLineup,} from "../lineup/actions"
 import {UNSAVE} from "../activity/actionTypes"
 import {GLineupAction, LineupRights} from "../lineupRights"
-import {LINEUP_AND_SAVING_SELECTOR} from "../../helpers/ModelUtils"
+import {LINEUP_AND_SAVING_SELECTOR, savingsCount} from "../../helpers/ModelUtils"
 import {createSelector} from "reselect"
 import FeedSeparator from "../activity/components/FeedSeparator"
 import {CachedImage} from 'react-native-cached-image'
@@ -25,7 +25,7 @@ import GTouchable from "../GTouchable"
 import {LineupHeader} from "../lineup/LineupHeader"
 
 import {createDetailsLink} from "../activity/activityDetail"
-import {openLinkSafely} from "../../managers/Links"
+import {buildSearchItemUrl, openLinkSafely} from "../../managers/Links"
 import SearchItems from "./searchitems"
 import GImage from "../components/GImage"
 import {LineupMedals} from "../lineup/LineupMedals"
@@ -84,11 +84,11 @@ class LineupScreen extends Screen<Props, State> {
 
     render() {
         const {lineup, savings} = this.props
-
+        let sc = savingsCount(lineup, null)
         let fetchSrc = this.getFetchSrc(lineup)
         let numColumns = this.state.renderType === 'grid' ? 3 : 1
         let data
-        if (this.state.renderType === 'grid') {
+        if (sc > 0 && this.state.renderType === 'grid') {
             data = _.concat([{type: 'plus_button'}], savings)
         }
         else {
@@ -102,7 +102,7 @@ class LineupScreen extends Screen<Props, State> {
                     renderItem={this.state.renderType === 'grid' ? this.renderItemGrid.bind(this) : this.renderItemStream.bind(this)}
                     fetchSrc={fetchSrc}
                     hasMore={true}
-                    ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t("empty.lineup")}</Text>}
+                    ListEmptyComponent={renderLinkInText("empty.lineup", buildSearchItemUrl(this.props.lineup.id))}
                     numColumns={numColumns}
                     ItemSeparatorComponent={TRANSPARENT_SPACER(SPACER)}
                     style={{flex: 1, backgroundColor: Colors.white}}
@@ -110,13 +110,12 @@ class LineupScreen extends Screen<Props, State> {
                         (
                             <View style={{marginTop: 40, }}>
 
-                                {/*<View style={{flexDirection: 'row', flex:1}}>*/}
                                 <LineupHeader lineup={lineup} navigator={this.props.navigator} />
-                                {/*</View>*/}
 
                                 <LineupMedals navigator={this.props.navigator} lineup={lineup}/>
                                 <FeedSeparator style={{marginTop: LINEUP_PADDING}}/>
                                 <ListColumnsSelector
+                                    disabled={sc <= 0}
                                     size={30}
                                     onTabPressed={index => this.setState({renderType: index === 0 ? 'grid' : 'stream'})}
                                 />

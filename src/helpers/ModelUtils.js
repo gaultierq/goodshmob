@@ -3,7 +3,7 @@
 import ApiAction from "./ApiAction"
 import * as Api from "../managers/Api"
 import {Call} from "../managers/Api"
-import type {Id} from "../types"
+import type {Id, Lineup} from "../types"
 import type {PendingItem} from "../reducers/dataReducer"
 import {CREATE_PENDING_ACTION, REMOVE_PENDING_ACTION} from "../reducers/dataReducer"
 import {createSelector} from "reselect"
@@ -623,3 +623,11 @@ export const LINEUP_AND_SAVING_SELECTOR = createSelector(
         return {lineup, savings}
     }
 )
+
+export function savingsCount(lineup: Lineup, pending: ?any) {
+    const result = _.get(lineup, 'meta.savingsCount', -1)
+    if (pending) {
+
+    }
+    return result
+}

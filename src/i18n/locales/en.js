@@ -377,7 +377,7 @@ export default {
         }
     },
     empty: {
-        lineup: "This list is empty, add what you love!"
+        lineup: "This list is empty\n <a href='%{link}'>add</a> what you love!",
     },
     activity_action_bar: {
         goodsh_deleted: "Goodsh deleted",

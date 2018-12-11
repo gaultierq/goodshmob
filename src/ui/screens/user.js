@@ -56,15 +56,10 @@ const selector = createSelector(
 @connect(selector)
 export default class UserScreen extends Screen<Props, State> {
 
-    static navigatorStyle = {
-        drawUnderNavBar: true,
-        navBarTransparent: true,
-        navBarTranslucent: true,
-        navBarBackgroundColor: Colors.dirtyWhite,
-        topBarElevationShadowEnabled: false
-    }
 
-    // static navigatorButtons = CANCELABLE_MODAL2
+    static navigatorStyle = {
+        navBarHidden: true,
+    }
 
     componentDidMount() {
 
@@ -79,7 +74,6 @@ export default class UserScreen extends Screen<Props, State> {
     getUser() {
         return this.props.user
     }
-
 
     render() {
         let user = this.getUser();

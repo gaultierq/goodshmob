@@ -1,7 +1,7 @@
 // @flow
 
 import Config from "react-native-config"
-import type {Lineup, User} from "../types"
+import type {Id, Lineup, User} from "../types"
 import {Linking} from "react-native"
 
 
@@ -22,6 +22,10 @@ export function buildUserUrl(user: User): string {
 
 export function buildLineupUrl(lineup: Lineup): string {
     return `${Config.GOODSH_PROTOCOL_SCHEME}://it/lists/${lineup.id}`
+}
+
+export function buildSearchItemUrl(defaultLineupId?: Id) {
+    return createOpenModalLink('goodsh.SearchItems', i18n.t('search_item_screen.title'), {defaultLineupId})
 }
 
 export function openLinkSafely(url: ?string) {
