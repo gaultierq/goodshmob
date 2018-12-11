@@ -21,6 +21,7 @@ import {renderSimpleButton} from "../UIStyles"
 import type {RequestState, RNNNavigator, User} from "../../types"
 import HTMLView from "react-native-htmlview"
 import GTouchable from "../GTouchable"
+import {Loader} from "../Loader"
 
 type Props = {
     initialIndex: number,
@@ -236,16 +237,30 @@ class Login extends Component<Props, State> {
                             </Text>
 
 
-                            <Button
-                                isLoading={this.isSending(['reqLoginFb'])}
-                                isDisabled={this.isSending()}
+                            {/*<Button*/}
+                            {/*isLoading={this.isSending(['reqLoginFb'])}*/}
+                            {/*isDisabled={this.isSending()}*/}
+                            {/*onPress={() => this.execLogin(false)}*/}
+                            {/*style={[styles.facebookButton, ]}>*/}
+
+                            {/*</Button>*/}
+
+                            <GTouchable
+                                disabled={this.isSending()}
                                 onPress={() => this.execLogin(false)}
-                                style={[styles.facebookButton, ]}>
-                                <Icon name="facebook" size={20} color="white" />
+                                style={[styles.facebookButton,
+                                    {
+                                        alignItems: 'center',
+                                        paddingVertical: 8,
+                                        paddingHorizontal: 12, flexDirection: 'row', justifyContent: 'center',
+                                    }]}
+
+                            >
+                                {this.isSending(['reqLoginFb']) ?  <Loader size={20} color={Colors.white} /> : <Icon name="facebook" size={20} color="white" />}
                                 <Text style={styles.facebookButtonText}>
                                     {i18n.t('login_screen.facebook_signin')}
                                 </Text>
-                            </Button>
+                            </GTouchable>
 
                             {
                                 renderSimpleButton(

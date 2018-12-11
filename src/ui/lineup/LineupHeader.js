@@ -3,7 +3,7 @@
 import React, {Component} from 'react'
 import {Image, StyleSheet, Text, View} from 'react-native'
 import {HEADER_STYLES, LINEUP_PADDING} from "../UIStyles"
-import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts"
+import {SFP_TEXT_BOLD} from "../fonts"
 import {Colors} from "../colors"
 import type {Lineup, RNNNavigator} from "../../types"
 import connect from "react-redux/es/connect/connect"
@@ -13,7 +13,7 @@ import {GLineupAction, L_ADD_ITEM, L_FOLLOW, L_SHARE, L_UNFOLLOW, LineupRights} 
 import {displayShareLineup} from "../Nav"
 import {followLineupPending, unfollowLineupPending} from "./actions"
 import GTouchable from "../GTouchable"
-import rnTextSize, { type TSFontSpecs, type TSMeasureResult} from 'react-native-text-size'
+import rnTextSize, {type TSFontSpecs, type TSMeasureResult} from 'react-native-text-size'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 
@@ -74,9 +74,29 @@ export class LineupHeader extends Component<Props, State> {
     render() {
         let {lineup} = this.props
 
-        const name = lineup.name
-        if (!name) return null
+        if (!lineup.name) return null
+        let words = this.getWords(lineup.name)
 
+        this.calculateWordsWidth(words)
+        if (!this.state.wordsWidth) return null
+
+        let lines = this.getLines(words)
+
+        return (
+            <View
+                style={{
+                    // flexWrap: "wrap",
+                    flex: 1,
+                    paddingHorizontal: LINEUP_PADDING,
+                }}>
+
+                {lines.map((line, i) => this.renderLine(line, {first: i === 0, last: i === lines.length - 1}))}
+
+            </View>
+        )
+    }
+
+    getWords(name) {
         let curChar = null, currWord = null
         let words1 = []
         for (var i = 0; i < name.length; i++) {
@@ -95,24 +115,7 @@ export class LineupHeader extends Component<Props, State> {
         }
         if (currWord) words1.push(currWord)
         let words = words1
-
-        this.calculateWordsWidth(words)
-
-        if (!this.state.wordsWidth) return null
-        let lines = this.getLines(words)
-
-        return (
-            <View
-                style={{
-                    // flexWrap: "wrap",
-                    flex: 1,
-                    paddingHorizontal: LINEUP_PADDING,
-                }}>
-
-                {lines.map((line, i) => this.renderLine(line, {first: i === 0, last: i === lines.length - 1}))}
-
-            </View>
-        )
+        return words
     }
 
     getLines(words) {
@@ -154,6 +157,7 @@ export class LineupHeader extends Component<Props, State> {
         //2nd pass: including the trailing buttons
         let cut = 0
         if (curLineW > widths.last) {
+            lines.pop()
             //need to cut it
             for (let i = words.length; i-- > 0;) {
                 let w = words[i]

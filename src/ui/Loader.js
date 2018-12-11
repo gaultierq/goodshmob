@@ -3,21 +3,22 @@
 import React, {Component} from 'react'
 import {ActivityIndicator} from 'react-native'
 import {Colors} from "./colors"
-import {selectDimension} from "./UIStyles"
 import Spinner from "react-native-spinkit"
+import type {Color} from "../types"
 
 type Props = {
     size: number,
+    color?: Color,
 }
 type State = {}
 
 export class Loader extends Component<Props, State> {
 
     static defaultProps = {
-        size: selectDimension({small: 34, normal: 36, big: 40})
+        color: Colors.grey3,
     }
     render() {
-        return <Spinner style={{alignSelf: 'center'}} size={this.props.size} type={__IS_IOS__ ? "Arc" : "WanderingCubes"} color={Colors.grey3}/>
+        return <Spinner style={{alignSelf: 'center'}} size={this.props.size} type={__IS_IOS__ ? "Arc" : "WanderingCubes"} color={this.props.color}/>
     }
 
     // render() {
