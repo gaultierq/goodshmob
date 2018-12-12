@@ -134,7 +134,7 @@ export class UserHeader extends Component<Props, State> {
             // backgroundColor: 'red',
         }}>
             <Text style={[styles.counters, {marginRight: 4}]}>{`${followersCount}`}</Text>
-            <Text style={[styles.counters_names]}>{`amis`}</Text>
+            <Text style={[styles.counters_names]}>{i18n.t('user_medals.friends', {count:followersCount})}</Text>
         </View>)
     }
 

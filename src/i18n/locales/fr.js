@@ -376,9 +376,8 @@ export default {
             ko: "Ré-essayer",
         }
     },
-    empty: {
-        lineup: "Cette liste est vide\n <a href='%{link}'>ajoute</a> ce que tu aimes !",
-    },
+    empty_lineup_cry: "Pas grand chose d'intéressant ici !",
+    empty_lineup_add: "Cette liste est vide\n <a href='%{link}'>ajoute</a> ce que tu aimes !",
     activity_action_bar: {
         goodsh_deleted: "Goodsh supprimé",
         goodsh_deleted_undo: "Restaurer",
@@ -525,5 +524,34 @@ export default {
         friends: {
             empty: "<a href='%{link}'>Invite</a> tes amis pour voir leurs coups de cœur et envies",
         }
+    },
+    lineup_medals: {
+        elements: {
+            zero: "élément",
+            one: "élément",
+            other: "éléments"
+        },
+        followers: {
+            zero: "abonné(e)",
+            one: "abonné(e)",
+            other: "abonné(e)s"
+        },
+    },
+    user_medals: {
+        lists: {
+            zero: "%{count} liste",
+            one: "%{count} liste",
+            other: "%{count} listes"
+        },
+        elements: {
+            zero: "%{count} élément",
+            one: "%{count} élément",
+            other: "%{count} éléments"
+        },
+        friends: {
+            zero: "abonné(e)",
+            one: "abonné(e)",
+            other: "abonné(e)s"
+        },
     }
 }

@@ -47,6 +47,7 @@ class _NavManager implements NavManager {
         if (modal) {
             Navigation.showModal({
                 ...modal,
+                navigatorButtons: Nav.CANCELABLE_MODAL,
             })
             return true
         }

@@ -1,8 +1,7 @@
 // @flow
 
 
-import type {Activity, ActivityType, Id, Item, Lineup, RNNNavigator, SearchToken, User} from "../types"
-import {fullName} from "../helpers/StringUtils"
+import type {Activity, ActivityType, Id, Lineup, RNNNavigator, SearchToken, User} from "../types"
 import StoreManager from "../managers/StoreManager"
 import i18n from '../i18n/i18n'
 import BottomSheet from 'react-native-bottomsheet'
@@ -20,7 +19,6 @@ import LineupCellSaving from "./components/LineupCellSaving"
 import {deleteLineup, followLineupPending, unfollowLineupPending} from "./lineup/actions"
 import {GLineupAction, L_DELETE, L_FOLLOW, L_RENAME, L_SHARE, L_UNFOLLOW, LineupRights} from "./lineupRights"
 import LineupTitle2 from "./components/LineupTitle2"
-import {SEARCH_CATEGORIES_TYPE} from "../helpers/SearchConstants"
 
 export const CLOSE_MODAL = 'close_modal';
 

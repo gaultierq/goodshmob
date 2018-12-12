@@ -73,7 +73,7 @@ export class LineupMedals extends Component<Props, State> {
                             marginRight: 8,
                         }}>
                             <Text style={[styles.counters]}>{`${savingsCount}`}</Text>
-                            <Text style={[styles.counters_names]}>{`éléments`}</Text>
+                            <Text style={[styles.counters_names]}>{i18n.t('lineup_medals.elements', {count:savingsCount})}</Text>
                         </View>
                         {
                             followersCount > 0 && <View style={{
@@ -83,7 +83,7 @@ export class LineupMedals extends Component<Props, State> {
                                 marginRight: 8,
                             }}>
                                 <Text style={[styles.counters]}>{`${followersCount}`}</Text>
-                                <Text style={[styles.counters_names]}>{`abonnés`}</Text>
+                                <Text style={[styles.counters_names]}>{i18n.t('lineup_medals.followers', {count:followersCount})}</Text>
                             </View>
                         }
                     </View>

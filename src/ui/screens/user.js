@@ -115,7 +115,7 @@ export default class UserScreen extends Screen<Props, State> {
                                     color:Colors.greyishBrown,
                                     fontSize: 24,
                                     fontFamily: SFP_TEXT_BOLD
-                                }}>{lineupsCount} listes - {savingsCount} éléments</Text>
+                                }}>{i18n.t('user_medals.lists', {count:lineupsCount})} - {i18n.t('user_medals.elements', {count: savingsCount})}</Text>
                                 <GTouchable onPress={() => {
                                     this.setState({showFilter: !this.state.showFilter})
                                     scheduleOpacityAnimation()

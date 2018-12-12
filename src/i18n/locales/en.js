@@ -376,9 +376,8 @@ export default {
             ko: "Retry",
         }
     },
-    empty: {
-        lineup: "This list is empty\n <a href='%{link}'>add</a> what you love!",
-    },
+    empty_lineup_cry: "Nothing interesting here!",
+    empty_lineup_add: "This list is empty\n <a href='%{link}'>add</a> what you love!",
     activity_action_bar: {
         goodsh_deleted: "Goodsh deleted",
         goodsh_deleted_undo: "Undo",
@@ -519,5 +518,34 @@ export default {
         one: "Invite %{name}",
         other: "Invite %{count} contacts"
     },
-    invite_contacts: "Inviter des contacts"
+    invite_contacts: "Inviter des contacts",
+    lineup_medals: {
+        elements: {
+            zero: "element",
+            one: "element",
+            other: "elements"
+        },
+        followers: {
+            zero: "follower",
+            one: "follower",
+            other: "followers"
+        },
+    },
+    user_medals: {
+        lists: {
+            zero: "%{count} list",
+            one: "%{count} list",
+            other: "%{count} lists"
+        },
+        elements: {
+            zero: "%{count} element",
+            one: "%{count} element",
+            other: "%{count} elements"
+        },
+        friends: {
+            zero: "follower",
+            one: "follower",
+            other: "followers"
+        },
+    }
 }

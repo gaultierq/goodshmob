@@ -34,9 +34,8 @@ export class UserRights {
     }
 
     canExec(action: GUserAction): boolean {
-        const l = this.user
-        if (!l) return false
-        let isMe = isCurrentUser(l.user)
+        if (!this.user) return false
+        let isMe = isCurrentUser(this.user)
         const connected = _.get(this.user, 'meta.followed');
 
         switch (action) {

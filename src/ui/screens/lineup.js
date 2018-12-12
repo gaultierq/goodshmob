@@ -63,13 +63,6 @@ class LineupScreen extends Screen<Props, State> {
     static navigatorStyle = {
         navBarHidden: true,
     }
-    // static navigatorStyle = {
-    //     drawUnderNavBar: true,
-    //     navBarTransparent: true,
-    //     navBarTranslucent: true,
-    //     navBarBackgroundColor: Colors.dirtyWhite,
-    //     topBarElevationShadowEnabled: false
-    // }
 
     static navigatorButtons = CANCELABLE_MODAL2
 
@@ -94,6 +87,8 @@ class LineupScreen extends Screen<Props, State> {
         else {
             data = savings
         }
+
+        let canAdd = true
         return (
             <View style={styles.container}>
                 <Feed
@@ -102,7 +97,7 @@ class LineupScreen extends Screen<Props, State> {
                     renderItem={this.state.renderType === 'grid' ? this.renderItemGrid.bind(this) : this.renderItemStream.bind(this)}
                     fetchSrc={fetchSrc}
                     hasMore={true}
-                    ListEmptyComponent={renderLinkInText("empty.lineup", buildSearchItemUrl(this.props.lineup.id))}
+                    ListEmptyComponent={renderLinkInText(canAdd ? "empty_lineup_add" : "empty_lineup_cry", buildSearchItemUrl(this.props.lineup.id))}
                     numColumns={numColumns}
                     ItemSeparatorComponent={TRANSPARENT_SPACER(SPACER)}
                     style={{flex: 1, backgroundColor: Colors.white}}
