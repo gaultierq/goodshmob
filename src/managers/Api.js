@@ -17,6 +17,7 @@ import {CONNECTIVITY_CHANGE} from "../reducers/app"
 import {sleeper} from "../helpers/TimeUtils"
 
 import analytics from './Analytics'
+import {DebugFailConfig} from "./DebugFailConfig"
 
 export const API_DATA_REQUEST = 'API_DATA_REQUEST';
 export const API_DATA_SUCCESS = 'API_DATA_SUCCESS';
@@ -88,7 +89,10 @@ class Api {
         return connected
     }
 
-    execPendings() {
+
+    execPendings = _.throttle(()=> this.execPendings(), 2000);
+
+    _execPendings() {
 
         if (!this.isConnected()) {
             logger.debug('Api: exec pendings: no connection');
@@ -467,71 +471,6 @@ export class Call {
     }
 }
 const instance : Api = new Api();
-
-/*
-    rate: 0.1,
-    err: {httpCode: 500, message: "Generic error message"},
-    actions:
-        {
-            save_item:
-                {
-                    rate: 0.5,
-                    err: {httpCode: 422, message: "You cannot save an item in this list"}
-                }
-        }
- */
-class DebugFailConfig {
-
-    globalConf: any; //TYPEME
-    confByAction = {};
-
-    constructor(jsonObj) {
-        this.globalConf = this.makeErr(jsonObj);
-        _.forIn(jsonObj.actions, (value, key) => {
-            this.confByAction[key] = this.makeErr(value)
-        });
-
-    }
-
-    makeErr(obj) {
-        let rate = _.get(obj, 'rate', 0);
-        let err = _.get(obj, 'err', {httpCode: 511, message: 'Fake error message'});
-        return {rate, err};
-    }
-
-    getFail(action: ApiAction) {
-        let errConf = this.confByAction[action.name()] || this.globalConf;
-        return errConf && Math.random() < errConf.rate && this.thrown(errConf);
-
-    }
-
-    thrown(errConf) {
-        return new FakeError(errConf.err.message, errConf.err.httpCode);
-    }
-}
-
-//https://stackoverflow.com/questions/31089801/extending-error-in-javascript-with-es6-syntax-babel
-class ExtendableError extends Error {
-    constructor(message) {
-        super(message);
-        this.name = this.constructor.name;
-        if (typeof Error.captureStackTrace === 'function') {
-            Error.captureStackTrace(this, this.constructor);
-        } else {
-            this.stack = (new Error(message)).stack;
-        }
-    }
-}
-
-// now I can extend
-class FakeError extends ExtendableError {
-    status: number;
-
-    constructor(message: string, status: number) {
-        super(message);
-        this.status = status;
-    }
-}
 
 
 export function init(store) {

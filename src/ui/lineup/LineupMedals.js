@@ -5,43 +5,45 @@ import {Image, StyleSheet, Text, View} from 'react-native'
 import {LINEUP_PADDING} from "../UIStyles"
 import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "../fonts"
 import {Colors} from "../colors"
-import type {Lineup, RNNNavigator} from "../../types"
+import type {Lineup, RNNNavigator, User} from "../../types"
 import connect from "react-redux/es/connect/connect"
-import {LINEUP_SELECTOR} from "../../helpers/ModelUtils"
-import {createSelector} from "reselect"
-import {GLineupAction} from "../lineupRights"
+import {
+    LINEUP_AUTHOR,
+    LINEUP_FOLLOWS_COUNT_SELECTOR,
+    LINEUP_SAVING_COUNT_SELECTOR,
+    LINEUP_SELECTOR
+} from "../../helpers/Selectors"
 import {GAvatar} from "../GAvatar"
 import {pressToSeeUser} from "../../managers/Links"
+import {createStructuredSelector} from "reselect"
 
 type Props = {
     navigator: RNNNavigator,
     lineup: Lineup,
-    actions?: GLineupAction[]
+
+    savingsCount?: number,
+    followersCount?: number,
+    author?: User,
+
 }
 type State = {}
 
 
-export const selector = createSelector(
-    [
-        LINEUP_SELECTOR,
-    ],
-    lineup => lineup
-)
 
-@connect(selector)
+@connect(() => createStructuredSelector(
+    {
+        lineup: LINEUP_SELECTOR(),
+        savingsCount: LINEUP_SAVING_COUNT_SELECTOR(),
+        followersCount: LINEUP_FOLLOWS_COUNT_SELECTOR(),
+        author: LINEUP_AUTHOR(),
+    }
+))
 export class LineupMedals extends Component<Props, State> {
 
-
-    static defaultProps = {
-    }
-
     render() {
-        let {lineup} = this.props
-
-        const user = lineup.user
-        const savingsCount = _.get(lineup, 'meta.savingsCount')
-        const followersCount = _.get(lineup, 'meta.followersCount')
-
+        let {lineup, savingsCount, followersCount, author} = this.props
+        savingsCount = savingsCount.total
+        followersCount = followersCount.total
 
         return (
             <View>
@@ -58,13 +60,13 @@ export class LineupMedals extends Component<Props, State> {
                         // justifyContent: 'space-between',
                         alignItems: 'center',
                     }}>
-                        { user && <View style={{
+                        { author && <View style={{
                             alignItems: 'center',
                             flexDirection: 'row',
                             marginRight: 8,
                         }}>
-                            <GAvatar person={user} seeable style={{alignItems: 'center',}} size={LINEUP_PADDING * 2}/>
-                            <Text onPress={pressToSeeUser(user)} style={[{marginLeft: 6}, styles.counters_names]}>{_.join([user.firstName, user.lastName[0] + "."], ' ')}</Text>
+                            <GAvatar person={author} seeable style={{alignItems: 'center',}} size={LINEUP_PADDING * 2}/>
+                            <Text onPress={pressToSeeUser(author)} style={[{marginLeft: 6}, styles.counters_names]}>{_.join([author.firstName, author.lastName[0] + "."], ' ')}</Text>
                         </View>}
                         <View style={{
                             justifyContent: 'flex-end',

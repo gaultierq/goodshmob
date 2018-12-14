@@ -1,19 +1,7 @@
 //@flow
 
 
-
-export function createConsole(displayName: string) {
-
-    return {
-        log: (message: string, ...others) => console.log(`[${displayName}]: ${message}`, ...others),
-        debug: (message: string, ...others) => console.debug(`[${displayName}]: ${message}`, ...others),
-        info: (message: string, ...others) => console.info(`[${displayName}]: ${message}`, ...others),
-        warn: (message: string, ...others) => console.warn(`[${displayName}]: ${message}`, ...others),
-    }
-}
-
-
-
+import type {Logger} from "../../flow-typed/goodshmob"
 
 export function hexToRgb(hex) {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -32,3 +20,17 @@ export function hexToRgbaWithHalpha(hex:string, alpha: number) {
 
 }
 
+export function createCounter(logger: Logger, batchTimeMs: number = 5000): (path: string) => void {
+    let logRet = {}
+    let to = null
+    return (path: string) => {
+        _.set(logRet, path, _.get(logRet, path, 0) + 1)
+        if (!to) {
+            to = setTimeout(() => {
+                logger.debug("counter: ", logRet)
+                to = null
+                logRet = {}
+            }, batchTimeMs)
+        }
+    }
+}

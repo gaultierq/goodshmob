@@ -7,8 +7,14 @@ export function isUnique(activities) {
 }
 
 
+export function isEqualsArrayFree(obj1, obj2) {
+    if (obj1 === obj2) return true
+    if (_.isArray(obj1) && _.isArray(obj2)) return !areNotEquals(obj1, obj2)
+    return false
+}
+
 export function areNotEquals(array1, array2) {
-    //TODO: check types
+
     if (!array1 || _.size(array2) !== _.size(array1)) return true;
     for (let i = array2.length; i-- > 0;) {
         // let refKey = refKeys[i];

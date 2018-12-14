@@ -6,7 +6,7 @@ import type {Id, User} from "../../types"
 import {SFP_TEXT_MEDIUM} from "../fonts"
 import {Colors} from "../colors"
 import {createSelector} from "reselect"
-import {LINEUP_SELECTOR} from "../../helpers/ModelUtils"
+import {LINEUP_SELECTOR} from "../../helpers/Selectors"
 import {connect} from "react-redux"
 import {NAV_BACKGROUND_COLOR} from "../UIStyles"
 
@@ -31,9 +31,10 @@ const getNavBarState = (lineup, pending) => {
     }
     else return {}
 }
+//TODO: wtf is this ?
 export const selector = createSelector(
     [
-        LINEUP_SELECTOR,
+        LINEUP_SELECTOR(),
         state => state.pending
     ],
     (lineup, pending) => getNavBarState(lineup, pending)

@@ -129,8 +129,7 @@ export const RENDER_SECTION_HEADER = (navigator: RNNNavigator, dispatch: Dispatc
     onPress={() => seeList(navigator, lineup)}>
 
     <LineupTitle2
-        lineupId={lineup.id}
-        dataResolver={id => lineup}
+        lineup={lineup}
         style={{
             backgroundColor: BACKGROUND_COLOR,
             paddingLeft: LINEUP_PADDING,
@@ -149,8 +148,7 @@ export const LINEUP_SECTIONS = (navigator: RNNNavigator, dispatch: any) => (line
             <GTouchable
                 onPress={() => seeList(navigator, lineup)}>
                 <LineupHorizontal
-                    lineupId={item.id}
-                    dataResolver={() => ({lineup: lineup, savings: lineup.savings})}
+                    lineup={lineup}
                     skipLineupTitle={true}
                 />
             </GTouchable>
@@ -185,7 +183,6 @@ export function renderLineup(navigator: RNNNavigator, lineup: Lineup) {
             <LineupHorizontal
                 lineup={lineup}
                 style={{paddingBottom: 10}}
-                renderTitle={(l: Lineup) => <LineupTitle2 dataResolver={id => lineup} lineupId={lineup.id}/>}
             />
         </GTouchable>
     )

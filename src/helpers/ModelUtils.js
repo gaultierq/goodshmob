@@ -3,169 +3,11 @@
 import ApiAction from "./ApiAction"
 import * as Api from "../managers/Api"
 import {Call} from "../managers/Api"
-import type {Id, Lineup} from "../types"
+import type {Id, Lineup, Saving} from "../types"
 import type {PendingItem} from "../reducers/dataReducer"
 import {CREATE_PENDING_ACTION, REMOVE_PENDING_ACTION} from "../reducers/dataReducer"
-import {createSelector} from "reselect"
-import {buildData} from "./DataUtils"
-import {CREATE_LINEUP, SAVE_ITEM} from "../ui/lineup/actionTypes"
-import {UNSAVE} from "../ui/activity/actionTypes"
-/*
-
-export function parse(data: any) {
-    let createStore =  (store) => {
-
-        if (data.included) {
-            data.included.map((source) => {
-                let obj: Base = createObject(source, store);
-                if (obj) {
-                    // $FlowFixMe
-                    store[obj.type] = store[obj.type] || {};
-                    // $FlowFixMe
-                    store[obj.type][obj.id] = obj;
-                }
-            });
-        }
-        return store;
-    };
-
-    let store = createStore({});
-
-    //this is a hack to avoid too much thinking
-    //TODO: do the thinking
-    store = createStore(store);
-
-    let data2 = data.data;
-    if (data2 instanceof Array) {
-        return data2.map((o) => createObject(o, store));
-    }
-    else {
-        return createObject(data2, store)
-    }
-}
-
-class ParseError extends Error {
-
-}
-
-let formatMsg = function (msg, type, source) {
-    return `${msg} for type=${type}, and source=${source}`;
-};
-
-let thrown = function (msg, type, source) {
-    throw new ParseError(formatMsg(msg, type, source));
-};
-
-
-let assignSafe = function (target, src) {
-    for (let p in src) {
-        if (src.hasOwnProperty(p)) {
-            let pp = StringUtils.toLowercase(dashToCamel(p));
-            // $FlowFixMe
-            target[pp] = src[p];
-        }
-    }
-};
-
-let dashToCamel = function (type) {
-    let uppercased = type.split('-').map((part) => {
-        return StringUtils.toUppercase(part);
-    });
-    return uppercased.join('');
-};
-
-//2. flatten attributes
-//type will be singular, CamelCased
-function createFlatObject(source): Base {
-
-    let type: string;
-    //if (!source.id) throw new ParseError("expecting id");
-    type = source.type;
-
-    if (!type) {
-
-        return null;
-    }
-
-
-
-    if (!type.endsWith("s")) thrown(`expecting plural`, type, source);
-
-    //remove the plurals
-    type = type.substr(0, type.length - 1);
-
-    let moduleId: string = dashToCamel(type);
-
-    //let moduleId = toUppercase(type);
-
-    let clazz = Models[moduleId];
-    if (!clazz) thrown(`model not found:${moduleId}`, type, source);
-
-    let obj: Base = new clazz;
-
-    obj.id = source.id;
-    obj.type = moduleId;
-
-    //let obj: Base = new Base();
-    if (source.attributes) {
-        assignSafe(obj, source.attributes);
-    }
-    if (source.meta) {
-        obj.meta = source.meta;
-    }
-
-
-    return obj;
-}
-
-    //1. create flat object
-    //2. fill relationship
-    //3. flatten relationships
-
-    //if the store is provided, and contains the element for type x id,
-    //then this element will be used to popoulate the resulting object.
-
-export function createObject(source: Source, store: any): Base {
-
-    let result = createFlatObject(source);
-
-    if (source.relationships) {
-        let relResult = {};
-        Object.getOwnPropertyNames(source.relationships).map((relKey)=>{
-            let srcObj = source.relationships[relKey];
-            if (!srcObj || !srcObj.data) return;
-
-            //object vs array
-
-            let objectFromStore = (src) => {
-                let relObj: Base = createObject(src, store);
-
-                //populate from store
-                if (relObj) {
-                    if (store && store[relObj.type]) {
-                        let stored = store[relObj.type][relObj.id];
-                        if (stored) {
-                            Object.assign(relObj, stored);
-                        }
-                    }
-                }
-                return relObj;
-            };
-
-            let relObj = Array.isArray(srcObj.data) ?srcObj.data.map((a) => objectFromStore(a)) :  objectFromStore(srcObj.data);
-            if (relObj) {
-                relResult[relKey] = relObj;
-            }
-        });
-
-        Object.assign(result, relResult);
-    }
-
-
-
-    return result;
-}
-*/
+import {SAVE_ITEM} from "../ui/lineup/actionTypes"
+import {UNSAVE} from "../ui/lineup/actionTypes"
 
 export type MergeOptions<K> = {
     afterId?: K,
@@ -536,98 +378,22 @@ export function mergeItemsAndPendings2<T>(
     return items;
 }
 
-let lineupId = props => props.lineupId || _.get(props, 'lineup.id')
-let userId = props => props.userId || _.get(props, 'user.id')
 
-export const LINEUP_SELECTOR = createSelector(
-    [
-        (state, props) => props.lineup,
-        (state, props) => _.get(state, `data.lists.${lineupId(props)}`),
-        (state, props) => _.head(state.pending[CREATE_LINEUP], pending => pending.id === lineupId(props)),
-        state => state.data
-    ],
-    (
-        propLineup, //lineup
-        syncList, //lineup
-        rawPendingList, //lineup
-        data
-    ) => {
-        let lineup = (syncList && buildData(data, syncList.type, syncList.id) || {...rawPendingList, savings: []})
-        if (syncList) {
-            lineup = buildData(data, syncList.type, syncList.id)
-        }
-        else if (rawPendingList) {
-            lineup = {id: rawPendingList.id, name: rawPendingList.payload.listName, savings: []}
-        }
-        else if (propLineup) {
-            lineup = propLineup
-        }
-        return lineup
-    }
-)
 
-export const USER_SECLECTOR = createSelector(
-    [
-        (state, props) => props.user,
-        (state, props) => _.get(state, `data.users.${userId(props)}`),
-        state => state.data
-    ],
-    (
-        propUser,
-        syncUser,
-        data
-    ) => {
-        if (syncUser) return buildData(data, syncUser.type, syncUser.id)
-        else if (propUser) return propUser
-        return null
-    }
-)
+export type SavingAcc = {
+    syncedValue?: Saving,
+    pendingValue?: any,
+}
 
-export const LINEUP_AND_SAVING_SELECTOR = createSelector(
-    [
-        LINEUP_SELECTOR,
-        (state, props) => _.filter(state.pending[SAVE_ITEM], pending => pending.payload.lineupId === lineupId(props)),
-        (state, props) => _.filter(state.pending[UNSAVE], pending => pending.payload.lineupId === lineupId(props)),
-        state => state.data
-    ],
-    (
-        lineup, //lineup
-        rawPendingCreatedSavings,
-        rawPendingDeletedSavings,
-        data
-    ) => {
-        let savings
-        if (lineup) {
-            if (!_.isEmpty(rawPendingCreatedSavings)) {
-                savings = rawPendingCreatedSavings.map(pending => {
-                    return {
-                            id: pending.id,
-                            lineupId: pending.payload.lineupId,
-                            itemId: pending.payload.itemId,
-                            pending: true,
-                            resource: pending.payload.item
-                        }
-                    }
-                )
-            }
 
-            if (lineup.savings) {
-                if (savings) savings = savings.concat(lineup.savings)
-                else savings = [].concat(lineup.savings) //?
-            }
-            if (!_.isEmpty(rawPendingDeletedSavings)) {
-                _.remove(savings, saving => rawPendingDeletedSavings.some(pending => pending.payload.savingId === saving.id))
-            }
-
-        }
-        return {lineup, savings}
-    }
-)
 
 export function savingsCount(lineup: Lineup, pending: ?any) {
-    const result = _.get(lineup, 'meta.savingsCount', -1)
+    let result = _.get(lineup, 'meta.savingsCount', -1)
+    if (result < 0) return result
     if (pending) {
-
+        const predicate = pending => pending.payload.lineupId === lineup.id;
+        result += _.filter(pending[SAVE_ITEM], predicate).length
+        result -= _.filter(pending[UNSAVE], predicate).length
     }
     return result
 }

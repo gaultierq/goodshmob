@@ -5,6 +5,7 @@ import {sanitizeActivityType} from "../../helpers/DataUtils"
 import type {ActivityType, Id} from "../../types"
 import type {PendingAction} from "../../helpers/ModelUtils"
 import {pendingActionWrapper} from "../../helpers/ModelUtils"
+import {UNSAVE} from "../lineup/actionTypes"
 
 
 export function fetchActivity(activityId: Id, activityType: ActivityType, options?:any = {}) {
@@ -52,7 +53,7 @@ export function unsave(savingId: Id, lineupId: Id) {
     return new Api.Call()
         .withMethod('DELETE')
         .withRoute(`savings/${savingId}`)
-        .createActionDispatchee(types.UNSAVE,
+        .createActionDispatchee(UNSAVE,
             {id: savingId, lineupId}
         );
 }

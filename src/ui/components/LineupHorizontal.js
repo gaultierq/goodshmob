@@ -3,10 +3,7 @@
 import type {Node} from 'react'
 import React, {Component} from 'react'
 import {
-    Alert,
-    BackHandler,
-    Button,
-    Dimensions,
+    FlatList,
     Image,
     KeyboardAvoidingView,
     Platform,
@@ -18,30 +15,27 @@ import {
 } from 'react-native'
 
 import {connect} from "react-redux"
-import type {Id, Lineup, RNNNavigator, Saving} from "../../types"
+import type {Lineup, RNNNavigator, Saving} from "../../types"
 import {ViewStyle} from "../../types"
 import {logged} from "../../managers/CurrentUser"
 import {Navigation} from 'react-native-navigation'
 import {displaySavingActions, seeActivityDetails, seeList} from "../Nav"
-import Feed from "../components/feed"
 import LineupCellSaving from "../components/LineupCellSaving"
 
 import GTouchable from "../GTouchable"
 import {EmptyCell} from "./LineupCellSaving"
 import {LINEUP_PADDING} from "../UIStyles"
-import {InnerPlus, renderInnerPlus, renderLineupMenu} from "../UIComponents"
+import {InnerPlus, renderLineupMenu} from "../UIComponents"
 import LineupTitle2 from "./LineupTitle2"
-import * as Api from "../../managers/Api"
-import {FETCH_LINEUP, fetchLineup} from "../lineup/actions"
-import {LINEUP_AND_SAVING_SELECTOR} from "../../helpers/ModelUtils"
+import {LINEUP_SELECTOR, SAVING_LIST_SELECTOR} from "../../helpers/Selectors"
 import {Colors} from "../colors"
+import {createStructuredSelector} from "reselect"
+import {FETCH_LINEUP, fetchLineup} from "../lineup/actions"
+import * as Api from "../../managers/Api"
 
 // $FlowFixMe
 type Props = {
-    //merge these 2 into one
-    lineupId: Id,
-    lineup?: Lineup, //incomplete data (coming from algolia ?)
-
+    lineup: Lineup,
     savings?: Saving[],
     // dataResolver: Id => {lineup: Lineup, savings: Array<Saving>},
     renderMenuButton?: () => Node,
@@ -49,7 +43,7 @@ type Props = {
     onPressEmptyLineup?: () => void,
     onSavingPressed?:(navigator: RNNNavigator, saving: Saving) => void,
     renderSaving?: (saving:Saving) => Node,
-    renderTitle: (lineup: Lineup) => Node,
+    renderTitle?: (lineup: Lineup) => Node,
     style?: ViewStyle,
     renderEmpty: (list: Lineup) => Node,
 };
@@ -62,30 +56,28 @@ export const ITEM_SEP = 10
 let lineupId = props => props.lineupId || props.lineup.id
 
 
-@connect((state, props) => ({
-    pending: state.pending,
-    ...LINEUP_AND_SAVING_SELECTOR(state, props)
-}))
+@connect(() => {
+    const lineup = LINEUP_SELECTOR()
+    const savings = SAVING_LIST_SELECTOR()
+    return (state, props) => ({
+        lineup: lineup(state, props),
+        savings: savings(state, props),
+    })
+})
 @logged
 export default class LineupHorizontal extends Component<Props, State> {
 
-    // updateTracker: UpdateTracker;
-
     static defaultProps = {
         skipLineupTitle: false,
-        renderTitle: default_renderTitle,
+        renderTitle: lineup => <LineupTitle2 lineup={lineup}/>,
         renderSaving: saving => <LineupCellSaving item={saving.resource} />,
         renderEmpty: (list: Lineup) => LineupHorizontal.defaultRenderEmpty()
     }
 
-
     componentDidMount() {
         if (!this.props.lineup || !this.props.savings) {
-            console.info("missing data, fetching the lineup")
             const listId = lineupId(this.props)
-            Api.safeDispatchAction.call(
-                this,
-                this.props.dispatch,
+            Api.safeDispatchAction.call(this,this.props.dispatch,
                 fetchLineup(listId).createActionDispatchee(FETCH_LINEUP, {listId: listId}),
                 'fetchLineup'
             )
@@ -93,14 +85,18 @@ export default class LineupHorizontal extends Component<Props, State> {
     }
 
     render() {
-        // this.updateTracker.onRender(this.props);
 
-        const {lineup, savings, renderTitle, renderMenuButton, skipLineupTitle, lineupId, style, ...attributes} = this.props;
-        //let {lineup, savings} = this.props.dataResolver(lineupId);
+        const {
+            lineup, savings,
+            renderTitle, renderMenuButton,
+            skipLineupTitle, style, ...attributes} = this.props;
+
         if (!lineup) {
             console.warn('lineup not found for id', lineupId)
             return null;
         }
+
+        // console.info('savings', savings)
 
         return (
             <View style={[style]}>
@@ -108,20 +104,20 @@ export default class LineupHorizontal extends Component<Props, State> {
                     !skipLineupTitle &&
 
                     <View style={{flexDirection:'row', paddingHorizontal: LINEUP_PADDING}}>
-                        {renderTitle(lineup)}
+                        {renderTitle && renderTitle(lineup)}
                         {renderMenuButton && renderMenuButton()}
                     </View>
                 }
-                {/*{this.renderList(lineup, savings)}*/}
+                {/* TODO EmptyComponent does not work for some reason*/}
                 {_.isEmpty(savings) ? this.props.renderEmpty(lineup) :
-                    <Feed
+                    <FlatList
                         data={savings}
-                        renderItem={({item}) => this.props.renderSaving(item)}
-                        hasMore={false}
+                        renderItem={this._renderItem}
                         horizontal={true}
-                        ItemSeparatorComponent={()=> <View style={{width: ITEM_SEP}} />}
+                        ItemSeparatorComponent={() => <View style={{width: ITEM_SEP}}/>}
                         contentContainerStyle={{paddingLeft: LINEUP_PADDING}}
                         showsHorizontalScrollIndicator={false}
+                        // EmptyComponent={this.props.renderEmpty(lineup)}
                         {...attributes}
                     />
                 }
@@ -129,10 +125,13 @@ export default class LineupHorizontal extends Component<Props, State> {
         )
     }
 
+    _renderItem = ({item}) => {
+        return this.props.renderSaving(item.saving)
+    }
 
     static defaultRenderEmpty(renderFirstAsPlus: boolean = false, plusRef?: () => void) {
         return (
-            <View style={{flexDirection: 'row', paddingLeft: LINEUP_PADDING}}>{
+            <View style={{flexDirection: 'row', paddingLeft: LINEUP_PADDING,}}>{
                 [0,1,2,3,4].map((o, i) => {
                         return (
                             <EmptyCell key={`empty-${i}`} style={{marginRight: 10}}>
@@ -171,7 +170,7 @@ export const LineupH1 = connect()((props: Props1) => {
     return <GTouchable onPress={()=>seeList(navigator, lineup)}>
 
         <LineupHorizontal
-            lineupId={lineup.id}
+            lineup={lineup}
             renderSaving={saving => (
                 <GTouchable
                     onPress={() => seeActivityDetails(navigator, saving)}
@@ -182,16 +181,8 @@ export const LineupH1 = connect()((props: Props1) => {
                     <LineupCellSaving item={saving.resource} />
                 </GTouchable>
             )}
-            renderMenuButton={renderLineupMenu(navigator, dispatch, lineup)}
+            renderMenuButton={() => renderLineupMenu(navigator, dispatch, lineup)}
             {...attr}
         />
     </GTouchable>
 });
-
-
-export function default_renderTitle(lineup: Lineup) {
-    return <LineupTitle2
-        lineupId={lineup.id}
-        dataResolver={id => lineup}
-    />
-}

@@ -258,17 +258,8 @@ export function displayShareLineup({navigator, lineup}: {navigator: RNNNavigator
         {
             renderSharedObject: () => (
                 <LineupHorizontal
-                    lineupId={lineup.id}
+                    lineup={lineup}
                     style={{height: 100}}
-                    renderSaving={saving => <LineupCellSaving item={saving.resource} />}
-                    renderTitle={(lineup: Lineup) => (
-                        //{/*<:LineupTitle style={{fontSize: 24}} lineup={lineup} />*/}
-                        <LineupTitle2
-                            lineupId={lineup.id}
-                            dataResolver={id => lineup}
-                            // style={{backgroundColor: BACKGROUND_COLOR,}}
-                        />
-                    )}
                 />),
             sendAction: null,
             createShareIntent: () => createShareIntent(lineup.name, url),

@@ -3,7 +3,8 @@
 import {sanitizeActivityType, updateSplice0} from "../../helpers/DataUtils"
 import update from "immutability-helper"
 import dotprop from "dot-prop-immutable"
-import {CREATE_LIKE, DELETE_LIKE, MOVE_SAVING, UNSAVE} from "./actionTypes"
+import {CREATE_LIKE, DELETE_LIKE, MOVE_SAVING} from "./actionTypes"
+import {UNSAVE} from "../lineup/actionTypes"
 
 
 export default function reduce(state:any = {}, action: any) {

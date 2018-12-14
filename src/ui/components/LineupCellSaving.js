@@ -21,7 +21,7 @@ export const ITEM_DIM = 70;
 
 export default class LineupCellSaving extends React.PureComponent<Props, State> {
 
-    static displayName = "LineupCell";
+    static displayName = "LineupCellSaving";
 
     static styles = StyleSheet.create({
         cell: {

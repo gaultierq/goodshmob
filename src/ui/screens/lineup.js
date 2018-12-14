@@ -13,12 +13,12 @@ import ActivityCell from "../activity/components/ActivityCell"
 import {CANCELABLE_MODAL2, seeActivityDetails} from "../Nav"
 import {Colors} from "../colors"
 import Screen from "./../components/Screen"
-import {LINEUP_PADDING, STYLES} from "../UIStyles"
+import {LINEUP_PADDING} from "../UIStyles"
 import {FETCH_LINEUP, FETCH_SAVINGS, fetchLineup,} from "../lineup/actions"
-import {UNSAVE} from "../activity/actionTypes"
-import {GLineupAction, LineupRights} from "../lineupRights"
-import {LINEUP_AND_SAVING_SELECTOR, savingsCount} from "../../helpers/ModelUtils"
-import {createSelector} from "reselect"
+import {UNSAVE} from "../lineup/actionTypes"
+import {GLineupAction} from "../lineupRights"
+import {savingsCount} from "../../helpers/ModelUtils"
+import {createStructuredSelector} from "reselect"
 import FeedSeparator from "../activity/components/FeedSeparator"
 import {CachedImage} from 'react-native-cached-image'
 import GTouchable from "../GTouchable"
@@ -29,6 +29,7 @@ import {buildSearchItemUrl, openLinkSafely} from "../../managers/Links"
 import SearchItems from "./searchitems"
 import GImage from "../components/GImage"
 import {LineupMedals} from "../lineup/LineupMedals"
+import {LINEUP_ACTIONS_SELECTOR, LINEUP_SELECTOR, SAVING_LIST_SELECTOR} from "../../helpers/Selectors"
 
 type Props = {
     lineupId: string,
@@ -42,22 +43,16 @@ type State = {
     titleSet?: boolean,
     renderType: 'grid' | 'stream'
 }
-export const selector = createSelector(
-    [
-        LINEUP_AND_SAVING_SELECTOR,
-        state => state.pending
-    ],
-    ({lineup, savings}, pending) => {
-
-        let actions = LineupRights.getActions(lineup, pending)
-        return {lineup, savings, actions}
-    }
-)
 
 const SPACER = 6
 
 @logged
-@connect(selector)
+@connect(() => {
+    const lineup = LINEUP_SELECTOR()
+    const savings = SAVING_LIST_SELECTOR()
+    const actions = LINEUP_ACTIONS_SELECTOR()
+    return createStructuredSelector({lineup,savings,actions})
+})
 class LineupScreen extends Screen<Props, State> {
 
     static navigatorStyle = {
@@ -148,7 +143,8 @@ class LineupScreen extends Screen<Props, State> {
 
     renderItemStream({item}) {
 
-        let saving: Saving = item
+        let saving: Saving = item.saving
+        if (item.from === 'pending') return null
         return (
             <ActivityCell
                 activity={saving}
@@ -176,21 +172,28 @@ class LineupScreen extends Screen<Props, State> {
             )
         }
         else {
-            uri = createDetailsLink(item.id, item.type)
+            let saving = item.saving
+            uri = createDetailsLink(saving.id, saving.type)
             child = <GImage
-                source={{uri: _.get(item, 'resource.image'), }}
+                source={{uri: _.get(saving, 'resource.image'), }}
                 style={[styles.gridImg]}
                 resizeMode='cover'
                 fallbackSource={require('../../img/goodsh_placeholder.png')}/>
         }
         return (
-            <GTouchable style={[styles.gridCellCommon, index === 0 ? styles.gridCellL : index === layout.numColumns ? styles.gridCellR : null ]}
-                        onPress={() => openLinkSafely(uri)}>
+            <GTouchable
+                key={`lineup.${this.lineupId()}.grid.${index}`}
+                style={[styles.gridCellCommon, index === 0 ? styles.gridCellL : index === layout.numColumns ? styles.gridCellR : null ]}
+                onPress={() => openLinkSafely(uri)}>
                 {child}
             </GTouchable>
         )
     }
 
+
+    lineupId() {
+        return this.props.lineup.id
+    }
 
     static gridStyles = {}
 

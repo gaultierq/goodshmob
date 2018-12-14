@@ -2,11 +2,11 @@
 import {Navigation} from 'react-native-navigation'
 import type {Id, ItemType, Saving} from "../types"
 import {mergeItemsAndPendings} from "../helpers/ModelUtils"
-import {CREATE_LINEUP, SAVE_ITEM} from "../ui/lineup/actionTypes"
+import {CREATE_LINEUP, SAVE_ITEM, UNFOLLOW_LINEUP} from "../ui/lineup/actionTypes"
 import {buildData} from "../helpers/DataUtils"
-import {UNSAVE} from "../ui/activity/actionTypes"
+import {UNSAVE} from "../ui/lineup/actionTypes"
 import {isId} from "../helpers/StringUtils"
-import {FOLLOW_LINEUP, UNFOLLOW_LINEUP} from "../ui/lineup/actions"
+import {FOLLOW_LINEUP} from "../ui/lineup/actionTypes"
 
 // export const DEEPLINK_OPEN_SCREEN_IN_MODAL = 'DEEPLINK_OPEN_SCREEN_IN_MODAL';
 
@@ -19,20 +19,6 @@ class _StoreManager implements StoreManager {
 
     init(store: *) {
         this.store = store;
-    }
-
-
-    isItemPendingAdd(itemId: Id): boolean {
-        let result = mergeItemsAndPendings(
-            [],
-            this.store.getState().pending[SAVE_ITEM],
-            [],
-            (pending) => ({
-                itemId: pending.payload.itemId,
-            })
-        );
-
-        return !_.isEmpty(_.filter(result, pending => pending.itemId === itemId));
     }
 
     isListPendingFollowOrUnfollow(listId: Id, pending?: any): boolean {
@@ -135,8 +121,6 @@ class _StoreManager implements StoreManager {
 export interface StoreManager {
 
     init(store: *): void;
-
-    isItemPendingAdd(itemId: Id): boolean;
 
     isListPendingFollowOrUnfollow(listId: Id): boolean;
 

@@ -7,7 +7,7 @@ import {SFP_TEXT_BOLD, SFP_TEXT_REGULAR} from "../fonts"
 import {Colors} from "../colors"
 import type {RequestState, RNNNavigator, User} from "../../types"
 import connect from "react-redux/es/connect/connect"
-import {USER_SECLECTOR} from "../../helpers/ModelUtils"
+import {USER_SELECTOR} from "../../helpers/Selectors"
 import {createSelector} from "reselect"
 // import {followLineupPending, unfollowLineupPending} from "./actions"
 import {GAvatar} from "../GAvatar"
@@ -35,9 +35,9 @@ type State = {
 }
 
 
-const selector = createSelector(
+const selector = () => createSelector(
     [
-        USER_SECLECTOR,
+        USER_SELECTOR(),
         state => state.pending
     ],
     (user, pending) => {

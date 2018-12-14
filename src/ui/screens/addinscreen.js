@@ -45,18 +45,7 @@ export default class AddInScreen extends Screen<Props, State> {
                     userId={currentUserId()}
                     renderItem={lineup => (
                         <GTouchable onPress={()=>onListSelected(lineup)}>
-                            <LineupHorizontal
-                                lineupId={lineup.id}
-                                renderSaving={saving => <LineupCellSaving item={saving.resource} />}
-                                renderTitle={(lineup: Lineup) => (
-                                    //<:LineupTitle lineup={lineup} style={{marginVertical: 6,}}/>
-                                    <LineupTitle2
-                                        lineupId={lineup.id}
-                                        dataResolver={id => lineup}
-                                    />
-                                )}
-
-                            />
+                            <LineupHorizontal lineup={lineup}/>
                         </GTouchable>
                     )
                     }

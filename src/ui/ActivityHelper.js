@@ -1,5 +1,5 @@
 import type {Activity, Lineup, NavParams, User} from "../types"
-import {fullName, savingCount} from "../helpers/StringUtils"
+import {fullName} from "../helpers/StringUtils"
 import HTMLView from "react-native-htmlview/HTMLView"
 import React from "react"
 import {isAsking, isComment, isLike, isSaving, isSending, sanitizeActivityType} from "../helpers/DataUtils"
@@ -119,9 +119,8 @@ function renderComment(activity) {
     //saving
     //send
     let item = resource.resource
-
-
     const user = activity.user
+
     let textNode = <HTMLView
         // renderNode={renderNode}
         value={`<div>${i18n.t("activity_item.header.comment",
@@ -185,7 +184,7 @@ function getUserHtml(user: User) {
 
 function getLineupHtml(lineup: Lineup) {
     let lineupUrl = buildLineupUrl(lineup)
-    return `<a href="${lineupUrl}">${truncate(lineup.name)}</a> (${savingCount(lineup)})`
+    return `<a href="${lineupUrl}">${truncate(lineup.name)}</a> (${_.get(lineup, 'meta.savingsCount', 0)})`
 }
 
 function renderAsk(activity: Activity) {

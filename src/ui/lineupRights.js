@@ -2,7 +2,7 @@
 
 import type {Lineup} from "../types"
 import {isCurrentUser} from "../managers/CurrentUser"
-import {isFollowed} from "./activity/components/FollowButton"
+import StoreManager from "../managers/StoreManager"
 
 const GLineupActions = []
 
@@ -30,6 +30,12 @@ export const L_RENAME: GLineupAction = new GLineupAction('rename list', 1)
 export const L_DELETE: GLineupAction = new GLineupAction('delete list', 2)
 export const L_FOLLOW: GLineupAction = new GLineupAction('follow list', -3)
 export const L_UNFOLLOW: GLineupAction = new GLineupAction('unfollow list', 4)
+
+// return null if we don't know (eg: when item is pending)
+export function isFollowed(lineup: Lineup, pending?: any) {
+    if (StoreManager.isListPendingFollowOrUnfollow(lineup.id, pending)) return null
+    return _.get(lineup, 'meta.followed')
+}
 
 export class LineupRights {
     lineup: Lineup

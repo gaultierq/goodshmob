@@ -6,13 +6,13 @@ import {stylePadding} from "../../UIStyles"
 import type {Activity, RNNNavigator} from "../../../types"
 import {ViewStyle} from "../../../types"
 import Octicons from "react-native-vector-icons/Octicons"
-import {seeUser} from "../../Nav"
 import {SFP_TEXT_ITALIC} from "../../fonts"
 import GTouchable from "../../GTouchable"
-import {sanitizeActivityType, timeSinceActivity} from "../../../helpers/DataUtils"
+import {buildData, sanitizeActivityType, timeSinceActivity} from "../../../helpers/DataUtils"
 import {connect} from "react-redux"
 import {getActivityText, getMainUrl, showResourceActions} from "../../ActivityHelper"
 import {GAvatar} from "../../GAvatar"
+import StoreManager from "../../../managers/StoreManager"
 
 type Props = {
     activity: Activity,
@@ -37,7 +37,15 @@ export default class ActivityStatus extends React.Component<Props, State> {
     };
 
     render() {
-        const {activity, navigator, style, cardStyle, children} = this.props;
+        let {activity, navigator, style, cardStyle, children} = this.props;
+
+        if (!activity) return null
+        //TODO: use selectors, remove singleton access
+        {
+            let {type, id} = activity
+            activity = StoreManager.buildData(type, id)
+        }
+
 
         //TODO: clear db from this type
         if (sanitizeActivityType(activity.type) === 'posts') return null

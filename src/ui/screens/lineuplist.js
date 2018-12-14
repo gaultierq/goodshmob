@@ -27,9 +27,8 @@ import {mergeItemsAndPendings} from "../../helpers/ModelUtils"
 import Screen from "../components/Screen"
 
 import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
-import LineupCell from "../components/LineupCell"
 import * as Api from "../../managers/Api"
-import GTouchable from "../GTouchable"
+import {createCounter} from "../../helpers/DebugUtils"
 
 
 export type Props = FeedProps & {
@@ -39,7 +38,7 @@ export type Props = FeedProps & {
     sectionMaker?: (lineups: List<List>) => Array<*>,
     ListHeaderComponent?: Node,
     navigator: *,
-    listRef: any => void | string
+    listRef?: any => void | string
 };
 
 type State = {
@@ -47,7 +46,8 @@ type State = {
     isLoadingMore?: boolean,
 };
 
-
+const logger = rootlogger.createLogger('lineupList')
+const counter = createCounter(logger)
 
 @logged
 @connect(state => ({
@@ -74,6 +74,7 @@ export class LineupListScreen extends Screen<Props, State> {
             ...attributes
         } = this.props;
 
+        counter('render')
 
         let user: User = buildData(this.props.data, "users", userId);
 
@@ -87,7 +88,7 @@ export class LineupListScreen extends Screen<Props, State> {
         } : {
             callFactory: () => userActions.getUserAndTheirLists(userId),
             action: userActionTypes.GET_USER_W_LISTS
-        };
+        }
 
 
         //reconciliate pendings
@@ -105,16 +106,12 @@ export class LineupListScreen extends Screen<Props, State> {
             {afterI: 0}
         );
 
-        // items = includePendingFollowItems(items,
-        //     this.props.pending[FOLLOW_LINEUP],
-        //     this.props.pending[UNFOLLOW_LINEUP])
-
         return (
             <Feed
                 data={items}
                 listRef={this.props.listRef}
                 sections={sectionMaker && sectionMaker(items)}
-                renderItem={this.renderItem.bind(this)}
+                renderItem={this._renderItem}
                 fetchSrc={fetchSrc}
                 {...attributes}
             />
@@ -122,13 +119,13 @@ export class LineupListScreen extends Screen<Props, State> {
         )
     }
 
-    renderItem({item}) {
+    _renderItem = ({item}) => {
         let list = item;
         list = buildData(this.props.data, list.type, list.id) || list;
 
-        let {renderItem, navigator} = this.props;
+        let {renderItem} = this.props;
 
-        return (renderItem || renderSimpleListItem(navigator))(list);
+        return renderItem(list);
     }
 }
 
@@ -151,21 +148,4 @@ const reducer = (() => {
     }
 })();
 
-
-export {reducer};
-
-//TODO: REMOVE
-export function renderSimpleListItem(navigator: *) {
-
-    return (item: List) => (<GTouchable
-        onPress={() => {
-            navigator.showModal({
-                screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
-                passProps: {
-                    lineupId: item.id,
-                },
-            });
-        }}>
-        <LineupCell lineup={item}/>
-    </GTouchable>)
-}
+export {reducer}

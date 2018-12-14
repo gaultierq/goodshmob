@@ -3,12 +3,12 @@
 import * as Api from "../../managers/Api"
 import {Call} from "../../managers/Api"
 import type {Id, IItem, ItemType, List, ms} from "../../types"
-import {CREATE_LINEUP, DELETE_LINEUP, EDIT_LINEUP, SAVE_ITEM} from "./actionTypes"
+import {CREATE_LINEUP, DELETE_LINEUP, EDIT_LINEUP, FOLLOW_LINEUP, SAVE_ITEM, UNFOLLOW_LINEUP} from "./actionTypes"
 import type {PendingAction} from "../../helpers/ModelUtils"
 import {pendingActionWrapper} from "../../helpers/ModelUtils"
 import type {Visibility} from "../screens/additem"
 import ApiAction from "../../helpers/ApiAction"
-import {UNSAVE} from "../activity/actionTypes"
+import {UNSAVE} from "./actionTypes"
 import {Alert} from "react-native"
 import type {LineupActionParams} from "../Nav"
 import _Messenger from "../../managers/Messenger"
@@ -133,9 +133,6 @@ export function deleteLineup({dispatch, lineup}: LineupActionParams) {
         { cancelable: true }
     );
 }
-
-export const FOLLOW_LINEUP = ApiAction.create("follow_lineup", "follow a lineup");
-export const UNFOLLOW_LINEUP = ApiAction.create("unfollow_lineup", "unfollow a lineup");
 
 
 export function fetchLineup(lineupId: string): Call {

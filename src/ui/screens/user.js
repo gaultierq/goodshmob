@@ -14,12 +14,11 @@ import * as Api from "../../managers/Api"
 import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
 import {getUserActions, GUserAction, U_CONNECT} from "../userRights"
 import {createSelector} from "reselect"
-import {USER_SECLECTOR} from "../../helpers/ModelUtils"
+import {USER_SELECTOR} from "../../helpers/Selectors"
 import {UserHeader} from "../components/UserHeader"
 import {Colors} from "../colors"
 import {SFP_TEXT_BOLD} from "../fonts"
 import GTouchable from "../GTouchable"
-import {CANCELABLE_MODAL2} from "../Nav"
 
 type Props = {
     userId: Id,
@@ -33,27 +32,28 @@ type State = {
     reqConnect?: RequestState,
     reqDisconnect?: RequestState,
     showFilter?: boolean,
-};
-
-
-const selector = createSelector(
-    [
-        USER_SECLECTOR,
-        state => state.pending
-    ],
-    (user, pending) => {
-        let action = null
-        if (user) {
-            let actions = getUserActions(user, pending)
-            if (actions.indexOf(U_CONNECT) >= 0) action = U_CONNECT
-            // if (actions.indexOf(U_DISCONNECT) >= 0) action = U_DISCONNECT
-        }
-        return {user, action}
-    }
-)
+}
 
 @logged
-@connect(selector)
+@connect(() => {
+    const user = USER_SELECTOR()
+
+    return createSelector(
+        [
+            user,
+            state => state.pending
+        ],
+        (user, pending) => {
+            let action = null
+            if (user) {
+                let actions = getUserActions(user, pending)
+                if (actions.indexOf(U_CONNECT) >= 0) action = U_CONNECT
+                // if (actions.indexOf(U_DISCONNECT) >= 0) action = U_DISCONNECT
+            }
+            return {user, action}
+        }
+    )
+})
 export default class UserScreen extends Screen<Props, State> {
 
 

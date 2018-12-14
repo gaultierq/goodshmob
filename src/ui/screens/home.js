@@ -40,7 +40,6 @@ import {PagerPan, TabView} from "react-native-tab-view"
 import MyGoodsh from "./MyGoodsh"
 import MyInterests from "./MyInterests"
 import {fullName2} from "../../helpers/StringUtils"
-import {currentUserFilter} from "../../redux/selectors"
 import NotificationManager from '../../managers/NotificationManager'
 
 type Props = {
@@ -84,7 +83,7 @@ export function renderTip(currentTip: TipConfig) {
 @connect((state, props)=>({
     config: state.config,
     onBoarding: state.onBoarding,
-    currentUser: currentUserFilter(state, props)
+    currentUser: _.get(state, `data.users.${props.userId}`)
 }))
 export default class HomeScreen extends Screen<Props, State> {
 

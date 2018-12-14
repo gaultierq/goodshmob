@@ -39,12 +39,12 @@ export type Movie = Item & {
 
 export type List =  Base & {
 
-    createdAt: any,
-    name: string,
-    primary: any,
-    privacy: any,
-    savings: List<Saving>,
-    user: User,
+    createdAt?: any,
+    name?: string,
+    primary?: any,
+    privacy?: any,
+    savings?: List<Saving>,
+    user?: User,
 }
 
 export type LineupMeta = {
@@ -56,9 +56,9 @@ export type Lineup = List;
 export type Base = {
 
     id: Id,
-    type: String, //doesn't make sense though
-    links: any,
-    meta: any,
+    type: String,
+    links?: any,
+    meta?: any,
 }
 
 export type ActivityGroup = {

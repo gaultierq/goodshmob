@@ -31,12 +31,13 @@ import type {Id} from "../../types"
 import {LINEUP_PADDING, openModalStatic, renderSimpleButton, STYLES} from "../UIStyles"
 import {GoodshContext, LINEUP_SECTIONS} from "../UIComponents"
 import {buildData, updateSplice0} from "../../helpers/DataUtils"
-import {FOLLOW_LINEUP, UNFOLLOW_LINEUP} from "../lineup/actions"
+import {FOLLOW_LINEUP} from "../lineup/actionTypes"
 import {mergeItemsAndPendings2} from "../../helpers/ModelUtils"
 import {Colors} from "../colors"
 import {CANCELABLE_MODAL2} from "../Nav"
 import {SFP_TEXT_REGULAR} from "../fonts"
 import GButton from "../components/GButton"
+import {UNFOLLOW_LINEUP} from "../lineup/actionTypes"
 
 
 type Props = {

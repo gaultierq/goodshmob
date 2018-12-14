@@ -145,8 +145,7 @@ export default class MyGoodsh extends Screen<Props, State> {
                 }}
                 renderTitle={(lineup: Lineup) => (
                     <LineupTitle2
-                        lineupId={lineup.id}
-                        dataResolver={id => lineup}
+                        lineup={lineup}
                         style={{
                             marginBottom: 10,
                             paddingRight: 30,

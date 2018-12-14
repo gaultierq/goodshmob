@@ -5,45 +5,56 @@ import React, {Component} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {connect} from "react-redux"
-import type {Color, Id, Lineup} from "../../types"
+import type {Color, Lineup} from "../../types"
 import {ViewStyle} from "../../types"
 import {logged} from "../../managers/CurrentUser"
 import {Navigation} from 'react-native-navigation'
 import {Colors} from "../colors"
 import Icon from 'react-native-vector-icons/FontAwesome'
-import {buildData} from "../../helpers/DataUtils"
 import {STYLES} from "../UIStyles"
 import {GoodshContext} from "../UIComponents"
-import {L_FOLLOW, LineupRights} from "../lineupRights"
+import {GLineupAction, L_FOLLOW, LineupRights} from "../lineupRights"
 import {followLineupPending} from "../lineup/actions"
 import {SFP_TEXT_BOLD} from "../fonts"
 import PersonRowI from "../activity/components/PeopleRow"
+import {createStructuredSelector} from "reselect"
+import {
+    LINEUP_ACTIONS_SELECTOR, LINEUP_AUTHOR,
+    LINEUP_FOLLOWS_COUNT_SELECTOR,
+    LINEUP_SAVING_COUNT_SELECTOR,
+    LINEUP_SELECTOR
+} from "../../helpers/Selectors"
 
 export type State = {
 
 }
 export type Props = {
-    lineupId: Id,
-    dataResolver?: Id => Lineup,
+    lineup: Lineup,
     style?: ViewStyle,
     children?: Node,
+
+    savingsCount?: number,
+    followersCount?: number,
+    actions?: GLineupAction[],
 }
 
-
-@connect(state => ({
-    data: state.data,
-    pending: state.pending,
-}))
+@connect(() => createStructuredSelector(
+    {
+        lineup: LINEUP_SELECTOR(),
+        savingsCount: LINEUP_SAVING_COUNT_SELECTOR(),
+        followersCount: LINEUP_FOLLOWS_COUNT_SELECTOR(),
+        actions: LINEUP_ACTIONS_SELECTOR(),
+        author: LINEUP_AUTHOR(),
+    }
+))
 @logged
 export default class LineupTitle2 extends Component<Props, State> {
 
     render() {
 
-        let {lineupId, dataResolver, style, children} = this.props
+        let {lineup, style, children, author} = this.props
 
-        dataResolver = dataResolver || (id => buildData(this.props.data, 'lists', id))
-        let lineup = dataResolver(lineupId)
-        let author =  lineup.user;
+
         return (
             <GoodshContext.Consumer>
                 { ({userOwnResources}) => (
@@ -77,7 +88,7 @@ export default class LineupTitle2 extends Component<Props, State> {
 
                         </View>
                         {
-                            !userOwnResources && author && author.firstName && <View style={{
+                            (!userOwnResources )&& author && author.firstName && <View style={{
                                 flexDirection: 'row',
                                 alignItems: 'center',
                                 flex: 0,
@@ -108,8 +119,8 @@ export default class LineupTitle2 extends Component<Props, State> {
         let lr = new LineupRights(lineup, this.props.pending)
         let canFollow = lr.canExec(L_FOLLOW)
         return [
-            this.renderMedal(_.get(lineup, 'meta.savingsCount', -1), "th-large", it),
-            this.renderMedal(_.get(lineup, 'meta.followersCount', -1), "star", it, _.get(lineup, 'meta.followed', false) ? Colors.green : undefined),
+            this.renderMedal(this.props.savingsCount.total, "th-large", it),
+            this.renderMedal(this.props.followersCount.total, "star", it, _.get(lineup, 'meta.followed', false) ? Colors.green : undefined),
             (canFollow &&
                 <Text
                     key={"follow"}

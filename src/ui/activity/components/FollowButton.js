@@ -10,8 +10,7 @@ import {Colors} from "../../colors"
 import {renderSimpleButton} from "../../UIStyles"
 import {followLineupPending, unfollowLineupPending} from "../../lineup/actions"
 import {SFP_TEXT_REGULAR} from "../../fonts"
-import StoreManager from "../../../managers/StoreManager"
-import {L_FOLLOW, L_UNFOLLOW, LineupRights} from "../../lineupRights"
+import {isFollowed, L_FOLLOW, L_UNFOLLOW, LineupRights} from "../../lineupRights"
 
 type Props = {
     lineup: Lineup,
@@ -67,11 +66,6 @@ export default class FollowButton extends Component<Props, State> {
 }
 
 //TODO: create decorators when building
-// return null if we don't know (eg: when item is pending)
-export function isFollowed(lineup: Lineup, pending?: any) {
-    if (StoreManager.isListPendingFollowOrUnfollow(lineup.id, pending)) return null
-    return _.get(lineup, 'meta.followed')
-}
 
 const styles = StyleSheet.create({
     container: {

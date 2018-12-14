@@ -7,9 +7,9 @@ import {SFP_TEXT_BOLD} from "../fonts"
 import {Colors} from "../colors"
 import type {Lineup, RNNNavigator} from "../../types"
 import connect from "react-redux/es/connect/connect"
-import {LINEUP_SELECTOR} from "../../helpers/ModelUtils"
-import {createSelector} from "reselect"
-import {GLineupAction, L_ADD_ITEM, L_FOLLOW, L_SHARE, L_UNFOLLOW, LineupRights} from "../lineupRights"
+import {LINEUP_ACTIONS_SELECTOR, LINEUP_SELECTOR} from "../../helpers/Selectors"
+import {createStructuredSelector} from "reselect"
+import {GLineupAction, L_ADD_ITEM, L_FOLLOW, L_SHARE, L_UNFOLLOW} from "../lineupRights"
 import {displayShareLineup} from "../Nav"
 import {followLineupPending, unfollowLineupPending} from "./actions"
 import GTouchable from "../GTouchable"
@@ -18,17 +18,6 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 
 const BACK_BUTTON_WIDTH = 40
-export const selector = createSelector(
-    [
-        LINEUP_SELECTOR,
-        state => state.pending
-    ],
-    (lineup, pending) => {
-        let actions = LineupRights.getActions(lineup, pending)
-        actions = _.sortBy(actions, a => a.priority)
-        return {lineup, actions}
-    }
-)
 
 const fontSpecs: TSFontSpecs = {
     fontFamily: SFP_TEXT_BOLD,
@@ -48,7 +37,11 @@ type State = {
     wordsWidth: TSMeasureResult[],
 }
 
-@connect(selector)
+@connect(() => {
+    const lineup = LINEUP_SELECTOR()
+    const actions = LINEUP_ACTIONS_SELECTOR()
+    return createStructuredSelector({lineup,actions})
+})
 export class LineupHeader extends Component<Props, State> {
 
     static defaultProps = {
@@ -204,12 +197,14 @@ export class LineupHeader extends Component<Props, State> {
             // backgroundColor: 'green',
         }]
         return (
-            <View style={{
-                flex: 1,
-                flexDirection: 'row',
-                // justifyContent: 'space-between',
-                alignItems: 'center',
-            }}>
+            <View
+                key={`line-${line}`}
+                style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    // justifyContent: 'space-between',
+                    alignItems: 'center',
+                }}>
                 {first && this.renderBackButton()}
                 <Text style={lol}>{line}</Text>
                 {last && <View onLayout={e => this.setState({  buttonsWidth: _.get(e, 'nativeEvent.layout.width') })} style={{

@@ -382,6 +382,10 @@ export default class App implements GoodshApp {
         if (module && module.hot) {
             global.reloads = 0;
         }
+        // if (__DEV__) {
+        //     this.logger.debug(`loading reselect tools`);
+        //     require('reselect-tools').registerSelectors(require('./helpers/Selectors'))
+        // }
 
         console.disableYellowBox = true
 

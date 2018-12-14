@@ -5,7 +5,6 @@ import {currentUser, currentUserId, logged} from "../../managers/CurrentUser"
 import {Navigation} from 'react-native-navigation'
 import GTouchable from "../GTouchable"
 import {connect} from "react-redux"
-import {currentUserFilter} from "../../redux/selectors"
 import type {Id} from "../../types"
 import {GAvatar} from "../GAvatar"
 
@@ -21,7 +20,7 @@ export const PROFILE_CLICKED = 'PROFILE_NAV_CLICKED';
 
 @logged
 @connect((state, props)=>({
-    currentUser: currentUserFilter(state, {userId: currentUserId()})
+    currentUser: _.get(state, `data.users.${{userId: currentUserId()}.userId}`)
 }))
 export default class MyAvatar extends Component<Props, State> {
 

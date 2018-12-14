@@ -65,18 +65,11 @@ export default class MoveInScreen extends Screen<Props, State> {
                             disabled={lineup.id === _.get(saving, 'target.id')}
                         >
                             <LineupHorizontal
-                                lineupId={lineup.id}
-                                renderTitle={default_renderTitle}
+                                lineup={lineup}
                                 renderSaving={(saving: Saving) => {
                                     return <LineupCellSaving item={saving.resource} style={{
                                         borderWidth: saving.id === this.props.savingId ? 1 : 0,
                                         borderColor: 'black',
-                                        // transform: [
-                                        //     { scaleX: saving.id === this.props.savingId ? 1.5 : 1 },
-                                        //     { scaleY: saving.id === this.props.savingId ? 1.5 : 1},
-                                        //
-                                        // ],
-
                                     }}/>
                                 }
 
