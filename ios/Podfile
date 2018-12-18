@@ -66,6 +66,10 @@ post_install do |installer|
        target.remove_from_project
     end
 
+    if target.name == "yoga"
+      target.remove_from_project
+    end
+
     if target.name == 'react-native-config' then
       phase = target.new_shell_script_build_phase("Build env file")
       phase.shell_script = "cd ../../node_modules/react-native-config/"\
