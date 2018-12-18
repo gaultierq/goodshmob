@@ -12,7 +12,7 @@ import Screen from "../components/Screen"
 import LineupHorizontal from "../components/LineupHorizontal"
 import LineupCellSaving from "../components/LineupCellSaving"
 import type {Lineup} from "../../types"
-import LineupTitle2 from "../components/LineupTitle2"
+import LineupTitle from "../components/LineupTitle"
 
 type Props = LineupProps & {
     onListSelected: ()=>void

@@ -12,9 +12,12 @@ import {LINEUP_PADDING, STYLES} from "../UIStyles"
 import UserLineups from "./userLineups"
 import * as Api from "../../managers/Api"
 import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
-import {getUserActions, GUserAction, U_CONNECT} from "../userRights"
-import {createSelector} from "reselect"
-import {USER_SELECTOR} from "../../helpers/Selectors"
+import {GUserAction} from "../userRights"
+import {
+    USER_SELECTOR,
+    USER_SYNCED_LINEUPS_COUNT_SELECTOR,
+    USER_SYNCED_SAVINGS_COUNT_SELECTOR
+} from "../../helpers/Selectors"
 import {UserHeader} from "../components/UserHeader"
 import {Colors} from "../colors"
 import {SFP_TEXT_BOLD} from "../fonts"
@@ -37,22 +40,14 @@ type State = {
 @logged
 @connect(() => {
     const user = USER_SELECTOR()
+    const lineupsCount = USER_SYNCED_LINEUPS_COUNT_SELECTOR()
+    const savingsCount = USER_SYNCED_SAVINGS_COUNT_SELECTOR()
 
-    return createSelector(
-        [
-            user,
-            state => state.pending
-        ],
-        (user, pending) => {
-            let action = null
-            if (user) {
-                let actions = getUserActions(user, pending)
-                if (actions.indexOf(U_CONNECT) >= 0) action = U_CONNECT
-                // if (actions.indexOf(U_DISCONNECT) >= 0) action = U_DISCONNECT
-            }
-            return {user, action}
-        }
-    )
+    return (state, props) => ({
+        user: user(state, props),
+        lineupsCount: lineupsCount(state, props),
+        savingsCount: savingsCount(state, props),
+    })
 })
 export default class UserScreen extends Screen<Props, State> {
 
@@ -71,16 +66,12 @@ export default class UserScreen extends Screen<Props, State> {
         )
     }
 
-    getUser() {
-        return this.props.user
-    }
-
     render() {
-        let user = this.getUser();
+        let {user, lineupsCount, savingsCount} = this.props
 
         // this.props.navigator.setButtons(this.getButtons(this.props.action, this.props.userId))
-        const lineupsCount = _.get(user, 'meta.lineupsCount')
-        const savingsCount = _.get(user, 'meta.savingsCount')
+        // const lineupsCount = _.get(user, 'meta.lineupsCount')
+        // const savingsCount = _.get(user, 'meta.savingsCount')
 
         let userId = this.props.userId;
 
@@ -99,10 +90,8 @@ export default class UserScreen extends Screen<Props, State> {
                             // backgroundColor: 'green',
                         }}>
                             <UserHeader
-                                // avatarProps={{size: LINEUP_PADDING * 8,}}
-                                // avatarContainerStyle={{marginTop: 32,}}
-                                        navigator={this.props.navigator}
-                                        user={user}/>
+                                navigator={this.props.navigator}
+                                user={user}/>
 
                             <View style={{
                                 alignItems: 'center',

@@ -64,11 +64,14 @@ class Api {
     }
 
     handleConnection = connected => {
-        logger.log('Api: ' + (connected ? 'online' : 'offline'));
-        // this.isConnected = connected;
-        this.store.dispatch({type: CONNECTIVITY_CHANGE, connected});
+        if (this.getConn() !== connected) {
+            logger.log((connected ? 'online' : 'offline'));
 
-        this.execPendings();
+            this.store.dispatch({type: CONNECTIVITY_CHANGE, connected});
+
+            this.execPendings();
+        }
+
     }
 
     _debounceFetchIsConnected = _.debounce(this.fetchIsConnected, 500);
@@ -82,7 +85,7 @@ class Api {
     //TODO: this is a hack. logout should preserve 'app' store sub-state
     isConnected() {
         // return true;
-        const connected = this.store.getState().app.connected !== false
+        const connected = this.getConn() !== false
         if (!connected) {
             this._debounceFetchIsConnected()
         }
@@ -90,12 +93,16 @@ class Api {
     }
 
 
-    execPendings = _.throttle(()=> this.execPendings(), 2000);
+    getConn() {
+        return this.store.getState().app.connected
+    }
+
+    execPendings = _.throttle(()=> this._execPendings(), 2000);
 
     _execPendings() {
 
         if (!this.isConnected()) {
-            logger.debug('Api: exec pendings: no connection');
+            logger.debug('exec pendings: no connection');
             return;
         }
 

@@ -11,10 +11,10 @@ import type {Lineup, RNNNavigator, Url} from "../types"
 import {ViewStyle} from "../types"
 import {CANCELABLE_MODAL2, displayLineupActionMenu, seeList} from "./Nav"
 import LineupHorizontal from "./components/LineupHorizontal"
-import LineupTitle2 from "./components/LineupTitle2"
+import LineupTitle from "./components/LineupTitle"
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import {GLineupAction, L_ADD_ITEM, L_FOLLOW, L_SHARE, L_UNFOLLOW} from "./lineupRights"
+import {GLineupAction, L_ADD_ITEM, L_FOLLOW, L_SHARE, L_UNFOLLOW, LineupRights} from "./lineupRights"
 import {TabBar} from "react-native-tab-view"
 import {currentGoodshboxId} from "../managers/CurrentUser"
 import {SEARCH_CATEGORIES_TYPE} from "../helpers/SearchConstants"
@@ -128,15 +128,15 @@ export function floatingButtonScrollListener() {
 export const RENDER_SECTION_HEADER = (navigator: RNNNavigator, dispatch: Dispatch, lineup: Lineup) => <GTouchable
     onPress={() => seeList(navigator, lineup)}>
 
-    <LineupTitle2
+    <LineupTitle
         lineup={lineup}
         style={{
             backgroundColor: BACKGROUND_COLOR,
             paddingLeft: LINEUP_PADDING,
         }}
     >
-        {renderLineupMenu(navigator, dispatch, lineup)}
-    </LineupTitle2>
+        {renderLineupMenu(navigator, dispatch, lineup, LineupRights.getActions(lineup))}
+    </LineupTitle>
 </GTouchable>;
 
 //TODO: split - create a file dedicated to Lineup rendering
@@ -158,34 +158,21 @@ export const LINEUP_SECTIONS = (navigator: RNNNavigator, dispatch: any) => (line
 };
 
 
-export function renderLineupMenu(navigator: RNNNavigator, dispatch: any, lineup: Lineup) {
+export function renderLineupMenu(navigator: RNNNavigator, dispatch: any, lineup: Lineup, actions: GLineupAction[]) {
     return (
         <GTouchable style={{
             // backgroundColor: 'red'
         }}
-                    onPress={() => displayLineupActionMenu(navigator, dispatch, lineup)}>
+                    onPress={() => displayLineupActionMenu(navigator, dispatch, lineup, actions)}>
             <View style={{
                 paddingHorizontal: LINEUP_PADDING,
                 paddingVertical: 12,
             }}>
+
                 <Image source={require('../img2/moreDotsGrey.png')} resizeMode="contain"/>
             </View>
         </GTouchable>
     );
-}
-
-export function renderLineup(navigator: RNNNavigator, lineup: Lineup) {
-
-    return (
-        <GTouchable
-            onPress={() => seeList(navigator, lineup)}>
-
-            <LineupHorizontal
-                lineup={lineup}
-                style={{paddingBottom: 10}}
-            />
-        </GTouchable>
-    )
 }
 
 export const GoodshContext = React.createContext({userOwnResources: true});
@@ -429,13 +416,18 @@ export class ListColumnsSelector extends Component<
         onTabPressed?: number => void,
         size: number,
         disabled?: boolean,
+        initialIndex?: number,
     },
     {
         index: number
     }> {
 
-    state = {index: 0}
+    static defaultProps = {initialIndex: 0}
 
+    constructor(props) {
+        super(props)
+        this.state = {index: props.initialIndex}
+    }
 
     _select = (index: number) => {
         this.setState({index})

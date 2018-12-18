@@ -26,26 +26,26 @@ import GTouchable from "../GTouchable"
 import {EmptyCell} from "./LineupCellSaving"
 import {LINEUP_PADDING} from "../UIStyles"
 import {InnerPlus, renderLineupMenu} from "../UIComponents"
-import LineupTitle2 from "./LineupTitle2"
-import {LINEUP_SELECTOR, SAVING_LIST_SELECTOR} from "../../helpers/Selectors"
+import LineupTitle from "./LineupTitle"
+import {LINEUP_ACTIONS_SELECTOR, LINEUP_SELECTOR, lineupIdExtract, LIST_SAVINGS_SELECTOR} from "../../helpers/Selectors"
 import {Colors} from "../colors"
-import {createStructuredSelector} from "reselect"
 import {FETCH_LINEUP, fetchLineup} from "../lineup/actions"
 import * as Api from "../../managers/Api"
+import {GLineupAction} from "../lineupRights"
 
 // $FlowFixMe
 type Props = {
     lineup: Lineup,
     savings?: Saving[],
     // dataResolver: Id => {lineup: Lineup, savings: Array<Saving>},
-    renderMenuButton?: () => Node,
+    renderMenuButton?: GLineupAction[] => Node,
     skipLineupTitle?: boolean,
     onPressEmptyLineup?: () => void,
     onSavingPressed?:(navigator: RNNNavigator, saving: Saving) => void,
     renderSaving?: (saving:Saving) => Node,
     renderTitle?: (lineup: Lineup) => Node,
     style?: ViewStyle,
-    renderEmpty: (list: Lineup) => Node,
+    renderEmpty?: (list: Lineup) => Node,
 };
 
 type State = {
@@ -53,30 +53,41 @@ type State = {
 
 export const ITEM_SEP = 10
 
-let lineupId = props => props.lineupId || props.lineup.id
-
-
 @connect(() => {
+
     const lineup = LINEUP_SELECTOR()
-    const savings = SAVING_LIST_SELECTOR()
+    const savings = LIST_SAVINGS_SELECTOR()
+    const actions = LINEUP_ACTIONS_SELECTOR()
+
     return (state, props) => ({
         lineup: lineup(state, props),
         savings: savings(state, props),
+        actions: actions(state, props),
     })
 })
 @logged
 export default class LineupHorizontal extends Component<Props, State> {
 
+    render() {
+        return <LineupHorizontalPure {...this.props} />
+    }
+}
+
+
+//same as above, but read its data from props only
+@connect()
+export class LineupHorizontalPure extends Component<Props, State> {
+
     static defaultProps = {
         skipLineupTitle: false,
-        renderTitle: lineup => <LineupTitle2 lineup={lineup}/>,
+        renderTitle: lineup => <LineupTitle lineup={lineup}/>,
         renderSaving: saving => <LineupCellSaving item={saving.resource} />,
-        renderEmpty: (list: Lineup) => LineupHorizontal.defaultRenderEmpty()
+        renderEmpty: (list: Lineup) => defaultRenderEmpty()
     }
 
     componentDidMount() {
         if (!this.props.lineup || !this.props.savings) {
-            const listId = lineupId(this.props)
+            const listId = lineupIdExtract(this.props)
             Api.safeDispatchAction.call(this,this.props.dispatch,
                 fetchLineup(listId).createActionDispatchee(FETCH_LINEUP, {listId: listId}),
                 'fetchLineup'
@@ -89,10 +100,10 @@ export default class LineupHorizontal extends Component<Props, State> {
         const {
             lineup, savings,
             renderTitle, renderMenuButton,
-            skipLineupTitle, style, ...attributes} = this.props;
+            skipLineupTitle, style, actions, ...attributes} = this.props;
 
         if (!lineup) {
-            console.warn('lineup not found for id', lineupId)
+            console.warn('lineup not found for id', lineupIdExtract)
             return null;
         }
 
@@ -105,7 +116,7 @@ export default class LineupHorizontal extends Component<Props, State> {
 
                     <View style={{flexDirection:'row', paddingHorizontal: LINEUP_PADDING}}>
                         {renderTitle && renderTitle(lineup)}
-                        {renderMenuButton && renderMenuButton()}
+                        {renderMenuButton && renderMenuButton(actions)}
                     </View>
                 }
                 {/* TODO EmptyComponent does not work for some reason*/}
@@ -117,7 +128,6 @@ export default class LineupHorizontal extends Component<Props, State> {
                         ItemSeparatorComponent={() => <View style={{width: ITEM_SEP}}/>}
                         contentContainerStyle={{paddingLeft: LINEUP_PADDING}}
                         showsHorizontalScrollIndicator={false}
-                        // EmptyComponent={this.props.renderEmpty(lineup)}
                         {...attributes}
                     />
                 }
@@ -126,38 +136,8 @@ export default class LineupHorizontal extends Component<Props, State> {
     }
 
     _renderItem = ({item}) => {
-        return this.props.renderSaving(item.saving)
+        return this.props.renderSaving(item)
     }
-
-    static defaultRenderEmpty(renderFirstAsPlus: boolean = false, plusRef?: () => void) {
-        return (
-            <View style={{flexDirection: 'row', paddingLeft: LINEUP_PADDING,}}>{
-                [0,1,2,3,4].map((o, i) => {
-                        return (
-                            <EmptyCell key={`empty-${i}`} style={{marginRight: 10}}>
-                                {i === 0 && renderFirstAsPlus && this.renderInnerPlus(plusRef)}
-                            </EmptyCell>
-                        )
-                    }
-                )
-            }</View>
-        )
-    }
-
-    static renderPlus(cellProps: any, ref?: () => void) {
-        return (
-            <EmptyCell key={`key-${0}`} {...cellProps}>
-                {this.renderInnerPlus(ref)}
-            </EmptyCell>
-        )
-    }
-
-    static renderInnerPlus(ref?: () => void) {
-        return (
-            <InnerPlus ref={ref} plusStyle={{backgroundColor: Colors.white, borderRadius: 4,}}/>
-        )
-    }
-
 }
 
 export type Props1 = {
@@ -167,12 +147,13 @@ export type Props1 = {
 }
 export const LineupH1 = connect()((props: Props1) => {
     const {lineup, dispatch, navigator, ...attr} = props;
-    return <GTouchable onPress={()=>seeList(navigator, lineup)}>
+    return <GTouchable disabled={!!lineup.pending} onPress={()=> seeList(navigator, lineup)}>
 
         <LineupHorizontal
             lineup={lineup}
             renderSaving={saving => (
                 <GTouchable
+                    disabled={!!saving.pending}
                     onPress={() => seeActivityDetails(navigator, saving)}
                     onLongPress={saving.pending ? null : ()=> {
                         displaySavingActions(navigator, props.dispatch, saving.id, saving.type)
@@ -181,8 +162,29 @@ export const LineupH1 = connect()((props: Props1) => {
                     <LineupCellSaving item={saving.resource} />
                 </GTouchable>
             )}
-            renderMenuButton={() => renderLineupMenu(navigator, dispatch, lineup)}
+            renderMenuButton={(actions) => renderLineupMenu(navigator, dispatch, lineup, actions)}
             {...attr}
         />
     </GTouchable>
 });
+
+export function defaultRenderEmpty(renderFirstAsPlus: boolean = false, plusRef?: () => void) {
+    return (
+        <View style={{flexDirection: 'row', paddingLeft: LINEUP_PADDING,}}>{
+            [0,1,2,3,4].map((o, i) => {
+                    return (
+                        <EmptyCell key={`empty-${i}`} style={{marginRight: 10}}>
+                            {i === 0 && renderFirstAsPlus && renderInnerPlus(plusRef)}
+                        </EmptyCell>
+                    )
+                }
+            )
+        }</View>
+    )
+}
+
+export function renderInnerPlus(ref?: () => void) {
+    return (
+        <InnerPlus ref={ref} plusStyle={{backgroundColor: Colors.white, borderRadius: 4,}}/>
+    )
+}

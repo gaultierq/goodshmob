@@ -16,8 +16,7 @@ import Screen from "./../components/Screen"
 import {LINEUP_PADDING} from "../UIStyles"
 import {FETCH_LINEUP, FETCH_SAVINGS, fetchLineup,} from "../lineup/actions"
 import {UNSAVE} from "../lineup/actionTypes"
-import {GLineupAction} from "../lineupRights"
-import {savingsCount} from "../../helpers/ModelUtils"
+import {GLineupAction, L_ADD_ITEM} from "../lineupRights"
 import {createStructuredSelector} from "reselect"
 import FeedSeparator from "../activity/components/FeedSeparator"
 import {CachedImage} from 'react-native-cached-image'
@@ -29,7 +28,12 @@ import {buildSearchItemUrl, openLinkSafely} from "../../managers/Links"
 import SearchItems from "./searchitems"
 import GImage from "../components/GImage"
 import {LineupMedals} from "../lineup/LineupMedals"
-import {LINEUP_ACTIONS_SELECTOR, LINEUP_SELECTOR, SAVING_LIST_SELECTOR} from "../../helpers/Selectors"
+import {
+    LINEUP_ACTIONS_SELECTOR,
+    LINEUP_SAVING_COUNT_SELECTOR,
+    LINEUP_SELECTOR, lineupId, lineupIdExtract,
+    LIST_SAVINGS_SELECTOR
+} from "../../helpers/Selectors"
 
 type Props = {
     lineupId: string,
@@ -49,50 +53,54 @@ const SPACER = 6
 @logged
 @connect(() => {
     const lineup = LINEUP_SELECTOR()
-    const savings = SAVING_LIST_SELECTOR()
+    const savings = LIST_SAVINGS_SELECTOR()
     const actions = LINEUP_ACTIONS_SELECTOR()
-    return createStructuredSelector({lineup,savings,actions})
+    const savingsCount = LINEUP_SAVING_COUNT_SELECTOR()
+
+    return createStructuredSelector({
+        lineup,
+        savings,
+        actions,
+        savingsCount,
+    })
 })
 class LineupScreen extends Screen<Props, State> {
 
-    static navigatorStyle = {
-        navBarHidden: true,
-    }
+    static navigatorStyle = {navBarHidden: true,}
+
+    static gridStyles = {}
 
     static navigatorButtons = CANCELABLE_MODAL2
-
-    unsubscribe: ?() => void
-    actions: ?GLineupAction[]
 
     state = {
         navBarState: {},
         renderType: 'grid',
     }
 
-
     render() {
         const {lineup, savings} = this.props
-        let sc = savingsCount(lineup, null)
+        let sc = this.props.savingsCount.total
         let fetchSrc = this.getFetchSrc(lineup)
         let numColumns = this.state.renderType === 'grid' ? 3 : 1
         let data
-        if (sc > 0 && this.state.renderType === 'grid') {
+        let canAdd = this.props.actions.indexOf(L_ADD_ITEM) >= 0
+        if (sc > 0 && canAdd && this.state.renderType === 'grid') {
             data = _.concat([{type: 'plus_button'}], savings)
         }
         else {
             data = savings
         }
 
-        let canAdd = true
         return (
             <View style={styles.container}>
                 <Feed
                     key={"lineup-" + this.state.renderType}
+                    // decorateLoadMoreCall={(sections: any[], call: Call) => call.addQuery({id_after: _.get(_.last(data), 'saving.id')})}
                     data={data}
                     renderItem={this.state.renderType === 'grid' ? this.renderItemGrid.bind(this) : this.renderItemStream.bind(this)}
                     fetchSrc={fetchSrc}
                     hasMore={true}
-                    ListEmptyComponent={renderLinkInText(canAdd ? "empty_lineup_add" : "empty_lineup_cry", buildSearchItemUrl(this.props.lineup.id))}
+                    ListEmptyComponent={renderLinkInText(canAdd ? "empty_lineup_add" : "empty_lineup_cry", buildSearchItemUrl(this.lineupId()))}
                     numColumns={numColumns}
                     ItemSeparatorComponent={TRANSPARENT_SPACER(SPACER)}
                     style={{flex: 1, backgroundColor: Colors.white}}
@@ -107,6 +115,7 @@ class LineupScreen extends Screen<Props, State> {
                                 <ListColumnsSelector
                                     disabled={sc <= 0}
                                     size={30}
+                                    initialIndex={this.state.renderType === 'stream' ? 1 : 0}
                                     onTabPressed={index => this.setState({renderType: index === 0 ? 'grid' : 'stream'})}
                                 />
                                 <FeedSeparator />
@@ -116,6 +125,12 @@ class LineupScreen extends Screen<Props, State> {
             </View>
         );
     }
+
+    lineupId() {
+        return lineupId(this.props)
+    }
+
+
     getFetchSrc(lineup: Lineup) {
         let fetchSrc
         if (lineup && lineup.savings) {
@@ -143,7 +158,7 @@ class LineupScreen extends Screen<Props, State> {
 
     renderItemStream({item}) {
 
-        let saving: Saving = item.saving
+        let saving: Saving = item
         if (item.from === 'pending') return null
         return (
             <ActivityCell
@@ -172,7 +187,7 @@ class LineupScreen extends Screen<Props, State> {
             )
         }
         else {
-            let saving = item.saving
+            let saving = item
             uri = createDetailsLink(saving.id, saving.type)
             child = <GImage
                 source={{uri: _.get(saving, 'resource.image'), }}
@@ -189,13 +204,6 @@ class LineupScreen extends Screen<Props, State> {
             </GTouchable>
         )
     }
-
-
-    lineupId() {
-        return this.props.lineup.id
-    }
-
-    static gridStyles = {}
 
     static obtainGridStyles(layout: any) {
         const width = layout.cellWidth

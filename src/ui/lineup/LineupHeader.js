@@ -49,19 +49,43 @@ export class LineupHeader extends Component<Props, State> {
 
     state = {}
 
+    static wordsWidthCache = {}
 
-    async calculateWordsWidth(words: string[]) {
-        if (this.state.wordsWidth) return
-        logger.info("calculateWordsWidth")
-        let results = await Promise.all(words.map(text => rnTextSize.measure({
+
+    obtainWordsWidth(words: string[]) {
+        let results = Array(words.length)
+        let missing = []
+        for (let i = 0; i < words.length; i++) {
+            let w = words[i]
+            const cache = LineupHeader.wordsWidthCache[w]
+            if (cache) {
+                results[i] = cache
+            }
+            else {
+                const job = this.calcWordWidth(w).then(width => {
+                    LineupHeader.wordsWidthCache[w] = width
+                })
+                missing.push(job)
+            }
+        }
+        if (_.isEmpty(missing)) {
+            return results
+        }
+        else {
+            Promise.all(missing).then(() => {this.forceUpdate()})
+            return null
+        }
+
+
+        // logger.info("words dimensions:", results)
+    }
+
+    async calcWordWidth(text: string) {
+        return rnTextSize.measure({
                 text,
                 ...fontSpecs,
             }
-            )
-            )
         )
-        this.setState({wordsWidth: results})
-        logger.info("words dimensions:", results)
     }
 
     render() {
@@ -70,10 +94,13 @@ export class LineupHeader extends Component<Props, State> {
         if (!lineup.name) return null
         let words = this.getWords(lineup.name)
 
-        this.calculateWordsWidth(words)
-        if (!this.state.wordsWidth) return null
+        let wordsWidth = this.obtainWordsWidth(words)
+        if (!wordsWidth ) {
+            logger.debug("returning null while calculating words width")
+            return null
+        }
 
-        let lines = this.getLines(words)
+        let lines = this.getLines(words, wordsWidth)
 
         return (
             <View
@@ -111,12 +138,11 @@ export class LineupHeader extends Component<Props, State> {
         return words
     }
 
-    getLines(words) {
-        let widths = {
-            first: __DEVICE_WIDTH__ - 2 * LINEUP_PADDING - (this.state.backButtonWidth || BACK_BUTTON_WIDTH) - LINEUP_PADDING,
-            middle: __DEVICE_WIDTH__ - 2 * LINEUP_PADDING,
-            last: __DEVICE_WIDTH__ - 2 * LINEUP_PADDING - (this.state.buttonsWidth || 60)
-        }
+    getLines(words, wordsWidth) {
+        const baseWidth = __DEVICE_WIDTH__ - 2 * LINEUP_PADDING
+        const backButtonWidth = (this.state.backButtonWidth || BACK_BUTTON_WIDTH) + LINEUP_PADDING
+        const actionButtonWidth = this.state.buttonsWidth || 60
+        const avWidth = (isFirst = false, isLast = false) => baseWidth - isFirst * backButtonWidth - isLast * actionButtonWidth
 
         let lines = []
 
@@ -124,9 +150,9 @@ export class LineupHeader extends Component<Props, State> {
         let currLine = null, curLineW = 0
 
         for (let i = 0; i < words.length; i++) {
-            let availWidth = lines.length === 0 ? widths.first : widths.middle
+            let availWidth = avWidth(lines.length === 0, false)
             let w = words[i]
-            let ww = this.state.wordsWidth[i].width
+            let ww = wordsWidth[i].width
             if (curLineW + ww < availWidth) {
                 if (currLine === null) currLine = ''
                 currLine += w
@@ -149,13 +175,13 @@ export class LineupHeader extends Component<Props, State> {
 
         //2nd pass: including the trailing buttons
         let cut = 0
-        if (curLineW > widths.last) {
+        if (curLineW > avWidth(lines.length <= 1,true)) {
             lines.pop()
             //need to cut it
             for (let i = words.length; i-- > 0;) {
                 let w = words[i]
-                let ww = this.state.wordsWidth[i].width
-                if (curLineW < widths.last) {
+                let ww = wordsWidth[i].width
+                if (curLineW < avWidth(lines.length <= 1,true)) {
                     //finish
                     lines.push(currLine.substr(0, currLine.length - cut))
                     lines.push(currLine.substr(currLine.length - cut))
@@ -259,7 +285,13 @@ export class LineupHeader extends Component<Props, State> {
                     </GTouchable>)
             }
         }
-        return [button, shareB]
+        return (
+            <View style={{flexDirection: 'row'}}>
+                {button}
+                {shareB}
+            </View>
+        )
+        // return [button, shareB]
     }
 }
 const styles = HEADER_STYLES

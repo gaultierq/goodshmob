@@ -41,6 +41,7 @@ import MyGoodsh from "./MyGoodsh"
 import MyInterests from "./MyInterests"
 import {fullName2} from "../../helpers/StringUtils"
 import NotificationManager from '../../managers/NotificationManager'
+import {createCounter} from "../../helpers/DebugUtils"
 
 type Props = {
     navigator: RNNNavigator
@@ -79,6 +80,9 @@ export function renderTip(currentTip: TipConfig) {
     />
 }
 
+const logger = rootlogger.createLogger('home')
+const counter = createCounter(logger)
+
 @logged
 @connect((state, props)=>({
     config: state.config,
@@ -110,7 +114,6 @@ export default class HomeScreen extends Screen<Props, State> {
     }
 
     _mounted: boolean
-    logger = rootlogger.createLogger("home")
     feed: any
     onBoardingHelper = new HomeOnBoardingHelper()
     state = {
@@ -125,18 +128,8 @@ export default class HomeScreen extends Screen<Props, State> {
     constructor(props: Props){
         super(props);
         props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-        // setTimeout(()=>this.startTunnel(), 2000)
     }
 
-    // componentWillAppear() {
-    //     this.props.navigator.setDrawerEnabled({side: 'left', enabled: true});
-    //     this.props.navigator.setDrawerEnabled({side: 'right', enabled: false});
-    // }
-
-
-    // componentWillDisappear() {
-    //     this.props.navigator.setDrawerEnabled({side: 'left', enabled: false});
-    // }
 
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
 
@@ -186,25 +179,17 @@ export default class HomeScreen extends Screen<Props, State> {
     }
 
     componentDidMount() {
-        this.logger.debug("componentDidMount")
+        logger.debug("componentDidMount")
         this._mounted = true
     }
 
     componentWillUnmount() {
-        this.logger.debug("componentWillUnmount")
+        logger.debug("componentWillUnmount")
         this._mounted = false
         this.onBoardingHelper.clearTapTarget()
     }
 
     componentDidAppear() {
-
-        // this.onBoardingHelper.listenTipChange(tip => {
-        //     if (tip !== this.state.currentTip) {
-        //         console.debug(`new tip`, tip)
-        //         registerLayoutAnimation("opacity")
-        //         this.setState({currentTip: tip})
-        //     }
-        // })
         this.refreshOnBoarding()
         this.refreshRightButtons()
     }
@@ -218,7 +203,7 @@ export default class HomeScreen extends Screen<Props, State> {
             if (!info) return
 
             let {type} = info
-            this.logger.debug("found info to display:", type)
+            logger.debug("found info to display:", type)
             switch (type) {
                 case "focus_add":
                     if (this._mounted && isLogged()) {
@@ -251,11 +236,11 @@ export default class HomeScreen extends Screen<Props, State> {
                     let listener = new RNNScreenVisibilityListener({
                         didAppear: ({screen, startTime, endTime, commandType}) => {
                             if (screen === 'goodsh.InviteManyContacts') {
-                                this.logger.debug("hack visib listener: appear", screen)
+                                logger.debug("hack visib listener: appear", screen)
                             }
                         },
                         didDisappear: ({screen, startTime, endTime, commandType}) => {
-                            this.logger.debug("hack visib listener: disappear", screen)
+                            logger.debug("hack visib listener: disappear", screen)
                             if (screen === 'goodsh.InviteManyContacts') {
                                 listener.unregister()
                                 OnBoardingManager.postOnDismissed("popular")
@@ -285,7 +270,7 @@ export default class HomeScreen extends Screen<Props, State> {
         })
     }
 
-//!\\ hypothesis: logout => store.currentUser becomes null => update is triggered
+    //!\\ hypothesis: logout => store.currentUser becomes null => update is triggered
     //    => focusAdd is posted natively => component is unmounted
     //    => the native code doesnt find the unmounted component
     componentDidUpdate() {
@@ -294,7 +279,9 @@ export default class HomeScreen extends Screen<Props, State> {
 
     render() {
 
-        this.logger.debug("rendering home", this.state)
+        logger.debug("rendering home", this.state)
+
+        counter('render')
 
         this.setNavigatorTitle(this.props.navigator, {title: fullName2(_.get(this.props, 'currentUser.attributes'))})
 
@@ -330,6 +317,7 @@ export default class HomeScreen extends Screen<Props, State> {
         switch (route.key) {
 
             case 'my_goodsh':
+                counter('render:my_goodsh')
                 return (
                     <MyGoodsh
                         visibility={focused ? 'visible' : 'hidden'}
@@ -347,6 +335,7 @@ export default class HomeScreen extends Screen<Props, State> {
                     />
                 )
             case 'my_interests':
+                counter('render:my_interests')
                 return (
                     <MyInterests
                         navigator={this.props.navigator}

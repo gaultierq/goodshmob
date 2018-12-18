@@ -18,7 +18,7 @@ import LineupHorizontal from "./components/LineupHorizontal"
 import LineupCellSaving from "./components/LineupCellSaving"
 import {deleteLineup, followLineupPending, unfollowLineupPending} from "./lineup/actions"
 import {GLineupAction, L_DELETE, L_FOLLOW, L_RENAME, L_SHARE, L_UNFOLLOW, LineupRights} from "./lineupRights"
-import LineupTitle2 from "./components/LineupTitle2"
+import LineupTitle from "./components/LineupTitle"
 
 export const CLOSE_MODAL = 'close_modal';
 
@@ -356,12 +356,10 @@ export function displayLineupActionMenu(
     navigator: RNNNavigator,
     dispatch: any,
     lineup: Lineup,
-    filter?: GLineupAction => boolean = a => true) {
+    actions: GLineupAction[],
+) {
 
-    let menuAction : LineupMenuAction[] =
-        _.filter(LineupRights.getActions(lineup), filter)
-            .map(a => MENU_ACTIONS.get(a))
-            .filter(a => !!a)
+    let menuAction : LineupMenuAction[] = _.compact(actions.map(a => MENU_ACTIONS.get(a)))
 
     BottomSheet.showBottomSheetWithOptions({
             options: [

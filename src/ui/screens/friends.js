@@ -10,13 +10,10 @@ import type {Id, Item, RNNNavigator, User} from "../../types"
 import {buildData, doDataMergeInState} from "../../helpers/DataUtils"
 import Screen from "../components/Screen"
 import GTouchable from "../GTouchable"
-import * as Nav from "../Nav"
 import {openUserSheet, seeUser} from "../Nav"
 import {LINEUP_PADDING, STYLES} from "../UIStyles"
 import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
 import PersonRowI from "../activity/components/PeopleRow"
-import {displayLineupActionMenu} from "../Nav"
-import {L_SHARE} from "../lineupRights"
 
 
 type Props = {

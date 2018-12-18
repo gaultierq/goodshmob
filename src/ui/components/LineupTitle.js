@@ -19,7 +19,7 @@ import {SFP_TEXT_BOLD} from "../fonts"
 import PersonRowI from "../activity/components/PeopleRow"
 import {createStructuredSelector} from "reselect"
 import {
-    LINEUP_ACTIONS_SELECTOR, LINEUP_AUTHOR,
+    LINEUP_ACTIONS_SELECTOR, LINEUP_AUTHOR, LINEUP_FOLLOWED_SELECTOR,
     LINEUP_FOLLOWS_COUNT_SELECTOR,
     LINEUP_SAVING_COUNT_SELECTOR,
     LINEUP_SELECTOR
@@ -43,12 +43,21 @@ export type Props = {
         lineup: LINEUP_SELECTOR(),
         savingsCount: LINEUP_SAVING_COUNT_SELECTOR(),
         followersCount: LINEUP_FOLLOWS_COUNT_SELECTOR(),
+        followed: LINEUP_FOLLOWED_SELECTOR(),
         actions: LINEUP_ACTIONS_SELECTOR(),
         author: LINEUP_AUTHOR(),
     }
 ))
 @logged
-export default class LineupTitle2 extends Component<Props, State> {
+export default class LineupTitle extends Component<Props, State> {
+
+    render() {
+        return <LineupTitlePure {...this.props} />
+    }
+}
+
+@connect()
+export class LineupTitlePure extends Component<Props, State> {
 
     render() {
 
@@ -116,11 +125,10 @@ export default class LineupTitle2 extends Component<Props, State> {
             yield false
         })();
 
-        let lr = new LineupRights(lineup, this.props.pending)
-        let canFollow = lr.canExec(L_FOLLOW)
+        let canFollow = this.props.actions.indexOf(L_FOLLOW) >= 0
         return [
-            this.renderMedal(this.props.savingsCount.total, "th-large", it),
-            this.renderMedal(this.props.followersCount.total, "star", it, _.get(lineup, 'meta.followed', false) ? Colors.green : undefined),
+            this.renderMedal(_.get(this.props, 'savingsCount.total', -1), "th-large", it),
+            this.renderMedal(_.get(this.props, 'followersCount.total', -1), "star", it, this.props.followed ? Colors.green : undefined),
             (canFollow &&
                 <Text
                     key={"follow"}

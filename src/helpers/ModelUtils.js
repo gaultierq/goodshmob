@@ -378,22 +378,7 @@ export function mergeItemsAndPendings2<T>(
     return items;
 }
 
-
-
 export type SavingAcc = {
     syncedValue?: Saving,
     pendingValue?: any,
-}
-
-
-
-export function savingsCount(lineup: Lineup, pending: ?any) {
-    let result = _.get(lineup, 'meta.savingsCount', -1)
-    if (result < 0) return result
-    if (pending) {
-        const predicate = pending => pending.payload.lineupId === lineup.id;
-        result += _.filter(pending[SAVE_ITEM], predicate).length
-        result -= _.filter(pending[UNSAVE], predicate).length
-    }
-    return result
 }

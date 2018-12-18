@@ -91,6 +91,7 @@ type FeedFetchOption = {
 
 // const LAST_EMPTY_RESULT_WAIT_MS = 5 * 60 * 1000;
 const LAST_EMPTY_RESULT_WAIT_MS = Config.LAST_EMPTY_RESULT_WAIT_MS;
+const LAST_WAIT_MS = Config.LAST_WAIT_MS
 
 @connect((state, ownProps) => ({
     config: state.config,
@@ -213,7 +214,7 @@ export default class Feed extends Component<Props, State>  {
             BugsnagManager.leaveBreadcrumb(name, {type: 'render feed'});
         }
 
-        assertUnique(this.getFlatItems());
+        //assertUnique(this.getFlatItems())
 
         const {
             sections,
@@ -425,11 +426,19 @@ export default class Feed extends Component<Props, State>  {
 
             //if recent (5min) result with no data, do not refetch now
             {
-                let lastEmpty = _.last(events.filter(e=> _.get(e, 'options.emptyResult')));
-
+                let lastEmpty = _.last(events)
 
                 if (lastEmpty && Date.now() < lastEmpty.date + LAST_EMPTY_RESULT_WAIT_MS) {
                     return "debounced: recent empty";
+                }
+            }
+            //if super recent (5sec), do not refetch now
+            {
+                let last = _.last(events.filter(e=> _.get(e, 'options.emptyResult')));
+
+
+                if (last && Date.now() < last.date + LAST_WAIT_MS) {
+                    return "debounced: recent too recent";
                 }
             }
         }

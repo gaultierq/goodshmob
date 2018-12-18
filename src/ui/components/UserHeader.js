@@ -2,21 +2,25 @@
 
 import React, {Component} from 'react'
 import {Image, StyleSheet, Text, View} from 'react-native'
-import {HEADER_STYLES, LINEUP_PADDING} from "../UIStyles"
+import {LINEUP_PADDING} from "../UIStyles"
 import {SFP_TEXT_BOLD, SFP_TEXT_REGULAR} from "../fonts"
 import {Colors} from "../colors"
 import type {RequestState, RNNNavigator, User} from "../../types"
 import connect from "react-redux/es/connect/connect"
-import {USER_SELECTOR} from "../../helpers/Selectors"
+import {
+    LINEUP_SELECTOR, LIST_SAVINGS_SELECTOR,
+    USER_ACTIONS_SELECTOR,
+    USER_SELECTOR,
+    USER_SYNCED_FRIENDS_COUNT_SELECTOR
+} from "../../helpers/Selectors"
 import {createSelector} from "reselect"
 // import {followLineupPending, unfollowLineupPending} from "./actions"
 import {GAvatar} from "../GAvatar"
-import {getUserActions, GUserAction, U_CONNECT, U_DISCONNECT} from "../userRights"
+import {GUserAction, U_CONNECT, U_DISCONNECT} from "../userRights"
 import {CONNECT, createFriendship, disconnectFromUserWithAlert} from "../../redux/UserActions"
 import * as Api from "../../managers/Api"
 import _Messenger from "../../managers/Messenger"
 import {Loader} from "../Loader"
-import {fullName2} from "../../helpers/StringUtils"
 import GTouchable from "../GTouchable"
 
 type Props = {
@@ -25,7 +29,6 @@ type Props = {
     actions?: GUserAction[],
     avatarSize?: number,
     avatarProps?: any,
-    avatarContainerStyle?: any
 }
 type State = {
     reqConnect?: RequestState,
@@ -35,25 +38,19 @@ type State = {
 }
 
 
-const selector = () => createSelector(
-    [
-        USER_SELECTOR(),
-        state => state.pending
-    ],
-    (user, pending) => {
-        let actions
-        if (user) {
-            actions = getUserActions(user, pending)
-        }
-        else {  actions = [] }
-        return {user, actions}
-    }
-)
 
+@connect(() => {
+    const user = USER_SELECTOR()
+    const actions = USER_ACTIONS_SELECTOR()
+    const friendsCount = USER_SYNCED_FRIENDS_COUNT_SELECTOR()
 
-@connect(selector)
+    return (state, props) => ({
+        user: user(state, props),
+        actions: actions(state, props),
+        friendsCount: friendsCount(state, props),
+    })
+})
 export class UserHeader extends Component<Props, State> {
-
 
     static defaultProps = {
         avatarProps: {
@@ -65,21 +62,13 @@ export class UserHeader extends Component<Props, State> {
     state = {}
 
     render() {
-        let {user, actions, avatarProps, avatarContainerStyle} = this.props
+        let {user, actions, friendsCount} = this.props
 
-        const followersCount = _.get(user, 'meta.friendsCount')
 
         let button = this.getButton(actions, user)
 
-        const newVar = {
-            fontFamily: SFP_TEXT_BOLD,
-            fontSize: 40,
-            color: Colors.black,
-            alignItems: 'center',
-            // backgroundColor: 'blue',
+        const newVar = styles.medal
 
-
-        }
         return (
 
             // back , name | avatar, connect
@@ -103,7 +92,7 @@ export class UserHeader extends Component<Props, State> {
                     <View style={{flexDirection: 'row',
                     }}>
                         <Text style={newVar}>{user.lastName}</Text>
-                        {this.renderFriendsCount(followersCount)}
+                        {this.renderFriendsCount(friendsCount)}
                     </View>
                 </View>
 
@@ -112,7 +101,7 @@ export class UserHeader extends Component<Props, State> {
                     flex:1,
                     alignItems: 'flex-end',
                     // backgroundColor: 'red',
-                }, avatarContainerStyle]}>
+                }]}>
                     <GAvatar person={user} size={LINEUP_PADDING * 6} style={{marginBottom: 12, marginRight: LINEUP_PADDING,}}/>
                     <View style={{position: 'absolute', bottom: 0, right: LINEUP_PADDING / 2}}>
                         {button}
@@ -247,5 +236,12 @@ const styles = StyleSheet.create({
         width: 80,
         height: 80,
     },
+    medal: {
+        fontFamily: SFP_TEXT_BOLD,
+        fontSize: 40,
+        color: Colors.black,
+        alignItems: 'center',
+        // backgroundColor: 'blue',
+    }
 
 })

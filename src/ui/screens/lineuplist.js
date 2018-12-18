@@ -4,31 +4,26 @@ import type {Node} from 'react'
 import React from 'react'
 import {
     ActivityIndicator,
-    Button,
     FlatList,
     Image,
-    RefreshControl,
     StyleSheet,
     Text,
-    TextInput,
-    TouchableOpacity,
     View
 } from 'react-native'
 
 import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
 import {SearchBar} from 'react-native-elements'
-import type {Id, List, User} from "../../types"
+import type {Id, List} from "../../types"
 import type {Props as FeedProps} from "../components/feed"
 import Feed from "../components/feed"
-import {buildData, doDataMergeInState} from "../../helpers/DataUtils"
-import {CREATE_LINEUP, DELETE_LINEUP} from "../lineup/actionTypes"
-import {mergeItemsAndPendings} from "../../helpers/ModelUtils"
+import {doDataMergeInState} from "../../helpers/DataUtils"
 import Screen from "../components/Screen"
 
 import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
 import * as Api from "../../managers/Api"
 import {createCounter} from "../../helpers/DebugUtils"
+import {LINEUP_LIST_SELECTOR} from "../../helpers/Selectors"
 
 
 export type Props = FeedProps & {
@@ -50,10 +45,7 @@ const logger = rootlogger.createLogger('lineupList')
 const counter = createCounter(logger)
 
 @logged
-@connect(state => ({
-    data: state.data,
-    pending: state.pending
-}))
+@connect(LINEUP_LIST_SELECTOR())
 export class LineupListScreen extends Screen<Props, State> {
 
 
@@ -76,10 +68,8 @@ export class LineupListScreen extends Screen<Props, State> {
 
         counter('render')
 
-        let user: User = buildData(this.props.data, "users", userId);
 
-
-        let lists = user && user.lists || [];
+        let lists = this.props.lineups
 
         let fetchSrc =  !_.isEmpty(lists) ? {
             callFactory: () => userActions.fetchLineups(userId),
@@ -91,26 +81,12 @@ export class LineupListScreen extends Screen<Props, State> {
         }
 
 
-        //reconciliate pendings
-        let items = mergeItemsAndPendings(
-            lists,
-            this.props.pending[CREATE_LINEUP],
-            this.props.pending[DELETE_LINEUP],
-            (pending) => ({
-                id: pending.id,
-                name: pending.payload.listName,
-                savings: [],
-                type: 'lists', //here ? or reducer ?
-                pending: true,
-            }),
-            {afterI: 0}
-        );
 
         return (
             <Feed
-                data={items}
+                data={lists}
                 listRef={this.props.listRef}
-                sections={sectionMaker && sectionMaker(items)}
+                sections={sectionMaker && sectionMaker(lists)}
                 renderItem={this._renderItem}
                 fetchSrc={fetchSrc}
                 {...attributes}
@@ -120,12 +96,7 @@ export class LineupListScreen extends Screen<Props, State> {
     }
 
     _renderItem = ({item}) => {
-        let list = item;
-        list = buildData(this.props.data, list.type, list.id) || list;
-
-        let {renderItem} = this.props;
-
-        return renderItem(list);
+        return this.props.renderItem(item);
     }
 }
 

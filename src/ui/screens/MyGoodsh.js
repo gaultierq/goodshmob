@@ -28,14 +28,15 @@ import Screen from "../components/Screen"
 
 import GTouchable from "../GTouchable"
 import AddLineupComponent from "../components/addlineup"
-import LineupHorizontal, {LineupH1} from "../components/LineupHorizontal"
+import LineupHorizontal, {defaultRenderEmpty, LineupH1, renderInnerPlus} from "../components/LineupHorizontal"
 import UserLineups from "./userLineups"
 import {TipConfig} from "../components/Tip"
-import LineupTitle2 from "../components/LineupTitle2"
-import {SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "../fonts"
-import {LINEUP_SECTIONS} from "../UIComponents"
-import {L_SHARE} from "../lineupRights"
+import LineupTitle from "../components/LineupTitle"
+import {SFP_TEXT_REGULAR} from "../fonts"
+import {GLineupAction, L_SHARE, LineupRights} from "../lineupRights"
 import {Colors} from "../colors"
+import {createCounter} from "../../helpers/DebugUtils"
+import {EmptyCell} from "../components/LineupCellSaving"
 
 
 type Props = {
@@ -47,7 +48,8 @@ type State = {
     filterFocused?: boolean,
     currentTip?:TipConfig
 };
-
+const logger = rootlogger.createLogger('MyGoodsh')
+const counter = createCounter(logger)
 
 @logged
 @connect(state=>({
@@ -63,6 +65,7 @@ export default class MyGoodsh extends Screen<Props, State> {
     render() {
         const userId = currentUserId();
         const {navigator, dispatch, ...attributes}= this.props;
+        counter('render')
 
         return (
             // $FlowFixMe
@@ -81,7 +84,7 @@ export default class MyGoodsh extends Screen<Props, State> {
                     const showGoodshbox = _.get(goodshbox, 'savings.length', 0) > 0;
 
                     return _.compact([
-                        showGoodshbox ? {
+                        (showGoodshbox || true)? {
                             data: [goodshbox],
                             title: i18n.t("lineups.goodsh.title"),
                             subtitle: ` (${savingCount})`,
@@ -140,11 +143,11 @@ export default class MyGoodsh extends Screen<Props, State> {
                 withMenuButton={true}
                 onPressEmptyLineup={() => startAddItem(navigator, item)}
                 renderEmpty={this.renderEmptyLineup(navigator, item, targetRef)}
-                renderMenuButton={() => {
-                    return this.renderMenuButton(item)
+                renderMenuButton={(actions) => {
+                    return this.renderMenuButton(item, actions)
                 }}
                 renderTitle={(lineup: Lineup) => (
-                    <LineupTitle2
+                    <LineupTitle
                         lineup={lineup}
                         style={{
                             marginBottom: 10,
@@ -155,7 +158,9 @@ export default class MyGoodsh extends Screen<Props, State> {
                 )}
                 ListHeaderComponent={(
                     !item.pending && <GTouchable onPress={() => startAddItem(navigator, item)}>
-                        {LineupHorizontal.renderPlus({style:{marginRight: 10}}, targetRef)}
+                        <EmptyCell key={`key-${0}`} style={{marginRight: 10}}>
+                            {renderInnerPlus(targetRef)}
+                        </EmptyCell>
                     </GTouchable>)
                 }
                 style={[
@@ -172,13 +177,13 @@ export default class MyGoodsh extends Screen<Props, State> {
                 deactivated={item.pending}
             >
                 {
-                    LineupHorizontal.defaultRenderEmpty(true, targetRefFirstElement)
+                    defaultRenderEmpty(true, targetRefFirstElement)
                 }
             </GTouchable>
         );
     }
 
-    renderMenuButton(item: Lineup) {
+    renderMenuButton(item: Lineup, actions: GLineupAction[]) {
         //TODO: use right manager
         if (!item || item.id === currentGoodshboxId()) return null;
 
@@ -208,7 +213,7 @@ export default class MyGoodsh extends Screen<Props, State> {
                     paddingLeft: 0,
                     // backgroundColor: 'green',
                     paddingVertical: 16,
-                }} onPress={() => displayLineupActionMenu(this.props.navigator, this.props.dispatch, item, a => a !== L_SHARE)}>
+                }} onPress={() => displayLineupActionMenu(this.props.navigator, this.props.dispatch, item, _.filter(actions, a => a !== L_SHARE))}>
                     <Image source={require('../../img2/sidedots.png')} resizeMode="contain"/>
                 </GTouchable>
             </View>

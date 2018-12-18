@@ -5,7 +5,7 @@ import React from 'react'
 import {StyleSheet, Text, TextInput, View,} from 'react-native'
 import type {SearchEngine,} from "../../../helpers/SearchHelper"
 import {
-    __createAlgoliaSearcher, PERMISSION_EMPTY_INPUT,
+    __createAlgoliaSearcher, PERMISSION_EMPTY_INPUT, renderLineup,
 } from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import {LINEUP_PADDING, NAV_BACKGROUND_COLOR} from "../../UIStyles"
@@ -18,7 +18,7 @@ import {currentUserId} from "../../../managers/CurrentUser"
 import {createResultFromHit} from "../../../helpers/AlgoliaUtils"
 import SearchListResults from "../searchListResults"
 import BlankSearch, {renderBlankIcon} from "../../components/BlankSearch"
-import {renderLineup, GoodshContext} from "../../../ui/UIComponents"
+import {GoodshContext} from "../../../ui/UIComponents"
 
 export type SearchUserOptions = {
     token: string

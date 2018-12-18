@@ -9,6 +9,7 @@ import URL from "url-parse"
 import Config from 'react-native-config'
 import {getLineup} from "../helpers/DataAccessors"
 import {SEARCH_CATEGORIES_TYPE} from "../helpers/SearchConstants"
+import {LineupRights} from "../ui/lineupRights"
 
 // export const DEEPLINK_OPEN_SCREEN_IN_MODAL = 'DEEPLINK_OPEN_SCREEN_IN_MODAL';
 
@@ -127,7 +128,7 @@ class _NavManager implements NavManager {
             else if (url.query && url.query.origin === 'long_press') {
                 if (options) {
                     let {dispatch, navigator} = options
-                    handler = () => getLineup(id).then(lineup => displayLineupActionMenu(navigator, dispatch, lineup))
+                    handler = () => getLineup(id).then(lineup => displayLineupActionMenu(navigator, dispatch, lineup, LineupRights.getActions(lineup)))
                 }
             }
             else {

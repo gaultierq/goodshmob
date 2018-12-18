@@ -1,19 +1,20 @@
 import {createSelector, createSelectorCreator, defaultMemoize} from "reselect"
 import {CREATE_LINEUP, DELETE_LINEUP, FOLLOW_LINEUP, SAVE_ITEM, UNFOLLOW_LINEUP, UNSAVE} from "../ui/lineup/actionTypes"
-import {buildData} from "./DataUtils"
 import {LineupRights} from "../ui/lineupRights"
 import {isEqualsArrayFree} from "./ArrayUtil"
 import {hashCode} from "./StringUtils"
 import {createCounter} from "./DebugUtils"
+import {getUserActions} from "../ui/userRights"
+import {sanitizeActivityType} from "./DataUtils"
 
 
 const logger = rootlogger.createLogger("selectors")
 
 let thrown = message => {throw message}
-let lineupId = props => _.get(props, 'lineupId') || _.get(props, 'lineup.id') || thrown("you")
+export let lineupId = props => _.get(props, 'lineupId') || _.get(props, 'lineup.id')
 let userId = props => props.userId || _.get(props, 'user.id')
 let savingId = props => props.savingId || _.get(props, 'saving.id')
-const lineupIdExtract = (state, props) => lineupId(props)
+export const lineupIdExtract = (state, props) => lineupId(props)
 const userIdExtract = (state, props) => userId(props)
 
 const counter = createCounter(logger, 10000)
@@ -62,6 +63,9 @@ export const LINEUP_SELECTOR = () => createSelector(
         let lineup
         if (syncList) {
             lineup = createObj(syncList)
+            if (lineup.primary === true) {
+                lineup.name = i18n.t('lineups.goodsh.title')
+            }
         }
         else if (rawPendingList) {
             lineup = {id: rawPendingList.id, name: rawPendingList.payload.listName, savings: []}
@@ -104,20 +108,38 @@ export const PENDING_FOLLOWS_SELECTOR = () => createSelector(
         return {pendingFollow, pendingUnfollow}
     }
 )
+export const PENDING_SAVINGS_SELECTOR = () => createSelector(
+    [
+        lineupIdExtract,
+        state => state.pending[SAVE_ITEM],
+        state => state.pending[UNSAVE],
+    ],
+    (
+        lineupId,
+        pendingSaveStore,
+        pendingUnsaveStore,
+    ) => {
+
+        const pendingSave = _.filter(pendingSaveStore, pending => pending.payload.lineupId === lineupId)
+        const pendingUnsave = _.filter(pendingUnsaveStore, pending => pending.payload.lineupId === lineupId)
+        counter(`PENDING_SAVINGS_SELECTOR.${lineupId}`)
+        return {pendingSave, pendingUnsave}
+    }
+)
 
 export const PENDING_LINEUPS_SELECTOR = () => createSelector(
     [
         userIdExtract,
-        state => state.pending[CREATE_LINEUP],
-        state => state.pending[DELETE_LINEUP],
+        state => _.get(state, `pending.${CREATE_LINEUP}`, []),
+        state => _.get(state, `pending.${DELETE_LINEUP}`, []),
     ],
     (
         userIdExtract,
-        pendingCreateStore,
-        pendingDeleteStore,
+        pendingCreate,
+        pendingDelete,
     ) => {
-        counter(`PENDING_SAVINGS_SELECTOR.user-${userIdExtract}`)
-        return {pendingCreateStore, pendingDeleteStore}
+        counter(`PENDING_LINEUPS_SELECTOR.user-${userIdExtract}`)
+        return {pendingCreate, pendingDelete}
     }
 )
 
@@ -151,7 +173,8 @@ const SAVING_LIST_SELECTOR_STORE = () => {
     )
 }
 
-export const SAVING_LIST_SELECTOR = () => {
+
+export const LIST_SAVINGS_SELECTOR = () => {
 
     const savingsSelector = SAVING_LIST_SELECTOR_STORE()
     const pendingSelector = PENDING_SAVINGS_SELECTOR()
@@ -175,18 +198,49 @@ export const SAVING_LIST_SELECTOR = () => {
             syncedItems,
             {pendingSave, pendingUnsave},
         ) => {
-            if (propsSaving) return propsSaving.map(s => ({saving: s, from: 'props'}))
-            let savings = pendingSave.map(pending => ({saving: savingFromPending(pending), from: 'pending'}))
+            if (propsSaving) return propsSaving
+            let savings = pendingSave.map(pending => savingFromPending(pending))
 
             syncedSavings.forEach((s, index) => {
                 s.resource = createObj(syncedItems[index]) || s.resource
             })
-            savings = savings.concat(syncedSavings.map(s => ({saving: s, from: 'store'})))
+            savings = savings.concat(syncedSavings)
 
-            _.remove(savings, ({saving}) => pendingUnsave.some(pending => pending.payload.savingId === saving.id))
+            _.remove(savings, (saving) => pendingUnsave.some(pending => pending.payload.savingId === saving.id))
 
             counter(`SAVING_LIST_SELECTOR.${lineupId}`)
             return savings
+        }
+    )
+}
+
+export const LINEUP_LIST_SELECTOR = () => {
+
+    const pendingSelector = PENDING_LINEUPS_SELECTOR()
+    const lineupSel = LINEUP_SELECTOR()
+
+    return createSelector1(
+        [
+            userIdExtract,
+            (state, props) => {
+                let shallowLists = _.get(state, `data.users.${userId(props)}.relationships.lists.data`, [])
+                return shallowLists.map(lineup => lineupSel(state, {lineup}))
+            },
+            pendingSelector,
+        ],
+        (
+            userId,
+            syncedLineups,
+            {pendingCreate, pendingDelete},
+        ) => {
+            const lineups = syncedLineups
+            let pending = pendingCreate.map(pending => lineupFromPending(pending))
+            lineups.splice(1, 0, ...pending)
+
+            _.remove(lineups, lineup => pendingDelete.some(pending => pending.payload.lineupId === lineup.id))
+
+            counter(`LINEUP_LIST_SELECTOR.${userId}`)
+            return {lineups}
         }
     )
 }
@@ -213,14 +267,15 @@ const boolToOne = bool => bool ? 1 : 0
 export const LINEUP_FOLLOWED_SELECTOR = () => createSelector(
     [
         lineupIdExtract,
-        (state, props) => _.get(state, `data.lists.${lineupId(props)}.meta.followed`),
+        (state, props) => _.get(state, `data.lists.${lineupId(props)}.meta.followed`, false),
         PENDING_FOLLOWS_SELECTOR,
 
     ],
     (lineupId, syncedFollowed, {pendingFollow, pendingUnfollow}) => {
-        let unsyncedDelta = boolToOne(!_.isEmpty(pendingFollow)) - boolToOne(!_.isEmpty(pendingUnfollow))
-        let pendingFollowed = unsyncedDelta === 0 && unsyncedDelta > 0
-        return {total: syncedCount + unsyncedDelta, syncedCount, unsyncedDelta}
+        if (!_.isEmpty(pendingFollow)) return true
+        if (!_.isEmpty(pendingUnfollow)) return false
+        counter(`LINEUP_FOLLOWED_SELECTOR.${lineupId}`)
+        return syncedFollowed
     }
 )
 export const LINEUP_FOLLOWS_COUNT_SELECTOR = () => {
@@ -240,16 +295,29 @@ export const LINEUP_FOLLOWS_COUNT_SELECTOR = () => {
         }
     )
 }
+
 export const LINEUP_ACTIONS_SELECTOR = () => {
-    const lineup = LINEUP_SELECTOR()
+
+    return createSelector1(
+        [
+            (state, props) => {
+                const rights = LineupRights.create(lineupId(props), state)
+                return rights.allActions()
+            }
+        ],
+        actions => actions
+    )
+}
+export const USER_ACTIONS_SELECTOR = () => {
+    const user = USER_SELECTOR()
     return createSelector(
         [
-            lineup,
+            user,
             state => _.get(state, `pending`),
         ],
         (lineup, pending) => {
             counter(`LINEUP_ACTIONS_SELECTOR.${_.get(lineup, 'id')}`)
-            return LineupRights.getActions(lineup, pending)
+            return getUserActions(user, pending)
         }
     )
 }
@@ -262,22 +330,38 @@ export const USER_SELECTOR2 = user => createSelector(
 //deprecated
 export const USER_SELECTOR = () => createSelector(
     [
+        userIdExtract,
         (state, props) => props.user,
         (state, props) => _.get(state, `data.users.${userId(props)}`),
-        state => state.data
     ],
     (
+        userId,
         propUser,
         syncUser,
-        data
     ) => {
         let res
-        if (syncUser) res = buildData(data, syncUser.type, syncUser.id)
+        if (syncUser) res = createObj(syncUser)
         else if (propUser) res = propUser
-        counter(`USER_SELECTOR.${_.get(user, 'id')}`)
+        counter(`USER_SELECTOR.${userId}`)
         return res
     }
 )
+let userMetaSelector = (s) => () => createSelector(
+    [
+        userIdExtract,
+        (state, props) => _.get(state, `data.users.${userId(props)}.meta.${s}`, 0),
+    ],
+    (userId, syncedCount) => {
+        counter(`USER_${s.toUpperCase()}_SELECTOR.${userId}`)
+        return syncedCount
+    }
+)
+
+export const USER_SYNCED_SAVINGS_COUNT_SELECTOR = userMetaSelector(`savingsCount`)
+export const USER_SYNCED_LINEUPS_COUNT_SELECTOR = userMetaSelector(`lineupsCount`)
+export const USER_SYNCED_FRIENDS_COUNT_SELECTOR = userMetaSelector(`friendsCount`)
+export const USER_SYNCED_FOLLOWED_SELECTOR = userMetaSelector(`followed`)
+
 
 let savingFromPending = function (pending) {
     return {

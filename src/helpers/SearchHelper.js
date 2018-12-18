@@ -4,8 +4,8 @@ import type {Element, Node} from 'react'
 import * as React from 'react'
 import type {Lineup, List, RNNNavigator, Saving, User} from "../types"
 import {RequestState} from "../types"
-import {GoodshContext, RENDER_EMPTY_ME_RESULT, RENDER_EMPTY_RESULT, renderLineup} from "../ui/UIComponents"
-import {seeActivityDetails, seeUser} from "../ui/Nav"
+import {GoodshContext, RENDER_EMPTY_ME_RESULT, RENDER_EMPTY_RESULT} from "../ui/UIComponents"
+import {seeActivityDetails, seeList, seeUser} from "../ui/Nav"
 import GTouchable from "../ui/GTouchable"
 import ItemCell from "../ui/components/ItemCell"
 import UserItem from "../ui/screens/userItem"
@@ -15,9 +15,11 @@ import * as Api from "../managers/Api"
 import {Call} from "../managers/Api"
 import {currentUserId} from "../managers/CurrentUser"
 import type {SearchItemCategoryType} from "./SearchConstants"
+import {SEARCH_CATEGORIES_TYPE} from "./SearchConstants"
 import {fullName} from "./StringUtils"
 import {Colors} from "../ui/colors"
-import {SEARCH_CATEGORIES_TYPE} from "./SearchConstants"
+import LineupHorizontal, {LineupHorizontalPure} from "../ui/components/LineupHorizontal"
+import LineupTitle, {LineupTitlePure} from "../ui/components/LineupTitle"
 
 export type SearchCategoryType = string;
 
@@ -63,6 +65,23 @@ export type FRIEND_FILTER_TYPE = "me" | "friends" | "all" ;
 // wrong type, used for tests, FIXME
 // $FlowFixMe
 
+
+export function renderLineup(navigator: RNNNavigator, lineup: Lineup) {
+
+    return (
+        <GTouchable
+            onPress={() => seeList(navigator, lineup)}>
+
+            <LineupHorizontalPure
+                lineup={lineup}
+                savings={lineup.savings}
+                actions={[]}
+                style={{paddingBottom: 10}}
+                renderTitle={l => <LineupTitlePure lineup={lineup} actions={[]} author={lineup.user} />}
+            />
+        </GTouchable>
+    )
+}
 
 export function renderSavingOrLineup(navigator: RNNNavigator) {
 

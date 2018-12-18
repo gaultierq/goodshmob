@@ -10,6 +10,7 @@ export default (state = {}, action) => {
         //     return {...state, rehydrated: true};
         case CONNECTIVITY_CHANGE:
             return {...state, connected: action.connected};
+
     }
     return state;
 };

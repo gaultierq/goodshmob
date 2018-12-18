@@ -3,8 +3,9 @@
 import type {Lineup} from "../types"
 import {isCurrentUser} from "../managers/CurrentUser"
 import StoreManager from "../managers/StoreManager"
+import {buildData} from "../helpers/DataUtils"
 
-const GLineupActions = []
+export const GLineupActions = []
 
 export class GLineupAction {
 
@@ -47,6 +48,14 @@ export class LineupRights {
         this.pending = pending
     }
 
+    static create(lineupId, state) {
+        //dummy
+        let r = new LineupRights({}, null)
+        r.lineup = buildData(state.data, 'lists', lineupId)
+        r.pending = state.pending
+        return r
+    }
+
     canExec(action: GLineupAction): boolean {
         const l = this.lineup
         if (!l) return false
@@ -69,6 +78,10 @@ export class LineupRights {
             default:
                 throw `unknown action ${action}`
         }
+    }
+
+    allActions() {
+        return GLineupActions.filter(a => this.canExec(a))
     }
 
     static getActions(lineup: Lineup, pending?: any): GLineupAction[] {
