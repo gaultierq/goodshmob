@@ -2,6 +2,7 @@
 
 
 import type {Logger} from "../../flow-typed/goodshmob"
+import Config from "react-native-config"
 
 export function hexToRgb(hex) {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -24,13 +25,18 @@ export function createCounter(logger: Logger, batchTimeMs: number = 5000): (path
     let logRet = {}
     let to = null
     return (path: string) => {
-        _.set(logRet, path, _.get(logRet, path, 0) + 1)
-        if (!to) {
-            to = setTimeout(() => {
-                logger.debug("counter: ", logRet)
-                to = null
-                logRet = {}
-            }, batchTimeMs)
+        // caution: setting many timeouts will cause the js thread to hang
+        // on a bundled app
+        if (Config.DEV_TOOLS === 'true') {
+            _.set(logRet, path, _.get(logRet, path, 0) + 1)
+            if (!to) {
+                to = setTimeout(() => {
+                    logger.debug("counter: ", logRet)
+                    to = null
+                    logRet = {}
+                }, batchTimeMs)
+            }
         }
+
     }
 }
