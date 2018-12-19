@@ -430,7 +430,36 @@ export default class App implements GoodshApp {
 
     }
 
-    // getting the singleton ready.
+    job: ?number;
+
+    setState(statePart: any) {
+        this.state = {...this.state, ...statePart}
+        this.logger.debug('new state', this.state)
+
+        if (!this.job) {
+            this.job = setTimeout(() => {
+                this.refreshIfDiff()
+                this.job = null
+            })
+        }
+
+
+    }
+
+
+    refreshIfDiff() {
+        let diff = flatDiff(this.renderedState || {}, this.state)
+        if (!_.isEmpty(diff)) {
+            this.logger.debug('refreshing', diff)
+            this.renderedState = this.state
+            this.refresh()
+        }
+        else {
+            this.logger.debug('refresh saved')
+        }
+    }
+
+// getting the singleton ready.
     initializeManagers() {
 
         StoreManager.init(this.store);
