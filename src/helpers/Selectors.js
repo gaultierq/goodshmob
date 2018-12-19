@@ -5,7 +5,6 @@ import {isEqualsArrayFree} from "./ArrayUtil"
 import {hashCode} from "./StringUtils"
 import {createCounter} from "./DebugUtils"
 import {getUserActions} from "../ui/userRights"
-import {sanitizeActivityType} from "./DataUtils"
 
 
 const logger = rootlogger.createLogger("selectors")
@@ -166,8 +165,7 @@ const SAVING_LIST_SELECTOR_STORE = () => {
             return list.map(saving => savingSel(state, {saving}))
         },
         savings => {
-            let code = hashCode(savings.map(s => s.id).join(' '))
-            counter(`SAVING_LIST_SELECTOR_STORE.${code}`)
+            counter(`SAVING_LIST_SELECTOR_STORE.${hashCode(savings.map(s => _.get(s, 'id')).join(' '))}`)
             return savings
         }
     )
