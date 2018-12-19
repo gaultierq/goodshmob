@@ -65,7 +65,14 @@ export class HomeOnBoardingHelper {
                 appTourSequence.add(this.createAppTourView(primaryText, secondaryText, ref));
             });
 
-            AppTour.ShowSequence(appTourSequence);
+            if (__IS_IOS__) {
+                AppTour.ShowSequence(appTourSequence);
+            }
+            else {
+                // temp hack to avoid a crash on android.
+                // was working before, needs more investigations
+            }
+
 
 
             //as we don't have a callback on when the tour is finished,
