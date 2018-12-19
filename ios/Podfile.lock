@@ -57,8 +57,8 @@ PODS:
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
   - Protobuf (3.5.0)
-  - React (0.57.1):
-    - React/Core (= 0.57.1)
+  - React (0.57.8):
+    - React/Core (= 0.57.8)
   - react-native-config (0.9.1):
     - React
   - react-native-contacts (2.2.4):
@@ -69,35 +69,35 @@ PODS:
     - React
   - react-native-maps (0.21.0):
     - React
-  - React/ART (0.57.1):
+  - React/ART (0.57.8):
     - React/Core
-  - React/Core (0.57.1):
-    - yoga (= 0.57.1.React)
-  - React/fishhook (0.57.1)
-  - React/RCTActionSheet (0.57.1):
+  - React/Core (0.57.8):
+    - yoga (= 0.57.8.React)
+  - React/fishhook (0.57.8)
+  - React/RCTActionSheet (0.57.8):
     - React/Core
-  - React/RCTAnimation (0.57.1):
+  - React/RCTAnimation (0.57.8):
     - React/Core
-  - React/RCTBlob (0.57.1):
+  - React/RCTBlob (0.57.8):
     - React/Core
-  - React/RCTGeolocation (0.57.1):
+  - React/RCTGeolocation (0.57.8):
     - React/Core
-  - React/RCTImage (0.57.1):
+  - React/RCTImage (0.57.8):
     - React/Core
     - React/RCTNetwork
-  - React/RCTLinkingIOS (0.57.1):
+  - React/RCTLinkingIOS (0.57.8):
     - React/Core
-  - React/RCTNetwork (0.57.1):
+  - React/RCTNetwork (0.57.8):
     - React/Core
-  - React/RCTPushNotification (0.57.1):
+  - React/RCTPushNotification (0.57.8):
     - React/Core
-  - React/RCTSettings (0.57.1):
+  - React/RCTSettings (0.57.8):
     - React/Core
-  - React/RCTText (0.57.1):
+  - React/RCTText (0.57.8):
     - React/Core
-  - React/RCTVibration (0.57.1):
+  - React/RCTVibration (0.57.8):
     - React/Core
-  - React/RCTWebSocket (0.57.1):
+  - React/RCTWebSocket (0.57.8):
     - React/Core
     - React/fishhook
     - React/RCTBlob
@@ -105,7 +105,7 @@ PODS:
     - React
   - RNDeviceInfo (0.21.5):
     - React
-  - yoga (0.57.1.React)
+  - yoga (0.57.8.React)
 
 DEPENDENCIES:
   - Firebase/Core
