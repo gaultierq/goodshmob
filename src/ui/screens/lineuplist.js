@@ -70,9 +70,6 @@ export class LineupListScreen extends Screen<Props, State> {
 
 
         let lists = this.props.lineups
-        debugger;
-        //TODO: understand and remove
-        lists = _.compact(lists)
 
 
         let fetchSrc =  !_.isEmpty(lists) ? {

@@ -84,7 +84,7 @@ export default class MyGoodsh extends Screen<Props, State> {
                     const showGoodshbox = _.get(goodshbox, 'savings.length', 0) > 0;
 
                     return _.compact([
-                        (showGoodshbox || true)? {
+                        showGoodshbox ? {
                             data: [goodshbox],
                             title: i18n.t("lineups.goodsh.title"),
                             subtitle: ` (${savingCount})`,

@@ -101,7 +101,16 @@ export default class Feed extends Component<Props, State>  {
 
     static defaultProps = {
         visibility: 'visible',
-        keyExtractor: item => item.id,
+        keyExtractor: item => {
+            if (!item) {
+                if (Config.DEV_TOOLS === 'true') {
+                    debugger;
+                }
+                return null
+
+            }
+            return item.id
+        },
         // listRef: "feed",
     }
 
