@@ -93,7 +93,7 @@ export function renderSavingOrLineup(navigator: RNNNavigator) {
             return renderLineup(navigator, item)
         }
         else {
-            return renderSaving2(item, navigator)
+            return renderSaving({item}, navigator)
 
         }
     }
@@ -265,11 +265,6 @@ export function makeBrowseAlgoliaFilter2(friendFilter: FRIEND_FILTER_TYPE, categ
 }
 
 export function renderSaving({item}: {item: Saving}, navigator: RNNNavigator) {
-    return renderSaving2(item, navigator)
-}
-
-
-export function renderSaving2(item: Saving, navigator: RNNNavigator) {
 
     let saving = item;
 
