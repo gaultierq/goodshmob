@@ -63,6 +63,7 @@ export class LineupHeader extends Component<Props, State> {
             }
             else {
                 const job = this.calcWordWidth(w).then(width => {
+                    logger.info(`'${w}' dimensions:`, width)
                     LineupHeader.wordsWidthCache[w] = width
                 })
                 missing.push(job)
@@ -91,8 +92,8 @@ export class LineupHeader extends Component<Props, State> {
     render() {
         let {lineup} = this.props
 
-        if (!lineup.name) return null
-        let words = this.getWords(lineup.name)
+        let name = _.get(lineup, 'name')
+        let words = this.getWords(name)
 
         let wordsWidth = this.obtainWordsWidth(words)
         if (!wordsWidth ) {
@@ -108,6 +109,8 @@ export class LineupHeader extends Component<Props, State> {
                     // flexWrap: "wrap",
                     flex: 1,
                     paddingHorizontal: LINEUP_PADDING,
+                    minHeight: 48,
+                    // backgroundColor: 'blue',
                 }}>
 
                 {lines.map((line, i) => this.renderLine(line, {first: i === 0, last: i === lines.length - 1}))}
@@ -117,6 +120,7 @@ export class LineupHeader extends Component<Props, State> {
     }
 
     getWords(name) {
+        if (!name) return []
         let curChar = null, currWord = null
         let words1 = []
         for (var i = 0; i < name.length; i++) {

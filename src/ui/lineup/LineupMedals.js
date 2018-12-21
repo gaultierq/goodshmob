@@ -60,38 +60,37 @@ export class LineupMedals extends Component<Props, State> {
                         // justifyContent: 'space-between',
                         alignItems: 'center',
                     }}>
-                        { author && <View style={{
+                        { <View style={{
                             alignItems: 'center',
                             flexDirection: 'row',
                             marginRight: 8,
                         }}>
                             <GAvatar person={author} seeable style={{alignItems: 'center',}} size={LINEUP_PADDING * 2}/>
-                            <Text onPress={pressToSeeUser(author)} style={[{marginLeft: 6}, styles.counters_names]}>{_.join([author.firstName, author.lastName[0] + "."], ' ')}</Text>
-                        </View>}
-                        <View style={{
-                            justifyContent: 'flex-end',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            marginRight: 8,
-                        }}>
-                            <Text style={[styles.counters]}>{`${savingsCount}`}</Text>
-                            <Text style={[styles.counters_names]}>{i18n.t('lineup_medals.elements', {count:savingsCount})}</Text>
+                            {author && <Text onPress={pressToSeeUser(author)} style={[{marginLeft: 6}, styles.counters_names]}>{_.join([author.firstName, author.lastName[0] + "."], ' ')}</Text>}
                         </View>
+                        }
                         {
-                            followersCount > 0 && <View style={{
-                                justifyContent: 'flex-end',
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                marginRight: 8,
-                            }}>
-                                <Text style={[styles.counters]}>{`${followersCount}`}</Text>
-                                <Text style={[styles.counters_names]}>{i18n.t('lineup_medals.followers', {count:followersCount})}</Text>
-                            </View>
+                            this.renderMedal(savingsCount, i18n.t('lineup_medals.elements', {count: savingsCount}))
+                        }
+                        {
+                            this.renderMedal(savingsCount, i18n.t('lineup_medals.followers', {count: followersCount}))
                         }
                     </View>
                 </View>
             </View>
         )
+    }
+
+    renderMedal(count: number, text: string) {
+        return <View style={{
+            justifyContent: 'flex-end',
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginRight: 8,
+        }}>
+            {count >0 && <Text style={[styles.counters]}>{`${count}`}</Text>}
+            {count >0 && <Text style={[styles.counters_names]}>{text}</Text>}
+        </View>
     }
 }
 const styles = StyleSheet.create({

@@ -107,26 +107,29 @@ class LineupScreen extends Screen<Props, State> {
                     numColumns={numColumns}
                     ItemSeparatorComponent={this.layout.ItemSeparatorComponent}
                     style={{flex: 1, backgroundColor: Colors.white}}
-                    ListHeaderComponent={
-                        (
-                            <View style={{marginTop: 40, }}>
-
-                                <LineupHeader lineup={lineup} navigator={this.props.navigator} />
-
-                                <LineupMedals navigator={this.props.navigator} lineup={lineup}/>
-                                <FeedSeparator style={{marginTop: LINEUP_PADDING}}/>
-                                <ListColumnsSelector
-                                    disabled={sc <= 0}
-                                    size={30}
-                                    initialIndex={this.state.renderType === 'stream' ? 1 : 0}
-                                    onTabPressed={index => this.setState({renderType: index === 0 ? 'grid' : 'stream'})}
-                                />
-                                <FeedSeparator />
-                            </View>
-                        )}
+                    ListHeaderComponent={(isContentReady) => this.renderHeader(lineup, sc)}
                 />
             </View>
         );
+    }
+
+    renderHeader(lineup, sc) {
+        return (
+            <View style={{marginTop: 40,}}>
+
+                <LineupHeader lineup={lineup} navigator={this.props.navigator}/>
+
+                <LineupMedals navigator={this.props.navigator} lineup={lineup}/>
+                <FeedSeparator style={{marginTop: LINEUP_PADDING}}/>
+                <ListColumnsSelector
+                    disabled={sc <= 0}
+                    size={30}
+                    initialIndex={this.state.renderType === 'stream' ? 1 : 0}
+                    onTabPressed={index => this.setState({renderType: index === 0 ? 'grid' : 'stream'})}
+                />
+                <FeedSeparator/>
+            </View>
+        )
     }
 
     lineupId() {

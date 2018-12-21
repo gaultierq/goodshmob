@@ -28,11 +28,9 @@ export class GAvatar extends Component<Props, State> {
     static FACEBOOK_REGEX = /^https:\/\/graph\.facebook\.com\/[0-9]+\/picture$/
 
     render() {
-        if (this.props.seeable) {
+        const user = this.props.person
 
-            const user = this.props.person
-            if (!user) throw "null user"
-            if (!isId(user.id)) throw "invalid user id:" + user.id
+        if (this.props.seeable && user) {
 
             let uri = buildUserUrl(user)
             return <GTouchable  onPress={() => openLinkSafely(uri)}>{this.renderInner()}</GTouchable>
