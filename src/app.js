@@ -534,7 +534,7 @@ export default class App implements GoodshApp {
         if (cui) {
             if (testScreen) {
                 Object.assign(testScreen.screen, {navigatorStyle: UI.NavStyles});
-                Navigation.startSingleScreenApp(testScreen);
+                this.startSingleScreenApp(testScreen);
             }
             else {
                 const userData = this.state.userData
@@ -550,7 +550,7 @@ export default class App implements GoodshApp {
                 if (this.state.userWithName === false) {
 
 
-                    Navigation.startSingleScreenApp({
+                    this.startSingleScreenApp({
                         screen: {
                             screen: 'goodsh.EditUserProfileScreen',
                             title: i18n.t('edit_profile_screen.title'),
@@ -659,9 +659,23 @@ export default class App implements GoodshApp {
 
     }
 
-    startUnlogged() {
+    lastParams: any
+
+    startSingleScreenApp(params: any) {
         if (this.state.init !== 'initialized') throw "Initialize the app before displaying screens."
-        Navigation.startSingleScreenApp({
+        if (_.isEqual(params, this.lastParams)) {
+            this.logger.debug("skipping 'startSingleScreenApp': params are the same")
+        }
+        else {
+            this.lastParams = params
+            this.logger.info("startSingleScreenApp", params)
+            Navigation.startSingleScreenApp(params)
+        }
+
+    }
+
+    startUnlogged() {
+        this.startSingleScreenApp({
             screen: {
                 label: 'Login',
                 screen: 'goodsh.LoginScreen',
