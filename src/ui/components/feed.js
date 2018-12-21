@@ -46,7 +46,7 @@ export type Props = {
     renderItem: any => Node,
     fetchSrc: FeedSource,
     hasMore?: boolean,
-    ListHeaderComponent?: Node,
+    ListHeaderComponent?: Node | boolean => Node,
     ListFooterComponent?: Node,
     ListEmptyComponent?: Node,
     style?: ViewStyle,
@@ -243,34 +243,40 @@ export default class Feed extends Component<Props, State>  {
         if (!this.firstRenderAt) this.firstRenderAt = Date.now();
 
         let items = this.getItems();
+        let empty = ListEmptyComponent
+        const hasItems = this.hasItems()
 
-        // rendering rules
-        // 1. if has some items to display, display them
-        if (!this.hasItems()) {
-            if (this.manager.isSending('isFetchingHead', this)) return <FullScreenLoader/>
-            if (this.manager.isFail('isFetchingHead', this)) return this.renderFail(()=>this.tryFetchIt())
-            if (this.state.isFetchingHead === 'idle' && fetchSrc) return null
-
-
-            //FIX: this line would ignore header & footer + empty component (comments ActivityDescription on 1st comment)
-            // if (this.manager.isSuccess('isFetchingHead', this)) return this.renderEmpty()
-
-            // if (!ListFooterComponent && !ListHeaderComponent) {
-            //     this.logger.warn("rendering hole", this.state)
-            //     return this.renderEmpty()
-            // }
+        const fetchingHead = this.state.isFetchingHead
+        if (!hasItems) {
+            this.logger.debug("special render:", this.state);
+            switch (fetchingHead) {
+                case "sending":
+                    empty = <FullScreenLoader/>
+                    break
+                case "ko":
+                    empty = this.renderFail(()=>this.tryFetchIt())
+                    break
+                case "idle":
+                    empty = fetchSrc && null
+                    break
+            }
         }
 
         const filter = this.props.filter;
         if (filter) {
             items = filter.applyFilter(items);
+            if (filter.token) {
+                empty = filter.emptyFilterResult(filter.token)
+            }
         }
 
         const style1 = [style];
-        if ((this.state.isFetchingHead === 'sending' || this.state.isFetchingHead === 'idle') && !this.hasItems()) style1.push({minHeight: 150});
+        const isContentReady: boolean = fetchingHead !== 'sending' && fetchingHead !== 'idle' || hasItems
 
+        if (!isContentReady) style1.push({minHeight: 150, backgroundColor: 'red'})
 
-        const someCondition = this.state.isFetchingHead !== 'sending' && this.state.isFetchingHead !== 'idle' || this.hasItems()
+        const header: boolean => Node = _.isFunction(ListHeaderComponent) ? ListHeaderComponent : icr => icr && ListHeaderComponent
+
         let params =  {
             ref: listRef,
             renderItem,
@@ -279,10 +285,10 @@ export default class Feed extends Component<Props, State>  {
             onEndReached: this.onEndReached.bind(this),
             onEndReachedThreshold: 0.1,
             style: style1,
-            ListHeaderComponent: someCondition && ListHeaderComponent,
-            ListEmptyComponent: (filter && filter.token) ? filter.emptyFilterResult(filter.token) : ListEmptyComponent,
-            ListFooterComponent: someCondition && this.renderFetchMoreLoader(ListFooterComponent),
-            renderSectionHeader: someCondition && renderSectionHeader,
+            ListHeaderComponent: header(isContentReady),
+            ListEmptyComponent: empty,
+            ListFooterComponent: isContentReady && this.renderFetchMoreLoader(ListFooterComponent),
+            renderSectionHeader: isContentReady && renderSectionHeader,
             onScroll: this._handleScroll,
             onScrollBeginDrag: Keyboard.dismiss,
             keyboardShouldPersistTaps: 'always',
