@@ -204,7 +204,7 @@ export const STYLES = StyleSheet.create({
     FULL_SCREEN: {
         marginTop: LINEUP_PADDING,
         justifyContent: 'center',
-        backgroundColor: 'rgba(255, 255, 255, 0.65)',
+        // backgroundColor: 'rgba(255, 255, 255, 0.65)',
     },
     SECTION_TITLE: {
         fontSize: 17,
