@@ -67,7 +67,7 @@ export class LineupTitlePure extends Component<Props, State> {
         return (
             <GoodshContext.Consumer>
                 { ({userOwnResources}) => (
-                    <View style={[{paddingVertical: 6}, style, {
+                    <View style={[{paddingTop: 6, }, style, {
                         flex:1,
                     }]}>
                         <View style={{
@@ -128,7 +128,7 @@ export class LineupTitlePure extends Component<Props, State> {
         let canFollow = this.props.actions.indexOf(L_FOLLOW) >= 0
         return [
             this.renderMedal(_.get(this.props, 'savingsCount.total', -1), "th-large", it),
-            this.renderMedal(_.get(this.props, 'followersCount.total', -1), "star", it, this.props.followed ? Colors.green : undefined),
+            this.renderMedal(_.get(this.props, 'followersCount.total', -1), "star", it, this.props.followed ? Colors.brownishGrey : undefined),
             (canFollow &&
                 <Text
                     key={"follow"}
@@ -136,11 +136,10 @@ export class LineupTitlePure extends Component<Props, State> {
                         followLineupPending(this.props.dispatch, lineup)
                     }}
                     style={{
-                        color: Colors.green,
+                        color: Colors.black,
                         fontSize: 14,
                         fontFamily: SFP_TEXT_BOLD
-                        // backgroundColor: 'blue'
-                    }}>  {i18n.t('actions.follow')}</Text>
+                    }}> • {i18n.t('actions.follow').toLowerCase()}</Text>
             )
         ];
     }
