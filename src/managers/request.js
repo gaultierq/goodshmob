@@ -57,15 +57,17 @@ export class RequestManager {
         const action: string = tracker.getAction();
 
 
-        this.events.push({
-            action,
-            caller,
-            status,
-            date: Date.now(),
-            options
-        })
 
-        caller.setState({[action]: status})
+
+        caller.setState({[action]: status}, () => {
+            this.events.push({
+                action,
+                caller,
+                status,
+                date: Date.now(),
+                options
+            })
+        })
     }
 }
 

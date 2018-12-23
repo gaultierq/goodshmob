@@ -19,9 +19,9 @@ const logger = rootlogger.createLogger({group: 'image'})
 
 export default class GImage extends Component<Props, State>  {
 
-    static defaultProps = {
-        fallbackSource: require('../../img/missing-image.png')
-    };
+    // static defaultProps = {
+    //     fallbackSource: require('../../img/missing-image.png')
+    // };
 
     render() {
         // logger.debug("render", this.props)

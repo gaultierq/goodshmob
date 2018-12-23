@@ -73,7 +73,7 @@ export class LineupMedals extends Component<Props, State> {
                             this.renderMedal(savingsCount, i18n.t('lineup_medals.elements', {count: savingsCount}))
                         }
                         {
-                            this.renderMedal(savingsCount, i18n.t('lineup_medals.followers', {count: followersCount}))
+                            this.renderMedal(followersCount, i18n.t('lineup_medals.followers', {count: followersCount}))
                         }
                     </View>
                 </View>

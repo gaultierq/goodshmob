@@ -18,7 +18,12 @@ export class Loader extends Component<Props, State> {
         color: Colors.grey3,
     }
     render() {
-        return <Spinner style={{alignSelf: 'center'}} size={this.props.size} type={__IS_IOS__ ? "Arc" : "WanderingCubes"} color={this.props.color}/>
+        return <Spinner
+            style={{alignSelf: 'center'}}
+            type={__IS_IOS__ ? "Arc" : "WanderingCubes"}
+            color={this.props.color}
+            {...this.props}
+        />
     }
 
     // render() {

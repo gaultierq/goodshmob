@@ -222,7 +222,6 @@ export default class Feed extends Component<Props, State>  {
         if (name) {
             BugsnagManager.leaveBreadcrumb(name, {type: 'render feed'});
         }
-
         //assertUnique(this.getFlatItems())
 
         const {
@@ -247,8 +246,9 @@ export default class Feed extends Component<Props, State>  {
         const hasItems = this.hasItems()
 
         const fetchingHead = this.state.isFetchingHead
+        this.logger.debug("render: hasItems=", hasItems, this.state);
+
         if (!hasItems) {
-            this.logger.debug("special render:", this.state);
             switch (fetchingHead) {
                 case "sending":
                     empty = <FullScreenLoader/>
@@ -273,7 +273,6 @@ export default class Feed extends Component<Props, State>  {
         const style1 = [style];
         const isContentReady: boolean = fetchingHead !== 'sending' && fetchingHead !== 'idle' || hasItems
 
-        if (!isContentReady) style1.push({minHeight: 150, backgroundColor: 'red'})
 
         const header: boolean => Node = _.isFunction(ListHeaderComponent) ? ListHeaderComponent : icr => icr && ListHeaderComponent
 
@@ -426,7 +425,7 @@ export default class Feed extends Component<Props, State>  {
         if (!this.isVisible()) return "not visible";
         if (!this.props.fetchSrc) return "no fetch sources";
 
-        if (this.manager.isSending(requestName, this)) return "already sending";
+        if (this.state[requestName] === 'sending' ) return "already sending";
         if (options.trigger === TRIGGER_USER_INDIRECT_ACTION) {
             let events = this.manager.getEvents(this, requestName);
 
@@ -565,12 +564,19 @@ export default class Feed extends Component<Props, State>  {
         }
     }
 
+    setState(a) {
+        this.logger.debug('setState', a, this.state)
+        super.setState(a)
+    }
+
     renderRefreshControl() {
-        let displayLoader = (this.isFetchingHead() && !this.hasItems()) || this.state.isPulling;
-        return (<RefreshControl
-            refreshing={!!displayLoader}
-            onRefresh={this.onRefresh.bind(this)}
-        />);
+        let displayLoader = this.state.isPulling;
+        return (
+            <RefreshControl
+                refreshing={!!displayLoader}
+                onRefresh={this.onRefresh.bind(this)}
+            />
+        )
     }
 
     renderFetchMoreLoader(ListFooterComponent: Node) {
@@ -580,12 +586,12 @@ export default class Feed extends Component<Props, State>  {
         return (<View style={{backgroundColor: 'transparent'}}>
                 {ListFooterComponent}
                 {
-                    this.manager.isSending('isFetchingMore', this) &&
+                    this.state.isFetchingMore === 'sending' &&
                     !recentlyCreated &&
                     !this.props.doNotDisplayFetchMoreLoader && (<Spinner style={{alignSelf: 'center'}} size={40} type={__IS_IOS__ ? "Arc" : "WanderingCubes"} color={Colors.grey3}/>)
                 }
                 {
-                    this.manager.isFail('isFetchingMore', this) && this.renderFail(() => this.fetchMore({trigger: TRIGGER_USER_DIRECT_ACTION}))
+                    this.state.isFetchingMore === 'ko'  && this.renderFail(() => this.fetchMore({trigger: TRIGGER_USER_DIRECT_ACTION}))
                 }
             </View>
         )

@@ -203,13 +203,15 @@ export const STYLES = StyleSheet.create({
     },
     FULL_SCREEN: {
         flex:1,
-        width: "100%",
-        height: "100%",
+        // width: "100%",
+        // height: "100%",
+        marginTop: __DEVICE_WIDTH__ / 4,
         alignItems: 'center',
         justifyContent: 'center',
-        position: 'absolute',
-        zIndex: 1000,
-        backgroundColor: 'rgba(255, 255, 255, 0.65)'
+        // position: 'absolute',
+        // zIndex: 1000,
+        backgroundColor: 'rgba(255, 255, 255, 0.65)',
+        // backgroundColor: 'red',
     },
     SECTION_TITLE: {
         fontSize: 17,

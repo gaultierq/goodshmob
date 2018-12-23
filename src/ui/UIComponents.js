@@ -23,6 +23,7 @@ import HTMLView from "react-native-htmlview/HTMLView"
 import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "./fonts"
 import {createOpenModalLink} from "../managers/Links"
 import SearchItems from "./screens/searchitems"
+import {Loader} from "./Loader"
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
@@ -63,13 +64,11 @@ export function renderTag(tag: string, onPress: () => void, style?:?*) {
 }
 
 
-export const FullScreenLoader = props => (<View style={STYLES.FULL_SCREEN}>
-    <Spinner
-        isVisible={true}
-        size={__DEVICE_WIDTH__ / 10}
-        type={"9CubeGrid"}
-        color={Colors.grey3}/>
-</View>);
+export const FullScreenLoader = props => (
+    <View style={STYLES.FULL_SCREEN}>
+        <Loader size={__DEVICE_WIDTH__ / 10}/>
+    </View>
+);
 
 
 export const scheduleOpacityAnimation = () => {
