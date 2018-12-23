@@ -8,7 +8,7 @@ import {
     __createAlgoliaSearcher,
     makeBrowseAlgoliaFilter2,
     PERMISSION_EMPTY_POSITION, PERMISSION_NO_FRIEND, renderEmptyResults,
-    renderSaving
+    renderSavingWithDescription
 } from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import type {ISearchMotor} from "../searchMotor"
@@ -39,6 +39,7 @@ import GTouchable from "../../GTouchable"
 import {hexToRgbaWithHalpha} from "../../../helpers/DebugUtils"
 import {flatDiff} from "../../../helpers/StringUtils"
 import {LINEUP_PADDING} from "../../UIStyles"
+import SavingsGrid from "../SavingsGrid"
 
 
 type SMS = {
@@ -281,15 +282,12 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
         }
 
         else return (
-            <SearchListResults
+            <SavingsGrid
                 searchState={state}
-                renderItem={this._renderSaving}
                 EmptyComponent={renderEmptyResults(this.state.scope, 'places', this.props.navigator)}
             />
         )
     }
-
-    _renderSaving = (item) => renderSaving(item, this.props.navigator)
 
     getRegion() {
         if (this.state.searchOptions) {

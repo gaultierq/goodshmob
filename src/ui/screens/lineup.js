@@ -20,13 +20,9 @@ import {L_ADD_ITEM} from "../lineupRights"
 import {createStructuredSelector} from "reselect"
 import FeedSeparator from "../activity/components/FeedSeparator"
 import {CachedImage} from 'react-native-cached-image'
-import GTouchable from "../GTouchable"
 import {LineupHeader} from "../lineup/LineupHeader"
-
-import {createDetailsLink} from "../activity/activityDetail"
-import {buildSearchItemUrl, openLinkSafely} from "../../managers/Links"
+import {buildSearchItemUrl} from "../../managers/Links"
 import SearchItems from "./searchitems"
-import GImage from "../components/GImage"
 import {LineupMedals} from "../lineup/LineupMedals"
 import {
     LINEUP_ACTIONS_SELECTOR,
@@ -35,7 +31,7 @@ import {
     lineupId,
     LIST_SAVINGS_SELECTOR
 } from "../../helpers/Selectors"
-import {calcGridLayout, obtainGridStyles} from "../../helpers/GridHelper"
+import {calcGridLayout, obtainGridStyles, renderSavingForGrid, savingForGridRenderer} from "../../helpers/GridHelper"
 
 type Props = {
     lineupId: string,
@@ -74,6 +70,8 @@ class LineupScreen extends Screen<Props, State> {
     layout: any = calcGridLayout(__DEVICE_WIDTH__, 3)
 
     gridStyles: any = obtainGridStyles(this.layout)
+
+    _savingForGridRenderer = savingForGridRenderer(this.layout, this.gridStyles)
 
     state = {
         navBarState: {},
@@ -173,40 +171,26 @@ class LineupScreen extends Screen<Props, State> {
     renderItemGrid({item, index}) {
 
 
-        index = index % this.layout.numColumns
-        let uri, child
+        const layout = this.layout
+        index = index % layout.numColumns
+        const gridStyles = this.gridStyles
+
         if (item.type === 'plus_button') {
-            uri = SearchItems.createAddLink(this.props.lineupId)
-            child = (
-                <View style={{width: this.layout.cellWidth, height: this.layout.cellHeight}}>
+            return renderSavingForGrid(
+                index,
+                gridStyles,
+                layout,
+                SearchItems.createAddLink(this.props.lineupId), (
+                <View style={{width: layout.cellWidth, height: layout.cellHeight}}>
                     <InnerPlus plusStyle={{backgroundColor: Colors.black, borderRadius: 4,}}/>
                 </View>
-            )
+            ))
         }
-        else {
-            let saving = item
-            uri = createDetailsLink(saving.id, saving.type)
-            child = <GImage
-                source={{uri: _.get(saving, 'resource.image'), }}
-                style={[this.gridStyles.gridImg]}
-                resizeMode='cover'
-                fallbackSource={require('../../img/goodsh_placeholder.png')}/>
-        }
-        return (
-            <GTouchable
-                key={`lineup.${this.lineupId()}.grid.${index}`}
-                style={[this.gridStyles.gridCellCommon, index === 0 ? this.gridStyles.gridCellL : index === this.layout.numColumns ? this.gridStyles.gridCellR : null ]}
-                onPress={() => openLinkSafely(uri)}>
-                {child}
-            </GTouchable>
-        )
+
+        return this._savingForGridRenderer({item, index})
     }
 
-
-
-
 }
-
 
 
 const styles = StyleSheet.create({

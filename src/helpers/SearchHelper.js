@@ -9,7 +9,7 @@ import {seeActivityDetails, seeList, seeUser} from "../ui/Nav"
 import GTouchable from "../ui/GTouchable"
 import ItemCell from "../ui/components/ItemCell"
 import UserItem from "../ui/screens/userItem"
-import {StyleSheet, Text} from "react-native"
+import {StyleSheet, Text, View} from "react-native"
 import type {SearchItemsGenOptions} from "../ui/screens/search/SearchGeneric"
 import * as Api from "../managers/Api"
 import {Call} from "../managers/Api"
@@ -20,6 +20,9 @@ import {fullName} from "./StringUtils"
 import {Colors} from "../ui/colors"
 import LineupHorizontal, {LineupHorizontalPure} from "../ui/components/LineupHorizontal"
 import LineupTitle, {LineupTitlePure} from "../ui/components/LineupTitle"
+import {STYLES} from "../ui/UIStyles"
+import {Loader} from "../ui/Loader"
+import SearchListResults from "../ui/screens/searchListResults"
 
 export type SearchCategoryType = string;
 
@@ -93,7 +96,7 @@ export function renderSavingOrLineup(navigator: RNNNavigator) {
             return renderLineup(navigator, item)
         }
         else {
-            return renderSaving({item}, navigator)
+            return renderSavingWithDescription({item}, navigator)
 
         }
     }
@@ -264,7 +267,7 @@ export function makeBrowseAlgoliaFilter2(friendFilter: FRIEND_FILTER_TYPE, categ
     }
 }
 
-export function renderSaving({item}: {item: Saving}, navigator: RNNNavigator) {
+export function renderSavingWithDescription({item}: {item: Saving}, navigator: RNNNavigator) {
 
     let saving = item;
 

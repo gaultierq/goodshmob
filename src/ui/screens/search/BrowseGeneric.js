@@ -8,8 +8,7 @@ import {
     __createAlgoliaSearcher,
     makeBrowseAlgoliaFilter2,
     PERMISSION_NO_FRIEND,
-    renderEmptyResults,
-    renderSaving
+    renderEmptyResults
 } from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import type {ISearchMotor} from "../searchMotor"
@@ -24,6 +23,8 @@ import SearchListResults from "../searchListResults"
 import type {SearchItemCategoryType} from "../../../helpers/SearchConstants"
 import {GoodshContext, RENDER_NO_FRIEND_ERROR} from "../../UIComponents"
 import {BrowseItemsPlacesOptions} from "./BrowsePlaces"
+import {savingForGridRenderer2} from "../../../helpers/GridHelper"
+import SavingsGrid from "../SavingsGrid"
 
 export type BrowseItemsGenOptions = {
     algoliaFilter?: string
@@ -108,10 +109,9 @@ export default class BrowseGeneric extends React.Component<SMP, SMS> {
                         innerRef={ref => this.searchMotor = ref}
                         searchEngine={this.search}
                         renderResults={(state, onLoadMore) => (
-                            <SearchListResults
+                            <SavingsGrid
                                 searchState={state}
                                 onLoadMore={onLoadMore}
-                                renderItem={this._renderSaving}
                                 EmptyComponent={renderEmptyResults(this.state.scope, this.props.category, this.props.navigator)}
                             />
                         )
@@ -124,8 +124,6 @@ export default class BrowseGeneric extends React.Component<SMP, SMS> {
             </View>
         )
     }
-
-    _renderSaving = (item) => renderSaving(item, this.props.navigator)
 
     _renderMissingPermission = (searchOptions: BrowseItemsPlacesOptions, missingPermission: string) => {
         if (missingPermission === PERMISSION_NO_FRIEND) {

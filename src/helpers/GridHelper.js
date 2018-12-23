@@ -1,6 +1,12 @@
-import {StyleSheet} from "react-native"
+import {StyleSheet, View} from "react-native"
 import {Colors} from "../ui/colors"
-import {TRANSPARENT_SPACER} from "../ui/UIComponents"
+import {GoodshContext, TRANSPARENT_SPACER} from "../ui/UIComponents"
+import GTouchable from "../ui/GTouchable"
+import {openLinkSafely} from "../managers/Links"
+import React from "react"
+import {createDetailsLink} from "../ui/activity/activityDetail"
+import GImage from "../ui/components/GImage"
+import {GAvatar} from "../ui/GAvatar"
 
 export const SPACER = 6
 
@@ -49,4 +55,40 @@ export function obtainGridStyles(layout: any) {
     })
     gridStyles[key] = res
     return res
+}
+
+export function renderSavingForGrid(index, gridStyles, layout, uri, child) {
+    return (
+        <GTouchable
+            key={`lineup.grid.${index}`}
+            style={[gridStyles.gridCellCommon, index === 0 ? gridStyles.gridCellL : index === layout.numColumns ? gridStyles.gridCellR : null]}
+            onPress={() => openLinkSafely(uri)}>
+            {child}
+        </GTouchable>
+    )
+}
+
+export const savingForGridRenderer = (layout, gridStyles) => ({index, item}) => renderSavingForGrid(
+    index,
+    gridStyles,
+    layout,
+    createDetailsLink(item.id, item.type),
+    <GoodshContext.Consumer>
+        { ({userOwnResources}) => (
+            <View>
+                <GImage
+                    source={{uri: _.get(item, 'resource.image'),}}
+                    style={[gridStyles.gridImg]}
+                    resizeMode='cover'
+                    fallbackSource={require('../img/goodsh_placeholder.png')}/>
+                {!userOwnResources && <GAvatar seeable person={item.user} size={30} style={{position: 'absolute', bottom: 5, right: 5}}/>}
+            </View>
+        )}
+    </GoodshContext.Consumer>
+
+)
+
+export function savingForGridRenderer2({width, columns} = {width: __DEVICE_WIDTH__, columns: 3}) {
+    const layout = calcGridLayout(width, columns)
+    return savingForGridRenderer(layout, obtainGridStyles(layout))
 }

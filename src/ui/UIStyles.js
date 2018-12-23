@@ -202,16 +202,9 @@ export const STYLES = StyleSheet.create({
         borderRadius: 0,
     },
     FULL_SCREEN: {
-        flex:1,
-        // width: "100%",
-        // height: "100%",
-        marginTop: __DEVICE_WIDTH__ / 4,
-        alignItems: 'center',
+        marginTop: LINEUP_PADDING,
         justifyContent: 'center',
-        // position: 'absolute',
-        // zIndex: 1000,
         backgroundColor: 'rgba(255, 255, 255, 0.65)',
-        // backgroundColor: 'red',
     },
     SECTION_TITLE: {
         fontSize: 17,
