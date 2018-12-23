@@ -565,10 +565,10 @@ export default class Feed extends Component<Props, State>  {
         }
     }
 
-    setState(a) {
-        this.logger.debug('setState', a, this.state)
-        super.setState(a)
-    }
+    // setState(a) {
+    //     this.logger.debug('setState', a, this.state)
+    //     super.setState(a)
+    // }
 
     renderRefreshControl() {
         let displayLoader = this.state.isPulling;
