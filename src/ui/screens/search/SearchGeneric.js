@@ -14,6 +14,14 @@ import BlankSearch, {renderBlankIcon} from "../../../ui/components/BlankSearch"
 import ItemCell from "../../components/ItemCell"
 import GTouchable from "../../GTouchable"
 import type {SearchItemCategoryType} from "../../../helpers/SearchConstants"
+import {
+    calcGridLayout,
+    gridCellPositioningStyle,
+    obtainGridStyles,
+    renderItemGridImage
+} from "../../../helpers/GridHelper"
+import Icon from "react-native-vector-icons/MaterialIcons"
+import {Colors} from "../../colors"
 
 export type SearchItemsGenOptions = {input: string}
 
@@ -31,6 +39,10 @@ type SMP = {
 export default class SearchGeneric extends React.Component<SMP, SMS> {
 
     search: SearchEngine<SearchItemsGenOptions>
+
+    layout: any = calcGridLayout(__DEVICE_WIDTH__, 3)
+
+    gridStyles: any = obtainGridStyles(this.layout)
 
     constructor(props: SMP) {
         super(props)
@@ -55,12 +67,22 @@ export default class SearchGeneric extends React.Component<SMP, SMS> {
                 />
                 <SearchMotor
                     searchEngine={this.search}
-                    renderResults={(state, onLoadMore) => <SearchListResults
-                        searchState={state}
-                        renderItem={this._renderItem}
-                        keyExtractor={item => item.uid}
-                        onLoadMore={onLoadMore}
-                    />}
+                    renderResults={(state, onLoadMore) => (
+                        <SearchListResults
+                            searchState={state}
+                            numColumns={3}
+                            renderItem={({item, index}) => (
+                                <GTouchable
+                                    style={[gridCellPositioningStyle(this.gridStyles, index, this.layout)]}
+                                    onPress={()=> this.props.onItemSelected(item)
+                                    }>
+                                    {renderItemGridImage(item, this.gridStyles)}
+                                </GTouchable>
+                            )}
+                            keyExtractor={item => item.uid}
+                            onLoadMore={onLoadMore}
+
+                        />)}
                     searchOptions={this.state.searchOptions}
                     canSearch={this._canSearch}
                     renderMissingPermission={this._renderMissingPermission}
@@ -68,12 +90,6 @@ export default class SearchGeneric extends React.Component<SMP, SMS> {
             </View>
         )
     }
-
-    _renderItem = ({item}) => (
-        <GTouchable onPress={() => this.props.onItemSelected(item)}>
-            <ItemCell item={item}/>
-        </GTouchable>
-    )
 
     _canSearch = searchOptions => {
         if (!_.isEmpty(searchOptions.input)) {

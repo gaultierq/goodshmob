@@ -23,6 +23,12 @@ import BlankSearch, {renderBlankIcon} from "../../../ui/components/BlankSearch"
 import GMap from "../../components/GMap"
 import GTouchable from "../../GTouchable"
 import ItemCell from "../../components/ItemCell"
+import {
+    calcGridLayout,
+    gridCellPositioningStyle,
+    obtainGridStyles,
+    renderItemGridImage
+} from "../../../helpers/GridHelper"
 
 export type SearchItemsPlacesOptions = SearchItemsGenOptions & {
     lat?: ?number,
@@ -43,7 +49,10 @@ type SMP = {
 
 export default class SearchPlaces extends React.Component<SMP, SMS> {
 
+    layout: any = calcGridLayout(__DEVICE_WIDTH__, 3)
 
+    gridStyles: any = obtainGridStyles(this.layout)
+    
     constructor(props: SMP) {
         super(props)
 
@@ -123,15 +132,28 @@ export default class SearchPlaces extends React.Component<SMP, SMS> {
     _renderResults = (state: SearchState) => {
         if (this.state.mapDisplay) return <GMap searchState={state} onItemPressed={(item) => this.props.onItemSelected(item)}/>
 
-        return <SearchListResults searchState={state} renderItem={this._renderItem}
-        />
+        return (
+            <SearchListResults
+                numColumns={3}
+                renderItem={({item, index}) => (
+                    <GTouchable
+                        style={[gridCellPositioningStyle(this.gridStyles, index, this.layout)]}
+                        onPress={()=> this.props.onItemSelected(item)
+                        }>
+                        {renderItemGridImage(item, this.gridStyles)}
+                    </GTouchable>
+                )}
+                searchState={state}
+                // renderItem={this._renderItem}
+            />
+        )
     }
-
-    _renderItem = ({item}) => (
-        <GTouchable onPress={() => this.props.onItemSelected(item)}>
-            <ItemCell item={item}/>
-        </GTouchable>
-    )
+    //
+    // _renderItem = ({item}) => (
+    //     <GTouchable onPress={() => this.props.onItemSelected(item)}>
+    //         <ItemCell item={item}/>
+    //     </GTouchable>
+    // )
 }
 
 //TODO: factorize
