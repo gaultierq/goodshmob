@@ -22,7 +22,7 @@ import {Call, TRIGGER_USER_DIRECT_ACTION, TRIGGER_USER_INDIRECT_ACTION} from "..
 import {isEmpty} from "lodash"
 import type {i18Key, ms, RequestState, Url} from "../../types"
 import {ViewStyle} from "../../types"
-import {renderSimpleButton} from "../UIStyles"
+import {LINEUP_PADDING, renderSimpleButton} from "../UIStyles"
 import type {ScreenVisibility} from "./Screen"
 import {getLanguages} from 'react-native-i18n'
 import {RequestManager} from "../../managers/request"
@@ -31,6 +31,7 @@ import {FullScreenLoader, renderTextAndDots} from "../UIComponents"
 import BugsnagManager from "../../managers/BugsnagManager"
 import {Colors} from "../colors"
 import Spinner from "react-native-spinkit"
+import {Loader} from "../Loader"
 
 export type FeedSource = {
     callFactory: ()=>Api.Call,
@@ -588,7 +589,11 @@ export default class Feed extends Component<Props, State>  {
                 {
                     this.state.isFetchingMore === 'sending' &&
                     !recentlyCreated &&
-                    !this.props.doNotDisplayFetchMoreLoader && (<Spinner style={{alignSelf: 'center'}} size={40} type={__IS_IOS__ ? "Arc" : "WanderingCubes"} color={Colors.grey3}/>)
+                    !this.props.doNotDisplayFetchMoreLoader && (
+                        <Loader
+                            size={50}
+                            style={{margin: LINEUP_PADDING, alignSelf: 'center'}} />
+                    )
                 }
                 {
                     this.state.isFetchingMore === 'ko'  && this.renderFail(() => this.fetchMore({trigger: TRIGGER_USER_DIRECT_ACTION}))

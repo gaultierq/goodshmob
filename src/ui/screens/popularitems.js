@@ -26,15 +26,14 @@ import {reduceList2} from "../../managers/Api"
 import ApiAction from "../../helpers/ApiAction"
 import type {FeedSource} from "../components/feed"
 import Feed from "../components/feed"
-import ItemCell from "../components/ItemCell"
 import {buildData} from "../../helpers/DataUtils"
 import GTouchable from "../GTouchable"
 import {Colors} from "../colors"
 import {SFP_TEXT_REGULAR} from "../fonts"
 import {LINEUP_PADDING, renderSimpleButton} from "../UIStyles"
-import {hexToRgbaWithHalpha} from "../../helpers/DebugUtils"
 import {findBestLineup} from "../../helpers/Classifier"
-
+import {calcGridLayout, gridCellPositioningStyle, obtainGridStyles, renderItemGridImage} from "../../helpers/GridHelper"
+import Icon from "react-native-vector-icons/MaterialIcons"
 
 export type Props = {
     onFinished ?: () => void
@@ -49,7 +48,8 @@ type State = {
 @connect(state => ({
         data: state.data,
         popular_items: state.popular_items,
-    }), dispatch => ({
+    }),
+    dispatch => ({
         saveManyItems: (itemsIds, listByItemId) => dispatch(saveManyItems(itemsIds, listByItemId))
     })
 )
@@ -60,10 +60,15 @@ export default class PopularItemsScreen extends Screen<Props, State> {
         selectedItems: []
     }
 
+    layout: any = calcGridLayout(__DEVICE_WIDTH__, 3)
+
+    gridStyles: any = obtainGridStyles(this.layout)
+
     constructor(props: Props) {
         super(props)
         props.navigator.setTitle({title: i18n.t("popular_screen.title")});
     }
+
 
     render() {
         const items = this.props.popular_items.list.map(i => buildData(this.props.data, i.type, i.id))
@@ -79,22 +84,35 @@ export default class PopularItemsScreen extends Screen<Props, State> {
                 </View>
                 <Feed
                     data={items}
-                    renderItem={({item}) => (
+                    renderItem={({item, index}) => (
                         <GTouchable
-                            style={{backgroundColor: this.state.selectedItems.includes(item.id) ? hexToRgbaWithHalpha(Colors.green, 0.3) : "transparent" }}
+                            style={[
+                                gridCellPositioningStyle(this.gridStyles, index, this.layout)
+
+                            ]}
                             onPress={()=>{
                                 let selectedItems = this.state.selectedItems;
                                 selectedItems = _.xor(selectedItems, [item.id])
                                 this.setState({selectedItems})
                             }
                             }>
-                            <ItemCell item={item}/>
+                            {renderItemGridImage(item, this.gridStyles)}
+                            {
+                                this.state.selectedItems.includes(item.id) &&
+                                <Icon
+                                    name="check-circle"
+                                    size={30}
+                                    color={Colors.green}
+                                    style={{position: 'absolute', top: 5, right: 5}}
+                                />
+                            }
                         </GTouchable>
                     )}
                     listRef={ref=>ref}
                     displayName={"PopularItems"}
                     fetchSrc={this.fetchSrc()}
                     ListEmptyComponent={<Text>{i18n.t("popular_screen.empty")}</Text>}
+                    numColumns={3}
                 />
                 <View style={{
                     padding: LINEUP_PADDING,
@@ -117,7 +135,7 @@ export default class PopularItemsScreen extends Screen<Props, State> {
                                 // disabled: !enabled,
                                 textStyle: {fontSize: 18, color: Colors.black}
                             }
-                        )
+                            )
                     }
                 </View>
             </View>

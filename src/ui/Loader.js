@@ -25,8 +25,4 @@ export class Loader extends Component<Props, State> {
             {...this.props}
         />
     }
-
-    // render() {
-    //     return <ActivityIndicator style={{width: this.props.size}}/>
-    // }
 }

@@ -7,7 +7,7 @@ import {Colors} from "../colors"
 import Spinner from "react-native-spinkit"
 
 export type Props = {
-    fallbackSource: any,
+    fallbackSource?: any,
 };
 
 type State = {

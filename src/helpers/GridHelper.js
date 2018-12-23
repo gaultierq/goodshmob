@@ -57,38 +57,48 @@ export function obtainGridStyles(layout: any) {
     return res
 }
 
+export let gridCellPositioningStyle = (gridStyles, index, layout) => [gridStyles.gridCellCommon, index === 0 ? gridStyles.gridCellL : index === layout.numColumns ? gridStyles.gridCellR : null]
+
 export function renderSavingForGrid(index, gridStyles, layout, uri, child) {
     return (
         <GTouchable
             key={`lineup.grid.${index}`}
-            style={[gridStyles.gridCellCommon, index === 0 ? gridStyles.gridCellL : index === layout.numColumns ? gridStyles.gridCellR : null]}
+            style={gridCellPositioningStyle(gridStyles, index, layout)}
             onPress={() => openLinkSafely(uri)}>
             {child}
         </GTouchable>
     )
 }
 
-export const savingForGridRenderer = (layout, gridStyles) => ({index, item}) => renderSavingForGrid(
-    index,
-    gridStyles,
-    layout,
-    createDetailsLink(item.id, item.type),
-    <GoodshContext.Consumer>
-        { ({userOwnResources}) => (
-            <View>
-                <GImage
-                    source={{uri: _.get(item, 'resource.image'),}}
-                    style={[gridStyles.gridImg]}
-                    resizeMode='cover'
-                    fallbackSource={require('../img/goodsh_placeholder.png')}/>
-                {!userOwnResources && <GAvatar seeable person={item.user} size={30} style={{position: 'absolute', bottom: 5, right: 5}}/>}
-            </View>
-        )}
-    </GoodshContext.Consumer>
-
+export const renderItemGridImage = (resource, gridStyles) => (
+    <GImage
+        source={{uri: _.get(resource, 'image'),}}
+        style={[gridStyles.gridImg]}
+        resizeMode='cover'
+        fallbackSource={require('../img/goodsh_placeholder.png')}/>
 )
 
 export function savingForGridRenderer2({width, columns} = {width: __DEVICE_WIDTH__, columns: 3}) {
     const layout = calcGridLayout(width, columns)
-    return savingForGridRenderer(layout, obtainGridStyles(layout))
+    const gridStyles = obtainGridStyles(layout)
+
+    return ({index, item}) => {
+        let resource = _.get(item, 'resource')
+        return renderSavingForGrid(
+            index,
+            obtainGridStyles(layout),
+            layout,
+            createDetailsLink(item.id, item.type),
+            <GoodshContext.Consumer>
+                {({userOwnResources}) => (
+                    <View>
+                        {renderItemGridImage(resource, gridStyles)}
+                        {!userOwnResources && <GAvatar seeable person={item.user} size={30}
+                                                       style={{position: 'absolute', bottom: 5, right: 5}}/>}
+                    </View>
+                )}
+            </GoodshContext.Consumer>
+        )
+    }
 }
+

@@ -31,7 +31,7 @@ import {
     lineupId,
     LIST_SAVINGS_SELECTOR
 } from "../../helpers/Selectors"
-import {calcGridLayout, obtainGridStyles, renderSavingForGrid, savingForGridRenderer} from "../../helpers/GridHelper"
+import {calcGridLayout, obtainGridStyles, renderSavingForGrid} from "../../helpers/GridHelper"
 
 type Props = {
     lineupId: string,
@@ -71,7 +71,7 @@ class LineupScreen extends Screen<Props, State> {
 
     gridStyles: any = obtainGridStyles(this.layout)
 
-    _savingForGridRenderer = savingForGridRenderer(this.layout, this.gridStyles)
+    _savingForGridRenderer = savingForGridRenderer2()
 
     state = {
         navBarState: {},
