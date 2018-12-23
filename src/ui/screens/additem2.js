@@ -126,6 +126,7 @@ export default class AddItemScreen2 extends React.Component<Props, State> {
                             onSubmitEditing={() => {selectedLineupId && this.props.doAdd(selectedLineupId, this.state.visibility, this.state.description)}}
                             multiline={true}
                             autoFocus={true}
+                            maxLength={500}
                         />
 
 

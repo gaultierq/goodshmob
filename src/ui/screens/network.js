@@ -58,14 +58,15 @@ const logger = rootlogger.createLogger('network')
 class NetworkScreen extends Screen<Props, State> {
 
     static navigatorButtons = {
-        rightButtons: [
-
-            {
-                id: 'interactions',
-                icon: require('../../img2/bell.png'),
-                // title: i18n.t("home_search_screen.community.title")
-            },
-        ],
+        // rightButtons: [
+        //
+        //     {
+        //         id: 'interactions',
+        //         icon: require('../../img2/bell.png'),
+        //         // title: i18n.t("home_search_screen.community.title")
+        //     },
+        // ],
+        rightButtons: [],
         leftButtons: [
 
             {

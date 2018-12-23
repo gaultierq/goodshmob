@@ -31,7 +31,7 @@ import {
     lineupId,
     LIST_SAVINGS_SELECTOR
 } from "../../helpers/Selectors"
-import {calcGridLayout, obtainGridStyles, renderSavingForGrid} from "../../helpers/GridHelper"
+import {calcGridLayout, obtainGridStyles, renderSavingForGrid, savingForGridRenderer2} from "../../helpers/GridHelper"
 
 type Props = {
     lineupId: string,
