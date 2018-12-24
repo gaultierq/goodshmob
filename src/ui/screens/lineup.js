@@ -100,7 +100,9 @@ class LineupScreen extends Screen<Props, State> {
         }
 
         return (
-            <View style={{
+            <View
+                onLayout={e => this.containerHeight = e.nativeEvent.layout.height}
+                style={{
                 flex: 1,
                 // backgroundColor: 'orange',
                 height: '100%',
@@ -111,7 +113,7 @@ class LineupScreen extends Screen<Props, State> {
                     paddingTop: 40,
                 }}>
                     <View
-                        onLayout={e => this.containerHeight = e.nativeEvent.layout.height}
+
                         style={{
                         flex:1,
                         // backgroundColor: 'pink',
