@@ -2,17 +2,16 @@
 import React, {Component} from 'react'
 import {ActivityIndicator, Image, Text, View} from 'react-native'
 import MapView, {Callout, Marker} from 'react-native-maps'
-import type {SearchState} from "../../helpers/SearchHelper"
 import memoize from "memoize-one"
-import {Colors} from "../colors"
+import type {Item} from "../../types"
 
 
 export type Props = {
-    searchState: SearchState,
     setRef?: () => void,
     onItemPressed: (item: any) => void,
     onRegionChange?: Region => void,
-    EmptyComponent?: () => any
+    EmptyComponent?: () => any,
+    points: Item[]
 };
 
 type State = {
@@ -33,47 +32,21 @@ export default class GMap extends Component<Props, State>  {
     getData = memoize(data => _.flatten(data))
     center: Region
 
-    static defaultProps = {
-        EmptyComponent: () => (
-
-            <Text style={{backgroundColor: Colors.white, padding: 10}}>{i18n.t("lineups.search.empty")}</Text>
-
-        )
-    }
 
     render() {
 
-        const {...attr} = this.props
+        const {points, ...attr} = this.props
 
-        const requestState = _.get(this.props, 'searchState.requestState', [])
-
-        const data = this.getData(_.get(this.props, 'searchState.data', []))
-
-        // Important: we must have data to compute center
-        if (requestState === 'ok') {
-            this.center = this.getCenter(data)
-        }
 
         return (
-            <View style={{flex:1}}>
-                <MapView
-                    style={{flex:1}}
-                    provider={'google'}
-                    // region={this.center}
-                    {...attr}
-                >
-                    {data && data.map((result, i) => {
-                        return this.renderMarker(i, result)
-                    })}
-                </MapView>
-                {requestState === 'sending' && <ActivityIndicator
-                    animating={true}
-                    size="large"
-                    style={{position: 'absolute', bottom: 30, left: 20}}
-                />
-                }
-                {requestState === 'ok' && data.length === 0 && this.props.EmptyComponent()}
-            </View>
+            <MapView
+                style={{flex:1}}
+                provider={'google'}
+                showsUserLocation={true}
+                {...attr}
+            >
+                {points && points.map(this._renderMarker)}
+            </MapView>
         )
     }
 
@@ -102,7 +75,7 @@ export default class GMap extends Component<Props, State>  {
             longitudeDelta: (maxLongitude - minLongitude) * 2}
     }
 
-    renderMarker(key: number, result: any) {
+    _renderMarker = (result: *, key: number) => {
         //Q to E: un peu strange ca; add a type for result ?
         const item = result.resource || result
 

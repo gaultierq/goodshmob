@@ -7,8 +7,9 @@ import type {FRIEND_FILTER_TYPE, SearchEngine, SearchState} from "../../../helpe
 import {
     __createAlgoliaSearcher,
     makeBrowseAlgoliaFilter2,
-    PERMISSION_EMPTY_POSITION, PERMISSION_NO_FRIEND, renderEmptyResults,
-    renderSavingWithDescription
+    PERMISSION_EMPTY_POSITION,
+    PERMISSION_NO_FRIEND,
+    renderEmptyResults
 } from "../../../helpers/SearchHelper"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import type {ISearchMotor} from "../searchMotor"
@@ -22,24 +23,18 @@ import {SocialScopeSelector} from "./socialscopeselector"
 import type {GeoStatus, IPositionSelector} from "./searchplacesoption"
 import {renderAskPermission, SearchPlacesOption} from "./searchplacesoption"
 import type {RNNNavigator} from "../../../types"
-import SearchListResults from "../searchListResults"
 import type {Region} from "../../components/GMap"
-import GMap, {mFromLatDelta, mFromLngDelta, regionFrom} from "../../components/GMap"
+import {mFromLatDelta, mFromLngDelta, regionFrom} from "../../components/GMap"
 import {Colors} from "../../colors"
 import ActionButton from "react-native-action-button"
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import {seeActivityDetails} from "../../Nav"
-import {
-    GoodshContext,
-    registerLayoutAnimation,
-    RENDER_NO_FRIEND_ERROR,
-    scheduleOpacityAnimation
-} from "../../UIComponents"
+import {GoodshContext, RENDER_NO_FRIEND_ERROR, scheduleOpacityAnimation} from "../../UIComponents"
 import GTouchable from "../../GTouchable"
 import {hexToRgbaWithHalpha} from "../../../helpers/DebugUtils"
-import {flatDiff} from "../../../helpers/StringUtils"
 import {LINEUP_PADDING} from "../../UIStyles"
 import SavingsGrid from "../SavingsGrid"
+import SearchMap from "../../components/SearchMap"
 
 
 type SMS = {
@@ -257,7 +252,7 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
 
                             </View>)
                     }
-                    <GMap
+                    <SearchMap
                         searchState={state}
                         onItemPressed={(item) => seeActivityDetails(this.props.navigator, item)}
                         initialRegion={region}
@@ -273,9 +268,17 @@ export default class BrowsePlaces extends React.Component<SMP, SMS> {
                             scheduleOpacityAnimation()
 
                         }}
-                        EmptyComponent={() => <View style={{position: 'absolute', backgroundColor: 'rgba(255,255,255,0.7)',
-                            borderRadius: 20,
-                            left: LINEUP_PADDING, right: LINEUP_PADDING, bottom: LINEUP_PADDING}}>{renderEmptyResults(this.state.scope, 'places', this.props.navigator)()}</View>}
+                        EmptyComponent={() => (
+                            <View style={{
+                                position: 'absolute',
+                                backgroundColor: 'rgba(255,255,255,0.7)',
+                                borderRadius: 20,
+                                left: LINEUP_PADDING,
+                                right: LINEUP_PADDING,
+                                bottom: LINEUP_PADDING}}>
+                                {renderEmptyResults(this.state.scope, 'places', this.props.navigator)()}
+                            </View>
+                        )}
                     />
                 </View>
             )

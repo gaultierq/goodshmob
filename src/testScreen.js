@@ -142,7 +142,7 @@ export const lineupScreen = {
         // lineupId: 'bede4c55-2e48-4f95-9d13-a619907d7882', // titre pourri qg local
         // lineupId: 'a48a269f-a3b5-4018-8596-e2f6c723c1ef', // titre pourri not qg local
         // lineupId: 'f3d6912e-6c21-4534-9689-6749a06c2b94', // titre pourri
-        lineupId: '37e67b05-c86c-4aeb-b3af-bf1c34862cd0', //local mine
+        lineupId: '37824893-5d63-44cb-bbb5-46c8bc954bb5', //local mine
         // lineupId: 'bffaf43b-f32c-424d-bae2-10cdc12fd192', //a benoit
     }
 };

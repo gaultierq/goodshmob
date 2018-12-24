@@ -7,7 +7,7 @@ import type {SearchEngine, SearchState} from "../../../helpers/SearchHelper"
 import {
     __createSearchItemSearcher,
     PERMISSION_EMPTY_INPUT,
-    PERMISSION_EMPTY_POSITION
+    PERMISSION_EMPTY_POSITION, renderEmptyResults
 } from "../../../helpers/SearchHelper"
 import {LINEUP_PADDING, NAV_BACKGROUND_COLOR} from "../../UIStyles"
 import {renderAskPermission, SearchPlacesOption} from "./searchplacesoption"
@@ -29,6 +29,7 @@ import {
     obtainGridStyles,
     renderItemGridImage
 } from "../../../helpers/GridHelper"
+import SearchMap from "../../components/SearchMap"
 
 export type SearchItemsPlacesOptions = SearchItemsGenOptions & {
     lat?: ?number,
@@ -52,7 +53,7 @@ export default class SearchPlaces extends React.Component<SMP, SMS> {
     layout: any = calcGridLayout(__DEVICE_WIDTH__, 3)
 
     gridStyles: any = obtainGridStyles(this.layout)
-    
+
     constructor(props: SMP) {
         super(props)
 
@@ -130,7 +131,15 @@ export default class SearchPlaces extends React.Component<SMP, SMS> {
     }
 
     _renderResults = (state: SearchState) => {
-        if (this.state.mapDisplay) return <GMap searchState={state} onItemPressed={(item) => this.props.onItemSelected(item)}/>
+        if (this.state.mapDisplay) return (
+            <SearchMap
+                searchState={state}
+                onItemPressed={(item) => this.props.onItemSelected(item)}
+                EmptyComponent={() => (
+                    <Text style={{backgroundColor: Colors.white, padding: 10}}>{i18n.t("lineups.search.empty")}</Text>
+                )}
+            />
+        )
 
         return (
             <SearchListResults

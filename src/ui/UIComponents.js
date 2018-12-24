@@ -24,6 +24,7 @@ import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "./fonts"
 import {createOpenModalLink} from "../managers/Links"
 import SearchItems from "./screens/searchitems"
 import {Loader} from "./Loader"
+import FeedSeparator from "./activity/components/FeedSeparator"
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
@@ -460,7 +461,6 @@ export class ListColumnsSelector extends Component<
                     }}>
                     <MaterialCommunityIcons name="view-day" size={this.props.size} color={!this.props.disabled && this.state.index === 1 ? Colors.brownishGrey: Colors.grey3} />
                 </GTouchable>
-
             </View>
         )
     }
