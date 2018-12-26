@@ -144,6 +144,7 @@ export const lineupScreen = {
         // lineupId: 'f3d6912e-6c21-4534-9689-6749a06c2b94', // titre pourri
         lineupId: '37824893-5d63-44cb-bbb5-46c8bc954bb5', //local mine
         // lineupId: 'bffaf43b-f32c-424d-bae2-10cdc12fd192', //a benoit
+        mapDisplay: true,
     }
 };
 

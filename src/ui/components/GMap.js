@@ -7,11 +7,11 @@ import type {Item} from "../../types"
 
 
 export type Props = {
-    setRef?: () => void,
+    setRef?: any => void,
     onItemPressed: (item: any) => void,
     onRegionChange?: Region => void,
     EmptyComponent?: () => any,
-    points: Item[]
+    points: Item[],
 };
 
 type State = {
@@ -32,14 +32,35 @@ export default class GMap extends Component<Props, State>  {
     getData = memoize(data => _.flatten(data))
     center: Region
 
+    map;
+
+    componentDidMount() {
+        setTimeout(()=> {
+            if (this.map) {
+                // this.map.fitToSuppliedMarkers(this.props.points.map((p, i) => i), {
+                //     animated: true, edgePadding: {
+                //         top: 10,
+                //         right: 10,
+                //         bottom: 10,
+                //         left: 10,
+                //     }})
+
+                this.map.fitToElements(true)
+            }
+        }, 1000)
+    }
 
     render() {
 
-        const {points, ...attr} = this.props
+        const {setRef, points, ...attr} = this.props
 
 
         return (
             <MapView
+                ref={map => {
+                    this.map = map
+                    if (setRef) setRef(map)
+                }}
                 style={{flex:1}}
                 provider={'google'}
                 showsUserLocation={true}

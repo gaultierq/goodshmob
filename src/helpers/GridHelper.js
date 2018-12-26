@@ -59,17 +59,6 @@ export function obtainGridStyles(layout: any) {
 
 export let gridCellPositioningStyle = (gridStyles, index, layout) => [gridStyles.gridCellCommon, index === 0 ? gridStyles.gridCellL : index === layout.numColumns ? gridStyles.gridCellR : null]
 
-export function renderSavingForGrid(index, gridStyles, layout, uri, child) {
-    return (
-        <GTouchable
-            key={`lineup.grid.${index}`}
-            style={gridCellPositioningStyle(gridStyles, index, layout)}
-            onPress={() => openLinkSafely(uri)}>
-            {child}
-        </GTouchable>
-    )
-}
-
 export const renderItemGridImage = (resource, gridStyles) => (
     <GImage
         source={{uri: _.get(resource, 'image'),}}
@@ -78,24 +67,30 @@ export const renderItemGridImage = (resource, gridStyles) => (
         fallbackSource={require('../img/goodsh_placeholder.png')}/>
 )
 
-export function savingForGridRenderer2({width, columns} = {width: __DEVICE_WIDTH__, columns: 3}) {
+export function savingForGridRenderer2(
+    {width, columns} = {width: __DEVICE_WIDTH__, columns: 3},
+    onPress = item => () => openLinkSafely(createDetailsLink(item.id, item.type))
+) {
+
     const layout = calcGridLayout(width, columns)
     const gridStyles = obtainGridStyles(layout)
 
     return ({index, item}) => {
         let resource = _.get(item, 'resource')
-        return renderSavingForGrid(
-            index,
-            obtainGridStyles(layout),
-            layout,
-            createDetailsLink(item.id, item.type),
+
+        return (
             <GoodshContext.Consumer>
                 {({userOwnResources}) => (
-                    <View>
-                        {renderItemGridImage(resource, gridStyles)}
-                        {!userOwnResources && <GAvatar seeable person={item.user} size={30}
-                                                       style={{position: 'absolute', bottom: 5, right: 5}}/>}
-                    </View>
+                    <GTouchable
+                        key={`lineup.grid.${index}`}
+                        style={gridCellPositioningStyle(gridStyles, index, layout)}
+                        onPress={onPress(item)}>
+                        <View>
+                            {renderItemGridImage(resource, gridStyles)}
+                            {!userOwnResources && <GAvatar seeable person={item.user} size={30}
+                                                           style={{position: 'absolute', bottom: 5, right: 5}}/>}
+                        </View>
+                    </GTouchable>
                 )}
             </GoodshContext.Consumer>
         )

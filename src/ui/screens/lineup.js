@@ -21,7 +21,7 @@ import {createStructuredSelector} from "reselect"
 import FeedSeparator from "../activity/components/FeedSeparator"
 import {CachedImage} from 'react-native-cached-image'
 import {LineupHeader} from "../lineup/LineupHeader"
-import {buildSearchItemUrl} from "../../managers/Links"
+import {buildSearchItemUrl, openLinkSafely} from "../../managers/Links"
 import SearchItems from "./searchitems"
 import {LineupMedals} from "../lineup/LineupMedals"
 import {
@@ -31,16 +31,25 @@ import {
     lineupId,
     LIST_SAVINGS_SELECTOR
 } from "../../helpers/Selectors"
-import {calcGridLayout, obtainGridStyles, renderSavingForGrid, savingForGridRenderer2} from "../../helpers/GridHelper"
+import {
+    calcGridLayout,
+    gridCellPositioningStyle,
+    obtainGridStyles,
+    savingForGridRenderer2
+} from "../../helpers/GridHelper"
 import GMap from "../components/GMap"
 import ActionButton from "react-native-action-button"
 import MaterialIcon from "react-native-vector-icons/MaterialIcons"
+import GTouchable from "../GTouchable"
+import {createDetailsLink} from "../activity/activityDetail"
 
 type Props = {
     lineupId: string,
     navigator: any,
     lineup: ?Lineup,
     saving: ?Saving[],
+    mapDisplay?: boolean,
+    renderType?: 'grid' | 'stream',
 };
 
 type State = {
@@ -75,15 +84,41 @@ class LineupScreen extends Screen<Props, State> {
 
     gridStyles: any = obtainGridStyles(this.layout)
 
-    _savingForGridRenderer = savingForGridRenderer2()
+    _savingForGridRenderer = savingForGridRenderer2(
+        {width: __DEVICE_WIDTH__, columns: 3},
+        item => this._makeOnItemPressed(item)
+    )
 
-    state = {
-        navBarState: {},
+    _makeOnItemPressed = item => {
+        if (this.state.mapDisplay) {
+            let desc = _.get(item, 'resource.description')
+            const coordinate = _.pick(desc, ['latitude', 'longitude'])
+            if (_.isEmpty(coordinate)) return null
+
+            return () => this.map && this.map.animateToCoordinate(coordinate)
+        }
+        else {
+            return () => openLinkSafely(createDetailsLink(item.id, item.type))
+        }
+    }
+
+    containerHeight:number
+    headerHeight: number
+    map: any
+
+    static defaultProps = {
         renderType: 'grid',
         mapDisplay: false,
     }
-    containerHeight:number
-    headerHeight: number
+
+    constructor(props: Props) {
+        super(props)
+        this.state = {
+            navBarState: {},
+            renderType: props.renderType,
+            mapDisplay: props.mapDisplay,
+        }
+    }
 
     render() {
         const {lineup, savings} = this.props
@@ -103,10 +138,10 @@ class LineupScreen extends Screen<Props, State> {
             <View
                 onLayout={e => this.containerHeight = e.nativeEvent.layout.height}
                 style={{
-                flex: 1,
-                // backgroundColor: 'orange',
-                height: '100%',
-            }}>
+                    flex: 1,
+                    // backgroundColor: 'orange',
+                    height: '100%',
+                }}>
                 <ScrollView style={{
                     flex: 1,
                     // backgroundColor: 'blue',
@@ -115,40 +150,37 @@ class LineupScreen extends Screen<Props, State> {
                     <View
 
                         style={{
-                        flex:1,
-                        // backgroundColor: 'pink',
-                        // height: '100%',
-                    }}>
+                            flex:1,
+                            // backgroundColor: 'pink',
+                            // height: '100%',
+                        }}>
                         <View onLayout={e => this.headerHeight = e.nativeEvent.layout.height}>
                             <LineupHeader lineup={lineup} navigator={this.props.navigator}/>
                             <LineupMedals navigator={this.props.navigator} lineup={lineup}/>
                             <FeedSeparator style={{marginTop: LINEUP_PADDING}}/>
+                            <View>
+                                <ListColumnsSelector
+                                    disabled={sc <= 0}
+                                    size={30}
+                                    initialIndex={this.state.renderType === 'stream' ? 1 : 0}
+                                    onTabPressed={index => this.setState({renderType: index === 0 ? 'grid' : 'stream'})}
+                                />
+                                <FeedSeparator/>
+                            </View>
+                            { this.state.mapDisplay && this.renderMap() }
                         </View>
-                        {this.state.mapDisplay ? this.renderMap() :
-                            <Feed
-                                key={"lineup-" + this.state.renderType}
-                                // decorateLoadMoreCall={(sections: any[], call: Call) => call.addQuery({id_after: _.get(_.last(data), 'saving.id')})}
-                                data={data}
-                                renderItem={this.state.renderType === 'grid' ? this.renderItemGrid.bind(this) : this.renderItemStream.bind(this)}
-                                fetchSrc={fetchSrc}
-                                hasMore={true}
-                                ListEmptyComponent={renderLinkInText(canAdd ? "empty_lineup_add" : "empty_lineup_cry", buildSearchItemUrl(this.lineupId()))}
-                                numColumns={numColumns}
-                                ItemSeparatorComponent={this.layout.ItemSeparatorComponent}
-                                style={{flex: 1, backgroundColor: Colors.white}}
-                                ListHeaderComponent={(isContentReady) => (
-                                    <View>
-                                        <ListColumnsSelector
-                                            disabled={sc <= 0}
-                                            size={30}
-                                            initialIndex={this.state.renderType === 'stream' ? 1 : 0}
-                                            onTabPressed={index => this.setState({renderType: index === 0 ? 'grid' : 'stream'})}
-                                        />
-                                        <FeedSeparator/>
-                                    </View>
-                                )}
-                            />
-                        }
+                        <Feed
+                            key={"lineup-" + this.state.renderType}
+                            // decorateLoadMoreCall={(sections: any[], call: Call) => call.addQuery({id_after: _.get(_.last(data), 'saving.id')})}
+                            data={data}
+                            renderItem={this.state.renderType === 'grid' ? this.renderItemGrid.bind(this) : this.renderItemStream.bind(this)}
+                            fetchSrc={fetchSrc}
+                            hasMore={true}
+                            ListEmptyComponent={renderLinkInText(canAdd ? "empty_lineup_add" : "empty_lineup_cry", buildSearchItemUrl(this.lineupId()))}
+                            numColumns={numColumns}
+                            ItemSeparatorComponent={this.layout.ItemSeparatorComponent}
+                            style={{flex: 1, backgroundColor: Colors.white}}
+                        />
 
                     </View>
                 </ScrollView>
@@ -156,11 +188,6 @@ class LineupScreen extends Screen<Props, State> {
             </View>
         );
     }
-
-    _onLayoutDidChange = e => {
-        const layout = e.nativeEvent.layout;
-        this.setState({  width: layout.width });
-    };
 
     renderMapButton() {
         return (
@@ -173,7 +200,7 @@ class LineupScreen extends Screen<Props, State> {
         )
     }
 
-    mapHeight = () => (this.containerHeight - this.headerHeight) || __DEVICE_WIDTH__
+    mapHeight = () => /*(this.containerHeight - this.headerHeight) || */__DEVICE_WIDTH__ / 1.618
 
     renderMap() {
         let points = this.props.savings.map(s => s.resource).filter(item => item.type === 'Place')
@@ -183,21 +210,12 @@ class LineupScreen extends Screen<Props, State> {
                 height: this.mapHeight(),
                 flex: 1}}>
                 <GMap
+                    setRef={ref => this.map = ref}
                     onItemPressed={(item) => seeActivityDetails(this.props.navigator, item)}
                     points={points}
                 />
             </View>
         )
-        // let points = this.props.savings.map(s => s.resource).filter(item => item.type === 'Place')
-        // return (
-        //     <View style={{width: "100%", height: "100%", flex: 1}}>
-        //         <GMap
-        //             onItemPressed={(item) => seeActivityDetails(this.props.navigator, item)}
-        //             points={points}
-        //         />
-        //         {this.renderMapButton()}
-        //     </View>
-        // )
     }
     lineupId() {
         return lineupId(this.props)
@@ -245,15 +263,18 @@ class LineupScreen extends Screen<Props, State> {
         const gridStyles = this.gridStyles
 
         if (item.type === 'plus_button') {
-            return renderSavingForGrid(
-                index,
-                gridStyles,
-                layout,
-                SearchItems.createAddLink(this.props.lineupId), (
-                    <View style={{width: layout.cellWidth, height: layout.cellHeight}}>
-                        <InnerPlus plusStyle={{backgroundColor: Colors.black, borderRadius: 4,}}/>
-                    </View>
-                ))
+            return (
+                <GTouchable
+                    key={`lineup.grid.${index}`}
+                    style={gridCellPositioningStyle(gridStyles, index, layout)}
+                    onPress={() => openLinkSafely(SearchItems.createAddLink(this.props.lineupId))}>
+                    {(
+                        <View style={{width: layout.cellWidth, height: layout.cellHeight}}>
+                            <InnerPlus plusStyle={{backgroundColor: Colors.black, borderRadius: 4,}}/>
+                        </View>
+                    )}
+                </GTouchable>
+            )
         }
 
         return this._savingForGridRenderer({item, index})

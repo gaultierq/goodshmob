@@ -7,7 +7,6 @@ import type {ms} from "../types"
 
 export type Props = {
     onPress: ?() => void,
-    noprotect?: boolean,
     onDoublePress?: () => void,
     deactivated?: boolean, //skip the gtouchable completely
     disabledStyle?: *,
@@ -33,7 +32,6 @@ export default class GTouchable extends Component<Props, State>  {
 
     render() {
         const {
-            noprotect,
             onPress,
             onDoublePress,
             deactivated,
@@ -47,7 +45,7 @@ export default class GTouchable extends Component<Props, State>  {
 
 
         let _onPress;
-        if (!noprotect || onDoublePress) {
+        if (onPress || onDoublePress) {
             _onPress = () => {
                 const now = Date.now();
                 const lastPress = this.lastPress;
