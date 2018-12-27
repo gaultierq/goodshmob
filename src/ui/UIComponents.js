@@ -145,10 +145,10 @@ export const LINEUP_SECTIONS = (navigator: RNNNavigator, dispatch: any) => (line
         data: [lineup],
         onPress: () => seeList(navigator, lineup),
         renderItem: ({item}: {item: Lineup}) => (
-            <GTouchable
-                onPress={() => seeList(navigator, lineup)}>
+            item && <GTouchable
+                onPress={() => seeList(navigator, item)}>
                 <LineupHorizontal
-                    lineup={lineup}
+                    lineup={item}
                     skipLineupTitle={true}
                 />
             </GTouchable>

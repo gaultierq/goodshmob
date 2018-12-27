@@ -16,7 +16,7 @@ import {GUserAction} from "../userRights"
 import {
     USER_SELECTOR,
     USER_SYNCED_LINEUPS_COUNT_SELECTOR,
-    USER_SYNCED_SAVINGS_COUNT_SELECTOR
+    USER_SYNCED_SAVINGS_COUNT_SELECTOR, userId
 } from "../../helpers/Selectors"
 import {UserHeader} from "../components/UserHeader"
 import {Colors} from "../colors"
@@ -61,7 +61,7 @@ export default class UserScreen extends Screen<Props, State> {
         Api.safeDispatchAction.call(
             this,
             this.props.dispatch,
-            userActions.getUser(this.props.userId).createActionDispatchee(userActionTypes.GET_USER),
+            userActions.getUser(userId(this.props)).createActionDispatchee(userActionTypes.GET_USER),
             'reqFetchUser'
         )
     }
@@ -69,26 +69,19 @@ export default class UserScreen extends Screen<Props, State> {
     render() {
         let {user, lineupsCount, savingsCount} = this.props
 
-        // this.props.navigator.setButtons(this.getButtons(this.props.action, this.props.userId))
-        // const lineupsCount = _.get(user, 'meta.lineupsCount')
-        // const savingsCount = _.get(user, 'meta.savingsCount')
-
-        let userId = this.props.userId;
-
+        let userId = user.id
         return (
             <MainBackground>
                 <UserLineups
                     displayName={"user feed"}
                     feedId={"user list"}
+                    style={{marginTop: 40,}}
                     userId={userId}
                     navigator={this.props.navigator}
                     ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
                     renderSectionHeader={({section}) => section.renderSectionHeader()}
-                    ListHeaderComponent={(
-                        <View style={{
-                            marginTop: 40,
-                            // backgroundColor: 'green',
-                        }}>
+                    ListHeaderComponent={(isContentReady) => (
+                        <View key={"user-header"}>
                             <UserHeader
                                 navigator={this.props.navigator}
                                 user={user}/>

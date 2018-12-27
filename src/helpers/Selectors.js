@@ -11,7 +11,7 @@ const logger = rootlogger.createLogger("selectors")
 
 let thrown = message => {throw message}
 export let lineupId = props => _.get(props, 'lineupId') || _.get(props, 'lineup.id')
-let userId = props => props.userId || _.get(props, 'user.id')
+export let userId = props => props.userId || _.get(props, 'user.id')
 let savingId = props => props.savingId || _.get(props, 'saving.id')
 export const lineupIdExtract = (state, props) => lineupId(props)
 const userIdExtract = (state, props) => userId(props)
@@ -340,6 +340,7 @@ export const USER_SELECTOR = () => createSelector(
         let res
         if (syncUser) res = createObj(syncUser)
         else if (propUser) res = propUser
+        else if (userId) res = {id: userId}
         counter(`USER_SELECTOR.${userId}`)
         return res
     }

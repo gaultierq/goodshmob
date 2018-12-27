@@ -125,7 +125,7 @@ export default class MoveInScreen extends Screen<Props, State> {
 }
 
 export function moveSaving(saving: Saving, lineupId: Id) {
-    if (!saving || !lineupId) throw "invalid params";
+    if (!saving || !lineupId) throw "invalid params 3";
 
     const savingId = saving.id;
     const originalLineupId = saving.target.id;

@@ -147,19 +147,20 @@ export type Props1 = {
 }
 export const LineupH1 = connect()((props: Props1) => {
     const {lineup, dispatch, navigator, ...attr} = props;
+    if (!lineup) return null
     return <GTouchable disabled={!!lineup.pending} onPress={()=> seeList(navigator, lineup)}>
 
         <LineupHorizontal
             lineup={lineup}
             renderSaving={saving => (
-                <GTouchable
+                saving && <GTouchable
                     disabled={!!saving.pending}
                     onPress={() => seeActivityDetails(navigator, saving)}
                     onLongPress={saving.pending ? null : ()=> {
                         displaySavingActions(navigator, props.dispatch, saving.id, saving.type)
                     }}
                 >
-                    <LineupCellSaving item={saving.resource} />
+                    <LineupCellSaving item={saving && saving.resource} />
                 </GTouchable>
             )}
             renderMenuButton={(actions) => renderLineupMenu(navigator, dispatch, lineup, actions)}

@@ -31,7 +31,7 @@ export type Props = FeedProps & {
     data?: any,
     onCancel?: ()=>void,
     sectionMaker?: (lineups: List<List>) => Array<*>,
-    ListHeaderComponent?: Node,
+    // ListHeaderComponent?: Node,
     navigator: *,
     listRef?: any => void | string
 };
@@ -71,7 +71,6 @@ export class LineupListScreen extends Screen<Props, State> {
 
         let lists = this.props.lineups
 
-
         let fetchSrc =  !_.isEmpty(lists) ? {
             callFactory: () => userActions.fetchLineups(userId),
             action: userActionTypes.FETCH_LINEUPS,
@@ -80,8 +79,6 @@ export class LineupListScreen extends Screen<Props, State> {
             callFactory: () => userActions.getUserAndTheirLists(userId),
             action: userActionTypes.GET_USER_W_LISTS
         }
-
-
 
         return (
             <Feed
@@ -97,6 +94,7 @@ export class LineupListScreen extends Screen<Props, State> {
     }
 
     _renderItem = ({item}) => {
+        if (!item) return null
         return this.props.renderItem(item);
     }
 }

@@ -88,16 +88,7 @@ class _NavManager implements NavManager {
         if (main === 'openmodal' ) {
             let {passProps, ...query} = url.query
             modal = query
-            if (passProps) {
-                try {
-                    passProps = JSON.parse(passProps)
-                }
-                catch(e) {
-                    console.error(e)
-                    passProps = null
-                }
-                modal.passProps = passProps
-            }
+            modal.passProps = this.parsePassProps(passProps)
         }
 
         //after RNN v2, try to see if there is a static "switchToTab"
@@ -156,10 +147,12 @@ class _NavManager implements NavManager {
                 }
             }
             else {
+                let passProps = this.parsePassProps(_.get(url.query, 'passProps')) || {}
                 modal = {
                     screen: 'goodsh.UserScreen', // unique ID registered with Navigation.registerScreen
                     passProps: {
                         userId: id,
+                        ...passProps
                     },
                 }
             }
@@ -200,6 +193,17 @@ class _NavManager implements NavManager {
             }
         }
         return {modal, handler, tab}
+    }
+
+    parsePassProps(passProps: string) {
+        if (_.isEmpty(passProps)) return null
+        try {
+            return JSON.parse(passProps)
+        }
+        catch (e) {
+            console.error(e)
+        }
+        return null
     }
 
 //temporary: should be provided by the backend

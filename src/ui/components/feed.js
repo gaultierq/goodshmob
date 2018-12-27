@@ -15,7 +15,6 @@ import {
     View
 } from 'react-native'
 import {connect} from "react-redux"
-import {assertUnique} from "../../helpers/DataUtils"
 import ApiAction from "../../helpers/ApiAction"
 import * as Api from "../../managers/Api"
 import {Call, TRIGGER_USER_DIRECT_ACTION, TRIGGER_USER_INDIRECT_ACTION} from "../../managers/Api"
@@ -27,10 +26,8 @@ import type {ScreenVisibility} from "./Screen"
 import {getLanguages} from 'react-native-i18n'
 import {RequestManager} from "../../managers/request"
 import Config from "react-native-config"
-import {FullScreenLoader, renderTextAndDots} from "../UIComponents"
+import {FullScreenLoader} from "../UIComponents"
 import BugsnagManager from "../../managers/BugsnagManager"
-import {Colors} from "../colors"
-import Spinner from "react-native-spinkit"
 import {Loader} from "../Loader"
 
 export type FeedSource = {
@@ -57,6 +54,7 @@ export type Props = {
     displayName?: string,
     doNotDisplayFetchMoreLoader?:boolean,
     listRef ?:(any => void | string),
+    feedRef ?:(any => void | string),
     doNotDisplayFetchMoreLoader?: boolean,
     decorateLoadMoreCall?: (sections: any[], call: Call) => Call,
     getFlatItems?: () => any[],
@@ -132,7 +130,7 @@ export default class Feed extends Component<Props, State>  {
             isFetchingHead: 'idle',
             isFetchingMore: 'idle',
         }
-
+        if (props.feedRef) props.feedRef(this)
         this.createdAt = Date.now();
         this.fetchHead();
 
@@ -275,17 +273,17 @@ export default class Feed extends Component<Props, State>  {
         const isContentReady: boolean = fetchingHead !== 'sending' && fetchingHead !== 'idle' || hasItems
 
 
-        const header: boolean => Node = _.isFunction(ListHeaderComponent) ? ListHeaderComponent : icr => icr && ListHeaderComponent
+
 
         let params =  {
             ref: listRef,
             renderItem,
             key: "feed-list",
             refreshControl: this.renderRefreshControl(),
-            onEndReached: this.onEndReached.bind(this),
+            onEndReached: this.props.onEndReached || this.onEndReached,
             onEndReachedThreshold: 0.1,
             style: style1,
-            ListHeaderComponent: header(isContentReady),
+            ListHeaderComponent: this._ListHeaderComponent(isContentReady),
             ListEmptyComponent: empty,
             ListFooterComponent: isContentReady && this.renderFetchMoreLoader(ListFooterComponent),
             renderSectionHeader: isContentReady && renderSectionHeader,
@@ -298,6 +296,28 @@ export default class Feed extends Component<Props, State>  {
 
         if (sections) return <SectionList sections={items} {...params} />
         else return <FlatList data={items} {...params} />
+    }
+
+    _ListHeaderComponent = (isContentReady: boolean) => {
+        return Feed.idk(this.props.ListHeaderComponent, isContentReady)
+    }
+
+    static idk(ListHeaderComponent, isContentReady) {
+        const headerTransform = LHC => _.isFunction(LHC) ? LHC : icr => icr && LHC
+
+        let result
+        if (!ListHeaderComponent) result = null
+        else if (_.isArray(ListHeaderComponent)) {
+            result = (
+                <View>
+                    {ListHeaderComponent.map(LHC => Feed.idk(LHC, isContentReady))}
+                </View>
+            )
+        }
+        else {
+            result = headerTransform(ListHeaderComponent)(isContentReady)
+        }
+        return result
     }
 
     isVisible() {
@@ -396,9 +416,12 @@ export default class Feed extends Component<Props, State>  {
         }
     }
 
-    onEndReached() {
+    onEndReached = () => {
         if (this.gentleFetchMore()) {
             this.logger.debug("onEndReached => fetching more");
+        }
+        else {
+            this.logger.debug("onEndReached => not fetching");
         }
     }
 
@@ -441,7 +464,7 @@ export default class Feed extends Component<Props, State>  {
 
             //if recent (5min) result with no data, do not refetch now
             {
-                let lastEmpty = _.last(events)
+                let lastEmpty = _.last(events.filter(e=> _.get(e, 'options.emptyResult')));
 
                 if (lastEmpty && Date.now() < lastEmpty.date + LAST_EMPTY_RESULT_WAIT_MS) {
                     return "debounced: recent empty";
@@ -449,8 +472,7 @@ export default class Feed extends Component<Props, State>  {
             }
             //if super recent (5sec), do not refetch now
             {
-                let last = _.last(events.filter(e=> _.get(e, 'options.emptyResult')));
-
+                let last = _.last(events)
 
                 if (last && Date.now() < last.date + LAST_WAIT_MS) {
                     return "debounced: recent too recent";
@@ -592,7 +614,7 @@ export default class Feed extends Component<Props, State>  {
                     !this.props.doNotDisplayFetchMoreLoader && (
                         <Loader
                             size={50}
-                            style={{margin: LINEUP_PADDING, alignSelf: 'center'}} />
+                            style={{margin: LINEUP_PADDING * 2, alignSelf: 'center'}} />
                     )
                 }
                 {

@@ -28,7 +28,7 @@ export class UserRights {
     pending: any
 
     constructor(user: User, pending?: any) {
-        if (!user) throw "invalid params"
+        if (!user) throw "invalid params 1"
         this.user = user
         this.pending = pending
     }
@@ -50,9 +50,11 @@ export class UserRights {
 }
 
 export function getUserActions(user: User, pending?: any): GUserAction[] {
+    if (!user) return []
     let rights = new UserRights(user, pending)
     return GUserActions.filter(a => rights.canExec(a))
 }
 export function canExecUserAction(action: GUserAction, user: User): boolean {
+    if (!user) return false
     return new UserRights(user).canExec(action)
 }

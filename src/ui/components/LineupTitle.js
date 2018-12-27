@@ -63,6 +63,7 @@ export class LineupTitlePure extends Component<Props, State> {
 
         let {lineup, style, children, author} = this.props
 
+        if (!lineup) return null
 
         return (
             <GoodshContext.Consumer>

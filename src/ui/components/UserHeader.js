@@ -64,7 +64,6 @@ export class UserHeader extends Component<Props, State> {
     render() {
         let {user, actions, friendsCount} = this.props
 
-
         let button = this.getButton(actions, user)
 
         const newVar = styles.medal

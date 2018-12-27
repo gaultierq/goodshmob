@@ -9,7 +9,7 @@ import {UNSAVE} from "../lineup/actionTypes"
 
 
 export function fetchActivity(activityId: Id, activityType: ActivityType, options?:any = {}) {
-    if (!activityId || !activityType) throw "invalid params";
+    if (!activityId || !activityType) throw "invalid params 4";
     let type = sanitizeActivityType(activityType);
 
     let {include} = options;

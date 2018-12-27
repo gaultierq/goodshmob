@@ -42,8 +42,7 @@ export class LineupRights {
     lineup: Lineup
     pending: ?any
 
-    constructor(lineup: Lineup, pending?: any) {
-        if (!lineup) throw "invalid params"
+    constructor(lineup: Lineup = {}, pending?: any) {
         this.lineup = lineup
         this.pending = pending
     }

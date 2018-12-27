@@ -58,25 +58,19 @@ export default class UserLineups extends Screen<Props, State> {
             if (this.props.listRef) this.props.listRef(ref)
         }
         return (
-            <View style={{flex:1}}>
-                <View style={{flex:1}}>
-
-                    <LineupListScreen
-                        onLineupPressed={(lineup) => seeList(navigator, lineup)}
-                        onSavingPressed={(saving) => seeActivityDetails(navigator, saving)}
-                        scrollUpOnBack={super.isVisible() ? () => false : null}
-                        visibility={'visible'}
-                        // renderSectionHeader={({section}) => renderSectionHeader(section)}
-                        renderSectionFooter={()=> <View style={{height: 25, width: "100%"}} />}
-                        ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
-                        filter={this.filter()}
-                        {...this.props}
-                        listRef={listRef}
-                        ListHeaderComponent={<View>{this.props.ListHeaderComponent}{this.renderFilter()}</View>}
-                    />
-                    {/*{_.isEmpty(this.state.filter) && this.state.isFilterFocused && this.renderSearchOverlay()}*/}
-                </View>
-            </View>
+            <LineupListScreen
+                onLineupPressed={(lineup) => seeList(navigator, lineup)}
+                onSavingPressed={(saving) => seeActivityDetails(navigator, saving)}
+                scrollUpOnBack={super.isVisible() ? () => false : null}
+                visibility={'visible'}
+                // renderSectionHeader={({section}) => renderSectionHeader(section)}
+                // renderSectionFooter={()=> <View style={{height: 25, width: "100%"}} />}
+                // ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
+                filter={this.filter()}
+                {...this.props}
+                listRef={listRef}
+                ListHeaderComponent={[this.props.ListHeaderComponent, this.renderFilter()]}
+            />
         );
     }
 

@@ -60,6 +60,8 @@ type State = {
 }
 
 
+
+
 @logged
 @connect(() => {
     const lineup = LINEUP_SELECTOR()
@@ -83,6 +85,8 @@ class LineupScreen extends Screen<Props, State> {
     layout: any = calcGridLayout(__DEVICE_WIDTH__, 3)
 
     gridStyles: any = obtainGridStyles(this.layout)
+
+    feedRef: any
 
     _savingForGridRenderer = savingForGridRenderer2(
         {width: __DEVICE_WIDTH__, columns: 3},
@@ -142,11 +146,18 @@ class LineupScreen extends Screen<Props, State> {
                     // backgroundColor: 'orange',
                     height: '100%',
                 }}>
-                <ScrollView style={{
-                    flex: 1,
-                    // backgroundColor: 'blue',
-                    paddingTop: 40,
-                }}>
+                <ScrollView
+                    // onEndReached={this._onEndReached}
+                    onScroll={({nativeEvent}) => {
+                        if (isCloseToBottom(nativeEvent)) {
+                            this._onEndReached()
+                        }
+                    }}
+                    scrollEventThrottle={100}
+                    contentContainerStyle={{
+                        paddingTop: 40,
+                    }}
+                >
                     <View
 
                         style={{
@@ -170,8 +181,8 @@ class LineupScreen extends Screen<Props, State> {
                             { this.state.mapDisplay && this.renderMap() }
                         </View>
                         <Feed
+                            feedRef={ref => this.feedRef = ref}
                             key={"lineup-" + this.state.renderType}
-                            // decorateLoadMoreCall={(sections: any[], call: Call) => call.addQuery({id_after: _.get(_.last(data), 'saving.id')})}
                             data={data}
                             renderItem={this.state.renderType === 'grid' ? this.renderItemGrid.bind(this) : this.renderItemStream.bind(this)}
                             fetchSrc={fetchSrc}
@@ -180,6 +191,8 @@ class LineupScreen extends Screen<Props, State> {
                             numColumns={numColumns}
                             ItemSeparatorComponent={this.layout.ItemSeparatorComponent}
                             style={{flex: 1, backgroundColor: Colors.white}}
+                            // listview in scrollview is not happy with the onEndReached event
+                            onEndReached={() => null}
                         />
 
                     </View>
@@ -187,6 +200,11 @@ class LineupScreen extends Screen<Props, State> {
                 {_.some(data, s => _.get(s, 'resource.type') === 'Place') && this.renderMapButton()}
             </View>
         );
+    }
+
+    _onEndReached = () => {
+        console.debug("lineup scrollview: _onEndReached")
+        return this.feedRef && this.feedRef.onEndReached()
     }
 
     renderMapButton() {
@@ -334,3 +352,9 @@ let screen = LineupScreen;
 export {reducer, screen, actions};
 
 
+
+const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingToBottom = 20;
+    return layoutMeasurement.height + contentOffset.y >=
+        contentSize.height - paddingToBottom;
+};

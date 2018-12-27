@@ -5,19 +5,21 @@ import type {Id, Lineup, User} from "../types"
 import {Linking} from "react-native"
 
 
+let passPropsString = (passProps, sep = "?") => _.isEmpty(passProps) ? "" : `${sep}passProps=${encodeURIComponent(JSON.stringify(passProps))}`
+
 export function createOpenModalLink(screen:string , title: ?string, passProps?: any) {
     let result = `${Config.GOODSH_PROTOCOL_SCHEME}://it/openmodal?screen=${screen}`
     if (title) {
         result = result + `&title=${encodeURIComponent(title)}`
     }
     if (passProps) {
-        result = result + "&passProps=" + encodeURIComponent(JSON.stringify(passProps))
+        result = result + passPropsString(passProps, "&")
     }
     return result
 }
 
 export function buildUserUrl(user: User): string {
-    return `${Config.GOODSH_PROTOCOL_SCHEME}://it/users/${user.id}`
+    return `${Config.GOODSH_PROTOCOL_SCHEME}://it/users/${user.id}${passPropsString(_.pick(user, ['firstName', 'lastName']))}`
 }
 
 export function buildLineupUrl(lineup: Lineup): string {

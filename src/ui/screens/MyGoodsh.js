@@ -137,6 +137,7 @@ export default class MyGoodsh extends Screen<Props, State> {
     }
 
     renderLineup(item: Lineup, index: number, navigator: RNNNavigator, targetRef?: any) {
+        if (!item) return null
         return (
             <LineupH1
                 lineup={item} navigator={navigator}
