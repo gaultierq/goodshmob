@@ -81,7 +81,7 @@ export function seeList(navigator: RNNNavigator, lineup: Lineup) {
     navigator.showModal({
         screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
         passProps: {
-            lineupId: lineup.id,
+            lineup
         },
         navigatorButtons: CANCELABLE_MODAL
     });

@@ -139,7 +139,7 @@ export function fetchLineup(lineupId: string): Call {
     return new Api.Call().withMethod('GET')
         .withRoute(`lists/${lineupId}`)
         .addQuery({
-            include: "savings,savings.user,savings.resource"
+            include: "user,savings,savings.user,savings.resource"
         });
 }
 

@@ -149,7 +149,11 @@ export const lineupScreen = {
         // lineupId: 'a48a269f-a3b5-4018-8596-e2f6c723c1ef', // titre pourri not qg local
         // lineupId: 'f3d6912e-6c21-4534-9689-6749a06c2b94', // titre pourri
         // lineupId: '37824893-5d63-44cb-bbb5-46c8bc954bb5', //local mine
-        lineupId: '37e67b05-c86c-4aeb-b3af-bf1c34862cd0', //a benoit
+        // lineupId: '37e67b05-c86c-4aeb-b3af-bf1c34862cd0', //a benoit
+        lineup: {
+            id: '37e67b05-c86c-4aeb-b3af-bf1c34862cd0',
+            name: 'dummy name'
+        }
         // mapDisplay: true,
     }
 };

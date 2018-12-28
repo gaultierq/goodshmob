@@ -29,7 +29,7 @@ import {
     LINEUP_SAVING_COUNT_SELECTOR,
     LINEUP_SELECTOR,
     lineupId,
-    LIST_SAVINGS_SELECTOR
+    LIST_SAVINGS_SELECTOR, userId
 } from "../../helpers/Selectors"
 import {
     calcGridLayout,
@@ -42,6 +42,7 @@ import ActionButton from "react-native-action-button"
 import MaterialIcon from "react-native-vector-icons/MaterialIcons"
 import GTouchable from "../GTouchable"
 import {createDetailsLink} from "../activity/activityDetail"
+import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
 
 type Props = {
     lineupId: string,
@@ -82,38 +83,20 @@ class LineupScreen extends Screen<Props, State> {
 
     static navigatorButtons = CANCELABLE_MODAL2
 
+    static defaultProps = {
+        renderType: 'grid',
+        mapDisplay: false,
+    }
+
     layout: any = calcGridLayout(__DEVICE_WIDTH__, 3)
 
     gridStyles: any = obtainGridStyles(this.layout)
 
     feedRef: any
 
-    _savingForGridRenderer = savingForGridRenderer2(
-        {width: __DEVICE_WIDTH__, columns: 3},
-        item => this._makeOnItemPressed(item)
-    )
-
-    _makeOnItemPressed = item => {
-        if (this.state.mapDisplay) {
-            let desc = _.get(item, 'resource.description')
-            const coordinate = _.pick(desc, ['latitude', 'longitude'])
-            if (_.isEmpty(coordinate)) return null
-
-            return () => this.map && this.map.animateToCoordinate(coordinate)
-        }
-        else {
-            return () => openLinkSafely(createDetailsLink(item.id, item.type))
-        }
-    }
-
     containerHeight:number
     headerHeight: number
     map: any
-
-    static defaultProps = {
-        renderType: 'grid',
-        mapDisplay: false,
-    }
 
     constructor(props: Props) {
         super(props)
@@ -122,6 +105,10 @@ class LineupScreen extends Screen<Props, State> {
             renderType: props.renderType,
             mapDisplay: props.mapDisplay,
         }
+    }
+
+    componentDidMount() {
+        this.props.dispatch(fetchLineup(this.props.lineup.id).createActionDispatchee(FETCH_LINEUP))
     }
 
     render() {
@@ -202,6 +189,24 @@ class LineupScreen extends Screen<Props, State> {
         );
     }
 
+    _savingForGridRenderer = savingForGridRenderer2(
+        {width: __DEVICE_WIDTH__, columns: 3},
+        item => this._makeOnItemPressed(item)
+    )
+
+    _makeOnItemPressed = item => {
+        if (this.state.mapDisplay) {
+            let desc = _.get(item, 'resource.description')
+            const coordinate = _.pick(desc, ['latitude', 'longitude'])
+            if (_.isEmpty(coordinate)) return null
+
+            return () => this.map && this.map.animateToCoordinate(coordinate)
+        }
+        else {
+            return () => openLinkSafely(createDetailsLink(item.id, item.type))
+        }
+    }
+
     _onEndReached = () => {
         console.debug("lineup scrollview: _onEndReached")
         return this.feedRef && this.feedRef.onEndReached()
@@ -242,18 +247,19 @@ class LineupScreen extends Screen<Props, State> {
 
     getFetchSrc(lineup: Lineup) {
         let fetchSrc
-        if (lineup && lineup.savings) {
+        const listId = lineup.id
+        if (lineup && !_.isEmpty(lineup.savings)) {
             fetchSrc = {
-                callFactory: () => actions.fetchSavings(this.props.lineupId),
+                callFactory: () => actions.fetchSavings(listId),
                 action: FETCH_SAVINGS,
                 options: {listId: this.props.lineupId}
             }
         }
         else {
             fetchSrc = {
-                callFactory: () => fetchLineup(this.props.lineupId),
+                callFactory: () => fetchLineup(listId),
                 action: FETCH_LINEUP,
-                options: {listId: this.props.lineupId}
+                options: {listId: listId}
             }
         }
         return fetchSrc
@@ -299,14 +305,6 @@ class LineupScreen extends Screen<Props, State> {
     }
 
 }
-
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: Colors.white,
-    },
-})
 
 const actions = {
 

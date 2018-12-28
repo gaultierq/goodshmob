@@ -114,6 +114,7 @@ class _NavManager implements NavManager {
 
         }
         if (main === 'lists') {
+            let {lineupName, ...passProps} = this.parsePassProps(_.get(url.query, 'passProps')) || {}
             let id = _.nth(parts, 2)
             if (!isId(id)) {}
             else if (url.query && url.query.origin === 'long_press') {
@@ -126,7 +127,12 @@ class _NavManager implements NavManager {
                 modal = {
                     screen: 'goodsh.LineupScreen', // unique ID registered with Navigation.registerScreen
                     passProps: {
-                        lineupId: id,
+                        lineup: {
+                            id,
+                            lineupName,
+                        },
+                        ...passProps
+
                     },
                 }
 

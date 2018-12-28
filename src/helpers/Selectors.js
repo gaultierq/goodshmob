@@ -50,12 +50,12 @@ export function createObj(source: any) {
 
 export const LINEUP_SELECTOR = () => createSelector(
     [
-        // (state, props) => props.lineup,
+        (state, props) => props.lineup || props.lineupId && {id: props.lineupId},
         (state, props) => _.get(state, `data.lists.${lineupId(props)}`),
         (state, props) => _.head(state.pending[CREATE_LINEUP], pending => pending.id === lineupId(props)),
     ],
     (
-        // propLineup, // lineup provided in props
+        propLineup, // lineup provided in props
         syncList, // lineup synchronized in data
         rawPendingList, // lineup in pending
     ) => {
@@ -70,8 +70,7 @@ export const LINEUP_SELECTOR = () => createSelector(
             lineup = {id: rawPendingList.id, name: rawPendingList.payload.listName, savings: []}
         }
         else {
-            // lineup = propLineup
-            lineup = null
+            lineup = propLineup
         }
         counter(`LINEUP_SELECTOR.${_.get(lineup,'id')}`)
         return lineup

@@ -23,7 +23,9 @@ export function buildUserUrl(user: User): string {
 }
 
 export function buildLineupUrl(lineup: Lineup): string {
-    return `${Config.GOODSH_PROTOCOL_SCHEME}://it/lists/${lineup.id}`
+    let name = _.get(lineup, 'name')
+    let passProps = name && {lineupName: name}
+    return `${Config.GOODSH_PROTOCOL_SCHEME}://it/lists/${lineup.id}${passPropsString(passProps)}`
 }
 
 export function buildSearchItemUrl(defaultLineupId?: Id) {
