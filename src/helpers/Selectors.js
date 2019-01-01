@@ -183,8 +183,12 @@ export const LIST_SAVINGS_SELECTOR = () => {
             savingsSelector,
             (state, props) => {
                 let savings = savingsSelector(state, props)
-                let items = savings.map(s => s.resource)
-                return items.map(({id, type}) => _.get(state, `data.${type}.${id}`))
+                let items = savings.map(s => s && s.resource)
+                return items.map(s => {
+                    if (!s) return null
+                    let {id, type} = s
+                    return _.get(state, `data.${type}.${id}`)
+                })
             },
             pendingSelector,
         ],
