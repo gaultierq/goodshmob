@@ -7,9 +7,9 @@ import type {SearchEngine, SearchState} from "../../../helpers/SearchHelper"
 import {
     __createSearchItemSearcher,
     PERMISSION_EMPTY_INPUT,
-    PERMISSION_EMPTY_POSITION, renderEmptyResults
+    PERMISSION_EMPTY_POSITION
 } from "../../../helpers/SearchHelper"
-import {LINEUP_PADDING, NAV_BACKGROUND_COLOR} from "../../UIStyles"
+import {LINEUP_PADDING} from "../../UIStyles"
 import {renderAskPermission, SearchPlacesOption} from "./searchplacesoption"
 import GSearchBar2 from "../../components/GSearchBar2"
 import SearchMotor from "../searchMotor"
@@ -20,15 +20,8 @@ import {Colors} from "../../colors"
 import ActionButton from "react-native-action-button"
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import BlankSearch, {renderBlankIcon} from "../../../ui/components/BlankSearch"
-import GMap from "../../components/GMap"
 import GTouchable from "../../GTouchable"
 import ItemCell from "../../components/ItemCell"
-import {
-    calcGridLayout,
-    gridCellPositioningStyle,
-    obtainGridStyles,
-    renderItemGridImage
-} from "../../../helpers/GridHelper"
 import SearchMap from "../../components/SearchMap"
 
 export type SearchItemsPlacesOptions = SearchItemsGenOptions & {
@@ -50,9 +43,6 @@ type SMP = {
 
 export default class SearchPlaces extends React.Component<SMP, SMS> {
 
-    layout: any = calcGridLayout(__DEVICE_WIDTH__, 3)
-
-    gridStyles: any = obtainGridStyles(this.layout)
 
     constructor(props: SMP) {
         super(props)
@@ -141,28 +131,15 @@ export default class SearchPlaces extends React.Component<SMP, SMS> {
             />
         )
 
-        return (
-            <SearchListResults
-                numColumns={3}
-                renderItem={({item, index}) => (
-                    <GTouchable
-                        style={[gridCellPositioningStyle(this.gridStyles, index, this.layout)]}
-                        onPress={()=> this.props.onItemSelected(item)
-                        }>
-                        {renderItemGridImage(item, this.gridStyles)}
-                    </GTouchable>
-                )}
-                searchState={state}
-                // renderItem={this._renderItem}
-            />
-        )
+        return <SearchListResults searchState={state} renderItem={this._renderItem}
+        />
     }
-    //
-    // _renderItem = ({item}) => (
-    //     <GTouchable onPress={() => this.props.onItemSelected(item)}>
-    //         <ItemCell item={item}/>
-    //     </GTouchable>
-    // )
+
+    _renderItem = ({item}) => (
+        <GTouchable onPress={() => this.props.onItemSelected(item)}>
+            <ItemCell item={item}/>
+        </GTouchable>
+    )
 }
 
 //TODO: factorize
