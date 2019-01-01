@@ -14,7 +14,7 @@ import OnBoardingManager from "../managers/OnBoardingManager"
 import {reducer as followed_lists} from "../ui/screens/MyInterests"
 import {reducer as popular_items} from "../ui/screens/popularitems"
 import {reducer as contacts} from "../ui/screens/contact_list"
-import {reducer as stream} from "../managers/Stream"
+import {reducer as last_active_users} from "../ui/screens/last_active_users"
 
 
 import app from './app'
@@ -45,6 +45,7 @@ export {
     app,
     data,
     network,
+    last_active_users,
     auth,
     stat,
     device,

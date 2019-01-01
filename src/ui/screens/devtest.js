@@ -12,6 +12,7 @@ import GButton from "../components/GButton"
 import {renderTip} from "./home"
 import {Colors} from "../colors"
 import Stream from "../../managers/Stream"
+import LastActiveUsers from "./last_active_users"
 
 type Props = {
 };
@@ -126,6 +127,8 @@ export default class TestScreen extends Component<Props, State> {
 
     }
 
+
+
     componentDidMount() {
         this.readFeed()
     }
@@ -147,5 +150,9 @@ export default class TestScreen extends Component<Props, State> {
 
             </ScrollView>
         )
+    }
+
+    render() {
+        return <LastActiveUsers />
     }
 }
