@@ -15,6 +15,7 @@ import {followLineupPending, unfollowLineupPending} from "./actions"
 import GTouchable from "../GTouchable"
 import rnTextSize, {type TSFontSpecs, type TSMeasureResult} from 'react-native-text-size'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import Feather from 'react-native-vector-icons/Feather'
 
 
 const BACK_BUTTON_WIDTH = 40
@@ -284,7 +285,9 @@ export class LineupHeader extends Component<Props, State> {
                             marginLeft: LINEUP_PADDING / 2,
                         }}
                     >
-                        <MaterialIcons style={{}} name={__IS_IOS__ ? 'share' : 'share'} size={24} color={Colors.grey}/>
+
+                        {__IS_IOS__ && <Feather name={'share'} size={24} color={Colors.grey}/>}
+                        {!__IS_IOS__ && <MaterialIcons name={'share'} size={24} color={Colors.grey}/>}
 
                     </GTouchable>)
             }
