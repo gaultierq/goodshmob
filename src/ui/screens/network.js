@@ -34,6 +34,8 @@ import AskInput from "../components/AskInput"
 import GTouchable from "../GTouchable"
 import Config from "react-native-config"
 import {Tip} from "../components/Tip"
+import {ScreenVisibilityListener as RNNScreenVisibilityListener} from "react-native-navigation"
+import BugsnagManager from "../../managers/BugsnagManager"
 
 type Props = NavigableProps;
 
@@ -88,6 +90,7 @@ class NetworkScreen extends Screen<Props, State> {
     feed: any
 
     lastRenderedLength: ?number
+    screenVisibilityListener
 
     constructor(props: Props){
         super(props);
@@ -96,6 +99,16 @@ class NetworkScreen extends Screen<Props, State> {
 
     componentDidMount() {
         this.refreshActivitiesCount()
+
+        //FIXME: hack: the counter was not working on the release candidate
+        this.screenVisibilityListener = new RNNScreenVisibilityListener({
+            didAppear: () => {
+                this.props.navigator.setTabBadge({
+                    tabIndex: 2,
+                    badge: 0,
+                });
+            }
+        });
     }
 
     async refreshActivitiesCount() {
