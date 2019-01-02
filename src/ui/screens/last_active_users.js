@@ -8,7 +8,7 @@ import {buildData} from "../../helpers/DataUtils"
 import Feed from "../components/feed"
 import {Avatar} from "react-native-elements"
 import {GAvatar} from "../GAvatar"
-import {reduceList2} from "../../managers/Api"
+import {Call, reduceList2} from "../../managers/Api"
 import {FETCH_LAST_ACTIVE_USERS, fetchLastActiveUsers} from "../networkActions"
 import {Colors} from "../colors"
 import {View} from "react-native"
@@ -50,8 +50,9 @@ export default class LastActiveUsers extends Component<Props, State> {
                         options: {userId},
                         // onFetch: this.onFetch.bind(this)
                     }}
-                    // decorateLoadMoreCall={(sections: any[], call: Call) => call.addQuery({id_lt: _.last(sections).id})}
                     style={{backgroundColor: Colors.greying}}
+                    hasMore={false}
+
                     {...attr}
 
                 />
