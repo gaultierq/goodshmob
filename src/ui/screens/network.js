@@ -105,10 +105,11 @@ class NetworkScreen extends Screen<Props, State> {
             didAppear: () => {
                 this.props.navigator.setTabBadge({
                     tabIndex: 2,
-                    badge: 0,
+                    badge: null,
                 });
             }
         });
+        this.screenVisibilityListener.register()
     }
 
     async refreshActivitiesCount() {
