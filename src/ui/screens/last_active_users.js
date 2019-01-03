@@ -21,7 +21,7 @@ const logger = rootlogger.createLogger('last_active_users')
     last_active_users: state.last_active_users,
     data: state.data,
 }))
-export default class LastActiveUsers extends Component<{}, {}> {
+export default class LastActiveUsers extends Component<{style?: any}, {}> {
 
     render() {
         const {data, last_active_users, ...attr} = this.props
@@ -30,11 +30,11 @@ export default class LastActiveUsers extends Component<{}, {}> {
         let items = lui.list.map(u => buildData(data, 'users', u.id))
 
         return (
-            <View style={{flex:1}}>
+            <View style={[{flex:1}, this.props.style]}>
                 <Feed
                     data={items}
                     displayName={"last_active_users"}
-                    renderItem={({item, index}) => <GAvatar person={item} size={50} />}
+                    renderItem={({item, index}) => <GAvatar person={item} size={50} seeable />}
                     fetchSrc={{
                         callFactory: () => fetchLastActiveUsers(userId),
                         // useLinks: true,
@@ -46,11 +46,6 @@ export default class LastActiveUsers extends Component<{}, {}> {
                     hasMore={false}
                     horizontal
                     ItemSeparatorComponent={()=> <View style={{margin: 4}} />}
-                    ListHeaderComponent={(
-                        <GTouchable onPress={() => {}}>
-                            <Image source={require('../../img2/add-user.png')} resizeMode="contain"/>
-                        </GTouchable>
-                    )}
                     {...attr}
 
                 />

@@ -201,9 +201,11 @@ export const LIST_SAVINGS_SELECTOR = () => {
         ) => {
             if (propsSaving) return propsSaving
             let savings = pendingSave.map(pending => savingFromPending(pending))
-
+            syncedSavings = _.filter(syncedSavings)
             syncedSavings.forEach((s, index) => {
-                s.resource = createObj(syncedItems[index]) || s.resource
+                if (s) {
+                    s.resource = createObj(syncedItems[index]) || s.resource
+                }
             })
             savings = savings.concat(syncedSavings)
 
