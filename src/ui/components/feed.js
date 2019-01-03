@@ -493,6 +493,7 @@ export default class Feed extends Component<Props, State>  {
     }
 
     fetchIt(options?: FeedFetchOption = {}) {
+        debugger
         let {loadMore, trigger, drop} = options;
         let requestName = loadMore ? 'isFetchingMore' : 'isFetchingHead';
 
@@ -635,7 +636,7 @@ export default class Feed extends Component<Props, State>  {
     }
 
     hasMore() {
-        return (typeof this.props.hasMore !== 'undefined' && this.props.hasMore) || true;
+        return typeof this.props.hasMore !== 'undefined' ? this.props.hasMore : true
     }
 
 
