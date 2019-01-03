@@ -36,6 +36,7 @@ import Config from "react-native-config"
 import {Tip} from "../components/Tip"
 import {ScreenVisibilityListener as RNNScreenVisibilityListener} from "react-native-navigation"
 import BugsnagManager from "../../managers/BugsnagManager"
+import LastActiveUsers from "./last_active_users"
 
 type Props = NavigableProps;
 
@@ -215,7 +216,7 @@ class NetworkScreen extends Screen<Props, State> {
                     sections={sections}
                     renderItem={({item, index}) => this.renderItem(item, index)}
                     renderSectionFooter={({section}) => this.renderSectionFooter(section)}
-                    ListHeaderComponent={fc !== 0 && this.renderAskInput()}
+                    ListHeaderComponent={<LastActiveUsers />}
                     listRef={ref => this.feed = ref}
                     fetchSrc={{
                         callFactory: fetchMyNetwork,
@@ -264,7 +265,7 @@ class NetworkScreen extends Screen<Props, State> {
                         />
                     }
                     {...attr}
-                    contentOffset={{x: 0, y: 100}}
+                    // contentOffset={{x: 0, y: 100}}
 
                 />
 

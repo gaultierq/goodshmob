@@ -377,7 +377,7 @@ export class Call {
 
                     .then(resp => {
                             let response = resp.json;
-
+                            logger.debug("api response json", response)
                             let data = normalize(response);
 
                             //write in data

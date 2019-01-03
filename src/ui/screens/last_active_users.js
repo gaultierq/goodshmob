@@ -3,20 +3,16 @@
 import React, {Component} from 'react'
 import {connect} from "react-redux"
 import {currentUserId, logged} from "../../managers/CurrentUser"
-import type {NavigableProps} from "../../types"
 import {buildData} from "../../helpers/DataUtils"
 import Feed from "../components/feed"
 import {Avatar} from "react-native-elements"
 import {GAvatar} from "../GAvatar"
-import {Call, reduceList2} from "../../managers/Api"
+import {reduceList2} from "../../managers/Api"
 import {FETCH_LAST_ACTIVE_USERS, fetchLastActiveUsers} from "../networkActions"
 import {Colors} from "../colors"
-import {View} from "react-native"
+import {Image, Text, View} from "react-native"
+import GTouchable from "../GTouchable"
 
-type Props = NavigableProps;
-
-type State = {
-};
 
 const logger = rootlogger.createLogger('last_active_users')
 
@@ -25,24 +21,20 @@ const logger = rootlogger.createLogger('last_active_users')
     last_active_users: state.last_active_users,
     data: state.data,
 }))
-export default class LastActiveUsers extends Component<Props, State> {
-
-
-    componentDidMount() {
-    }
+export default class LastActiveUsers extends Component<{}, {}> {
 
     render() {
         const {data, last_active_users, ...attr} = this.props
         const userId = currentUserId()
         let lui = last_active_users[userId] || {list: []}
         let items = lui.list.map(u => buildData(data, 'users', u.id))
-        debugger;
+
         return (
             <View style={{flex:1}}>
                 <Feed
                     data={items}
                     displayName={"last_active_users"}
-                    renderItem={({item, index}) => <GAvatar person={item} />}
+                    renderItem={({item, index}) => <GAvatar person={item} size={50} />}
                     fetchSrc={{
                         callFactory: () => fetchLastActiveUsers(userId),
                         // useLinks: true,
@@ -52,7 +44,13 @@ export default class LastActiveUsers extends Component<Props, State> {
                     }}
                     style={{backgroundColor: Colors.greying}}
                     hasMore={false}
-
+                    horizontal
+                    ItemSeparatorComponent={()=> <View style={{margin: 4}} />}
+                    ListHeaderComponent={(
+                        <GTouchable onPress={() => {}}>
+                            <Image source={require('../../img2/add-user.png')} resizeMode="contain"/>
+                        </GTouchable>
+                    )}
                     {...attr}
 
                 />
