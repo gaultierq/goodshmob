@@ -36,6 +36,27 @@ type State = {
 @connect()
 export default class CommunityScreen extends Screen<Props, State> {
 
+    constructor(props: Props){
+        super(props);
+        props.navigator.setButtons({
+            rightButtons: [{
+                id: 'friendsSearch',
+                icon: require('../../img2/search.png'),
+            }]
+        })
+        props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+    }
+
+    onNavigatorEvent(event: any) { // this is the onPress handler for the two buttons together
+        if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
+            if (event.id === 'friendsSearch') {
+                this.props.navigator.push({
+                    screen: 'goodsh.UserSearchScreen',
+                    title: i18n.t("search.in_users")
+                });
+            }
+        }
+    }
 
     render() {
         return (
@@ -49,7 +70,7 @@ export default class CommunityScreen extends Screen<Props, State> {
                                 this.props.navigator.push({
                                     screen: 'goodsh.InviteManyContacts',
                                     // navigatorButtons: CANCELABLE_MODAL,
-                                    title: "Inviter des contacts",
+                                    title: i18n.t('invite_contacts'),
                                 })
                             }
                         }>
@@ -58,7 +79,6 @@ export default class CommunityScreen extends Screen<Props, State> {
                         </GTouchable>
                         <FeedSeparator/>
                     </View>
-
                 }
             />
         )

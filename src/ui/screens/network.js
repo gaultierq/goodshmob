@@ -165,6 +165,7 @@ class NetworkScreen extends Screen<Props, State> {
                     renderSectionFooter={({section}) => this.renderSectionFooter(section)}
                     ListHeaderComponent={(
                         <LastActiveUsers
+                            userId={currentUserId()}
                             showsHorizontalScrollIndicator={false}
                             style={{paddingHorizontal: 8, paddingVertical: 8, backgroundColor: BACKGROUND_COLOR}}
                             ListHeaderComponent={(

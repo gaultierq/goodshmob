@@ -6,7 +6,6 @@ import {Button, Dimensions, Text, View} from 'react-native'
 
 import {connect} from "react-redux"
 import {Navigation} from 'react-native-navigation'
-import {createSelector} from "reselect"
 import {renderSimpleButton, STYLES} from "../../UIStyles"
 import {logout} from "../../../auth/actions"
 

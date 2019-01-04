@@ -13,6 +13,7 @@ import {renderTip} from "./home"
 import {Colors} from "../colors"
 import Stream from "../../managers/Stream"
 import LastActiveUsers from "./last_active_users"
+import {currentUserId} from "../../managers/CurrentUser"
 
 type Props = {
 };
@@ -153,6 +154,8 @@ export default class TestScreen extends Component<Props, State> {
     }
 
     render() {
-        return <LastActiveUsers />
+        return (
+            <LastActiveUsers userId={currentUserId()} />
+        )
     }
 }

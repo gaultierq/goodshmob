@@ -2,8 +2,7 @@
 
 import React, {Component} from 'react'
 import {connect} from "react-redux"
-import {currentUserId, logged} from "../../managers/CurrentUser"
-import {buildData} from "../../helpers/DataUtils"
+import {logged} from "../../managers/CurrentUser"
 import Feed from "../components/feed"
 import {Avatar} from "react-native-elements"
 import {GAvatar} from "../GAvatar"
@@ -11,28 +10,27 @@ import {reduceList2} from "../../managers/Api"
 import {FETCH_LAST_ACTIVE_USERS, fetchLastActiveUsers} from "../networkActions"
 import {Colors} from "../colors"
 import {Image, Text, View} from "react-native"
-import GTouchable from "../GTouchable"
+import {createStructuredSelector} from "reselect"
+import type {Id, User} from "../../types"
+import {LAST_ACTIVE_USERS_SELECTOR} from "../../helpers/Selectors"
 
 
 const logger = rootlogger.createLogger('last_active_users')
 
 @logged
-@connect((state, ownProps) => ({
-    last_active_users: state.last_active_users,
-    data: state.data,
-}))
-export default class LastActiveUsers extends Component<{style?: any}, {}> {
+@connect(() => createStructuredSelector(
+    {
+        lastActiveUsers: LAST_ACTIVE_USERS_SELECTOR(),
+    }
+))
+export default class LastActiveUsers extends Component<{userId: Id, style?: any, lastActiveUsers?: User[]}, {}> {
 
     render() {
-        const {data, last_active_users, ...attr} = this.props
-        const userId = currentUserId()
-        let lui = last_active_users[userId] || {list: []}
-        let items = lui.list.map(u => buildData(data, 'users', u.id))
-
+        const {lastActiveUsers, userId, ...attr} = this.props
         return (
             <View style={[{flex:1}, this.props.style]}>
                 <Feed
-                    data={items}
+                    data={lastActiveUsers}
                     displayName={"last_active_users"}
                     renderItem={({item, index}) => <GAvatar person={item} size={50} seeable />}
                     fetchSrc={{

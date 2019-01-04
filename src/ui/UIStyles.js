@@ -218,6 +218,7 @@ export type DimensionSelector = {
     normal: any,
     big: any,
 }
+
 export const selectDimension = (obj: DimensionSelector) => {
     if (__DEVICE_WIDTH__ < 400) return obj.small
     if (__DEVICE_WIDTH__ < 600) return obj.normal

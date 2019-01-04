@@ -493,7 +493,6 @@ export default class Feed extends Component<Props, State>  {
     }
 
     fetchIt(options?: FeedFetchOption = {}) {
-        debugger
         let {loadMore, trigger, drop} = options;
         let requestName = loadMore ? 'isFetchingMore' : 'isFetchingHead';
 

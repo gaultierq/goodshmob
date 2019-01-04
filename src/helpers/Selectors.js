@@ -142,7 +142,7 @@ export const PENDING_LINEUPS_SELECTOR = () => createSelector(
 )
 
 
-
+// [obj1] === [obj1] !
 const createSelector1 = createSelectorCreator(
     defaultMemoize,
     isEqualsArrayFree
@@ -330,6 +330,17 @@ export const USER_SELECTOR2 = user => createSelector(
     syncUser => createObj(syncUser)
 )
 
+
+let createMemoizeIdSelector = createSelectorCreator(_.memoize, s => _.get(s, 'id'))
+
+
+//will not listen to user attributes changes
+const _userSelector = createMemoizeIdSelector(
+    (state, props) =>  _.get(state, `data.users.${userId(props)}`),
+    userData => createObj(userData)
+)
+
+
 //deprecated
 export const USER_SELECTOR = () => createSelector(
     [
@@ -388,4 +399,30 @@ let lineupFromPending = function (pending) {
     }
 }
 
+export const LAST_ACTIVE_USERS_SELECTOR = () => {
+    return createSelector1(
+        (state, props) => {
+            const list = _.get(state, `last_active_users.${userId(props)}.list`, [])
+            return list.map(user => _userSelector(state, {user}))
+        },
+        users => {
+            counter(`LAST_ACTIVE_USERS_SELECTOR.${hashCode(users.map(s => _.get(s, 'id')).join(' '))}`)
+            return users
+        }
+    )
+}
+
+
+export const FRIENDS_SELECTOR = () => {
+    return createSelector1(
+        (state, props) => {
+            const list = _.get(state, `data.users.${userId(props)}.relationships.friends.data`, [])
+            return list.map(user => _userSelector(state, {user}))
+        },
+        friends => {
+            counter(`FRIENDS_SELECTOR.${hashCode(friends.map(s => _.get(s, 'id')).join(' '))}`)
+            return friends
+        }
+    )
+}
 

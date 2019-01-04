@@ -7,9 +7,8 @@ import {StyleSheet} from "react-native"
 import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "./fonts"
 import {Colors} from "./colors"
 import NavManager from "../managers/NavManager"
-import URL from "url-parse"
 import {CREATE_LIKE, DELETE_LIKE} from "./activity/actionTypes"
-import {buildLineupUrl, buildUserUrl} from "../managers/Links"
+import {buildLineupUrl, buildUserUrl, decorateUrlWithLongPress} from "../managers/Links"
 
 
 export function getActivityText(activity: Activity, navP: NavParams): () => any {
@@ -61,19 +60,6 @@ export function showResourceActions(pressed: string, navP: NavParams) {
     if (url) {
         NavManager.goToDeeplink(url, navP)
     }
-}
-
-function decorateUrlWithLongPress(url: string): URL {
-    let result: URL
-    try {
-        result = new URL(url)
-        const q = result.query
-        result.set('query', {... (q || {}), origin: 'long_press'})
-    }
-    catch (e) {
-        console.log("failed to parse result", e)
-    }
-    return result
 }
 
 function getItemHtml(item: Item) {
