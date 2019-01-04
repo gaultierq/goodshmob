@@ -315,10 +315,11 @@ export default class HomeScreen extends Screen<Props, State> {
         />
     }
 
-    _ListHeaderComponent = () => {
+    _ListHeaderComponent = (icr) => {
         if (this.state.filterFocused) return null
+        if (!icr) return null
         if (this.state.currentTip) return renderTip(this.state.currentTip)
-        return (this.renderHorizontalFriends())
+        return this.renderHorizontalFriends()
     }
 
     renderHorizontalFriends() {

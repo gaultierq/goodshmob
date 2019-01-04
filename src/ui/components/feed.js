@@ -272,9 +272,6 @@ export default class Feed extends Component<Props, State>  {
         const style1 = [style];
         const isContentReady: boolean = fetchingHead !== 'sending' && fetchingHead !== 'idle' || hasItems
 
-
-
-
         let params =  {
             ref: listRef,
             renderItem,
