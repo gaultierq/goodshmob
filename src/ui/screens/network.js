@@ -168,23 +168,6 @@ class NetworkScreen extends Screen<Props, State> {
                             userId={currentUserId()}
                             showsHorizontalScrollIndicator={false}
                             style={{paddingHorizontal: 8, paddingVertical: 8, backgroundColor: BACKGROUND_COLOR}}
-                            ListHeaderComponent={(
-                                <GTouchable style={{
-                                    width: 50,
-                                    height: 50,
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    borderWidth: StyleSheet.hairlineWidth,
-                                    borderColor: Colors.greyishBrown,
-                                    borderRadius: 25,
-                                    marginRight: 8,
-                                }} onPress={() => {this.showFriends()}}>
-                                    <Image
-                                        source={require('../../img2/add-user.png')}
-                                        resizeMode="contain"
-                                        style={{tintColor: Colors.greyishBrown}}/>
-                                </GTouchable>
-                            )}
                         />
                     )}
                     listRef={ref => this.feed = ref}
@@ -240,26 +223,6 @@ class NetworkScreen extends Screen<Props, State> {
 
             </SafeAreaView>
         );
-    }
-
-    showFriends() {
-        this.props.navigator.showModal({
-            screen: 'goodsh.Community',
-            title: i18n.t("community.screens.friends"),
-            // passProps:{
-            //     userId: currentUserId(),
-            // },
-            navigatorButtons: {
-                ...Nav.CANCELABLE_MODAL,
-                // rightButtons: [
-                //
-                //     {
-                //         id: 'friendsSearch',
-                //         icon: require('../../img2/searchHeaderIcon.png'),
-                //     },
-                // ]
-            }
-        })
     }
 
     /*

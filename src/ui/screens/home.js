@@ -4,12 +4,11 @@ import React from 'react'
 import {
     Alert,
     BackHandler,
-    Button,
-    Dimensions,
     Image,
     Keyboard,
     KeyboardAvoidingView,
     Platform,
+    SafeAreaView,
     StyleSheet,
     Text,
     TextInput,
@@ -26,25 +25,21 @@ import {CLOSE_MODAL, displayHomeSearch, startAddItem} from "../Nav"
 import Screen from "../components/Screen"
 import {PROFILE_CLICKED} from "../components/MyAvatar"
 import OnBoardingManager from "../../managers/OnBoardingManager"
-import {
-    floatingButtonScrollListener,
-    getAddButton,
-    getClearButton,
-    renderTabBarFactory,
-    scheduleOpacityAnimation
-} from "../UIComponents"
+import {floatingButtonScrollListener, getAddButton, getClearButton, scheduleOpacityAnimation} from "../UIComponents"
 import type {TipConfig} from "../components/Tip"
 import {Tip} from "../components/Tip"
 import {HomeOnBoardingHelper} from "./HomeOnBoardingHelper"
-import {PagerPan, TabView} from "react-native-tab-view"
 import MyGoodsh from "./MyGoodsh"
 import MyInterests from "./MyInterests"
-import {fullName2} from "../../helpers/StringUtils"
 import NotificationManager from '../../managers/NotificationManager'
 import {createCounter} from "../../helpers/DebugUtils"
 import FriendsList from "./friends"
 import {GAvatar} from "../GAvatar"
 import {BACKGROUND_COLOR} from "../UIStyles"
+import GTouchable from "../GTouchable"
+import {Colors} from "../colors"
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import * as Nav from "../Nav"
 
 type Props = {
     navigator: RNNNavigator
@@ -94,27 +89,6 @@ const counter = createCounter(logger)
 }))
 export default class HomeScreen extends Screen<Props, State> {
 
-    static navigatorStyle = {
-        navBarNoBorder: true,
-        topBarElevationShadowEnabled: false
-    };
-
-
-    static navigatorButtons = {
-
-        //'component' doesnt work on android :/
-        leftButtons: [
-            __IS_IOS__ ?
-                {
-                    id: 'profile',
-                    component: 'goodsh.MyAvatar'
-                }:
-                {
-                    icon: require('../../img/goodshersHeaderProfileIcon.png'),
-                    id: 'profile',
-                }
-        ],
-    }
 
     _mounted: boolean
     feed: any
@@ -151,11 +125,7 @@ export default class HomeScreen extends Screen<Props, State> {
         if (event.type === 'DeepLink') {
             switch (event.link) {
                 case PROFILE_CLICKED:
-                    Keyboard.dismiss();
-                    this.props.navigator.toggleDrawer({
-                        side: 'left',
-                        animated: true
-                    });
+                    this.showProfile()
                     break;
                 // case "topLevelIndex":
                 //     this.props.navigator.switchToTab({
@@ -181,6 +151,14 @@ export default class HomeScreen extends Screen<Props, State> {
         }
     }
 
+    showProfile() {
+        Keyboard.dismiss()
+        this.props.navigator.toggleDrawer({
+            side: 'left',
+            animated: true
+        })
+    }
+
     componentDidMount() {
         logger.debug("componentDidMount")
         this._mounted = true
@@ -192,40 +170,23 @@ export default class HomeScreen extends Screen<Props, State> {
         this.onBoardingHelper.clearTapTarget()
     }
 
+
+    render() {
+        logger.debug("rendering home", this.state)
+
+        counter('render')
+
+        return (
+
+            <SafeAreaView style={{flex:1}}>
+                {this.renderMyGoodshs(true)}
+            </SafeAreaView>
+        )
+    }
+
     componentDidAppear() {
         this.refreshOnBoarding()
         this.refreshRightButtons()
-    }
-
-    refreshOnBoarding() {
-
-        //TODO: rm this settimeout
-        setTimeout(() => {
-
-            let info = OnBoardingManager.getInfoToDisplay(this.props.onBoarding, {group: "full_focus", persistBeforeDisplay: true});
-            if (!info) return
-
-            let {type} = info
-            logger.debug("found info to display:", type)
-            switch (type) {
-                case "focus_add":
-                    if (this._mounted && isLogged()) {
-                        this.onBoardingHelper.handleFocusAdd(() => this._mounted && isLogged())
-                    }
-                    break
-                case "notification_permissions":
-                    NotificationManager.requestPermissionsForLoggedUser()
-                    break
-                case "popular":
-                    if (this.state.popularDisplayCount === 0) {
-                        this.setState({popularDisplayCount: 1}, () => {
-                            this.startTunnel()
-                        })
-                    }
-                    break
-            }
-        })
-
     }
 
     startTunnel() {
@@ -273,38 +234,42 @@ export default class HomeScreen extends Screen<Props, State> {
         })
     }
 
+    refreshOnBoarding() {
+
+        //TODO: rm this settimeout
+        setTimeout(() => {
+
+            let info = OnBoardingManager.getInfoToDisplay(this.props.onBoarding, {group: "full_focus", persistBeforeDisplay: true});
+            if (!info) return
+
+            let {type} = info
+            logger.debug("found info to display:", type)
+            switch (type) {
+                case "focus_add":
+                    if (this._mounted && isLogged()) {
+                        this.onBoardingHelper.handleFocusAdd(() => this._mounted && isLogged())
+                    }
+                    break
+                case "notification_permissions":
+                    NotificationManager.requestPermissionsForLoggedUser()
+                    break
+                case "popular":
+                    if (this.state.popularDisplayCount === 0) {
+                        this.setState({popularDisplayCount: 1}, () => {
+                            this.startTunnel()
+                        })
+                    }
+                    break
+            }
+        })
+
+    }
+
     //!\\ hypothesis: logout => store.currentUser becomes null => update is triggered
     //    => focusAdd is posted natively => component is unmounted
     //    => the native code doesnt find the unmounted component
     componentDidUpdate() {
         this.refreshOnBoarding()
-    }
-
-    render() {
-
-        logger.debug("rendering home", this.state)
-
-        counter('render')
-
-        this.setNavigatorTitle(this.props.navigator, {title: fullName2(_.get(this.props, 'currentUser.attributes'))})
-
-        return (
-            <View style={{flex:1}}>
-
-                <TabView
-                    style={{flex: 1}}
-                    navigationState={{...this.state, visible: this.isVisible()}}
-                    renderScene={this.renderScene.bind(this)}
-                    renderTabBar={renderTabBarFactory(this.isFocused.bind(this))}
-                    renderPager={props => <PagerPan {...props} />}
-                    swipeEnabled={false}
-                    onIndexChange={index => {
-                        this.setState({index}, () => this.refreshRightButtons())
-                    }
-                    }
-                />
-            </View>
-        )
     }
 
     refreshRightButtons() {
@@ -322,29 +287,37 @@ export default class HomeScreen extends Screen<Props, State> {
             case 'my_goodsh':
                 counter('render:my_goodsh')
                 return (
-                    <MyGoodsh
-                        visibility={focused ? 'visible' : 'hidden'}
-                        navigator={this.props.navigator}
-                        listRef={ref => this.feed = ref}
-                        onScroll={floatingButtonScrollListener.call(this)}
-                        ListHeaderComponent={this._ListHeaderComponent}
-                        targetRef={this._targetRef("add", i18n.t("home.wizard.action_button_label"), i18n.t("home.wizard.action_button_body"))}
-                        onFilterFocusChange={filterFocused => new Promise(resolved => {
-                            this.setState({filterFocused}, resolved())
-                        })
-                        }
-                    />
+                    this.renderMyGoodshs(focused)
                 )
             case 'my_interests':
                 counter('render:my_interests')
                 return (
-                    <MyInterests
-                        navigator={this.props.navigator}
-                        visibility={focused ? 'visible' : 'hidden'}
-                    />
+                    this.renderMyInterests(focused)
                 )
             default: throw "unexpected"
         }
+    }
+
+    renderMyInterests(focused) {
+        return <MyInterests
+            navigator={this.props.navigator}
+            visibility={focused ? 'visible' : 'hidden'}
+        />
+    }
+
+    renderMyGoodshs(focused) {
+        return <MyGoodsh
+            visibility={focused ? 'visible' : 'hidden'}
+            navigator={this.props.navigator}
+            listRef={ref => this.feed = ref}
+            onScroll={floatingButtonScrollListener.call(this)}
+            ListHeaderComponent={this._ListHeaderComponent}
+            targetRef={this._targetRef("add", i18n.t("home.wizard.action_button_label"), i18n.t("home.wizard.action_button_body"))}
+            onFilterFocusChange={filterFocused => new Promise(resolved => {
+                this.setState({filterFocused}, resolved())
+            })
+            }
+        />
     }
 
     _ListHeaderComponent = () => {
@@ -354,15 +327,51 @@ export default class HomeScreen extends Screen<Props, State> {
             <FriendsList
                 userId={currentUserId()}
                 displayName={"home_friend_list"}
-                renderItem={({item, index}) => <GAvatar person={item} size={50} seeable />}
+                renderItem={({item, index}) => <View style={{margin: 1}}><GAvatar person={item} size={50} seeable /></View>}
                 ItemSeparatorComponent={()=> <View style={{margin: 4}} />}
                 hasMore={false}
                 style={{paddingHorizontal: 8, paddingVertical: 8, backgroundColor: BACKGROUND_COLOR}}
                 horizontal
+                showsHorizontalScrollIndicator={false}
+                ListHeaderComponent={(
+                    <GTouchable style={{
+                        // width: 54,
+                        // height: 54,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderWidth: 2,
+                        padding: 1,
+                        borderColor: Colors.orange,
+                        borderRadius: 28,
+                        marginRight: 8,
+                        alignItems: 'center',
+                    }} onPress={() => {this.showProfile()}}>
+                        <GAvatar person={currentUser()} size={50} />
+                    </GTouchable>
+                )}
+                ListFooterComponent={(
+                    <GTouchable style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        paddingHorizontal: 8,
+                        alignItems: 'center',
+                    }} onPress={() => {this.showFriends()}}>
+                        <Ionicons name="ios-person-add" size={50} color={Colors.orange} />
+                    </GTouchable>
+                )}
             />
         )
     }
-
+    
+    showFriends() {
+        this.props.navigator.showModal({
+            screen: 'goodsh.Community',
+            title: i18n.t("community.screens.friends"),
+            navigatorButtons: {
+                ...Nav.CANCELABLE_MODAL,
+            }
+        })
+    }
 
 
     isFocused(route) {

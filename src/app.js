@@ -72,6 +72,7 @@ const TABS = [
         screen: 'goodsh.HomeScreen',
         icon: require('./img2/home.png'),
         selectedIcon: require('./img2/home-active.png'),
+        titleImage: require('./img2/goodsh-it.png'),
         navigatorStyle: UI.NavStyles,
         iconInsets,
     },
