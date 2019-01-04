@@ -76,7 +76,7 @@ export default class FriendsList extends Component<Props, State> {
             ...attr
         } = this.props;
 
-        const data = _.filter(friends, u => u.id !== this.props.userId)
+        const data = _.filter(friends, u => _.get(u, 'id') !== this.props.userId)
         return (
             <Feed
                 data={data}

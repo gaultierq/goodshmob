@@ -87,11 +87,19 @@ export function renderTip(currentTip: TipConfig) {
 const logger = rootlogger.createLogger('home')
 const counter = createCounter(logger)
 
+let isFullyLoaded = (state, props) => {
+    let userStore = _.get(state, `data.users.${currentUserId()}`)
+    let a = _.get(userStore, 'meta.lineupsCount', -1)
+    let b = _.get(userStore, 'relationships.lists.data', []).length
+    debugger;
+    return a <= b
+}
+
 @logged
 @connect((state, props)=>({
-    config: state.config,
     onBoarding: state.onBoarding,
-    currentUser: _.get(state, `data.users.${props.userId}`)
+    currentUser: _.get(state, `data.users.${props.userId}`),
+    isFullyLoaded: isFullyLoaded(state, props)
 }))
 export default class HomeScreen extends Screen<Props, State> {
 
@@ -101,6 +109,9 @@ export default class HomeScreen extends Screen<Props, State> {
     _mounted: boolean
     feed: any
     onBoardingHelper = new HomeOnBoardingHelper()
+
+    displayFooter: boolean
+
     state = {
         focusedSaving: false,
         isActionButtonVisible: true,
@@ -183,6 +194,7 @@ export default class HomeScreen extends Screen<Props, State> {
         logger.debug("rendering home", this.state)
 
         counter('render')
+        this.displayFooter = this.props.isFullyLoaded || !!this.displayFooter
 
         return (
 
@@ -294,7 +306,7 @@ export default class HomeScreen extends Screen<Props, State> {
             listRef={ref => this.feed = ref}
             onScroll={floatingButtonScrollListener.call(this)}
             ListHeaderComponent={this._ListHeaderComponent}
-            ListFooterComponent={this.renderMyInterests()}
+            ListFooterComponent={this.renderMyInterests(this.props.isFullyLoaded)}
             targetRef={this._targetRef("add", i18n.t("home.wizard.action_button_label"), i18n.t("home.wizard.action_button_body"))}
             onFilterFocusChange={filterFocused => new Promise(resolved => {
                 this.setState({filterFocused}, resolved())

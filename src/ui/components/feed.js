@@ -299,7 +299,6 @@ export default class Feed extends Component<Props, State>  {
     }
 
     _ListHeaderComponent = (isContentReady: boolean) => {
-        debugger;
         return Feed.idk(this.props.ListHeaderComponent, isContentReady)
     }
 
