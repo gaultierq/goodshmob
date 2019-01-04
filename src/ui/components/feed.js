@@ -50,7 +50,7 @@ export type Props = {
     style?: ViewStyle,
     scrollUpOnBack?:?() => ?boolean,
     visibility?: ScreenVisibility,
-    filter?:FilterConfig<any>,
+    filter?: ?FilterConfig<any>,
     displayName?: string,
     doNotDisplayFetchMoreLoader?:boolean,
     listRef ?:(any => void | string),
@@ -299,6 +299,7 @@ export default class Feed extends Component<Props, State>  {
     }
 
     _ListHeaderComponent = (isContentReady: boolean) => {
+        debugger;
         return Feed.idk(this.props.ListHeaderComponent, isContentReady)
     }
 

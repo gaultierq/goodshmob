@@ -28,12 +28,12 @@ import Screen from "../components/Screen"
 
 import GTouchable from "../GTouchable"
 import AddLineupComponent from "../components/addlineup"
-import LineupHorizontal, {defaultRenderEmpty, LineupH1, renderInnerPlus} from "../components/LineupHorizontal"
+import {defaultRenderEmpty, LineupH1, renderInnerPlus} from "../components/LineupHorizontal"
 import UserLineups from "./userLineups"
 import {TipConfig} from "../components/Tip"
 import LineupTitle from "../components/LineupTitle"
 import {SFP_TEXT_REGULAR} from "../fonts"
-import {GLineupAction, L_SHARE, LineupRights} from "../lineupRights"
+import {GLineupAction, L_SHARE} from "../lineupRights"
 import {Colors} from "../colors"
 import {createCounter} from "../../helpers/DebugUtils"
 import {EmptyCell} from "../components/LineupCellSaving"
@@ -70,10 +70,10 @@ export default class MyGoodsh extends Screen<Props, State> {
         return (
             // $FlowFixMe
             <UserLineups
-                contentOffset={{x: 0, y: 50}}
                 displayName={"MyGoodsh"}
                 feedId={"home list"}
                 userId={userId}
+                hideFilter={true}
                 navigator={navigator}
                 ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
                 renderSectionHeader={({section}) => section.renderSectionHeader()}

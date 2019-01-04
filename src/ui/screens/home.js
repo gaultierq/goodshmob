@@ -19,7 +19,7 @@ import {
 
 import {connect} from "react-redux"
 import type {RNNNavigator, Saving} from "../../types"
-import {currentGoodshboxId, currentUser, isLogged, logged} from "../../managers/CurrentUser"
+import {currentGoodshboxId, currentUser, currentUserId, isLogged, logged} from "../../managers/CurrentUser"
 import {CheckBox} from 'react-native-elements'
 import {Navigation, ScreenVisibilityListener as RNNScreenVisibilityListener} from 'react-native-navigation'
 import {CLOSE_MODAL, displayHomeSearch, startAddItem} from "../Nav"
@@ -42,6 +42,9 @@ import MyInterests from "./MyInterests"
 import {fullName2} from "../../helpers/StringUtils"
 import NotificationManager from '../../managers/NotificationManager'
 import {createCounter} from "../../helpers/DebugUtils"
+import FriendsList from "./friends"
+import {GAvatar} from "../GAvatar"
+import {BACKGROUND_COLOR} from "../UIStyles"
 
 type Props = {
     navigator: RNNNavigator
@@ -324,9 +327,7 @@ export default class HomeScreen extends Screen<Props, State> {
                         navigator={this.props.navigator}
                         listRef={ref => this.feed = ref}
                         onScroll={floatingButtonScrollListener.call(this)}
-                        ListHeaderComponent={
-                            !this.state.filterFocused && this.state.currentTip && renderTip(this.state.currentTip)
-                        }
+                        ListHeaderComponent={this._ListHeaderComponent}
                         targetRef={this._targetRef("add", i18n.t("home.wizard.action_button_label"), i18n.t("home.wizard.action_button_body"))}
                         onFilterFocusChange={filterFocused => new Promise(resolved => {
                             this.setState({filterFocused}, resolved())
@@ -345,6 +346,23 @@ export default class HomeScreen extends Screen<Props, State> {
             default: throw "unexpected"
         }
     }
+
+    _ListHeaderComponent = () => {
+        if (this.state.filterFocused) return null
+        if (this.state.currentTip) return renderTip(this.state.currentTip)
+        return (
+            <FriendsList
+                userId={currentUserId()}
+                displayName={"home_friend_list"}
+                renderItem={({item, index}) => <GAvatar person={item} size={50} seeable />}
+                ItemSeparatorComponent={()=> <View style={{margin: 4}} />}
+                hasMore={false}
+                style={{paddingHorizontal: 8, paddingVertical: 8, backgroundColor: BACKGROUND_COLOR}}
+                horizontal
+            />
+        )
+    }
+
 
 
     isFocused(route) {

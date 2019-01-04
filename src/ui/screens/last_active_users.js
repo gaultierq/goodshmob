@@ -33,6 +33,9 @@ export default class LastActiveUsers extends Component<{userId: Id, style?: any,
                     data={lastActiveUsers}
                     displayName={"last_active_users"}
                     renderItem={({item, index}) => <GAvatar person={item} size={50} seeable />}
+                    ItemSeparatorComponent={()=> <View style={{margin: 4}} />}
+                    hasMore={false}
+                    horizontal
                     fetchSrc={{
                         callFactory: () => fetchLastActiveUsers(userId),
                         // useLinks: true,
@@ -41,9 +44,6 @@ export default class LastActiveUsers extends Component<{userId: Id, style?: any,
                         // onFetch: this.onFetch.bind(this)
                     }}
                     style={{backgroundColor: Colors.greying}}
-                    hasMore={false}
-                    horizontal
-                    ItemSeparatorComponent={()=> <View style={{margin: 4}} />}
                     {...attr}
 
                 />

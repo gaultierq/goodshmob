@@ -76,11 +76,11 @@ export default class FriendsList extends Component<Props, State> {
             ...attr
         } = this.props;
 
-
+        const data = _.filter(friends, u => u.id !== this.props.userId)
         return (
             <Feed
+                data={data}
                 renderItem={renderItem}
-                data={friends}
                 fetchSrc={{
                     callFactory: () => userActions.fetchFriendsCall(userId),
                     action: userActionTypes.GET_USER_W_FRIENDS,
