@@ -9,6 +9,7 @@ import {
     KeyboardAvoidingView,
     Platform,
     SafeAreaView,
+    ScrollView,
     StyleSheet,
     Text,
     TextInput,
@@ -21,11 +22,17 @@ import type {RNNNavigator, Saving} from "../../types"
 import {currentGoodshboxId, currentUser, currentUserId, isLogged, logged} from "../../managers/CurrentUser"
 import {CheckBox} from 'react-native-elements'
 import {Navigation, ScreenVisibilityListener as RNNScreenVisibilityListener} from 'react-native-navigation'
+import * as Nav from "../Nav"
 import {CLOSE_MODAL, displayHomeSearch, startAddItem} from "../Nav"
 import Screen from "../components/Screen"
 import {PROFILE_CLICKED} from "../components/MyAvatar"
 import OnBoardingManager from "../../managers/OnBoardingManager"
-import {floatingButtonScrollListener, getAddButton, getClearButton, scheduleOpacityAnimation} from "../UIComponents"
+import {
+    floatingButtonScrollListener,
+    getAddButton,
+    renderSectionHeader2,
+    scheduleOpacityAnimation
+} from "../UIComponents"
 import type {TipConfig} from "../components/Tip"
 import {Tip} from "../components/Tip"
 import {HomeOnBoardingHelper} from "./HomeOnBoardingHelper"
@@ -39,7 +46,6 @@ import {BACKGROUND_COLOR} from "../UIStyles"
 import GTouchable from "../GTouchable"
 import {Colors} from "../colors"
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import * as Nav from "../Nav"
 
 type Props = {
     navigator: RNNNavigator
@@ -89,6 +95,8 @@ const counter = createCounter(logger)
 }))
 export default class HomeScreen extends Screen<Props, State> {
 
+
+    static navigatorButtons = getAddButton()
 
     _mounted: boolean
     feed: any
@@ -186,7 +194,6 @@ export default class HomeScreen extends Screen<Props, State> {
 
     componentDidAppear() {
         this.refreshOnBoarding()
-        this.refreshRightButtons()
     }
 
     startTunnel() {
@@ -272,36 +279,11 @@ export default class HomeScreen extends Screen<Props, State> {
         this.refreshOnBoarding()
     }
 
-    refreshRightButtons() {
-        this.props.navigator.setButtons(this.state.index === 0 ? getAddButton() : getClearButton())
-    }
-
-    displayFloatingButton() {
-        return __IS_ANDROID__  && !this.state.filterFocused && this.state.isActionButtonVisible && this.state.index === 0;
-    }
-
-    renderScene({ route}: *) {
-        let focused = this.isFocused(route)
-        switch (route.key) {
-
-            case 'my_goodsh':
-                counter('render:my_goodsh')
-                return (
-                    this.renderMyGoodshs(focused)
-                )
-            case 'my_interests':
-                counter('render:my_interests')
-                return (
-                    this.renderMyInterests(focused)
-                )
-            default: throw "unexpected"
-        }
-    }
-
     renderMyInterests(focused) {
         return <MyInterests
             navigator={this.props.navigator}
             visibility={focused ? 'visible' : 'hidden'}
+            ListHeaderComponent={(icr) => icr && renderSectionHeader2(i18n.t("home.tabs.my_interests"))}
         />
     }
 
@@ -312,6 +294,7 @@ export default class HomeScreen extends Screen<Props, State> {
             listRef={ref => this.feed = ref}
             onScroll={floatingButtonScrollListener.call(this)}
             ListHeaderComponent={this._ListHeaderComponent}
+            ListFooterComponent={this.renderMyInterests()}
             targetRef={this._targetRef("add", i18n.t("home.wizard.action_button_label"), i18n.t("home.wizard.action_button_body"))}
             onFilterFocusChange={filterFocused => new Promise(resolved => {
                 this.setState({filterFocused}, resolved())
@@ -323,46 +306,52 @@ export default class HomeScreen extends Screen<Props, State> {
     _ListHeaderComponent = () => {
         if (this.state.filterFocused) return null
         if (this.state.currentTip) return renderTip(this.state.currentTip)
-        return (
-            <FriendsList
-                userId={currentUserId()}
-                displayName={"home_friend_list"}
-                renderItem={({item, index}) => <View style={{margin: 1}}><GAvatar person={item} size={50} seeable /></View>}
-                ItemSeparatorComponent={()=> <View style={{margin: 4}} />}
-                hasMore={false}
-                style={{paddingHorizontal: 8, paddingVertical: 8, backgroundColor: BACKGROUND_COLOR}}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                ListHeaderComponent={(
-                    <GTouchable style={{
-                        // width: 54,
-                        // height: 54,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        borderWidth: 2,
-                        padding: 1,
-                        borderColor: Colors.orange,
-                        borderRadius: 28,
-                        marginRight: 8,
-                        alignItems: 'center',
-                    }} onPress={() => {this.showProfile()}}>
-                        <GAvatar person={currentUser()} size={50} />
-                    </GTouchable>
-                )}
-                ListFooterComponent={(
-                    <GTouchable style={{
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        paddingHorizontal: 8,
-                        alignItems: 'center',
-                    }} onPress={() => {this.showFriends()}}>
-                        <Ionicons name="ios-person-add" size={50} color={Colors.orange} />
-                    </GTouchable>
-                )}
-            />
-        )
+        return (this.renderHorizontalFriends())
     }
-    
+
+    renderHorizontalFriends() {
+        return <FriendsList
+            userId={currentUserId()}
+            displayName={"home_friend_list"}
+            renderItem={({item, index}) => <View style={{margin: 1}}><GAvatar person={item} size={50} seeable/></View>}
+            ItemSeparatorComponent={() => <View style={{margin: 4}}/>}
+            hasMore={false}
+            style={{paddingHorizontal: 8, paddingVertical: 8, backgroundColor: BACKGROUND_COLOR}}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            ListHeaderComponent={(
+                <GTouchable style={{
+                    // width: 54,
+                    // height: 54,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderWidth: 2,
+                    padding: 1,
+                    borderColor: Colors.orange,
+                    borderRadius: 28,
+                    marginRight: 8,
+                    alignItems: 'center',
+                }} onPress={() => {
+                    this.showProfile()
+                }}>
+                    <GAvatar person={currentUser()} size={50}/>
+                </GTouchable>
+            )}
+            ListFooterComponent={(
+                <GTouchable style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    paddingHorizontal: 8,
+                    alignItems: 'center',
+                }} onPress={() => {
+                    this.showFriends()
+                }}>
+                    <Ionicons name="ios-person-add" size={50} color={Colors.orange}/>
+                </GTouchable>
+            )}
+        />
+    }
+
     showFriends() {
         this.props.navigator.showModal({
             screen: 'goodsh.Community',

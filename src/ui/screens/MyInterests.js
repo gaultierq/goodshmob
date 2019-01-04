@@ -91,13 +91,13 @@ export default class MyInterests extends Screen<Props, State> {
                     displayName={"MyInterests"}
                     renderSectionHeader={({section}) => section.renderSectionHeader()}
                     sections={sections}
-                    ListHeaderComponent={() => (
-                        <View style={{marginVertical: 10}}>
-                            <GButton style={{margin: LINEUP_PADDING}} onPress={() => {
-                                openModalStatic('goodsh.SearchSavingsOrUsers', i18n.t('my_interests_screen.search_lists_title'))
-                            }} text={i18n.t('my_interests_screen.search_lists')}></GButton>
-                        </View>
-                    )}
+                    // ListHeaderComponent={() => (
+                    //     <View style={{marginVertical: 10}}>
+                    //         <GButton style={{margin: LINEUP_PADDING}} onPress={() => {
+                    //             openModalStatic('goodsh.SearchSavingsOrUsers', i18n.t('my_interests_screen.search_lists_title'))
+                    //         }} text={i18n.t('my_interests_screen.search_lists')}></GButton>
+                    //     </View>
+                    // )}
                     ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t('my_interests_screen.empty_screen')}</Text>}
 
                     fetchSrc={this.fetchSrc(userId)}

@@ -37,6 +37,7 @@ import {GLineupAction, L_SHARE} from "../lineupRights"
 import {Colors} from "../colors"
 import {createCounter} from "../../helpers/DebugUtils"
 import {EmptyCell} from "../components/LineupCellSaving"
+import {renderSectionHeader2} from "../UIComponents"
 
 
 type Props = {
@@ -112,7 +113,6 @@ export default class MyGoodsh extends Screen<Props, State> {
                         },
                     ]);
                 }}
-
                 {...attributes}
             />
 
@@ -120,20 +120,7 @@ export default class MyGoodsh extends Screen<Props, State> {
     }
 
     renderSectionHeader(name: string, children?: Node) {
-        return (
-            <View style={{
-                flexDirection: 'row',
-                backgroundColor: BACKGROUND_COLOR,
-                paddingHorizontal: LINEUP_PADDING,
-                paddingVertical: 8
-            }}>
-                <Text style={{
-                    fontSize: 22,
-                    fontFamily: SFP_TEXT_REGULAR,
-                }}>{name}</Text>
-                {children}
-            </View>
-        );
+        return renderSectionHeader2(name, children)
     }
 
     renderLineup(item: Lineup, index: number, navigator: RNNNavigator, targetRef?: any) {
