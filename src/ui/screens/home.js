@@ -42,10 +42,11 @@ import NotificationManager from '../../managers/NotificationManager'
 import {createCounter} from "../../helpers/DebugUtils"
 import FriendsList from "./friends"
 import {GAvatar} from "../GAvatar"
-import {BACKGROUND_COLOR} from "../UIStyles"
+import {BACKGROUND_COLOR, LINEUP_PADDING} from "../UIStyles"
 import GTouchable from "../GTouchable"
 import {Colors} from "../colors"
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC, SFP_TEXT_REGULAR} from "../fonts"
 
 type Props = {
     navigator: RNNNavigator
@@ -91,7 +92,6 @@ let isFullyLoaded = (state, props) => {
     let userStore = _.get(state, `data.users.${currentUserId()}`)
     let a = _.get(userStore, 'meta.lineupsCount', -1)
     let b = _.get(userStore, 'relationships.lists.data', []).length
-    debugger;
     return a <= b
 }
 
@@ -342,23 +342,51 @@ export default class HomeScreen extends Screen<Props, State> {
             renderItem={({item, index}) => <View style={{margin: 1}}><GAvatar person={item} size={50} seeable/></View>}
             ItemSeparatorComponent={() => <View style={{margin: 4}}/>}
             hasMore={false}
-            style={{paddingHorizontal: 8, paddingVertical: 8, backgroundColor: BACKGROUND_COLOR}}
+            style={{
+                paddingHorizontal: LINEUP_PADDING,
+                paddingTop: LINEUP_PADDING,
+                paddingBottom: 8,
+                backgroundColor: BACKGROUND_COLOR}}
             horizontal
             showsHorizontalScrollIndicator={false}
-            ListFooterComponent={(
-                <GTouchable style={{
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    paddingHorizontal: 8,
-                    alignItems: 'center',
-                }} onPress={() => {
-                    this.showFriends()
-                }}>
-                    <Ionicons name="ios-person-add" size={50} color={Colors.orange}/>
-                </GTouchable>
+            ListFooterComponent={ ({hasItems}) => (
+                hasItems && this.renderAddFriend()
             )}
         />
     }
+
+    renderAddFriend() {
+        return <GTouchable style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingHorizontal: 8,
+            alignItems: 'center',
+        }} onPress={() => {
+            this.showFriends()
+        }}>
+            <Ionicons name="ios-person-add" size={50} color={Colors.orange}/>
+        </GTouchable>
+    }
+
+    // renderEmptyFriends() {
+    //     return (
+    //         <View style={{
+    //             flex: 1, flexDirection: 'row',
+    //         }}>
+    //             {this.renderAddFriend()}
+    //             <Text style={{
+    //                 marginLeft: 4,
+    //                 fontSize: 20,
+    //                 lineHeight: 20,
+    //                 fontFamily: SFP_TEXT_REGULAR,
+    //                 textAlignVertical: 'center',
+    //                 alignSelf: 'center',
+    //                 color: Colors.brownishGrey,}}>
+    //                 {i18n.t('friends_empty')}
+    //             </Text>
+    //         </View>
+    //     )
+    // }
 
     showFriends() {
         this.props.navigator.showModal({

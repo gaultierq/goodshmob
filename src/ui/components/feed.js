@@ -381,7 +381,7 @@ export default class Feed extends Component<Props, State>  {
 
     hasItems(): boolean {
         return this.itemsLen() > 0;
-    }
+    }onlyEmptyFeeds
 
     itemsLen(): number {
         return _.size(this.getFlatItems());
@@ -650,7 +650,7 @@ export default class Feed extends Component<Props, State>  {
     renderFail(fetch: () => any) {
 
         return (
-            <View style={{padding: 12}}>
+            <View style={{padding: LINEUP_PADDING, flexDirection: this.props.horizontal ? 'row' : 'column'}}>
                 <Text style={{alignSelf: "center"}}>{i18n.t('loading.error')}</Text>
                 {renderSimpleButton(i18n.t('actions.try_again'), fetch)}
             </View>

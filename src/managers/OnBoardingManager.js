@@ -22,7 +22,8 @@ type InfoConfig = {
     maxDisplay?: ms,
     timeAfter?: ms,
     priority: number,
-    extraData?: any
+    extraData?: any,
+    recurring?: number,
 }
 type OnBoardingState = {
     [string]: {
@@ -68,6 +69,7 @@ const ALL_INFOS = [
         maxDisplay: 3000000,
         priority: 7,
         timeAfter: TIME_BETWEEN_TIPS_MS,
+        recurring: 1000 * 3600 * 24,
         extraData: {
             type: 'invite',
             keys: 'tips.invite',
@@ -147,7 +149,15 @@ class _OnBoardingManager implements OnBoardingManager {
         let reason = null
         let stat = state[info.type]
         if (!stat || !stat.displayedAt) return null
-        if (stat.dismissedAt) return "dismissed"
+        if (stat.dismissedAt) {
+            if (info.recurring && (stat.dismissedAt + info.recurring < Date.now())) {
+
+            }
+            else {
+                return "dismissed"
+            }
+
+        }
         if ('maxDisplay' in info && (stat.displayedAt + info.maxDisplay < Date.now())) return "too long"
 
         return reason
@@ -179,14 +189,15 @@ class _OnBoardingManager implements OnBoardingManager {
                 if (!__WITH_NOTIFICATIONS__) return false
                 return !NotificationManager.hasPermissionsSync(true)
             case "popular":
-                const user = currentUser()
-                let sCount = _.get(user, 'meta.savingsCount', -1);
+                let sCount = _.get(currentUser(), 'meta.savingsCount', -1);
                 return sCount === 0
             case "noise":
             case "visibility":
             case "private":
-            case "invite":
                 return true
+            case "invite":
+                let fCount = _.get(currentUser(), 'meta.friendsCount', -1);
+                return fCount === 0
             default:
                 return false
         }

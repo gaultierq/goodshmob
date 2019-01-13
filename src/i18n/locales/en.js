@@ -547,5 +547,6 @@ export default {
             one: "follower",
             other: "followers"
         },
-    }
+    },
+    friends_empty: "Find your friends \nand enjoy goodsh.it together"
 }
