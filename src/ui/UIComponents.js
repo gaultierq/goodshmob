@@ -132,6 +132,7 @@ export const RENDER_SECTION_HEADER = (navigator: RNNNavigator, dispatch: Dispatc
         lineup={lineup}
         style={{
             backgroundColor: BACKGROUND_COLOR,
+            // backgroundColor: 'purple',
             paddingLeft: LINEUP_PADDING,
         }}
     >
@@ -165,8 +166,9 @@ export function renderLineupMenu(navigator: RNNNavigator, dispatch: any, lineup:
         }}
                     onPress={() => displayLineupActionMenu(navigator, dispatch, lineup, actions)}>
             <View style={{
+                flex:1,
                 paddingHorizontal: LINEUP_PADDING,
-                paddingVertical: 12,
+                justifyContent: 'center',
             }}>
 
                 <Image source={require('../img2/moreDotsGrey.png')} resizeMode="contain"/>

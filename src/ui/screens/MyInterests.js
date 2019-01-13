@@ -28,8 +28,8 @@ import * as Api from "../../managers/Api"
 import {Call, reduceList2} from "../../managers/Api"
 import ApiAction from "../../helpers/ApiAction"
 import type {Id} from "../../types"
-import {LINEUP_PADDING, openModalStatic, renderSimpleButton, STYLES} from "../UIStyles"
-import {GoodshContext, LINEUP_SECTIONS} from "../UIComponents"
+import {LINEUP_PADDING, LINEUP_SEP, openModalStatic, renderSimpleButton, STYLES} from "../UIStyles"
+import {GoodshContext, LINEUP_SECTIONS, TRANSPARENT_SPACER} from "../UIComponents"
 import {buildData, updateSplice0} from "../../helpers/DataUtils"
 import {FOLLOW_LINEUP} from "../lineup/actionTypes"
 import {mergeItemsAndPendings2} from "../../helpers/ModelUtils"
@@ -59,6 +59,8 @@ export default class MyInterests extends Screen<Props, State> {
     followIdsByListIds = {}
 
 
+    _spacer
+
     render() {
         const {data, followed_lists, navigator, dispatch, ...attr} = this.props
         let userId = currentUserId()
@@ -84,6 +86,7 @@ export default class MyInterests extends Screen<Props, State> {
 
         let sections = LINEUP_SECTIONS(navigator, dispatch)(lists);
 
+        this._spacer = TRANSPARENT_SPACER(LINEUP_SEP)
         return (
             <GoodshContext.Provider value={{userOwnResources: false}}>
                 <Feed
@@ -91,15 +94,8 @@ export default class MyInterests extends Screen<Props, State> {
                     displayName={"MyInterests"}
                     renderSectionHeader={({section}) => section.renderSectionHeader()}
                     sections={sections}
-                    // ListHeaderComponent={() => (
-                    //     <View style={{marginVertical: 10}}>
-                    //         <GButton style={{margin: LINEUP_PADDING}} onPress={() => {
-                    //             openModalStatic('goodsh.SearchSavingsOrUsers', i18n.t('my_interests_screen.search_lists_title'))
-                    //         }} text={i18n.t('my_interests_screen.search_lists')}></GButton>
-                    //     </View>
-                    // )}
                     ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t('my_interests_screen.empty_screen')}</Text>}
-
+                    SectionSeparatorComponent={({leadingItem})=> leadingItem ? this._spacer() : null}
                     fetchSrc={this.fetchSrc(userId)}
                     decorateLoadMoreCall={(sections: any[], call: Call) => {
                         let firstItems = sections.map(s => s.data).map(data => data[0])

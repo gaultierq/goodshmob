@@ -68,12 +68,14 @@ export class LineupTitlePure extends Component<Props, State> {
         return (
             <GoodshContext.Consumer>
                 { ({userOwnResources}) => (
-                    <View style={[{paddingTop: 6, }, style, {
+                    <View style={[style, {
                         flex:1,
+                        paddingBottom: 5,
                     }]}>
                         <View style={{
                             // flex: 1,
                             flexDirection: 'row',
+
                             // backgroundColor: 'purple'
                         }}>
 
@@ -98,19 +100,20 @@ export class LineupTitlePure extends Component<Props, State> {
 
                         </View>
                         {
-                            (!userOwnResources )&& author && author.firstName && <View style={{
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                flex: 0,
-                            }}>
-                                <Text style={styles.smallText}>{i18n.t('search.by')}</Text>
-                                <PersonRowI
-                                    person={author}
-                                    noImage={true}
-                                    style={{flex: 0, marginLeft: 4}} //TODO: rm when removed in UserRowI
-                                    textStyle={{color: Colors.greyish}}
-                                />
-                            </View>
+                            (!userOwnResources )&& author && author.firstName && (
+                                <View style={{
+                                    flex: 0,
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                }}>
+                                    <Text style={styles.smallText}>{i18n.t('search.by')}</Text>
+                                    <PersonRowI
+                                        person={author}
+                                        noImage={true}
+                                        style={{flex: 0, marginLeft: 4}} //TODO: rm when removed in UserRowI
+                                        textStyle={{color: Colors.greyish}}
+                                    />
+                                </View>)
                         }
                     </View>
                 )}

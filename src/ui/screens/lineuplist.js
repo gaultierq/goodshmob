@@ -24,6 +24,8 @@ import {actions as userActions, actionTypes as userActionTypes} from "../../redu
 import * as Api from "../../managers/Api"
 import {createCounter} from "../../helpers/DebugUtils"
 import {LINEUP_LIST_SELECTOR} from "../../helpers/Selectors"
+import {TRANSPARENT_SPACER} from "../UIComponents"
+import {LINEUP_SEP} from "../UIStyles"
 
 
 export type Props = FeedProps & {
@@ -48,6 +50,7 @@ const counter = createCounter(logger)
 @connect(LINEUP_LIST_SELECTOR())
 export class LineupListScreen extends Screen<Props, State> {
 
+    _spacer = TRANSPARENT_SPACER(LINEUP_SEP)
 
     constructor(props: Props) {
         super(props);
@@ -87,6 +90,7 @@ export class LineupListScreen extends Screen<Props, State> {
                 sections={sectionMaker && sectionMaker(lists)}
                 renderItem={this._renderItem}
                 fetchSrc={fetchSrc}
+                SectionSeparatorComponent={({leadingItem})=> leadingItem ? this._spacer() : null}
                 {...attributes}
             />
 

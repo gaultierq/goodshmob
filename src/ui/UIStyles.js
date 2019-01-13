@@ -87,6 +87,7 @@ export function styleMargin(left?: number, top?: number, right?: number, bottom?
 }
 
 export const LINEUP_PADDING = 15
+export const LINEUP_SEP = 14
 
 type ButtonOptions = {disabled?: boolean, loading?: boolean, style?: ViewStyle, textStyle?: TextStyle};
 

@@ -20,7 +20,7 @@ import {
 
 import {connect} from "react-redux"
 import type {Lineup, RNNNavigator} from "../../types"
-import {BACKGROUND_COLOR, LINEUP_PADDING, STYLES} from "../UIStyles"
+import {LINEUP_SEP, STYLES} from "../UIStyles"
 import {currentGoodshboxId, currentUserId, logged} from "../../managers/CurrentUser"
 import {Navigation} from 'react-native-navigation'
 import {displayLineupActionMenu, displayShareLineup, seeList, startAddItem} from "../Nav"
@@ -32,12 +32,11 @@ import {defaultRenderEmpty, LineupH1, renderInnerPlus} from "../components/Lineu
 import UserLineups from "./userLineups"
 import {TipConfig} from "../components/Tip"
 import LineupTitle from "../components/LineupTitle"
-import {SFP_TEXT_REGULAR} from "../fonts"
 import {GLineupAction, L_SHARE} from "../lineupRights"
 import {Colors} from "../colors"
 import {createCounter} from "../../helpers/DebugUtils"
 import {EmptyCell} from "../components/LineupCellSaving"
-import {renderSectionHeader2} from "../UIComponents"
+import {renderSectionHeader2, TRANSPARENT_SPACER} from "../UIComponents"
 
 
 type Props = {
@@ -59,6 +58,7 @@ const counter = createCounter(logger)
 }))
 export default class MyGoodsh extends Screen<Props, State> {
 
+    _spacer = TRANSPARENT_SPACER(LINEUP_SEP)
 
     state = {
     }
@@ -113,6 +113,7 @@ export default class MyGoodsh extends Screen<Props, State> {
                         },
                     ]);
                 }}
+                ItemSeparatorComponent={this._spacer}
                 {...attributes}
             />
 
@@ -128,7 +129,6 @@ export default class MyGoodsh extends Screen<Props, State> {
         return (
             <LineupH1
                 lineup={item} navigator={navigator}
-                withMenuButton={true}
                 onPressEmptyLineup={() => startAddItem(navigator, item)}
                 renderEmpty={this.renderEmptyLineup(navigator, item, targetRef)}
                 renderMenuButton={(actions) => {
@@ -138,8 +138,8 @@ export default class MyGoodsh extends Screen<Props, State> {
                     <LineupTitle
                         lineup={lineup}
                         style={{
-                            marginBottom: 10,
-                            paddingRight: 30,
+                            // marginBottom: 10,
+                            // paddingRight: 30,
                             // backgroundColor: 'blue',
                         }}
                     />
@@ -152,8 +152,9 @@ export default class MyGoodsh extends Screen<Props, State> {
                     </GTouchable>)
                 }
                 style={[
-                    {paddingTop: 8, paddingBottom: 12},
+                    // {paddingTop: 8, paddingBottom: 12},
                     {backgroundColor: index % 2 === 1 ? 'transparent' : 'rgba(255, 255, 255, 0.3)'},
+
                 ]}
             />)
     }
@@ -177,17 +178,17 @@ export default class MyGoodsh extends Screen<Props, State> {
 
         return (
             <View style={{
-                flex:0,
+                flex: 0,
                 flexDirection: 'row',
                 // backgroundColor: 'red',
-                height: 36,
+                // height: 36,
                 alignItems: 'center',
             }}>
                 <GTouchable
                     style={{
                         paddingHorizontal: 8,
                         // backgroundColor: 'yellow',
-                        paddingVertical: 16,
+                        justifyContent: 'center',
                     }}
                     onPress={() => {
                         displayShareLineup({
@@ -195,14 +196,19 @@ export default class MyGoodsh extends Screen<Props, State> {
                             lineup: item
                         })
                     }}>
-                    <Image source={require('../../img2/share-arrow.png')} resizeMode="contain"/>
+                    <View style={{flex:1,justifyContent: 'center', }}>
+                        <Image source={require('../../img2/share-arrow.png')} resizeMode="contain"/>
+                    </View>
+
                 </GTouchable>
                 <GTouchable style={{
                     paddingLeft: 0,
                     // backgroundColor: 'green',
-                    paddingVertical: 16,
+                    justifyContent: 'center',
                 }} onPress={() => displayLineupActionMenu(this.props.navigator, this.props.dispatch, item, _.filter(actions, a => a !== L_SHARE))}>
-                    <Image source={require('../../img2/sidedots.png')} resizeMode="contain"/>
+                    <View style={{flex:1,justifyContent: 'center', }}>
+                        <Image source={require('../../img2/sidedots.png')} resizeMode="contain"/>
+                    </View>
                 </GTouchable>
             </View>
         );
