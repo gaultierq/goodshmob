@@ -76,7 +76,6 @@ export default class FriendsList extends Component<Props, State> {
         } = this.props;
 
         let data = _.filter(friends, u => _.get(u, 'id') !== this.props.userId)
-        data = null
 
         return (
             <Feed
