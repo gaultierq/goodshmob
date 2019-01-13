@@ -103,9 +103,6 @@ let isFullyLoaded = (state, props) => {
 }))
 export default class HomeScreen extends Screen<Props, State> {
 
-
-    static navigatorButtons = getAddButton()
-
     _mounted: boolean
     feed: any
     onBoardingHelper = new HomeOnBoardingHelper()
@@ -120,6 +117,22 @@ export default class HomeScreen extends Screen<Props, State> {
         routes: ROUTES,
         // currentTip: TEST_TIP
     }
+
+    static navigatorButtons = _.merge({
+
+        //'component' doesnt work on android :/
+        leftButtons: [
+            __IS_IOS__ ?
+                {
+                    id: 'profile',
+                    component: 'goodsh.MyAvatar'
+                }:
+                {
+                    icon: require('../../img/goodshersHeaderProfileIcon.png'),
+                    id: 'profile',
+                }
+        ],
+    }, getAddButton())
 
     constructor(props: Props){
         super(props);
@@ -332,24 +345,6 @@ export default class HomeScreen extends Screen<Props, State> {
             style={{paddingHorizontal: 8, paddingVertical: 8, backgroundColor: BACKGROUND_COLOR}}
             horizontal
             showsHorizontalScrollIndicator={false}
-            ListHeaderComponent={(
-                <GTouchable style={{
-                    // width: 54,
-                    // height: 54,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderWidth: 2,
-                    padding: 1,
-                    borderColor: Colors.orange,
-                    borderRadius: 28,
-                    marginRight: 8,
-                    alignItems: 'center',
-                }} onPress={() => {
-                    this.showProfile()
-                }}>
-                    <GAvatar person={currentUser()} size={50}/>
-                </GTouchable>
-            )}
             ListFooterComponent={(
                 <GTouchable style={{
                     alignItems: 'center',

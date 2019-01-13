@@ -55,7 +55,6 @@ export default class FriendsList extends Component<Props, State> {
                     />
                 </GTouchable>
             ),
-        ListEmptyComponent: <Text style={STYLES.empty_message}>{i18n.t('friends.empty_screen')}</Text>
     }
 
     componentDidMount() {

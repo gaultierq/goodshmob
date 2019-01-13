@@ -280,9 +280,9 @@ export default class Feed extends Component<Props, State>  {
             onEndReached: this.props.onEndReached || this.onEndReached,
             onEndReachedThreshold: 0.1,
             style: style1,
-            ListHeaderComponent: this._ListHeaderComponent(isContentReady),
+            ListHeaderComponent: this._ListHeaderComponent,
             ListEmptyComponent: empty,
-            ListFooterComponent: isContentReady && this.renderFetchMoreLoader(ListFooterComponent),
+            ListFooterComponent: this._ListFooterComponent,
             renderSectionHeader: isContentReady && renderSectionHeader,
             onScroll: this._handleScroll,
             onScrollBeginDrag: Keyboard.dismiss,
@@ -299,6 +299,36 @@ export default class Feed extends Component<Props, State>  {
         return Feed.idk(this.props.ListHeaderComponent, isContentReady)
     }
 
+    _ListFooterComponent = () => {
+        const fetchingHead = this.state.isFetchingHead
+        const hasItems = this.hasItems()
+        let state = {
+            ..._.pick(this.state, ['isFetchingMore', 'isFetchingHead', 'isPulling']),
+            hasItems,
+            isContentReady: fetchingHead !== 'sending' && fetchingHead !== 'idle' || hasItems
+        }
+
+        const footer = _.compact([this.renderGetMoreLoader(), this.renderTryAgain(), this.props.ListFooterComponent])
+
+        return Feed.idk2(footer, state)
+    }
+
+    renderTryAgain() {
+        return this.state.isFetchingMore === 'ko' && this.renderFail(() => this.fetchMore({trigger: TRIGGER_USER_DIRECT_ACTION}))
+    }
+
+    renderGetMoreLoader() {
+        //this is a hack: do not display load more loader right away
+        let recentlyCreated = Date.now() - this.createdAt < 2000;
+        return this.state.isFetchingMore === 'sending' &&
+            !recentlyCreated &&
+            !this.props.doNotDisplayFetchMoreLoader && (
+                <Loader
+                    size={50}
+                    style={{margin: LINEUP_PADDING * 2, alignSelf: 'center'}}/>
+            )
+    }
+
     static idk(ListHeaderComponent, isContentReady) {
         const headerTransform = LHC => _.isFunction(LHC) ? LHC : icr => icr && LHC
 
@@ -313,6 +343,24 @@ export default class Feed extends Component<Props, State>  {
         }
         else {
             result = headerTransform(ListHeaderComponent)(isContentReady)
+        }
+        return result
+    }
+
+    static idk2(renderer, state) {
+        const transform = LHC => _.isFunction(LHC) ? LHC : state => state.isContentReady && LHC
+
+        let result
+        if (!renderer) result = null
+        else if (_.isArray(renderer)) {
+            result = (
+                <View>
+                    {renderer.map(LHC => Feed.idk2(LHC, state))}
+                </View>
+            )
+        }
+        else {
+            result = transform(renderer)(state)
         }
         return result
     }
@@ -432,6 +480,7 @@ export default class Feed extends Component<Props, State>  {
         }
     }
 
+
     canFetch(requestName: string = 'isFetchingHead', options: FeedFetchOption = {loadMore: false}): boolean {
         const reason = this.cannotFetchReason(requestName, options);
         if (reason) {
@@ -439,7 +488,6 @@ export default class Feed extends Component<Props, State>  {
         }
         return reason === null
     }
-
 
     cannotFetchReason(requestName: string = 'isFetchingHead', options: FeedFetchOption = {loadMore: false}): string  | null {
         if (this.isFiltering()) return "filtering list";
@@ -596,28 +644,6 @@ export default class Feed extends Component<Props, State>  {
                 refreshing={!!displayLoader}
                 onRefresh={this.onRefresh.bind(this)}
             />
-        )
-    }
-
-    renderFetchMoreLoader(ListFooterComponent: Node) {
-        //this is a hack: do not display load more loader right away
-        let recentlyCreated = Date.now() - this.createdAt < 2000;
-
-        return (<View style={{backgroundColor: 'transparent'}}>
-                {ListFooterComponent}
-                {
-                    this.state.isFetchingMore === 'sending' &&
-                    !recentlyCreated &&
-                    !this.props.doNotDisplayFetchMoreLoader && (
-                        <Loader
-                            size={50}
-                            style={{margin: LINEUP_PADDING * 2, alignSelf: 'center'}} />
-                    )
-                }
-                {
-                    this.state.isFetchingMore === 'ko'  && this.renderFail(() => this.fetchMore({trigger: TRIGGER_USER_DIRECT_ACTION}))
-                }
-            </View>
         )
     }
 

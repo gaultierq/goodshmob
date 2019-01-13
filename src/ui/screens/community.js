@@ -19,7 +19,7 @@ import {connect} from "react-redux"
 import FriendsList from "./friends"
 import {currentUserId} from "../../managers/CurrentUser"
 import GButton from "../components/GButton"
-import {LINEUP_PADDING, SIMPLE_BUTTON_TEXT_STYLE} from "../UIStyles"
+import {LINEUP_PADDING, SIMPLE_BUTTON_TEXT_STYLE, STYLES} from "../UIStyles"
 import GTouchable from "../GTouchable"
 import Icon from 'react-native-vector-icons/Ionicons'
 import {Colors} from "../colors"
@@ -63,6 +63,7 @@ export default class CommunityScreen extends Screen<Props, State> {
             <FriendsList
                 userId={currentUserId()}
                 navigator={this.props.navigator}
+                ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t('friends.empty_screen')}</Text>}
                 ListHeaderComponent={
                     <View>
                         <GTouchable style={{margin: LINEUP_PADDING, flexDirection: 'row',alignItems: 'center',}} onPress={
