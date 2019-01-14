@@ -190,6 +190,7 @@ export const LIST_SAVINGS_SELECTOR = () => {
                     return _.get(state, `data.${type}.${id}`)
                 })
             },
+
             pendingSelector,
         ],
         (

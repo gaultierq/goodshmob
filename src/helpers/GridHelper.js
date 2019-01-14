@@ -74,21 +74,25 @@ export function savingForGridRenderer2(
 
     const layout = calcGridLayout(width, columns)
     const gridStyles = obtainGridStyles(layout)
-
+    let displayAuthor = (left, right) => !!left && !!right && left !== right
     return ({index, item}) => {
         let resource = _.get(item, 'resource')
 
         return (
             <GoodshContext.Consumer>
-                {({userOwnResources}) => (
+                {({userOwnResources, resourceOwnerId}) => (
                     <GTouchable
                         key={`lineup.grid.${index}`}
                         style={gridCellPositioningStyle(gridStyles, index, layout)}
                         onPress={onPress(item)}>
                         <View>
                             {renderItemGridImage(resource, gridStyles)}
-                            {!userOwnResources && <GAvatar seeable person={item.user} size={30}
-                                                           style={{position: 'absolute', bottom: 5, right: 5}}/>}
+                            {(!userOwnResources || displayAuthor(_.get(item, 'user.id'), resourceOwnerId)) && (
+                                <GAvatar seeable person={item.user} size={30}
+                                         style={{
+                                             position: 'absolute',
+                                             bottom: 5, right: 5}}/>
+                            )}
                         </View>
                     </GTouchable>
                 )}

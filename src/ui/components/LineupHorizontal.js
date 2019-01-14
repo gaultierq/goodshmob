@@ -27,7 +27,13 @@ import {EmptyCell} from "./LineupCellSaving"
 import {LINEUP_PADDING} from "../UIStyles"
 import {InnerPlus, renderLineupMenu} from "../UIComponents"
 import LineupTitle from "./LineupTitle"
-import {LINEUP_ACTIONS_SELECTOR, LINEUP_SELECTOR, lineupIdExtract, LIST_SAVINGS_SELECTOR} from "../../helpers/Selectors"
+import {
+    LINEUP_ACTIONS_SELECTOR,
+    LINEUP_AUTHOR,
+    LINEUP_SELECTOR,
+    lineupIdExtract,
+    LIST_SAVINGS_SELECTOR
+} from "../../helpers/Selectors"
 import {Colors} from "../colors"
 import {FETCH_LINEUP, fetchLineup} from "../lineup/actions"
 import * as Api from "../../managers/Api"
@@ -46,21 +52,26 @@ type Props = {
     renderTitle?: (lineup: Lineup) => Node,
     style?: ViewStyle,
     renderEmpty?: (list: Lineup) => Node,
+    renderTouchable?: (saving: Saving, node: Node) => Node,
 };
 
 type State = {
-};
+    renderSaving: (saving:Saving) => Node,
+    renderTouchable?: (saving: Saving, node: ?Node) => ?Node,
+}
 
 export const ITEM_SEP = 10
 
 @connect(() => {
 
     const lineup = LINEUP_SELECTOR()
+    const author = LINEUP_AUTHOR()
     const savings = LIST_SAVINGS_SELECTOR()
     const actions = LINEUP_ACTIONS_SELECTOR()
 
     return (state, props) => ({
         lineup: lineup(state, props),
+        author: author(state, props),
         savings: savings(state, props),
         actions: actions(state, props),
     })
@@ -81,8 +92,16 @@ export class LineupHorizontalPure extends Component<Props, State> {
     static defaultProps = {
         skipLineupTitle: false,
         renderTitle: lineup => <LineupTitle lineup={lineup}/>,
-        renderSaving: saving => <LineupCellSaving item={saving.resource} />,
-        renderEmpty: (list: Lineup) => defaultRenderEmpty()
+        renderEmpty: (list: Lineup) => defaultRenderEmpty(),
+
+    }
+
+    constructor(props: Props) {
+        super(props)
+        this.state = {
+            renderSaving: this.props.renderSaving || this._renderDefaultSaving,
+            renderTouchable: this.props.renderTouchable || ((saving, node) => node)
+        }
     }
 
     componentDidMount() {
@@ -98,9 +117,15 @@ export class LineupHorizontalPure extends Component<Props, State> {
     render() {
 
         const {
-            lineup, savings,
-            renderTitle, renderMenuButton,
-            skipLineupTitle, style, actions, ...attributes} = this.props;
+            lineup,
+            savings,
+            renderTitle,
+            renderMenuButton,
+            skipLineupTitle,
+            style,
+            actions,
+            ...attributes
+        } = this.props;
 
         if (!lineup) {
             console.warn('lineup not found for id', lineupIdExtract)
@@ -136,8 +161,20 @@ export class LineupHorizontalPure extends Component<Props, State> {
     }
 
     _renderItem = ({item}) => {
-        return this.props.renderSaving(item)
+        let node = this.state.renderSaving(item)
+        return this.state.renderTouchable(item, node)
     }
+
+    _renderDefaultSaving = saving => {
+        let lAuthorId = _.get(this.props, 'author.id')
+        let sAuthorId = _.get(saving, 'user.id')
+        let author = lAuthorId && sAuthorId && lAuthorId !== sAuthorId ? {id: sAuthorId} : null
+
+        return (
+            <LineupCellSaving item={saving.resource} author={author}/>
+        )
+    }
+
 }
 
 export type Props1 = {
@@ -152,18 +189,16 @@ export const LineupH1 = connect()((props: Props1) => {
 
         <LineupHorizontal
             lineup={lineup}
-            renderSaving={saving => (
-                saving && <GTouchable
-                    disabled={!!saving.pending}
-                    onPress={() => seeActivityDetails(navigator, saving)}
-                    onLongPress={saving.pending ? null : ()=> {
-                        displaySavingActions(navigator, props.dispatch, saving.id, saving.type)
-                    }}
-                >
-                    <LineupCellSaving item={saving && saving.resource} />
-                </GTouchable>
-            )}
             renderMenuButton={(actions) => renderLineupMenu(navigator, dispatch, lineup, actions)}
+            renderTouchable={(saving: Saving, child) => (<GTouchable
+                disabled={!!saving.pending}
+                onPress={() => seeActivityDetails(navigator, saving)}
+                onLongPress={saving.pending ? null : ()=> {
+                    displaySavingActions(navigator, props.dispatch, saving.id, saving.type)
+                }}
+            >
+                {child}
+            </GTouchable>)}
             {...attr}
         />
     </GTouchable>
