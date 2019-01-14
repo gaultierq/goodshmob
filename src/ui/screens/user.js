@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import {Alert, Clipboard, Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import {Alert, SafeAreaView, Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
 import type {Id, RequestState, RNNNavigator, User} from "../../types"
 import {CheckBox} from "react-native-elements"
 import {connect} from "react-redux"
@@ -71,11 +71,11 @@ export default class UserScreen extends Screen<Props, State> {
 
         let userId = user.id
         return (
-            <MainBackground>
+            <SafeAreaView style={{backgroundColor: Colors.white}}>
                 <UserLineups
                     displayName={"user feed"}
                     feedId={"user list"}
-                    style={{marginTop: 40,}}
+                    // style={{marginTop: 40,}}
                     userId={userId}
                     navigator={this.props.navigator}
                     ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t('lineups.empty_screen')}</Text>}
@@ -110,7 +110,7 @@ export default class UserScreen extends Screen<Props, State> {
                     hideFilter={!this.state.showFilter}
 
                 />
-            </MainBackground>
+            </SafeAreaView>
         );
     }
 }

@@ -96,7 +96,7 @@ class NetworkScreen extends Screen<Props, State> {
     async refreshActivitiesCount() {
         //hack: this counter is broken. Probably due to the activity groups
         return
-        
+
         let count = await Stream.networkNewActivityCount()
         logger.info("unfetched activities:", count)
         if (count <= 0) count = null

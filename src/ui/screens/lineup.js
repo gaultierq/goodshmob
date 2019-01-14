@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import {Image, ImageBackground, Keyboard, ScrollView, StyleSheet, Text, View} from 'react-native'
+import {Image, ImageBackground, Keyboard, SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
 import {InnerPlus, ListColumnsSelector, renderLinkInText} from "../UIComponents"
@@ -126,7 +126,7 @@ class LineupScreen extends Screen<Props, State> {
         }
 
         return (
-            <View
+            <SafeAreaView
                 onLayout={e => this.containerHeight = e.nativeEvent.layout.height}
                 style={{
                     flex: 1,
@@ -141,9 +141,6 @@ class LineupScreen extends Screen<Props, State> {
                         }
                     }}
                     scrollEventThrottle={100}
-                    contentContainerStyle={{
-                        paddingTop: 40,
-                    }}
                 >
                     <View
 
@@ -185,7 +182,7 @@ class LineupScreen extends Screen<Props, State> {
                     </View>
                 </ScrollView>
                 {_.some(data, s => _.get(s, 'resource.type') === 'Place') && this.renderMapButton()}
-            </View>
+            </SafeAreaView>
         );
     }
 
