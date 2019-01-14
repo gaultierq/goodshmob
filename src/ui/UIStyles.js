@@ -87,6 +87,7 @@ export function styleMargin(left?: number, top?: number, right?: number, bottom?
 }
 
 export const LINEUP_PADDING = 15
+export const LINEUP_SEP = 14
 
 type ButtonOptions = {disabled?: boolean, loading?: boolean, style?: ViewStyle, textStyle?: TextStyle};
 
@@ -218,6 +219,7 @@ export type DimensionSelector = {
     normal: any,
     big: any,
 }
+
 export const selectDimension = (obj: DimensionSelector) => {
     if (__DEVICE_WIDTH__ < 400) return obj.small
     if (__DEVICE_WIDTH__ < 600) return obj.normal

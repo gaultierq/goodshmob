@@ -50,7 +50,7 @@ export type Props = {
     style?: ViewStyle,
     scrollUpOnBack?:?() => ?boolean,
     visibility?: ScreenVisibility,
-    filter?:FilterConfig<any>,
+    filter?: ?FilterConfig<any>,
     displayName?: string,
     doNotDisplayFetchMoreLoader?:boolean,
     listRef ?:(any => void | string),
@@ -272,9 +272,6 @@ export default class Feed extends Component<Props, State>  {
         const style1 = [style];
         const isContentReady: boolean = fetchingHead !== 'sending' && fetchingHead !== 'idle' || hasItems
 
-
-
-
         let params =  {
             ref: listRef,
             renderItem,
@@ -283,9 +280,9 @@ export default class Feed extends Component<Props, State>  {
             onEndReached: this.props.onEndReached || this.onEndReached,
             onEndReachedThreshold: 0.1,
             style: style1,
-            ListHeaderComponent: this._ListHeaderComponent(isContentReady),
+            ListHeaderComponent: this._ListHeaderComponent,
             ListEmptyComponent: empty,
-            ListFooterComponent: isContentReady && this.renderFetchMoreLoader(ListFooterComponent),
+            ListFooterComponent: this._ListFooterComponent,
             renderSectionHeader: isContentReady && renderSectionHeader,
             onScroll: this._handleScroll,
             onScrollBeginDrag: Keyboard.dismiss,
@@ -300,6 +297,36 @@ export default class Feed extends Component<Props, State>  {
 
     _ListHeaderComponent = (isContentReady: boolean) => {
         return Feed.idk(this.props.ListHeaderComponent, isContentReady)
+    }
+
+    _ListFooterComponent = () => {
+        const fetchingHead = this.state.isFetchingHead
+        const hasItems = this.hasItems()
+        let state = {
+            ..._.pick(this.state, ['isFetchingMore', 'isFetchingHead', 'isPulling']),
+            hasItems,
+            isContentReady: fetchingHead !== 'sending' && fetchingHead !== 'idle' || hasItems
+        }
+
+        const footer = _.compact([this.renderGetMoreLoader(), this.renderTryAgain(), this.props.ListFooterComponent])
+
+        return Feed.idk2(footer, state)
+    }
+
+    renderTryAgain() {
+        return this.state.isFetchingMore === 'ko' && this.renderFail(() => this.fetchMore({trigger: TRIGGER_USER_DIRECT_ACTION}))
+    }
+
+    renderGetMoreLoader() {
+        //this is a hack: do not display load more loader right away
+        let recentlyCreated = Date.now() - this.createdAt < 2000;
+        return this.state.isFetchingMore === 'sending' &&
+            !recentlyCreated &&
+            !this.props.doNotDisplayFetchMoreLoader && (
+                <Loader
+                    size={50}
+                    style={{margin: LINEUP_PADDING * 2, alignSelf: 'center'}}/>
+            )
     }
 
     static idk(ListHeaderComponent, isContentReady) {
@@ -320,6 +347,24 @@ export default class Feed extends Component<Props, State>  {
         return result
     }
 
+    static idk2(renderer, state) {
+        const transform = LHC => _.isFunction(LHC) ? LHC : state => state.isContentReady && LHC
+
+        let result
+        if (!renderer) result = null
+        else if (_.isArray(renderer)) {
+            result = (
+                <View>
+                    {renderer.map(LHC => Feed.idk2(LHC, state))}
+                </View>
+            )
+        }
+        else {
+            result = transform(renderer)(state)
+        }
+        return result
+    }
+
     isVisible() {
         return this.props.visibility === 'visible';
     }
@@ -336,7 +381,7 @@ export default class Feed extends Component<Props, State>  {
 
     hasItems(): boolean {
         return this.itemsLen() > 0;
-    }
+    }onlyEmptyFeeds
 
     itemsLen(): number {
         return _.size(this.getFlatItems());
@@ -435,6 +480,7 @@ export default class Feed extends Component<Props, State>  {
         }
     }
 
+
     canFetch(requestName: string = 'isFetchingHead', options: FeedFetchOption = {loadMore: false}): boolean {
         const reason = this.cannotFetchReason(requestName, options);
         if (reason) {
@@ -442,7 +488,6 @@ export default class Feed extends Component<Props, State>  {
         }
         return reason === null
     }
-
 
     cannotFetchReason(requestName: string = 'isFetchingHead', options: FeedFetchOption = {loadMore: false}): string  | null {
         if (this.isFiltering()) return "filtering list";
@@ -602,32 +647,10 @@ export default class Feed extends Component<Props, State>  {
         )
     }
 
-    renderFetchMoreLoader(ListFooterComponent: Node) {
-        //this is a hack: do not display load more loader right away
-        let recentlyCreated = Date.now() - this.createdAt < 2000;
-
-        return (<View style={{backgroundColor: 'transparent'}}>
-                {ListFooterComponent}
-                {
-                    this.state.isFetchingMore === 'sending' &&
-                    !recentlyCreated &&
-                    !this.props.doNotDisplayFetchMoreLoader && (
-                        <Loader
-                            size={50}
-                            style={{margin: LINEUP_PADDING * 2, alignSelf: 'center'}} />
-                    )
-                }
-                {
-                    this.state.isFetchingMore === 'ko'  && this.renderFail(() => this.fetchMore({trigger: TRIGGER_USER_DIRECT_ACTION}))
-                }
-            </View>
-        )
-    }
-
     renderFail(fetch: () => any) {
 
         return (
-            <View style={{padding: 12}}>
+            <View style={{padding: LINEUP_PADDING, flexDirection: this.props.horizontal ? 'row' : 'column'}}>
                 <Text style={{alignSelf: "center"}}>{i18n.t('loading.error')}</Text>
                 {renderSimpleButton(i18n.t('actions.try_again'), fetch)}
             </View>
@@ -635,7 +658,7 @@ export default class Feed extends Component<Props, State>  {
     }
 
     hasMore() {
-        return (typeof this.props.hasMore !== 'undefined' && this.props.hasMore) || true;
+        return typeof this.props.hasMore !== 'undefined' ? this.props.hasMore : true
     }
 
 

@@ -1,6 +1,6 @@
 // @flow
 
-import type {Element} from "react"
+import type {Element, Node} from "react"
 import React, {Component} from 'react'
 import {Image, LayoutAnimation, Platform, StyleSheet, Text, UIManager, View} from 'react-native'
 import {Colors} from "./colors"
@@ -20,7 +20,7 @@ import {currentGoodshboxId} from "../managers/CurrentUser"
 import {SEARCH_CATEGORIES_TYPE} from "../helpers/SearchConstants"
 import i18n from "../i18n/i18n"
 import HTMLView from "react-native-htmlview/HTMLView"
-import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM} from "./fonts"
+import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "./fonts"
 import {createOpenModalLink} from "../managers/Links"
 import SearchItems from "./screens/searchitems"
 import {Loader} from "./Loader"
@@ -132,6 +132,7 @@ export const RENDER_SECTION_HEADER = (navigator: RNNNavigator, dispatch: Dispatc
         lineup={lineup}
         style={{
             backgroundColor: BACKGROUND_COLOR,
+            // backgroundColor: 'purple',
             paddingLeft: LINEUP_PADDING,
         }}
     >
@@ -165,8 +166,9 @@ export function renderLineupMenu(navigator: RNNNavigator, dispatch: any, lineup:
         }}
                     onPress={() => displayLineupActionMenu(navigator, dispatch, lineup, actions)}>
             <View style={{
+                flex:1,
                 paddingHorizontal: LINEUP_PADDING,
-                paddingVertical: 12,
+                justifyContent: 'center',
             }}>
 
                 <Image source={require('../img2/moreDotsGrey.png')} resizeMode="contain"/>
@@ -487,4 +489,22 @@ export class InnerPlus extends Component<{plusStyle?: ViewStyle}, {}> {
             </View>
         )
     }
+}
+
+
+export const renderSectionHeader2 = (name: string, children?: Node) => {
+    return (
+        <View style={{
+            flexDirection: 'row',
+            backgroundColor: BACKGROUND_COLOR,
+            paddingHorizontal: LINEUP_PADDING,
+            paddingVertical: 8
+        }}>
+            <Text style={{
+                fontSize: 22,
+                fontFamily: SFP_TEXT_REGULAR,
+            }}>{name}</Text>
+            {children}
+        </View>
+    );
 }

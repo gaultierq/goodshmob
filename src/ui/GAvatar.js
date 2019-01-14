@@ -6,11 +6,14 @@ import {AVATAR_BACKGROUNDS, Colors} from "./colors"
 import type {Person} from "../types"
 import {ViewStyle} from "../types"
 import GImage from "./components/GImage"
-import {firstLetter, hashCode, isId} from "../helpers/StringUtils"
+import {firstLetter, hashCode} from "../helpers/StringUtils"
 import {SFP_TEXT_REGULAR} from "./fonts"
 import {selectDimension} from "./UIStyles"
 import {buildUserUrl, openLinkSafely} from "../managers/Links"
 import GTouchable from "./GTouchable"
+import {createSelector} from 'reselect'
+import {USER_ACTIONS_SELECTOR, USER_SELECTOR, USER_SYNCED_FRIENDS_COUNT_SELECTOR} from "../helpers/Selectors"
+import connect from "react-redux/es/connect/connect"
 
 type Props = {
     person: Person,
@@ -20,6 +23,13 @@ type Props = {
 }
 type State = {}
 
+@connect(() => {
+    const user = USER_SELECTOR()
+
+    return (state, props) => ({
+        user: user(state, {user: props.person}),
+    })
+})
 export class GAvatar extends Component<Props, State> {
 
     static defaultProps = {
@@ -28,7 +38,7 @@ export class GAvatar extends Component<Props, State> {
     static FACEBOOK_REGEX = /^https:\/\/graph\.facebook\.com\/[0-9]+\/picture$/
 
     render() {
-        const user = this.props.person
+        const user = this.props.user
 
         if (this.props.seeable && user) {
 
@@ -38,9 +48,10 @@ export class GAvatar extends Component<Props, State> {
         return this.renderInner()
     }
     renderInner() {
-        const {person, style, size, ...attributes} = this.props;
+        const {user, style, size, ...attributes} = this.props;
 
         let uri = null
+        let person = user
 
         if (person) {
             uri = person.image

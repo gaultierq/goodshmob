@@ -10,7 +10,7 @@ import {
     Text,
     TouchableOpacity,
     View,
-    PushNotificationIOS
+    PushNotificationIOS, Image, StyleSheet, SafeAreaView
 } from 'react-native'
 import {connect} from "react-redux"
 import {currentUser, currentUserId, logged} from "../../managers/CurrentUser"
@@ -23,7 +23,7 @@ import {FETCH_ACTIVITIES, fetchMyNetwork} from "../networkActions"
 import * as Nav from "../Nav"
 import {seeActivityDetails} from "../Nav"
 import Screen from "../components/Screen"
-import {LINEUP_PADDING, renderSimpleButton, STYLES} from "../UIStyles"
+import {BACKGROUND_COLOR, LINEUP_PADDING, renderSimpleButton, STYLES} from "../UIStyles"
 import {Colors} from "../colors"
 import AppShareButton from "../components/AppShareButton"
 import {Call, safeDispatchAction} from "../../managers/Api"
@@ -36,6 +36,7 @@ import Config from "react-native-config"
 import {Tip} from "../components/Tip"
 import {ScreenVisibilityListener as RNNScreenVisibilityListener} from "react-native-navigation"
 import BugsnagManager from "../../managers/BugsnagManager"
+import LastActiveUsers from "./last_active_users"
 
 type Props = NavigableProps;
 
@@ -59,29 +60,9 @@ const logger = rootlogger.createLogger('network')
 }))
 class NetworkScreen extends Screen<Props, State> {
 
-    static navigatorButtons = {
-        // rightButtons: [
-        //
-        //     {
-        //         id: 'interactions',
-        //         icon: require('../../img2/bell.png'),
-        //         // title: i18n.t("home_search_screen.community.title")
-        //     },
-        // ],
-        rightButtons: [],
-        leftButtons: [
-
-            {
-                id: 'friends',
-                icon: require('../../img2/add-user.png'),
-                // title: i18n.t("home_search_screen.community.title")
-            }
-        ],
-    };
-
 
     static navigatorStyle = {
-        navBarBackgroundColor: Colors.blue
+        navBarHidden: true,
     };
 
     state = {
@@ -113,6 +94,9 @@ class NetworkScreen extends Screen<Props, State> {
     }
 
     async refreshActivitiesCount() {
+        //hack: this counter is broken. Probably due to the activity groups
+        return
+
         let count = await Stream.networkNewActivityCount()
         logger.info("unfetched activities:", count)
         if (count <= 0) count = null
@@ -139,40 +123,6 @@ class NetworkScreen extends Screen<Props, State> {
                 this.feed.scrollToLocation({sectionIndex: 0, itemIndex: 0, viewOffset: 50})
             }
 
-        }
-
-        if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
-            if (event.id === 'interactions') { // this is the same id field from the static navigatorButtons definition
-
-                navigator.showModal({
-                    screen: 'goodsh.InteractionScreen', // unique ID registered with Navigation.registerScreen
-                    title: i18n.t("community.screens.notifications"),
-                    passProps:{
-                        style: {marginTop: 38},
-                    },
-                    navigatorButtons: Nav.CANCELABLE_MODAL,
-                });
-            }
-
-            if (event.id === 'friends') {
-                navigator.showModal({
-                    screen: 'goodsh.Community',
-                    title: i18n.t("community.screens.friends"),
-                    // passProps:{
-                    //     userId: currentUserId(),
-                    // },
-                    navigatorButtons: {
-                        ...Nav.CANCELABLE_MODAL,
-                        // rightButtons: [
-                        //
-                        //     {
-                        //         id: 'friendsSearch',
-                        //         icon: require('../../img2/searchHeaderIcon.png'),
-                        //     },
-                        // ]
-                    }
-                });
-            }
         }
     }
 
@@ -210,13 +160,19 @@ class NetworkScreen extends Screen<Props, State> {
         let fc = _.get(currentUser(), 'meta.friendsCount')
 
         return (
-            <View style={{flex:1}}>
+            <SafeAreaView style={{flex:1}}>
                 <Feed
                     displayName={"Network"}
                     sections={sections}
                     renderItem={({item, index}) => this.renderItem(item, index)}
                     renderSectionFooter={({section}) => this.renderSectionFooter(section)}
-                    ListHeaderComponent={fc !== 0 && this.renderAskInput()}
+                    ListHeaderComponent={(
+                        <LastActiveUsers
+                            userId={currentUserId()}
+                            showsHorizontalScrollIndicator={false}
+                            style={{paddingHorizontal: 8, paddingVertical: 8, backgroundColor: BACKGROUND_COLOR}}
+                        />
+                    )}
                     listRef={ref => this.feed = ref}
                     fetchSrc={{
                         callFactory: fetchMyNetwork,
@@ -233,8 +189,7 @@ class NetworkScreen extends Screen<Props, State> {
                     decorateLoadMoreCall={(sections: any[], call: Call) => call.addQuery({id_lt: _.last(sections).id})}
                     visibility={super.getVisibility()}
                     SectionSeparatorComponent={({leadingItem, trailingItem, leadingSection, section, trailingSection}) => {
-                        // return <View style={{height: 10, backgroundColor: 'blue'}}/>
-                        if (!leadingItem && trailingItem === _.get(section, 'data[0]')) {
+                        if (leadingSection && !leadingItem && trailingItem === _.get(section, 'data[0]')) {
                             return TRANSPARENT_SPACER(20)()
                         }
                         return null
@@ -265,11 +220,11 @@ class NetworkScreen extends Screen<Props, State> {
                         />
                     }
                     {...attr}
-                    contentOffset={{x: 0, y: 100}}
+                    // contentOffset={{x: 0, y: 100}}
 
                 />
 
-            </View>
+            </SafeAreaView>
         );
     }
 

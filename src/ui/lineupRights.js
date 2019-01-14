@@ -67,7 +67,7 @@ export class LineupRights {
             case L_RENAME:
                 return isMine
             case L_ADD_ITEM:
-                return isMine
+                return isMine || followed === true
             case L_DELETE:
                 return isMine
             case L_FOLLOW:

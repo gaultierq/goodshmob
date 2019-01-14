@@ -1,118 +1,94 @@
 // @flow
 
 import type {Node} from 'react'
-import React from 'react'
+import React, {Component} from 'react'
 import {Image, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {connect} from "react-redux"
-import {logged} from "../../managers/CurrentUser"
+import {currentUserId, logged} from "../../managers/CurrentUser"
 import Feed from "../components/feed"
-import type {Id, Item, RNNNavigator, User} from "../../types"
-import {buildData, doDataMergeInState} from "../../helpers/DataUtils"
-import Screen from "../components/Screen"
+import type {Id, Item, User} from "../../types"
+import {doDataMergeInState} from "../../helpers/DataUtils"
 import GTouchable from "../GTouchable"
-import {openUserSheet, seeUser} from "../Nav"
 import {LINEUP_PADDING, STYLES} from "../UIStyles"
 import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
 import PersonRowI from "../activity/components/PeopleRow"
+import {pressToSeeUser, pressToSeeUserSheet} from "../../managers/Links"
+import {createStructuredSelector} from "reselect"
+import {FRIENDS_SELECTOR} from "../../helpers/Selectors"
+import * as Api from "../../managers/Api"
 
 
 type Props = {
     userId: Id,
-    navigator: RNNNavigator,
+    friends?: User[],
     renderItem?: (item:Item)=>Node,
-
-    onPressItem?: (item: User)=>void,
-    data?: any,
-};
+}
 
 type State = {
-};
+}
 
 @logged
-@connect(state => ({
-    data: state.data,
-}))
-export default class FriendsList extends Screen<Props, State> {
+@connect(() => createStructuredSelector(
+    {
+        friends: FRIENDS_SELECTOR(),
+    }
+))
+export default class FriendsList extends Component<Props, State> {
 
-    constructor(props: Props){
-        super(props);
-        props.navigator.setButtons({
-            rightButtons: [{
-                id: 'friendsSearch',
-                icon: require('../../img2/search.png'),
-            }]
-        })
-        props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+    static defaultProps = {
+        renderItem: ({item}) =>
+            (
+                <GTouchable
+                    onLongPress={pressToSeeUserSheet(item)}
+                    onPress={pressToSeeUser(item)}>
+                    <PersonRowI
+                        person={item}
+                        style={{margin: LINEUP_PADDING}}
+                        rightComponent={(
+                            <GTouchable style={{
+                                paddingLeft: 0,
+                                paddingVertical: 16,
+                            }} onPress={pressToSeeUserSheet(item)}>
+                                <Image source={require('../../img2/sidedots.png')} resizeMode="contain"/>
+                            </GTouchable>
+                        )}
+                    />
+                </GTouchable>
+            ),
     }
 
-    onNavigatorEvent(event: any) { // this is the onPress handler for the two buttons together
-        if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
-            if (event.id === 'friendsSearch') {
-                this.props.navigator.push({
-                    screen: 'goodsh.UserSearchScreen',
-                    title: i18n.t("search.in_users")
-                });
-            }
-        }
+    componentDidMount() {
+        Api.safeDispatchAction.call(
+            this,
+            this.props.dispatch,
+            userActions.getUserAndTheirFriends(currentUserId()).createActionDispatchee(userActionTypes.GET_USER),
+            'reqFetchUser'
+        )
     }
 
     render() {
 
         const {
             userId,
+            friends,
             renderItem,
-            data,
             ...attr
         } = this.props;
 
-
-        let user: User = buildData(this.props.data, "users", userId);
-
-        let friends, callFactory, action;
-        if (user && user.friends) {
-            friends = user.friends;
-            callFactory = () => userActions.fetchFriendsCall(userId);
-            action = userActionTypes.LOAD_FRIENDS;
-        }
-        else {
-            friends = [];
-            callFactory = () => userActions.getUserAndTheirFriends(userId);
-            action = userActionTypes.GET_USER_W_FRIENDS;
-        }
+        let data = _.filter(friends, u => _.get(u, 'id') !== this.props.userId)
 
         return (
             <Feed
-                data={friends}
-                renderItem={({item}) => (renderItem||this.renderItem.bind(this))(item)}
+                data={data}
+                renderItem={renderItem}
                 fetchSrc={{
-                    callFactory,
-                    action,
+                    callFactory: () => userActions.fetchFriendsCall(userId),
+                    action: userActionTypes.GET_USER_W_FRIENDS,
                     options: {userId}
                 }}
-                ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t('friends.empty_screen')}</Text>}
                 {...attr}
             />
         );
-    }
-
-    renderItem(item: Item) : Node {
-        let user = buildData(this.props.data, "users", item.id);
-        return (
-            <GTouchable
-                onLongPress={() => {openUserSheet(this.props.navigator, user)}}
-                onPress={()=> {seeUser(this.props.navigator, user)}}>
-                <PersonRowI
-                    person={user}
-                    style={{margin: LINEUP_PADDING}}
-                    rightComponent={<GTouchable style={{
-                        paddingLeft: 0,
-                        paddingVertical: 16,
-                    }} onPress={() => openUserSheet(this.props.navigator, user)}>
-                        <Image source={require('../../img2/sidedots.png')} resizeMode="contain"/>
-                    </GTouchable>}
-                />
-            </GTouchable>
-        )
     }
 }
 

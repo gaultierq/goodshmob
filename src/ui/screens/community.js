@@ -19,7 +19,7 @@ import {connect} from "react-redux"
 import FriendsList from "./friends"
 import {currentUserId} from "../../managers/CurrentUser"
 import GButton from "../components/GButton"
-import {LINEUP_PADDING, SIMPLE_BUTTON_TEXT_STYLE} from "../UIStyles"
+import {LINEUP_PADDING, SIMPLE_BUTTON_TEXT_STYLE, STYLES} from "../UIStyles"
 import GTouchable from "../GTouchable"
 import Icon from 'react-native-vector-icons/Ionicons'
 import {Colors} from "../colors"
@@ -36,12 +36,34 @@ type State = {
 @connect()
 export default class CommunityScreen extends Screen<Props, State> {
 
+    constructor(props: Props){
+        super(props);
+        props.navigator.setButtons({
+            rightButtons: [{
+                id: 'friendsSearch',
+                icon: require('../../img2/search.png'),
+            }]
+        })
+        props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+    }
+
+    onNavigatorEvent(event: any) { // this is the onPress handler for the two buttons together
+        if (event.type === 'NavBarButtonPress') { // this is the event type for button presses
+            if (event.id === 'friendsSearch') {
+                this.props.navigator.push({
+                    screen: 'goodsh.UserSearchScreen',
+                    title: i18n.t("search.in_users")
+                });
+            }
+        }
+    }
 
     render() {
         return (
             <FriendsList
                 userId={currentUserId()}
                 navigator={this.props.navigator}
+                ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t('friends.empty_screen')}</Text>}
                 ListHeaderComponent={
                     <View>
                         <GTouchable style={{margin: LINEUP_PADDING, flexDirection: 'row',alignItems: 'center',}} onPress={
@@ -49,7 +71,7 @@ export default class CommunityScreen extends Screen<Props, State> {
                                 this.props.navigator.push({
                                     screen: 'goodsh.InviteManyContacts',
                                     // navigatorButtons: CANCELABLE_MODAL,
-                                    title: "Inviter des contacts",
+                                    title: i18n.t('invite_contacts'),
                                 })
                             }
                         }>
@@ -58,7 +80,6 @@ export default class CommunityScreen extends Screen<Props, State> {
                         </GTouchable>
                         <FeedSeparator/>
                     </View>
-
                 }
             />
         )

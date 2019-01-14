@@ -1,10 +1,10 @@
 // @flow
 
 import React from 'react'
-import {Image, ImageBackground, Keyboard, ScrollView, StyleSheet, Text, View} from 'react-native'
+import {Image, ImageBackground, Keyboard, SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {connect} from "react-redux"
 import {logged} from "../../managers/CurrentUser"
-import {InnerPlus, ListColumnsSelector, renderLinkInText} from "../UIComponents"
+import {GoodshContext, InnerPlus, ListColumnsSelector, renderLinkInText} from "../UIComponents"
 import * as Api from "../../managers/Api"
 import Feed from "../components/feed"
 import type {Lineup, Saving} from "../../types"
@@ -59,9 +59,6 @@ type State = {
     renderType: 'grid' | 'stream',
     mapDisplay: boolean
 }
-
-
-
 
 @logged
 @connect(() => {
@@ -126,66 +123,65 @@ class LineupScreen extends Screen<Props, State> {
         }
 
         return (
-            <View
-                onLayout={e => this.containerHeight = e.nativeEvent.layout.height}
-                style={{
-                    flex: 1,
-                    // backgroundColor: 'orange',
-                    height: '100%',
-                }}>
-                <ScrollView
-                    // onEndReached={this._onEndReached}
-                    onScroll={({nativeEvent}) => {
-                        if (isCloseToBottom(nativeEvent)) {
-                            this._onEndReached()
-                        }
-                    }}
-                    scrollEventThrottle={100}
-                    contentContainerStyle={{
-                        paddingTop: 40,
-                    }}
-                >
-                    <View
+            <GoodshContext.Provider value={{userOwnResources: true, resourceOwnerId: _.get(lineup, 'user.id')}}>
+                <SafeAreaView
+                    onLayout={e => this.containerHeight = e.nativeEvent.layout.height}
+                    style={{
+                        flex: 1,
+                        // backgroundColor: 'orange',
+                        height: '100%',
+                    }}>
+                    <ScrollView
+                        // onEndReached={this._onEndReached}
+                        onScroll={({nativeEvent}) => {
+                            if (isCloseToBottom(nativeEvent)) {
+                                this._onEndReached()
+                            }
+                        }}
+                        scrollEventThrottle={100}
+                    >
+                        <View
 
-                        style={{
-                            flex:1,
-                            // backgroundColor: 'pink',
-                            // height: '100%',
-                        }}>
-                        <View onLayout={e => this.headerHeight = e.nativeEvent.layout.height}>
-                            <LineupHeader lineup={lineup} navigator={this.props.navigator}/>
-                            <LineupMedals navigator={this.props.navigator} lineup={lineup}/>
-                            <FeedSeparator style={{marginTop: LINEUP_PADDING}}/>
-                            <View>
-                                <ListColumnsSelector
-                                    disabled={sc <= 0}
-                                    size={30}
-                                    initialIndex={this.state.renderType === 'stream' ? 1 : 0}
-                                    onTabPressed={index => this.setState({renderType: index === 0 ? 'grid' : 'stream'})}
-                                />
-                                <FeedSeparator/>
+                            style={{
+                                flex:1,
+                                // backgroundColor: 'pink',
+                                // height: '100%',
+                            }}>
+                            <View onLayout={e => this.headerHeight = e.nativeEvent.layout.height}>
+                                <LineupHeader lineup={lineup} navigator={this.props.navigator}/>
+                                <LineupMedals navigator={this.props.navigator} lineup={lineup}/>
+                                <FeedSeparator style={{marginTop: LINEUP_PADDING}}/>
+                                <View>
+                                    <ListColumnsSelector
+                                        disabled={sc <= 0}
+                                        size={30}
+                                        initialIndex={this.state.renderType === 'stream' ? 1 : 0}
+                                        onTabPressed={index => this.setState({renderType: index === 0 ? 'grid' : 'stream'})}
+                                    />
+                                    <FeedSeparator/>
+                                </View>
+                                { this.state.mapDisplay && this.renderMap() }
                             </View>
-                            { this.state.mapDisplay && this.renderMap() }
-                        </View>
-                        <Feed
-                            feedRef={ref => this.feedRef = ref}
-                            key={"lineup-" + this.state.renderType}
-                            data={data}
-                            renderItem={this.state.renderType === 'grid' ? this.renderItemGrid.bind(this) : this.renderItemStream.bind(this)}
-                            fetchSrc={fetchSrc}
-                            hasMore={true}
-                            ListEmptyComponent={renderLinkInText(canAdd ? "empty_lineup_add" : "empty_lineup_cry", buildSearchItemUrl(this.lineupId()))}
-                            numColumns={numColumns}
-                            ItemSeparatorComponent={this.layout.ItemSeparatorComponent}
-                            style={{flex: 1, backgroundColor: Colors.white}}
-                            // listview in scrollview is not happy with the onEndReached event
-                            onEndReached={() => null}
-                        />
+                            <Feed
+                                feedRef={ref => this.feedRef = ref}
+                                key={"lineup-" + this.state.renderType}
+                                data={data}
+                                renderItem={this.state.renderType === 'grid' ? this.renderItemGrid.bind(this) : this.renderItemStream.bind(this)}
+                                fetchSrc={fetchSrc}
+                                hasMore={true}
+                                ListEmptyComponent={renderLinkInText(canAdd ? "empty_lineup_add" : "empty_lineup_cry", buildSearchItemUrl(this.lineupId()))}
+                                numColumns={numColumns}
+                                ItemSeparatorComponent={this.layout.ItemSeparatorComponent}
+                                style={{flex: 1, backgroundColor: Colors.white}}
+                                // listview in scrollview is not happy with the onEndReached event
+                                onEndReached={() => null}
+                            />
 
-                    </View>
-                </ScrollView>
-                {_.some(data, s => _.get(s, 'resource.type') === 'Place') && this.renderMapButton()}
-            </View>
+                        </View>
+                    </ScrollView>
+                    {_.some(data, s => _.get(s, 'resource.type') === 'Place') && this.renderMapButton()}
+                </SafeAreaView>
+            </GoodshContext.Provider>
         );
     }
 

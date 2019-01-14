@@ -3,6 +3,7 @@
 import Config from "react-native-config"
 import type {Id, Lineup, User} from "../types"
 import {Linking} from "react-native"
+import URL from "url-parse"
 
 
 let passPropsString = (passProps, sep = "?") => _.isEmpty(passProps) ? "" : `${sep}passProps=${encodeURIComponent(JSON.stringify(passProps))}`
@@ -45,4 +46,26 @@ export function openLinkSafely(url: ?string) {
 
 export function pressToSeeUser(user: User) {
     return () => openLinkSafely(buildUserUrl(user))
+}
+
+export function decorateUrlWithLongPress(url: string): URL {
+    let result: URL
+    try {
+        result = new URL(url)
+        const q = result.query
+        result.set('query', {... (q || {}), origin: 'long_press'})
+    }
+    catch (e) {
+        console.log("failed to parse result", e)
+    }
+
+    return result
+}
+
+export function pressToSeeUserSheet(user: User) {
+    return () => openLinkSafely(decorateUrlWithLongPress(buildUserUrl(user)).toString())
+}
+
+export function pressToSeeLineup(lineup: Lineup) {
+    return () => openLinkSafely(buildLineupUrl(lineup))
 }

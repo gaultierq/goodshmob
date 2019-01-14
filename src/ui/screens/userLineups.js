@@ -35,13 +35,13 @@ type Props = LineupListProps & {
     navigator: RNNNavigator,
     listRef?: any => void | string,
     hideFilter?: boolean
-};
+}
 
 type State = {
     newLineupTitle?: string,
     newLineupPrivacy?: Visibility,
     filter?: ?string
-};
+}
 
 export default class UserLineups extends Screen<Props, State> {
 
@@ -63,9 +63,6 @@ export default class UserLineups extends Screen<Props, State> {
                 onSavingPressed={(saving) => seeActivityDetails(navigator, saving)}
                 scrollUpOnBack={super.isVisible() ? () => false : null}
                 visibility={'visible'}
-                // renderSectionHeader={({section}) => renderSectionHeader(section)}
-                // renderSectionFooter={()=> <View style={{height: 25, width: "100%"}} />}
-                // ItemSeparatorComponent={()=> <View style={{margin: 6}} />}
                 filter={this.filter()}
                 {...this.props}
                 listRef={listRef}

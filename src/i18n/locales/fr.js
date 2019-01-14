@@ -553,5 +553,6 @@ export default {
             one: "abonné(e)",
             other: "abonné(e)s"
         },
-    }
+    },
+    friends_empty: "Find your friends \nand enjoy goodsh.it together"
 }
