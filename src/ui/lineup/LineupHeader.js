@@ -16,6 +16,8 @@ import GTouchable from "../GTouchable"
 import rnTextSize, {type TSFontSpecs, type TSMeasureResult} from 'react-native-text-size'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Feather from 'react-native-vector-icons/Feather'
+import {HomeOnBoardingHelper} from "../screens/HomeOnBoardingHelper"
+import OnBoardingManager from "../../managers/OnBoardingManager"
 
 
 const BACK_BUTTON_WIDTH = 40
@@ -35,23 +37,70 @@ type Props = {
 type State = {
     buttonsWidth?: number,
     backButtonWidth?: number,
-    wordsWidth: TSMeasureResult[],
 }
 
 @connect(() => {
     const lineup = LINEUP_SELECTOR()
     const actions = LINEUP_ACTIONS_SELECTOR()
-    return createStructuredSelector({lineup,actions})
+    return createStructuredSelector({
+        lineup,
+        actions,
+        onBoarding: (state, props) => state.onBoarding
+
+    })
 })
 export class LineupHeader extends Component<Props, State> {
 
-    static defaultProps = {
-    }
-
-    state = {}
-
     static wordsWidthCache = {}
 
+    state = {}
+    onBoardingHelper = new HomeOnBoardingHelper()
+    _mount: boolean = false
+    componentDidMount() {
+        let info = OnBoardingManager.getInfoToDisplay(this.props.onBoarding, {group: "full_focus", persistBeforeDisplay: true})
+        if (_.get(info, 'type') === 'focus_contribute') {
+            setTimeout(() => {
+                this.onBoardingHelper.handleFocusContribute(() => this._mounted)
+            }, 1000)
+        }
+
+        this._mounted = true
+    }
+
+    componentWillUnmount() {
+        this._mounted = false
+        this.onBoardingHelper.clearTapTarget()
+    }
+
+    render() {
+        let {lineup} = this.props
+
+        let name = _.get(lineup, 'name')
+        let words = this.getWords(name)
+
+        let wordsWidth = this.obtainWordsWidth(words)
+        if (!wordsWidth ) {
+            logger.debug("returning null while calculating words width")
+            return null
+        }
+
+        let lines = this.getLines(words, wordsWidth)
+
+        return (
+            <View
+                style={{
+                    // flexWrap: "wrap",
+                    flex: 1,
+                    paddingHorizontal: LINEUP_PADDING,
+                    minHeight: 48,
+                    // backgroundColor: 'blue',
+                }}>
+
+                {lines.map((line, i) => this.renderLine(line, {first: i === 0, last: i === lines.length - 1}))}
+
+            </View>
+        )
+    }
 
     obtainWordsWidth(words: string[]) {
         let results = Array(words.length)
@@ -87,36 +136,6 @@ export class LineupHeader extends Component<Props, State> {
                 text,
                 ...fontSpecs,
             }
-        )
-    }
-
-    render() {
-        let {lineup} = this.props
-
-        let name = _.get(lineup, 'name')
-        let words = this.getWords(name)
-
-        let wordsWidth = this.obtainWordsWidth(words)
-        if (!wordsWidth ) {
-            logger.debug("returning null while calculating words width")
-            return null
-        }
-
-        let lines = this.getLines(words, wordsWidth)
-
-        return (
-            <View
-                style={{
-                    // flexWrap: "wrap",
-                    flex: 1,
-                    paddingHorizontal: LINEUP_PADDING,
-                    minHeight: 48,
-                    // backgroundColor: 'blue',
-                }}>
-
-                {lines.map((line, i) => this.renderLine(line, {first: i === 0, last: i === lines.length - 1}))}
-
-            </View>
         )
     }
 
@@ -256,9 +275,13 @@ export class LineupHeader extends Component<Props, State> {
         let button, shareB
         if (actions) {
             if (actions.indexOf(L_FOLLOW) >= 0) {
-                button = <Text onPress={()=>{
-                    followLineupPending(this.props.dispatch, lineup)
-                }} style={[styles.button_dim, styles.button, styles.button_active]}>{i18n.t('actions.follow')}</Text>
+                button = <Text
+                    ref={ref => this.onBoardingHelper.registerTapTarget(
+                        'contribute', ref, i18n.t("focus_contribute_title"),
+                        i18n.t("focus_contribute_text"), Colors.orange)}
+                    onPress={()=>{
+                        followLineupPending(this.props.dispatch, lineup)
+                    }} style={[styles.button_dim, styles.button, styles.button_active]}>{i18n.t('actions.follow')}</Text>
             }
             else if (actions.indexOf(L_UNFOLLOW) >= 0) {
                 button = <Text onPress={()=>{

@@ -25,7 +25,7 @@ export default {
         filter: {
             empty: "Pas de résultat",
             deepsearch: "Chercher dans toutes mes listes",
-            lineup_search: "Saisir des mots-clés pour trouver des listes à suivre",
+            lineup_search: "Saisir des mots-clés pour trouver des listes auxquelles contribuer",
         },
         goodsh : {
             title: "À ranger plus tard"
@@ -74,7 +74,7 @@ export default {
         },
         tabs: {
             my_goodsh: "Mes listes",
-            my_interests: "Listes suivies",
+            my_interests: "Listes collaboratives",
         }
     },
     search: {
@@ -130,8 +130,6 @@ export default {
                 one: "RÉPONDRE (1)",
                 other: "RÉPONDRE (%{count})"
             },
-            "follow_list": "SUIVRE LA LISTE",
-            "unfollow_list": "NE PLUS SUIVRE",
             "modified_list": "Liste renommée",
             "deleted_list": "Liste effacée"
         }
@@ -219,7 +217,7 @@ export default {
     "search_bar":{
         "me_placeholder":"Rechercher dans mes listes",
         "network_placeholder":"Rechercher dans mon réseau",
-        "lineup_placeholder":"Chercher des listes a suivre",
+        "lineup_placeholder":"Chercher des listes auxquelles contribuer",
         "places_placeholder":"Chercher restaurants, des bars ...",
         "users_placeholder":"Chercher des utilisateurs"
     },
@@ -241,7 +239,6 @@ export default {
     },
     "my_interests_screen":{
         "empty_screen": "Explore les listes de tes amis, et suis les plus intéressantes !",
-        "search_lists": "Trouver des listes à suivre",
         "search_lists_title": "Recherche de liste"
     },
     "comments_screen":{
@@ -265,7 +262,7 @@ export default {
             "places":"restaurant, café,\nboutique, hôtel, musée,\nville, plage, lieu touristique...",
             "movies":"film, série, documentaire, émission... ",
             "musics":"titre, artiste, album...",
-            "savings": "Saisir des mots-clés pour trouver des listes à suivre",
+            "savings": "Saisir des mots-clés pour trouver des listes",
             "users": "Chercher des membres à suivre",
 
         },
@@ -360,12 +357,12 @@ export default {
     },
     follow: {
         alert: {
-            title_unfollow: "Ne plus suivre",
-            label: "Êtes-vous sûr de vouloir ne plus suivre cette liste ?",
+            title_unfollow: "Ne plus contribuer à cette liste",
+            label: "Êtes-vous sûr de vouloir ne plus contribuer à cette liste ?",
         },
         messages: {
-            unfollowed: "Vous ne suivez plus cette liste",
-            followed: "Liste suivie"
+            unfollowed: "Vous n'êtes plus membre contributeur de cette liste",
+            followed: "Vous êtes maintenant membre contributeur de cette liste"
         }
     },
     unsave_screen: {
@@ -433,9 +430,9 @@ export default {
         try_again: "Réessayer",
         ask_friend: "Poser une question à mon réseau",
         logout: "Déconnexion",
-        follow: "Suivre",
-        followed: "Suivie",
-        unfollow: "Ne plus suivre",
+        follow: "Contribuer",
+        followed: "Contributeur",
+        unfollow: "Ne plus contribuer",
         connect: "Se connecter",
         connected: "Connectés",
         terms: "Conditions d'utilisation",
@@ -532,9 +529,9 @@ export default {
             other: "éléments"
         },
         followers: {
-            zero: "abonné(e)",
-            one: "abonné(e)",
-            other: "abonné(e)s"
+            zero: "contributeur",
+            one: "contributeur",
+            other: "contributeurs"
         },
     },
     user_medals: {
@@ -554,5 +551,7 @@ export default {
             other: "abonné(e)s"
         },
     },
-    friends_empty: "Find your friends \nand enjoy goodsh.it together"
+    friends_empty: "Find your friends \nand enjoy goodsh.it together",
+    focus_contribute_title: "Contribuez aux listes de vos amis!",
+    focus_contribute_text: "Vous pouvez maintenant facilement contribuer aux listes de vos amis ! Essayez !",
 }

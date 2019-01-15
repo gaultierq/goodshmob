@@ -151,7 +151,7 @@ export const lineupScreen = {
         // lineupId: '37824893-5d63-44cb-bbb5-46c8bc954bb5', //local mine
         // lineupId: '37e67b05-c86c-4aeb-b3af-bf1c34862cd0', //a benoit
         lineup: {
-            id: '8cfa1a5c-52c9-48ba-98aa-b6bd0c93e93e',
+            id: '6d9f8e0c-bf77-48d7-ad42-ac5ceafbe1f7',
             name: 'dummy name'
         }
         // mapDisplay: true,

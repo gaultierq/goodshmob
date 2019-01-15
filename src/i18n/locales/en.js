@@ -74,7 +74,7 @@ export default {
         },
         tabs: {
             my_goodsh: "My lists",
-            my_interests: "Follows",
+            my_interests: "Collaborative lists",
         }
     },
     search:{
@@ -131,8 +131,6 @@ export default {
                 one: "ANSWER (1)",
                 other: "ANSWER (%{count})"
             },
-            "follow_list": "FOLLOW LIST",
-            "unfollow_list": "UNFOLLOW LIST",
             "modified_list": "List renamed",
             "deleted_list": "List deleted"
         }
@@ -173,7 +171,7 @@ export default {
         "value_proposal":"##I was said it is\n" +"very good.\n" + "Not to forget it\n" + "I stored it\n" + "in",
         "slider_intro_1": "The app to\n" + "<bold>keep</bold> \n" + "all you <bold>love</bold>",
         "slider_intro_2": "<bold><black>Create</black></bold>\nlists\namong",
-        "slider_intro_3": "<bold><black>Follow</black></bold>\nlists\nthat interest you",
+        "slider_intro_3": "<bold><black>Contribute</black></bold>\nto lists\nthat interest you",
         "slider_intro_4": "<bold><black>Share</black></bold>\nyour coups de cœurs\nwith anyone you want",
         "slider_intro_4_bis": "<bold>Friends</bold>,\nfamily,\nworkmates,\nfans,\n...\n",
         "credentials": "Keep all you love",
@@ -242,7 +240,6 @@ export default {
     },
     "my_interests_screen":{
         "empty_screen": "You will find every list you follow here.\nExplore your friends lists, and find them here !",
-        "search_lists": "Find lists to follow",
         "search_lists_title": "List search"
     },
     "comments_screen":{
@@ -266,7 +263,7 @@ export default {
             "places":"restaurants, cafés,\nshops, hotels, museums,\ncities, beaches, places to visit...",
             "movies":"movies, TV shows",
             "musics":"tracks, artists, albums",
-            "savings": "Tap keywords for interesting lists to follow",
+            "savings": "Tap keywords for interesting lists",
             "users": "Search for users to follow",
         },
         "searchbar_placeholder": {
@@ -360,12 +357,12 @@ export default {
     },
     follow: {
         alert: {
-            title_unfollow: "Unfollow",
+            title_unfollow: "Stop contributions",
             label: "Are you sure ?",
         },
         messages: {
-            unfollowed: "Unfollowed",
-            followed: "Followed"
+            unfollowed: "You are not a editor on this list anymore",
+            followed: "You are now a contributor on this list"
         }
     },
     unsave_screen: {
@@ -436,9 +433,9 @@ export default {
         try_again: "Try Again",
         ask_friend: "Ask my network",
         logout: "Logout",
-        follow: "Follow",
-        followed: "Followed",
-        unfollow: "Unfollow",
+        follow: "Contribute",
+        followed: "Contributor",
+        unfollow: "Stop contribution",
         connect: "Connect",
         connected: "Connected",
         terms: "Terms and personal data",
@@ -526,9 +523,9 @@ export default {
             other: "elements"
         },
         followers: {
-            zero: "follower",
-            one: "follower",
-            other: "followers"
+            zero: "contributor",
+            one: "contributor",
+            other: "contributors"
         },
     },
     user_medals: {
@@ -548,5 +545,7 @@ export default {
             other: "followers"
         },
     },
-    friends_empty: "Find your friends \nand enjoy goodsh.it together"
+    friends_empty: "Find your friends \nand enjoy goodsh.it together",
+    focus_contribute_title: "Contribuez aux listes de vos amis!",
+    focus_contribute_text: "Vous pouvez maintenant facilement contribuer aux listes de vos amis ! Essayez !",
 }

@@ -14,7 +14,7 @@ import LineupHorizontal from "./components/LineupHorizontal"
 import LineupTitle from "./components/LineupTitle"
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import {GLineupAction, L_ADD_ITEM, L_FOLLOW, L_SHARE, L_UNFOLLOW, LineupRights} from "./lineupRights"
+import {GLineupAction, LineupRights} from "./lineupRights"
 import {TabBar} from "react-native-tab-view"
 import {currentGoodshboxId} from "../managers/CurrentUser"
 import {SEARCH_CATEGORIES_TYPE} from "../helpers/SearchConstants"
@@ -24,7 +24,6 @@ import {SFP_TEXT_BOLD, SFP_TEXT_MEDIUM, SFP_TEXT_REGULAR} from "./fonts"
 import {createOpenModalLink} from "../managers/Links"
 import SearchItems from "./screens/searchitems"
 import {Loader} from "./Loader"
-import FeedSeparator from "./activity/components/FeedSeparator"
 
 // export const MainBackground = (props) => <ImageBackground
 //         source={require('../img/home_background.png')}
@@ -205,51 +204,6 @@ export let getAddButton = () => {
     }
 }
 
-export let getFollowButton = (lineup: Lineup) => {
-    return {
-        ...Platform.select({
-            ios: {
-                rightButtons: [FOLLOW_RIGHT_BUTTON(lineup.id)],
-            },
-            android: {
-                fab: {
-                    collapsedId: 'add',
-                    collapsedIcon: require('./../img/plus.png'),
-                    collapsedIconColor: Colors.white,
-                    backgroundColor: Colors.green
-                }
-            },
-        }),
-    }
-}
-
-export const ADD_ITEM_RIGHT_BUTTON = (id: string) => ({
-    icon: require('../img2/add_green.png'),
-    disableIconTint: true,
-    id: 'add_' + id
-})
-
-export const FOLLOW_RIGHT_BUTTON = (id: string) => ({
-    title: i18n.t('actions.follow'),
-    id: 'follow_' + id,
-    buttonColor: Colors.green
-})
-
-export const UNFOLLOW_RIGHT_BUTTON = (id: string) => ({
-    title: i18n.t('actions.unfollow'),
-    id: 'unfollow_' + id
-})
-
-export const SHARE_RIGHT_BUTTON = (id: string) => ({
-    icon: require('../img2/shareArrow-empty.png'),
-    id: 'share_' + id
-})
-
-export const RIGHT_BUTTON_SPINNER = {
-    component: 'goodsh.NavBarButtonIndicator',
-}
-
-
 let PERSON_ADD
 Promise.all([
     Icon.getImageSource('person-add', 24, 'black')
@@ -257,51 +211,7 @@ Promise.all([
     PERSON_ADD = sources[0]
 })
 
-export const CONNECT_RIGHT_BUTTON = (id: string) => ({
-    // title: i18n.t('actions.follow'),
-    id: 'connect_' + id,
-    icon: PERSON_ADD
-})
-
-export const DISCONNECT_RIGHT_BUTTON = (id: string) => ({
-    title: i18n.t('actions.unfollow'),
-    id: 'disconnect_' + id
-})
-
-export let getUnfollowButton = (lineup: Lineup) => {
-    return Platform.select({
-        ios: {
-            rightButtons: [UNFOLLOW_RIGHT_BUTTON],
-        },
-        android: {
-            fab: {
-                collapsedId: 'add',
-                collapsedIcon: require('./../img/plus.png'),
-                collapsedIconColor: Colors.white,
-                backgroundColor: Colors.green
-            }
-        },
-    })
-}
-
-export let getClearButton = function () {
-    return Platform.select({
-        ios: {rightButtons: []},
-        android: {fab: {}}
-    })
-}
-
 export const RED_SQUARE = (size = 100) => () => <View style={{width: size, height: size, backgroundColor: 'red'}} />
-
-
-export function getNavButtonForAction(action: GLineupAction, id: string) {
-    if (action === L_ADD_ITEM) return ADD_ITEM_RIGHT_BUTTON(id)
-    if (action === L_FOLLOW) return FOLLOW_RIGHT_BUTTON(id)
-    if (action === L_UNFOLLOW) return UNFOLLOW_RIGHT_BUTTON(id)
-    if (action === L_SHARE) return SHARE_RIGHT_BUTTON(id)
-    throw action + " not found"
-
-}
 
 
 export const renderTabBarFactory = (isFocused: any => boolean) => (props: any) => (

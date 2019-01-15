@@ -319,7 +319,7 @@ export default class HomeScreen extends Screen<Props, State> {
             listRef={ref => this.feed = ref}
             onScroll={floatingButtonScrollListener.call(this)}
             ListHeaderComponent={this._ListHeaderComponent}
-            ListFooterComponent={this.renderMyInterests(this.props.isFullyLoaded)}
+            ListFooterComponent={({isContentReady}) => this.props.isFullyLoaded && this.renderMyInterests(this.props.isFullyLoaded)}
             targetRef={this._targetRef("add", i18n.t("home.wizard.action_button_label"), i18n.t("home.wizard.action_button_body"))}
             onFilterFocusChange={filterFocused => new Promise(resolved => {
                 this.setState({filterFocused}, resolved())
@@ -346,7 +346,9 @@ export default class HomeScreen extends Screen<Props, State> {
                 paddingHorizontal: LINEUP_PADDING,
                 paddingTop: LINEUP_PADDING,
                 paddingBottom: 8,
-                backgroundColor: BACKGROUND_COLOR}}
+                backgroundColor: BACKGROUND_COLOR,
+                minHeight: 50 + LINEUP_PADDING + 8
+            }}
             horizontal
             showsHorizontalScrollIndicator={false}
             ListFooterComponent={ ({hasItems}) => (
@@ -417,9 +419,9 @@ export default class HomeScreen extends Screen<Props, State> {
 
     }
 
-    _targetRef = (refName, primaryText, secondaryText) => ref => {
+    _targetRef = (refName, primaryText, secondaryText, backgroundColor) => ref => {
         if (!ref) return;
-        this.onBoardingHelper.registerTapTarget(refName, ref, primaryText, secondaryText)
+        this.onBoardingHelper.registerTapTarget(refName, ref, primaryText, secondaryText, backgroundColor)
     };
 
 }

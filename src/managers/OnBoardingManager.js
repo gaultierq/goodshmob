@@ -52,6 +52,11 @@ const ALL_INFOS = [
         priority: 3
     },
     {
+        type: 'focus_contribute',
+        group: 'full_focus',
+        priority: 3
+    },
+    {
         type: 'private',
         group: 'tip',
         maxDisplay: 30000,
@@ -184,6 +189,8 @@ class _OnBoardingManager implements OnBoardingManager {
         switch (info.type) {
             case "focus_add":
                 // no conditions on user
+                return true
+            case "focus_contribute":
                 return true
             case "notification_permissions":
                 if (!__WITH_NOTIFICATIONS__) return false

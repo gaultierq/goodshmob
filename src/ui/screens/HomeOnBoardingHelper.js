@@ -3,6 +3,7 @@
 import {Colors} from "../colors"
 import OnBoardingManager from "../../managers/OnBoardingManager"
 import {AppTour, AppTourSequence, AppTourView} from "../../../vendors/taptarget"
+import type {Color} from "../../types"
 
 
 export class HomeOnBoardingHelper {
@@ -10,18 +11,18 @@ export class HomeOnBoardingHelper {
 
     appTourTargets = new Map();
 
-    focusAddJob: ?number
+    focusJob: ?number
 
-    registerTapTarget(refName: string, ref: any, primaryText: string, secondaryText: string) {
+    registerTapTarget(refName: string, ref: any, primaryText: string, secondaryText: string, backgroundColor: Color) {
         if (this.isShowing()) return
-        this.appTourTargets.set(refName, {ref, primaryText, secondaryText});
+        this.appTourTargets.set(refName, {ref, primaryText, secondaryText, backgroundColor});
     }
 
     clearTapTarget() {
         this.appTourTargets.clear()
     }
 
-    createAppTourView(primaryText: string, secondaryText: string, ref) {
+    createAppTourView(primaryText: string, secondaryText: string, backgroundColor: Color, ref: any) {
         let params = {
             titleTextSize: "24",
             descriptionTextSize: "18"
@@ -51,38 +52,45 @@ export class HomeOnBoardingHelper {
     }
 
     handleFocusAdd(isMounted: () => boolean) {
-        if (this.isShowing()) return
-        if (this.appTourTargets.size  === 0) return
+        this.focus(isMounted, 'focus_add')
+    }
 
-        this.focusAddJob = setTimeout(() => {
-            if (!isMounted()) return
-            OnBoardingManager.onDisplayed('focus_add')
+    handleFocusContribute(isMounted: () => boolean) {
+        this.focus(isMounted, 'focus_contribute')
+    }
 
+    focus(isMounted, stepName) {
+        if (!this.isShowing() && this.appTourTargets.size !== 0) {
+            this.focusJob = setTimeout(() => {
+                if (!isMounted()) return
 
-            let appTourSequence = new AppTourSequence();
-            this.appTourTargets.forEach(({ref, primaryText, secondaryText}) => {
-                if (!ref) throw "wtf1 where is my ref"
-                appTourSequence.add(this.createAppTourView(primaryText, secondaryText, ref));
-            });
-
-            if (__IS_IOS__) {
-                AppTour.ShowSequence(appTourSequence);
-            }
-            else {
-                // temp hack to avoid a crash on android.
-                // was working before, needs more investigations
-            }
+                OnBoardingManager.onDisplayed(stepName)
 
 
+                let appTourSequence = new AppTourSequence()
+                this.appTourTargets.forEach(({ref, primaryText, secondaryText, backgroundColor}) => {
+                    if (!ref) throw "wtf1 where is my ref"
+                    appTourSequence.add(this.createAppTourView(primaryText, secondaryText, backgroundColor, ref))
+                })
 
-            //as we don't have a callback on when the tour is finished,
-            // we are using a 10s timer, to go to the next onBoardingStep
-            OnBoardingManager.postOnDismissed('focus_add', 10000)
+                if (__IS_IOS__) {
+                    AppTour.ShowSequence(appTourSequence)
+                }
+                else {
+                    // temp hack to avoid a crash on android.
+                    // was working before, needs more investigations
+                }
 
-        }, 100);
+
+                //as we don't have a callback on when the tour is finished,
+                // we are using a 10s timer, to go to the next onBoardingStep
+                OnBoardingManager.postOnDismissed(stepName, 10000)
+
+            }, 100)
+        }
     }
 
     isShowing() {
-        return this.focusAddJob
+        return this.focusJob
     }
 }
