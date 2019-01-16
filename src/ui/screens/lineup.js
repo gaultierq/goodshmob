@@ -223,6 +223,7 @@ class LineupScreen extends Screen<Props, State> {
 
     renderMap() {
         let points = this.props.savings.map(s => s.resource).filter(item => item.type === 'Place')
+        let _savingFromItem = item => this.props.savings.find(s => s.resource === item)
         return (
             <View style={{
                 width: "100%",
@@ -230,12 +231,13 @@ class LineupScreen extends Screen<Props, State> {
                 flex: 1}}>
                 <GMap
                     setRef={ref => this.map = ref}
-                    onItemPressed={(item) => seeActivityDetails(this.props.navigator, item)}
+                    onItemPressed={(item) => seeActivityDetails(this.props.navigator, _savingFromItem(item))}
                     points={points}
                 />
             </View>
         )
     }
+
     lineupId() {
         return lineupId(this.props)
     }
