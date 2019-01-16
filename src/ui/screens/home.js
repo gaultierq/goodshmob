@@ -351,8 +351,8 @@ export default class HomeScreen extends Screen<Props, State> {
             }}
             horizontal
             showsHorizontalScrollIndicator={false}
-            ListFooterComponent={ ({hasItems}) => (
-                hasItems && this.renderAddFriend()
+            ListHeaderComponent={ (icr) => (
+                icr && this.renderAddFriend()
             )}
         />
     }
@@ -361,34 +361,21 @@ export default class HomeScreen extends Screen<Props, State> {
         return <GTouchable style={{
             alignItems: 'center',
             justifyContent: 'center',
-            paddingHorizontal: 8,
             alignItems: 'center',
+            borderWidth: 1,
+            marginRight: 8,
+            borderColor: Colors.orange,
+            borderRadius: 25,
+            width: 50,
+            height: 50,
+
         }} onPress={() => {
             this.showFriends()
         }}>
-            <Ionicons name="ios-person-add" size={50} color={Colors.orange}/>
+            <Ionicons name="ios-person-add" size={46} color={Colors.orange}/>
         </GTouchable>
     }
 
-    // renderEmptyFriends() {
-    //     return (
-    //         <View style={{
-    //             flex: 1, flexDirection: 'row',
-    //         }}>
-    //             {this.renderAddFriend()}
-    //             <Text style={{
-    //                 marginLeft: 4,
-    //                 fontSize: 20,
-    //                 lineHeight: 20,
-    //                 fontFamily: SFP_TEXT_REGULAR,
-    //                 textAlignVertical: 'center',
-    //                 alignSelf: 'center',
-    //                 color: Colors.brownishGrey,}}>
-    //                 {i18n.t('friends_empty')}
-    //             </Text>
-    //         </View>
-    //     )
-    // }
 
     showFriends() {
         this.props.navigator.showModal({
