@@ -25,6 +25,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import {Colors} from "../colors"
 import FeedSeparator from "../activity/components/FeedSeparator"
 import {SFP_TEXT_MEDIUM} from "../fonts"
+import Ionicons from "react-native-vector-icons/Ionicons"
 
 type Props = NavigableProps & {
 }
@@ -75,10 +76,21 @@ export default class CommunityScreen extends Screen<Props, State> {
                                 })
                             }
                         }>
-                            <Icon name="ios-contacts" size={50} color={Colors.orange} />
+
+                            <View style={{
+                                borderWidth: 3,
+                                borderColor: Colors.orange,
+                                borderRadius: 25,
+                                width: 50,
+                                height: 50,
+                                alignItems: 'center',
+                            }}>
+                                <Ionicons name="ios-person-add" size={47} color={Colors.orange}/>
+                            </View>
                             <Text style={[{fontFamily: SFP_TEXT_MEDIUM, fontSize: 20}, {marginLeft: 12}]}>{i18n.t('invite_contacts')}</Text>
                         </GTouchable>
                         <FeedSeparator/>
+                        <Text style={{...STYLES.SECTION_TITLE, paddingVertical: 8, paddingHorizontal: LINEUP_PADDING}}>My friends</Text>
                     </View>
                 }
             />

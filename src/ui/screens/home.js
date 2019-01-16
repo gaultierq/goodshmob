@@ -47,6 +47,7 @@ import GTouchable from "../GTouchable"
 import {Colors} from "../colors"
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC, SFP_TEXT_REGULAR} from "../fonts"
+import Icon from "react-native-vector-icons/Ionicons"
 
 type Props = {
     navigator: RNNNavigator
@@ -361,18 +362,18 @@ export default class HomeScreen extends Screen<Props, State> {
         return <GTouchable style={{
             alignItems: 'center',
             justifyContent: 'center',
-            alignItems: 'center',
-            borderWidth: 1,
             marginRight: 8,
-            borderColor: Colors.orange,
-            borderRadius: 25,
-            width: 50,
-            height: 50,
+            // backgroundColor: 'yellow',
 
         }} onPress={() => {
             this.showFriends()
         }}>
-            <Ionicons name="ios-person-add" size={46} color={Colors.orange}/>
+            <Icon name="ios-contacts" size={54} color={Colors.orange}
+                  style={{
+                      justifyContent: 'center',
+                      // backgroundColor: 'red',
+                  }}
+            />
         </GTouchable>
     }
 
