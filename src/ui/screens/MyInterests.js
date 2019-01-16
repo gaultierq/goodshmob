@@ -38,7 +38,7 @@ import {CANCELABLE_MODAL2, startAddItem} from "../Nav"
 import {SFP_TEXT_REGULAR} from "../fonts"
 import GButton from "../components/GButton"
 import {UNFOLLOW_LINEUP} from "../lineup/actionTypes"
-import LineupHorizontal, {LineupH1, renderInnerPlus} from "../components/LineupHorizontal"
+import LineupHorizontal, {LineupH1, renderInnerPlus, renderLineupMenuButton} from "../components/LineupHorizontal"
 import GTouchable from "../GTouchable"
 import {EmptyCell} from "../components/LineupCellSaving"
 
@@ -112,6 +112,9 @@ export default class MyInterests extends Screen<Props, State> {
                                     </EmptyCell>
                                 </GTouchable>)
                             }
+                            renderMenuButton={(actions) => {
+                                return renderLineupMenuButton(item, actions, navigator, this.props.dispatch)
+                            }}
                         />
                     )}
                     ItemSeparatorComponent={this._spacer}

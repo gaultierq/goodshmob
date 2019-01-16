@@ -17,9 +17,9 @@ import {
 import {connect} from "react-redux"
 import type {Lineup, RNNNavigator, Saving} from "../../types"
 import {ViewStyle} from "../../types"
-import {logged} from "../../managers/CurrentUser"
+import {currentGoodshboxId, logged} from "../../managers/CurrentUser"
 import {Navigation} from 'react-native-navigation'
-import {displaySavingActions, seeActivityDetails, seeList} from "../Nav"
+import {displayLineupActionMenu, displaySavingActions, displayShareLineup, seeActivityDetails, seeList} from "../Nav"
 import LineupCellSaving from "../components/LineupCellSaving"
 
 import GTouchable from "../GTouchable"
@@ -37,7 +37,7 @@ import {
 import {Colors} from "../colors"
 import {FETCH_LINEUP, fetchLineup} from "../lineup/actions"
 import * as Api from "../../managers/Api"
-import {GLineupAction} from "../lineupRights"
+import {GLineupAction, L_SHARE} from "../lineupRights"
 import {pressToSeeLineup} from "../../managers/Links"
 
 // $FlowFixMe
@@ -228,5 +228,50 @@ export function defaultRenderEmpty(renderFirstAsPlus: boolean = false, plusRef?:
 export function renderInnerPlus(ref?: () => void) {
     return (
         <InnerPlus ref={ref} plusStyle={{backgroundColor: Colors.white, borderRadius: 4,}}/>
+    )
+}
+
+export function renderLineupMenuButton(item: Lineup, actions: GLineupAction[], navigator: RNNNavigator, dispatch:any) {
+    //TODO: use right manager
+    if (!item || item.id === currentGoodshboxId()) return null;
+
+    return (
+        <View style={{
+            flex: 0,
+            flexDirection: 'row',
+            // backgroundColor: 'red',
+            // height: 36,
+            alignItems: 'center',
+        }}>
+            <GTouchable
+                style={{
+                    paddingHorizontal: 8,
+                    // backgroundColor: 'yellow',
+                    justifyContent: 'center',
+                }}
+                onPress={() => {
+                    displayShareLineup({
+                        navigator: navigator,
+                        lineup: item
+                    })
+                }}>
+                <View style={{flex: 1, justifyContent: 'flex-start'}}>
+                    <Image source={require('../../img2/share-small.png')} resizeMode="contain"
+                           style={{height: 18, tintColor: Colors.brownishGrey, }} />
+                </View>
+
+            </GTouchable>
+            <GTouchable style={{
+                paddingLeft: 0,
+                // backgroundColor: 'green',
+                justifyContent: 'center',
+            }}
+                        onPress={() => displayLineupActionMenu(navigator, dispatch, item, _.filter(actions, a => a !== L_SHARE))}>
+                <View style={{flex: 1, justifyContent: 'flex-start', paddingTop: 12}}>
+                    <Image source={require('../../img2/sidedots.png')} resizeMode="contain"
+                           style={{width: 17, tintColor: Colors.brownishGrey}}/>
+                </View>
+            </GTouchable>
+        </View>
     )
 }

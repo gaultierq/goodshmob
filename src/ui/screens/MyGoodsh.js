@@ -21,18 +21,17 @@ import {
 import {connect} from "react-redux"
 import type {Lineup, RNNNavigator} from "../../types"
 import {LINEUP_SEP, STYLES} from "../UIStyles"
-import {currentGoodshboxId, currentUserId, logged} from "../../managers/CurrentUser"
+import {currentUserId, logged} from "../../managers/CurrentUser"
 import {Navigation} from 'react-native-navigation'
-import {displayLineupActionMenu, displayShareLineup, seeList, startAddItem} from "../Nav"
+import {seeList, startAddItem} from "../Nav"
 import Screen from "../components/Screen"
 
 import GTouchable from "../GTouchable"
 import AddLineupComponent from "../components/addlineup"
-import {defaultRenderEmpty, LineupH1, renderInnerPlus} from "../components/LineupHorizontal"
+import {defaultRenderEmpty, LineupH1, renderInnerPlus, renderLineupMenuButton} from "../components/LineupHorizontal"
 import UserLineups from "./userLineups"
 import {TipConfig} from "../components/Tip"
-import LineupTitle from "../components/LineupTitle"
-import {GLineupAction, L_SHARE} from "../lineupRights"
+import {GLineupAction} from "../lineupRights"
 import {Colors} from "../colors"
 import {createCounter} from "../../helpers/DebugUtils"
 import {EmptyCell} from "../components/LineupCellSaving"
@@ -132,18 +131,8 @@ export default class MyGoodsh extends Screen<Props, State> {
                 onPressEmptyLineup={() => startAddItem(navigator, item)}
                 renderEmpty={this.renderEmptyLineup(navigator, item, targetRef)}
                 renderMenuButton={(actions) => {
-                    return this.renderMenuButton(item, actions)
+                    return renderLineupMenuButton(item, actions, navigator, this.props.dispatch)
                 }}
-                renderTitle={(lineup: Lineup) => (
-                    <LineupTitle
-                        lineup={lineup}
-                        style={{
-                            // marginBottom: 10,
-                            // paddingRight: 30,
-                            // backgroundColor: 'blue',
-                        }}
-                    />
-                )}
                 ListHeaderComponent={(
                     !item.pending && <GTouchable onPress={() => startAddItem(navigator, item)}>
                         <EmptyCell key={`key-${0}`} style={{marginRight: 10}}>
@@ -171,46 +160,5 @@ export default class MyGoodsh extends Screen<Props, State> {
             </GTouchable>
         );
     }
-
-    renderMenuButton(item: Lineup, actions: GLineupAction[]) {
-        //TODO: use right manager
-        if (!item || item.id === currentGoodshboxId()) return null;
-
-        return (
-            <View style={{
-                flex: 0,
-                flexDirection: 'row',
-                // backgroundColor: 'red',
-                // height: 36,
-                alignItems: 'center',
-            }}>
-                <GTouchable
-                    style={{
-                        paddingHorizontal: 8,
-                        // backgroundColor: 'yellow',
-                        justifyContent: 'center',
-                    }}
-                    onPress={() => {
-                        displayShareLineup({
-                            navigator: this.props.navigator,
-                            lineup: item
-                        })
-                    }}>
-                    <View style={{flex:1,justifyContent: 'center', }}>
-                        <Image source={require('../../img2/share-arrow.png')} resizeMode="contain"/>
-                    </View>
-
-                </GTouchable>
-                <GTouchable style={{
-                    paddingLeft: 0,
-                    // backgroundColor: 'green',
-                    justifyContent: 'center',
-                }} onPress={() => displayLineupActionMenu(this.props.navigator, this.props.dispatch, item, _.filter(actions, a => a !== L_SHARE))}>
-                    <View style={{flex:1,justifyContent: 'center', }}>
-                        <Image source={require('../../img2/sidedots.png')} resizeMode="contain"/>
-                    </View>
-                </GTouchable>
-            </View>
-        );
-    }
 }
+
