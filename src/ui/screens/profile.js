@@ -94,13 +94,12 @@ export default class Profile extends Component<Props, State> {
                 <View >
                     <FeedSeparator/>
                     {
-                        this.renderButton(i18n.t('actions.invite'), () => {
+                        this.renderButton(i18n.t("community.screens.friends"), () => {
                             this.props.navigator.showModal({
-                                screen: 'goodsh.InviteManyContacts',
-                                title: i18n.t('actions.invite'),
+                                screen: 'goodsh.Community',
+                                title: i18n.t("community.screens.friends"),
                                 navigatorButtons: Nav.CANCELABLE_MODAL,
                             })
-
                         })
                     }
                     <FeedSeparator/>
