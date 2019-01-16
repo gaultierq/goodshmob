@@ -313,14 +313,14 @@ export const LINEUP_ACTIONS_SELECTOR = () => {
     )
 }
 export const USER_ACTIONS_SELECTOR = () => {
-    const user = USER_SELECTOR()
+    const userSel = USER_SELECTOR()
     return createSelector(
         [
-            user,
+            userSel,
             state => _.get(state, `pending`),
         ],
-        (lineup, pending) => {
-            counter(`LINEUP_ACTIONS_SELECTOR.${_.get(lineup, 'id')}`)
+        (user, pending) => {
+            counter(`LINEUP_ACTIONS_SELECTOR.${_.get(user, 'id')}`)
             return getUserActions(user, pending)
         }
     )
