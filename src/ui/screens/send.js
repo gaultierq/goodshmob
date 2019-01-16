@@ -56,7 +56,7 @@ export default class SendScreen extends Component<Props, State> {
                     ListHeaderComponent={
                         <TextInput
                             style={{
-                                fontSize: 24,
+                                fontSize: 22,
                                 margin: LINEUP_PADDING,
                             }}
                             onChangeText={message => this.setState({message})}
@@ -72,17 +72,17 @@ export default class SendScreen extends Component<Props, State> {
         )
     }
 
-    renderItem(friend: Item) : Node {
-        if (!friend) return null
+    renderItem({item}) {
+        if (!item) return null
 
         return (
             <PersonRowI
-                person={friend}
-                key={friend.id}
+                person={item}
+                key={item.id}
                 style={{
                     margin: LINEUP_PADDING
                 }}
-                rightComponent={this.rightComp(friend)}
+                rightComponent={this.rightComp(item)}
             />
         )
     }

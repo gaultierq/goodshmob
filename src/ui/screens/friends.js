@@ -83,7 +83,7 @@ export default class FriendsList extends Component<Props, State> {
                 renderItem={renderItem}
                 fetchSrc={{
                     callFactory: () => userActions.fetchFriendsCall(userId),
-                    action: userActionTypes.GET_USER_W_FRIENDS,
+                    action: userActionTypes.LOAD_FRIENDS,
                     options: {userId}
                 }}
                 {...attr}
