@@ -35,7 +35,7 @@ export default class SearchListResults extends Component<Props, State> {
 
         // let searchState = this.props.searchState || {}
         if (searchState.requestState === 'sending' && searchState.page === 0) return <FullScreenLoader/>
-        if (searchState.requestState === 'ko') return <Text style={styles.text}>{i18n.t("errors.generic")}</Text>
+        if (searchState.requestState === 'ko') return <Text style={{}}>{i18n.t("errors.generic")}</Text>
         if (_.flatten(searchState.data).length === 0 ) return empty()
 
         return (

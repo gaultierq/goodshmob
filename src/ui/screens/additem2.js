@@ -2,18 +2,17 @@
 import React from 'react'
 import {ActivityIndicator, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
 import {CheckBox} from "react-native-elements"
-import {renderSimpleButton, STYLES} from "../UIStyles"
+import {renderSimpleButton} from "../UIStyles"
 import type {Id, IItem} from "../../types"
 import {logged} from "../../managers/CurrentUser"
-import {buildData} from "../../helpers/DataUtils"
 import ItemCell from "../components/ItemCell"
 import {Colors} from "../colors"
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view"
 import Sheet from "../components/sheet"
-import {CANCELABLE_MODAL} from "../Nav"
 import {SFP_TEXT_ITALIC, SFP_TEXT_REGULAR} from "../fonts"
 import GTouchable from "../GTouchable"
 import {openLinkSafely} from "../../managers/Links"
+import LineupPicker from "./LineupPicker"
 
 type Props = {
     defaultLineupId: Id,
@@ -130,7 +129,12 @@ export default class AddItemScreen2 extends React.Component<Props, State> {
                         />
 
 
-                        {this.renderListSelector(selectedLineupId)}
+                        <LineupPicker
+                            navigator={this.props.navigator}
+                            lineupId={this.state.selectedLineupId}
+                            onListSelected={list => this.setState({selectedLineupId: list.id})}
+                        />
+
                         {renderSimpleButton(
                             i18n.t('shared.add'),
                             () => this.props.doAdd(selectedLineupId, this.state.visibility, this.state.description),
@@ -142,52 +146,6 @@ export default class AddItemScreen2 extends React.Component<Props, State> {
         );
     }
 
-    renderListSelector(selectedLineupId: Id) {
-        const lineup = buildData(this.props.data, 'lists', selectedLineupId);
-
-        console.debug(`DEBUG::::: selectedLineupId=${selectedLineupId} lineup=${JSON.stringify(lineup)}`)
-
-        //QtoK: wrapping a child positioning in absolute is the only wa I found to have a component with the good width
-        //other idea?
-        const handler = () => {
-            //select lineup
-            this.props.navigator.showModal({
-                screen: 'goodsh.AddInScreen',
-                title: i18n.t('create_list_controller.choose_another_list'),
-                passProps: {
-                    onListSelected: list => {
-
-                        //just a quick fix
-                        setTimeout(() => {
-                            console.log("onListSelected", list)
-                            this.setState({selectedLineupId:list.id});
-                        }, 1000)
-
-                        this.props.navigator.dismissModal();
-                    }
-                },
-                navigatorButtons: CANCELABLE_MODAL,
-            });
-        };
-
-        let tag = lineup && lineup.name;
-        tag = tag || i18n.t('create_list_controller.choose_list');
-
-        return (
-            <GTouchable onPress={handler}>
-                <View style={{height: 35, paddingLeft: 8, flexDirection: 'row'}}>
-                    {/*{renderTag(lineup.name, handler, {position: 'absolute'})}*/}
-                    <Text style={{marginRight: 5, marginTop: 2}}>{i18n.t('create_list_controller.add_to_list')} :</Text>
-
-                    <Text style={[STYLES.tag]}>
-                        {tag}{__IS_ANDROID__ && "  ▼"}
-                        {__IS_IOS__ && <Text style={{color: Colors.brownishGrey, fontSize: 10, justifyContent: "flex-end", alignItems: "flex-end"}}>  ▼</Text>}
-                    </Text>
-
-                </View>
-            </GTouchable>
-        );
-    }
 }
 
 

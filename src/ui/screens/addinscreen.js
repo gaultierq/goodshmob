@@ -13,6 +13,8 @@ import LineupHorizontal from "../components/LineupHorizontal"
 import LineupCellSaving from "../components/LineupCellSaving"
 import type {Lineup} from "../../types"
 import LineupTitle from "../components/LineupTitle"
+import {TRANSPARENT_SPACER} from "../UIComponents"
+import {LINEUP_SEP} from "../UIStyles"
 
 type Props = LineupProps & {
     onListSelected: ()=>void
@@ -25,7 +27,8 @@ type State = {
 export default class AddInScreen extends Screen<Props, State> {
 
     state = {filter: null};
-
+    _spacer = TRANSPARENT_SPACER(LINEUP_SEP)
+    
     render() {
 
         const {navigator, onListSelected, ...otherProps} = this.props;
@@ -50,6 +53,7 @@ export default class AddInScreen extends Screen<Props, State> {
                     )
                     }
                     navigator={navigator}
+                    ItemSeparatorComponent={this._spacer}
                 />
             </View>
         );

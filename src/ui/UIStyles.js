@@ -312,7 +312,7 @@ export const HEADER_STYLES = StyleSheet.create({
         borderRadius: 12,
         height: 26,
         lineHeight: 24,
-        marginLeft: LINEUP_PADDING,
+        marginLeft: 10,
         alignItems: "flex-end",
         alignSelf: "flex-end",
         // textAlignVertical: 'bottom',

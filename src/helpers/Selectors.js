@@ -48,11 +48,11 @@ export function createObj(source: any) {
 }
 
 
-export const LINEUP_SELECTOR = () => createSelector(
+export const LINEUP_SELECTOR = (lineupIdExtract = lineupId) => createSelector(
     [
         (state, props) => props.lineup || props.lineupId && {id: props.lineupId},
-        (state, props) => _.get(state, `data.lists.${lineupId(props)}`),
-        (state, props) => _.head(state.pending[CREATE_LINEUP], pending => pending.id === lineupId(props)),
+        (state, props) => _.get(state, `data.lists.${lineupIdExtract(props)}`),
+        (state, props) => _.head(state.pending[CREATE_LINEUP], pending => pending.id === lineupIdExtract(props)),
     ],
     (
         propLineup, // lineup provided in props
