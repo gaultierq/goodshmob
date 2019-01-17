@@ -13,7 +13,8 @@ import * as Nav from "../Nav"
 import {Colors} from "../colors"
 import GTouchable from "../GTouchable"
 import Sheet from "../components/sheet"
-import {LINEUP_PADDING} from "../UIStyles"
+import {LINEUP_PADDING, STYLES} from "../UIStyles"
+import {SFP_TEXT_MEDIUM} from "../fonts"
 
 
 type Props = {
@@ -31,6 +32,7 @@ type Props = {
 
     //return the intent for the share
     createShareIntent:? () => {content: any, options: any},
+    title?: string,
 };
 
 type State = {
@@ -65,6 +67,15 @@ class ShareScreen extends Component<Props, State> {
                     height: 375,
                     backgroundColor: 'rgba(255,255,255,1)',
                 }}>
+                    {!!this.props.title && <Text style={{
+                        fontSize: 22,
+                        fontFamily: SFP_TEXT_MEDIUM,
+                        color: Colors.black,
+                        paddingBottom: 12,
+                        paddingHorizontal:
+                        LINEUP_PADDING}}>{
+                        this.props.title
+                    }</Text>}
                     {renderSharedObject && renderSharedObject()}
 
                     <View style={{margin: LINEUP_PADDING, flexDirection: 'row', justifyContent: 'space-around'}}>

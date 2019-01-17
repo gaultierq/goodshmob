@@ -15,10 +15,10 @@ import Config from "react-native-config"
 import ItemCell from "./components/ItemCell"
 import React from "react"
 import LineupHorizontal from "./components/LineupHorizontal"
-import LineupCellSaving from "./components/LineupCellSaving"
 import {deleteLineup, followLineupPending, unfollowLineupPending} from "./lineup/actions"
 import {GLineupAction, L_DELETE, L_FOLLOW, L_RENAME, L_SHARE, L_UNFOLLOW, LineupRights} from "./lineupRights"
-import LineupTitle from "./components/LineupTitle"
+import {currentUserId} from "../managers/CurrentUser"
+import {buildLineupUrlExternal, buildLineupUrlInternal} from "../managers/Links"
 
 export const CLOSE_MODAL = 'close_modal';
 
@@ -193,28 +193,45 @@ export function displaySavingActions2(
 }
 
 
-
-
-
-let createShareIntent = (what, url) => {
+let createShareIntent2 = function (what, url, subject, message) {
     let prepareIntentContent = (title, url) => {
-        let intent = {title};
-        let message = i18n.t('send_message');
-        if (__IS_ANDROID__) message = url + '\n\n' + message;
-        if (__IS_IOS__) intent.url = url;
-        intent.message = message;
-        return intent;
+        let intent = {title}
+        let msg
+        if (__IS_ANDROID__) msg = url + '\n\n' + message
+        if (__IS_IOS__) {
+            msg = message
+            intent.url = url
+        }
+        intent.message = msg
+        return intent
     }
 
-    const content: any = prepareIntentContent(what, url);
+    const content: any = prepareIntentContent(what, url)
+
 
     const options = {
         // Android only:
-        dialogTitle: what,
+        dialogTitle: subject,
         //IOS only
-        subject: i18n.t('send_object', {what}),
-    };
-    return {content, options};
+        subject: subject,
+    }
+    return {content, options}
+}
+let createShareIntent = (what, url) => {
+
+    return createShareIntent2(
+        what,
+        url,
+        i18n.t('send_object', {what}),
+        i18n.t('send_message'))
+}
+let createInviteIntent = (what, url) => {
+
+    return createShareIntent2(
+        what,
+        url,
+        i18n.t('invite_object', {what}),
+        i18n.t('invite_message'))
 }
 
 let showShareScreen = (navigator, params) => {
@@ -264,6 +281,32 @@ export function displayShareLineup({navigator, lineup}: {navigator: RNNNavigator
             sendAction: null,
             createShareIntent: () => createShareIntent(lineup.name, url),
             urlForClipboard: ()=> url,
+            title: i18n.t("actions.share_list")
+        }
+    );
+}
+
+export function displayInvitetoContributeToLineup({navigator, lineup}: {navigator: RNNNavigator, lineup: Lineup}) {
+    let userId = _.get(lineup, 'user.id');
+    let lineupId = _.get(lineup, 'id');
+    if (!userId || !lineupId) return; //TODO: error
+
+    //const url = `${Config.SERVER_URL}lists/${lineupId}?invitedBy=${currentUserId()}`;
+    const url = buildLineupUrlExternal(lineup, {"invitedBy": currentUserId()})
+
+
+    showShareScreen(navigator,
+        {
+            renderSharedObject: () => (
+                <LineupHorizontal
+                    lineup={lineup}
+                    style={{height: 100}}
+                />
+            ),
+            sendAction: null,
+            createShareIntent: () => createInviteIntent(lineup.name, url),
+            urlForClipboard: ()=> url,
+            title: i18n.t("invite_lineup_title")
         }
     );
 }

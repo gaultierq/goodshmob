@@ -339,6 +339,11 @@ export default {
     loadmore: "Chargement",
     send_message: "Je t'envoie ceci de goodsh.it : l'app où tu stockes tout ce que tu aimes.",
     send_object: "te recommande %{what} - via goodsh.it",
+
+    invite_message: "Je t'invite à contribuer à mas liste.",
+    invite_object: "inviter à contribuer à ma liste %{what}",
+
+
     goodsh_url: "https:\/\/goodsh.it\/",
     friends: {
         empty_screen: "Invite des amis.",
@@ -555,4 +560,7 @@ export default {
     focus_contribute_title: "Contribuez aux listes de vos amis!",
     focus_contribute_text: "Vous pouvez maintenant facilement contribuer aux listes de vos amis ! Essayez !",
     my_connections: "Mes connexions",
+    invite_lineup: "inviter",
+    invite_lineup_title: "Inviter à contribuer",
+
 }

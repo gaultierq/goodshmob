@@ -23,10 +23,18 @@ export function buildUserUrl(user: User): string {
     return `${Config.GOODSH_PROTOCOL_SCHEME}://it/users/${user.id}${passPropsString(_.pick(user, ['firstName', 'lastName']))}`
 }
 
-export function buildLineupUrl(lineup: Lineup): string {
+let buildLineupUrl = function (lineup, passProps, protocol) {
     let name = _.get(lineup, 'name')
-    let passProps = name && {lineupName: name}
-    return `${Config.GOODSH_PROTOCOL_SCHEME}://it/lists/${lineup.id}${passPropsString(passProps)}`
+    let pp = name && {lineupName: name}
+    passProps = passProps ? _.assign(passProps, pp) : pp
+    return `${protocol}lists/${lineup.id}${passPropsString(passProps)}`
+}
+
+export function buildLineupUrlInternal(lineup: Lineup, passProps?: any): string {
+    return buildLineupUrl(lineup, passProps, `${Config.GOODSH_PROTOCOL_SCHEME}://it/`)
+}
+export function buildLineupUrlExternal(lineup: Lineup, passProps?: any): string {
+    return buildLineupUrl(lineup, passProps, Config.SERVER_URL)
 }
 
 export function buildSearchItemUrl(defaultLineupId?: Id) {
@@ -67,5 +75,5 @@ export function pressToSeeUserSheet(user: User) {
 }
 
 export function pressToSeeLineup(lineup: Lineup) {
-    return () => openLinkSafely(buildLineupUrl(lineup))
+    return () => openLinkSafely(buildLineupUrlInternal(lineup))
 }

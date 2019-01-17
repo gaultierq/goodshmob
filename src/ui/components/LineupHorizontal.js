@@ -19,7 +19,14 @@ import type {Lineup, RNNNavigator, Saving} from "../../types"
 import {ViewStyle} from "../../types"
 import {currentGoodshboxId, logged} from "../../managers/CurrentUser"
 import {Navigation} from 'react-native-navigation'
-import {displayLineupActionMenu, displaySavingActions, displayShareLineup, seeActivityDetails, seeList} from "../Nav"
+import {
+    displayInvitetoContributeToLineup,
+    displayLineupActionMenu,
+    displaySavingActions,
+    displayShareLineup,
+    seeActivityDetails,
+    seeList
+} from "../Nav"
 import LineupCellSaving from "../components/LineupCellSaving"
 
 import GTouchable from "../GTouchable"
@@ -39,6 +46,9 @@ import {FETCH_LINEUP, fetchLineup} from "../lineup/actions"
 import * as Api from "../../managers/Api"
 import {GLineupAction, L_SHARE} from "../lineupRights"
 import {pressToSeeLineup} from "../../managers/Links"
+import Ionicons from "react-native-vector-icons/Ionicons"
+import Icon from "react-native-vector-icons/Ionicons"
+import {SFP_TEXT_BOLD, SFP_TEXT_REGULAR} from "../fonts"
 
 // $FlowFixMe
 type Props = {
@@ -250,14 +260,17 @@ export function renderLineupMenuButton(item: Lineup, actions: GLineupAction[], n
                     justifyContent: 'center',
                 }}
                 onPress={() => {
-                    displayShareLineup({
+                    displayInvitetoContributeToLineup({
                         navigator: navigator,
                         lineup: item
                     })
                 }}>
-                <View style={{flex: 1, justifyContent: 'flex-start'}}>
-                    <Image source={require('../../img2/share-small.png')} resizeMode="contain"
-                           style={{height: 18, tintColor: Colors.brownishGrey, }} />
+                <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', paddingTop: 4,}}>
+                    <Icon name="ios-contacts" size={16} color={Colors.brownishGrey}/>
+                    <Text style={{
+                        color: Colors.brownishGrey, fontSize: 13, marginLeft: 3,
+                        fontFamily: SFP_TEXT_BOLD,
+                    }}>{i18n.t("invite_lineup")}</Text>
                 </View>
 
             </GTouchable>

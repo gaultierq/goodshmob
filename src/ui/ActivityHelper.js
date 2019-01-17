@@ -8,7 +8,7 @@ import {SFP_TEXT_BOLD, SFP_TEXT_ITALIC, SFP_TEXT_MEDIUM} from "./fonts"
 import {Colors} from "./colors"
 import NavManager from "../managers/NavManager"
 import {CREATE_LIKE, DELETE_LIKE} from "./activity/actionTypes"
-import {buildLineupUrl, buildUserUrl, decorateUrlWithLongPress} from "../managers/Links"
+import {buildLineupUrlInternal, buildUserUrl, decorateUrlWithLongPress} from "../managers/Links"
 
 
 export function getActivityText(activity: Activity, navP: NavParams): () => any {
@@ -21,7 +21,7 @@ export function getActivityText(activity: Activity, navP: NavParams): () => any 
 }
 
 export function getMainUrl(activity: Activity): ?string {
-    if (isSaving(activity)) return buildLineupUrl(activity.target)
+    if (isSaving(activity)) return buildLineupUrlInternal(activity.target)
     else if (isSending(activity)) return buildUserUrl(activity.target)
     else if (isAsking(activity)) return null
     else throw "christ:" + activity.type
@@ -169,7 +169,7 @@ function getUserHtml(user: User) {
 }
 
 function getLineupHtml(lineup: Lineup) {
-    let lineupUrl = buildLineupUrl(lineup)
+    let lineupUrl = buildLineupUrlInternal(lineup)
     return `<a href="${lineupUrl}">${truncate(lineup.name)}</a> (${_.get(lineup, 'meta.savingsCount', 0)})`
 }
 

@@ -85,7 +85,7 @@ export default class CommunityScreen extends Screen<Props, State> {
                                 height: 50,
                                 alignItems: 'center',
                             }}>
-                                <Ionicons name="ios-person-add" size={47} color={Colors.orange}/>
+                                <Ionicons name="ios-person-add" size={46} color={Colors.orange}/>
                             </View>
                             <Text style={[{fontFamily: SFP_TEXT_MEDIUM, fontSize: 20}, {marginLeft: 12}]}>{i18n.t('invite_contacts')}</Text>
                         </GTouchable>

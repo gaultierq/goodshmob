@@ -8,14 +8,14 @@ import {GoodshContext, InnerPlus, ListColumnsSelector, renderLinkInText} from ".
 import * as Api from "../../managers/Api"
 import Feed from "../components/feed"
 import type {Lineup, Saving} from "../../types"
-import {doDataMergeInState} from "../../helpers/DataUtils"
+import {doDataMergeInState, sanitizeActivityType} from "../../helpers/DataUtils"
 import ActivityCell from "../activity/components/ActivityCell"
 import {CANCELABLE_MODAL2, seeActivityDetails} from "../Nav"
 import {Colors} from "../colors"
 import Screen from "./../components/Screen"
 import {LINEUP_PADDING} from "../UIStyles"
-import {FETCH_LINEUP, FETCH_SAVINGS, fetchLineup,} from "../lineup/actions"
-import {UNSAVE} from "../lineup/actionTypes"
+import {FETCH_LINEUP, FETCH_SAVINGS, fetchLineup, FOLLOW_LINEUP_PENDING, followLineupPending,} from "../lineup/actions"
+import {FOLLOW_LINEUP, UNSAVE} from "../lineup/actionTypes"
 import {L_ADD_ITEM} from "../lineupRights"
 import {createStructuredSelector} from "reselect"
 import FeedSeparator from "../activity/components/FeedSeparator"
@@ -29,7 +29,7 @@ import {
     LINEUP_SAVING_COUNT_SELECTOR,
     LINEUP_SELECTOR,
     lineupId,
-    LIST_SAVINGS_SELECTOR, userId
+    LIST_SAVINGS_SELECTOR
 } from "../../helpers/Selectors"
 import {
     calcGridLayout,
@@ -42,7 +42,8 @@ import ActionButton from "react-native-action-button"
 import MaterialIcon from "react-native-vector-icons/MaterialIcons"
 import GTouchable from "../GTouchable"
 import {createDetailsLink} from "../activity/activityDetail"
-import {actions as userActions, actionTypes as userActionTypes} from "../../redux/UserActions"
+import _Messenger from "../../managers/Messenger"
+import {UPDATE_ACTIVITY} from "./changeDescription"
 
 type Props = {
     lineupId: string,
@@ -105,7 +106,12 @@ class LineupScreen extends Screen<Props, State> {
     }
 
     componentDidMount() {
-        this.props.dispatch(fetchLineup(this.props.lineup.id).createActionDispatchee(FETCH_LINEUP))
+        const lineupId = this.props.lineup.id
+        this.props.dispatch(fetchLineup(lineupId).createActionDispatchee(FETCH_LINEUP))
+
+        if (this.props.invitedBy && this.props.actions.indexOf(L_FOLLOW) >= 0) {
+            followLineupPending(this.props.dispatch, lineup)
+        }
     }
 
     render() {
