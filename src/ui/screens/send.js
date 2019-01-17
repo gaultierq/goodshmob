@@ -14,6 +14,7 @@ import GButton from "../components/GButton"
 import * as Api from "../../managers/Api"
 import {Colors} from "../colors"
 import {renderTextAndDots} from "../UIComponents"
+import Screen from "../components/Screen"
 
 type Props = {
     data?: any,
@@ -32,7 +33,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 @logged
 @connect(mapStateToProps)
-export default class SendScreen extends Component<Props, State> {
+export default class SendScreen extends Screen<Props, State> {
 
     state = {
         message: "",
