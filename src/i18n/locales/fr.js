@@ -554,4 +554,5 @@ export default {
     friends_empty: "Find your friends \nand enjoy goodsh.it together",
     focus_contribute_title: "Contribuez aux listes de vos amis!",
     focus_contribute_text: "Vous pouvez maintenant facilement contribuer aux listes de vos amis ! Essayez !",
+    my_connections: "Mes connexions",
 }

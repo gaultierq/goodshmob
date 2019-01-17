@@ -337,25 +337,29 @@ export default class HomeScreen extends Screen<Props, State> {
     }
 
     renderHorizontalFriends() {
-        return <FriendsList
-            userId={currentUserId()}
-            displayName={"home_friend_list"}
-            renderItem={({item, index}) => <View style={{margin: 1}}><GAvatar person={item} size={50} seeable/></View>}
-            ItemSeparatorComponent={() => <View style={{margin: 4}}/>}
-            hasMore={false}
-            style={{
-                paddingHorizontal: LINEUP_PADDING,
-                paddingTop: LINEUP_PADDING,
-                paddingBottom: 8,
-                backgroundColor: BACKGROUND_COLOR,
-                minHeight: 50 + LINEUP_PADDING + 8
-            }}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            ListHeaderComponent={ (icr) => (
-                icr && this.renderAddFriend()
-            )}
-        />
+        return (
+            <View style={{}}>
+                <FriendsList
+                    userId={currentUserId()}
+                    displayName={"home_friend_list"}
+                    renderItem={({item, index}) => <View style={{margin: 1}}><GAvatar person={item} size={50} seeable/></View>}
+                    ItemSeparatorComponent={() => <View style={{margin: 4}}/>}
+                    hasMore={false}
+                    contentContainerStyle={{
+                        paddingHorizontal: LINEUP_PADDING,
+                        paddingTop: LINEUP_PADDING,
+                        paddingBottom: 8,
+                        backgroundColor: BACKGROUND_COLOR,
+                        minHeight: 50 + LINEUP_PADDING + 8
+                    }}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    ListHeaderComponent={ (icr) => (
+                        icr && this.renderAddFriend()
+                    )}
+                />
+            </View>
+        )
     }
 
     renderAddFriend() {

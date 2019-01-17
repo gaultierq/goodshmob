@@ -6,6 +6,8 @@ import * as UI from "../UIStyles"
 import type {Item} from "../../types"
 import {Colors} from "../colors"
 import GImage from './GImage'
+import {LINEUP_PADDING} from "../UIStyles"
+import {SFP_TEXT_ITALIC, SFP_TEXT_REGULAR} from "../fonts"
 
 
 type Props = {
@@ -64,22 +66,22 @@ const styles = StyleSheet.create({
     containerInner: {
         flexDirection: 'row',
         justifyContent: "flex-start",
-        alignItems: 'center'
+        // alignItems: 'center'
     },
     image: {
         alignSelf: 'center',
-        height: 80,
-        width: 80,
+        height: 84,
+        width: 84,
         borderRadius: 8,
     },
     containerText: {
         flex:1,
-        padding: 15
+        paddingHorizontal: LINEUP_PADDING
     },
     placeholder: {
         backgroundColor: Colors.greyish
     },
-    title: {fontSize: 18, },
-    subtitle: {fontSize: 12, color: Colors.greyish}
+    title: {fontSize: 18, fontFamily: SFP_TEXT_REGULAR,},
+    subtitle: {fontSize: 15, color: Colors.greyish, fontFamily: SFP_TEXT_ITALIC,}
 
 });

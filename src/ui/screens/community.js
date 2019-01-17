@@ -90,7 +90,7 @@ export default class CommunityScreen extends Screen<Props, State> {
                             <Text style={[{fontFamily: SFP_TEXT_MEDIUM, fontSize: 20}, {marginLeft: 12}]}>{i18n.t('invite_contacts')}</Text>
                         </GTouchable>
                         <FeedSeparator/>
-                        <Text style={{...STYLES.SECTION_TITLE, paddingVertical: 8, paddingHorizontal: LINEUP_PADDING}}>My friends</Text>
+                        <Text style={{...STYLES.SECTION_TITLE, paddingVertical: 8, paddingHorizontal: LINEUP_PADDING}}>{i18n.t('my_connections')}</Text>
                     </View>
                 }
             />
