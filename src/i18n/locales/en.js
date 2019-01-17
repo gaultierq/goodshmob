@@ -522,6 +522,8 @@ export default {
         other: "Invite %{count} contacts"
     },
     invite_contacts: "Inviter des contacts",
+    share_app: "Share",
+    with_your_friends: "with your friends",
     lineup_medals: {
         elements: {
             zero: "element",

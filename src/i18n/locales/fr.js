@@ -523,6 +523,8 @@ export default {
         other: "Inviter %{count} contacts"
     },
     invite_contacts: "Inviter des contacts",
+    share_app: "Partager",
+    with_your_friends: "avec vos amis",
     explore: {
         friends: {
             empty: "<a href='%{link}'>Invite</a> tes amis pour voir leurs coups de cœur et envies",

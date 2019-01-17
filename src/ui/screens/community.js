@@ -3,10 +3,10 @@
 import React from 'react'
 import {
     ActivityIndicator,
-    FlatList,
+    FlatList, Image,
     Keyboard,
     Platform,
-    RefreshControl,
+    RefreshControl, Share,
     StyleSheet,
     Text,
     TextInput,
@@ -67,33 +67,79 @@ export default class CommunityScreen extends Screen<Props, State> {
                 ListEmptyComponent={<Text style={STYLES.empty_message}>{i18n.t('friends.empty_screen')}</Text>}
                 ListHeaderComponent={
                     <View>
-                        <GTouchable style={{margin: LINEUP_PADDING, flexDirection: 'row',alignItems: 'center',}} onPress={
-                            () => {
-                                this.props.navigator.push({
-                                    screen: 'goodsh.InviteManyContacts',
-                                    // navigatorButtons: CANCELABLE_MODAL,
-                                    title: i18n.t('invite_contacts'),
-                                })
-                            }
-                        }>
-
-                            <View style={{
-                                borderWidth: 3,
-                                borderColor: Colors.orange,
-                                borderRadius: 25,
-                                width: 50,
-                                height: 50,
-                                alignItems: 'center',
-                            }}>
-                                <Ionicons name="ios-person-add" size={46} color={Colors.orange}/>
-                            </View>
-                            <Text style={[{fontFamily: SFP_TEXT_MEDIUM, fontSize: 20}, {marginLeft: 12}]}>{i18n.t('invite_contacts')}</Text>
-                        </GTouchable>
+                        {this.renderShareApp()}
                         <FeedSeparator/>
-                        <Text style={{...STYLES.SECTION_TITLE, paddingVertical: 8, paddingHorizontal: LINEUP_PADDING}}>{i18n.t('my_connections')}</Text>
+
+                        {this.renderInviteContacts()}
+
+
+                        <FeedSeparator/>
+
+
+                        <Text style={{
+                            ...STYLES.SECTION_TITLE,
+                            paddingVertical: 8,
+                            paddingHorizontal: LINEUP_PADDING
+                        }}>{i18n.t('my_connections')}</Text>
                     </View>
                 }
             />
         )
     }
+
+    renderInviteContacts() {
+        return <GTouchable style={{margin: LINEUP_PADDING, flexDirection: 'row', alignItems: 'center',}} onPress={
+            () => {
+                this.props.navigator.push({
+                    screen: 'goodsh.InviteManyContacts',
+                    // navigatorButtons: CANCELABLE_MODAL,
+                    title: i18n.t('invite_contacts'),
+                })
+            }
+        }>
+            <View style={styles.headerIconWrapper}>
+                <Ionicons name="ios-person-add" size={46} color={Colors.orange}/>
+            </View>
+            <Text style={[styles.headerButtonText, {marginLeft: 12}]}>{i18n.t('invite_contacts')}</Text>
+        </GTouchable>
+    }
+
+    renderShareApp() {
+        return <GTouchable style={{margin: LINEUP_PADDING, flexDirection: 'row', alignItems: 'center',}} onPress={
+            () => {
+                let message = i18n.t('share_goodsh.message');
+                let title = i18n.t('share_goodsh.title');
+
+                let intent = {
+                    message,
+                    title
+                };
+
+                Share.share(intent, {
+                    dialogTitle: title,
+                });
+            }
+        }>
+            <Text style={[styles.headerButtonText, {marginRight: 5}]}>{i18n.t('share_app')}</Text>
+            <Image source={require('../../img2/goodsh-it.png')} resizeMode="contain" style={{width: 95, marginTop: 3}}/>
+            <Text style={[styles.headerButtonText, {marginLeft: 5}]}>{i18n.t('with_your_friends')}</Text>
+        </GTouchable>
+    }
 }
+
+
+
+const styles = StyleSheet.create({
+    headerButtonText: {
+        fontFamily: SFP_TEXT_MEDIUM, fontSize: 20
+    },
+    headerIconWrapper: {
+        borderWidth: 3,
+        borderColor: Colors.orange,
+        borderRadius: 25,
+        width: 50,
+        height: 50,
+        alignItems: 'center',
+    },
+
+})

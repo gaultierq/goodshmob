@@ -63,6 +63,3 @@ export default class LineupPicker extends
 
 }
 
-const styles = StyleSheet.create({
-
-})
