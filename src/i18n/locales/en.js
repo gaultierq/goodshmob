@@ -228,7 +228,7 @@ export default {
     },
     "community":{
         "screens": {
-            "friends":"My contacts",
+            "friends":"My community",
             "notifications":"Notifications",
         },
         "empty_screen": "The goodsh of your friends are here.\nInvite them to share your tips with them."

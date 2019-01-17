@@ -227,7 +227,7 @@ export default {
     },
     "community":{
         "screens": {
-            "friends":"Communauté",
+            "friends":"Ma communauté",
             "notifications":"Notifications",
         },
         "empty_screen": "Découvre ici les actus de tes contacts."
