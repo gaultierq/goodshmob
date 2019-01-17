@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     containerInner: {
         flexDirection: 'row',
         justifyContent: "flex-start",
-        // alignItems: 'center'
+        alignItems: 'center'
     },
     image: {
         alignSelf: 'center',

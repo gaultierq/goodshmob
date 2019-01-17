@@ -10,7 +10,7 @@ import connect from "react-redux/es/connect/connect"
 import {LINEUP_ACTIONS_SELECTOR, LINEUP_SELECTOR} from "../../helpers/Selectors"
 import {createStructuredSelector} from "reselect"
 import {GLineupAction, L_ADD_ITEM, L_FOLLOW, L_SHARE, L_UNFOLLOW} from "../lineupRights"
-import {displayShareLineup} from "../Nav"
+import {displayInvitetoContributeToLineup, displayShareLineup} from "../Nav"
 import {followLineupPending, unfollowLineupPending} from "./actions"
 import GTouchable from "../GTouchable"
 import rnTextSize, {type TSFontSpecs, type TSMeasureResult} from 'react-native-text-size'
@@ -18,6 +18,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Feather from 'react-native-vector-icons/Feather'
 import {HomeOnBoardingHelper} from "../screens/HomeOnBoardingHelper"
 import OnBoardingManager from "../../managers/OnBoardingManager"
+import Ionicons from "react-native-vector-icons/Ionicons"
 
 
 const BACK_BUTTON_WIDTH = 40
@@ -280,18 +281,21 @@ export class LineupHeader extends Component<Props, State> {
         )
     }
 
+    _registerTapTarget = ref => this.onBoardingHelper.registerTapTarget('contribute', ref, i18n.t("focus_contribute_title"), i18n.t("focus_contribute_text"), Colors.orange)
+
     renderButtons() {
         let {lineup, actions} = this.props
         let button, shareB
         if (actions) {
             if (actions.indexOf(L_FOLLOW) >= 0) {
-                button = <Text
-                    ref={ref => this.onBoardingHelper.registerTapTarget(
-                        'contribute', ref, i18n.t("focus_contribute_title"),
-                        i18n.t("focus_contribute_text"), Colors.orange)}
-                    onPress={()=>{
-                        followLineupPending(this.props.dispatch, lineup)
-                    }} style={[styles.button_dim, styles.button, styles.button_active]}>{i18n.t('actions.follow')}</Text>
+                button = (
+                    <Text
+                        ref={this._registerTapTarget}
+                        onPress={()=>{followLineupPending(this.props.dispatch, lineup)}}
+                        style={[styles.button_dim, styles.button, styles.button_active]}>{
+                            i18n.t('actions.follow')
+                        }</Text>
+                )
             }
             else if (actions.indexOf(L_UNFOLLOW) >= 0) {
                 button = <Text onPress={()=>{
@@ -300,7 +304,7 @@ export class LineupHeader extends Component<Props, State> {
             }
             else if (actions.indexOf(L_ADD_ITEM) >= 0) {
                 // button = <Text onPress={()=>{
-                //     startAddItem(this.props.navigator, lineup.id)
+                //     startAddIthomem(this.props.navigator, lineup.id)
                 // }} style={[styles.button_dim, styles.button, styles.button_inactive]}>{i18n.t('actions.add')}</Text>
             }
 
@@ -308,20 +312,17 @@ export class LineupHeader extends Component<Props, State> {
                 shareB = (
                     <GTouchable
                         onPress={()=>{
-                            displayShareLineup({
+                            displayInvitetoContributeToLineup({
                                 navigator: this.props.navigator,
                                 lineup: this.props.lineup,
                             })
                         }}
                         style={{
-                            alignItems: 'center',
-                            marginLeft: LINEUP_PADDING / 2,
+                            marginLeft: LINEUP_PADDING,
+                            paddingTop: 10,
                         }}
                     >
-
-                        {__IS_IOS__ && <Feather name={'share'} size={24} color={Colors.grey}/>}
-                        {!__IS_IOS__ && <MaterialIcons name={'share'} size={24} color={Colors.grey}/>}
-
+                        <Ionicons name="ios-person-add" size={30} color={Colors.grey} />
                     </GTouchable>)
             }
         }

@@ -279,7 +279,7 @@ export function renderLineupMenuButton(item: Lineup, actions: GLineupAction[], n
                 // backgroundColor: 'green',
                 justifyContent: 'center',
             }}
-                        onPress={() => displayLineupActionMenu(navigator, dispatch, item, _.filter(actions, a => a !== L_SHARE))}>
+                        onPress={() => displayLineupActionMenu(navigator, dispatch, item, actions)}>
                 <View style={{flex: 1, justifyContent: 'flex-start', paddingTop: 12}}>
                     <Image source={require('../../img2/sidedots.png')} resizeMode="contain"
                            style={{width: 17, tintColor: Colors.brownishGrey}}/>

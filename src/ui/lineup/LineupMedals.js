@@ -65,8 +65,8 @@ export class LineupMedals extends Component<Props, State> {
                             flexDirection: 'row',
                             marginRight: 8,
                         }}>
-                            <GAvatar person={author} seeable style={{alignItems: 'center',}} size={LINEUP_PADDING * 2}/>
-                            {author && <Text onPress={pressToSeeUser(author)} style={[{marginLeft: 6}, styles.counters_names]}>{_.join([author.firstName, author.lastName[0] + "."], ' ')}</Text>}
+                            <GAvatar person={author} seeable style={{alignItems: 'center',}} size={24}/>
+                            {author && <Text onPress={pressToSeeUser(author)} style={[styles.counters_names, {marginLeft: 6, color: Colors.black}, ]}>{_.join([author.firstName, author.lastName[0] + "."], ' ')}</Text>}
                         </View>
                         }
                         {
