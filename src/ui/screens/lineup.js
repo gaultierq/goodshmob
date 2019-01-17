@@ -320,14 +320,6 @@ const actions = {
                 include: "*.*"
             });
     },
-
-    deleteSaving: (saving:Saving) => {
-        let call = new Api.Call()
-            .withMethod('DELETE')
-            .withRoute(`savings/${saving.id}`);
-
-        return call.createActionDispatchee(UNSAVE);
-    }
 };
 
 

@@ -3,11 +3,9 @@
 import ApiAction from "./ApiAction"
 import * as Api from "../managers/Api"
 import {Call} from "../managers/Api"
-import type {Id, Lineup, Saving} from "../types"
+import type {Id, Saving} from "../types"
 import type {PendingItem} from "../reducers/dataReducer"
 import {CREATE_PENDING_ACTION, REMOVE_PENDING_ACTION} from "../reducers/dataReducer"
-import {SAVE_ITEM} from "../ui/lineup/actionTypes"
-import {UNSAVE} from "../ui/lineup/actionTypes"
 
 export type MergeOptions<K> = {
     afterId?: K,

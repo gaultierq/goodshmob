@@ -28,7 +28,7 @@ export default class AddInScreen extends Screen<Props, State> {
 
     state = {filter: null};
     _spacer = TRANSPARENT_SPACER(LINEUP_SEP)
-    
+
     render() {
 
         const {navigator, onListSelected, ...otherProps} = this.props;
