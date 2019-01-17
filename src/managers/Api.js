@@ -401,11 +401,17 @@ export class Call {
                         error => {
 
                             if (trigger <= 2) {
-                                sendMessage(
-                                    __IS_LOCAL__ ?
-                                        `#request failure: '${(error.message || `${error.status}! [${apiAction}]: ${JSON.stringify(error)}`)}'` :
-                                        i18n.t('common.api.generic_error')
-                                );
+                                if (instance.isConnected()) {
+                                    sendMessage(
+                                        __IS_LOCAL__ ?
+                                            `#request failure: '${(error.message || `${error.status}! [${apiAction}]: ${JSON.stringify(error)}`)}'` :
+                                            i18n.t('common.api.generic_error')
+                                    );
+                                }
+                                else {
+                                    // offline
+                                }
+
                             }
 
 
@@ -498,6 +504,12 @@ export function initialListState() {
         hasMore: false
     };
 }
+
+
+export function isApiConnected() {
+    return instance.isConnected()
+}
+
 
 //move
 export function safeDispatchAction(dispatch, action, stateName: string) {

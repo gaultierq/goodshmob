@@ -468,7 +468,8 @@ export default {
         message: "Je t'invite sur goodsh.it : l'app où tu stockes tout ce que tu aimes. https://goodsh.it/",
     },
     loading: {
-        error: "Oups... Problème avec internet. "
+        error: "Oups... Problème avec internet. ",
+        offline: "Vous n'êtes pas connecté. ",
     },
     alert: {
         delete: {

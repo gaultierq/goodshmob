@@ -29,6 +29,7 @@ import Config from "react-native-config"
 import {FullScreenLoader} from "../UIComponents"
 import BugsnagManager from "../../managers/BugsnagManager"
 import {Loader} from "../Loader"
+import {isApiConnected} from "../../managers/Api"
 
 export type FeedSource = {
     callFactory: ()=>Api.Call,
@@ -648,10 +649,10 @@ export default class Feed extends Component<Props, State>  {
     }
 
     renderFail(fetch: () => any) {
-
+        let message = isApiConnected() ? i18n.t('loading.error') : i18n.t('loading.offline')
         return (
             <View style={{padding: LINEUP_PADDING, flexDirection: this.props.horizontal ? 'row' : 'column'}}>
-                <Text style={{alignSelf: "center"}}>{i18n.t('loading.error')}</Text>
+                <Text style={{alignSelf: "center"}}>{message}</Text>
                 {renderSimpleButton(i18n.t('actions.try_again'), fetch)}
             </View>
         );

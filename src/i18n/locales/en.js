@@ -414,7 +414,8 @@ export default {
         }
     },
     loading: {
-        error: "D@#m$%n, loading error."
+        error: "D@#m$%n, loading error.",
+        offline: "You are not connected to the internet. ",
     },
     actions: {
         ok: "Ok",
