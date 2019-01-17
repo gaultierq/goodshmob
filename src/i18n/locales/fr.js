@@ -340,7 +340,7 @@ export default {
     send_message: "Je t'envoie ceci de goodsh.it : l'app où tu stockes tout ce que tu aimes.",
     send_object: "te recommande %{what} - via goodsh.it",
 
-    invite_message: "Je t'invite à contribuer à mas liste.",
+    invite_message: "Je t'invite à contribuer à ma liste.",
     invite_object: "inviter à contribuer à ma liste %{what}",
 
 
