@@ -166,7 +166,7 @@ export class LineupHeader extends Component<Props, State> {
         const baseWidth = __DEVICE_WIDTH__ - 2 * LINEUP_PADDING
         const backButtonWidth = (this.state.backButtonWidth || BACK_BUTTON_WIDTH) + LINEUP_PADDING
         const actionButtonWidth = this.state.buttonsWidth || 60
-        const avWidth = (isFirst = false, isLast = false) => baseWidth - isFirst * backButtonWidth - isLast * actionButtonWidth
+        const availableWidth = (isFirst = false, isLast = false) => baseWidth - isFirst * backButtonWidth - isLast * actionButtonWidth
 
         let lines = []
 
@@ -174,7 +174,7 @@ export class LineupHeader extends Component<Props, State> {
         let currLine = null, curLineW = 0
 
         for (let i = 0; i < words.length; i++) {
-            let availWidth = avWidth(lines.length === 0, false)
+            let availWidth = availableWidth(lines.length === 0, false)
             let w = words[i]
             let ww = wordsWidth[i].width
             if (curLineW + ww < availWidth) {
@@ -199,13 +199,15 @@ export class LineupHeader extends Component<Props, State> {
 
         //2nd pass: including the trailing buttons
         let cut = 0
-        if (curLineW > avWidth(lines.length <= 1,true)) {
+        if (curLineW > availableWidth(lines.length <= 1,true)) {
+            //currLine is already set
             lines.pop()
-            //need to cut it
+
+            //we need to cut currLine into 2
             for (let i = words.length; i-- > 0;) {
                 let w = words[i]
                 let ww = wordsWidth[i].width
-                if (curLineW < avWidth(lines.length <= 1,true)) {
+                if (curLineW < availableWidth(lines.length <= 1,true)) {
                     //finish
                     lines.push(currLine.substr(0, currLine.length - cut))
                     lines.push(currLine.substr(currLine.length - cut))
@@ -215,8 +217,16 @@ export class LineupHeader extends Component<Props, State> {
                 else {
                     curLineW -= ww
                     cut += w.length
+
+                    //hack for single line long word
+                    if (words.length === 1) {
+                        cut = currLine.length / 2
+                        lines.push(currLine.substr(0, currLine.length - cut))
+                        lines.push(currLine.substr(currLine.length - cut))
+                    }
                 }
             }
+
         }
         return lines
     }
