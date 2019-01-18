@@ -3,7 +3,15 @@
 import * as Api from "../../managers/Api"
 import {Call} from "../../managers/Api"
 import type {Id, IItem, ItemType, List, ms} from "../../types"
-import {CREATE_LINEUP, DELETE_LINEUP, EDIT_LINEUP, FOLLOW_LINEUP, SAVE_ITEM, UNFOLLOW_LINEUP} from "./actionTypes"
+import {
+    CREATE_AND_SAVE_ITEM,
+    CREATE_LINEUP,
+    DELETE_LINEUP,
+    EDIT_LINEUP,
+    FOLLOW_LINEUP,
+    SAVE_ITEM,
+    UNFOLLOW_LINEUP
+} from "./actionTypes"
 import type {PendingAction} from "../../helpers/ModelUtils"
 import {pendingActionWrapper} from "../../helpers/ModelUtils"
 import type {Visibility} from "../screens/additem"
@@ -59,7 +67,7 @@ export const CREATE_SAVING: PendingAction<SAVING_CREATION_PAYLOAD>  = pendingAct
 export type ITEM_AND_SAVING_CREATION_PAYLOAD = {item: IItem, lineupId: Id, privacy: Visibility, description: string}
 
 export const CREATE_ITEM_AND_SAVING: PendingAction<ITEM_AND_SAVING_CREATION_PAYLOAD>  = pendingActionWrapper(
-    SAVE_ITEM,
+    CREATE_AND_SAVE_ITEM,
     ({item, lineupId, privacy, description}: ITEM_AND_SAVING_CREATION_PAYLOAD) => new Api.Call()
         .withMethod('POST')
         .withRoute(`items/make`)

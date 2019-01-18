@@ -110,9 +110,7 @@ export default class AddItemScreen2 extends React.Component<Props, State> {
                                 uncheckedColor={Colors.brownishGrey}
                             />
                         </View>
-                        <GTouchable  onPress={() => {openLinkSafely(item.url)}} style={{flex:1}}>
-                            <ItemCell item={item}/>
-                        </GTouchable>
+                        <ItemCell item={item}/>
 
                         <TextInput
                             editable={editable}

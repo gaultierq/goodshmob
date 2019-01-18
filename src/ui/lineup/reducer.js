@@ -1,6 +1,6 @@
 // @flow
 
-import {CREATE_LINEUP, DELETE_LINEUP, SAVE_ITEM} from "./actionTypes"
+import {CREATE_LINEUP, DELETE_LINEUP, SAVE_ITEM, CREATE_AND_SAVE_ITEM} from "./actionTypes"
 import {currentUserId} from "../../managers/CurrentUser"
 import {doDataMergeInState} from "../../helpers/DataUtils"
 import dotprop from "dot-prop-immutable"
@@ -29,7 +29,8 @@ export default (state = {}, action = {}) => {
             state = dotprop.set(state, path, lists);
             break;
         }
-        case SAVE_ITEM.success(): {
+        case SAVE_ITEM.success():
+        case CREATE_AND_SAVE_ITEM.success(): {
             let {id, type} = action.payload.data;
             let {lineupId} = action.options;
             let path = `lists.${lineupId}.relationships.savings.data`;

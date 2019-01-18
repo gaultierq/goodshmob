@@ -60,7 +60,10 @@ export const LINEUP_SELECTOR = (lineupIdExtract = lineupId) => createSelector(
         rawPendingList, // lineup in pending
     ) => {
         let lineup
-        if (syncList) {
+        if (!propLineup) {
+            lineup = null
+        }
+        else if (syncList) {
             lineup = createObj(syncList)
             if (lineup.primary === true) {
                 lineup.name = i18n.t('lineups.goodsh.title')

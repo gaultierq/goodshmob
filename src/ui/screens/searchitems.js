@@ -119,7 +119,7 @@ export default class SearchItems extends Screen<Props, State> {
         return 0
     }
     static createAddLink(defaultLineupId?: Id) {
-        return createOpenModalLink('goodsh.SearchItems', i18n.t('search_item_screen.title'), null/*{defaultLineupId}*/)
+        return createOpenModalLink('goodsh.SearchItems', i18n.t('search_item_screen.title'), {defaultLineupId})
     }
 }
 

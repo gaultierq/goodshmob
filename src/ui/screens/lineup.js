@@ -16,7 +16,7 @@ import Screen from "./../components/Screen"
 import {LINEUP_PADDING} from "../UIStyles"
 import {FETCH_LINEUP, FETCH_SAVINGS, fetchLineup, FOLLOW_LINEUP_PENDING, followLineupPending,} from "../lineup/actions"
 import {FOLLOW_LINEUP, UNSAVE} from "../lineup/actionTypes"
-import {L_ADD_ITEM} from "../lineupRights"
+import {L_ADD_ITEM, L_FOLLOW} from "../lineupRights"
 import {createStructuredSelector} from "reselect"
 import FeedSeparator from "../activity/components/FeedSeparator"
 import {CachedImage} from 'react-native-cached-image'
@@ -106,12 +106,16 @@ class LineupScreen extends Screen<Props, State> {
     }
 
     componentDidMount() {
-        const lineupId = this.props.lineup.id
+        const lineupId = this.getLineupId()
         this.props.dispatch(fetchLineup(lineupId).createActionDispatchee(FETCH_LINEUP))
 
         if (this.props.invitedBy && this.props.actions.indexOf(L_FOLLOW) >= 0) {
-            followLineupPending(this.props.dispatch, lineup)
+            followLineupPending(this.props.dispatch, this.props.lineup)
         }
+    }
+
+    getLineupId() {
+        return this.props.lineup.id
     }
 
     render() {
@@ -284,8 +288,6 @@ class LineupScreen extends Screen<Props, State> {
     }
 
     renderItemGrid({item, index}) {
-
-
         const layout = this.layout
         index = index % layout.numColumns
         const gridStyles = this.gridStyles
@@ -295,7 +297,7 @@ class LineupScreen extends Screen<Props, State> {
                 <GTouchable
                     key={`lineup.grid.${index}`}
                     style={gridCellPositioningStyle(gridStyles, index, layout)}
-                    onPress={() => openLinkSafely(SearchItems.createAddLink(this.props.lineupId))}>
+                    onPress={() => openLinkSafely(SearchItems.createAddLink(this.getLineupId()))}>
                     {(
                         <View style={{width: layout.cellWidth, height: layout.cellHeight}}>
                             <InnerPlus plusStyle={{backgroundColor: Colors.black, borderRadius: 4,}}/>
