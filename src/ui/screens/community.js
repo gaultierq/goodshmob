@@ -3,10 +3,12 @@
 import React from 'react'
 import {
     ActivityIndicator,
-    FlatList, Image,
+    FlatList,
+    Image,
     Keyboard,
     Platform,
-    RefreshControl, Share,
+    RefreshControl,
+    Share,
     StyleSheet,
     Text,
     TextInput,
@@ -18,14 +20,13 @@ import Screen from "../components/Screen"
 import {connect} from "react-redux"
 import FriendsList from "./friends"
 import {currentUserId} from "../../managers/CurrentUser"
-import GButton from "../components/GButton"
-import {LINEUP_PADDING, SIMPLE_BUTTON_TEXT_STYLE, STYLES} from "../UIStyles"
+import {LINEUP_PADDING, STYLES} from "../UIStyles"
 import GTouchable from "../GTouchable"
-import Icon from 'react-native-vector-icons/Ionicons'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import {Colors} from "../colors"
 import FeedSeparator from "../activity/components/FeedSeparator"
 import {SFP_TEXT_MEDIUM} from "../fonts"
-import Ionicons from "react-native-vector-icons/Ionicons"
+import FontAwesome from "react-native-vector-icons/FontAwesome"
 
 type Props = NavigableProps & {
 }
@@ -97,7 +98,7 @@ export default class CommunityScreen extends Screen<Props, State> {
                 })
             }
         }>
-            <View style={styles.headerIconWrapper}>
+            <View style={[styles.headerIconWrapper, {borderColor: Colors.orange,}]}>
                 <Ionicons name="ios-person-add" size={46} color={Colors.orange}/>
             </View>
             <Text style={[styles.headerButtonText, {marginLeft: 12}]}>{i18n.t('invite_contacts')}</Text>
@@ -120,9 +121,11 @@ export default class CommunityScreen extends Screen<Props, State> {
                 });
             }
         }>
-            <Text style={[styles.headerButtonText, {marginRight: 5}]}>{i18n.t('share_app')}</Text>
-            <Image source={require('../../img2/goodsh-it.png')} resizeMode="contain" style={{width: 95, marginTop: 3}}/>
-            <Text style={[styles.headerButtonText, {marginLeft: 5}]}>{i18n.t('with_your_friends')}</Text>
+            <View style={[styles.headerIconWrapper, {borderColor: Colors.darkerGreen, paddingTop: 7}]}>
+                <FontAwesome name="group" size={30} color={Colors.darkerGreen}/>
+            </View>
+            <Text style={[styles.headerButtonText, {marginLeft: 12}]}>{i18n.t('share_app')}</Text>
+            <Image source={require('../../img2/goodsh-it.png')} resizeMode="contain" style={{width: 95, marginTop: 3, marginLeft: 10}}/>
         </GTouchable>
     }
 }
@@ -135,7 +138,6 @@ const styles = StyleSheet.create({
     },
     headerIconWrapper: {
         borderWidth: 3,
-        borderColor: Colors.orange,
         borderRadius: 25,
         width: 50,
         height: 50,

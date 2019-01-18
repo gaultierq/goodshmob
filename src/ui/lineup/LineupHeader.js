@@ -163,7 +163,7 @@ export class LineupHeader extends Component<Props, State> {
         return words
     }
 
-    getLines(words, wordsWidth) {
+    getLines(words, wordsWidth, optimize = true) {
         const baseWidth = __DEVICE_WIDTH__ - 2 * LINEUP_PADDING
         const backButtonWidth = (this.state.backButtonWidth || BACK_BUTTON_WIDTH) + LINEUP_PADDING
         const actionButtonWidth = this.state.buttonsWidth || 60
@@ -198,36 +198,44 @@ export class LineupHeader extends Component<Props, State> {
         }
         if (currLine) lines.push(currLine)
 
-        //2nd pass: including the trailing buttons
-        let cut = 0
-        if (curLineW > availableWidth(lines.length <= 1,true)) {
-            //currLine is already set
-            lines.pop()
+        if (optimize) {
+            //2nd pass: including the trailing buttons
+            let cut = 0
+            if (curLineW > availableWidth(lines.length <= 1,true)) {
+                //currLine is already set
+                lines.pop()
 
-            //we need to cut currLine into 2
-            for (let i = words.length; i-- > 0;) {
-                let w = words[i]
-                let ww = wordsWidth[i].width
-                if (curLineW < availableWidth(lines.length <= 1,true)) {
-                    //finish
-                    lines.push(currLine.substr(0, currLine.length - cut))
-                    lines.push(currLine.substr(currLine.length - cut))
-                    break
-
-                }
-                else {
-                    curLineW -= ww
-                    cut += w.length
-
-                    //hack for single line long word
-                    if (words.length === 1) {
-                        cut = currLine.length / 2
+                //we need to cut currLine into 2
+                for (let i = words.length; i-- > 0;) {
+                    let w = words[i]
+                    let ww = wordsWidth[i].width
+                    if (curLineW < availableWidth(false, true)) {
+                        //finish
                         lines.push(currLine.substr(0, currLine.length - cut))
                         lines.push(currLine.substr(currLine.length - cut))
+                        break
+
+                    }
+                    else {
+                        curLineW -= ww
+                        cut += w.length
+
+                        //hack for single line long word
+                        if (words.length === 1) {
+                            cut = currLine.length / 2
+                            lines.push(currLine.substr(0, currLine.length - cut))
+                            lines.push(currLine.substr(currLine.length - cut))
+                        }
                     }
                 }
-            }
 
+            }
+        }
+
+
+        if (lines.length === 0) {
+            //just a security
+            lines = this.getLines(words, wordsWidth, false)
         }
         return lines
     }
@@ -319,7 +327,7 @@ export class LineupHeader extends Component<Props, State> {
                         }}
                         style={{
                             marginLeft: LINEUP_PADDING,
-                            paddingTop: 10,
+                            paddingTop: 7,
                         }}
                     >
                         <Ionicons name="ios-person-add" size={30} color={Colors.grey} />

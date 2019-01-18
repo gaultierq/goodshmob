@@ -313,6 +313,7 @@ export const HEADER_STYLES = StyleSheet.create({
         height: 26,
         lineHeight: 24,
         marginLeft: 10,
+        marginBottom: 5,
         alignItems: "flex-end",
         alignSelf: "flex-end",
         // textAlignVertical: 'bottom',
@@ -322,7 +323,6 @@ export const HEADER_STYLES = StyleSheet.create({
         backgroundColor: 'transparent',
         fontFamily: SFP_TEXT_BOLD,
         fontSize: 16,
-        borderColor: Colors.green,
         // backgroundColor: 'red',
 
         alignItems: 'center',
@@ -331,10 +331,13 @@ export const HEADER_STYLES = StyleSheet.create({
     },
     button_active: {
         color: Colors.green,
+        borderColor: Colors.green,
         borderWidth: 1,
     },
     button_inactive: {
         color: Colors.greyish,
+        borderColor: Colors.greyish,
+        borderWidth: 1,
     },
 
 })

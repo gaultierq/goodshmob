@@ -260,7 +260,7 @@ class LineupScreen extends Screen<Props, State> {
             fetchSrc = {
                 callFactory: () => actions.fetchSavings(listId),
                 action: FETCH_SAVINGS,
-                options: {listId: this.props.lineupId}
+                options: {listId: this.lineupId()}
             }
         }
         else {
