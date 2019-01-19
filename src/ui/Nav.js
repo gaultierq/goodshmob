@@ -231,7 +231,7 @@ let createInviteIntent = (what, url) => {
         what,
         url,
         i18n.t('invite_object', {what}),
-        i18n.t('invite_message'))
+        i18n.t('invite_message', {what}))
 }
 
 let showShareScreen = (navigator, params) => {
