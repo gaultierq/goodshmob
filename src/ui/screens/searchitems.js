@@ -95,7 +95,26 @@ export default class SearchItems extends Screen<Props, State> {
         }
     }
 
-    _onItemSelected= (item: Item) => onNewItemSelected(item, this.props.navigator, this.props.defaultLineupId)
+    _onItemSelected= (item: Item) => {
+
+        this.props.navigator.showModal({
+            screen: 'goodsh.CreateItemScreen',
+            title: i18n.t("add_item_screen.title"),
+            animationType: 'none',
+            passProps: {
+                item,
+                onCancel: () => {
+                    setTimeout(this.props.navigator.dismissModal)
+                },
+                onAdded: () => {
+                    setTimeout(() => {
+                        this.props.navigator.dismissModal()
+                    }, 1000)
+                },
+                defaultLineupId: this.props.defaultLineupId
+            },
+        });
+    }
 
     findBestIndex(props: Props): number {
         if (props.initialCategory) {

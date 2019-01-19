@@ -2,7 +2,7 @@
 import React from 'react'
 import {ActivityIndicator, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
 import {CheckBox} from "react-native-elements"
-import type {Id} from "../../types"
+import type {Id, IItem} from "../../types"
 import {CREATE_ITEM_AND_SAVING, CREATE_SAVING} from "../lineup/actions"
 import {logged} from "../../managers/CurrentUser"
 import {connect} from "react-redux"
@@ -15,7 +15,8 @@ type Props = {
     defaultLineupId: Id,
     defaultDescription: Description,
     item: IItem,
-    onAdded: () => void,
+    onAdded
+        : () => void,
     navigator: *,
     data: *
 };
@@ -72,9 +73,10 @@ export default class CreateItemScreen extends Screen<Props, State> {
             }
         )).then(pendingId => {
 
-            let onAdded = this.props.onAdded;
-            onAdded && onAdded();
+            let onAdded = this.props.onAdded
+            onAdded && onAdded()
 
+            this.props.navigator.dismissModal()
             _Messenger.sendMessage(
                 //MagicString
                 i18n.t("shared.goodsh_saved"),
