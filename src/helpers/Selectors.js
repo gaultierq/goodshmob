@@ -1,5 +1,13 @@
 import {createSelector, createSelectorCreator, defaultMemoize} from "reselect"
-import {CREATE_LINEUP, DELETE_LINEUP, FOLLOW_LINEUP, SAVE_ITEM, UNFOLLOW_LINEUP, UNSAVE} from "../ui/lineup/actionTypes"
+import {
+    CREATE_AND_SAVE_ITEM,
+    CREATE_LINEUP,
+    DELETE_LINEUP,
+    FOLLOW_LINEUP,
+    SAVE_ITEM,
+    UNFOLLOW_LINEUP,
+    UNSAVE
+} from "../ui/lineup/actionTypes"
 import {LineupRights} from "../ui/lineupRights"
 import {isEqualsArrayFree} from "./ArrayUtil"
 import {hashCode} from "./StringUtils"
@@ -113,15 +121,22 @@ export const PENDING_SAVINGS_SELECTOR = () => createSelector(
     [
         lineupIdExtract,
         state => state.pending[SAVE_ITEM],
+        state => state.pending[CREATE_AND_SAVE_ITEM],
         state => state.pending[UNSAVE],
     ],
     (
         lineupId,
         pendingSaveStore,
+        pendingSave2Store,
         pendingUnsaveStore,
     ) => {
 
-        const pendingSave = _.filter(pendingSaveStore, pending => pending.payload.lineupId === lineupId)
+        //so lame
+        const pendingSave = _.concat(
+            _.filter(pendingSaveStore, pending => pending.payload.lineupId === lineupId),
+            _.filter(pendingSave2Store, pending => pending.payload.lineupId === lineupId),
+        )
+
         const pendingUnsave = _.filter(pendingUnsaveStore, pending => pending.payload.lineupId === lineupId)
         counter(`PENDING_SAVINGS_SELECTOR.${lineupId}`)
         return {pendingSave, pendingUnsave}
