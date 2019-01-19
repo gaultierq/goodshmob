@@ -132,7 +132,7 @@ export class LineupTitlePure extends Component<Props, State> {
         let canFollow = this.props.actions.indexOf(L_FOLLOW) >= 0
         return [
             this.renderMedal(_.get(this.props, 'savingsCount.total', -1), "th-large", it),
-            this.renderMedal(_.get(this.props, 'followersCount.total', -1), "star", it, this.props.followed ? Colors.brownishGrey : undefined),
+            this.renderMedal(_.get(this.props, 'followersCount.total', -1), "user", it, this.props.followed ? Colors.brownishGrey : undefined),
             (canFollow &&
                 <Text
                     key={"follow"}
