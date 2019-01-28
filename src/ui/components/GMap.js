@@ -33,21 +33,14 @@ export default class GMap extends Component<Props, State>  {
     center: Region
 
     map;
+    animateCount = 0
 
-    componentDidMount() {
-        setTimeout(()=> {
-            if (this.map) {
-                // this.map.fitToSuppliedMarkers(this.props.points.map((p, i) => i), {
-                //     animated: true, edgePadding: {
-                //         top: 10,
-                //         right: 10,
-                //         bottom: 10,
-                //         left: 10,
-                //     }})
-
-                this.map.fitToElements(true)
+    componentDidUpdate(prevProps: Props) {
+        if (this.props.points !== prevProps.points) {
+            if (++ this.animateCount === 1) {
+                this.animateToPoints()
             }
-        }, 1000)
+        }
     }
 
     render() {
@@ -69,6 +62,22 @@ export default class GMap extends Component<Props, State>  {
                 {points && points.map(this._renderMarker)}
             </MapView>
         )
+    }
+
+    animateToPoints() {
+        setTimeout(() => {
+            if (this.map) {
+                // this.map.fitToSuppliedMarkers(this.props.points.map((p, i) => i), {
+                //     animated: true, edgePadding: {
+                //         top: 10,
+                //         right: 10,
+                //         bottom: 10,
+                //         left: 10,
+                //     }})
+
+                this.map.fitToElements(true)
+            }
+        }, 1000)
     }
 
     static getCenter(data: []): ?Region {
