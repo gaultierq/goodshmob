@@ -39,13 +39,12 @@ export default class ActivityStatus extends React.Component<Props, State> {
     render() {
         let {activity, navigator, style, cardStyle, children} = this.props;
 
-        if (!activity) return null
-        //TODO: use selectors, remove singleton access
         {
             let {type, id} = activity
             activity = StoreManager.buildData(type, id)
         }
-
+        if (!activity) return null
+        //TODO: use selectors, remove singleton access
 
         //TODO: clear db from this type
         if (sanitizeActivityType(activity.type) === 'posts') return null

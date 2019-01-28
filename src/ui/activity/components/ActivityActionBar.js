@@ -55,6 +55,9 @@ export default class ActivityActionBar extends React.Component<Props, State> {
 
         //let activity: Model.Activity = this.props.activity;
 
+        // FIXME: quick and dirty
+        if (!activity) return null
+
         let ar = new SavingRights(activity);
 
 
