@@ -36,7 +36,7 @@ export default class GMap extends Component<Props, State>  {
     animateCount = 0
 
     componentDidUpdate(prevProps: Props) {
-        if (this.props.points !== prevProps.points) {
+        if (this.props.points !== prevProps.points && !_.isEmpty(this.props.points)) {
             if (++ this.animateCount === 1) {
                 this.animateToPoints()
             }
