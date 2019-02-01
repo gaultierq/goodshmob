@@ -57,7 +57,7 @@ export default class ActivityCell extends React.Component<Props, State> {
 
 
     render() {
-        console.debug("ActivityCell rendered");
+        // console.debug("ActivityCell rendered");
         let activity = this.getActivity()
         if (!activity) return null
         // this.refKeys = this.makeRefObject(this.props);
@@ -92,7 +92,7 @@ export default class ActivityCell extends React.Component<Props, State> {
                             activity={activity}
                             descriptionNumberOfLines={3}
                             navigator={this.props.navigator}
-                            withMenu={true}
+                            // withMenu={true}
                             cardStyle={{
                                 paddingHorizontal: LINEUP_PADDING,
                                 paddingVertical: 10,}}
