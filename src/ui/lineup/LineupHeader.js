@@ -77,6 +77,11 @@ export class LineupHeader extends Component<Props, State> {
         let {lineup} = this.props
 
         let name = _.get(lineup, 'name')
+
+        // quick and dirty
+        // TODO: keep the back button even if lineup data are being fetched
+        if (_.isEmpty(name)) return null
+
         let words = this.getWords(name)
 
         let wordsWidth = this.obtainWordsWidth(words)
